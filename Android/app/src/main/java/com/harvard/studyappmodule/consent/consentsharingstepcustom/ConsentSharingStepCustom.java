@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -18,11 +19,11 @@ import org.researchstack.backbone.step.QuestionStep;
 
 public class ConsentSharingStepCustom extends QuestionStep {
 
-  private String mLoadmoretxt;
+  private String loadmoretxt;
 
   public ConsentSharingStepCustom(String identifier, String loadmoretxt) {
     super(identifier);
-    mLoadmoretxt = loadmoretxt;
+    this.loadmoretxt = loadmoretxt;
     setOptional(false);
   }
 
@@ -32,6 +33,6 @@ public class ConsentSharingStepCustom extends QuestionStep {
   }
 
   public String getLoadmoretxt() {
-    return mLoadmoretxt;
+    return loadmoretxt;
   }
 }

@@ -59,14 +59,6 @@
     vertical-align: top;
   }
 
-  /* .delete{
-	background-position: -113px -63px ;
-	width: 17px;
-	height: 22px;
-    display: inline-block !important;
-    cursor: pointer;
-    vertical-align:middle;
-} */
 
   /* error box css start here  */
   .help-block ul {
@@ -81,7 +73,8 @@
   function isNumber(evt, thisAttr) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if ((charCode < 48 && charCode > 57) || (charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122)) {
+    if ((charCode < 48 && charCode > 57) || (charCode >= 65 && charCode <= 90) || (charCode >= 97
+        && charCode <= 122)) {
       return false;
     }
     if ((!$(thisAttr).val()) && charCode == 48) {
@@ -98,12 +91,12 @@
   <div class="right-content-head">
     <div class="text-right">
       <div class="black-md-f text-uppercase dis-line pull-left line34">
-				<span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img
-                        src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
+        <span class="pr-sm cur-pointer" onclick="goToBackPage(this);"><img
+            src="../images/icons/back-b.png" class="pr-md" alt=""/></span>
         <c:if test="${actionType eq 'add'}">Add Questionnaire</c:if>
         <c:if test="${actionType eq 'edit'}">Edit Questionnaire</c:if>
         <c:if test="${actionType eq 'view'}">View Questionnaire <c:set
-                var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?questionnaireBo.questionnarieVersion:''}
+            var="isLive">${_S}isLive</c:set>${not empty  sessionScope[isLive]?'<span class="eye-inc ml-sm vertical-align-text-top"></span> ':''} ${not empty  sessionScope[isLive]?questionnaireBo.questionnarieVersion:''}
         </c:if>
 
 
@@ -114,7 +107,6 @@
         </button>
       </div>
       <c:if test="${actionType ne 'view'}">
-        <%-- <c:if test="${empty permission}"> --%>
         <div class="dis-line form-group mb-none mr-sm">
           <c:choose>
             <c:when test="${not empty questionnaireBo.id}">
@@ -130,16 +122,20 @@
           </c:choose>
         </div>
         <div class="dis-line form-group mb-none">
-					<span class="tool-tip" data-toggle="tooltip"
-                          data-placement="bottom" id="helpNote"
-                            <c:if test="${empty questionnaireBo.id}"> title="Please click on Next to continue." </c:if>
-						<c:if test="${fn:length(qTreeMap) eq 0 }"> title="Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete." </c:if>
-						<c:if test="${!isDone }"> title="Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete." </c:if>>
-						<button type="button" class="btn btn-primary blue-btn" id="doneId"
-                                <c:if test="${fn:length(qTreeMap) eq 0 || !isDone }">disabled</c:if>>Done</button>
-					</span>
+          <span class="tool-tip" data-toggle="tooltip"
+                data-placement="bottom" id="helpNote"
+              <c:if
+                  test="${empty questionnaireBo.id}"> title="Please click on Next to continue." </c:if>
+              <c:if
+                  test="${fn:length(qTreeMap) eq 0 }"> title="Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete." </c:if>
+              <c:if
+                  test="${!isDone }"> title="Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete." </c:if>>
+            <button type="button" class="btn btn-primary blue-btn" id="doneId"
+                    <c:if
+                        test="${fn:length(qTreeMap) eq 0 || !isDone }">disabled</c:if>>Done
+            </button>
+          </span>
         </div>
-        <%-- /c:if> --%>
       </c:if>
     </div>
   </div>
@@ -148,18 +144,24 @@
 
   <div class="right-content-body pt-none pl-none" id="rootContainer">
     <ul class="nav nav-tabs review-tabs" id="tabContainer">
-      <li class="contentqusClass active"><a data-toggle="tab"
-                                            href="#contentTab">Content</a></li>
-      <li class="scheduleQusClass"><a data-toggle="tab"
-                                      href="#schedule">Schedule</a></li>
+      <li class="contentqusClass active">
+        <a data-toggle="tab"
+           href="#contentTab">Content
+        </a>
+      </li>
+      <li class="scheduleQusClass">
+        <a data-toggle="tab"
+           href="#schedule">Schedule
+        </a>
+      </li>
     </ul>
     <div class="tab-content pl-xlg pr-xlg">
       <!-- Content-->
       <div id="contentTab" class="tab-pane fade in active mt-lg">
         <form:form
-                action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
-                name="contentFormId" id="contentFormId" method="post"
-                data-toggle="validator" role="form">
+            action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+            name="contentFormId" id="contentFormId" method="post"
+            data-toggle="validator" role="form">
           <input type="hidden" name="${csrf.parameterName}"
                  value="${csrf.token}">
           <input type="hidden" name="type" id="type" value="content">
@@ -179,25 +181,29 @@
           <input type="hidden" id="actionTypeForQuestionPage"
                  name="actionTypeForQuestionPage">
           <div class="gray-xs-f mb-xs">
-            Activity Short Title or Key (1 to 50 characters)<span
-                  class="requiredStar">*</span><span
-                  class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                  title="A human readable step identifier and must be unique across all activities of the study.Note that this field cannot be edited once the study is Launched."></span>
+            Activity Short Title or Key (1 to 50 characters)
+            <span
+                class="requiredStar">*
+            </span>
+            <span
+                class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+                title="A human readable step identifier and must be unique across all activities of the study.Note that this field cannot be edited once the study is Launched."></span>
           </div>
           <div class="form-group col-md-5 p-none">
             <input autofocus="autofocus" type="text" custAttType="cust"
                    class="form-control" name="shortTitle" id="shortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"
-                    <c:if test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
+                <c:if
+                    test="${not empty questionnaireBo.shortTitleDuplicate && (questionnaireBo.shortTitleDuplicate gt 0)}"> disabled</c:if>
                    required="required" maxlength="50"/>
             <div class="help-block with-errors red-txt"></div>
             <input type="hidden" id="preShortTitleId"
                    value="${fn:escapeXml(questionnaireBo.shortTitle)}"/>
-            <!-- ///^[ A-Za-z0-9*()_+|:.-]*$/ -->
           </div>
           <div class="clearfix"></div>
           <div class="gray-xs-f mb-xs">
-            Title (300 characters max)<span class="requiredStar">*</span>
+            Title (300 characters max)
+            <span class="requiredStar">*</span>
           </div>
           <div class="form-group">
             <input type="text" class="form-control" name="title" id="titleId"
@@ -207,26 +213,26 @@
           </div>
           <div class="mt-lg" id="stepContainer">
             <div
-                    class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                    onclick="getQuestionnaireStep('Instruction');">Add
+                class="add-steps-btn blue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
+                onclick="getQuestionnaireStep('Instruction');">Add
               Instruction Step
             </div>
             <div
-                    class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                    onclick="getQuestionnaireStep('Question');">Add Question
+                class="add-steps-btn green-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
+                onclick="getQuestionnaireStep('Question');">Add Question
               Step
             </div>
             <div
-                    class="add-steps-btn skyblue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
-                    onclick="getQuestionnaireStep('Form');">Add Form Step
+                class="add-steps-btn skyblue-bg <c:if test="${actionType eq 'view' || empty questionnaireBo.id}"> cursor-none </c:if>"
+                onclick="getQuestionnaireStep('Form');">Add Form Step
             </div>
             <span class=" sprites_v3 filled-tooltip" id="infoIconId"></span>
             <div class="pull-right mt-xs">
-							<span class="checkbox checkbox-inline"> <input
-                                    type="checkbox" id="branchingId" value="true" name="branching"
-                              ${questionnaireBo.branching ? 'checked':''}> <label
-                                    for="branchingId"> Apply Branching </label>
-							</span>
+              <span class="checkbox checkbox-inline"><input
+                  type="checkbox" id="branchingId" value="true" name="branching"
+                ${questionnaireBo.branching ? 'checked':''}> <label
+                  for="branchingId"> Apply Branching </label>
+              </span>
             </div>
           </div>
         </form:form>
@@ -235,91 +241,96 @@
                  style="border-color: #ffffff;">
             <thead style="display: none;"></thead>
             <tbody>
-            <c:forEach items="${qTreeMap}" var="entry">
-              <tr>
-                <c:choose>
-                  <c:when test="${entry.value.stepType eq 'Instruction'}">
-                    <td><span id="${entry.key}" data="round blue-round"
-                              class="round blue-round">${entry.key}</span></td>
-                  </c:when>
-                  <c:when test="${entry.value.stepType eq 'Question'}">
-                    <td><span id="${entry.key}" data="round green-round"
-                              class="round green-round">${entry.key}</span></td>
-                  </c:when>
-                  <c:otherwise>
-                    <td><span id="${entry.key}" data="round teal-round"
-                              class="round teal-round">${entry.key}</span></td>
-                    <%-- <c:forEach begin="0" end="${fn:length(entry.value.fromMap)-1}">
-								    <div>&nbsp;</div>
-							 </c:forEach> --%>
-                  </c:otherwise>
-                </c:choose>
-                <td><c:choose>
-                  <c:when test="${entry.value.stepType eq 'Form'}">
-                    <c:forEach items="${entry.value.fromMap}" var="subentry">
+              <c:forEach items="${qTreeMap}" var="entry">
+                <tr>
+                  <c:choose>
+                    <c:when test="${entry.value.stepType eq 'Instruction'}">
+                      <td>
+                        <span id="${entry.key}" data="round blue-round"
+                              class="round blue-round">${entry.key}</span>
+                      </td>
+                    </c:when>
+                    <c:when test="${entry.value.stepType eq 'Question'}">
+                      <td>
+                        <span id="${entry.key}" data="round green-round"
+                              class="round green-round">${entry.key}</span>
+                      </td>
+                    </c:when>
+                    <c:otherwise>
+                      <td>
+                        <span id="${entry.key}" data="round teal-round"
+                              class="round teal-round">${entry.key}</span>
+                      </td>
+                    </c:otherwise>
+                  </c:choose>
+                  <td><c:choose>
+                    <c:when test="${entry.value.stepType eq 'Form'}">
+                      <c:forEach items="${entry.value.fromMap}" var="subentry">
+                        <div class="dis-ellipsis"
+                             title="${fn:escapeXml(subentry.value.title)}">${subentry.value.title}</div>
+                        <div class="clearfix"></div>
+                      </c:forEach>
+                    </c:when>
+                    <c:otherwise>
                       <div class="dis-ellipsis"
-                           title="${fn:escapeXml(subentry.value.title)}">${subentry.value.title}</div>
-                      <div class="clearfix"></div>
-                    </c:forEach>
-                  </c:when>
-                  <c:otherwise>
-                    <div class="dis-ellipsis"
-                         title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
-                  </c:otherwise>
-                </c:choose></td>
-                <td>
-                  <div class="destinationStep questionnaireStepClass"
-                       style="display: none;">${entry.value.destinationText}</div>
-                </td>
-                <td>
-                  <div>
-                    <div class="text-right pos-relative">
-                      <c:if test="${entry.value.stepType ne 'Instruction'}">
-                        <c:choose>
-                          <c:when
-                                  test="${entry.value.responseTypeText eq 'Double'  && (entry.value.lineChart eq 'Yes' || entry.value.statData eq 'Yes')}">
-                            <span class="sprites_v3 status-blue mr-md"></span>
-                          </c:when>
-                          <c:when
-                                  test="${entry.value.responseTypeText eq 'Double' && (entry.value.lineChart eq 'No' && entry.value.statData eq 'No')}">
-                            <span class="sprites_v3 status-gray mr-md"></span>
-                          </c:when>
-                          <c:when
-                                  test="${entry.value.responseTypeText eq 'Date' && entry.value.useAnchorDate}">
-                            <span class="sprites_v3 calender-blue mr-md"></span>
-                          </c:when>
-                          <c:when
-                                  test="${entry.value.responseTypeText eq 'Date' && !entry.value.useAnchorDate}">
-                            <span class="sprites_v3 calender-gray mr-md"></span>
-                          </c:when>
-                        </c:choose>
-                      </c:if>
+                           title="${fn:escapeXml(entry.value.title)}">${entry.value.title}</div>
+                    </c:otherwise>
+                  </c:choose></td>
+                  <td>
+                    <div class="destinationStep questionnaireStepClass"
+                         style="display: none;">${entry.value.destinationText}</div>
+                  </td>
+                  <td>
+                    <div>
+                      <div class="text-right pos-relative">
+                        <c:if test="${entry.value.stepType ne 'Instruction'}">
+                          <c:choose>
+                            <c:when
+                                test="${entry.value.responseTypeText eq 'Double'  && (entry.value.lineChart eq 'Yes' || entry.value.statData eq 'Yes')}">
+                              <span class="sprites_v3 status-blue mr-md"></span>
+                            </c:when>
+                            <c:when
+                                test="${entry.value.responseTypeText eq 'Double' && (entry.value.lineChart eq 'No' && entry.value.statData eq 'No')}">
+                              <span class="sprites_v3 status-gray mr-md"></span>
+                            </c:when>
+                            <c:when
+                                test="${entry.value.responseTypeText eq 'Date' && entry.value.useAnchorDate}">
+                              <span class="sprites_v3 calender-blue mr-md"></span>
+                            </c:when>
+                            <c:when
+                                test="${entry.value.responseTypeText eq 'Date' && !entry.value.useAnchorDate}">
+                              <span class="sprites_v3 calender-gray mr-md"></span>
+                            </c:when>
+                          </c:choose>
+                        </c:if>
 
-                      <span class="ellipse" onmouseenter="ellipseHover(this);"></span>
-                      <div class="ellipse-hover-icon"
-                           onmouseleave="ellipseUnHover(this);">
-													<span class="sprites_icon preview-g mr-sm"
-                                                          onclick="viewStep(${entry.value.stepId},'${entry.value.stepType}')"></span>
-                        <span
-                                class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
-                                <c:if test="${actionType ne 'view'}">onclick="editStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
-                        <span
-                                class="sprites_icon delete deleteStepButton <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
-                                <c:if test="${actionType ne 'view'}">onclick="deletStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
+                        <span class="ellipse" onmouseenter="ellipseHover(this);"></span>
+                        <div class="ellipse-hover-icon"
+                             onmouseleave="ellipseUnHover(this);">
+                          <span class="sprites_icon preview-g mr-sm"
+                                onclick="viewStep(${entry.value.stepId},'${entry.value.stepType}')"></span>
+                          <span
+                              class="${entry.value.status?'edit-inc':'edit-inc-draft mr-md'} mr-sm <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
+                              <c:if
+                                  test="${actionType ne 'view'}">onclick="editStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
+                          <span
+                              class="sprites_icon delete deleteStepButton <c:if test="${actionType eq 'view'}"> cursor-none-without-event </c:if>"
+                              <c:if
+                                  test="${actionType ne 'view'}">onclick="deletStep(${entry.value.stepId},'${entry.value.stepType}')"</c:if>></span>
+                        </div>
                       </div>
-                    </div>
-                    <c:if test="${entry.value.stepType eq 'Form'}">
-                      <c:if test="${fn:length(entry.value.fromMap) gt 0}">
-                        <c:forEach begin="0"
-                                   end="${fn:length(entry.value.fromMap)-1}">
-                          <div>&nbsp;</div>
-                        </c:forEach>
+                      <c:if test="${entry.value.stepType eq 'Form'}">
+                        <c:if test="${fn:length(entry.value.fromMap) gt 0}">
+                          <c:forEach begin="0"
+                                     end="${fn:length(entry.value.fromMap)-1}">
+                            <div>&nbsp;</div>
+                          </c:forEach>
+                        </c:if>
                       </c:if>
-                    </c:if>
-                  </div>
-                </td>
-              </tr>
-            </c:forEach>
+                    </div>
+                  </td>
+                </tr>
+              </c:forEach>
             </tbody>
           </table>
         </div>
@@ -329,29 +340,31 @@
       <div id="schedule" class="tab-pane fade mt-lg">
         <div class="gray-xs-f mb-sm">Schedule Type</div>
         <div class="pb-lg ">
-					<span class="radio radio-info radio-inline p-40"> <input
-                            type="radio" id="schedule1" class="typeofschedule"
-                            scheduletype="Regular" value="Regular" name="scheduleType"
-                      ${empty questionnaireBo.scheduleType  || questionnaireBo.scheduleType=='Regular' ?'checked':''}
-                      ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
-                      <c:if test="${empty anchorTypeList || fn:length(anchorTypeList) le 1}">'disabled'</c:if>>
-						<label for="schedule1">Regular</label>
-					</span> <span id="anchorspanId" class="tool-tip" data-toggle="tooltip"
-                                  data-html="true" data-placement="top"
-                <c:if test="${isAnchorQuestionnaire}">
-                  title="This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it."
-                </c:if>>
-						<span class="radio radio-inline p-40"> <input type="radio"
-                                                                      id="schedule2" class="typeofschedule"
-                                                                      scheduletype="AnchorDate"
-                                                                      value="AnchorDate" name="scheduleType"
-                        ${isAnchorQuestionnaire?'disabled':''}
-                        ${questionnaireBo.scheduleType=='AnchorDate' ?'checked':''}
-                        ${questionnaireBo.shortTitleDuplicate > 0?'disabled' : ''}
-                                                                      <c:if test="${empty anchorTypeList}">disabled</c:if>> <label
-                                for="schedule2">Anchor date based</label>
-					</span>
-					</span>
+          <span class="radio radio-info radio-inline p-40"><input
+              type="radio" id="schedule1" class="typeofschedule"
+              scheduletype="Regular" value="Regular" name="scheduleType"
+            ${empty questionnaireBo.scheduleType  || questionnaireBo.scheduleType=='Regular' ?'checked':''}
+            ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
+            <c:if test="${empty anchorTypeList || fn:length(anchorTypeList) le 1}">'disabled'</c:if>>
+            <label for="schedule1">Regular</label>
+          </span>
+          <span id="anchorspanId" class="tool-tip" data-toggle="tooltip"
+                data-html="true" data-placement="top"
+              <c:if test="${isAnchorQuestionnaire}">
+                title="This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it."
+              </c:if>>
+            <span class="radio radio-inline p-40"><input type="radio"
+                                                         id="schedule2" class="typeofschedule"
+                                                         scheduletype="AnchorDate"
+                                                         value="AnchorDate" name="scheduleType"
+            ${isAnchorQuestionnaire?'disabled':''}
+            ${questionnaireBo.scheduleType=='AnchorDate' ?'checked':''}
+            ${questionnaireBo.shortTitleDuplicate > 0?'disabled' : ''}
+                                                         <c:if
+                                                             test="${empty anchorTypeList}">disabled</c:if>> <label
+                for="schedule2">Anchor date based</label>
+            </span>
+          </span>
         </div>
         <!-- Anchor date type -->
         <form:form action="" name="anchorFormId" id="anchorFormId"
@@ -381,62 +394,67 @@
         <!-- Ancor date type -->
         <div class="gray-xs-f mb-sm">Questionnaire Scheduling Options</div>
         <div class="pb-lg b-bor">
-					<span class="radio radio-info radio-inline p-40"> <input
-                            type="radio" id="inlineRadio1" class="schedule"
-                            frequencytype="oneTime" value="One time" name="frequency"
-                    ${empty questionnaireBo.frequency  || questionnaireBo.frequency=='One time' ?'checked':''}
-                    ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}>
-						<label for="inlineRadio1">One Time</label>
-					</span> <span class="radio radio-inline p-40"> <input type="radio"
-                                                                          id="inlineRadio2" class="schedule"
-                                                                          frequencytype="daily"
-                                                                          value="Daily" name="frequency"
-        ${questionnaireBo.frequency=='Daily' ?'checked':''}
-        ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
-        ${isAnchorQuestionnaire?'disabled':''}> <label
-                for="inlineRadio2">Daily</label>
-					</span> <span class="radio radio-inline p-40"> <input type="radio"
-                                                                          id="inlineRadio3" class="schedule"
-                                                                          frequencytype="week"
-                                                                          value="Weekly" name="frequency"
-        ${questionnaireBo.frequency=='Weekly' ?'checked':''}
-        ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
-        ${isAnchorQuestionnaire?'disabled':''}> <label
-                for="inlineRadio3">Weekly</label>
-					</span> <span class="radio radio-inline p-40"> <input type="radio"
-                                                                          id="inlineRadio4" class="schedule"
-                                                                          frequencytype="month"
-                                                                          value="Monthly" name="frequency"
-        ${questionnaireBo.frequency=='Monthly' ?'checked':''}
-        ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
-        ${isAnchorQuestionnaire?'disabled':''}> <label
-                for="inlineRadio4">Monthly</label>
-					</span> <span class="radio radio-inline p-40"> <input type="radio"
-                                                                          id="inlineRadio5" class="schedule"
-                                                                          frequencytype="manually"
-                                                                          value="Manually Schedule" name="frequency"
-        ${questionnaireBo.frequency=='Manually Schedule' ?'checked':''}
-        ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
-        ${isAnchorQuestionnaire?'disabled':''}> <label
-                for="inlineRadio5">Custom Schedule</label>
-					</span>
+          <span class="radio radio-info radio-inline p-40"><input
+              type="radio" id="inlineRadio1" class="schedule"
+              frequencytype="oneTime" value="One time" name="frequency"
+          ${empty questionnaireBo.frequency  || questionnaireBo.frequency=='One time' ?'checked':''}
+          ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}>
+            <label for="inlineRadio1">One Time</label>
+          </span>
+          <span class="radio radio-inline p-40"><input type="radio"
+                                                       id="inlineRadio2" class="schedule"
+                                                       frequencytype="daily"
+                                                       value="Daily" name="frequency"
+          ${questionnaireBo.frequency=='Daily' ?'checked':''}
+          ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
+          ${isAnchorQuestionnaire?'disabled':''}> <label
+              for="inlineRadio2">Daily</label>
+          </span>
+          <span class="radio radio-inline p-40"><input type="radio"
+                                                       id="inlineRadio3" class="schedule"
+                                                       frequencytype="week"
+                                                       value="Weekly" name="frequency"
+          ${questionnaireBo.frequency=='Weekly' ?'checked':''}
+          ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
+          ${isAnchorQuestionnaire?'disabled':''}> <label
+              for="inlineRadio3">Weekly</label>
+          </span>
+          <span class="radio radio-inline p-40"><input type="radio"
+                                                       id="inlineRadio4" class="schedule"
+                                                       frequencytype="month"
+                                                       value="Monthly" name="frequency"
+          ${questionnaireBo.frequency=='Monthly' ?'checked':''}
+          ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
+          ${isAnchorQuestionnaire?'disabled':''}> <label
+              for="inlineRadio4">Monthly</label>
+          </span>
+          <span class="radio radio-inline p-40"><input type="radio"
+                                                       id="inlineRadio5" class="schedule"
+                                                       frequencytype="manually"
+                                                       value="Manually Schedule"
+                                                       name="frequency"
+          ${questionnaireBo.frequency=='Manually Schedule' ?'checked':''}
+          ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''}
+          ${isAnchorQuestionnaire?'disabled':''}> <label
+              for="inlineRadio5">Custom Schedule</label>
+          </span>
         </div>
         <!-- One Time Section-->
         <form:form
-                action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
-                name="oneTimeFormId" id="oneTimeFormId" method="post" role="form"
-                data-toggle="validator">
+            action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+            name="oneTimeFormId" id="oneTimeFormId" method="post" role="form"
+            data-toggle="validator">
           <input type="hidden" name="frequency" id="frequencyId"
                  value="${questionnaireBo.frequency}">
           <c:choose>
             <c:when test="${questionnaireBo.frequency eq 'Daily'}">
               <c:if
-                      test="${fn:length(questionnaireBo.questionnairesFrequenciesList) gt 1}">
+                  test="${fn:length(questionnaireBo.questionnairesFrequenciesList) gt 1}">
                 <input type="hidden" name="previousFrequency"
                        id="previousFrequency" value="${questionnaireBo.frequency}">
               </c:if>
               <c:if
-                      test="${empty questionnaireBo.questionnairesFrequenciesList || fn:length(questionnaireBo.questionnairesFrequenciesList) le 1}">
+                  test="${empty questionnaireBo.questionnairesFrequenciesList || fn:length(questionnaireBo.questionnairesFrequenciesList) le 1}">
                 <input type="hidden" name="previousFrequency"
                        id="previousFrequency" value="One time">
               </c:if>
@@ -453,81 +471,94 @@
                  value="${not empty questionnaireBo.studyId ? questionnaireBo.studyId : studyBo.id}">
           <div class="oneTime all mt-lg">
             <div class="gray-xs-f mb-sm">
-              Date/Time of launch (pick one) <span class="requiredStar">*</span>
+              Date/Time of launch (pick one)
+              <span class="requiredStar">*</span>
               <span
-                      class="ml-xs sprites_v3 filled-tooltip"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="All date/time selections are based on server timezone.">
-							</span>
+                  class="ml-xs sprites_v3 filled-tooltip"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="All date/time selections are based on server timezone.">
+              </span>
             </div>
             <div class="mt-sm">
-							<span class="checkbox checkbox-inline"> <input
-                                    type="hidden" name="questionnairesFrequenciesBo.id"
-                                    id="oneTimeFreId"
-                                    value="${questionnaireBo.questionnairesFrequenciesBo.id}">
-								<input type="checkbox" id="isLaunchStudy"
-                                       name="questionnairesFrequenciesBo.isLaunchStudy" value="true"
-                                  ${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy ?'checked':''}
-                                       required ${(questionnaireBo.shortTitleDuplicate>
-                                        0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
-									with study</label>
-							</span>
+              <span class="checkbox checkbox-inline"><input
+                  type="hidden" name="questionnairesFrequenciesBo.id"
+                  id="oneTimeFreId"
+                  value="${questionnaireBo.questionnairesFrequenciesBo.id}">
+                <input type="checkbox" id="isLaunchStudy"
+                       name="questionnairesFrequenciesBo.isLaunchStudy" value="true"
+                  ${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy ?'checked':''}
+                       required ${(questionnaireBo.shortTitleDuplicate>
+                    0)?'disabled' : ''}> <label for="isLaunchStudy"> Launch
+                  with study</label>
+              </span>
               <div class="onetimeanchorClass mt-sm" style="display: none">
                 <!-- Anchordate start -->
                 <div class="opacity06">OR</div>
                 <!-- Anchordate start-->
                 <div class="mt-none resetDate">
                   <div>
-                    <span class="pr-md">Anchor Date</span> <span> <select
-                          class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          name="questionnairesFrequenciesBo.xDaysSign"
-                          id="onetimeXSign">
-												<option value="0"
-                                                  ${studyBo.enrollmentdateAsAnchordate?'selected':''}
-                                                  ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+</option>
-												<option value="1"
-                                                  ${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-</option>
-										</select>
-										</span>
+                    <span class="pr-md">Anchor Date</span>
+                    <span><select
+                        class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                        name="questionnairesFrequenciesBo.xDaysSign"
+                        id="onetimeXSign">
+                      <option value="0"
+                        ${studyBo.enrollmentdateAsAnchordate?'selected':''}
+                        ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+
+                      </option>
+                      <option value="1"
+                        ${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-
+                      </option>
+                    </select>
+                    </span>
                     <!--  selectpicker -->
                     <span
-                            class="form-group m-none dis-inline vertical-align-middle">
-											<c:choose>
-                                              <c:when
-                                                      test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}">
-													<input id="onetimexdaysId" type="text"
-                                                           class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                           placeholder="X"
-                                                           name="questionnairesFrequenciesBo.timePeriodFromDays"
-                                                           value=""
-                                                            <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
-                                                           maxlength="3" pattern="[0-9]+"
-                                                           data-pattern-error="Please enter valid number."/>
-                                              </c:when>
-                                              <c:otherwise>
-													<input id="onetimexdaysId" type="text"
-                                                           class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                           placeholder="X"
-                                                           name="questionnairesFrequenciesBo.timePeriodFromDays"
-                                                           value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
-                                                            <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
-                                                           maxlength="3" pattern="[0-9]+"
-                                                           data-pattern-error="Please enter valid number."/>
-                                              </c:otherwise>
-                                            </c:choose> <span class="help-block with-errors red-txt"></span>
-										</span> <span class="mb-sm pr-md"> <span
-                          class="light-txt opacity06"> days</span>
-										</span> <span
-                          class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<input id="selectTime" type="text"
-                                                   class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                   name="questionnairesFrequenciesBo.frequencyTime"
-                                                   value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
-                                                    <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                                                   placeholder="Select Time"/> <span
+                        class="form-group m-none dis-inline vertical-align-middle">
+                      <c:choose>
+                        <c:when
+                            test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}">
+                          <input id="onetimexdaysId" type="text"
+                                 class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                                 placeholder="X"
+                                 name="questionnairesFrequenciesBo.timePeriodFromDays"
+                                 value=""
+                              <c:if
+                                  test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
+                                 maxlength="3" pattern="[0-9]+"
+                                 data-pattern-error="Please enter valid number."/>
+                        </c:when>
+                        <c:otherwise>
+                          <input id="onetimexdaysId" type="text"
+                                 class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                                 placeholder="X"
+                                 name="questionnairesFrequenciesBo.timePeriodFromDays"
+                                 value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
+                              <c:if
+                                  test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy }"> disabled </c:if>
+                                 maxlength="3" pattern="[0-9]+"
+                                 data-pattern-error="Please enter valid number."/>
+                        </c:otherwise>
+                      </c:choose>
+                      <span class="help-block with-errors red-txt"></span>
+                    </span>
+                    <span class="mb-sm pr-md">
+                      <span
+                          class="light-txt opacity06"> days
+                      </span>
+                    </span>
+                    <span
+                        class="form-group m-none dis-inline vertical-align-middle pr-md">
+                      <input id="selectTime" type="text"
+                             class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                             name="questionnairesFrequenciesBo.frequencyTime"
+                             value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
+                          <c:if
+                              test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
+                             placeholder="Select Time"/>
+                      <span
                           class='help-block with-errors red-txt'></span>
-										</span>
+                    </span>
                   </div>
                 </div>
                 <!-- Anchordate End -->
@@ -535,110 +566,127 @@
 
 
               <div class="mt-md form-group regularClass">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<input id="chooseDate" type="text"
-                                           class="mt-sm form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                           name="questionnairesFrequenciesBo.frequencyDate"
-                                           placeholder="Choose Date"
-                                           value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"
-                                           required
-                                            <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
-									<span class='help-block with-errors red-txt'></span>
-								</span> <span
-                      class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<input id="selectTime1" type="text"
-                                           class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                           name="questionnairesFrequenciesBo.frequencyTime"
-                                           value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
-                                           required
-                                            <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
-                                           placeholder="Select Time"/> <span
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <input id="chooseDate" type="text"
+                         class="mt-sm form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                         name="questionnairesFrequenciesBo.frequencyDate"
+                         placeholder="Choose Date"
+                         value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"
+                         required
+                      <c:if
+                          test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if> />
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <input id="selectTime1" type="text"
+                         class="mt-sm form-control clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                         name="questionnairesFrequenciesBo.frequencyTime"
+                         value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"
+                         required
+                      <c:if
+                          test="${questionnaireBo.questionnairesFrequenciesBo.isLaunchStudy}"> disabled </c:if>
+                         placeholder="Select Time"/>
+                  <span
                       class='help-block with-errors red-txt'></span>
-								</span>
+                </span>
               </div>
             </div>
             <div class="gray-xs-f mb-sm mt-md">
               Lifetime of the run/questionnaire (choose between Study Lifetime
-              and custom end date)<span class="requiredStar">*</span>
+              and custom end date)
+              <span class="requiredStar">*</span>
             </div>
             <div class="mt-sm">
-							<span class="checkbox checkbox-inline"> <input
-                                    type="checkbox" id="isStudyLifeTime"
-                                    name="questionnairesFrequenciesBo.isStudyLifeTime" value="true"
-                              ${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime ?'checked':''}
-                                    required ${(questionnaireBo.shortTitleDuplicate>
-                                    0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study
-									Lifetime </label>
-							</span>
+              <span class="checkbox checkbox-inline"><input
+                  type="checkbox" id="isStudyLifeTime"
+                  name="questionnairesFrequenciesBo.isStudyLifeTime" value="true"
+                ${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime ?'checked':''}
+                  required ${(questionnaireBo.shortTitleDuplicate>
+                  0)?'disabled' : ''}> <label for="isStudyLifeTime"> Study
+                Lifetime </label>
+              </span>
               <div class="mt-md form-group regularClass">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<c:choose>
-                                      <c:when
-                                              test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}">
-											<input id="chooseEndDate" type="text"
-                                                   class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                   name="studyLifetimeEnd" placeholder="Choose End Date"
-                                                   required
-                                                    <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
-                                                   value=""/>
-                                      </c:when>
-                                      <c:otherwise>
-											<input id="chooseEndDate" type="text"
-                                                   class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                   name="studyLifetimeEnd" placeholder="Choose End Date"
-                                                   required
-                                                    <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
-                                                   value="${questionnaireBo.studyLifetimeEnd}"/>
-                                      </c:otherwise>
-                                    </c:choose> <span class='help-block with-errors red-txt'></span>
-								</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <c:choose>
+                    <c:when
+                        test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}">
+                      <input id="chooseEndDate" type="text"
+                             class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                             name="studyLifetimeEnd" placeholder="Choose End Date"
+                             required
+                          <c:if
+                              test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
+                             value=""/>
+                    </c:when>
+                    <c:otherwise>
+                      <input id="chooseEndDate" type="text"
+                             class="form-control calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                             name="studyLifetimeEnd" placeholder="Choose End Date"
+                             required
+                          <c:if
+                              test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
+                             value="${questionnaireBo.studyLifetimeEnd}"/>
+                    </c:otherwise>
+                  </c:choose>
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
               </div>
               <div class="onetimeanchorClass mt-sm" style="display: none">
                 <div class="opacity06">OR</div>
                 <!-- Anchordate start-->
                 <div class="mt-none resetDate">
                   <div>
-                    <span class="pr-md">Anchor Date</span> <span> <select
-                          class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                          title="Select" name="questionnairesFrequenciesBo.yDaysSign"
-                          id="onetimeYSign">
-												<option value="0"
-                                                  ${not questionnaireBo.questionnairesFrequenciesBo.yDaysSign ?'selected':''}>+</option>
-												<option value="1"
-                                                  ${questionnaireBo.questionnairesFrequenciesBo.yDaysSign ?'selected':''}>-</option>
-										</select>
-										</span>
+                    <span class="pr-md">Anchor Date</span>
+                    <span><select
+                        class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                        title="Select" name="questionnairesFrequenciesBo.yDaysSign"
+                        id="onetimeYSign">
+                      <option value="0"
+                        ${not questionnaireBo.questionnairesFrequenciesBo.yDaysSign ?'selected':''}>+
+                      </option>
+                      <option value="1"
+                        ${questionnaireBo.questionnairesFrequenciesBo.yDaysSign ?'selected':''}>-
+                      </option>
+                    </select>
+                    </span>
                     <!--  selectpicker -->
                     <span
-                            class="form-group m-none dis-inline vertical-align-middle">
-											<c:choose>
-                                              <c:when
-                                                      test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}">
-													<input id="onetimeydaysId" type="text"
-                                                           class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                           placeholder="Y"
-                                                           name="questionnairesFrequenciesBo.timePeriodToDays"
-                                                           value=""
-                                                            <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
-                                                           maxlength="3" pattern="[0-9]+"
-                                                           data-pattern-error="Please enter valid number."/>
-                                              </c:when>
-                                              <c:otherwise>
-													<input id="onetimeydaysId" type="text"
-                                                           class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                           placeholder="Y"
-                                                           name="questionnairesFrequenciesBo.timePeriodToDays"
-                                                           value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodToDays}"
-                                                            <c:if test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
-                                                           maxlength="3" pattern="[0-9]+"
-                                                           data-pattern-error="Please enter valid number."/>
-                                              </c:otherwise>
-                                            </c:choose> <span class="help-block with-errors red-txt"></span>
-										</span> <span class="mb-sm pr-md"> <span
-                          class="light-txt opacity06"> days</span>
-										</span>
+                        class="form-group m-none dis-inline vertical-align-middle">
+                      <c:choose>
+                        <c:when
+                            test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}">
+                          <input id="onetimeydaysId" type="text"
+                                 class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                                 placeholder="Y"
+                                 name="questionnairesFrequenciesBo.timePeriodToDays"
+                                 value=""
+                              <c:if
+                                  test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime }"> disabled </c:if>
+                                 maxlength="3" pattern="[0-9]+"
+                                 data-pattern-error="Please enter valid number."/>
+                        </c:when>
+                        <c:otherwise>
+                          <input id="onetimeydaysId" type="text"
+                                 class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                                 placeholder="Y"
+                                 name="questionnairesFrequenciesBo.timePeriodToDays"
+                                 value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodToDays}"
+                              <c:if
+                                  test="${questionnaireBo.questionnairesFrequenciesBo.isStudyLifeTime}"> disabled </c:if>
+                                 maxlength="3" pattern="[0-9]+"
+                                 data-pattern-error="Please enter valid number."/>
+                        </c:otherwise>
+                      </c:choose>
+                      <span class="help-block with-errors red-txt"></span>
+                    </span>
+                    <span class="mb-sm pr-md">
+                      <span
+                          class="light-txt opacity06"> days
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -648,9 +696,9 @@
         </form:form>
         <!-- Daily Section-->
         <form:form
-                action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
-                name="dailyFormId" id="dailyFormId" method="post" role="form"
-                data-toggle="validator">
+            action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+            name="dailyFormId" id="dailyFormId" method="post" role="form"
+            data-toggle="validator">
           <input type="hidden" name="frequency" id="dailyFrequencyId"
                  value="${questionnaireBo.frequency}">
           <input type="hidden" name="previousFrequency"
@@ -664,89 +712,112 @@
 
             <div class="mt-md">
               <div class="dailyStartCls col-md-3 pl-none">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date <span
-                                            class="requiredStar">*</span></span>
-										<span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                                              data-placement="bottom" id="helpNote"
-                                              title="All date/time selections are based on server timezone.">
-								</span>
-										<br/> <input id="startDate"
-                                                     type="text"
-                                                     class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                     placeholder="Choose Date" name="studyLifetimeStart"
-                                                     value="${questionnaireBo.studyLifetimeStart}"/> <span
-                                        class='help-block with-errors red-txt'></span>
-								</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class="gray-xs-f">Start date
+                    <span
+                        class="requiredStar">*
+                    </span>
+                  </span>
+                  <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+                        data-placement="bottom" id="helpNote"
+                        title="All date/time selections are based on server timezone.">
+                  </span>
+                  <br/> <input id="startDate"
+                               type="text"
+                               class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               placeholder="Choose Date" name="studyLifetimeStart"
+                               value="${questionnaireBo.studyLifetimeStart}"/>
+                  <span
+                      class='help-block with-errors red-txt'></span>
+                </span>
               </div>
               <!-- Anchordate start-->
               <div class="dailyanchorDiv col-md-4 pl-none"
                    style="display: none;">
                 <div class=" resetDate">
                   <div>
-										<span
-                                                class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<span class="gray-xs-f">Start date <span
-                                                    class="requiredStar">*</span></span>
-												<span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
-                                                      data-placement="bottom" id="helpNote"
-                                                      title="All date/time selections are based on server timezone."></span>
+                    <span
+                        class="form-group m-none dis-inline vertical-align-middle pr-md">
+                      <span class="gray-xs-f">Start date
+                        <span
+                            class="requiredStar">*
+                        </span>
+                      </span>
+                      <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
+                            data-placement="bottom" id="helpNote"
+                            title="All date/time selections are based on server timezone."></span>
 
-												<br/> <span class="pr-md">Anchor
-												Date</span> <span> <select
-                                                class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                title="Select"
-                                                name="questionnairesFrequenciesList[0].xDaysSign"
-                                                id="dailyXSign">
-													<option value="0"
-                                                      ${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0) && not questionnaireBo.questionnairesFrequenciesList[0].xDaysSign ?'selected':''}>+</option>
-													<option value="1"
-                                                      ${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0) && questionnaireBo.questionnairesFrequenciesList[0].xDaysSign ?'selected':''}>-</option>
-											</select>
-										</span> <span
-                                                class="form-group m-none dis-inline vertical-align-middle">
-												<input id="dailyxdaysId" type="text"
-                                                       class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                       placeholder="X"
-                                                       name="questionnairesFrequenciesList[0].timePeriodFromDays"
-                                                       value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
-                                                       maxlength="3" pattern="[0-9]+"
-                                                       data-pattern-error="Please enter valid number."/> <span
-                                                class="help-block with-errors red-txt"></span>
-										</span> <span class="mb-sm pr-md"> <span
-                                                class="light-txt opacity06"> days</span>
-										</span>
-										</span>
+                      <br/>
+                      <span class="pr-md">Anchor
+                        Date
+                      </span>
+                      <span><select
+                          class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                          title="Select"
+                          name="questionnairesFrequenciesList[0].xDaysSign"
+                          id="dailyXSign">
+                        <option value="0"
+                          ${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0) && not questionnaireBo.questionnairesFrequenciesList[0].xDaysSign ?'selected':''}>
+                          +
+                        </option>
+                        <option value="1"
+                          ${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0) && questionnaireBo.questionnairesFrequenciesList[0].xDaysSign ?'selected':''}>
+                          -
+                        </option>
+                      </select>
+                      </span>
+                      <span
+                          class="form-group m-none dis-inline vertical-align-middle">
+                        <input id="dailyxdaysId" type="text"
+                               class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               placeholder="X"
+                               name="questionnairesFrequenciesList[0].timePeriodFromDays"
+                               value="${(fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0)?questionnaireBo.questionnairesFrequenciesList[0].timePeriodFromDays:''}"
+                               maxlength="3" pattern="[0-9]+"
+                               data-pattern-error="Please enter valid number."/>
+                        <span
+                            class="help-block with-errors red-txt"></span>
+                      </span>
+                      <span class="mb-sm pr-md">
+                        <span
+                            class="light-txt opacity06"> days
+                        </span>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
               <!-- Anchordate End -->
               <div class="col-md-6 pr-none">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">No. of times to repeat the
-										questionnaire <span class="requiredStar">*</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class="gray-xs-f">No. of times to repeat the
+                    questionnaire
+                    <span class="requiredStar">*</span>
 
-								</span><br/> <input id="days" type="text"
-                                                    class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                    name="repeatQuestionnaire" placeholder="No of Times" required
-                                                    value="${questionnaireBo.repeatQuestionnaire}"
-                                                    onkeypress="return isNumber(event, this)"
-                                                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                                    data-pattern-error="Please enter valid number." maxlength="3"/>
-									<span class='help-block with-errors red-txt'></span>
-								</span>
+                  </span>
+                  <br/> <input id="days" type="text"
+                               class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               name="repeatQuestionnaire" placeholder="No of Times" required
+                               value="${questionnaireBo.repeatQuestionnaire}"
+                               onkeypress="return isNumber(event, this)"
+                               pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
+                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
               </div>
               <div class="clearfix"></div>
             </div>
 
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">End Date <span class="ml-xs sprites_v3 filled-tooltip"
-                                                          data-toggle="tooltip"
-                                                          data-placement="bottom" id="helpNote"
-                                                          title="All date/time selections are based on server timezone.">
-								</span></div>
+              <div class="gray-xs-f mb-xs">End Date
+                <span class="ml-xs sprites_v3 filled-tooltip"
+                      data-toggle="tooltip"
+                      data-placement="bottom" id="helpNote"
+                      title="All date/time selections are based on server timezone.">
+                </span>
+              </div>
               <div class="black-xs-f"
                    id="endDateId">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
               <input type="hidden" name="studyLifetimeEnd"
@@ -757,53 +828,62 @@
 
             <div class="mt-md">
               <div class="gray-xs-f mb-sm">
-                Time(s) of the day for daily occurrence <span
-                      class="requiredStar">*</span>
+                Time(s) of the day for daily occurrence
+                <span
+                    class="requiredStar">*
+                </span>
                 <span class="ml-xs sprites_v3 filled-tooltip" data-toggle="tooltip"
                       data-placement="bottom" id="helpNote"
                       title="All date/time selections are based on server timezone.">
-								</span>
+                </span>
               </div>
               <div class="dailyContainer">
                 <c:if
-                        test="${fn:length(questionnaireBo.questionnairesFrequenciesList) eq 0}">
+                    test="${fn:length(questionnaireBo.questionnairesFrequenciesList) eq 0}">
                   <div class="time-opts mt-md dailyTimeDiv" id="0">
-									<span
-                                            class="form-group m-none dis-inline vertical-align-middle pr-md">
-										<input disabled id="time0" type="text"
-                                               name="questionnairesFrequenciesList[0].frequencyTime" required
-                                               class="form-control clock dailyClock" placeholder="Time"
-                                               onclick='timep(this.id);'/> <span
-                                            class='help-block with-errors red-txt'></span>
-									</span> <span id="dailyAddTimeButton"
-                                                  class="hide addBtnDis addbtn mr-sm align-span-center"
-                                                  onclick='addTime();'>+</span>
+                    <span
+                        class="form-group m-none dis-inline vertical-align-middle pr-md">
+                      <input disabled id="time0" type="text"
+                             name="questionnairesFrequenciesList[0].frequencyTime" required
+                             class="form-control clock dailyClock" placeholder="Time"
+                             onclick='timep(this.id);'/>
+                      <span
+                          class='help-block with-errors red-txt'></span>
+                    </span>
+                    <span id="dailyAddTimeButton"
+                          class="hide addBtnDis addbtn mr-sm align-span-center"
+                          onclick='addTime();'>+
+                    </span>
                   </div>
                 </c:if>
                 <c:if
-                        test="${fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0}">
+                    test="${fn:length(questionnaireBo.questionnairesFrequenciesList) gt 0}">
                   <c:forEach
-                          items="${questionnaireBo.questionnairesFrequenciesList}"
-                          var="questionnairesFrequencies" varStatus="frequeincesVar">
+                      items="${questionnaireBo.questionnairesFrequenciesList}"
+                      var="questionnairesFrequencies" varStatus="frequeincesVar">
                     <div class="time-opts mt-md dailyTimeDiv"
                          id="${frequeincesVar.index}">
                       <input type="hidden"
                              name="questionnairesFrequenciesList[${frequeincesVar.index}].id"
-                             value="${questionnairesFrequencies.id}"> <span
-                            class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<input id="time${frequeincesVar.index}" type="text"
-                                                   name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
-                                                   required
-                                                   class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                   placeholder="Time" onclick='timep(this.id);'
-                                                   value="${questionnairesFrequencies.frequencyTime}"
-                                              ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''} />
-											<span class='help-block with-errors red-txt'></span>
-										</span> <span
-                            class="addBtnDis addbtn mr-sm align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                            onclick='addTime();'>+</span> <span
-                            class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                            onclick='removeTime(this);'></span>
+                             value="${questionnairesFrequencies.id}">
+                      <span
+                          class="form-group m-none dis-inline vertical-align-middle pr-md">
+                        <input id="time${frequeincesVar.index}" type="text"
+                               name="questionnairesFrequenciesList[${frequeincesVar.index}].frequencyTime"
+                               required
+                               class="form-control clock dailyClock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               placeholder="Time" onclick='timep(this.id);'
+                               value="${questionnairesFrequencies.frequencyTime}"
+                          ${(questionnaireBo.shortTitleDuplicate > 0)?'disabled' : ''} />
+                        <span class='help-block with-errors red-txt'></span>
+                      </span>
+                      <span
+                          class="addBtnDis addbtn mr-sm align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                          onclick='addTime();'>+
+                      </span>
+                      <span
+                          class="delete vertical-align-middle remBtnDis hide pl-md align-span-center ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                          onclick='removeTime(this);'></span>
                     </div>
                   </c:forEach>
                 </c:if>
@@ -825,9 +905,9 @@
         </form:form>
         <!-- Weekly Section-->
         <form:form
-                action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
-                name="weeklyFormId" id="weeklyFormId" method="post" role="form"
-                data-toggle="validator">
+            action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+            name="weeklyFormId" id="weeklyFormId" method="post" role="form"
+            data-toggle="validator">
           <input type="hidden" name="frequency" id="weeklyfrequencyId">
           <input type="hidden" name="previousFrequency"
                  id="previousFrequency" value="${questionnaireBo.frequency}">
@@ -841,173 +921,209 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="week all mt-lg dis-none">
             <div id="weekDaysId" class="weeklyCls">
-							<span class="gray-xs-f">Day/Time (of the week) <span
-                                    class="requiredStar">*</span>
-								<span
-                                        class="ml-xs sprites_v3 filled-tooltip"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        title="All date/time selections are based on server timezone.">
-</span>
-								<br/> <span
-                                      class=" form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class=""> <select id="startDateWeekly"
-                                                            class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                                            name="dayOfTheWeek" required>
-											<option value=''>Select</option>
-											<option value='Sunday'
-                                              ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday</option>
-											<option value='Monday'
-                                              ${questionnaireBo.dayOfTheWeek eq 'Monday' ?'selected':''}>Monday</option>
-											<option value='Tuesday'
-                                              ${questionnaireBo.dayOfTheWeek eq 'Tuesday' ?'selected':''}>Tuesday</option>
-											<option value='Wednesday'
-                                              ${questionnaireBo.dayOfTheWeek eq 'Wednesday' ?'selected':''}>Wednesday</option>
-											<option value='Thursday'
-                                              ${questionnaireBo.dayOfTheWeek eq 'Thursday' ?'selected':''}>Thursday</option>
-											<option value='Friday'
-                                              ${questionnaireBo.dayOfTheWeek eq 'Friday' ?'selected':''}>Friday
-											</option>
-											<option value='Saturday'
-                                              ${questionnaireBo.dayOfTheWeek eq 'Saturday' ?'selected':''}>Saturday</option>
-									</select> <span class='help-block with-errors red-txt'></span>
-								</span>
-							</span>
-							</span> <span
-                    class="form-group m-none dis-inline vertical-align-middle pr-md">
-								<input id="selectWeeklyTime" type="text"
-                                       class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
-                                       required onclick="timep(this.id)" placeholder="Time"
-                                       name="questionnairesFrequenciesBo.frequencyTime"
-                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
-								<span class='help-block with-errors red-txt'></span>
-							</span>
+              <span class="gray-xs-f">Day/Time (of the week)
+                <span
+                    class="requiredStar">*
+                </span>
+                <span
+                    class="ml-xs sprites_v3 filled-tooltip"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="All date/time selections are based on server timezone.">
+                </span>
+                <br/>
+                <span
+                    class=" form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class=""><select id="startDateWeekly"
+                                         class="form-control mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
+                                         name="dayOfTheWeek" required>
+                    <option value=''>Select</option>
+                    <option value='Sunday'
+                      ${questionnaireBo.dayOfTheWeek eq 'Sunday' ? 'selected':''}>Sunday
+                    </option>
+                    <option value='Monday'
+                      ${questionnaireBo.dayOfTheWeek eq 'Monday' ?'selected':''}>Monday
+                    </option>
+                    <option value='Tuesday'
+                      ${questionnaireBo.dayOfTheWeek eq 'Tuesday' ?'selected':''}>Tuesday
+                    </option>
+                    <option value='Wednesday'
+                      ${questionnaireBo.dayOfTheWeek eq 'Wednesday' ?'selected':''}>Wednesday
+                    </option>
+                    <option value='Thursday'
+                      ${questionnaireBo.dayOfTheWeek eq 'Thursday' ?'selected':''}>Thursday
+                    </option>
+                    <option value='Friday'
+                      ${questionnaireBo.dayOfTheWeek eq 'Friday' ?'selected':''}>Friday
+                    </option>
+                    <option value='Saturday'
+                      ${questionnaireBo.dayOfTheWeek eq 'Saturday' ?'selected':''}>Saturday
+                    </option>
+                  </select>
+                    <span class='help-block with-errors red-txt'></span>
+                  </span>
+                </span>
+              </span>
+              <span
+                  class="form-group m-none dis-inline vertical-align-middle pr-md">
+                <input id="selectWeeklyTime" type="text"
+                       class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''} weeklyCls"
+                       required onclick="timep(this.id)" placeholder="Time"
+                       name="questionnairesFrequenciesBo.frequencyTime"
+                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
+                <span class='help-block with-errors red-txt'></span>
+              </span>
             </div>
             <div class="mt-md">
               <div class="weeklyStartCls col-md-3 pl-none">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date <span
-                                            class="requiredStar">*</span>
-										<span
-                                                class="ml-xs sprites_v3 filled-tooltip"
-                                                data-toggle="tooltip"
-                                                data-placement="bottom"
-                                                title="All date/time selections are based on server timezone.">
-</span>
-										</span><br/> <input
-                                        id="startWeeklyDate" type="text"
-                                        class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                        required name="studyLifetimeStart" placeholder="Choose Date"
-                                        value="${questionnaireBo.studyLifetimeStart}"
-                                        readonly="readonly"/> <span
-                                        class='help-block with-errors red-txt'></span>
-								</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class="gray-xs-f">Start date
+                    <span
+                        class="requiredStar">*
+                    </span>
+                    <span
+                        class="ml-xs sprites_v3 filled-tooltip"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="All date/time selections are based on server timezone.">
+                    </span>
+                  </span>
+                  <br/> <input
+                    id="startWeeklyDate" type="text"
+                    class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                    required name="studyLifetimeStart" placeholder="Choose Date"
+                    value="${questionnaireBo.studyLifetimeStart}"
+                    readonly="readonly"/>
+                  <span
+                      class='help-block with-errors red-txt'></span>
+                </span>
               </div>
               <!-- Anchordate start-->
               <div class="weeklyanchorDiv col-md-12 pl-none"
                    style="display: none;">
                 <div class=" resetDate dis_inlinetop p-none">
                   <div>
-										<span
-                                                class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<span class="gray-xs-f">Start date <span
-                                                    class="requiredStar">*</span>
-												<span
-                                                        class="ml-xs sprites_v3 filled-tooltip"
-                                                        data-toggle="tooltip"
-                                                        data-placement="bottom"
-                                                        title="All date/time selections are based on server timezone.">
-</span>
-												</span><br/> <span class="pr-md">Anchor
-												Date</span> <span> <select
-                                                class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                title="Select" name="questionnairesFrequenciesBo.xDaysSign"
-                                                id="weeklyXSign">
-													<option value="0"
-                                                      ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+</option>
-													<option value="1"
-                                                      ${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-</option>
-											</select>
-										</span> <span
-                                                class="form-group m-none dis-inline vertical-align-middle">
-												<input id="weeklyxdaysId" type="text"
-                                                       class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                       placeholder="X"
-                                                       name="questionnairesFrequenciesBo.timePeriodFromDays"
-                                                       value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
-                                                       maxlength="3" pattern="[0-9]+"
-                                                       data-pattern-error="Please enter valid number."/> <span
-                                                class="help-block with-errors red-txt"></span>
-										</span> <span class="mb-sm pr-md"> <span
-                                                class="light-txt opacity06"> days</span>
-										</span>
-										</span>
+                    <span
+                        class="form-group m-none dis-inline vertical-align-middle pr-md">
+                      <span class="gray-xs-f">Start date
+                        <span
+                            class="requiredStar">*
+                        </span>
+                        <span
+                            class="ml-xs sprites_v3 filled-tooltip"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="All date/time selections are based on server timezone.">
+                        </span>
+                      </span>
+                      <br/>
+                      <span class="pr-md">Anchor
+                        Date
+                      </span>
+                      <span><select
+                          class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                          title="Select" name="questionnairesFrequenciesBo.xDaysSign"
+                          id="weeklyXSign">
+                        <option value="0"
+                          ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+
+                        </option>
+                        <option value="1"
+                          ${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-
+                        </option>
+                      </select>
+                      </span>
+                      <span
+                          class="form-group m-none dis-inline vertical-align-middle">
+                        <input id="weeklyxdaysId" type="text"
+                               class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               placeholder="X"
+                               name="questionnairesFrequenciesBo.timePeriodFromDays"
+                               value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
+                               maxlength="3" pattern="[0-9]+"
+                               data-pattern-error="Please enter valid number."/>
+                        <span
+                            class="help-block with-errors red-txt"></span>
+                      </span>
+                      <span class="mb-sm pr-md">
+                        <span
+                            class="light-txt opacity06"> days
+                        </span>
+                      </span>
+                    </span>
                   </div>
                 </div>
                 <div class="dis_inlinetop p-none">
-									<span class="gray-xs-f">Time <span class="requiredStar">*</span>
-									<span
-                                            class="ml-xs sprites_v3 filled-tooltip"
-                                            data-toggle="tooltip"
-                                            data-placement="bottom"
-                                            title="All date/time selections are based on server timezone.">
-</span>
-									<br/></span>
+                  <span class="gray-xs-f">Time
+                    <span class="requiredStar">*</span>
+                    <span
+                        class="ml-xs sprites_v3 filled-tooltip"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="All date/time selections are based on server timezone.">
+                    </span>
+                    <br/></span>
                   <span
-                          class="form-group m-none dis-inline vertical-align-middle pr-md">
-										<input id="selectWeeklyTimeAnchor" type="text"
-                                               class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                               required onclick="timep(this.id)" placeholder="Time"
-                                               name="questionnairesFrequenciesBo.frequencyTime"
-                                               value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
-										<span class='help-block with-errors red-txt'></span>
-									</span>
+                      class="form-group m-none dis-inline vertical-align-middle pr-md">
+                    <input id="selectWeeklyTimeAnchor" type="text"
+                           class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                           required onclick="timep(this.id)" placeholder="Time"
+                           name="questionnairesFrequenciesBo.frequencyTime"
+                           value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
+                    <span class='help-block with-errors red-txt'></span>
+                  </span>
                 </div>
 
                 <div class="dis_inlinetop">
-									<span
-                                            class="form-group m-none dis-inline vertical-align-middle pr-md">
-										<span class="gray-xs-f">No. of times to repeat the
-											questionnaire <span class="requiredStar">*</span>
-									</span><br/> <input id="weeksAnchor" type="text"
-                                                        class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                        name="repeatQuestionnaire" placeholder="No of Times"
-                                                        value="${questionnaireBo.repeatQuestionnaire}" required
-                                                        onkeypress="return isNumber(event, this)"
-                                                        pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                                        data-pattern-error="Please enter valid number." maxlength="3"/>
-										<span class='help-block with-errors red-txt'></span>
-									</span>
+                  <span
+                      class="form-group m-none dis-inline vertical-align-middle pr-md">
+                    <span class="gray-xs-f">No. of times to repeat the
+                      questionnaire
+                      <span class="requiredStar">*</span>
+                    </span>
+                    <br/> <input id="weeksAnchor" type="text"
+                                 class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                                 name="repeatQuestionnaire" placeholder="No of Times"
+                                 value="${questionnaireBo.repeatQuestionnaire}" required
+                                 onkeypress="return isNumber(event, this)"
+                                 pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
+                                 data-pattern-error="Please enter valid number."
+                                 maxlength="3"/>
+                    <span class='help-block with-errors red-txt'></span>
+                  </span>
                 </div>
 
               </div>
 
               <!-- Anchordate End -->
               <div class="col-md-5 p-none weeklyRegular">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">No. of times to repeat the
-										questionnaire <span class="requiredStar">*</span>
-								</span><br/> <input id="weeks" type="text"
-                                                    class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                    name="repeatQuestionnaire" placeholder="No of Times"
-                                                    value="${questionnaireBo.repeatQuestionnaire}" required
-                                                    onkeypress="return isNumber(event, this)"
-                                                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                                    data-pattern-error="Please enter valid number." maxlength="3"/>
-									<span class='help-block with-errors red-txt'></span>
-								</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class="gray-xs-f">No. of times to repeat the
+                    questionnaire
+                    <span class="requiredStar">*</span>
+                  </span>
+                  <br/> <input id="weeks" type="text"
+                               class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               name="repeatQuestionnaire" placeholder="No of Times"
+                               value="${questionnaireBo.repeatQuestionnaire}" required
+                               onkeypress="return isNumber(event, this)"
+                               pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
+                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
               </div>
               <div class="clearfix"></div>
             </div>
             <div class="mt-md">
-              <div class="gray-xs-f mb-xs">End Date <span
-                      class="ml-xs sprites_v3 filled-tooltip"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="All date/time selections are based on server timezone.">
-</span></div>
+              <div class="gray-xs-f mb-xs">End Date
+                <span
+                    class="ml-xs sprites_v3 filled-tooltip"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="All date/time selections are based on server timezone.">
+                </span>
+              </div>
               <div class="black-xs-f"
                    id="weekEndDate">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
               <input type="hidden" name="studyLifetimeEnd"
@@ -1028,9 +1144,9 @@
         </form:form>
         <!-- Monthly Section-->
         <form:form
-                action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
-                name="monthlyFormId" id="monthlyFormId" method="post" role="form"
-                data-toggle="validator">
+            action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+            name="monthlyFormId" id="monthlyFormId" method="post" role="form"
+            data-toggle="validator">
           <input type="hidden" name="frequency" id="monthlyfrequencyId"
                  value="${questionnaireBo.frequency}">
           <input type="hidden" name="previousFrequency"
@@ -1045,175 +1161,192 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="month all mt-lg dis-none">
             <div id="monthlyDateId">
-							<span class="gray-xs-f">Select Date/Time (of the month) <span
-                                    class="requiredStar">*</span>
-								<span
-                                        class="ml-xs sprites_v3 filled-tooltip"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        title="All date/time selections are based on server timezone.">
-</span>
-								</span><br/> <span
-                    class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
-								<span class=""> <input id="startDateMonthly" type="text"
-                                                       class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                       required placeholder="Choose Date"
-                                                       name="questionnairesFrequenciesBo.frequencyDate"
-                                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"/>
-									<span class='help-block with-errors red-txt'></span>
-							</span>
-							</span> <span
-                    class="form-group m-none dis-inline vertical-align-middle pr-md">
-								<input id="selectMonthlyTime" type="text"
-                                       class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                       required onclick="timep(this.id)" placeholder="Time"
-                                       name="questionnairesFrequenciesBo.frequencyTime"
-                                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
-								<span class='help-block with-errors red-txt'></span>
-							</span>
+              <span class="gray-xs-f">Select Date/Time (of the month)
+                <span
+                    class="requiredStar">*
+                </span>
+                <span
+                    class="ml-xs sprites_v3 filled-tooltip"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="All date/time selections are based on server timezone.">
+                </span>
+              </span>
+              <br/>
+              <span
+                  class="monthlyStartCls form-group m-none dis-inline vertical-align-middle pr-md">
+                <span class=""><input id="startDateMonthly" type="text"
+                                      class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                                      required placeholder="Choose Date"
+                                      name="questionnairesFrequenciesBo.frequencyDate"
+                                      value="${questionnaireBo.questionnairesFrequenciesBo.frequencyDate}"/>
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
+              </span>
+              <span
+                  class="form-group m-none dis-inline vertical-align-middle pr-md">
+                <input id="selectMonthlyTime" type="text"
+                       class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                       required onclick="timep(this.id)" placeholder="Time"
+                       name="questionnairesFrequenciesBo.frequencyTime"
+                       value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
+                <span class='help-block with-errors red-txt'></span>
+              </span>
               <div
-                      class="gray-xs-f mt-xs mb-lg italic-txt text-weight-light monthlyStartCls">If
+                  class="gray-xs-f mt-xs mb-lg italic-txt text-weight-light monthlyStartCls">If
                 the selected date is not available in a month, the last day of
                 the month will be used instead
               </div>
               <div class="monthlyStartCls dis_inlinetop p-none">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date <span
-                                            class="requiredStar">*</span>
-										<span
-                                                class="ml-xs sprites_v3 filled-tooltip"
-                                                data-toggle="tooltip"
-                                                data-placement="bottom"
-                                                title="All date/time selections are based on server timezone.">
-</span>
-										</span><br/> <input id="pickStartDate"
-                                                            type="text"
-                                                            class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                            placeholder="Choose Start Date" required
-                                                            name="studyLifetimeStart"
-                                                            value="${questionnaireBo.studyLifetimeStart}"
-                                                            readonly="readonly"/> <span
-                                        class='help-block with-errors red-txt'></span>
-								</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class="gray-xs-f">Start date
+                    <span
+                        class="requiredStar">*
+                    </span>
+                    <span
+                        class="ml-xs sprites_v3 filled-tooltip"
+                        data-toggle="tooltip"
+                        data-placement="bottom"
+                        title="All date/time selections are based on server timezone.">
+                    </span>
+                  </span>
+                  <br/> <input id="pickStartDate"
+                               type="text"
+                               class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               placeholder="Choose Start Date" required
+                               name="studyLifetimeStart"
+                               value="${questionnaireBo.studyLifetimeStart}"
+                               readonly="readonly"/>
+                  <span
+                      class='help-block with-errors red-txt'></span>
+                </span>
               </div>
               <div class="dis_inlinetop p-none monthlyRegular">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">No. of times to repeat the
-										questionnaire <span class="requiredStar">*</span>
-								</span><br/> <input id="months" type="text"
-                                                    class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                    name="repeatQuestionnaire" placeholder="No of Times" required
-                                                    value="${questionnaireBo.repeatQuestionnaire}"
-                                                    onkeypress="return isNumber(event, this)"
-                                                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                                    data-pattern-error="Please enter valid number." maxlength="3"/>
-									<span class='help-block with-errors red-txt'></span>
-								</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class="gray-xs-f">No. of times to repeat the
+                    questionnaire
+                    <span class="requiredStar">*</span>
+                  </span>
+                  <br/> <input id="months" type="text"
+                               class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               name="repeatQuestionnaire" placeholder="No of Times" required
+                               value="${questionnaireBo.repeatQuestionnaire}"
+                               onkeypress="return isNumber(event, this)"
+                               pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
+                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
               </div>
             </div>
             <!-- Anchordate start-->
-              <%-- <div class="monthlyStartCls dis_inlinetop p-none">
-								<span
-									class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">Start date (pick a date) <span
-										class="requiredStar">*</span></span><br /> <input id="pickStartDate"
-									type="text"
-									class="form-control mt-sm calendar ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-									placeholder="Choose Start Date" required
-									name="studyLifetimeStart"
-									value="${questionnaireBo.studyLifetimeStart}"
-									readonly="readonly" /> <span
-									class='help-block with-errors red-txt'></span>
-								</span>
-							</div> --%>
             <div class="monthlyanchorDiv" style="display: none;">
               <div class="dis_inlinetop p-none">
                 <div class=" resetDate dis_inlinetop p-none">
                   <div>
-										<span
-                                                class="form-group m-none dis-inline vertical-align-middle pr-md">
-											<span class="gray-xs-f">Start date <span
-                                                    class="requiredStar">*</span>
-												<span
-                                                        class="ml-xs sprites_v3 filled-tooltip"
-                                                        data-toggle="tooltip"
-                                                        data-placement="bottom"
-                                                        title="All date/time selections are based on server timezone.">
-</span></span><br/> <span class="pr-md">Anchor
-												Date</span> <span> <select
-                                                class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                title="Select" name="questionnairesFrequenciesBo.xDaysSign"
-                                                id="monthlyXSign">
-													<option value="0"
-                                                      ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+</option>
-													<option value="1"
-                                                      ${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-</option>
-											</select>
-										</span> <span
-                                                class="form-group m-none dis-inline vertical-align-middle">
-												<input id="monthlyxdaysId" type="text"
-                                                       class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                       placeholder="X"
-                                                       name="questionnairesFrequenciesBo.timePeriodFromDays"
-                                                       value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
-                                                       maxlength="3" pattern="[0-9]+"
-                                                       data-pattern-error="Please enter valid number."/> <span
-                                                class="help-block with-errors red-txt"></span>
-										</span> <span class="mb-sm pr-md"> <span
-                                                class="light-txt opacity06">days</span>
-										</span>
-										</span>
+                    <span
+                        class="form-group m-none dis-inline vertical-align-middle pr-md">
+                      <span class="gray-xs-f">Start date
+                        <span
+                            class="requiredStar">*
+                        </span>
+                        <span
+                            class="ml-xs sprites_v3 filled-tooltip"
+                            data-toggle="tooltip"
+                            data-placement="bottom"
+                            title="All date/time selections are based on server timezone.">
+                        </span>
+                      </span>
+                      <br/>
+                      <span class="pr-md">Anchor
+                        Date
+                      </span>
+                      <span><select
+                          class="signDropDown selectpicker sign-box ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                          title="Select" name="questionnairesFrequenciesBo.xDaysSign"
+                          id="monthlyXSign">
+                        <option value="0"
+                          ${not questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>+
+                        </option>
+                        <option value="1"
+                          ${questionnaireBo.questionnairesFrequenciesBo.xDaysSign ?'selected':''}>-
+                        </option>
+                      </select>
+                      </span>
+                      <span
+                          class="form-group m-none dis-inline vertical-align-middle">
+                        <input id="monthlyxdaysId" type="text"
+                               class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave daysMask mt-sm ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               placeholder="X"
+                               name="questionnairesFrequenciesBo.timePeriodFromDays"
+                               value="${questionnaireBo.questionnairesFrequenciesBo.timePeriodFromDays}"
+                               maxlength="3" pattern="[0-9]+"
+                               data-pattern-error="Please enter valid number."/>
+                        <span
+                            class="help-block with-errors red-txt"></span>
+                      </span>
+                      <span class="mb-sm pr-md">
+                        <span
+                            class="light-txt opacity06">days
+                        </span>
+                      </span>
+                    </span>
                   </div>
                 </div>
               </div>
 
 
               <div class="dis_inlinetop p-none">
-								<span class="gray-xs-f">Time <span class="requiredStar">*</span>
-								<span
-                                        class="ml-xs sprites_v3 filled-tooltip"
-                                        data-toggle="tooltip"
-                                        data-placement="bottom"
-                                        title="All date/time selections are based on server timezone.">
-</span>
-								</span><br/>
+                <span class="gray-xs-f">Time
+                  <span class="requiredStar">*</span>
+                  <span
+                      class="ml-xs sprites_v3 filled-tooltip"
+                      data-toggle="tooltip"
+                      data-placement="bottom"
+                      title="All date/time selections are based on server timezone.">
+                  </span>
+                </span>
+                <br/>
                 <span
-                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<input id="selectMonthlyTimeAnchor" type="text"
-                                           class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                           required onclick="timep(this.id)" placeholder="Time"
-                                           name="questionnairesFrequenciesBo.frequencyTime"
-                                           value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
-									<span class='help-block with-errors red-txt'></span>
-								</span>
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <input id="selectMonthlyTimeAnchor" type="text"
+                         class="form-control mt-sm clock ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                         required onclick="timep(this.id)" placeholder="Time"
+                         name="questionnairesFrequenciesBo.frequencyTime"
+                         value="${questionnaireBo.questionnairesFrequenciesBo.frequencyTime}"/>
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
               </div>
               <div class="dis_inlinetop">
-								<span
-                                        class="form-group m-none dis-inline vertical-align-middle pr-md">
-									<span class="gray-xs-f">No. of times to repeat the
-										questionnaire <span class="requiredStar">*</span>
-								</span><br/> <input id="monthsAnchor" type="text"
-                                                    class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
-                                                    name="repeatQuestionnaire" placeholder="No of Times" required
-                                                    value="${questionnaireBo.repeatQuestionnaire}"
-                                                    onkeypress="return isNumber(event, this)"
-                                                    pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
-                                                    data-pattern-error="Please enter valid number." maxlength="3"/>
-									<span class='help-block with-errors red-txt'></span>
-								</span>
+                <span
+                    class="form-group m-none dis-inline vertical-align-middle pr-md">
+                  <span class="gray-xs-f">No. of times to repeat the
+                    questionnaire
+                    <span class="requiredStar">*</span>
+                  </span>
+                  <br/> <input id="monthsAnchor" type="text"
+                               class="form-control mt-sm numChk ${(questionnaireBo.shortTitleDuplicate > 0)?'cursor-none' : ''}"
+                               name="repeatQuestionnaire" placeholder="No of Times" required
+                               value="${questionnaireBo.repeatQuestionnaire}"
+                               onkeypress="return isNumber(event, this)"
+                               pattern="^(0{0,2}[1-9]|0?[1-9][0-9]|[1-9][0-9][0-9])$"
+                               data-pattern-error="Please enter valid number." maxlength="3"/>
+                  <span class='help-block with-errors red-txt'></span>
+                </span>
               </div>
             </div>
             <!-- Anchordate End -->
 
             <div class="mt-md col-md-12 p-none">
-              <div class="gray-xs-f mb-xs">End Date <span
-                      class="ml-xs sprites_v3 filled-tooltip"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="All date/time selections are based on server timezone.">
-</span></div>
+              <div class="gray-xs-f mb-xs">End Date
+                <span
+                    class="ml-xs sprites_v3 filled-tooltip"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title="All date/time selections are based on server timezone.">
+                </span>
+              </div>
               <div class="black-xs-f"
                    id="monthEndDate">${not empty questionnaireBo.studyLifetimeEnd ? questionnaireBo.studyLifetimeEnd :'NA'}</div>
               <input type="hidden" name="studyLifetimeEnd"
@@ -1234,9 +1367,9 @@
         </form:form>
         <!-- Manually Section-->
         <form:form
-                action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
-                name="customFormId" id="customFormId" method="post" role="form"
-                data-toggle="validator">
+            action="/studybuilder/adminStudies/saveorUpdateQuestionnaireSchedule.do?_S=${param._S}"
+            name="customFormId" id="customFormId" method="post" role="form"
+            data-toggle="validator">
           <input type="hidden" name="id" id="id"
                  value="${questionnaireBo.id}">
           <input type="hidden" name="studyId" id="studyId"
@@ -1248,52 +1381,62 @@
           <input type="hidden" name="type" id="type" value="schedule">
           <div class="manually all mt-lg dis-none">
             <div class="gray-xs-f mb-sm">
-              Select time period <span class="requiredStar">*</span>
+              Select time period
+              <span class="requiredStar">*</span>
               <span
-                      class="ml-xs sprites_v3 filled-tooltip"
-                      data-toggle="tooltip"
-                      data-placement="bottom"
-                      title="All date/time selections are based on server timezone.">
-</span>
+                  class="ml-xs sprites_v3 filled-tooltip"
+                  data-toggle="tooltip"
+                  data-placement="bottom"
+                  title="All date/time selections are based on server timezone.">
+              </span>
             </div>
             <div class="manuallyContainer">
               <c:if
-                      test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
+                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
                 <div class="manually-option mb-md form-group" id="0">
                   <input type="hidden"
                          name="questionnaireCustomScheduleBo[0].questionnairesId"
-                         id="questionnairesId" value="${questionnaireBo.id}"> <span
-                        class="form-group  dis-inline vertical-align-middle pr-md">
-										<input id="StartDate0" type="text" count='0'
-                                               class="form-control calendar customCalnder cusStrDate"
-                                               name="questionnaireCustomScheduleBo[0].frequencyStartDate"
-                                               value="" placeholder="Start Date"
-                                               onclick='customStartDate(this.id,0);' required/> <span
+                         id="questionnairesId" value="${questionnaireBo.id}">
+                  <span
+                      class="form-group  dis-inline vertical-align-middle pr-md">
+                    <input id="StartDate0" type="text" count='0'
+                           class="form-control calendar customCalnder cusStrDate"
+                           name="questionnaireCustomScheduleBo[0].frequencyStartDate"
+                           value="" placeholder="Start Date"
+                           onclick='customStartDate(this.id,0);' required/>
+                    <span
                         class='help-block with-errors red-txt'></span>
-									</span> <span class="gray-xs-f mb-sm pr-md align-span-center">
-										to </span> <span
-                        class="form-group dis-inline vertical-align-middle pr-md">
-										<input id="EndDate0" type="text" count='0'
-                                               class="form-control calendar customCalnder cusEndDate"
-                                               name="questionnaireCustomScheduleBo[0].frequencyEndDate"
-                                               placeholder="End Date" onclick='customEndDate(this.id,0);'
-                                               required/> <span class='help-block with-errors red-txt'></span>
-									</span> <span
-                        class="form-group  dis-inline vertical-align-middle pr-md">
-										<input id="customTime0" type="text" count='0'
-                                               class="form-control clock cusTime"
-                                               name="questionnaireCustomScheduleBo[0].frequencyTime"
-                                               placeholder="Time" onclick='timep(this.id);' disabled required/>
-										<span class='help-block with-errors red-txt'></span>
-									</span> <span class="addbtn addBtnDis align-span-center mr-md"
-                                                  onclick="addDate();">+</span>
+                  </span>
+                  <span class="gray-xs-f mb-sm pr-md align-span-center">
+                    to
+                  </span>
+                  <span
+                      class="form-group dis-inline vertical-align-middle pr-md">
+                    <input id="EndDate0" type="text" count='0'
+                           class="form-control calendar customCalnder cusEndDate"
+                           name="questionnaireCustomScheduleBo[0].frequencyEndDate"
+                           placeholder="End Date" onclick='customEndDate(this.id,0);'
+                           required/>
+                    <span class='help-block with-errors red-txt'></span>
+                  </span>
+                  <span
+                      class="form-group  dis-inline vertical-align-middle pr-md">
+                    <input id="customTime0" type="text" count='0'
+                           class="form-control clock cusTime"
+                           name="questionnaireCustomScheduleBo[0].frequencyTime"
+                           placeholder="Time" onclick='timep(this.id);' disabled required/>
+                    <span class='help-block with-errors red-txt'></span>
+                  </span>
+                  <span class="addbtn addBtnDis align-span-center mr-md"
+                        onclick="addDate();">+
+                  </span>
                 </div>
               </c:if>
               <c:if
-                      test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) gt 0}">
+                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) gt 0}">
                 <c:forEach
-                        items="${questionnaireBo.questionnaireCustomScheduleBo}"
-                        var="questionnaireCustomScheduleBo" varStatus="customVar">
+                    items="${questionnaireBo.questionnaireCustomScheduleBo}"
+                    var="questionnaireCustomScheduleBo" varStatus="customVar">
                   <div class="manually-option mb-md form-group"
                        id="${customVar.index}">
                     <input type="hidden"
@@ -1303,45 +1446,54 @@
                            name="activeTaskCustomScheduleBo[${customVar.index}].used"
                            id="isUsed${customVar.index}"
                            value="${questionnaireCustomScheduleBo.used}"> <input
-                          type="hidden"
-                          name="questionnaireCustomScheduleBo[${customVar.index}].questionnairesId"
-                          id="questionnairesId"
-                          value="${questionnaireCustomScheduleBo.questionnairesId}">
+                      type="hidden"
+                      name="questionnaireCustomScheduleBo[${customVar.index}].questionnairesId"
+                      id="questionnairesId"
+                      value="${questionnaireCustomScheduleBo.questionnairesId}">
                     <span
-                            class="form-group dis-inline vertical-align-middle pr-md">
-											<input id="StartDate${customVar.index}" type="text"
-                                                   count='${customVar.index}'
-                                                   class="form-control calendar cusStrDate ${questionnaireCustomScheduleBo.used?'cursor-none' : ''} "
-                                                   name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartDate"
-                                                   value="${questionnaireCustomScheduleBo.frequencyStartDate}"
-                                                   placeholder="Start Date"
-                                                   onclick='customStartDate(this.id,${customVar.index});'
-                                                   required/> <span class='help-block with-errors red-txt'></span>
-										</span> <span class="gray-xs-f mb-sm pr-md align-span-center">
-											to </span> <span
-                          class="form-group dis-inline vertical-align-middle pr-md">
-											<input id="EndDate${customVar.index}" type="text"
-                                                   count='${customVar.index}'
-                                                   class="form-control calendar cusEndDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
-                                                   name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndDate"
-                                                   value="${questionnaireCustomScheduleBo.frequencyEndDate}"
-                                                   placeholder="End Date"
-                                                   onclick='customEndDate(this.id,${customVar.index});' required/>
-											<span class='help-block with-errors red-txt'></span>
-										</span> <span
-                          class="form-group  dis-inline vertical-align-middle pr-md">
-											<input id="customTime${customVar.index}" type="text"
-                                                   count='${customVar.index}'
-                                                   class="form-control clock cusTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
-                                                   name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
-                                                   value="${questionnaireCustomScheduleBo.frequencyTime}"
-                                                   placeholder="Time" onclick='timep(this.id);' required/> <span
+                        class="form-group dis-inline vertical-align-middle pr-md">
+                      <input id="StartDate${customVar.index}" type="text"
+                             count='${customVar.index}'
+                             class="form-control calendar cusStrDate ${questionnaireCustomScheduleBo.used?'cursor-none' : ''} "
+                             name="questionnaireCustomScheduleBo[${customVar.index}].frequencyStartDate"
+                             value="${questionnaireCustomScheduleBo.frequencyStartDate}"
+                             placeholder="Start Date"
+                             onclick='customStartDate(this.id,${customVar.index});'
+                             required/>
+                      <span class='help-block with-errors red-txt'></span>
+                    </span>
+                    <span class="gray-xs-f mb-sm pr-md align-span-center">
+                      to
+                    </span>
+                    <span
+                        class="form-group dis-inline vertical-align-middle pr-md">
+                      <input id="EndDate${customVar.index}" type="text"
+                             count='${customVar.index}'
+                             class="form-control calendar cusEndDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
+                             name="questionnaireCustomScheduleBo[${customVar.index}].frequencyEndDate"
+                             value="${questionnaireCustomScheduleBo.frequencyEndDate}"
+                             placeholder="End Date"
+                             onclick='customEndDate(this.id,${customVar.index});' required/>
+                      <span class='help-block with-errors red-txt'></span>
+                    </span>
+                    <span
+                        class="form-group  dis-inline vertical-align-middle pr-md">
+                      <input id="customTime${customVar.index}" type="text"
+                             count='${customVar.index}'
+                             class="form-control clock cusTime ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
+                             name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
+                             value="${questionnaireCustomScheduleBo.frequencyTime}"
+                             placeholder="Time" onclick='timep(this.id);' required/>
+                      <span
                           class='help-block with-errors red-txt'></span>
-										</span> <span
-                          class="addbtn addBtnDis align-span-center mr-md cursor-display"
-                          onclick="addDate();">+</span> <span id="delete"
-                                                              class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
-                                                              onclick="removeDate(this);"></span>
+                    </span>
+                    <span
+                        class="addbtn addBtnDis align-span-center mr-md cursor-display"
+                        onclick="addDate();">+
+                    </span>
+                    <span id="delete"
+                          class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
+                          onclick="removeDate(this);"></span>
                   </div>
                 </c:forEach>
               </c:if>
@@ -1349,76 +1501,100 @@
             <div class="manuallyAnchorContainer" style="display: none;">
               <!-- anchordate Start -->
               <c:if
-                      test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
+                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) eq 0}">
                 <div class="manually-anchor-option mb-md form-group" id="0">
                   <input type="hidden"
                          name="questionnaireCustomScheduleBo[0].questionnairesId"
-                         id="questionnairesId" value="${questionnaireBo.id}"> <span
-                        class="mb-sm pr-md"> <span class="light-txt opacity06">
-											Anchor Date </span>
-									</span> <span> <select
-                        class="signDropDown selectpicker sign-box selectXSign"
-                        count='0' title="Select"
-                        name="questionnaireCustomScheduleBo[0].xDaysSign" id="xSign0">
-											<option value="0"
-                                              ${not questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>+</option>
-											<option value="1"
-                                              ${questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>-</option>
-									</select>
-									</span> <span
-                        class="form-group m-none dis-inline vertical-align-middle">
-										<input id="xdays0" type="text"
-                                               class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate"
-                                               count='0' placeholder="X"
-                                               name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
-                                               value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                                               maxlength="3" required pattern="[0-9]+"
-                                               data-pattern-error="Please enter valid number."/> <span
+                         id="questionnairesId" value="${questionnaireBo.id}">
+                  <span
+                      class="mb-sm pr-md">
+                    <span class="light-txt opacity06">
+                      Anchor Date
+                    </span>
+                  </span>
+                  <span><select
+                      class="signDropDown selectpicker sign-box selectXSign"
+                      count='0' title="Select"
+                      name="questionnaireCustomScheduleBo[0].xDaysSign" id="xSign0">
+                    <option value="0"
+                      ${not questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>+
+                    </option>
+                    <option value="1"
+                      ${questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>-
+                    </option>
+                  </select>
+                  </span>
+                  <span
+                      class="form-group m-none dis-inline vertical-align-middle">
+                    <input id="xdays0" type="text"
+                           class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate"
+                           count='0' placeholder="X"
+                           name="questionnaireCustomScheduleBo[0].timePeriodFromDays"
+                           value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
+                           maxlength="3" required pattern="[0-9]+"
+                           data-pattern-error="Please enter valid number."/>
+                    <span
                         class="help-block with-errors red-txt"></span>
-									</span> <span class="mb-sm pr-md"> <span
-                        class="light-txt opacity06"> days <span
-                        style="padding-right: 5px; padding-left: 5px">to </span>
-											Anchor Date
-									</span>
-									</span> <span> <select
-                        class="signDropDown selectpicker sign-box selectYSign"
-                        count='0' title="Select"
-                        name="questionnaireCustomScheduleBo[0].yDaysSign" id="ySign0">
-											<option value="0"
-                                              ${not questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>+</option>
-											<option value="1"
-                                              ${questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>-</option>
-									</select>
-									</span> <span
-                        class="form-group m-none dis-inline vertical-align-middle">
-										<input id="ydays0" type="text"
-                                               class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate"
-                                               count='0' placeholder="Y"
-                                               name="questionnaireCustomScheduleBo[0].timePeriodToDays"
-                                               value="${questionnaireCustomScheduleBo.timePeriodToDays}"
-                                               maxlength="3" pattern="[0-9]+"
-                                               data-pattern-error="Please enter valid number." required/> <span
+                  </span>
+                  <span class="mb-sm pr-md">
+                    <span
+                        class="light-txt opacity06"> days
+                      <span
+                          style="padding-right: 5px; padding-left: 5px">to
+                      </span>
+                      Anchor Date
+                    </span>
+                  </span>
+                  <span><select
+                      class="signDropDown selectpicker sign-box selectYSign"
+                      count='0' title="Select"
+                      name="questionnaireCustomScheduleBo[0].yDaysSign" id="ySign0">
+                    <option value="0"
+                      ${not questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>+
+                    </option>
+                    <option value="1"
+                      ${questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>-
+                    </option>
+                  </select>
+                  </span>
+                  <span
+                      class="form-group m-none dis-inline vertical-align-middle">
+                    <input id="ydays0" type="text"
+                           class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate"
+                           count='0' placeholder="Y"
+                           name="questionnaireCustomScheduleBo[0].timePeriodToDays"
+                           value="${questionnaireCustomScheduleBo.timePeriodToDays}"
+                           maxlength="3" pattern="[0-9]+"
+                           data-pattern-error="Please enter valid number." required/>
+                    <span
                         class="help-block with-errors red-txt"></span>
-									</span> <span class="mb-sm pr-md"> <span
-                        class="light-txt opacity06"> days </span>
-									</span> <span
-                        class="form-group  dis-inline vertical-align-middle pr-md"
-                        style="margin-bottom: -13px"> <input id="manualTime0"
-                                                             type="text" class="form-control clock"
-                                                             name="questionnaireCustomScheduleBo[0].frequencyTime"
-                                                             value="${questionnaireCustomScheduleBo.frequencyTime}"
-                                                             placeholder="Time" required/> <span
+                  </span>
+                  <span class="mb-sm pr-md">
+                    <span
+                        class="light-txt opacity06"> days
+                    </span>
+                  </span>
+                  <span
+                      class="form-group  dis-inline vertical-align-middle pr-md"
+                      style="margin-bottom: -13px"><input id="manualTime0"
+                                                          type="text" class="form-control clock"
+                                                          name="questionnaireCustomScheduleBo[0].frequencyTime"
+                                                          value="${questionnaireCustomScheduleBo.frequencyTime}"
+                                                          placeholder="Time" required/>
+                    <span
                         class='help-block with-errors red-txt'></span>
-									</span> <span id="addbtn0"
-                                                  class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
-                                                  onclick="addDateAnchor();">+</span>
+                  </span>
+                  <span id="addbtn0"
+                        class="addbtn addBtnDis dis-inline vertical-align-middle mr-sm"
+                        onclick="addDateAnchor();">+
+                  </span>
                 </div>
               </c:if>
               <c:if
-                      test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) gt 0}">
+                  test="${fn:length(questionnaireBo.questionnaireCustomScheduleBo) gt 0}">
                 <c:forEach
-                        items="${questionnaireBo.questionnaireCustomScheduleBo}"
-                        var="questionnaireCustomScheduleBo" varStatus="customVar">
+                    items="${questionnaireBo.questionnaireCustomScheduleBo}"
+                    var="questionnaireCustomScheduleBo" varStatus="customVar">
                   <div class="manually-anchor-option mb-md form-group"
                        id="${customVar.index}">
                     <input type="hidden"
@@ -1428,74 +1604,97 @@
                            name="activeTaskCustomScheduleBo[${customVar.index}].used"
                            id="isUsed${customVar.index}"
                            value="${questionnaireCustomScheduleBo.used}"> <input
-                          type="hidden"
-                          name="questionnaireCustomScheduleBo[${customVar.index}].questionnairesId"
-                          id="questionnairesId"
-                          value="${questionnaireCustomScheduleBo.questionnairesId}">
-                    <span class="mb-sm pr-md"> <span
-                            class="light-txt opacity06"> Anchor Date </span>
-										</span> <span> <select
-                          class="signDropDown selectpicker sign-box ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
-                          count='${customVar.index}' title="Select"
-                          name="questionnaireCustomScheduleBo[${customVar.index}].xDaysSign"
-                          id="xSign${customVar.index}">
-												<option value="0"
-                                                  ${not questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>+</option>
-												<option value="1"
-                                                  ${questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>-</option>
-										</select>
-										</span> <span
-                          class="form-group m-none dis-inline vertical-align-middle">
-											<input id="xdays${customVar.index}" type="text"
-                                                   class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
-                                                   count='${customVar.index}' placeholder="X"
-                                                   name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
-                                                   value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
-                                                   maxlength="3" required pattern="[0-9]+"
-                                                   data-pattern-error="Please enter valid number."/> <span
+                      type="hidden"
+                      name="questionnaireCustomScheduleBo[${customVar.index}].questionnairesId"
+                      id="questionnairesId"
+                      value="${questionnaireCustomScheduleBo.questionnairesId}">
+                    <span class="mb-sm pr-md">
+                      <span
+                          class="light-txt opacity06"> Anchor Date
+                      </span>
+                    </span>
+                    <span><select
+                        class="signDropDown selectpicker sign-box ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
+                        count='${customVar.index}' title="Select"
+                        name="questionnaireCustomScheduleBo[${customVar.index}].xDaysSign"
+                        id="xSign${customVar.index}">
+                      <option value="0"
+                        ${not questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>+
+                      </option>
+                      <option value="1"
+                        ${questionnaireCustomScheduleBo.xDaysSign ?'selected':''}>-
+                      </option>
+                    </select>
+                    </span>
+                    <span
+                        class="form-group m-none dis-inline vertical-align-middle">
+                      <input id="xdays${customVar.index}" type="text"
+                             class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
+                             count='${customVar.index}' placeholder="X"
+                             name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodFromDays"
+                             value="${questionnaireCustomScheduleBo.timePeriodFromDays}"
+                             maxlength="3" required pattern="[0-9]+"
+                             data-pattern-error="Please enter valid number."/>
+                      <span
                           class="help-block with-errors red-txt"></span>
-										</span> <span class="mb-sm pr-md"> <span
-                          class="light-txt opacity06"> days <span
-                          style="padding-right: 5px; padding-left: 5px">to </span>
-												Anchor Date
-										</span>
-										</span> <span> <select
-                          class="signDropDown selectpicker sign-box selectYSign ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
-                          count='${customVar.index}' title="Select"
-                          name="questionnaireCustomScheduleBo[${customVar.index}].yDaysSign"
-                          id="ySign${customVar.index}">
-												<option value="0"
-                                                  ${not questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>+</option>
-												<option value="1"
-                                                  ${questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>-</option>
-										</select>
-										</span> <span
-                          class="form-group m-none dis-inline vertical-align-middle">
-											<input id="ydays${customVar.index}" type="text"
-                                                   class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
-                                                   count='${customVar.index}' placeholder="Y"
-                                                   name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodToDays"
-                                                   value="${questionnaireCustomScheduleBo.timePeriodToDays}"
-                                                   maxlength="3" pattern="[0-9]+"
-                                                   data-pattern-error="Please enter valid number." required/>
-											<span class="help-block with-errors red-txt"></span>
-										</span> <span class="mb-sm pr-md"> <span
-                          class="light-txt opacity06"> days </span>
-										</span> <span
-                          class="form-group  dis-inline vertical-align-middle pr-md"
-                          style="margin-bottom: -13px"> <input
-                          id="manualTime${customVar.index}" type="text"
-                          class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
-                          name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
-                          value="${questionnaireCustomScheduleBo.frequencyTime}"
-                          placeholder="Time" required/> <span
+                    </span>
+                    <span class="mb-sm pr-md">
+                      <span
+                          class="light-txt opacity06"> days
+                        <span
+                            style="padding-right: 5px; padding-left: 5px">to
+                        </span>
+                        Anchor Date
+                      </span>
+                    </span>
+                    <span><select
+                        class="signDropDown selectpicker sign-box selectYSign ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
+                        count='${customVar.index}' title="Select"
+                        name="questionnaireCustomScheduleBo[${customVar.index}].yDaysSign"
+                        id="ySign${customVar.index}">
+                      <option value="0"
+                        ${not questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>+
+                      </option>
+                      <option value="1"
+                        ${questionnaireCustomScheduleBo.yDaysSign ?'selected':''}>-
+                      </option>
+                    </select>
+                    </span>
+                    <span
+                        class="form-group m-none dis-inline vertical-align-middle">
+                      <input id="ydays${customVar.index}" type="text"
+                             class="form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
+                             count='${customVar.index}' placeholder="Y"
+                             name="questionnaireCustomScheduleBo[${customVar.index}].timePeriodToDays"
+                             value="${questionnaireCustomScheduleBo.timePeriodToDays}"
+                             maxlength="3" pattern="[0-9]+"
+                             data-pattern-error="Please enter valid number." required/>
+                      <span class="help-block with-errors red-txt"></span>
+                    </span>
+                    <span class="mb-sm pr-md">
+                      <span
+                          class="light-txt opacity06"> days
+                      </span>
+                    </span>
+                    <span
+                        class="form-group  dis-inline vertical-align-middle pr-md"
+                        style="margin-bottom: -13px"><input
+                        id="manualTime${customVar.index}" type="text"
+                        class="form-control clock ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''}"
+                        name="questionnaireCustomScheduleBo[${customVar.index}].frequencyTime"
+                        value="${questionnaireCustomScheduleBo.frequencyTime}"
+                        placeholder="Time" required/>
+                      <span
                           class='help-block with-errors red-txt'></span>
-										</span> <span id="addbtn${customVar.index}"
-                                                      class="addbtn addBtnDis align-span-center mr-sm cursor-display"
-                                                      onclick="addDateAnchor();">+</span> <span
-                          id="deleteAncchor${customVar.index}"
-                          class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
-                          onclick="removeDateAnchor(this);"></span>
+                    </span>
+                    <span id="addbtn${customVar.index}"
+                          class="addbtn addBtnDis align-span-center mr-sm cursor-display"
+                          onclick="addDateAnchor();">+
+                    </span>
+                    <span
+                        id="deleteAncchor${customVar.index}"
+                        class="sprites_icon delete vertical-align-middle remBtnDis hide align-span-center ${questionnaireCustomScheduleBo.used ?'cursor-none' : ''} cursor-display"
+                        onclick="removeDateAnchor(this);"></span>
                   </div>
                 </c:forEach>
               </c:if>
@@ -1604,27 +1803,6 @@
   $('.addBtnDis, .remBtnDis').addClass('dis-none');
   </c:if>
 
-  /*<c:if test="${questionnaireBo.shortTitleDuplicate <= 0}">
-$('#contentFormId input[type="text"]').prop('disabled', true);
-$('#contentFormId input[type="checkbox"]').prop('disabled', true);
-$('#schedule input[type="radio"]').prop('disabled', true);
-$('#oneTimeFormId input').prop('disabled', true);
-$('#oneTimeFormId input[type="text"]').prop('disabled', true);
-$('#dailyFormId input[type="text"]').prop('disabled', true);
-$('#weeklyFormId input[type="text"]').prop('disabled', true);
-$('#monthlyFormId input[type="text"]').prop('disabled', true);
-$('select').prop('disabled', true);
-$('#inlineRadio1,#inlineRadio2,#inlineRadio3,#inlineRadio4,#inlineRadio5').prop('disabled', true);
-$('.addBtnDis, .remBtnDis').addClass('');
-$('.cursor-display').removeClass('cursor-none');
-</c:if>*/
-
-
-  /* <c:if test="${questionnaireBo.shortTitleDuplicate > 0}">
-  $('span.addBtnDis').remove();
-  $('span.remBtnDis').remove();
-</c:if> */
-
 
   var count = 0;
   var customCount = 0;
@@ -1635,7 +1813,6 @@ $('.cursor-display').removeClass('cursor-none');
   var multiTimeVal = true;
   var table1;
   var customAnchorCount = 0;
-  //customAnchorCount = '${customCount}';
   var scheduletype = "${questionnaireBo.scheduleType}";
   if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined') {
     scheduletype = $('input[name="scheduleType"]:checked').val();
@@ -1646,6 +1823,15 @@ $('.cursor-display').removeClass('cursor-none');
     });
     $("#time0").keydown(function (event) {
       event.preventDefault();
+    });
+    $("#dailyxdaysId").change(function () {
+      dailyXday = $("#dailyxdaysId").val();
+      console.log(dailyXday)
+      if (dailyXday != '') {
+        $('#time0').prop("disabled", false);
+        $("#dailyAddTimeButton").removeClass('hide');
+      }
+
     });
     $('[data-toggle="tooltip"]').tooltip();
     $(".menuNav li.active").removeClass('active');
@@ -1670,7 +1856,6 @@ $('.cursor-display').removeClass('cursor-none');
     })
 
     $(".typeofschedule").change(function () {
-
 
       var scheduletype = $(this).attr('scheduletype');
       $('#isLaunchStudy').prop('checked', false);
@@ -1718,8 +1903,7 @@ $('.cursor-display').removeClass('cursor-none');
         if (schedule_opts == 'Monthly') {
           $("#monthEndDate").text('NA');
           $("#monthLifeTimeDate").text('-');
-          /* $("#monthlyDateId").hide();
-				   $("#monthlyDateId").find('input:text').removeAttr('required',true); */
+
           $(".monthlyanchorDiv").show();
           $(".monthlyanchorDiv").find('input:text').attr('required', true);
         }
@@ -1734,8 +1918,6 @@ $('.cursor-display').removeClass('cursor-none');
         $('.selectpicker').selectpicker('refresh');
         $('.dailyStartCls').hide();
         $('.dailyStartCls').find('input:text').removeAttr('required');
-        //$('.weeklyCls').hide();
-        //$('.weekDaysId').find('input:text,select').removeAttr('required');
         $('.weeklyStartCls').hide();
         $('.weeklyStartCls').find('input:text,select').removeAttr('required');
         $('.monthlyStartCls').hide();
@@ -1907,17 +2089,21 @@ $('.cursor-display').removeClass('cursor-none');
             if (status == "SUCCESS") {
 
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('e-box').addClass('s-box').html("Reorder done successfully");
+              $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                  "Reorder done successfully");
 
               var questionnaireSteps = jsonobject.questionnaireJsonObject;
               var isDone = jsonobject.isDone;
               reloadQuestionnaireStepData(questionnaireSteps, isDone);
-              if ($('.sixthQuestionnaires').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
-                $('.sixthQuestionnaires').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
+              if ($('.sixthQuestionnaires').find('span').hasClass(
+                  'sprites-icons-2 tick pull-right mt-xs')) {
+                $('.sixthQuestionnaires').find('span').removeClass(
+                    'sprites-icons-2 tick pull-right mt-xs');
               }
             } else {
               $('#alertMsg').show();
-              $("#alertMsg").removeClass('s-box').addClass('e-box').html("Unable to reorder questionnaire");
+              $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                  "Unable to reorder questionnaire");
 
             }
             setTimeout(hideDisplayMessage, 4000);
@@ -1930,9 +2116,7 @@ $('.cursor-display').removeClass('cursor-none');
 
       }
 
-
     });
-
 
     if (document.getElementById("doneId") != null && document.getElementById("doneId").disabled) {
       $('[data-toggle="tooltip"]').tooltip();
@@ -1960,7 +2144,8 @@ $('.cursor-display').removeClass('cursor-none');
             $("#isLaunchStudy").val('');
             $("#isStudyLifeTime").val('');
             var frequency_txt = "${questionnaireBo.frequency}";
-            if (frequency_txt != '' && frequency_txt != null && typeof frequency_txt != 'undefined') {
+            if (frequency_txt != '' && frequency_txt != null && typeof frequency_txt
+                != 'undefined') {
               $("#previousFrequency").val(frequency_txt);
             }
             $('#onetimexdaysId').val('');
@@ -2045,16 +2230,13 @@ $('.cursor-display').removeClass('cursor-none');
         if (val == 'Weekly') {
           $("#weekEndDate").text('NA');
           $("#weekLifeTimeEnd").text('-');
-          //$("#weekDaysId").hide();
-          //$("#weekDaysId").find('input:text').removeAttr('required',true);
           $(".weeklyanchorDiv").show();
           $(".weeklyanchorDiv").find('input:text').attr('required', true);
         }
         if (val == 'Monthly') {
           $("#monthEndDate").text('NA');
           $("#monthLifeTimeDate").text('-');
-          /* $("#monthlyDateId").hide();
-				 $("#monthlyDateId").find('input:text').removeAttr('required',true); */
+
           $(".monthlyanchorDiv").show();
           $(".monthlyanchorDiv").find('input:text').attr('required', true);
         }
@@ -2088,15 +2270,11 @@ $('.cursor-display').removeClass('cursor-none');
 
         $('.weeklyStartCls').show();
         $('.weeklyStartCls').find('input:text,select').attr('required', true);
-        //$("#weekDaysId").show();
-        //$("#weekDaysId").find('input:text').attr('required',true);
         $(".weeklyanchorDiv").hide();
         $(".weeklyanchorDiv").find('input:text').removeAttr('required', true);
 
         $('.monthlyStartCls').show();
         $('.monthlyStartCls').find('input:text').attr('required', true);
-        /* $("#monthlyDateId").show();
-			$("#monthlyDateId").find('input:text').attr('required',true); */
         $(".monthlyanchorDiv").hide();
         $(".monthlyanchorDiv").find('input:text').removeAttr('required', true);
 
@@ -2125,7 +2303,8 @@ $('.cursor-display').removeClass('cursor-none');
         $(".month").removeClass("dis-none");
       }
       var scheduletype = $('input[name="scheduleType"]:checked').val();
-      if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined' && scheduletype == 'AnchorDate') {
+      if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined'
+          && scheduletype == 'AnchorDate') {
         if (frequencey == 'One time') {
           $(".onetimeanchorClass").show();
           $('#chooseDate').removeAttr('required');
@@ -2219,14 +2398,17 @@ $('.cursor-display').removeClass('cursor-none');
           }
         });
         if (!chkVal) {
-          thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").html('<ul class="list-unstyled"><li>Duplicate times cannot be set.</li></ul>');
+          thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").html(
+              '<ul class="list-unstyled"><li>Duplicate times cannot be set.</li></ul>');
         } else {
-          thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").html('');
+          thisAttr.parents('.dailyTimeDiv').find('.dailyClock').parent().find(".help-block").html(
+              '');
         }
       });
       var a = 0;
       $('.dailyContainer').find('.dailyTimeDiv').each(function () {
-        if ($(this).find('.dailyClock').parent().find('.help-block.with-errors').children().length > 0) {
+        if ($(this).find('.dailyClock').parent().find('.help-block.with-errors').children().length
+            > 0) {
           a++;
         }
       });
@@ -2238,7 +2420,6 @@ $('.cursor-display').removeClass('cursor-none');
       minDate: serverDate(),
       useCurrent: false,
     });
-
 
     $('#startDate').not('.cursor-none, :disabled').datetimepicker({
       format: 'MM/DD/YYYY',
@@ -2300,10 +2481,12 @@ $('.cursor-display').removeClass('cursor-none');
         customEndDate($(this).parents('.manually-option').find('.cusEndDate').attr('id'), 0);
       }
       if (nxtDate)
-        $(this).parents('.manually-option').find('.cusEndDate').val('').data("DateTimePicker").minDate(nxtDate);
+        $(this).parents('.manually-option').find('.cusEndDate').val('').data(
+            "DateTimePicker").minDate(nxtDate);
     });
     $(document).on('dp.change change', '.cusStrDate, .cusEndDate', function () {
-      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents('.manually-option').find('.cusEndDate').val()) {
+      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents(
+          '.manually-option').find('.cusEndDate').val()) {
         $(this).parents('.manually-option').find('.cusTime').prop('disabled', false);
       } else {
         $(this).parents('.manually-option').find('.cusTime').prop('disabled', true);
@@ -2319,7 +2502,8 @@ $('.cursor-display').removeClass('cursor-none');
       $('#pickStartDate').attr("readonly", true);
       var pickStartDate = $("#pickStartDate").val();
       var months = $("#months").val();
-      if ((pickStartDate != null && pickStartDate != '' && typeof pickStartDate != 'undefined') && (months != null && months != '' && typeof months != 'undefined')) {
+      if ((pickStartDate != null && pickStartDate != '' && typeof pickStartDate != 'undefined')
+          && (months != null && months != '' && typeof months != 'undefined')) {
         var dt = new Date(pickStartDate);
         endDate = moment(moment(dt).add(Number(months), 'M')).format("MM/DD/YYYY");
         $("#studyMonthlyLifetimeEnd").val(endDate);
@@ -2337,7 +2521,8 @@ $('.cursor-display').removeClass('cursor-none');
       var weeklyDate = $("#startWeeklyDate").val();
       var weeks = $("#weeks").val();
       $('#startWeeklyDate').attr("readonly", true);
-      if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks != null && weeks != '' && typeof weeks != 'undefined')) {
+      if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
+          != null && weeks != '' && typeof weeks != 'undefined')) {
         var dt = new Date(weeklyDate);
         var weekcount = Number(weeks) * 7;
 
@@ -2375,7 +2560,8 @@ $('.cursor-display').removeClass('cursor-none');
         var weeklyDate = $("#startWeeklyDate").val();
         var weeks = $("#weeks").val();
 
-        if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks != null && weeks != '' && typeof weeks != 'undefined')) {
+        if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
+            != null && weeks != '' && typeof weeks != 'undefined')) {
           var dt = new Date(weeklyDate);
           var weekcount = Number(weeks) * 7;
 
@@ -2438,7 +2624,8 @@ $('.cursor-display').removeClass('cursor-none');
                   } else {
                     $("body").removeClass("loading");
                     $('.contentqusClass a').tab('show');
-                    showErrMsg("One or more steps has a question added to dashboard line chart. Please update the time range for these line charts based on the questionnaire schedule.");
+                    showErrMsg(
+                        "One or more steps has a question added to dashboard line chart. Please update the time range for these line charts based on the questionnaire schedule.");
                   }
                 });
 
@@ -2467,16 +2654,8 @@ $('.cursor-display').removeClass('cursor-none');
       });
     });
     $("#saveId").click(function () {
-      /* var anchorList = "
 
-      ${anchorTypeList}";
-		 var length = anchorList.length; */
       var table = $('#content').DataTable();
-      /* if(length < 3){
-			 $("#schedule2").attr('disabled', true);
-		 }else{
-			 $("#schedule2").attr('disabled', false);
-		 } */
       validateShortTitle('', function (val) {
         if (val) {
           if (isFromValid("#contentFormId")) {
@@ -2535,7 +2714,8 @@ $('.cursor-display').removeClass('cursor-none');
       var weeklyDate = $("#startWeeklyDate").val();
       var weeks = $("#weeks").val();
 
-      if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks != null && weeks != '' && typeof weeks != 'undefined')) {
+      if ((weeklyDate != null && weeklyDate != '' && typeof weeklyDate != 'undefined') && (weeks
+          != null && weeks != '' && typeof weeks != 'undefined')) {
         var dt = new Date(weeklyDate);
         var weekcount = Number(weeks) * 7;
 
@@ -2549,7 +2729,8 @@ $('.cursor-display').removeClass('cursor-none');
     $("#months").on('change', function () {
       var pickStartDate = $("#pickStartDate").val();
       var months = $("#months").val();
-      if ((pickStartDate != null && pickStartDate != '' && typeof pickStartDate != 'undefined') && (months != null && months != '' && typeof months != 'undefined')) {
+      if ((pickStartDate != null && pickStartDate != '' && typeof pickStartDate != 'undefined')
+          && (months != null && months != '' && typeof months != 'undefined')) {
         var dt = new Date(pickStartDate);
         endDate = moment(moment(dt).add(Number(months), 'M')).format("MM/DD/YYYY");
         $("#studyMonthlyLifetimeEnd").val(endDate);
@@ -2560,7 +2741,8 @@ $('.cursor-display').removeClass('cursor-none');
     $("#isLaunchStudy").change(function () {
       var scheduletype = $('input[name="scheduleType"]:checked').val();
       if (!$("#isLaunchStudy").is(':checked')) {
-        if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined' && scheduletype == 'AnchorDate') {
+        if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined'
+            && scheduletype == 'AnchorDate') {
           $("#onetimexdaysId").prop('disabled', false);
           $("#selectTime").attr("disabled", false);
           $("#selectTime").required = true;
@@ -2598,14 +2780,15 @@ $('.cursor-display').removeClass('cursor-none');
         }
       }
       resetValidation($(this).parents('form'));
-      //resetValidation($("#oneTimeFormId"));
     });
     $("#isStudyLifeTime").change(function () {
       var scheduletype = $('input[name="scheduleType"]:checked').val();
       if (!$("#isStudyLifeTime").is(':checked')) {
-        if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined' && scheduletype == 'AnchorDate') {
+        if (scheduletype != '' && scheduletype != null && typeof scheduletype != 'undefined'
+            && scheduletype == 'AnchorDate') {
           $("#onetimeydaysId").prop('disabled', false);
-          $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").html("");
+          $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(
+              ".help-block").html("");
           resetValidation($('#onetimeydaysId').parents('form'));
         } else {
           $("#chooseEndDate").attr("disabled", false);
@@ -2665,10 +2848,13 @@ $('.cursor-display').removeClass('cursor-none');
 
     $(document).on('click change dp.change', '.cusStrDate, .cusTime', function (e) {
       if ($(this).is('.cusTime') && !$(this).prop('disabled')) {
-        disablePastTime('#' + $(this).attr('id'), '#' + $(this).parents('.manually-option').find('.cusStrDate').attr('id'));
+        disablePastTime('#' + $(this).attr('id'),
+            '#' + $(this).parents('.manually-option').find('.cusStrDate').attr('id'));
       }
-      if ($(this).is('.cusStrDate') && !$(this).parents('.manually-option').find('.cusTime').prop('disabled')) {
-        disablePastTime('#' + $(this).parents('.manually-option').find('.cusTime').attr('id'), '#' + $(this).attr('id'));
+      if ($(this).is('.cusStrDate') && !$(this).parents('.manually-option').find('.cusTime').prop(
+          'disabled')) {
+        disablePastTime('#' + $(this).parents('.manually-option').find('.cusTime').attr('id'),
+            '#' + $(this).attr('id'));
       }
     });
 
@@ -2676,8 +2862,9 @@ $('.cursor-display').removeClass('cursor-none');
       var dt = $('#startDate').val();
       var date = new Date();
       var day = date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate());
-      var month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1));
-      var today = moment(serverDate()).format("MM/DD/YYYY"); // month + '/' +  day + '/' + date.getFullYear();
+      var month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth()
+          + 1));
+      var today = moment(serverDate()).format("MM/DD/YYYY");
       $('#startDate').parent().removeClass("has-danger").removeClass("has-error");
       $('#startDate').parent().find(".help-block").html("");
       $('.time-opts').each(function () {
@@ -2694,11 +2881,13 @@ $('.cursor-display').removeClass('cursor-none');
           } else {
             $(timeId).data("DateTimePicker").minDate(serverDateTime());
           }
-          if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate() < serverDateTime()) {
+          if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate()
+              < serverDateTime()) {
             $(timeId).data("DateTimePicker").date(null);
             $(timeId).data("DateTimePicker").date(serverDateTime());
             $(timeId).parent().addClass("has-danger").addClass("has-error");
-            $(timeId).parent().find(".help-block").html('<ul class="list-unstyled"><li>Time reset to current time. </li></ul>');
+            $(timeId).parent().find(".help-block").html(
+                '<ul class="list-unstyled"><li>Time reset to current time. </li></ul>');
           }
         } else {
           $(timeId).data("DateTimePicker").minDate(false);
@@ -2736,11 +2925,15 @@ $('.cursor-display').removeClass('cursor-none');
     count = count + 1;
     var newTime = "<div class='time-opts mt-md dailyTimeDiv' id=" + count + ">" +
         "  <span class='form-group m-none dis-inline vertical-align-middle pr-md'>" +
-        "  <input id='time" + count + "' type='text' required name='questionnairesFrequenciesList[" + count + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>" +
+        "  <input id='time" + count + "' type='text' required name='questionnairesFrequenciesList["
+        + count
+        + "].frequencyTime' placeholder='Time' class='form-control clock dailyClock' placeholder='00:00' onclick='timep(this.id);'/>"
+        +
         "<span class='help-block with-errors red-txt'></span>" +
         " </span>" +
         "  <span class='addBtnDis addbtn mr-sm align-span-center' onclick='addTime();'>+</span>" +
-        " <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeTime(this);'></span>" +
+        " <span class='delete vertical-align-middle remBtnDis hide pl-md align-span-center' onclick='removeTime(this);'></span>"
+        +
         "</div>";
     $(".time-opts:last").after(newTime);
     $(".time-opts").parents("form").validator("destroy");
@@ -2774,18 +2967,26 @@ $('.cursor-display').removeClass('cursor-none');
     customCount = customCount + 1;
     var newDateCon = "<div class='manually-option mb-md form-group' id='" + customCount + "'>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
-        + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount + "' required name='questionnaireCustomScheduleBo[" + customCount + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start Date' onclick='customStartDate(this.id," + customCount + ");'/>"
+        + "  <input id='StartDate" + customCount + "' type='text' count='" + customCount
+        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "].frequencyStartDate' class='form-control calendar customCalnder cusStrDate' placeholder='Start Date' onclick='customStartDate(this.id,"
+        + customCount + ");'/>"
         + "	<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='gray-xs-f mb-sm pr-md align-span-center'>"
         + "  to "
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
-        + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount + "' required name='questionnaireCustomScheduleBo[" + customCount + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End Date' onclick='customEndDate(this.id," + customCount + ");'/>"
+        + "  <input id='EndDate" + customCount + "' type='text' count='" + customCount
+        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "].frequencyEndDate' class='form-control calendar customCalnder cusEndDate' placeholder='End Date' onclick='customEndDate(this.id,"
+        + customCount + ");'/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='form-group dis-inline vertical-align-middle pr-md'>"
-        + "  <input id='customTime" + customCount + "' type='text' count='" + customCount + "' required name='questionnaireCustomScheduleBo[" + customCount + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
+        + "  <input id='customTime" + customCount + "' type='text' count='" + customCount
+        + "' required name='questionnaireCustomScheduleBo[" + customCount
+        + "].frequencyTime' class='form-control clock customTime cusTime' placeholder='Time' onclick='timep(this.id);' disabled/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "  </span>"
         + "  <span class='addbtn addBtnDis align-span-center mr-md' onclick='addDate();'>+</span>"
@@ -2842,7 +3043,8 @@ $('.cursor-display').removeClass('cursor-none');
       var endDate = $("#EndDate" + count).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $("#" + id).parent().addClass("has-danger").addClass("has-error");
-        $("#" + id).parent().find(".help-block").html('<ul class="list-unstyled"><li>Start Date and Time Should not be greater than End Date and Time</li></ul>');
+        $("#" + id).parent().find(".help-block").html(
+            '<ul class="list-unstyled"><li>Start Date and Time Should not be greater than End Date and Time</li></ul>');
       } else {
         $("#id").parent().removeClass("has-danger").removeClass("has-error");
         $("#id").parent().find(".help-block").html("");
@@ -2867,7 +3069,8 @@ $('.cursor-display').removeClass('cursor-none');
       var endDate = $('#' + id).val();
       if (startDate != '' && endDate != '' && toJSDate(startDate) > toJSDate(endDate)) {
         $('#' + id).parent().addClass("has-danger").addClass("has-error");
-        $('#' + id).parent().find(".help-block").html('<ul class="list-unstyled"><li>End Date and Time Should not be less than Start Date and Time</li></ul>');
+        $('#' + id).parent().find(".help-block").html(
+            '<ul class="list-unstyled"><li>End Date and Time Should not be less than Start Date and Time</li></ul>');
       } else {
         $('#' + id).parent().removeClass("has-danger").removeClass("has-error");
         $('#' + id).parent().find(".help-block").html("");
@@ -2901,10 +3104,8 @@ $('.cursor-display').removeClass('cursor-none');
     var scheduletype = document.querySelector('input[name="scheduleType"]:checked').value;
     branching = $('input[name="branching"]:checked').val();
 
-
     var type_text = "";
     var tab = $("#tabContainer li.active").text();
-
 
     type_text = "schedule";
     var questionnaire = new Object();
@@ -2932,7 +3133,8 @@ $('.cursor-display').removeClass('cursor-none');
     if (title_text != null && title_text != '' && typeof title_text != 'undefined') {
       questionnaire.title = title_text;
     }
-    if (previous_frequency != null && previous_frequency != '' && typeof previous_frequency != 'undefined') {
+    if (previous_frequency != null && previous_frequency != '' && typeof previous_frequency
+        != 'undefined') {
       questionnaire.previousFrequency = previous_frequency;
     } else {
       questionnaire.previousFrequency = frequency_text;
@@ -2958,7 +3160,8 @@ $('.cursor-display').removeClass('cursor-none');
       }
 
       study_lifetime_end = $("#chooseEndDate").val();
-      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end != 'undefined') {
+      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end
+          != 'undefined') {
         questionnaire.studyLifetimeEnd = study_lifetime_end;
       }
       if (frequence_id != null && frequence_id != '' && typeof frequence_id != 'undefined') {
@@ -2974,7 +3177,8 @@ $('.cursor-display').removeClass('cursor-none');
       if (isLaunch_study != null && isLaunch_study != '' && typeof isLaunch_study != 'undefined') {
         questionnaireFrequencey.isLaunchStudy = isLaunch_study;
       }
-      if (isStudy_lifeTime != null && isStudy_lifeTime != '' && typeof isStudy_lifeTime != 'undefined') {
+      if (isStudy_lifeTime != null && isStudy_lifeTime != '' && typeof isStudy_lifeTime
+          != 'undefined') {
         questionnaireFrequencey.isStudyLifeTime = isStudy_lifeTime;
       }
       if (id != null && id != '' && typeof id != 'undefined') {
@@ -2991,7 +3195,8 @@ $('.cursor-display').removeClass('cursor-none');
             xval = false;
           questionnaireFrequencey.xDaysSign = xval;
         }
-        if (onetimeXSignVal != null && onetimeXSignVal != '' && typeof onetimeXSignVal != 'undefined') {
+        if (onetimeXSignVal != null && onetimeXSignVal != '' && typeof onetimeXSignVal
+            != 'undefined') {
           questionnaireFrequencey.timePeriodFromDays = onetimeXSignVal;
         }
         if (onetimeYSign != null && onetimeYSign != '' && typeof onetimeYSign != 'undefined') {
@@ -3000,11 +3205,13 @@ $('.cursor-display').removeClass('cursor-none');
             yval = false;
           questionnaireFrequencey.yDaysSign = yval;
         }
-        if (onetimeYSignVal != null && onetimeYSignVal != '' && typeof onetimeYSignVal != 'undefined') {
+        if (onetimeYSignVal != null && onetimeYSignVal != '' && typeof onetimeYSignVal
+            != 'undefined') {
           questionnaireFrequencey.timePeriodToDays = onetimeYSignVal;
         }
         var freQuence_time = $("#selectTime").val();
-        if (freQuence_time != null && freQuence_time != '' && typeof freQuence_time != 'undefined') {
+        if (freQuence_time != null && freQuence_time != '' && typeof freQuence_time
+            != 'undefined') {
           questionnaireFrequencey.frequencyTime = freQuence_time;
         }
 
@@ -3018,8 +3225,6 @@ $('.cursor-display').removeClass('cursor-none');
           questionnaireFrequencey.yDaysSign = true;
         }
         questionnaireFrequencey.frequencyDate = null;
-        //questionnaire.studyLifetimeStart=null;
-        //questionnaire.studyLifetimeEnd=null;
       } else {
         questionnaire.anchorDateId = null;
         questionnaireFrequencey.timePeriodFromDays = null;
@@ -3028,7 +3233,8 @@ $('.cursor-display').removeClass('cursor-none');
         questionnaireFrequencey.yDaysSign = true;
       }
       questionnaire.questionnairesFrequenciesBo = questionnaireFrequencey;
-      isFormValid = validateTime($("#chooseDate").not('.cursor-none, :disabled'), $("#selectTime").not('.cursor-none, :disabled'));
+      isFormValid = validateTime($("#chooseDate").not('.cursor-none, :disabled'),
+          $("#selectTime").not('.cursor-none, :disabled'));
     } else if (frequency_text == 'Manually Schedule') {
       var customArray = new Array();
       isFormValid = isValidManuallySchedule;
@@ -3103,7 +3309,9 @@ $('.cursor-display').removeClass('cursor-none');
         questionnaire.questionnaireCustomScheduleBo = customArray;
         if (isValidManuallySchedule) {
           $(document).find('.manually-option').each(function () {
-            var returnFlag = validateTime($(this).find(".cusStrDate").not('.cursor-none, :disabled'), $(this).find(".cusTime").not('.cursor-none, :disabled'));
+            var returnFlag = validateTime(
+                $(this).find(".cusStrDate").not('.cursor-none, :disabled'),
+                $(this).find(".cusTime").not('.cursor-none, :disabled'));
             if (isFormValid) {
               isFormValid = returnFlag;
             }
@@ -3132,10 +3340,12 @@ $('.cursor-display').removeClass('cursor-none');
 
         var frequence_time = $('#time' + id).val();
 
-        if (frequence_time != null && frequence_time != '' && typeof frequence_time != 'undefined') {
+        if (frequence_time != null && frequence_time != '' && typeof frequence_time
+            != 'undefined') {
           questionnaireFrequencey.frequencyTime = frequence_time;
         }
-        if (dailyXSign != null && dailyXSign != '' && typeof dailyXSign != 'undefined' && count == 0) {
+        if (dailyXSign != null && dailyXSign != '' && typeof dailyXSign != 'undefined' && count
+            == 0) {
           var xval = true;
           if (dailyXSign == '0')
             xval = false;
@@ -3156,17 +3366,23 @@ $('.cursor-display').removeClass('cursor-none');
 
       })
       questionnaire.questionnairesFrequenciesList = frequenceArray;
-      if (study_lifetime_start != null && study_lifetime_start != '' && typeof study_lifetime_start != 'undefined') {
+      if (study_lifetime_start != null && study_lifetime_start != '' && typeof study_lifetime_start
+          != 'undefined') {
         questionnaire.studyLifetimeStart = study_lifetime_start;
       }
-      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end != 'undefined') {
+      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end
+          != 'undefined') {
         questionnaire.studyLifetimeEnd = study_lifetime_end;
       }
-      if (repeat_questionnaire != null && repeat_questionnaire != '' && typeof repeat_questionnaire != 'undefined') {
+      if (repeat_questionnaire != null && repeat_questionnaire != '' && typeof repeat_questionnaire
+          != 'undefined') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire;
       }
       questionnaire.questionnairesFrequenciesBo = questionnaireFrequencey;
-      if (multiTimeVal && $('#dailyFormId').find('.numChk').val() && $('#dailyFormId').find('.numChk').val() == 0 || !(validateTime($(document).find("#startDate").not('.cursor-none, :disabled'), $(document).find(".dailyClock").not('.cursor-none, :disabled')))) {
+      if (multiTimeVal && $('#dailyFormId').find('.numChk').val() && $('#dailyFormId').find(
+          '.numChk').val() == 0 || !(validateTime(
+          $(document).find("#startDate").not('.cursor-none, :disabled'),
+          $(document).find(".dailyClock").not('.cursor-none, :disabled')))) {
         isFormValid = false;
       }
 
@@ -3190,17 +3406,21 @@ $('.cursor-display').removeClass('cursor-none');
       if (dayOftheweek != null && dayOftheweek != '' && typeof dayOftheweek != 'undefined') {
         questionnaire.dayOfTheWeek = dayOftheweek;
       }
-      if (study_lifetime_start != null && study_lifetime_start != '' && typeof study_lifetime_start != 'undefined') {
+      if (study_lifetime_start != null && study_lifetime_start != '' && typeof study_lifetime_start
+          != 'undefined') {
         questionnaire.studyLifetimeStart = study_lifetime_start;
       }
-      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end != 'undefined') {
+      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end
+          != 'undefined') {
         questionnaire.studyLifetimeEnd = study_lifetime_end;
       }
-      if (repeat_questionnaire != null && repeat_questionnaire != '' && typeof repeat_questionnaire != 'undefined') {
+      if (repeat_questionnaire != null && repeat_questionnaire != '' && typeof repeat_questionnaire
+          != 'undefined') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire;
       }
 
-      if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != '' && typeof repeat_questionnaire_anchor != 'undefined') {
+      if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != ''
+          && typeof repeat_questionnaire_anchor != 'undefined') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire_anchor;
       }
 
@@ -3214,7 +3434,8 @@ $('.cursor-display').removeClass('cursor-none');
         questionnaireFrequencey.frequencyTime = frequence_time;
       }
 
-      if (frequence_time_anchor != null && frequence_time_anchor != '' && typeof frequence_time_anchor != 'undefined') {
+      if (frequence_time_anchor != null && frequence_time_anchor != ''
+          && typeof frequence_time_anchor != 'undefined') {
         questionnaireFrequencey.frequencyTime = frequence_time_anchor;
       }
 
@@ -3235,7 +3456,9 @@ $('.cursor-display').removeClass('cursor-none');
         questionnaireFrequencey.yDaysSign = true;
       }
       questionnaire.questionnairesFrequenciesBo = questionnaireFrequencey;
-      if ($('#weeklyFormId').find('.numChk').val() && $('#weeklyFormId').find('.numChk').val() == 0 || !(validateTime($(document).find("#startWeeklyDate").not('.cursor-none, :disabled'), $(document).find("#selectWeeklyTime").not('.cursor-none, :disabled')))) {
+      if ($('#weeklyFormId').find('.numChk').val() && $('#weeklyFormId').find('.numChk').val() == 0
+          || !(validateTime($(document).find("#startWeeklyDate").not('.cursor-none, :disabled'),
+              $(document).find("#selectWeeklyTime").not('.cursor-none, :disabled')))) {
         isFormValid = false;
       }
       if (scheduletype == 'AnchorDate') {
@@ -3255,17 +3478,21 @@ $('.cursor-display').removeClass('cursor-none');
       var monthlyXSign = $('#monthlyXSign').val();
       var monthlyXSignVal = $('#monthlyxdaysId').val();
 
-      if (study_lifetime_start != null && study_lifetime_start != '' && typeof study_lifetime_start != 'undefined') {
+      if (study_lifetime_start != null && study_lifetime_start != '' && typeof study_lifetime_start
+          != 'undefined') {
         questionnaire.studyLifetimeStart = study_lifetime_start;
       }
-      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end != 'undefined') {
+      if (study_lifetime_end != null && study_lifetime_end != '' && typeof study_lifetime_end
+          != 'undefined') {
         questionnaire.studyLifetimeEnd = study_lifetime_end;
       }
-      if (repeat_questionnaire != null && repeat_questionnaire != '' && typeof repeat_questionnaire != 'undefined') {
+      if (repeat_questionnaire != null && repeat_questionnaire != '' && typeof repeat_questionnaire
+          != 'undefined') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire;
       }
 
-      if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != '' && typeof repeat_questionnaire_anchor != 'undefined') {
+      if (repeat_questionnaire_anchor != null && repeat_questionnaire_anchor != ''
+          && typeof repeat_questionnaire_anchor != 'undefined') {
         questionnaire.repeatQuestionnaire = repeat_questionnaire_anchor;
       }
 
@@ -3281,7 +3508,8 @@ $('.cursor-display').removeClass('cursor-none');
       if (frequencetime != null && frequencetime != '' && typeof frequencetime != 'undefined') {
         questionnaireFrequencey.frequencyTime = frequencetime;
       }
-      if (frequencetime_anchor != null && frequencetime_anchor != '' && typeof frequencetime_anchor != 'undefined') {
+      if (frequencetime_anchor != null && frequencetime_anchor != '' && typeof frequencetime_anchor
+          != 'undefined') {
         questionnaireFrequencey.frequencyTime = frequencetime_anchor;
       }
       if (monthlyXSign != null && monthlyXSign != '' && typeof monthlyXSign != 'undefined') {
@@ -3290,7 +3518,8 @@ $('.cursor-display').removeClass('cursor-none');
           xval = false;
         questionnaireFrequencey.xDaysSign = xval;
       }
-      if (monthlyXSignVal != null && monthlyXSignVal != '' && typeof monthlyXSignVal != 'undefined') {
+      if (monthlyXSignVal != null && monthlyXSignVal != '' && typeof monthlyXSignVal
+          != 'undefined') {
         questionnaireFrequencey.timePeriodFromDays = monthlyXSignVal;
         questionnaireFrequencey.timePeriodToDays = null;
         questionnaireFrequencey.yDaysSign = true;
@@ -3301,7 +3530,10 @@ $('.cursor-display').removeClass('cursor-none');
         questionnaireFrequencey.yDaysSign = true;
       }
       questionnaire.questionnairesFrequenciesBo = questionnaireFrequencey;
-      if ($('#monthlyFormId').find('.numChk').val() && $('#monthlyFormId').find('.numChk').val() == 0 || !(validateTime($(document).find("#startDateMonthly").not('.cursor-none, :disabled'), $(document).find("#selectMonthlyTime").not('.cursor-none, :disabled')))) {
+      if ($('#monthlyFormId').find('.numChk').val() && $('#monthlyFormId').find('.numChk').val()
+          == 0 || !(validateTime(
+              $(document).find("#startDateMonthly").not('.cursor-none, :disabled'),
+              $(document).find("#selectMonthlyTime").not('.cursor-none, :disabled')))) {
         isFormValid = false;
       }
       if (scheduletype == 'AnchorDate') {
@@ -3340,7 +3572,8 @@ $('.cursor-display').removeClass('cursor-none');
             }
             if (frequency_text == 'Daily') {
               var previous_frequency = $("#previousFrequency").val();
-              if (previous_frequency != '' && previous_frequency != null && previous_frequency != 'undefined') {
+              if (previous_frequency != '' && previous_frequency != null && previous_frequency
+                  != 'undefined') {
                 $("#previousFrequency").val(previous_frequency);
               } else {
                 $("#previousFrequency").val(frequency_text);
@@ -3356,14 +3589,17 @@ $('.cursor-display').removeClass('cursor-none');
             } else if (frequency_text == 'Monthly') {
               $("#monthFreId").val(questionnaireFrequenceId);
             }
-            if ($('.sixthQuestionnaires').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
-              $('.sixthQuestionnaires').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
+            if ($('.sixthQuestionnaires').find('span').hasClass(
+                'sprites-icons-2 tick pull-right mt-xs')) {
+              $('.sixthQuestionnaires').find('span').removeClass(
+                  'sprites-icons-2 tick pull-right mt-xs');
             }
             $("#stepContainer").show();
             $("#content").show();
             $("#saveId").text("Save");
             if (!$('#content').DataTable().data().count()) {
-              $('#helpNote').attr('data-original-title', 'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
+              $('#helpNote').attr('data-original-title',
+                  'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
             }
             frequencey = frequency_text;
             if (callback)
@@ -3400,10 +3636,14 @@ $('.cursor-display').removeClass('cursor-none');
   function checkDateRange() {
     $(document).on('dp.change change', '.cusStrDate, .cusEndDate, .cusTime', function (e) {
       var chkVal = true;
-      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents('.manually-option').find('.cusEndDate').val() && $(this).parents('.manually-option').find('.cusTime').val()) {
+      if ($(this).parents('.manually-option').find('.cusStrDate').val() && $(this).parents(
+          '.manually-option').find('.cusEndDate').val() && $(this).parents('.manually-option').find(
+          '.cusTime').val()) {
         var thisAttr = this;
         $(this).parents('.manuallyContainer').find('.manually-option').each(function () {
-          if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find('.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find('.cusTime').val()) {
+          if ((!$(thisAttr).parents('.manually-option').is($(this))) && $(this).find(
+              '.cusStrDate').val() && $(this).find('.cusEndDate').val() && $(this).find(
+              '.cusTime').val()) {
             var fromDate = moment($(this).find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
             var cusTime = moment($(this).find('.cusTime').val(), "HH:mm").toDate()
             fromDate.setHours(cusTime.getHours());
@@ -3411,22 +3651,31 @@ $('.cursor-display').removeClass('cursor-none');
             var toDate = moment($(this).find('.cusEndDate').val(), "MM/DD/YYYY").toDate();
             toDate.setHours(cusTime.getHours());
             toDate.setMinutes(cusTime.getMinutes());
-            var thisFromDate = moment($(thisAttr).parents('.manually-option').find('.cusStrDate').val(), "MM/DD/YYYY").toDate();
-            var thisCusTime = moment($(thisAttr).parents('.manually-option').find('.cusTime').val(), "HH:mm").toDate()
+            var thisFromDate = moment(
+                $(thisAttr).parents('.manually-option').find('.cusStrDate').val(),
+                "MM/DD/YYYY").toDate();
+            var thisCusTime = moment($(thisAttr).parents('.manually-option').find('.cusTime').val(),
+                "HH:mm").toDate()
             thisFromDate.setHours(thisCusTime.getHours());
             thisFromDate.setMinutes(thisCusTime.getMinutes());
-            var thisToDate = moment($(thisAttr).parents('.manually-option').find('.cusEndDate').val(), "MM/DD/YYYY").toDate();
+            var thisToDate = moment(
+                $(thisAttr).parents('.manually-option').find('.cusEndDate').val(),
+                "MM/DD/YYYY").toDate();
             thisToDate.setHours(thisCusTime.getHours());
             thisToDate.setMinutes(thisCusTime.getMinutes());
             if (chkVal)
-              chkVal = !((thisFromDate >= fromDate && thisFromDate <= toDate) || (thisToDate >= fromDate && thisToDate <= toDate));
+              chkVal = !((thisFromDate >= fromDate && thisFromDate <= toDate) || (thisToDate
+                  >= fromDate && thisToDate <= toDate));
           }
         });
       }
       if (!chkVal) {
-        $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass('has-error has-danger').find(".help-block").removeClass('with-errors').html('<ul class="list-unstyled" style="font-size: 10px;"><li>Please ensure that the runs created do not have any overlapping time period.</li></ul>');
+        $(thisAttr).parents('.manually-option').find('.cusTime').parent().addClass(
+            'has-error has-danger').find(".help-block").removeClass('with-errors').html(
+            '<ul class="list-unstyled" style="font-size: 10px;"><li>Please ensure that the runs created do not have any overlapping time period.</li></ul>');
       } else {
-        $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass('has-error has-danger').find(".help-block").addClass('with-errors').html('');
+        $(thisAttr).parents('.manually-option').find('.cusTime').parent().removeClass(
+            'has-error has-danger').find(".help-block").addClass('with-errors').html('');
       }
       var a = 0;
       $('.manuallyContainer').find('.manually-option').each(function () {
@@ -3535,7 +3784,8 @@ $('.cursor-display').removeClass('cursor-none');
           var questionnaireId = $("#id").val();
           var studyId = $("#studyId").val();
           if ((stepId != null && stepId != '' && typeof stepId != 'undefined') &&
-              (questionnaireId != null && questionnaireId != '' && typeof questionnaireId != 'undefined')) {
+              (questionnaireId != null && questionnaireId != '' && typeof questionnaireId
+                  != 'undefined')) {
             $.ajax({
               url: "/studybuilder/adminStudies/deleteQuestionnaireStep.do?_S=${param._S}",
               type: "POST",
@@ -3550,17 +3800,21 @@ $('.cursor-display').removeClass('cursor-none');
                 var jsonobject = eval(data);
                 var status = jsonobject.message;
                 if (status == "SUCCESS") {
-                  $("#alertMsg").removeClass('e-box').addClass('s-box').html("Questionnaire step deleted successfully");
+                  $("#alertMsg").removeClass('e-box').addClass('s-box').html(
+                      "Questionnaire step deleted successfully");
                   $('#alertMsg').show();
                   var questionnaireSteps = jsonobject.questionnaireJsonObject;
                   var isDone = jsonobject.isDone;
                   reloadQuestionnaireStepData(questionnaireSteps, isDone);
-                  if ($('.sixthQuestionnaires').find('span').hasClass('sprites-icons-2 tick pull-right mt-xs')) {
-                    $('.sixthQuestionnaires').find('span').removeClass('sprites-icons-2 tick pull-right mt-xs');
+                  if ($('.sixthQuestionnaires').find('span').hasClass(
+                      'sprites-icons-2 tick pull-right mt-xs')) {
+                    $('.sixthQuestionnaires').find('span').removeClass(
+                        'sprites-icons-2 tick pull-right mt-xs');
                   }
                   var isAnchorQuestionnaire = jsonobject.isAnchorQuestionnaire;
                   if (isAnchorQuestionnaire) {
-                    $('#anchorspanId').prop('title', 'This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it.');
+                    $('#anchorspanId').prop('title',
+                        'This option has been disabled, since this questionnaire has 1 or more anchor dates defined in it.');
                     $('#anchorspanId').attr('disabled', true);
                     $('#schedule2').attr('disabled', true);
                     $('.schedule').attr('disabled', true);
@@ -3572,9 +3826,11 @@ $('.cursor-display').removeClass('cursor-none');
                   }
                 } else {
                   if (status == 'FAILUREanchorused') {
-                    $("#alertMsg").removeClass('s-box').addClass('e-box').html("Questionnaire step already live anchorbased.unable to delete");
+                    $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                        "Questionnaire step already live anchorbased.unable to delete");
                   } else {
-                    $("#alertMsg").removeClass('s-box').addClass('e-box').html("Unable to delete questionnaire step");
+                    $("#alertMsg").removeClass('s-box').addClass('e-box').html(
+                        "Unable to delete questionnaire step");
                   }
                   $('#alertMsg').show();
                 }
@@ -3595,7 +3851,8 @@ $('.cursor-display').removeClass('cursor-none');
 
   function reloadQuestionnaireStepData(questionnaire, isDone) {
     $('#content').DataTable().clear();
-    if (typeof questionnaire != 'undefined' && questionnaire != null && Object.keys(questionnaire).length > 0) {
+    if (typeof questionnaire != 'undefined' && questionnaire != null && Object.keys(
+        questionnaire).length > 0) {
       $.each(questionnaire, function (key, value) {
         var datarow = [];
         if (typeof key === "undefined") {
@@ -3625,16 +3882,21 @@ $('.cursor-display').removeClass('cursor-none');
           datarow.push(title);
         }
         if ($("#branchingId").is(':checked')) {
-          datarow.push('<div class="destinationStep questionnaireStepClass" style="display: block;">' + value.destinationText + '</div>');
+          datarow.push(
+              '<div class="destinationStep questionnaireStepClass" style="display: block;">'
+              + value.destinationText + '</div>');
         } else {
-          datarow.push('<div class="destinationStep questionnaireStepClass" style="display: none;">' + value.destinationText + '</div>');
+          datarow.push('<div class="destinationStep questionnaireStepClass" style="display: none;">'
+              + value.destinationText + '</div>');
         }
         var dynamicAction = '<div>' +
             '<div class="text-right pos-relative">';
         if (value.stepType != 'Instruction') {
-          if (value.responseTypeText == 'Double' && (value.lineChart == 'Yes' || value.statData == 'Yes')) {
+          if (value.responseTypeText == 'Double' && (value.lineChart == 'Yes' || value.statData
+              == 'Yes')) {
             dynamicAction += '<span class="sprites_v3 status-blue mr-md"></span>';
-          } else if (value.responseTypeText == 'Double' && (value.lineChart == 'No' && value.statData == 'No')) {
+          } else if (value.responseTypeText == 'Double' && (value.lineChart == 'No'
+              && value.statData == 'No')) {
             dynamicAction += '<span class="sprites_v3 status-gray mr-md"></span>';
           } else if (value.responseTypeText == 'Date' && value.useAnchorDate) {
             dynamicAction += '<span class="sprites_v3 calender-blue mr-md"></span>';
@@ -3644,16 +3906,19 @@ $('.cursor-display').removeClass('cursor-none');
         }
         dynamicAction += '<span class="ellipse" onmouseenter="ellipseHover(this);"></span>' +
             '<div class="ellipse-hover-icon" onmouseleave="ellipseUnHover(this);">' +
-            '  <span class="sprites_icon preview-g mr-sm" onclick="viewStep(' + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>';
+            '  <span class="sprites_icon preview-g mr-sm" onclick="viewStep(' + value.stepId
+            + ',&#34;' + value.stepType + '&#34;)"></span>';
         if (value.status) {
-          dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editStep(' + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>';
+          dynamicAction += '<span class="sprites_icon edit-g mr-sm" onclick="editStep('
+              + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>';
         } else {
-          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editStep(' + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>';
+          dynamicAction += '<span class="edit-inc-draft mr-md mr-sm" onclick="editStep('
+              + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>';
         }
-        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" onclick="deletStep(' + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>' +
+        dynamicAction += '  <span class="sprites_icon delete deleteStepButton" onclick="deletStep('
+            + value.stepId + ',&#34;' + value.stepType + '&#34;)"></span>' +
             '</div>' +
             '</div>';
-
 
         if (value.stepType == 'Form') {
           if (Object.keys(value.fromMap).length > 0) {
@@ -3672,13 +3937,15 @@ $('.cursor-display').removeClass('cursor-none');
         $('#helpNote').attr('data-original-title', '');
       } else {
         $("#doneId").attr("disabled", true);
-        $('#helpNote').attr('data-original-title', 'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
+        $('#helpNote').attr('data-original-title',
+            'Please ensure individual list items on this page are marked Done before attempting to mark this section as Complete.');
       }
       $('#content').DataTable().draw();
     } else {
       $('#content').DataTable().draw();
       $("#doneId").attr("disabled", true);
-      $('#helpNote').attr('data-original-title', 'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
+      $('#helpNote').attr('data-original-title',
+          'Please ensure you add one or more Steps to this questionnaire before attempting to mark this section as Complete.');
     }
   }
 
@@ -3777,7 +4044,8 @@ $('.cursor-display').removeClass('cursor-none');
       var dt = $(dateId).val();
       var date = new Date();
       var day = date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate());
-      var month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1));
+      var month = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : ('0' + (date.getMonth()
+          + 1));
       var today = moment(serverDate()).format("MM/DD/YYYY");
       if (dt) {
         if (dt != today) {
@@ -3785,7 +4053,8 @@ $('.cursor-display').removeClass('cursor-none');
         } else {
           $(timeId).data("DateTimePicker").minDate(serverDateTime());
         }
-        if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate() < serverDateTime()) {
+        if ($(timeId).val() && dt == today && moment($(timeId).val(), 'h:mm a').toDate()
+            < serverDateTime()) {
           $(timeId).val('');
         }
       } else {
@@ -3828,7 +4097,9 @@ $('.cursor-display').removeClass('cursor-none');
               $(thisAttr).val('');
               $(thisAttr).parent().addClass("has-danger").addClass("has-error");
               $(thisAttr).parent().find(".help-block").empty();
-              $(thisAttr).parent().find(".help-block").append("<ul class='list-unstyled'><li>'" + shortTitle + "' has already been used in the past.</li></ul>");
+              $(thisAttr).parent().find(".help-block").append(
+                  "<ul class='list-unstyled'><li>'" + shortTitle
+                  + "' has already been used in the past.</li></ul>");
               callback(false);
             }
           },
@@ -3854,7 +4125,8 @@ $('.cursor-display').removeClass('cursor-none');
       }
     }
 
-    if ((questionnaireId != null && questionnaireId != '' && typeof questionnaireId != 'undefined') &&
+    if ((questionnaireId != null && questionnaireId != '' && typeof questionnaireId != 'undefined')
+        &&
         (frequencyTxt != null && frequencyTxt != '' && typeof frequencyTxt != 'undefined')) {
       $.ajax({
         url: "/studybuilder/adminStudies/validateLineChartSchedule.do?_S=${param._S}",
@@ -3875,7 +4147,8 @@ $('.cursor-display').removeClass('cursor-none');
           } else {
             callback(false);
             var questionnaireSteps = jsonobject.questionnaireJsonObject;
-            if (typeof questionnaireSteps != 'undefined' && questionnaireSteps != null && questionnaireSteps != '') {
+            if (typeof questionnaireSteps != 'undefined' && questionnaireSteps != null
+                && questionnaireSteps != '') {
               reloadQuestionnaireStepData(questionnaireSteps, null);
             }
           }
@@ -3902,11 +4175,13 @@ $('.cursor-display').removeClass('cursor-none');
             $(this).data("DateTimePicker").date(serverDateTime());
             dt = dateRef.val();
             $(this).parent().addClass('has-error has-danger');
-            $(this).parent().find(".help-block").html('<ul class="list-unstyled"><li>Date reset to current date. </li></ul>');
+            $(this).parent().find(".help-block").html(
+                '<ul class="list-unstyled"><li>Date reset to current date. </li></ul>');
           } else {
             $(this).data("DateTimePicker").clear();
             $(this).parent().addClass('has-error has-danger');
-            $(this).parent().find(".help-block").html('<ul class="list-unstyled"><li>Please select a valid date.</li></ul>');
+            $(this).parent().find(".help-block").html(
+                '<ul class="list-unstyled"><li>Please select a valid date.</li></ul>');
           }
         } else {
           $(this).parent().removeClass('has-error has-danger').find(".help-block").html("");
@@ -3920,7 +4195,8 @@ $('.cursor-display').removeClass('cursor-none');
               if (dt < serverDateTime()) {
                 $(this).data("DateTimePicker").date(serverDateTime());
                 $(this).parent().addClass("has-danger").addClass("has-error");
-                $(this).parent().find(".help-block").html('<ul class="list-unstyled"><li>Time reset to current time. </li></ul>');
+                $(this).parent().find(".help-block").html(
+                    '<ul class="list-unstyled"><li>Time reset to current time. </li></ul>');
               }
             } else {
               if (dt < serverDateTime()) {
@@ -3959,10 +4235,13 @@ $('.cursor-display').removeClass('cursor-none');
       if (parseInt(x) > parseInt(y)) {
         if (clickDone && isFromValid($('#onetimeydaysId').parents('form')))
           $('#onetimeydaysId').focus();
-        $('#onetimeydaysId').parent().addClass('has-error has-danger').find(".help-block").empty().append('<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
+        $('#onetimeydaysId').parent().addClass('has-error has-danger').find(
+            ".help-block").empty().append(
+            '<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
         valid = false;
       } else {
-        $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").html("");
+        $('#onetimeydaysId').parent().removeClass('has-error has-danger').find(".help-block").html(
+            "");
         resetValidation($('#onetimeydaysId').parents('form'));
       }
     }
@@ -3970,33 +4249,46 @@ $('.cursor-display').removeClass('cursor-none');
   }
 
   function addDateAnchor() {
-    //customAnchorCount = parseInt(customAnchorCount) +1;
     customAnchorCount = $('.manually-anchor-option').length;
-    var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount + "'>"
+    var newDateCon = "<div class='manually-anchor-option mb-md form-group' id='" + customAnchorCount
+        + "'>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> Anchor Date </span></span>"
-        + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectXSign' count='" + customAnchorCount + "' title='Select' name='questionnaireCustomScheduleBo[" + customAnchorCount + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
+        + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectXSign' count='"
+        + customAnchorCount + "' title='Select' name='questionnaireCustomScheduleBo["
+        + customAnchorCount + "].xDaysSign' id='xSign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
         + "</select></span>"
         + "<span class='form-group m-none dis-inline vertical-align-middle'>"
-        + "<input id='xdays" + customAnchorCount + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
-        + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo[" + customAnchorCount + "].timePeriodFromDays'"
+        + "<input id='xdays" + customAnchorCount
+        + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave xdays daysMask mt-sm resetAncDate'"
+        + "count='" + customAnchorCount + "' placeholder='X' name='questionnaireCustomScheduleBo["
+        + customAnchorCount + "].timePeriodFromDays'"
         + "maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days <span style='padding-right:5px;padding-left:5px'>to </span>  Anchor Date </span></span>"
-        + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='" + customAnchorCount + "' title='Select' name='questionnaireCustomScheduleBo[" + customAnchorCount + "].yDaysSign' id='ySign" + customAnchorCount + "'>"
+        + "<span class='mr-xs'><select class='signDropDown selectpicker sign-box selectYSign' count='"
+        + customAnchorCount + "' title='Select' name='questionnaireCustomScheduleBo["
+        + customAnchorCount + "].yDaysSign' id='ySign" + customAnchorCount + "'>"
         + "<option value='0' selected>+</option><option value='1'>-</option>"
         + "</select></span>"
         + "<span class='form-group m-none dis-inline vertical-align-middle'>"
-        + "<input id='ydays" + customAnchorCount + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='" + customAnchorCount + "' placeholder='Y'"
-        + "name='questionnaireCustomScheduleBo[" + customAnchorCount + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
+        + "<input id='ydays" + customAnchorCount
+        + "' type='text' class='form-control wid70 disRadBtn1 disBtn1 remReqOnSave ydays daysMask mt-sm resetAncDate' count='"
+        + customAnchorCount + "' placeholder='Y'"
+        + "name='questionnaireCustomScheduleBo[" + customAnchorCount
+        + "].timePeriodToDays' maxlength='3' required pattern='[0-9]+' data-pattern-error='Please enter valid number.'/><span class='help-block with-errors red-txt'></span>"
         + "</span>"
         + "<span class='mb-sm pr-md'><span class='light-txt opacity06'> days </span></span>"
         + "<span class='form-group  dis-inline vertical-align-middle pr-md' style='margin-bottom: -13px'>"
-        + "<input id='manualTime" + customAnchorCount + "' type='text' count='" + customAnchorCount + "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount + "].frequencyTime' placeholder='Time' required/>"
+        + "<input id='manualTime" + customAnchorCount + "' type='text' count='" + customAnchorCount
+        + "' class='form-control clock' name='questionnaireCustomScheduleBo[" + customAnchorCount
+        + "].frequencyTime' placeholder='Time' required/>"
         + "<span class='help-block with-errors red-txt'></span>"
         + "</span>"
-        + "<span id='addbtn" + customAnchorCount + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor();'>+</span>"
-        + "<span id='deleteAncchor" + customAnchorCount + "' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
+        + "<span id='addbtn" + customAnchorCount
+        + "' class='addbtn addBtnDis align-span-center mr-md' onclick='addDateAnchor();'>+</span>"
+        + "<span id='deleteAncchor" + customAnchorCount
+        + "' class='sprites_icon delete vertical-align-middle remBtnDis hide align-span-center' onclick='removeDateAnchor(this);'></span>"
         + "</div>";
 
     $(".manually-anchor-option:last").after(newDateCon);
@@ -4011,7 +4303,6 @@ $('.cursor-display').removeClass('cursor-none');
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
     timep('manualTime' + customAnchorCount);
-    //$('#manualTime'+customAnchorCount).val("");
     $('#' + customAnchorCount).find('input:first').focus();
     $('.selectpicker').selectpicker('refresh');
   }
@@ -4025,7 +4316,6 @@ $('.cursor-display').removeClass('cursor-none');
     } else {
       $('.manuallyAnchorContainer').find(".remBtnDis").addClass("hide");
     }
-    //$(document).find('.cusTime').trigger('dp.change');
   }
 
   function setAnchorDropdown(frequency_text, anchorType) {
@@ -4061,30 +4351,37 @@ $('.cursor-display').removeClass('cursor-none');
     } else {
       if (frequency_text == 'One time') {
         $('#onetimeXSign').children('option').remove();
-        $('#onetimeXSign').append("<option value='0' selected>+</option><option value='1'>-</option>");
+        $('#onetimeXSign').append(
+            "<option value='0' selected>+</option><option value='1'>-</option>");
         $('#onetimeYSign').children('option').remove();
-        $('#onetimeYSign').append("<option value='0' selected>+</option><option value='1'>-</option>");
+        $('#onetimeYSign').append(
+            "<option value='0' selected>+</option><option value='1'>-</option>");
       }
       if (frequency_text == 'Manually Schedule') {
         $('.manually-anchor-option').each(function () {
           var id = $(this).attr("id");
           $("#xSign" + id).children('option').remove();
           $("#ySign" + id).children('option').remove();
-          $("#xSign" + id).append("<option value='0' selected>+</option><option value='1'>-</option>");
-          $("#ySign" + id).append("<option value='0' selected>+</option><option value='1'>-</option>");
+          $("#xSign" + id).append(
+              "<option value='0' selected>+</option><option value='1'>-</option>");
+          $("#ySign" + id).append(
+              "<option value='0' selected>+</option><option value='1'>-</option>");
         });
       }
       if (frequency_text == 'Daily') {
         $('#dailyXSign').children('option').remove();
-        $('#dailyXSign').append("<option value='0' selected>+</option><option value='1'>-</option>");
+        $('#dailyXSign').append(
+            "<option value='0' selected>+</option><option value='1'>-</option>");
       }
       if (frequency_text == 'Weekly') {
         $('#weeklyXSign').children('option').remove();
-        $('#weeklyXSign').append("<option value='0' selected>+</option><option value='1'>-</option>");
+        $('#weeklyXSign').append(
+            "<option value='0' selected>+</option><option value='1'>-</option>");
       }
       if (frequency_text == 'Monthly') {
         $('#monthlyXSign').children('option').remove();
-        $('#monthlyXSign').append("<option value='0' selected>+</option><option value='1'>-</option>");
+        $('#monthlyXSign').append(
+            "<option value='0' selected>+</option><option value='1'>-</option>");
       }
       $('.selectpicker').selectpicker('refresh');
     }
@@ -4103,28 +4400,21 @@ $('.cursor-display').removeClass('cursor-none');
       var ydayValue = parseInt(ysign + "" + yday);
 
 
-      //var siblings_length = $(".manuallyAnchorContainer > div").length;
-      //
-      //for(i= parseInt(parent_id)+1  ; i<= siblings_length; i++){
-//		    $("#"+i).remove();
-      //}
-
-
-      //$("#"+parent_id).next().remove();
-
-
       if (parent_id === "0") {
 
         if (ydayValue !== "") {
           if (xdayValue > ydayValue) {
             $(this).addClass("red-border");
             $("#ydays" + parent_id).addClass("red-border");
-            $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(".help-block").empty().append('<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
+            $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
+                ".help-block").empty().append(
+                '<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
             $("#addbtn" + parent_id).addClass("not-allowed");
           } else {
             $(this).removeClass("red-border");
             $("#ydays" + parent_id).removeClass("red-border");
-            $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(".help-block").html("");
+            $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+                ".help-block").html("");
             $("#addbtn" + parent_id).removeClass("not-allowed");
           }
         }
@@ -4136,11 +4426,11 @@ $('.cursor-display').removeClass('cursor-none');
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-
         if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
-          $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append('<ul class="list-unstyled"><li>Child X days should be greater than parent Y days.</li></ul>');
+          $(this).parent().addClass('has-error has-danger').find(".help-block").empty().append(
+              '<ul class="list-unstyled"><li>Child X days should be greater than parent Y days.</li></ul>');
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
@@ -4151,36 +4441,22 @@ $('.cursor-display').removeClass('cursor-none');
             if (xdayValue > ydayValue) {
               $(this).addClass("red-border");
               $("#ydays" + parent_id).addClass("red-border");
-              $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(".help-block").empty().append('<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
+              $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
+                  ".help-block").empty().append(
+                  '<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
               $("#addbtn" + parent_id).addClass("not-allowed");
             } else {
               $(this).removeClass("red-border");
               $("#ydays" + parent_id).removeClass("red-border");
-              $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(".help-block").html("");
+              $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+                  ".help-block").html("");
               $("#addbtn" + parent_id).removeClass("not-allowed");
             }
           }
         }
 
 
-        /* if(xdayValue < pydayValue){
-			 $("xdays"+parent_id).addClass("red-border");
-		     $("#ydays"+pre_parent).addClass("red-border");
-		  }else if(ydayValue !== ""){
-		      if(xdayValue > ydayValue){
-		    	  $(this).addClass("red-border");
-				  $("#ydays"+parent_id).addClass("red-border");
-				  $("#addbtn"+parent_id).addClass("not-allowed");
-		       }else{
-		    	   $(this).removeClass("red-border");
-				   $("#ydays"+parent_id).removeClass("red-border");
-				   $("#addbtn"+parent_id).removeClass("not-allowed");
-		       }
-	     } */
-
-
       }
-
 
     });
 
@@ -4201,11 +4477,12 @@ $('.cursor-display').removeClass('cursor-none');
       var ysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
       var ydayValue = parseInt(ysign + "" + yday);
 
-
       if (ydayValue < xdayValue) {
         $(this).addClass("red-border");
         $("#xdays" + parent_id).addClass("red-border");
-        $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(".help-block").empty().append('<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
+        $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
+            ".help-block").empty().append(
+            '<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
         $(this).parent().parent().siblings().removeClass("current");
         $(this).parent().parent().addClass("current");
         $(".current").nextAll().remove();
@@ -4213,13 +4490,12 @@ $('.cursor-display').removeClass('cursor-none');
       } else {
         $(this).removeClass("red-border");
         $("#xdays" + parent_id).removeClass("red-border");
-        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(".help-block").html("");
+        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+            ".help-block").html("");
         $("#addbtn" + parent_id).removeClass("not-allowed");
       }
 
-
     });
-
 
     jQuery(document).on("change", ".ydays", function () {
       $(this).parent().parent().siblings().removeClass("current");
@@ -4227,7 +4503,6 @@ $('.cursor-display').removeClass('cursor-none');
       $(".current").nextAll().remove();
 
     });
-
 
     jQuery(document).on("change", ".sign-box select", function () {
       var parent_id = $(this).attr("count");
@@ -4244,12 +4519,15 @@ $('.cursor-display').removeClass('cursor-none');
       if (ydayValue < xdayValue) {
         $("#xdays" + parent_id).addClass("red-border");
         $("#ydays" + parent_id).addClass("red-border");
-        $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(".help-block").empty().append('<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
+        $("#ydays" + parent_id).parent().addClass('has-error has-danger').find(
+            ".help-block").empty().append(
+            '<ul class="list-unstyled"><li>Y days should be greater than X days.</li></ul>');
         $("#addbtn" + parent_id).addClass("not-allowed");
       } else {
         $("#xdays" + parent_id).removeClass("red-border");
         $("#ydays" + parent_id).removeClass("red-border");
-        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(".help-block").html("");
+        $("#ydays" + parent_id).parent().removeClass('has-error has-danger').find(
+            ".help-block").html("");
         $("#addbtn" + parent_id).removeClass("not-allowed");
       }
 
@@ -4259,16 +4537,18 @@ $('.cursor-display').removeClass('cursor-none');
         var pysign = $("#ySign" + parent_id).val() === "0" ? "+" : "-";
         var pydayValue = parseInt(pysign + "" + pyday);
 
-
         if (xdayValue < pydayValue) {
           $(this).addClass("red-border");
           $("#ydays" + pre_parent).addClass("red-border");
-          $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(".help-block").empty().append('<ul class="list-unstyled"><li>Child X days should be greater than parent Y days.</li></ul>');
+          $("#xdays" + parent_id).parent().addClass('has-error has-danger').find(
+              ".help-block").empty().append(
+              '<ul class="list-unstyled"><li>Child X days should be greater than parent Y days.</li></ul>');
           $("#addbtn" + parent_id).addClass("not-allowed");
         } else {
           $(this).removeClass("red-border");
           $("#ydays" + pre_parent).removeClass("red-border");
-          $("#xdays" + parent_id).parent().removeClass('has-error has-danger').find(".help-block").html("");
+          $("#xdays" + parent_id).parent().removeClass('has-error has-danger').find(
+              ".help-block").html("");
           $("#addbtn" + parent_id).addClass("not-allowed");
         }
       }
@@ -4276,24 +4556,11 @@ $('.cursor-display').removeClass('cursor-none');
       $(this).parent().parent().parent().siblings().removeClass("current");
       $(this).parent().parent().parent().addClass("current");
 
-      /* $("#"+parent_id).siblings().removeClass("current");
-			$("#"+parent_id).parent().parent().addClass("current"); */
 
       $(".current").nextAll().remove();
 
 
-      /* var siblings_length = $(".manuallyAnchorContainer > div").length;
-			for(i= 0; i<= siblings_length; i++){
-
-				if(i !== parseInt(parent_id)){
-					$("#"+i).remove();
-				}
-
-		    } */
-
-
     });
-
 
   });
 

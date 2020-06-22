@@ -75,8 +75,8 @@ public class LocationQuestion
   private LocationAnswerFormat format;
   private LatLng currentSelected;
   private Context context;
-  private GoogleMap mGoogleMap;
-  private GoogleApiClient mGoogleApiClient;
+  private GoogleMap googleMapObj;
+  private GoogleApiClient googleApiClient;
   private boolean currentlocation = true;
   private EditText search;
 
@@ -160,7 +160,7 @@ public class LocationQuestion
                     new OnMapReadyCallback() {
                       @Override
                       public void onMapReady(final GoogleMap googleMap) {
-                        mGoogleMap = googleMap;
+                        googleMapObj = googleMap;
                         if (currentSelected != null) {
                           googleMap.addMarker(
                               new MarkerOptions()
@@ -184,27 +184,27 @@ public class LocationQuestion
                               || (ActivityCompat.checkSelfPermission(
                                       context, Manifest.permission.ACCESS_COARSE_LOCATION)
                                   == PackageManager.PERMISSION_GRANTED)) {
-                            mGoogleApiClient =
+                            googleApiClient =
                                 new GoogleApiClient.Builder(context)
                                     .addApi(LocationServices.API)
                                     .addConnectionCallbacks(LocationQuestion.this)
                                     .addOnConnectionFailedListener(LocationQuestion.this)
                                     .build();
 
-                            LocationManager mService =
+                            LocationManager service =
                                 (LocationManager)
                                     context.getSystemService(Context.LOCATION_SERVICE);
-                            mService.addGpsStatusListener(LocationQuestion.this);
+                            service.addGpsStatusListener(LocationQuestion.this);
                             try {
-                              mGoogleApiClient.connect();
+                              googleApiClient.connect();
                             } catch (Exception e) {
                               Logger.log(e);
                             }
-                            mGoogleMap.setOnMapLoadedCallback(
+                            googleMapObj.setOnMapLoadedCallback(
                                 new GoogleMap.OnMapLoadedCallback() {
                                   @Override
                                   public void onMapLoaded() {
-                                    mGoogleMap.setMyLocationEnabled(true);
+                                    googleMapObj.setMyLocationEnabled(true);
                                   }
                                 });
                           } else {
@@ -309,11 +309,11 @@ public class LocationQuestion
     return p1;
   }
 
-  private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+  private String getCompleteAddressString(double latitude, double longitude) {
     String strAdd = "";
     Geocoder geocoder = new Geocoder(context, Locale.getDefault());
     try {
-      List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+      List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
       if (addresses != null) {
         Address returnedAddress = addresses.get(0);
         StringBuilder strReturnedAddress = new StringBuilder("");
@@ -366,12 +366,12 @@ public class LocationQuestion
 
   @Override
   public void onConnected(Bundle bundle) {
-    LocationRequest mLocationRequest = LocationRequest.create();
-    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-    mLocationRequest.setInterval(1000); // Update location every workout_minsond
-    mLocationRequest.setSmallestDisplacement(.5f);
+    LocationRequest locationRequest = LocationRequest.create();
+    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    locationRequest.setInterval(1000); // Update location every workout_minsond
+    locationRequest.setSmallestDisplacement(.5f);
     LocationServices.FusedLocationApi.requestLocationUpdates(
-        mGoogleApiClient, mLocationRequest, this);
+        googleApiClient, locationRequest, this);
   }
 
   @Override
@@ -388,11 +388,11 @@ public class LocationQuestion
     if (currentlocation && currentSelected == null) {
       currentlocation = false;
       currentSelected = new LatLng(location.getLatitude(), location.getLongitude());
-      mGoogleMap.addMarker(
+      googleMapObj.addMarker(
           new MarkerOptions()
               .position(new LatLng(location.getLatitude(), location.getLongitude()))
               .title(context.getResources().getString(R.string.selected_location)));
-      mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentSelected, 5.0f));
+      googleMapObj.animateCamera(CameraUpdateFactory.newLatLngZoom(currentSelected, 5.0f));
       search.setText(getCompleteAddressString(currentSelected.latitude, currentSelected.longitude));
     }
   }

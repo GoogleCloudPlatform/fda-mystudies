@@ -63,59 +63,67 @@
     <div>
       <table id="user_list" class="table tbl_rightalign tbl">
         <thead>
-        <tr>
-          <th id="">Name <span class="sort"></span></th>
-          <th id="">Email address <span class="sort"></span></th>
-          <th id="">ROLE <span class="sort"></span></th>
-          <th id="">Actions</th>
-        </tr>
+          <tr>
+            <th id="">Name
+              <span class="sort"></span>
+            </th>
+            <th id="">Email address
+              <span class="sort"></span>
+            </th>
+            <th id="">ROLE
+              <span class="sort"></span>
+            </th>
+            <th id="">Actions</th>
+          </tr>
         </thead>
         <tbody>
-        <c:forEach items="${userList}" var="user">
-          <tr
-              <c:if test="${fn:contains(aspList.capability , 'Project Lead' )}"> plRow </c:if>
-              <c:if test="${fn:contains(aspList.capability , 'Coordinator' )}"> cRow </c:if>>
-            <td>
-              <div class="dis-ellipsis"
-                   title="${fn:escapeXml(user.userFullName)}">${fn:escapeXml(user.userFullName)}</div>
-            </td>
-            <td>
-              <div class="dis-ellipsis" title="${user.userEmail}">${user.userEmail}</div>
-            </td>
-            <td>${user.roleName}</td>
-            <td><span class="sprites_icon preview-g mr-lg viewUser"
+          <c:forEach items="${userList}" var="user">
+            <tr
+                <c:if test="${fn:contains(aspList.capability , 'Project Lead' )}"> plRow </c:if>
+                <c:if test="${fn:contains(aspList.capability , 'Coordinator' )}"> cRow </c:if>>
+              <td>
+                <div class="dis-ellipsis"
+                     title="${fn:escapeXml(user.userFullName)}">${fn:escapeXml(user.userFullName)}</div>
+              </td>
+              <td>
+                <div class="dis-ellipsis" title="${user.userEmail}">${user.userEmail}</div>
+              </td>
+              <td>${user.roleName}</td>
+              <td>
+                <span class="sprites_icon preview-g mr-lg viewUser"
                       userId="${user.userId}" data-toggle="tooltip"
-                      data-placement="top" title="View"></span> <c:if
-                test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
-									<span
+                      data-placement="top" title="View"></span>
+                <c:if
+                    test="${fn:contains(sessionObject.userPermissions,'ROLE_MANAGE_USERS_EDIT')}">
+                  <span
                       class="sprites_icon edit-g addOrEditUser <c:if test='${not empty user.userPassword &&  not user.enabled}'>cursor-none</c:if>"
                       userId="${user.userId}" data-toggle="tooltip"
                       data-placement="top" title="Edit" id="editIcon${user.userId}">
-									</span>
-              <span class="ml-lg"> <label class="switch"
-                                          data-toggle="tooltip" id="label${user.userId}"
-                                          data-placement="top"
-                                          <c:if
-                                              test="${empty user.userPassword}">title="Status: Invitation Sent, Account Activation Pending"</c:if>
-                                          <c:if
-                                              test="${user.emailChanged}">title="Status: Pending Verification"</c:if>
-                                          <c:if
-                                              test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Status: Active"</c:if>
-                                          <c:if
-                                              test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Status: Deactivated"</c:if>>
-											<input type="checkbox" class="switch-input"
-                             value="${user.enabled ? 1 : 0}" id="${user.userId}"
-                             <c:if test="${user.enabled}">checked</c:if>
-                             onchange="activateOrDeactivateUser(${user.userId})"
-                             <c:if
-                                 test="${empty user.userPassword || user.emailChanged}">disabled</c:if>>
-											<span class="switch-label" data-on="On" data-off="Off"></span>
-											<span class="switch-handle"></span>
-									</label>
-									</span>
-            </c:if></td>
-          </tr>
-        </c:forEach>
+                  </span>
+                  <span class="ml-lg"><label class="switch"
+                                             data-toggle="tooltip" id="label${user.userId}"
+                                             data-placement="top"
+                                             <c:if
+                                                 test="${empty user.userPassword}">title="Status: Invitation Sent, Account Activation Pending"</c:if>
+                                             <c:if
+                                                 test="${user.emailChanged}">title="Status: Pending Verification"</c:if>
+                                             <c:if
+                                                 test="${!user.emailChanged && not empty user.userPassword && user.enabled}">title="Status: Active"</c:if>
+                                             <c:if
+                                                 test="${!user.emailChanged && not empty user.userPassword &&  not user.enabled}">title="Status: Deactivated"</c:if>>
+                    <input type="checkbox" class="switch-input"
+                           value="${user.enabled ? 1 : 0}" id="${user.userId}"
+                           <c:if test="${user.enabled}">checked</c:if>
+                           onchange="activateOrDeactivateUser(${user.userId})"
+                           <c:if
+                               test="${empty user.userPassword || user.emailChanged}">disabled</c:if>>
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                  </span>
+                </c:if></td>
+            </tr>
+          </c:forEach>
         </tbody>
       </table>
     </div>

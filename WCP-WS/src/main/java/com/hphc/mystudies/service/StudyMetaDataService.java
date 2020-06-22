@@ -64,9 +64,6 @@ import com.hphc.mystudies.integration.StudyMetaDataOrchestration;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 import com.hphc.mystudies.util.StudyMetaDataEnum;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 
 @Path("/")
 public class StudyMetaDataService {
@@ -277,40 +274,6 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
-    return resourcesForStudyImpl(studyId, context, response);
-  }
-
-  @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Path("userResources")
-  public Object getUserResources(
-      @HeaderParam("userId") String userId,
-      @HeaderParam("clientToken") String clientToken,
-      @HeaderParam("accessToken") String accessToken,
-      @QueryParam("studyId") String studyId,
-      @Context ServletContext context,
-      @Context HttpServletResponse response) {
-    Client client = Client.create();
-    WebResource webResource = client.resource(propMap.get("userRegistrationServerPersonalizedResourcesUrl"));
-    ClientResponse ursResponse = webResource
-      .queryParam("studyId", studyId)
-      .header("userId", userId)
-      .header("clientToken", clientToken)
-      .header("accessToken", accessToken)
-      .get(ClientResponse.class);
-    if (ursResponse.getStatus() != 200) {
-      LOGGER.error("Failed : HTTP error code : " + ursResponse.getStatus());
-      // Fall back to generic resources for this user.
-      return resourcesForStudyImpl(studyId, context, response);
-    }
-    return ursResponse.getEntity(String.class);
-  }
-
-  public Object resourcesForStudyImpl(
-      String studyId,
-      ServletContext context,
-      HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - resourcesForStudy() :: Starts");
     ResourcesResponse resourcesResponse = new ResourcesResponse();
     Boolean isValidFlag = false;
@@ -923,14 +886,9 @@ public class StudyMetaDataService {
   }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-  @Consumes(MediaType.APPLICATION_XML)
-  @Path("ping")
-  public String ping() {
-    LOGGER.info("INFO: StudyMetaDataService - ping() :: Starts ");
-    String response = "It Works!";
-    LOGGER.info("INFO: StudyMetaDataService - ping() :: Ends ");
-    return response;
+  @Path("healthCheck")
+  public String healthCheck() {
+    return "200 OK!";
   }
 
   @GET
@@ -968,10 +926,39 @@ public class StudyMetaDataService {
   @Produces(MediaType.APPLICATION_JSON)
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("versionInfo")
-  public Object getAppVersionInfo() {
+  public Object getAppVersionInfo(
+      @HeaderParam("applicationId") String appId,
+      @HeaderParam("orgId") String orgId,
+      @Context HttpServletResponse response) {
     AppVersionInfoBean appVersionInfoBean = null;
     LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: Starts");
-    appVersionInfoBean = appMetaDataOrchestration.getAppVersionInfo();
+
+    if (StringUtils.isBlank(appId) || StringUtils.isBlank(orgId)) {
+      StudyMetaDataUtil.getFailureResponse(
+          ErrorCodes.STATUS_102,
+          ErrorCodes.UNKNOWN,
+          StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG,
+          response);
+      return Response.status(Response.Status.NOT_FOUND)
+          .entity(StudyMetaDataConstants.INVALID_INPUT)
+          .build();
+    }
+
+    try {
+      appVersionInfoBean = appMetaDataOrchestration.getAppVersionInfo(appId, orgId);
+      if (appVersionInfoBean == null) {
+        StudyMetaDataUtil.getFailureResponse(
+            ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
+        return Response.status(Response.Status.NOT_FOUND)
+            .entity(StudyMetaDataConstants.NO_RECORD)
+            .build();
+      }
+    } catch (Exception e) {
+      LOGGER.error("ERROR: StudyMetaDataService - getAppVersionInfo()", e);
+      return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+          .entity(StudyMetaDataConstants.FAILURE)
+          .build();
+    }
     LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: ends");
     return appVersionInfoBean;
   }

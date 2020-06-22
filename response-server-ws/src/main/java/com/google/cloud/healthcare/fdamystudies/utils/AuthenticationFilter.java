@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.utils;
 
 import java.io.IOException;
@@ -48,21 +49,21 @@ public class AuthenticationFilter implements Filter {
         String clientToken = httpServletRequest.getHeader(AppConstants.CLIENT_TOKEN_KEY);
         Integer value = null;
         boolean isValid = false;
-        boolean isInterceptorURL = false;
+        boolean isInterceptorUrl = false;
         boolean isServerApiUrl = false;
         ApplicationConfiguration applicationConfiguration =
             BeanUtil.getBean(ApplicationConfiguration.class);
-        String interceptorURL = applicationConfiguration.getInterceptorUrls();
+        String interceptorUrl = applicationConfiguration.getInterceptorUrls();
         String serverApiUrls = applicationConfiguration.getServerApiUrls();
         String uri = ((HttpServletRequest) request).getRequestURI();
-        String[] list = interceptorURL.split(",");
+        String[] list = interceptorUrl.split(",");
         for (int i = 0; i < list.length; i++) {
           if (uri.endsWith(list[i].trim())) {
-            isInterceptorURL = true;
+            isInterceptorUrl = true;
             break;
           }
         }
-        if (!isInterceptorURL) {
+        if (!isInterceptorUrl) {
           String[] listServerApiUrls = serverApiUrls.split(",");
           for (int i = 0; i < listServerApiUrls.length; i++) {
             if (uri.endsWith(listServerApiUrls[i].trim())) {
@@ -72,7 +73,7 @@ public class AuthenticationFilter implements Filter {
           }
         }
 
-        if (isInterceptorURL) {
+        if (isInterceptorUrl) {
           setCommonHeaders(httpServletResponse);
           chain.doFilter(request, response);
 
@@ -87,12 +88,14 @@ public class AuthenticationFilter implements Filter {
               setCommonHeaders(httpServletResponse);
               chain.doFilter(request, response);
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : clientID and Secret don't match");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               }
             }
           } catch (UnAuthorizedRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -105,6 +108,7 @@ public class AuthenticationFilter implements Filter {
 
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           } catch (InvalidRequestException e) {
+            logger.warn("AuthenticationFilter doFilter failed : ", e);
             setCommonHeaders(httpServletResponse);
 
             httpServletResponse.setHeader(
@@ -144,12 +148,14 @@ public class AuthenticationFilter implements Filter {
               chain.doFilter(request, response);
 
             } else {
+              logger.warn("AuthenticationFilter doFilter failed : invalid accessToken");
               if (response instanceof HttpServletResponse) {
                 setCommonHeaders(httpServletResponse);
                 httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
               }
             }
           } else {
+            logger.warn("AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           }

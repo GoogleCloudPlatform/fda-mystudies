@@ -20,15 +20,15 @@ import io.realm.annotations.PrimaryKey;
 public class ConsentDocumentData extends RealmObject {
   private String message;
   private ConsentDocObj consent;
+  @PrimaryKey
+  private String mStudyId;
 
-  @PrimaryKey private String mStudyId;
-
-  public String getmStudyId() {
+  public String getStudyId() {
     return mStudyId;
   }
 
-  public void setmStudyId(String mStudyId) {
-    this.mStudyId = mStudyId;
+  public void setStudyId(String studyId) {
+    this.mStudyId = studyId;
   }
 
   public String getMessage() {

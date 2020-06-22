@@ -10,9 +10,11 @@
   <!-- widgets section-->
   <div class="col-sm-12 col-md-12 col-lg-12 p-none">
     <div class="black-lg-f">
-			<span class="mr-xs"><a href="javascript:void(0)"
-                             class="backOrCancelBttn"><img
-          src="/studybuilder/images/icons/back-b.png" alt=""/></a> </span>
+      <span class="mr-xs">
+        <a href="javascript:void(0)"
+           class="backOrCancelBttn"><img
+            src="/studybuilder/images/icons/back-b.png" alt=""/></a>
+      </span>
       <c:if test="${actionPage eq 'ADD_PAGE'}">
         Add New User
       </c:if>
@@ -30,30 +32,48 @@
           <c:if
               test="${not empty userBO.userPassword && userBO.enabled && not userBO.emailChanged}">
             <div class="dis-inline mt-sm">
-							<span class="stat"><span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs"> Active</span></span></span>
+              <span class="stat">
+                <span class="black-sm-f">Status:
+                  <span
+                      class="gray-xs-f mb-xs pl-xs"> Active
+                  </span>
+                </span>
+              </span>
             </div>
           </c:if>
           <c:if
               test="${not empty userBO.userPassword &&  not userBO.enabled}">
             <div class="dis-inline mt-sm">
-							<span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs"> Deactivated</span></span>
+              <span class="black-sm-f">Status:
+                <span
+                    class="gray-xs-f mb-xs pl-xs"> Deactivated
+                </span>
+              </span>
             </div>
           </c:if>
           <c:if test="${empty userBO.userPassword}">
             <div class="dis-inline mt-sm">
-							<span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs pr-md"> Invitation Sent,
-									Account Activation Pending</span></span><span class="black-sm-f resend pl-md"><a
-                href="javascript:void(0)" id="resendLinkId">Re-send
-									Activation Link</a></span>
+              <span class="black-sm-f">Status:
+                <span
+                    class="gray-xs-f mb-xs pl-xs pr-md"> Invitation Sent,
+                  Account Activation Pending
+                </span>
+              </span>
+              <span class="black-sm-f resend pl-md">
+                <a
+                    href="javascript:void(0)" id="resendLinkId">Re-send
+                  Activation Link
+                </a>
+              </span>
             </div>
           </c:if>
           <c:if test="${userBO.emailChanged}">
             <div class="dis-inline mt-sm">
-							<span class="black-sm-f">Status:<span
-                  class="gray-xs-f mb-xs pl-xs"> Pending Verification</span></span>
+              <span class="black-sm-f">Status:
+                <span
+                    class="gray-xs-f mb-xs pl-xs"> Pending Verification
+                </span>
+              </span>
             </div>
           </c:if>
         </div>
@@ -144,6 +164,7 @@
                      pattern="[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
                      data-pattern-error="Email address is invalid" maxlength="100"
                      required
+                <%-- <c:if test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO) || not empty userBO}">disabled</c:if>/> --%>
                      <c:if
                          test="${actionPage eq 'VIEW_PAGE' || (empty userBO.userPassword && not empty userBO)}">disabled</c:if> />
               <div class="help-block with-errors red-txt"></div>
@@ -152,7 +173,8 @@
           <!-- form- input-->
           <div class="col-md-6 pr-none">
             <div class="gray-xs-f mb-xs">
-              Phone (XXX - XXX - XXXX)<span class="requiredStar"> *</span>
+              Phone (XXX - XXX - XXXX)
+              <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
               <input type="text" class="form-control phoneMask"
@@ -170,7 +192,8 @@
           <!-- form- input-->
           <div class="col-md-6 pl-none">
             <div class="blue-md-f text-uppercase mt-lg mb-md">
-              Assign Role<span class="requiredStar"> *</span>
+              Assign Role
+              <span class="requiredStar"> *</span>
             </div>
             <div class="form-group">
               <select id="roleId"
@@ -193,7 +216,7 @@
               <div class="form-group mb-none">
                 <c:if
                     test="${actionPage eq 'EDIT_PAGE' || actionPage eq 'VIEW_PAGE'}">
-									<span class="ml-xs">&nbsp; <label
+                  <span class="ml-xs">&nbsp; <label
                       class="switch bg-transparent mt-xs"> <input
                       type="checkbox" class="switch-input"
                       value="${userBO.enabled}" id="change${userBO.userId}"
@@ -201,10 +224,11 @@
                       <c:if
                           test="${empty userBO.userPassword || actionPage eq 'VIEW_PAGE' || userBO.emailChanged}">disabled</c:if>
                       onclick="activateOrDeactivateUser(${userBO.userId});">
-											<span class="switch-label bg-transparent" data-on="On"
-                            data-off="Off"></span> <span class="switch-handle"></span>
-									</label>
-									</span>
+                    <span class="switch-label bg-transparent" data-on="On"
+                          data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+                  </span>
                 </c:if>
               </div>
             </div>
@@ -215,80 +239,88 @@
         <!-- Assign Permissions -->
         <div class="blue-md-f text-uppercase mt-lg">Assign Permissions</div>
         <div class="pull-right mb-xs">
-          <span class="gray-xs-f">View only</span> <span
-            class="gray-xs-f ml-lg">View and edit</span>
+          <span class="gray-xs-f">View only</span>
+          <span
+              class="gray-xs-f ml-lg">View and edit
+          </span>
         </div>
         <div class="clearfix"></div>
 
         <!-- Gray Widget-->
         <div class="edit-user-list-widget">
-					<span class="checkbox checkbox-inline"> <input
+          <span class="checkbox checkbox-inline"><input
               type="checkbox" class="chk" id="inlineCheckbox1" value="option1"
               <c:if test="${fn:contains(permissions,7)}">checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox1"> Users </label>
-					</span> <span class="pull-right"> <span
-            class="radio radio-info radio-inline p-45"> <input
-            type="radio" class="musr" id="inlineRadio1" value="0"
-            name="manageUsers"
-            <c:if test="${fn:contains(permissions,7)}">checked</c:if>
-            <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio1"></label>
-					</span> <span class="radio radio-inline"> <input type="radio"
-                                                           class="musr" id="inlineRadio2" value="1"
-                                                           name="manageUsers"
-                                                           <c:if
-                                                               test="${fn:contains(permissions,5)}">checked</c:if>
-                                                           <c:if
-                                                               test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio2"></label>
-					</span>
-					</span>
+            <label for="inlineCheckbox1"> Users </label>
+          </span>
+          <span class="pull-right">
+            <span
+                class="radio radio-info radio-inline p-45"><input
+                type="radio" class="musr" id="inlineRadio1" value="0"
+                name="manageUsers"
+                <c:if test="${fn:contains(permissions,7)}">checked</c:if>
+                <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio1"></label>
+            </span>
+            <span class="radio radio-inline"><input type="radio"
+                                                    class="musr" id="inlineRadio2" value="1"
+                                                    name="manageUsers"
+                                                    <c:if
+                                                        test="${fn:contains(permissions,5)}">checked</c:if>
+                                                    <c:if
+                                                        test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio2"></label>
+            </span>
+          </span>
         </div>
 
         <div class="edit-user-list-widget">
-					<span class="checkbox checkbox-inline"> <input
+          <span class="checkbox checkbox-inline"><input
               type="checkbox" id="inlineCheckbox3" class="chk" value="option1"
               <c:if test="${fn:contains(permissions,4)}">checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox3"> Notifications </label>
-					</span> <span class="pull-right"> <span
-            class="radio radio-info radio-inline p-45"> <input
-            type="radio" id="inlineRadio5" class="mnotf" value="0"
-            name="manageNotifications"
-            <c:if test="${fn:contains(permissions,4)}">checked</c:if>
-            <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio5"></label>
-					</span> <span class="radio radio-inline"> <input type="radio"
-                                                           id="inlineRadio6" class="mnotf" value="1"
-                                                           name="manageNotifications"
-                                                           <c:if
-                                                               test="${fn:contains(permissions,6)}">checked</c:if>
-                                                           <c:if
-                                                               test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-							<label for="inlineRadio6"></label>
-					</span>
-					</span>
+            <label for="inlineCheckbox3"> Notifications </label>
+          </span>
+          <span class="pull-right">
+            <span
+                class="radio radio-info radio-inline p-45"><input
+                type="radio" id="inlineRadio5" class="mnotf" value="0"
+                name="manageNotifications"
+                <c:if test="${fn:contains(permissions,4)}">checked</c:if>
+                <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio5"></label>
+            </span>
+            <span class="radio radio-inline"><input type="radio"
+                                                    id="inlineRadio6" class="mnotf" value="1"
+                                                    name="manageNotifications"
+                                                    <c:if
+                                                        test="${fn:contains(permissions,6)}">checked</c:if>
+                                                    <c:if
+                                                        test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+              <label for="inlineRadio6"></label>
+            </span>
+          </span>
         </div>
 
         <!-- Gray Widget-->
         <div class="edit-user-list-widget">
-					<span class="checkbox checkbox-inline"> <input
+          <span class="checkbox checkbox-inline"><input
               type="checkbox" id="inlineCheckbox4" name="manageStudies"
               <c:if test="${fn:contains(permissions,2)}">value="1" checked</c:if>
               <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-						<label for="inlineCheckbox4"> Studies </label>
-					</span>
+            <label for="inlineCheckbox4"> Studies </label>
+          </span>
           <div class="mt-lg pl-lg">
             <div class="pb-md bor-dashed">
-							<span class="checkbox checkbox-inline"> <input
+              <span class="checkbox checkbox-inline"><input
                   type="checkbox" id="inlineCheckbox5" class="changeView1"
                   name="addingNewStudy"
                   value="${fn:contains(permissions,8)?'1':''}"
               <c:if test="${fn:contains(permissions,8)}"> checked</c:if>
                   <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-								<label for="inlineCheckbox5"> Create New Studies </label>
-							</span>
+                <label for="inlineCheckbox5"> Create New Studies </label>
+              </span>
             </div>
             <div class="mt-md study-list mb-md addHide">
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
@@ -306,7 +338,8 @@
             </div>
             <div class="addHide">
               <span
-                  class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions</span>
+                  class="mr-lg text-weight-semibold text-uppercase">Existing Study Permissions
+              </span>
 
               <c:if test="${actionPage ne 'VIEW_PAGE'}">
                 <span class="ablue removeAll changeView">x Remove all</span>
@@ -321,29 +354,32 @@
                          stdTxt="${study.name}&nbsp;(${study.customStudyId})"
                          <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
                   <c:if test="${actionPage ne 'VIEW_PAGE'}">
-										<span class="mr-md"><img
+                    <span class="mr-md"><img
                         src="/studybuilder/images/icons/close.png"
                         onclick="del(${study.id});" alt=""/></span>
                   </c:if>
-                  <span>${study.name}&nbsp;(${study.customStudyId})</span> <span
-                    class="pull-right"> <span
-                    class="radio radio-info radio-inline p-45 mr-xs"> <input
-                    type="radio" class="v${study.id} changeView"
-                    id="v1${study.id}" name="radio${study.id}" value="0"
-                    <c:if test="${not study.viewPermission}">checked</c:if>
-                    <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-											<label for="v1${study.id}"></label></span> <span
-                    class="radio radio-inline"> <input type="radio"
-                                                       class="v${study.id} changeView"
-                                                       id="v2${study.id}"
-                                                       name="radio${study.id}" value="1"
-                                                       <c:if
-                                                           test="${study.viewPermission}">checked</c:if>
-                                                       <c:if
-                                                           test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
-											<label for="v2${study.id}"></label>
-									</span>
-									</span>
+                  <span>${study.name}&nbsp;(${study.customStudyId})</span>
+                  <span
+                      class="pull-right">
+                    <span
+                        class="radio radio-info radio-inline p-45 mr-xs"><input
+                        type="radio" class="v${study.id} changeView"
+                        id="v1${study.id}" name="radio${study.id}" value="0"
+                        <c:if test="${not study.viewPermission}">checked</c:if>
+                        <c:if test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                      <label for="v1${study.id}"></label></span>
+                    <span
+                        class="radio radio-inline"><input type="radio"
+                                                          class="v${study.id} changeView"
+                                                          id="v2${study.id}"
+                                                          name="radio${study.id}" value="1"
+                                                          <c:if
+                                                              test="${study.viewPermission}">checked</c:if>
+                                                          <c:if
+                                                              test="${actionPage eq 'VIEW_PAGE'}">disabled</c:if>>
+                      <label for="v2${study.id}"></label>
+                    </span>
+                  </span>
                 </div>
               </c:forEach>
             </div>

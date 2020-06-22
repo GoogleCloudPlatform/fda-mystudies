@@ -37,13 +37,13 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.harvard.AppConfig;
-import com.harvard.eligibilitymodule.CustomViewTaskActivity;
-import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.R;
 import com.harvard.WebViewActivity;
+import com.harvard.eligibilitymodule.CustomViewTaskActivity;
+import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.gatewaymodule.CircleIndicator;
 import com.harvard.offlinemodule.model.OfflineData;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
 import com.harvard.studyappmodule.consent.model.CorrectAnswerString;
 import com.harvard.studyappmodule.consent.model.EligibilityConsent;
@@ -60,23 +60,23 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WCPConfigEvent;
+import com.harvard.webservicemodule.events.WcpConfigEvent;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.researchstack.backbone.task.OrderedTask;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.util.HashMap;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmObject;
 
 public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
   private static final int STUDY_INFO = 10;
@@ -84,31 +84,30 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private static final int GET_CONSENT_DOC = 12;
   private static final int JOIN_ACTION_SIGIN = 100;
   private static final int GET_PREFERENCES = 101;
-  private RelativeLayout mBackBtn;
-  private RelativeLayout mRightBtn;
-  private AppCompatImageView mBookmarkimage;
-  private boolean mBookmarked = false;
-  private String mStudyId = "";
-  private String mStatus = "";
-  private String mStudyStatus = "";
-  private String mPosition = "";
-  private String mTitle = "";
-  private String mEnroll = "";
-  private String mRejoin = "";
-  private AppCompatTextView mJoinButton;
-  private StudyHome mStudyHome;
-  private ConsentDocumentData mConsentDocumentData;
-
-  private AppCompatTextView mVisitWebsiteButton;
-  private AppCompatTextView mLernMoreButton;
-  private AppCompatTextView mConsentLayButton;
-  private LinearLayout mBottombar;
-  private LinearLayout mBottombar1;
-  private RelativeLayout mConsentLay;
-  private boolean mAboutThisStudy;
-  private int mDeleteIndexNumberDB;
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private RelativeLayout backBtn;
+  private RelativeLayout rightBtn;
+  private AppCompatImageView bookmarkimage;
+  private boolean bookmarked = false;
+  private String studyId = "";
+  private String status = "";
+  private String studyStatus = "";
+  private String position = "";
+  private String title = "";
+  private String enroll = "";
+  private String rejoin = "";
+  private AppCompatTextView joinButton;
+  private StudyHome studyHome;
+  private ConsentDocumentData consentDocumentData;
+  private AppCompatTextView visitWebsiteButton;
+  private AppCompatTextView learnMoreButton;
+  private AppCompatTextView consentLayButton;
+  private LinearLayout bottomBar;
+  private LinearLayout bottomBar1;
+  private RelativeLayout consentLay;
+  private boolean aboutThisStudy;
+  private int deleteIndexNumberDb;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
   private EligibilityConsent eligibilityConsent;
   private RealmList<Studies> userPreferenceStudies;
 
@@ -116,23 +115,23 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_study_info);
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(this);
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(this);
 
-    initializeXMLId();
+    initializeXmlId();
     setFont();
     bindEvents();
 
     try {
-      mStudyId = getIntent().getStringExtra("studyId");
-      mStatus = getIntent().getStringExtra("status");
-      mStudyStatus = getIntent().getStringExtra("studyStatus");
-      mPosition = getIntent().getStringExtra("position");
-      mTitle = getIntent().getStringExtra("title");
-      mBookmarked = getIntent().getBooleanExtra("bookmark", false);
-      mEnroll = getIntent().getStringExtra("enroll");
-      mRejoin = getIntent().getStringExtra("rejoin");
-      mAboutThisStudy = getIntent().getBooleanExtra("about_this_study", false);
+      studyId = getIntent().getStringExtra("studyId");
+      status = getIntent().getStringExtra("status");
+      studyStatus = getIntent().getStringExtra("studyStatus");
+      position = getIntent().getStringExtra("position");
+      title = getIntent().getStringExtra("title");
+      bookmarked = getIntent().getBooleanExtra("bookmark", false);
+      enroll = getIntent().getStringExtra("enroll");
+      rejoin = getIntent().getStringExtra("rejoin");
+      aboutThisStudy = getIntent().getBooleanExtra("about_this_study", false);
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -140,71 +139,71 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     if (AppController.getHelperSharedPreference()
         .readPreference(this, getResources().getString(R.string.userid), "")
         .equalsIgnoreCase("")) {
-      mBookmarkimage.setVisibility(View.GONE);
-      mRightBtn.setClickable(false);
+      bookmarkimage.setVisibility(View.GONE);
+      rightBtn.setClickable(false);
     }
-    if (mBookmarked) {
-      mBookmarkimage.setImageResource(R.drawable.star_yellow_big);
+    if (bookmarked) {
+      bookmarkimage.setImageResource(R.drawable.star_yellow_big);
     } else {
-      mBookmarkimage.setImageResource(R.drawable.star_grey_big);
+      bookmarkimage.setImageResource(R.drawable.star_grey_big);
     }
     AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
     callGetStudyInfoWebservice();
 
-    if (mStatus.equalsIgnoreCase(getString(R.string.upcoming))
-        || mStatus.equalsIgnoreCase(getString(R.string.closed))) {
-      mJoinButton.setVisibility(View.GONE);
+    if (status.equalsIgnoreCase(getString(R.string.upcoming))
+        || status.equalsIgnoreCase(getString(R.string.closed))) {
+      joinButton.setVisibility(View.GONE);
     }
 
-    if (mStatus.equalsIgnoreCase(getString(R.string.closed))) {
-      mBookmarkimage.setVisibility(View.GONE);
+    if (status.equalsIgnoreCase(getString(R.string.closed))) {
+      bookmarkimage.setVisibility(View.GONE);
     }
 
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_standalone))) {
-      mBookmarkimage.setVisibility(View.GONE);
-      mBackBtn.setVisibility(View.GONE);
+      bookmarkimage.setVisibility(View.GONE);
+      backBtn.setVisibility(View.VISIBLE);
     }
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mRightBtn = (RelativeLayout) findViewById(R.id.rightBtn);
-    mBookmarkimage = (AppCompatImageView) findViewById(R.id.imageViewRight);
-    mJoinButton = (AppCompatTextView) findViewById(R.id.joinButton);
-    mVisitWebsiteButton = (AppCompatTextView) findViewById(R.id.mVisitWebsiteButton);
-    mLernMoreButton = (AppCompatTextView) findViewById(R.id.mLernMoreButton);
-    mConsentLayButton = (AppCompatTextView) findViewById(R.id.consentLayButton);
-    mBottombar = (LinearLayout) findViewById(R.id.bottom_bar);
-    mBottombar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
-    mConsentLay = (RelativeLayout) findViewById(R.id.consentLay);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    rightBtn = (RelativeLayout) findViewById(R.id.rightBtn);
+    bookmarkimage = (AppCompatImageView) findViewById(R.id.imageViewRight);
+    joinButton = (AppCompatTextView) findViewById(R.id.joinButton);
+    visitWebsiteButton = (AppCompatTextView) findViewById(R.id.mVisitWebsiteButton);
+    learnMoreButton = (AppCompatTextView) findViewById(R.id.mLernMoreButton);
+    consentLayButton = (AppCompatTextView) findViewById(R.id.consentLayButton);
+    bottomBar = (LinearLayout) findViewById(R.id.bottom_bar);
+    bottomBar1 = (LinearLayout) findViewById(R.id.bottom_bar1);
+    consentLay = (RelativeLayout) findViewById(R.id.consentLay);
   }
 
   private void setFont() {
-    mJoinButton.setTypeface(AppController.getTypeface(this, "regular"));
-    mVisitWebsiteButton.setTypeface(AppController.getTypeface(StudyInfoActivity.this, "regular"));
-    mLernMoreButton.setTypeface(AppController.getTypeface(StudyInfoActivity.this, "regular"));
-    mConsentLayButton.setTypeface(AppController.getTypeface(StudyInfoActivity.this, "regular"));
+    joinButton.setTypeface(AppController.getTypeface(this, "regular"));
+    visitWebsiteButton.setTypeface(AppController.getTypeface(StudyInfoActivity.this, "regular"));
+    learnMoreButton.setTypeface(AppController.getTypeface(StudyInfoActivity.this, "regular"));
+    consentLayButton.setTypeface(AppController.getTypeface(StudyInfoActivity.this, "regular"));
   }
 
   private void bindEvents() {
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             Intent intent = new Intent();
-            intent.putExtra("position", mPosition);
-            intent.putExtra("bookmark", mBookmarked);
+            intent.putExtra("position", position);
+            intent.putExtra("bookmark", bookmarked);
             intent.putExtra("action", "refresh");
             setResult(Activity.RESULT_OK, intent);
             finish();
           }
         });
 
-    mRightBtn.setOnClickListener(
+    rightBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (mBookmarked) {
+            if (bookmarked) {
               updatebookmark(false);
             } else {
               updatebookmark(true);
@@ -212,7 +211,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           }
         });
 
-    mJoinButton.setOnClickListener(
+    joinButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -225,31 +224,31 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
               intent.putExtra("from", "StudyInfo");
               startActivityForResult(intent, JOIN_ACTION_SIGIN);
             } else {
-              new callConsentMetaData(true).execute();
+              new CallConsentMetaData(true).execute();
             }
           }
         });
 
-    mVisitWebsiteButton.setOnClickListener(
+    visitWebsiteButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             try {
               Intent browserIntent =
-                  new Intent(Intent.ACTION_VIEW, Uri.parse(mStudyHome.getStudyWebsite()));
+                  new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
               startActivity(browserIntent);
             } catch (Exception e) {
               Logger.log(e);
             }
           }
         });
-    mLernMoreButton.setOnClickListener(
+    learnMoreButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             try {
               Intent intent = new Intent(StudyInfoActivity.this, WebViewActivity.class);
-              intent.putExtra("consent", mConsentDocumentData.getConsent().getContent());
+              intent.putExtra("consent", consentDocumentData.getConsent().getContent());
               startActivity(intent);
             } catch (Exception e) {
               Logger.log(e);
@@ -259,21 +258,21 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   }
 
   private void joinStudy() {
-    if (mStatus.equalsIgnoreCase(StudyFragment.UPCOMING)) {
+    if (status.equalsIgnoreCase(StudyFragment.UPCOMING)) {
       Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
-    } else if (mEnroll.equalsIgnoreCase("false")) {
+    } else if (enroll.equalsIgnoreCase("false")) {
       Toast.makeText(getApplication(), R.string.study_no_enroll, Toast.LENGTH_SHORT).show();
-    } else if (mStatus.equalsIgnoreCase(StudyFragment.PAUSED)) {
+    } else if (status.equalsIgnoreCase(StudyFragment.PAUSED)) {
       Toast.makeText(getApplication(), R.string.study_paused, Toast.LENGTH_SHORT).show();
-    } else if (mRejoin.equalsIgnoreCase("false")
-        && mStudyStatus.equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
+    } else if (rejoin.equalsIgnoreCase("false")
+        && studyStatus.equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
       Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
     } else {
       if (eligibilityConsent.getEligibility().getType().equalsIgnoreCase("token")) {
         Intent intent = new Intent(StudyInfoActivity.this, EligibilityEnrollmentActivity.class);
         intent.putExtra("enrollmentDesc", eligibilityConsent.getEligibility().getTokenTitle());
-        intent.putExtra("title", mTitle);
-        intent.putExtra("studyId", mStudyId);
+        intent.putExtra("title", title);
+        intent.putExtra("studyId", studyId);
         intent.putExtra("eligibility", "token");
         intent.putExtra("type", "join");
         startActivity(intent);
@@ -281,16 +280,16 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
         RealmList<Steps> stepsRealmList = eligibilityConsent.getEligibility().getTest();
         StepsBuilder stepsBuilder = new StepsBuilder(this, stepsRealmList, false);
-        OrderedTask mTask = new OrderedTask("Test", stepsBuilder.getsteps());
+        OrderedTask task = new OrderedTask("Test", stepsBuilder.getsteps());
 
         Intent intent =
             CustomViewTaskActivity.newIntent(
                 this,
-                mTask,
+                task,
                 "",
-                mStudyId,
+                studyId,
                 eligibilityConsent.getEligibility(),
-                mTitle,
+                title,
                 "",
                 "test",
                 "join");
@@ -299,8 +298,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       } else {
         Intent intent = new Intent(StudyInfoActivity.this, EligibilityEnrollmentActivity.class);
         intent.putExtra("enrollmentDesc", eligibilityConsent.getEligibility().getTokenTitle());
-        intent.putExtra("title", mTitle);
-        intent.putExtra("studyId", mStudyId);
+        intent.putExtra("title", title);
+        intent.putExtra("studyId", studyId);
         intent.putExtra("eligibility", "combined");
         intent.putExtra("type", "join");
         startActivityForResult(intent, 12345);
@@ -308,13 +307,13 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     }
   }
 
-  private class callConsentMetaData extends AsyncTask<String, Void, String> {
+  private class CallConsentMetaData extends AsyncTask<String, Void, String> {
     String response = null;
     String responseCode = null;
-    Responsemodel mResponseModel;
+    Responsemodel responseModel;
     boolean join;
 
-    public callConsentMetaData(boolean join) {
+    public CallConsentMetaData(boolean join) {
       this.join = join;
     }
 
@@ -322,11 +321,11 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     protected String doInBackground(String... params) {
       ConnectionDetector connectionDetector = new ConnectionDetector(StudyInfoActivity.this);
 
-      String url = URLs.BASE_URL_WCP_SERVER + URLs.CONSENT_METADATA + "?studyId=" + mStudyId;
+      String url = Urls.BASE_URL_WCP_SERVER + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        mResponseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
-        responseCode = mResponseModel.getResponseCode();
-        response = mResponseModel.getResponseData();
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseCode = responseModel.getResponseCode();
+        response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
           response = "timeout";
         } else if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("")) {
@@ -416,23 +415,24 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                   .create();
           eligibilityConsent = gson.fromJson(response, EligibilityConsent.class);
           if (eligibilityConsent != null) {
-            eligibilityConsent.setStudyId(mStudyId);
+            eligibilityConsent.setStudyId(studyId);
             saveConsentToDB(eligibilityConsent);
 
-            if (join) joinStudy();
-            else {
+            if (join) {
+              joinStudy();
+            } else {
               if (userPreferenceStudies != null) {
                 if (userPreferenceStudies.size() != 0) {
                   boolean studyIdPresent = false;
                   for (int i = 0; i < userPreferenceStudies.size(); i++) {
-                    if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(mStudyId)) {
+                    if (userPreferenceStudies.get(i).getStudyId().equalsIgnoreCase(studyId)) {
                       studyIdPresent = true;
                       if (userPreferenceStudies
                           .get(i)
                           .getStatus()
                           .equalsIgnoreCase(StudyFragment.IN_PROGRESS)) {
                         Intent intent = new Intent(StudyInfoActivity.this, SurveyActivity.class);
-                        intent.putExtra("studyId", mStudyId);
+                        intent.putExtra("studyId", studyId);
                         startActivity(intent);
                       } else {
                         joinStudy();
@@ -479,18 +479,18 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   }
 
   private void saveConsentToDB(EligibilityConsent eligibilityConsent) {
-    mRealm.beginTransaction();
-    mRealm.copyToRealmOrUpdate(eligibilityConsent);
-    mRealm.commitTransaction();
+    realm.beginTransaction();
+    realm.copyToRealmOrUpdate(eligibilityConsent);
+    realm.commitTransaction();
   }
 
   @Override
   public void onBackPressed() {
     Intent intent = new Intent();
-    intent.putExtra("position", mPosition);
-    intent.putExtra("bookmark", mBookmarked);
-    intent.putExtra("status", mStatus);
-    intent.putExtra("studyId", mStudyId);
+    intent.putExtra("position", position);
+    intent.putExtra("bookmark", bookmarked);
+    intent.putExtra("status", status);
+    intent.putExtra("studyId", studyId);
     intent.putExtra("action", "refresh");
     setResult(Activity.RESULT_OK, intent);
     finish();
@@ -502,7 +502,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     if (requestCode == JOIN_ACTION_SIGIN) {
       if (resultCode == RESULT_OK) {
         AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
-        GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
+
         HashMap<String, String> header = new HashMap();
         header.put(
             "accessToken",
@@ -522,7 +522,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
             new RegistrationServerEnrollmentConfigEvent(
                 "get",
-                URLs.STUDY_STATE,
+                Urls.STUDY_STATE,
                 GET_PREFERENCES,
                 StudyInfoActivity.this,
                 StudyData.class,
@@ -531,7 +531,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 null,
                 false,
                 this);
-
+        GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
         getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
             registrationServerEnrollmentConfigEvent);
         UserModulePresenter userModulePresenter = new UserModulePresenter();
@@ -542,16 +542,16 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         if (eligibilityConsent != null) {
           RealmList<Steps> stepsRealmList = eligibilityConsent.getEligibility().getTest();
           StepsBuilder stepsBuilder = new StepsBuilder(this, stepsRealmList, false);
-          OrderedTask mTask = new OrderedTask("Test", stepsBuilder.getsteps());
+          OrderedTask task = new OrderedTask("Test", stepsBuilder.getsteps());
 
           Intent intent =
               CustomViewTaskActivity.newIntent(
                   this,
-                  mTask,
+                  task,
                   "",
-                  mStudyId,
+                  studyId,
                   eligibilityConsent.getEligibility(),
-                  mTitle,
+                  title,
                   data.getStringExtra("enrollId"),
                   "combined",
                   "join");
@@ -564,17 +564,17 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
     if (responseCode == STUDY_INFO) {
-      mStudyHome = (StudyHome) response;
-      if (mStudyHome != null) {
+      studyHome = (StudyHome) response;
+      if (studyHome != null) {
         HashMap<String, String> header = new HashMap<>();
         String url =
-            URLs.GET_CONSENT_DOC
+            Urls.GET_CONSENT_DOC
                 + "?studyId="
-                + mStudyId
+                + studyId
                 + "&consentVersion=&activityId=&activityVersion=";
         GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-        WCPConfigEvent wcpConfigEvent =
-            new WCPConfigEvent(
+        WcpConfigEvent wcpConfigEvent =
+            new WcpConfigEvent(
                 "get",
                 url,
                 StudyInfoActivity.GET_CONSENT_DOC,
@@ -597,31 +597,31 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       LoginData loginData = (LoginData) response;
       AppController.getHelperProgressDialog().dismissDialog();
       if (loginData != null) {
-        if (mBookmarked) {
-          mBookmarkimage.setImageResource(R.drawable.star_grey_big);
-          mBookmarked = false;
+        if (bookmarked) {
+          bookmarkimage.setImageResource(R.drawable.star_grey_big);
+          bookmarked = false;
         } else {
-          mBookmarkimage.setImageResource(R.drawable.star_yellow_big);
-          mBookmarked = true;
+          bookmarkimage.setImageResource(R.drawable.star_yellow_big);
+          bookmarked = true;
         }
 
-        dbServiceSubscriber.updateStudyPreferenceToDb(this, mStudyId, mBookmarked, mStudyStatus);
+        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, bookmarked, studyStatus);
         /// delete offline row
-        dbServiceSubscriber.deleteOfflineDataRow(this, mDeleteIndexNumberDB);
+        dbServiceSubscriber.deleteOfflineDataRow(this, deleteIndexNumberDb);
       }
     } else if (responseCode == GET_CONSENT_DOC) {
       AppController.getHelperProgressDialog().dismissDialog();
-      mConsentDocumentData = (ConsentDocumentData) response;
+      consentDocumentData = (ConsentDocumentData) response;
       getStudyWebsiteNull();
-      mStudyHome.setmStudyId(mStudyId);
-      if (mStudyHome != null) {
-        dbServiceSubscriber.saveStudyInfoToDB(this, mStudyHome);
+      studyHome.setStudyId(studyId);
+      if (studyHome != null) {
+        dbServiceSubscriber.saveStudyInfoToDB(this, studyHome);
       }
-      if (mConsentDocumentData != null) {
-        mConsentDocumentData.setmStudyId(mStudyId);
-        dbServiceSubscriber.saveConsentDocumentToDB(this, mConsentDocumentData);
+      if (consentDocumentData != null) {
+        consentDocumentData.setStudyId(studyId);
+        dbServiceSubscriber.saveConsentDocumentToDB(this, consentDocumentData);
       }
-      setViewPagerView(mStudyHome);
+      setViewPagerView(studyHome);
     } else if (responseCode == GET_PREFERENCES) {
 
       AppController.getHelperProgressDialog().dismissDialog();
@@ -633,7 +633,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         dbServiceSubscriber.saveStudyPreferencesToDB(this, studies);
 
         userPreferenceStudies = studies.getStudies();
-        StudyList studyList = dbServiceSubscriber.getStudiesDetails(mStudyId, mRealm);
+        StudyList studyList = dbServiceSubscriber.getStudiesDetails(studyId, realm);
         if (studyList.getStatus().equalsIgnoreCase(StudyFragment.UPCOMING)) {
           Toast.makeText(getApplication(), R.string.upcoming_study, Toast.LENGTH_SHORT).show();
         } else if (!studyList.getSetting().isEnrolling()) {
@@ -644,7 +644,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             && studyList.getStudyStatus().equalsIgnoreCase(StudyFragment.WITHDRAWN)) {
           Toast.makeText(getApplication(), R.string.cannot_rejoin_study, Toast.LENGTH_SHORT).show();
         } else {
-          new callConsentMetaData(false).execute();
+          new CallConsentMetaData(false).execute();
         }
       } else {
         Toast.makeText(StudyInfoActivity.this, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
@@ -653,46 +653,46 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   }
 
   private void getStudyWebsiteNull() {
-    mJoinButton.setVisibility(View.VISIBLE);
-    if ((mAboutThisStudy) && mStudyHome.getStudyWebsite().equalsIgnoreCase("")) {
-      mBottombar.setVisibility(View.INVISIBLE);
-      mBottombar1.setVisibility(View.GONE);
-      mJoinButton.setVisibility(View.INVISIBLE);
-      mVisitWebsiteButton.setClickable(false);
-      mLernMoreButton.setClickable(false);
-    } else if (mAboutThisStudy) {
-      mBottombar.setVisibility(View.INVISIBLE);
-      mBottombar1.setVisibility(View.VISIBLE);
-      mJoinButton.setVisibility(View.INVISIBLE);
-      mVisitWebsiteButton.setClickable(false);
-      mLernMoreButton.setClickable(false);
-      if (mStudyHome.getStudyWebsite() != null
-          && !mStudyHome.getStudyWebsite().equalsIgnoreCase("")) {
-        mConsentLayButton.setText(getResources().getString(R.string.visit_website));
-        mConsentLay.setOnClickListener(
+    joinButton.setVisibility(View.VISIBLE);
+    if ((aboutThisStudy) && studyHome.getStudyWebsite().equalsIgnoreCase("")) {
+      bottomBar.setVisibility(View.INVISIBLE);
+      bottomBar1.setVisibility(View.GONE);
+      joinButton.setVisibility(View.INVISIBLE);
+      visitWebsiteButton.setClickable(false);
+      learnMoreButton.setClickable(false);
+    } else if (aboutThisStudy) {
+      bottomBar.setVisibility(View.INVISIBLE);
+      bottomBar1.setVisibility(View.VISIBLE);
+      joinButton.setVisibility(View.INVISIBLE);
+      visitWebsiteButton.setClickable(false);
+      learnMoreButton.setClickable(false);
+      if (studyHome.getStudyWebsite() != null
+          && !studyHome.getStudyWebsite().equalsIgnoreCase("")) {
+        consentLayButton.setText(getResources().getString(R.string.visit_website));
+        consentLay.setOnClickListener(
             new View.OnClickListener() {
               @Override
               public void onClick(View v) {
                 Intent browserIntent =
-                    new Intent(Intent.ACTION_VIEW, Uri.parse(mStudyHome.getStudyWebsite()));
+                    new Intent(Intent.ACTION_VIEW, Uri.parse(studyHome.getStudyWebsite()));
                 startActivity(browserIntent);
               }
             });
       } else {
-        mConsentLay.setVisibility(View.GONE);
+        consentLay.setVisibility(View.GONE);
       }
-    } else if (mStudyHome.getStudyWebsite().equalsIgnoreCase("")) {
-      mBottombar.setVisibility(View.INVISIBLE);
-      mBottombar1.setVisibility(View.VISIBLE);
-      mVisitWebsiteButton.setClickable(false);
-      mLernMoreButton.setClickable(false);
-      mConsentLay.setOnClickListener(
+    } else if (studyHome.getStudyWebsite().equalsIgnoreCase("")) {
+      bottomBar.setVisibility(View.INVISIBLE);
+      bottomBar1.setVisibility(View.VISIBLE);
+      visitWebsiteButton.setClickable(false);
+      learnMoreButton.setClickable(false);
+      consentLay.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
               try {
                 Intent intent = new Intent(StudyInfoActivity.this, WebViewActivity.class);
-                intent.putExtra("consent", mConsentDocumentData.getConsent().getContent());
+                intent.putExtra("consent", consentDocumentData.getConsent().getContent());
                 startActivity(intent);
               } catch (Exception e) {
                 Logger.log(e);
@@ -700,19 +700,19 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             }
           });
     } else {
-      mBottombar.setVisibility(View.VISIBLE);
-      mBottombar1.setVisibility(View.GONE);
-      mVisitWebsiteButton.setClickable(true);
-      mLernMoreButton.setClickable(true);
+      bottomBar.setVisibility(View.VISIBLE);
+      bottomBar1.setVisibility(View.GONE);
+      visitWebsiteButton.setClickable(true);
+      learnMoreButton.setClickable(true);
     }
 
-    if (mStatus.equalsIgnoreCase(getString(R.string.upcoming))
-        || mStatus.equalsIgnoreCase(getString(R.string.closed))) {
-      mJoinButton.setVisibility(View.GONE);
+    if (status.equalsIgnoreCase(getString(R.string.upcoming))
+        || status.equalsIgnoreCase(getString(R.string.closed))) {
+      joinButton.setVisibility(View.GONE);
     }
 
-    if (mStatus.equalsIgnoreCase(getString(R.string.closed))) {
-      mBookmarkimage.setVisibility(View.GONE);
+    if (status.equalsIgnoreCase(getString(R.string.closed))) {
+      bookmarkimage.setVisibility(View.GONE);
     }
   }
 
@@ -724,20 +724,20 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     } else {
       // offline update
       if (responseCode == UPDATE_PREFERENCES) {
-        if (mBookmarked) {
-          mBookmarkimage.setImageResource(R.drawable.star_grey_big);
-          mBookmarked = false;
+        if (bookmarked) {
+          bookmarkimage.setImageResource(R.drawable.star_grey_big);
+          bookmarked = false;
         } else {
-          mBookmarkimage.setImageResource(R.drawable.star_yellow_big);
-          mBookmarked = true;
+          bookmarkimage.setImageResource(R.drawable.star_yellow_big);
+          bookmarked = true;
         }
-        dbServiceSubscriber.updateStudyPreferenceToDb(this, mStudyId, mBookmarked, mStudyStatus);
+        dbServiceSubscriber.updateStudyPreferenceToDb(this, studyId, bookmarked, studyStatus);
       }
-      mStudyHome = dbServiceSubscriber.getStudyInfoListFromDB(mStudyId, mRealm);
-      if (mStudyHome != null) {
-        mConsentDocumentData = dbServiceSubscriber.getConsentDocumentFromDB(mStudyId, mRealm);
+      studyHome = dbServiceSubscriber.getStudyInfoListFromDB(studyId, realm);
+      if (studyHome != null) {
+        consentDocumentData = dbServiceSubscriber.getConsentDocumentFromDB(studyId, realm);
         getStudyWebsiteNull();
-        setViewPagerView(mStudyHome);
+        setViewPagerView(studyHome);
       } else {
         Toast.makeText(StudyInfoActivity.this, errormsg, Toast.LENGTH_SHORT).show();
         finish();
@@ -748,10 +748,10 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
   private void callGetStudyInfoWebservice() {
     AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
     HashMap<String, String> header = new HashMap<>();
-    String url = URLs.STUDY_INFO + "?studyId=" + mStudyId;
+    String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WCPConfigEvent wcpConfigEvent =
-        new WCPConfigEvent(
+    WcpConfigEvent wcpConfigEvent =
+        new WcpConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -770,7 +770,6 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
   public void updatebookmark(boolean b) {
     AppController.getHelperProgressDialog().showProgress(this, "", "", false);
-    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
 
     HashMap<String, String> header = new HashMap();
     header.put(
@@ -791,7 +790,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     JSONArray studieslist = new JSONArray();
     JSONObject studies = new JSONObject();
     try {
-      studies.put("studyId", mStudyId);
+      studies.put("studyId", studyId);
       studies.put("bookmarked", b);
     } catch (JSONException e) {
       Logger.log(e);
@@ -805,23 +804,22 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
     /////////// offline data storing
     try {
-      int number = dbServiceSubscriber.getUniqueID(mRealm);
+      int number = dbServiceSubscriber.getUniqueID(realm);
       if (number == 0) {
         number = 1;
       } else {
         number += 1;
       }
-      String studyId = mStudyId;
-      OfflineData offlineData = dbServiceSubscriber.getStudyIdOfflineData(studyId, mRealm);
+      OfflineData offlineData = dbServiceSubscriber.getStudyIdOfflineData(studyId, realm);
       if (offlineData != null) {
         number = offlineData.getNumber();
       }
-      mDeleteIndexNumberDB = number;
+      deleteIndexNumberDb = number;
       AppController.pendingService(
           this,
           number,
           "post_object",
-          URLs.UPDATE_STUDY_PREFERENCE,
+          Urls.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
           "RegistrationServerEnrollment",
@@ -835,7 +833,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
             "post_object",
-            URLs.UPDATE_STUDY_PREFERENCE,
+            Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
             this,
             LoginData.class,
@@ -844,7 +842,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             jsonObject,
             false,
             this);
-
+    UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
     updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
         registrationServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
@@ -856,7 +854,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
     CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
     viewpager.setAdapter(
-        new StudyInfoPagerAdapter(StudyInfoActivity.this, studyHome.getInfo(), mStudyId));
+        new StudyInfoPagerAdapter(StudyInfoActivity.this, studyHome.getInfo(), studyId));
     indicator.setViewPager(viewpager);
     if (studyHome.getInfo().size() < 2) {
       indicator.setVisibility(View.GONE);
@@ -872,13 +870,12 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           public void onPageSelected(int position) {
             // Check if this is the page you want.
             if (studyHome.getInfo().get(position).getType().equalsIgnoreCase("video")) {
-              mJoinButton.setBackground(
-                  getResources().getDrawable(R.drawable.rectangle_blue_white));
-              mJoinButton.setTextColor(getResources().getColor(R.color.white));
+              joinButton.setBackground(getResources().getDrawable(R.drawable.rectangle_blue_white));
+              joinButton.setTextColor(getResources().getColor(R.color.white));
             } else {
-              mJoinButton.setBackground(
+              joinButton.setBackground(
                   getResources().getDrawable(R.drawable.rectangle_black_white));
-              mJoinButton.setTextColor(getResources().getColor(R.color.colorPrimary));
+              joinButton.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
           }
         });
@@ -886,7 +883,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
   @Override
   protected void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     super.onDestroy();
   }
 }

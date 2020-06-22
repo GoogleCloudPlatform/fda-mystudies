@@ -42,7 +42,7 @@ public class IntegerUnitAnswerFormat extends ChoiceAnswerFormatCustom {
   }
 
   /**
-   * Returns the maximum allowed value for the question, 0 if no max
+   * Returns the maximum allowed value for the question, 0 if no max.
    *
    * @return the max value, 0 if no max
    */
@@ -51,7 +51,7 @@ public class IntegerUnitAnswerFormat extends ChoiceAnswerFormatCustom {
   }
 
   /**
-   * Returns the minimum allowed value for the question
+   * Returns the minimum allowed value for the question.
    *
    * @return returns the minimum allowed value for the question
    */

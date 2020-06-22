@@ -37,7 +37,7 @@ import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.NewPasscodeSetupActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.GetUserProfileEvent;
@@ -51,7 +51,7 @@ import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
@@ -62,60 +62,60 @@ import org.json.JSONObject;
 
 public class ProfileFragment extends Fragment
     implements ApiCall.OnAsyncRequestComplete, CompoundButton.OnCheckedChangeListener {
-  private Context mContext;
-  private AppCompatEditText mFirstName;
-  private AppCompatEditText mLastName;
-  private AppCompatEditText mEmail;
-  private AppCompatTextView mPassword;
-  private Switch mSwitchUsePasscode;
-  private AppCompatTextView mUsePasscodeLabel;
-  private Switch mSwitchTouch;
-  private AppCompatTextView mTouchIdLabel;
-  private Switch mSwitchRecvPushNotifctn;
-  private AppCompatTextView mRecvPushNotifctnLabel;
-  private Switch mSwitchRecvStdyRemindr;
-  private AppCompatTextView mRecvStdyActRemLabel;
-  private RelativeLayout mPickerReminderBtn;
-  private AppCompatTextView mPickerReminderLabel;
-  private AppCompatTextView mReminderLabel;
-  private AppCompatTextView mSignOutButton;
-  private AppCompatTextView mDeleteMyAccount;
-  private AppCompatTextView mFirstNameLabel;
-  private AppCompatTextView mLastNameLabel;
-  private AppCompatTextView mEmailLabel;
-  private AppCompatTextView mPasswordLabel;
-  private AppCompatTextView mHrLine12;
-  private AppCompatTextView mPasscode;
-  private int USER_PROFILE_REQUEST = 6;
-  private int UPDATE_USER_PROFILE_REQUEST = 7;
+  private Context context;
+  private AppCompatEditText firstName;
+  private AppCompatEditText lastName;
+  private AppCompatEditText email;
+  private AppCompatTextView password;
+  private Switch switchUsePasscode;
+  private AppCompatTextView usePasscodeLabel;
+  private Switch switchTouch;
+  private AppCompatTextView touchIdLabel;
+  private Switch switchRecvPushNotifctn;
+  private AppCompatTextView recvPushNotifctnLabel;
+  private Switch switchRecvStdyRemindr;
+  private AppCompatTextView recvStdyActRemLabel;
+  private RelativeLayout pickerReminderBtn;
+  private AppCompatTextView pickerReminderLabel;
+  private AppCompatTextView reminderLabel;
+  private AppCompatTextView signOutButton;
+  private AppCompatTextView deleteMyAccount;
+  private AppCompatTextView firstNameLabel;
+  private AppCompatTextView lastNameLabel;
+  private AppCompatTextView emailLabel;
+  private AppCompatTextView passwordLabel;
+  private AppCompatTextView hrLine12;
+  private AppCompatTextView passcode;
+  private static final int USER_PROFILE_REQUEST = 6;
+  private static final int UPDATE_USER_PROFILE_REQUEST = 7;
   private static final int LOGOUT_REPSONSECODE = 100;
   private static final int DELETE_ACCOUNT_REPSONSECODE = 101;
   private static final int PASSCODE_REPSONSE = 102;
   private static final int NEW_PASSCODE_REPSONSE = 103;
   private static final int CHANGE_PASSCODE_REPSONSE = 104;
   private static final int PASSCODE_CHANGE_REPSONSE = 105;
-  private UserProfileData mUserProfileData = null;
-  private UpdateProfileRequestData mUpdateProfileRequestData = null;
-  private int DELETE_ACCOUNT = 5;
-  private int mDeleteIndexNumberDB;
-  private DBServiceSubscriber dbServiceSubscriber;
-  private Realm mRealm;
+  private UserProfileData userProfileData = null;
+  private UpdateProfileRequestData updateProfileRequestData = null;
+  private static final int DELETE_ACCOUNT = 5;
+  private int deleteIndexNumberDb;
+  private DbServiceSubscriber dbServiceSubscriber;
+  private Realm realm;
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    this.mContext = context;
+    this.context = context;
   }
 
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_profile, container, false);
-    dbServiceSubscriber = new DBServiceSubscriber();
-    mRealm = AppController.getRealmobj(mContext);
-    initializeXMLId(view);
+    dbServiceSubscriber = new DbServiceSubscriber();
+    realm = AppController.getRealmobj(context);
+    initializeXmlId(view);
     setFont();
-    AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     callUserProfileWebService();
     bindEvents();
     return view;
@@ -126,74 +126,74 @@ public class ProfileFragment extends Fragment
     header.put(
         "accessToken",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, mContext.getString(R.string.auth), ""));
+            .readPreference(context, context.getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, mContext.getString(R.string.userid), ""));
+            .readPreference(context, context.getString(R.string.userid), ""));
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "get",
-            URLs.GET_USER_PROFILE,
+            Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
-            mContext,
+            context,
             UserProfileData.class,
             null,
             header,
             null,
             false,
             this);
-    getUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }
 
-  private void initializeXMLId(View view) {
-    mFirstNameLabel = (AppCompatTextView) view.findViewById(R.id.first_name_label);
-    mFirstName = (AppCompatEditText) view.findViewById(R.id.edittxt_first_name);
-    mLastNameLabel = (AppCompatTextView) view.findViewById(R.id.last_name_label);
-    mLastName = (AppCompatEditText) view.findViewById(R.id.edittxt_last_name);
-    mEmailLabel = (AppCompatTextView) view.findViewById(R.id.email_label);
-    mEmail = (AppCompatEditText) view.findViewById(R.id.edittxt_email);
-    mPasswordLabel = (AppCompatTextView) view.findViewById(R.id.password_label);
-    mPassword = (AppCompatTextView) view.findViewById(R.id.edittxt_password);
-    mSwitchUsePasscode = (Switch) view.findViewById(R.id.switch_use_passcode);
-    mUsePasscodeLabel = (AppCompatTextView) view.findViewById(R.id.use_passcode_label);
-    mSwitchTouch = (Switch) view.findViewById(R.id.switch_touch);
-    mTouchIdLabel = (AppCompatTextView) view.findViewById(R.id.touch_id_label);
-    mSwitchRecvPushNotifctn = (Switch) view.findViewById(R.id.switch_recv_push_notifctn);
-    mRecvPushNotifctnLabel = (AppCompatTextView) view.findViewById(R.id.recv_push_notifctn_label);
-    mSwitchRecvStdyRemindr = (Switch) view.findViewById(R.id.switch_recv_stdy_actrem);
-    mRecvStdyActRemLabel = (AppCompatTextView) view.findViewById(R.id.recv_stdy_actrem_label);
-    mPickerReminderBtn = (RelativeLayout) view.findViewById(R.id.rel_picker_reminder);
-    mPickerReminderLabel = (AppCompatTextView) view.findViewById(R.id.picker_reminder);
-    mReminderLabel = (AppCompatTextView) view.findViewById(R.id.reminder_label);
-    mSignOutButton = (AppCompatTextView) view.findViewById(R.id.signOutButton);
-    mDeleteMyAccount = (AppCompatTextView) view.findViewById(R.id.deleteMyAccount);
-    mHrLine12 = (AppCompatTextView) view.findViewById(R.id.hrline12);
-    mPasscode = (AppCompatTextView) view.findViewById(R.id.edittxt_passcode);
+  private void initializeXmlId(View view) {
+    firstNameLabel = (AppCompatTextView) view.findViewById(R.id.first_name_label);
+    firstName = (AppCompatEditText) view.findViewById(R.id.edittxt_first_name);
+    lastNameLabel = (AppCompatTextView) view.findViewById(R.id.last_name_label);
+    lastName = (AppCompatEditText) view.findViewById(R.id.edittxt_last_name);
+    emailLabel = (AppCompatTextView) view.findViewById(R.id.email_label);
+    email = (AppCompatEditText) view.findViewById(R.id.edittxt_email);
+    passwordLabel = (AppCompatTextView) view.findViewById(R.id.password_label);
+    password = (AppCompatTextView) view.findViewById(R.id.edittxt_password);
+    switchUsePasscode = (Switch) view.findViewById(R.id.switch_use_passcode);
+    usePasscodeLabel = (AppCompatTextView) view.findViewById(R.id.use_passcode_label);
+    switchTouch = (Switch) view.findViewById(R.id.switch_touch);
+    touchIdLabel = (AppCompatTextView) view.findViewById(R.id.touch_id_label);
+    switchRecvPushNotifctn = (Switch) view.findViewById(R.id.switch_recv_push_notifctn);
+    recvPushNotifctnLabel = (AppCompatTextView) view.findViewById(R.id.recv_push_notifctn_label);
+    switchRecvStdyRemindr = (Switch) view.findViewById(R.id.switch_recv_stdy_actrem);
+    recvStdyActRemLabel = (AppCompatTextView) view.findViewById(R.id.recv_stdy_actrem_label);
+    pickerReminderBtn = (RelativeLayout) view.findViewById(R.id.rel_picker_reminder);
+    pickerReminderLabel = (AppCompatTextView) view.findViewById(R.id.picker_reminder);
+    reminderLabel = (AppCompatTextView) view.findViewById(R.id.reminder_label);
+    signOutButton = (AppCompatTextView) view.findViewById(R.id.signOutButton);
+    deleteMyAccount = (AppCompatTextView) view.findViewById(R.id.deleteMyAccount);
+    hrLine12 = (AppCompatTextView) view.findViewById(R.id.hrline12);
+    passcode = (AppCompatTextView) view.findViewById(R.id.edittxt_passcode);
 
     disableEditText();
   }
 
   private void setFont() {
     try {
-      mFirstNameLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mFirstName.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mLastNameLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mLastName.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mEmailLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mEmail.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mPasswordLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mPassword.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mUsePasscodeLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mTouchIdLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mRecvPushNotifctnLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mRecvStdyActRemLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mReminderLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mSignOutButton.setTypeface(AppController.getTypeface(mContext, "bold"));
-      mDeleteMyAccount.setTypeface(AppController.getTypeface(mContext, "bold"));
+      firstNameLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      firstName.setTypeface(AppController.getTypeface(context, "regular"));
+      lastNameLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      lastName.setTypeface(AppController.getTypeface(context, "regular"));
+      emailLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      email.setTypeface(AppController.getTypeface(context, "regular"));
+      passwordLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      password.setTypeface(AppController.getTypeface(context, "regular"));
+      usePasscodeLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      touchIdLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      recvPushNotifctnLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      recvStdyActRemLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      reminderLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      signOutButton.setTypeface(AppController.getTypeface(context, "bold"));
+      deleteMyAccount.setTypeface(AppController.getTypeface(context, "bold"));
 
     } catch (Exception e) {
       Logger.log(e);
@@ -202,59 +202,59 @@ public class ProfileFragment extends Fragment
 
   private void bindEvents() {
 
-    mPickerReminderBtn.setOnClickListener(
+    pickerReminderBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (mSwitchRecvStdyRemindr.isChecked()) {
+            if (switchRecvStdyRemindr.isChecked()) {
               CustomDialogClass cdd =
-                  new CustomDialogClass(((Activity) mContext), ProfileFragment.this);
+                  new CustomDialogClass(((Activity) context), ProfileFragment.this);
               cdd.show();
             } else {
-              Toast.makeText(mContext, R.string.remainder_settings, Toast.LENGTH_SHORT).show();
+              Toast.makeText(context, R.string.remainder_settings, Toast.LENGTH_SHORT).show();
             }
           }
         });
 
-    mPassword.setOnClickListener(
+    password.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Intent intent = new Intent(mContext, ChangePasswordActivity.class);
+            Intent intent = new Intent(context, ChangePasswordActivity.class);
             intent.putExtra("from", "ProfileFragment");
 
             intent.putExtra(
                 "userid",
                 AppController.getHelperSharedPreference()
-                    .readPreference(mContext, mContext.getString(R.string.userid), ""));
+                    .readPreference(context, context.getString(R.string.userid), ""));
             intent.putExtra(
                 "auth",
                 AppController.getHelperSharedPreference()
-                    .readPreference(mContext, mContext.getString(R.string.auth), ""));
+                    .readPreference(context, context.getString(R.string.auth), ""));
             intent.putExtra(
                 "verified",
                 AppController.getHelperSharedPreference()
-                    .readPreference(mContext, getString(R.string.verified), ""));
+                    .readPreference(context, getString(R.string.verified), ""));
             intent.putExtra(
                 "email",
                 AppController.getHelperSharedPreference()
-                    .readPreference(mContext, getString(R.string.email), ""));
+                    .readPreference(context, getString(R.string.email), ""));
             startActivity(intent);
           }
         });
 
-    mPasscode.setOnClickListener(
+    passcode.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
 
-            Intent intent = new Intent(mContext, PasscodeSetupActivity.class);
+            Intent intent = new Intent(context, PasscodeSetupActivity.class);
             intent.putExtra("from", "profile");
             startActivityForResult(intent, PASSCODE_CHANGE_REPSONSE);
           }
         });
 
-    mSwitchRecvPushNotifctn.setOnClickListener(
+    switchRecvPushNotifctn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -262,7 +262,7 @@ public class ProfileFragment extends Fragment
           }
         });
 
-    mSwitchRecvStdyRemindr.setOnClickListener(
+    switchRecvStdyRemindr.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -271,36 +271,37 @@ public class ProfileFragment extends Fragment
         });
 
     if (AppController.getHelperSharedPreference()
-        .readPreference(mContext, getString(R.string.usepasscode), "")
+        .readPreference(context, getString(R.string.usepasscode), "")
         .equalsIgnoreCase("yes")) {
-      mSwitchUsePasscode.setOnCheckedChangeListener(null);
-      mSwitchUsePasscode.setChecked(true);
-      mSwitchUsePasscode.setOnCheckedChangeListener(this);
-      mPasscode.setEnabled(true);
-      mPasscode.setTextColor(getResources().getColor(R.color.colorSecondaryStatBar));
+      switchUsePasscode.setOnCheckedChangeListener(null);
+      switchUsePasscode.setChecked(true);
+      switchUsePasscode.setOnCheckedChangeListener(this);
+      passcode.setEnabled(true);
+      passcode.setTextColor(getResources().getColor(R.color.colorSecondaryStatBar));
 
     } else {
-      mSwitchUsePasscode.setOnCheckedChangeListener(null);
-      mSwitchUsePasscode.setChecked(false);
-      mSwitchUsePasscode.setOnCheckedChangeListener(this);
-      mPasscode.setEnabled(false);
-      mPasscode.setTextColor(Color.LTGRAY);
+      switchUsePasscode.setOnCheckedChangeListener(null);
+      switchUsePasscode.setChecked(false);
+      switchUsePasscode.setOnCheckedChangeListener(this);
+      passcode.setEnabled(false);
+      passcode.setTextColor(Color.LTGRAY);
     }
-    mSwitchUsePasscode.setEnabled(true);
-    mSwitchUsePasscode.setOnCheckedChangeListener(this);
+    switchUsePasscode.setEnabled(true);
+    switchUsePasscode.setOnCheckedChangeListener(this);
 
-    mSwitchRecvPushNotifctn.setEnabled(true);
-    mSwitchRecvStdyRemindr.setEnabled(true);
+    switchRecvPushNotifctn.setEnabled(true);
+    switchRecvStdyRemindr.setEnabled(true);
 
-    mSignOutButton.setOnClickListener(
+    signOutButton.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (mSignOutButton
+            if (signOutButton
                 .getText()
                 .toString()
-                .equalsIgnoreCase(getResources().getString(R.string.sign_out))) logout();
-            else if (mSignOutButton
+                .equalsIgnoreCase(getResources().getString(R.string.sign_out))) {
+              logout();
+            } else if (signOutButton
                 .getText()
                 .toString()
                 .equalsIgnoreCase(getResources().getString(R.string.update))) {
@@ -309,105 +310,107 @@ public class ProfileFragment extends Fragment
           }
         });
 
-    mDeleteMyAccount.setOnClickListener(
+    deleteMyAccount.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Intent intent = new Intent(mContext, DeleteAccountActivity.class);
+            Intent intent = new Intent(context, DeleteAccountActivity.class);
             startActivityForResult(intent, DELETE_ACCOUNT);
           }
         });
   }
 
   private void logout() {
-    AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
-    LogoutEvent logoutEvent = new LogoutEvent();
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
+
     HashMap<String, String> params = new HashMap<>();
     params.put("reason", "user_action");
     HashMap<String, String> header = new HashMap<String, String>();
     header.put(
         "accessToken",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getString(R.string.auth), ""));
+            .readPreference(context, getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
-            .readPreference(mContext, getString(R.string.userid), ""));
+            .readPreference(context, getString(R.string.userid), ""));
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
             "delete",
-            URLs.LOGOUT,
+            Urls.LOGOUT,
             LOGOUT_REPSONSECODE,
-            mContext,
+            context,
             LoginData.class,
             params,
             header,
             null,
             false,
             this);
+    LogoutEvent logoutEvent = new LogoutEvent();
     logoutEvent.setAuthServerConfigEvent(authServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performLogout(logoutEvent);
   }
 
   public void enableEditText() {
-    mFirstName.setEnabled(true);
-    mLastName.setEnabled(true);
-    mSignOutButton.setText(getResources().getString(R.string.update));
-    mHrLine12.setVisibility(View.VISIBLE);
-    mDeleteMyAccount.setVisibility(View.VISIBLE);
+    firstName.setEnabled(true);
+    lastName.setEnabled(true);
+    signOutButton.setText(getResources().getString(R.string.update));
+    hrLine12.setVisibility(View.VISIBLE);
+    deleteMyAccount.setVisibility(View.VISIBLE);
 
-    mSwitchUsePasscode.setEnabled(true);
-    mSwitchTouch.setEnabled(true);
-    mSwitchRecvPushNotifctn.setEnabled(true);
-    mSwitchRecvStdyRemindr.setEnabled(true);
-    mPickerReminderBtn.setEnabled(true);
-    mSignOutButton.setVisibility(View.VISIBLE);
+    switchUsePasscode.setEnabled(true);
+    switchTouch.setEnabled(true);
+    switchRecvPushNotifctn.setEnabled(true);
+    switchRecvStdyRemindr.setEnabled(true);
+    pickerReminderBtn.setEnabled(true);
+    signOutButton.setVisibility(View.VISIBLE);
   }
 
   public void disableEditText() {
-    mFirstName.setEnabled(false);
-    mLastName.setEnabled(false);
-    mSignOutButton.setVisibility(View.GONE);
-    mSignOutButton.setText(getResources().getString(R.string.sign_out));
-    mHrLine12.setVisibility(View.VISIBLE);
-    mHrLine12.setVisibility(View.GONE);
-    mDeleteMyAccount.setVisibility(View.VISIBLE);
+    firstName.setEnabled(false);
+    lastName.setEnabled(false);
+    signOutButton.setVisibility(View.GONE);
+    signOutButton.setText(getResources().getString(R.string.sign_out));
+    hrLine12.setVisibility(View.VISIBLE);
+    hrLine12.setVisibility(View.GONE);
+    deleteMyAccount.setVisibility(View.VISIBLE);
 
-    mSwitchUsePasscode.setEnabled(false);
-    mSwitchTouch.setEnabled(false);
-    mSwitchRecvPushNotifctn.setEnabled(false);
-    mSwitchRecvStdyRemindr.setEnabled(false);
-    mPickerReminderBtn.setEnabled(false);
-    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway)))
-      ((StudyActivity) mContext).disableEditTextFromFragment();
-    if (mUserProfileData != null) {
+    switchUsePasscode.setEnabled(false);
+    switchTouch.setEnabled(false);
+    switchRecvPushNotifctn.setEnabled(false);
+    switchRecvStdyRemindr.setEnabled(false);
+    pickerReminderBtn.setEnabled(false);
+    if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+      ((StudyActivity) context).disableEditTextFromFragment();
+    }
+    if (userProfileData != null) {
       updateUI();
     }
-    mSignOutButton.setVisibility(View.GONE);
+    signOutButton.setVisibility(View.GONE);
   }
 
   public void updatePickerTime(String val) {
-    mPickerReminderLabel.setText(val);
+    pickerReminderLabel.setText(val);
 
     if (!val.equalsIgnoreCase("")) {
       String hours = val.split(":")[0];
       String minutes = val.split(":")[1];
       if (("" + hours).length() > 1 && ("" + minutes).length() > 1) {
-        mPickerReminderLabel.setText("" + hours + ":" + minutes);
+        pickerReminderLabel.setText("" + hours + ":" + minutes);
       } else if (("" + hours).length() > 1) {
-        mPickerReminderLabel.setText("" + hours + ":0" + minutes);
+        pickerReminderLabel.setText("" + hours + ":0" + minutes);
       } else if (("" + minutes).length() > 1) {
-        mPickerReminderLabel.setText("0" + hours + ":" + minutes);
+        pickerReminderLabel.setText("0" + hours + ":" + minutes);
       } else {
-        mPickerReminderLabel.setText("0" + hours + ":0" + minutes);
+        pickerReminderLabel.setText("0" + hours + ":0" + minutes);
       }
     }
   }
 
   @Override
   public void onDestroy() {
-    dbServiceSubscriber.closeRealmObj(mRealm);
+    dbServiceSubscriber.closeRealmObj(realm);
     disableEditText();
     super.onDestroy();
   }
@@ -416,50 +419,49 @@ public class ProfileFragment extends Fragment
   public <T> void asyncResponse(T response, int responseCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (USER_PROFILE_REQUEST == responseCode) {
-      mUserProfileData = (UserProfileData) response;
-      if (mUserProfileData != null) {
+      userProfileData = (UserProfileData) response;
+      if (userProfileData != null) {
         updateUI();
       } else {
-        Toast.makeText(mContext, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
       try {
         // if already having data then delete it (avoid duplication)
-        dbServiceSubscriber.deleteUserProfileDataDuplicateRow(mContext);
-        // save mUserProfileData to db
-        dbServiceSubscriber.saveUserProfileData(mContext, mUserProfileData);
+        dbServiceSubscriber.deleteUserProfileDataDuplicateRow(context);
+        // save userProfileData to db
+        dbServiceSubscriber.saveUserProfileData(context, userProfileData);
       } catch (Exception e) {
         Logger.log(e);
       }
 
     } else if (UPDATE_USER_PROFILE_REQUEST == responseCode) {
       Toast.makeText(
-              mContext, getResources().getString(R.string.profile_updated), Toast.LENGTH_SHORT)
+              context, getResources().getString(R.string.profile_updated), Toast.LENGTH_SHORT)
           .show();
       try {
-        Realm realm = AppController.getRealmobj(mContext);
+        Realm realm = AppController.getRealmobj(context);
         realm.beginTransaction();
-        mUserProfileData
+        userProfileData
             .getSettings()
-            .setLocalNotifications(mUpdateProfileRequestData.getSettings().isLocalNotifications());
-        mUserProfileData
+            .setLocalNotifications(updateProfileRequestData.getSettings().isLocalNotifications());
+        userProfileData
             .getSettings()
-            .setPasscode(mUpdateProfileRequestData.getSettings().isPasscode());
-        mUserProfileData
+            .setPasscode(updateProfileRequestData.getSettings().isPasscode());
+        userProfileData
             .getSettings()
-            .setRemindersTime(mUpdateProfileRequestData.getSettings().getRemindersTime());
-        mUserProfileData
+            .setRemindersTime(updateProfileRequestData.getSettings().getRemindersTime());
+        userProfileData
             .getSettings()
-            .setRemoteNotifications(
-                mUpdateProfileRequestData.getSettings().isRemoteNotifications());
-        mUserProfileData
+            .setRemoteNotifications(updateProfileRequestData.getSettings().isRemoteNotifications());
+        userProfileData
             .getSettings()
-            .setTouchId(mUpdateProfileRequestData.getSettings().isTouchId());
+            .setTouchId(updateProfileRequestData.getSettings().isTouchId());
         realm.commitTransaction();
         dbServiceSubscriber.closeRealmObj(realm);
-        // save mUserProfileData to db
-        dbServiceSubscriber.saveUserProfileData(mContext, mUserProfileData);
+        // save userProfileData to db
+        dbServiceSubscriber.saveUserProfileData(context, userProfileData);
         // delete offline row sync
-        dbServiceSubscriber.deleteOfflineDataRow(mContext, mDeleteIndexNumberDB);
+        dbServiceSubscriber.deleteOfflineDataRow(context, deleteIndexNumberDb);
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -467,57 +469,59 @@ public class ProfileFragment extends Fragment
     } else if (responseCode == LOGOUT_REPSONSECODE) {
       LoginData loginData = (LoginData) response;
       if (loginData != null) {
-        Toast.makeText(mContext, loginData.getMessage(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, loginData.getMessage(), Toast.LENGTH_SHORT).show();
         NotificationModuleSubscriber notificationModuleSubscriber =
-            new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
-        notificationModuleSubscriber.cancelNotificationTurnOffNotification(mContext);
-        SharedPreferences settings = SharedPreferenceHelper.getPreferences(mContext);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+        notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
+        SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
         settings.edit().clear().apply();
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
         AppController.deleteKey("passcode_" + pass);
-        Toast.makeText(mContext, R.string.signed_out,Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.signed_out, Toast.LENGTH_SHORT).show();
         if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          ((StudyActivity) mContext).loadstudylist();
+          ((StudyActivity) context).loadstudylist();
         } else {
-          ((SurveyActivity) mContext).signout();
+          ((SurveyActivity) context).signout();
         }
       } else {
-        Toast.makeText(mContext, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
     } else if (responseCode == DELETE_ACCOUNT_REPSONSECODE) {
       LoginData loginData = (LoginData) response;
       if (loginData != null) {
         Toast.makeText(
-                mContext, getResources().getString(R.string.account_deletion), Toast.LENGTH_SHORT)
+                context, getResources().getString(R.string.account_deletion), Toast.LENGTH_SHORT)
             .show();
-        SharedPreferences settings = SharedPreferenceHelper.getPreferences(mContext);
+        SharedPreferences settings = SharedPreferenceHelper.getPreferences(context);
         settings.edit().clear().apply();
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
-        if (pass != null) AppController.deleteKey("passcode_" + pass);
+        if (pass != null) {
+          AppController.deleteKey("passcode_" + pass);
+        }
         if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          ((StudyActivity) mContext).loadstudylist();
+          ((StudyActivity) context).loadstudylist();
         } else {
-          ((SurveyActivity) mContext).signout();
+          ((SurveyActivity) context).signout();
         }
       } else {
-        Toast.makeText(mContext, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
       }
     }
   }
 
   private void updateUI() {
     try {
-      mFirstName.setText(mUserProfileData.getProfile().getFirstName());
-      mLastName.setText(mUserProfileData.getProfile().getLastName());
-      mEmail.setText(mUserProfileData.getProfile().getEmailId());
+      firstName.setText(userProfileData.getProfile().getFirstName());
+      lastName.setText(userProfileData.getProfile().getLastName());
+      email.setText(userProfileData.getProfile().getEmailId());
 
-      mSwitchRecvPushNotifctn.setEnabled(true);
-      mSwitchRecvPushNotifctn.setChecked(mUserProfileData.getSettings().isRemoteNotifications());
+      switchRecvPushNotifctn.setEnabled(true);
+      switchRecvPushNotifctn.setChecked(userProfileData.getSettings().isRemoteNotifications());
 
-      mSwitchRecvStdyRemindr.setEnabled(true);
-      mSwitchRecvStdyRemindr.setChecked(mUserProfileData.getSettings().isLocalNotifications());
+      switchRecvStdyRemindr.setEnabled(true);
+      switchRecvStdyRemindr.setChecked(userProfileData.getSettings().isLocalNotifications());
     } catch (Exception e) {
       Logger.log(e);
     }
@@ -527,42 +531,41 @@ public class ProfileFragment extends Fragment
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
     if (statusCode.equalsIgnoreCase("401")) {
-      Toast.makeText(mContext, errormsg, Toast.LENGTH_SHORT).show();
-      AppController.getHelperSessionExpired(mContext, errormsg);
+      Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
+      AppController.getHelperSessionExpired(context, errormsg);
     } else if (responseCode == USER_PROFILE_REQUEST) {
-      mUserProfileData = dbServiceSubscriber.getUserProfileData(mRealm);
-      if (mUserProfileData != null) {
+      userProfileData = dbServiceSubscriber.getUserProfileData(realm);
+      if (userProfileData != null) {
         updateUI();
       } else {
-        Toast.makeText(mContext, errormsg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
       }
     } else if (UPDATE_USER_PROFILE_REQUEST == responseCode) {
       try {
 
-        if (mUserProfileData != null) {
-          Realm realm = AppController.getRealmobj(mContext);
+        if (userProfileData != null) {
+          Realm realm = AppController.getRealmobj(context);
           realm.beginTransaction();
-          mUserProfileData
+          userProfileData
               .getSettings()
-              .setLocalNotifications(
-                  mUpdateProfileRequestData.getSettings().isLocalNotifications());
-          mUserProfileData
+              .setLocalNotifications(updateProfileRequestData.getSettings().isLocalNotifications());
+          userProfileData
               .getSettings()
-              .setPasscode(mUpdateProfileRequestData.getSettings().isPasscode());
-          mUserProfileData
+              .setPasscode(updateProfileRequestData.getSettings().isPasscode());
+          userProfileData
               .getSettings()
-              .setRemindersTime(mUpdateProfileRequestData.getSettings().getRemindersTime());
-          mUserProfileData
+              .setRemindersTime(updateProfileRequestData.getSettings().getRemindersTime());
+          userProfileData
               .getSettings()
               .setRemoteNotifications(
-                  mUpdateProfileRequestData.getSettings().isRemoteNotifications());
-          mUserProfileData
+                  updateProfileRequestData.getSettings().isRemoteNotifications());
+          userProfileData
               .getSettings()
-              .setTouchId(mUpdateProfileRequestData.getSettings().isTouchId());
+              .setTouchId(updateProfileRequestData.getSettings().isTouchId());
           realm.commitTransaction();
           dbServiceSubscriber.closeRealmObj(realm);
-          // save mUserProfileData to db
-          dbServiceSubscriber.saveUserProfileData(mContext, mUserProfileData);
+          // save userProfileData to db
+          dbServiceSubscriber.saveUserProfileData(context, userProfileData);
         }
 
       } catch (Exception e) {
@@ -573,48 +576,48 @@ public class ProfileFragment extends Fragment
 
   private void callUpdateUserProfileWebService(
       boolean isNotificationToggle, String notificationType) {
-    AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
 
     if (isNotificationToggle
         && notificationType.equalsIgnoreCase("mSwitchRecvPushNotifctn")
-        && mSwitchRecvStdyRemindr.isChecked()
-        && !mSwitchRecvPushNotifctn.isChecked()) {
+        && switchRecvStdyRemindr.isChecked()
+        && !switchRecvPushNotifctn.isChecked()) {
       NotificationModuleSubscriber notificationModuleSubscriber =
-          new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
       notificationModuleSubscriber.generateNotificationTurnOffNotification(
-          Calendar.getInstance().getTime(), mContext);
+          Calendar.getInstance().getTime(), context);
     } else if (isNotificationToggle
         && notificationType.equalsIgnoreCase("mSwitchRecvStdyRemindr")
-        && !mSwitchRecvStdyRemindr.isChecked()
-        && mSwitchRecvPushNotifctn.isChecked()) {
+        && !switchRecvStdyRemindr.isChecked()
+        && switchRecvPushNotifctn.isChecked()) {
       NotificationModuleSubscriber notificationModuleSubscriber =
-          new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
       notificationModuleSubscriber.generateNotificationTurnOffNotification(
-          Calendar.getInstance().getTime(), mContext);
+          Calendar.getInstance().getTime(), context);
     } else if (isNotificationToggle
-        && mSwitchRecvStdyRemindr.isChecked()
-        && mSwitchRecvPushNotifctn.isChecked()) {
+        && switchRecvStdyRemindr.isChecked()
+        && switchRecvPushNotifctn.isChecked()) {
       NotificationModuleSubscriber notificationModuleSubscriber =
-          new NotificationModuleSubscriber(dbServiceSubscriber, mRealm);
-      notificationModuleSubscriber.cancelNotificationTurnOffNotification(mContext);
+          new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+      notificationModuleSubscriber.cancelNotificationTurnOffNotification(context);
     }
 
-    Gson gson = new Gson();
-    mUpdateProfileRequestData = new UpdateProfileRequestData();
+    updateProfileRequestData = new UpdateProfileRequestData();
     Settings settings = new Settings();
-    settings.setLocalNotifications(mSwitchRecvStdyRemindr.isChecked());
-    settings.setPasscode(mSwitchUsePasscode.isChecked());
-    settings.setRemoteNotifications(mSwitchRecvPushNotifctn.isChecked());
-    settings.setTouchId(mSwitchTouch.isChecked());
-    mPickerReminderLabel.getText().toString();
+    settings.setLocalNotifications(switchRecvStdyRemindr.isChecked());
+    settings.setPasscode(switchUsePasscode.isChecked());
+    settings.setRemoteNotifications(switchRecvPushNotifctn.isChecked());
+    settings.setTouchId(switchTouch.isChecked());
+    pickerReminderLabel.getText().toString();
     int time =
-        (Integer.parseInt(mPickerReminderLabel.getText().toString().split(":")[0]) * 60)
-            + (Integer.parseInt(mPickerReminderLabel.getText().toString().split(":")[1]));
+        (Integer.parseInt(pickerReminderLabel.getText().toString().split(":")[0]) * 60)
+            + (Integer.parseInt(pickerReminderLabel.getText().toString().split(":")[1]));
     settings.setRemindersTime("" + time);
 
-    mUpdateProfileRequestData.setSettings(settings);
-    String json = gson.toJson(mUpdateProfileRequestData);
+    updateProfileRequestData.setSettings(settings);
+    Gson gson = new Gson();
+    String json = gson.toJson(updateProfileRequestData);
     try {
       JSONObject obj = new JSONObject(json);
 
@@ -622,15 +625,15 @@ public class ProfileFragment extends Fragment
       header.put(
           "accessToken",
           AppController.getHelperSharedPreference()
-              .readPreference(mContext, getString(R.string.auth), ""));
+              .readPreference(context, getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
-              .readPreference(mContext, getString(R.string.userid), ""));
+              .readPreference(context, getString(R.string.userid), ""));
 
       // offline data storing
       try {
-        int number = dbServiceSubscriber.getUniqueID(mRealm);
+        int number = dbServiceSubscriber.getUniqueID(realm);
         if (number == 0) {
           number = 1;
         } else {
@@ -639,17 +642,17 @@ public class ProfileFragment extends Fragment
 
         String userProfileId =
             AppController.getHelperSharedPreference()
-                .readPreference(mContext, mContext.getString(R.string.userid), "");
-        OfflineData offlineData = dbServiceSubscriber.getUserIdOfflineData(userProfileId, mRealm);
+                .readPreference(context, context.getString(R.string.userid), "");
+        OfflineData offlineData = dbServiceSubscriber.getUserIdOfflineData(userProfileId, realm);
         if (offlineData != null) {
           number = offlineData.getNumber();
         }
-        mDeleteIndexNumberDB = number;
+        deleteIndexNumberDb = number;
         AppController.pendingService(
-            mContext,
+            context,
             number,
             "post_object",
-            URLs.UPDATE_USER_PROFILE,
+            Urls.UPDATE_USER_PROFILE,
             "",
             obj.toString(),
             "RegistrationServer",
@@ -663,16 +666,16 @@ public class ProfileFragment extends Fragment
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
               "post_object",
-              URLs.UPDATE_USER_PROFILE,
+              Urls.UPDATE_USER_PROFILE,
               UPDATE_USER_PROFILE_REQUEST,
-              mContext,
+              context,
               UpdateUserProfileData.class,
               null,
               header,
               obj,
               false,
               ProfileFragment.this);
-      updateUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+      updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
     } catch (Exception e) {
@@ -684,62 +687,66 @@ public class ProfileFragment extends Fragment
   public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == DELETE_ACCOUNT) {
-      if (resultCode == ((Activity) mContext).RESULT_OK) {
+      if (resultCode == ((Activity) context).RESULT_OK) {
         if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-          ((StudyActivity) mContext).loadstudylist();
+          ((StudyActivity) context).loadstudylist();
         } else {
-          ((SurveyActivity) mContext).signout();
+          ((SurveyActivity) context).signout();
         }
       }
     } else if (requestCode == PASSCODE_REPSONSE) {
-      if (resultCode == ((Activity) mContext).RESULT_OK) {
+      if (resultCode == ((Activity) context).RESULT_OK) {
         callUpdateUserProfileWebService(false, "mSwitchRecvPushNotifctn");
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
-        if (pass != null) AppController.deleteKey("passcode_" + pass);
+        if (pass != null) {
+          AppController.deleteKey("passcode_" + pass);
+        }
 
         AppController.getHelperSharedPreference()
-            .writePreference(mContext, getString(R.string.usepasscode), "no");
-        mPasscode.setEnabled(false);
-        mPasscode.setTextColor(Color.LTGRAY);
+            .writePreference(context, getString(R.string.usepasscode), "no");
+        passcode.setEnabled(false);
+        passcode.setTextColor(Color.LTGRAY);
       } else {
         AppController.getHelperSharedPreference()
-            .writePreference(mContext, getString(R.string.usepasscode), "yes");
-        mPasscode.setEnabled(true);
-        mPasscode.setTextColor(getResources().getColor(R.color.colorSecondaryStatBar));
-        mSwitchUsePasscode.setOnCheckedChangeListener(null);
-        mSwitchUsePasscode.setChecked(true);
-        mSwitchUsePasscode.setOnCheckedChangeListener(this);
+            .writePreference(context, getString(R.string.usepasscode), "yes");
+        passcode.setEnabled(true);
+        passcode.setTextColor(getResources().getColor(R.color.colorSecondaryStatBar));
+        switchUsePasscode.setOnCheckedChangeListener(null);
+        switchUsePasscode.setChecked(true);
+        switchUsePasscode.setOnCheckedChangeListener(this);
       }
     } else if (requestCode == NEW_PASSCODE_REPSONSE) {
-      if (resultCode != ((Activity) mContext).RESULT_OK) {
-        mSwitchUsePasscode.setOnCheckedChangeListener(null);
-        mSwitchUsePasscode.setChecked(false);
-        mSwitchUsePasscode.setOnCheckedChangeListener(this);
+      if (resultCode != ((Activity) context).RESULT_OK) {
+        switchUsePasscode.setOnCheckedChangeListener(null);
+        switchUsePasscode.setChecked(false);
+        switchUsePasscode.setOnCheckedChangeListener(this);
         // delete passcode from keystore
         String pass = AppController.refreshKeys("passcode");
-        if (pass != null) AppController.deleteKey("passcode_" + pass);
+        if (pass != null) {
+          AppController.deleteKey("passcode_" + pass);
+        }
         AppController.getHelperSharedPreference()
-            .writePreference(mContext, getString(R.string.usepasscode), "no");
-        mPasscode.setEnabled(false);
-        mPasscode.setTextColor(Color.LTGRAY);
+            .writePreference(context, getString(R.string.usepasscode), "no");
+        passcode.setEnabled(false);
+        passcode.setTextColor(Color.LTGRAY);
       } else {
         callUpdateUserProfileWebService(false, "mSwitchRecvPushNotifctn");
         AppController.getHelperSharedPreference()
-            .writePreference(mContext, getString(R.string.usepasscode), "yes");
-        mPasscode.setEnabled(true);
-        mPasscode.setTextColor(getResources().getColor(R.color.colorSecondaryStatBar));
-        mSwitchUsePasscode.setOnCheckedChangeListener(null);
-        mSwitchUsePasscode.setChecked(true);
-        mSwitchUsePasscode.setOnCheckedChangeListener(this);
+            .writePreference(context, getString(R.string.usepasscode), "yes");
+        passcode.setEnabled(true);
+        passcode.setTextColor(getResources().getColor(R.color.colorSecondaryStatBar));
+        switchUsePasscode.setOnCheckedChangeListener(null);
+        switchUsePasscode.setChecked(true);
+        switchUsePasscode.setOnCheckedChangeListener(this);
       }
     } else if (requestCode == CHANGE_PASSCODE_REPSONSE) {
-      if (resultCode == ((Activity) mContext).RESULT_OK) {
-        Toast.makeText(mContext, "Passcode updated", Toast.LENGTH_SHORT).show();
+      if (resultCode == ((Activity) context).RESULT_OK) {
+        Toast.makeText(context, "Passcode updated", Toast.LENGTH_SHORT).show();
       }
     } else if (requestCode == PASSCODE_CHANGE_REPSONSE) {
-      if (resultCode == ((Activity) mContext).RESULT_OK) {
-        Intent intent = new Intent(((Activity) mContext), NewPasscodeSetupActivity.class);
+      if (resultCode == ((Activity) context).RESULT_OK) {
+        Intent intent = new Intent(((Activity) context), NewPasscodeSetupActivity.class);
         intent.putExtra("from", "profile_change");
         startActivityForResult(intent, CHANGE_PASSCODE_REPSONSE);
       }
@@ -749,11 +756,11 @@ public class ProfileFragment extends Fragment
   @Override
   public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
     if (isChecked) {
-      Intent intent = new Intent(((Activity) mContext), NewPasscodeSetupActivity.class);
+      Intent intent = new Intent(((Activity) context), NewPasscodeSetupActivity.class);
       intent.putExtra("from", "profile");
       startActivityForResult(intent, NEW_PASSCODE_REPSONSE);
     } else {
-      Intent intent = new Intent(mContext, PasscodeSetupActivity.class);
+      Intent intent = new Intent(context, PasscodeSetupActivity.class);
       intent.putExtra("from", "profile");
       startActivityForResult(intent, PASSCODE_REPSONSE);
     }

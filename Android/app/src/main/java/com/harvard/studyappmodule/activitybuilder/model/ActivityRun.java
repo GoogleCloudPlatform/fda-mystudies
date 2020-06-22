@@ -15,8 +15,8 @@
 
 package com.harvard.studyappmodule.activitybuilder.model;
 
-import java.util.Date;
 import io.realm.RealmObject;
+import java.util.Date;
 
 public class ActivityRun extends RealmObject {
   private int runId;

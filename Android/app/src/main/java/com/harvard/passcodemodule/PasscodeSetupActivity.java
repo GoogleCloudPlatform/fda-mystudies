@@ -30,75 +30,77 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
-import com.harvard.storagemodule.DBServiceSubscriber;
+import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 
 public class PasscodeSetupActivity extends AppCompatActivity {
-  private RelativeLayout mBackBtn;
-  private AppCompatTextView mTitle, mSetup, hrLine1;
-  private RelativeLayout mCancelBtn;
-  private PasscodeView mPasscodeView;
+  private RelativeLayout backBtn;
+  private AppCompatTextView title;
+  private AppCompatTextView setup;
+  private AppCompatTextView hrLine1;
+  private RelativeLayout cancelBtn;
+  private PasscodeView passcodeView;
   private TextView forgot;
-  private TextView mPasscodeTitle;
-  private TextView mPasscodeDesc;
-  private DBServiceSubscriber dbServiceSubscriber;
+  private TextView passcodeTitle;
+  private TextView passcodeDesc;
+  private DbServiceSubscriber dbServiceSubscriber;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_passcode_setup);
     getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-    dbServiceSubscriber = new DBServiceSubscriber();
-    initializeXMLId();
+    dbServiceSubscriber = new DbServiceSubscriber();
+    initializeXmlId();
     setTextForView();
     setFont();
     bindEvent();
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mSetup = (AppCompatTextView) findViewById(R.id.setup_info);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    title = (AppCompatTextView) findViewById(R.id.title);
+    setup = (AppCompatTextView) findViewById(R.id.setup_info);
     hrLine1 = (AppCompatTextView) findViewById(R.id.hrLine1);
-    mCancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
-    mPasscodeView = (PasscodeView) findViewById(R.id.passcode_view);
-    mPasscodeTitle = (TextView) findViewById(R.id.passcodetitle);
+    cancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
+    passcodeView = (PasscodeView) findViewById(R.id.passcode_view);
+    passcodeTitle = (TextView) findViewById(R.id.passcodetitle);
 
     forgot = (TextView) findViewById(R.id.forgot);
-    mPasscodeDesc = (TextView) findViewById(R.id.passcodedesc);
+    passcodeDesc = (TextView) findViewById(R.id.passcodedesc);
   }
 
   private void setTextForView() {
-    mCancelBtn.setVisibility(View.GONE);
+    cancelBtn.setVisibility(View.GONE);
     hrLine1.setVisibility(View.GONE);
-    mPasscodeDesc.setVisibility(View.INVISIBLE);
-    mTitle.setText("");
-    mSetup.setText("");
-    mPasscodeTitle.setText(getString(R.string.enter_your_passcode));
+    passcodeDesc.setVisibility(View.INVISIBLE);
+    title.setText("");
+    setup.setText("");
+    passcodeTitle.setText(getString(R.string.enter_your_passcode));
   }
 
   private void setFont() {
     try {
-      mTitle.setTypeface(AppController.getTypeface(PasscodeSetupActivity.this, "medium"));
-      mPasscodeTitle.setTypeface(AppController.getTypeface(PasscodeSetupActivity.this, "regular"));
+      title.setTypeface(AppController.getTypeface(PasscodeSetupActivity.this, "medium"));
+      passcodeTitle.setTypeface(AppController.getTypeface(PasscodeSetupActivity.this, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvent() {
-    mPasscodeView.postDelayed(
+    passcodeView.postDelayed(
         new Runnable() {
           @Override
           public void run() {
-            mPasscodeView.requestToShowKeyboard();
+            passcodeView.requestToShowKeyboard();
           }
         },
         400);
 
-    mBackBtn.setVisibility(View.GONE);
+    backBtn.setVisibility(View.GONE);
     forgot.setOnClickListener(
         new View.OnClickListener() {
           @Override
@@ -127,7 +129,7 @@ public class PasscodeSetupActivity extends AppCompatActivity {
           }
         });
 
-    mPasscodeView.setPasscodeEntryListener(
+    passcodeView.setPasscodeEntryListener(
         new PasscodeView.PasscodeEntryListener() {
           @Override
           public void onPasscodeEntered(String passcode) {
@@ -142,7 +144,7 @@ public class PasscodeSetupActivity extends AppCompatActivity {
             } else {
               Toast.makeText(PasscodeSetupActivity.this, R.string.invalidcode, Toast.LENGTH_SHORT)
                   .show();
-              mPasscodeView.clearText();
+              passcodeView.clearText();
             }
           }
         });
@@ -153,7 +155,9 @@ public class PasscodeSetupActivity extends AppCompatActivity {
     settings.edit().clear().apply();
     // delete passcode from keystore
     String pass = AppController.refreshKeys("passcode");
-    if (pass != null) AppController.deleteKey("passcode_" + pass);
+    if (pass != null) {
+      AppController.deleteKey("passcode_" + pass);
+    }
 
     dbServiceSubscriber.deleteDb(this);
 
