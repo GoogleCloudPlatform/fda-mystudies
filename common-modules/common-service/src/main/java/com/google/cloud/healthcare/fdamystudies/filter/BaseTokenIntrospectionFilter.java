@@ -51,7 +51,7 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
     logger.entry(
         String.format("begin doFilter() for %s", ((HttpServletRequest) request).getRequestURI()));
     HttpServletRequest req = (HttpServletRequest) request;
-    if (checkPathAndHttpMethodMatches(req)) {
+    if (validatePathAndHttpMethod(req)) {
       logger.info(String.format("validate token for %s", req.getRequestURI()));
 
       String auth = req.getHeader("Authorization");
@@ -67,7 +67,7 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
     }
   }
 
-  private boolean checkPathAndHttpMethodMatches(HttpServletRequest req) {
+  private boolean validatePathAndHttpMethod(HttpServletRequest req) {
     String method = req.getMethod().toUpperCase();
     for (Map.Entry<String, String[]> entry : getUriTemplateAndHttpMethodsMap().entrySet()) {
       if (ArrayUtils.contains(entry.getValue(), method)

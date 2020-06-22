@@ -29,7 +29,7 @@ public class HealthController {
   @Autowired private OAuthService oauthService;
 
   @GetMapping(
-      value = "/health",
+      value = "/healthCheck",
       produces = {MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<JsonNode> health(HttpServletRequest request) {
     logger.entry(String.format("begin %s request with no args", request.getRequestURI()));

@@ -60,7 +60,7 @@ public final class AuditLogEventValidator {
       ArrayNode errors = getArrayNode();
       for (String msg : messages) {
         ObjectNode err = getObjectNode();
-        err.put(FILED_PATH, extractFieldPath(msg));
+        err.put(FILED_PATH, extractFieldPathFromValidationError(msg));
         err.put(ERROR_DESCRIPTION, msg.substring(msg.indexOf(':')).trim());
         errors.add(err);
       }
@@ -84,7 +84,7 @@ public final class AuditLogEventValidator {
     return result;
   }
 
-  private String extractFieldPath(String msg) {
+  private String extractFieldPathFromValidationError(String msg) {
     String fieldpath = msg.substring(0, msg.indexOf(':'));
     fieldpath = StringUtils.replace(fieldpath, "/", ".");
     fieldpath = StringUtils.replace(fieldpath, "#", "$");
