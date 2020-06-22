@@ -1,0 +1,96 @@
+<div (keydown)="mobileHandleKeyDown($event)" id="mobile-menu">
+  <div id="mySidenav__menubar" class="flex__justify__space-between">
+    <div>
+      <button class="openNav display-inline-block mr-sm" (click)="toggleNav()">
+        <img src="assets/svgs/menu-icon.svg" />
+      </button>
+      <a href="#">
+        <img class="mr-sm" src="assets/images/landing-logo.gif" />
+        <span class="header__logo__text">FDA MyStudies </span>
+      </a>
+    </div>
+    <div
+      *ngIf="showSearchBar"
+      class="navbar-nav inner-addon right-addon search-icon"
+    >
+      <div class="position__relative">
+        <input
+          type="text"
+          [attr.placeholder]="searchPlaceholder"
+          autocomplete="off"
+          [(ngModel)]="filterQuery"
+          class="form-control search-box search__"
+        />
+        <i
+          class="fa fa-times-circle cursor__pointer cir__pos"
+          aria-hidden="true"
+        ></i>
+      </div>
+      <div></div>
+    </div>
+  </div>
+  <div
+    id="mySidenav"
+    class="sidenav"
+    [ngClass]="navIsOpen ? 'open__nav' : 'close__nav '"
+  >
+    <div [ngClass]="navIsOpen ? 'open__nav display__block ' : 'display__none '">
+      <div class="mob__bo">
+        <a
+          href="javascript:void(0)"
+          class="closebtn"
+          id="closeMobile"
+          (click)="toggleNav()"
+          >×</a
+        >
+        <a href="#">
+          <img class="mr-sm" src="assets/images/landing-logo.gif" />
+          <span class="header__logo__text">FDA MyStudies </span>
+        </a>
+      </div>
+
+      <ul class="user__profile__ul">
+        <li>
+          <a
+            routerLink="/coordinator/participants/dashboard"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}"
+            class="nav-item nav-link"
+            >Dashboard</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/coordinator/locations"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}"
+            class="nav-item nav-link"
+            >Locations</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/coordinator/users"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}"
+            class="nav-item nav-link"
+            >Users</a
+          >
+        </li>
+        <li>
+          <a
+            routerLink="/coordinator/accounts"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}"
+            class="nav-item nav-link"
+            >My Account</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    class="bg__overlay"
+    [ngClass]="navIsOpen ? 'display__block' : 'display__none'"
+  ></div>
+</div>
