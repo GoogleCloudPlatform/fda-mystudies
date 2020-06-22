@@ -989,6 +989,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
       dashboardData = (DashboardData) response;
       if (dashboardData != null) {
         dashboardData.setStudyId(((SurveyActivity) context).getStudyId());
+        if (dashboardData.getDashboard().getCharts().isEmpty())
+          trendLayout.setVisibility(View.GONE);
         scrollView.setVisibility(View.VISIBLE);
         dbServiceSubscriber.saveStudyDashboardToDB(context, dashboardData);
         new ProcessData().execute();
