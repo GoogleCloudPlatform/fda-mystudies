@@ -21,7 +21,7 @@ public final class Constants {
 
   public static final String STUDYOF_HEALTH_1 = "StudyofHealth1";
 
-  public static final String INVALID_USER_ID = "invalid userId";
+  public static final String INVALID_USER_ID = "dmdNLVo32rCfRzR-M41gwCTZVOuiTZR-DUNybqf8JkS8Oye";
 
   public static final String TOKEN = "BSEEMNH6";
 
@@ -48,4 +48,12 @@ public final class Constants {
   public static final String PARTICIPANT_ID_NOT_EXISTS = "5";
 
   public static final String STUDY_ID_OF_PARTICIPANT = "OpenStudy02";
+
+  public static final boolean BOOKMARKED = true;
+
+  public static final int COMPLETION = 0;
+
+  public static final int ADHERENCE = 0;
+
+  public static final boolean DELETE = true;
 }
