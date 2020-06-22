@@ -7,7 +7,6 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/error.model';
-import {HttpErrorResponse} from '@angular/common/http';
 import {throwError, of} from 'rxjs';
 import {Location} from '../shared/location.model';
 
@@ -77,16 +76,13 @@ describe('LocationService', () => {
       ['getCollection'],
     );
     locationService = new LocationService(entityServicespy);
-    const errorResponse = new HttpErrorResponse({
+    const errorResponse: ApiResponse = {
       error: {
-        app_error_code: 401,
         userMessage: 'User does not exist',
         type: 'error',
         detailMessage: '404 Cant able to get details',
       },
-      status: 401,
-      statusText: 'Unauthorized',
-    });
+    };
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponse));
 
@@ -104,18 +100,14 @@ describe('LocationService', () => {
       ['getCollection'],
     );
     locationService = new LocationService(entityServicespy);
-
-    const errorResponses = new HttpErrorResponse({
+    const errorResponses: ApiResponse = {
       error: {
-        app_error_code: 400,
         userMessage: 'Bad Request',
         type: 'error',
         detailMessage:
           'Missing request header userId for method parameter of type Integer',
       },
-      status: 401,
-      statusText: 'Unauthorized',
-    });
+    };
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
     tick(40);
