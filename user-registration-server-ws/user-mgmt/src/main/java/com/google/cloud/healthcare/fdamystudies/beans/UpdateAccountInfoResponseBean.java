@@ -19,8 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UpdateAccountInfoResponseBean {
 
-  private String httpStatusCode;
-  private String code;
+  private int httpStatusCode;
   private String message;
 
   public String toString() {

@@ -70,4 +70,12 @@ public class AppConstants {
   public static final String GATEWAY = "Gateway";
 
   public static final String WITHDRAWN = "Withdrawn";
+
+  public static final String MISSING_REQUIRED_PARAMETER = "MissingRequiredParameter";
+  public static final String INVALID_REQUEST_EXCEPTION = "InvalidRequestException";
+  public static final String INVALID_EMAIL_CODE_EXCEPTION = "InvalidEmailCodeException";
+  public static final String INVALID_USERID_EXCEPTION = "InvalidUserIdException";
+  public static final String SYSTEM_EXCEPTION = "SystemException";
+  public static final Integer EMAILID_VERIFIED_STATUS = 1;
+  public static final String EMAIL_NOT_EXISTS = "EMAIL_NOT_EXISTS";
 }

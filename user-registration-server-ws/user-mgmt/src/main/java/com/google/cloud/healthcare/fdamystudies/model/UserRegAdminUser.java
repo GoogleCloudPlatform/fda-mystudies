@@ -53,8 +53,8 @@ public class UserRegAdminUser implements Serializable {
   @Column(name = "status", columnDefinition = "TINYINT(1)")
   private Integer status = 0;
 
-  @Column(name = "manage_users", columnDefinition = "TINYINT(1)")
-  private Integer manageUsers = 0;
+  @Column(name = "super_admin", columnDefinition = "TINYINT(1)")
+  private Boolean superAdmin = false;
 
   @Column(name = "manage_locations", columnDefinition = "TINYINT(1)")
   private Integer manageLocations = 0;
@@ -64,10 +64,4 @@ public class UserRegAdminUser implements Serializable {
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
-
-  @Column(name = "code_expire_date")
-  private LocalDateTime codeExpireDate;
-
-  @Column(name = "email_code")
-  private String emailCode;
 }
