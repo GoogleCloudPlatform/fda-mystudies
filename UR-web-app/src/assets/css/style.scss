@@ -932,7 +932,7 @@ button {
 
 .form-group .custom__labels label:before {
   content: "";
-  -webkit-appearance: none;
+  appearance: none;
   background-color: transparent;
   border: 1px solid var(--geyser-gray);
   padding: 7px;
@@ -945,7 +945,7 @@ button {
 
 .user__details .form-group .custom__labels label:before {
   content: url("../images/tick.gif");
-  -webkit-appearance: none;
+  appearance: none;
   background-color: transparent;
   border: none;
   padding: 0;
@@ -966,7 +966,7 @@ button {
   height: 11px;
   border: solid var(--white);
   border-width: 0px 1px 1px 0;
-  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
   transform: rotate(45deg);
 }
 
@@ -1019,19 +1019,19 @@ button {
   top: 3px;
   left: 3px;
   border-radius: 50%;
-  -webkit-transition: all 0.2s ease;
+  transition: all 0.2s ease;
   transition: all 0.2s ease;
 }
 
 [type="radio"]:not(:checked) + label:after {
   opacity: 0;
-  -webkit-transform: scale(0);
+  transform: scale(0);
   transform: scale(0);
 }
 
 [type="radio"]:checked + label:after {
   opacity: 1;
-  -webkit-transform: scale(1);
+  transform: scale(1);
   transform: scale(1);
 }
 
@@ -1110,16 +1110,6 @@ button {
 
 .pad__15__20 {
   padding: 15px 20px !important;
-}
-
-::-webkit-input-placeholder {
-  color: var(--oslo-gray);
-  font-weight: normal !important;
-}
-
-:-ms-input-placeholder {
-  color: var(--oslo-gray);
-  font-weight: normal !important;
 }
 
 ::placeholder {
@@ -1445,8 +1435,6 @@ button {
 }
 
 select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
 }
 
@@ -1459,7 +1447,7 @@ select {
 [type="reset"],
 [type="submit"],
 button {
-  -webkit-appearance: none !important;
+  appearance: none !important;
 }
 
 .fa__plus__minus[aria-expanded="true"] {
@@ -1539,7 +1527,7 @@ div.show + div {
 }
 
 .acc__dele {
-  width: -webkit-fill-available;
+  width: fill-available;
   margin-right: 15px;
 }
 
