@@ -1,21 +1,29 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import com.google.cloud.healthcare.fdamystudies.beans.InfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
+import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.UserProfileController;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import com.jayway.jsonpath.JsonPath;
 
 public class UserProfileControllerTest extends BaseMockIT {
 
@@ -27,12 +35,14 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired UserProfileController profileController;
   @Autowired UserManagementProfileService profileService;
+  @Autowired FdaEaUserDetailsServiceImpl service;
 
   @Test
   public void contextLoads() {
     assertNotNull(profileController);
     assertNotNull(mockMvc);
     assertNotNull(profileService);
+    assertNotNull(service);
   }
 
   @Test
@@ -43,7 +53,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void getUserProfileSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
-    performGet(USER_PROFILE_PATH, headers, OK);
+    performGet(USER_PROFILE_PATH, headers, "cdash93@gmail.com", OK);
   }
 
   @Test
@@ -59,11 +69,15 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void updateUserProfileSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
-    UserRequestBean bean = new UserRequestBean();
-    String requestJson = getObjectMapper().writeValueAsString(bean);
-    // sample response= {"code":200,"message":"Profile Updated successfully"}
-    // expect actual response contains 200
-    performPost(UPDATE_USER_PROFILE_PATH, requestJson, headers, String.valueOf(200), OK);
+    SettingsRespBean settingRespBean = new SettingsRespBean(true, true, true, true, "", "");
+    UserRequestBean userRequestBean = new UserRequestBean(settingRespBean, new InfoBean());
+    String requestJson = getObjectMapper().writeValueAsString(userRequestBean);
+    performPost(
+        UPDATE_USER_PROFILE_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
+    MvcResult result = performGet(USER_PROFILE_PATH, headers, OK);
+    boolean remote =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.settings.remoteNotifications");
+    assertEquals(true, remote);
   }
 
   @Test
@@ -75,9 +89,9 @@ public class UserProfileControllerTest extends BaseMockIT {
     list.add(studyReqBean);
     DeactivateAcctBean acctBean = new DeactivateAcctBean(list);
     String requestJson = getObjectMapper().writeValueAsString(acctBean);
-    // sample response={"message":"success"}
-    // expect actual response contains 'success'
     performDelete(DEACTIVATE_PATH, requestJson, headers, Constants.SUCCESS, OK);
+    UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
+    assertEquals(3, daoResp.getStatus());
   }
 
   @Test
@@ -98,7 +112,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     // without email
-    String requestJson = getLoginBean(null, Constants.PASSWORD);
+    String requestJson = getLoginBean("", Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // invalid email
@@ -109,12 +123,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     headers.set(Constants.APP_ID_HEADER, "");
     requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
-
-    // without OrgId
-    headers.set(Constants.APP_ID_HEADER, Constants.APP_ID_VALUE);
-    headers.set(Constants.ORG_ID_HEADER, "");
-    requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
-    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
   @Test
@@ -123,13 +131,11 @@ public class UserProfileControllerTest extends BaseMockIT {
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
-    // sample response={"message":"success"}
-    // expect actual response contains 'success'
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, Constants.SUCCESS, OK);
   }
 
   private String getLoginBean(String emailId, String password) throws JsonProcessingException {
-    LoginBean bean = new LoginBean(emailId, password);
-    return getObjectMapper().writeValueAsString(bean);
+    LoginBean loginBean = new LoginBean(emailId, password);
+    return getObjectMapper().writeValueAsString(loginBean);
   }
 }

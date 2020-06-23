@@ -1,17 +1,22 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.StudiesController;
+import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
+import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -23,12 +28,14 @@ public class StudiesControllerTest extends BaseMockIT {
 
   @Autowired StudiesController studiesController;
   @Autowired StudiesServices studiesServices;
+  @Autowired CommonDaoImpl commonDao;
 
   @Test
   public void contextLoads() {
     assertNotNull(studiesController);
     assertNotNull(mockMvc);
     assertNotNull(studiesServices);
+    assertNotNull(commonDao);
   }
 
   public StudyMetadataBean createStudyMetadataBean() {
@@ -52,13 +59,23 @@ public class StudiesControllerTest extends BaseMockIT {
   public void addUpdateStudyMetadataSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     String requestJson = getObjectMapper().writeValueAsString(createStudyMetadataBean());
-    // sample response={"code":200,"message":"Success"}
-    // expect actual response contains 200
-    performPost(STUDY_METADATA_PATH, requestJson, headers, String.valueOf(200), OK);
+    performPost(
+        STUDY_METADATA_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
+    HashSet<String> set = new HashSet<>();
+    set.add(Constants.STUDY_ID);
+    List<StudyInfoBO> list = commonDao.getStudyInfoSet(set);
+    StudyInfoBO studyInfoBo =
+        list.stream()
+            .filter(x -> x.getCustomId().equals(Constants.STUDY_ID))
+            .findFirst()
+            .orElse(null);
+    assertNotNull(studyInfoBo);
+    assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
+    assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
   }
 
   @Test
-  public void addUpdateStudyMetadataFailure() throws Exception {
+  public void addUpdateStudyMetadataBadRequest() throws Exception {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
 
@@ -88,7 +105,7 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void sendNotificationFailure() throws Exception {
+  public void sendNotificationBadRequest() throws Exception {
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
@@ -116,17 +133,17 @@ public class StudiesControllerTest extends BaseMockIT {
             Constants.CUSTOM_STUDY_ID,
             Constants.APP_ID_HEADER,
             Constants.STUDY_LEVEL);
-    // sample response={"code":200,"message":"Success"}
-    // expect actual response contains 200
-    performPost(SEND_NOTIFICATION_PATH, requestJson, headers, String.valueOf(200), OK);
+    performPost(
+        SEND_NOTIFICATION_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
   }
 
   private String getNotificationForm(
       String studyId, String customStudyId, String appId, String notificationType)
       throws JsonProcessingException {
-    NotificationBean bean = new NotificationBean(studyId, customStudyId, appId, notificationType);
+    NotificationBean notificationBean =
+        new NotificationBean(studyId, customStudyId, appId, notificationType);
     List<NotificationBean> list = new ArrayList<NotificationBean>();
-    list.add(bean);
+    list.add(notificationBean);
     NotificationForm notificationForm = new NotificationForm(list);
     return getObjectMapper().writeValueAsString(notificationForm);
   }

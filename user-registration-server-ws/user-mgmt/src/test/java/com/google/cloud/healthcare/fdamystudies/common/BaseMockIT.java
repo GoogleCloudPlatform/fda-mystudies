@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import javax.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 
@@ -62,9 +64,35 @@ public class BaseMockIT {
         .andReturn();
   }
 
-  protected void performGet(String path, HttpHeaders headers, ResultMatcher resultMatcher)
+  protected MvcResult performGet(String path, HttpHeaders headers, ResultMatcher resultMatcher)
       throws Exception {
-    mockMvc.perform(get(path).headers(headers)).andDo(print()).andExpect(resultMatcher);
+    return mockMvc
+        .perform(get(path).headers(headers))
+        .andDo(print())
+        .andExpect(resultMatcher)
+        .andReturn();
+  }
+
+  protected MvcResult performGet(
+      String path,
+      HttpHeaders headers,
+      String expectedTextInResponseBody,
+      ResultMatcher httpStatusMatcher,
+      Cookie... cookies)
+      throws Exception {
+
+    MockHttpServletRequestBuilder reqBuilder = get(path).headers(headers);
+
+    if (cookies.length > 0) {
+      reqBuilder.cookie(cookies);
+    }
+
+    return mockMvc
+        .perform(reqBuilder)
+        .andDo(print())
+        .andExpect(httpStatusMatcher)
+        .andExpect(content().string(containsString(expectedTextInResponseBody)))
+        .andReturn();
   }
 
   protected void performDelete(

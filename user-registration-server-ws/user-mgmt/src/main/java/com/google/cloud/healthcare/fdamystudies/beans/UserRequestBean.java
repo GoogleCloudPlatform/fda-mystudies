@@ -35,4 +35,10 @@ public class UserRequestBean implements Serializable {
     this.info = info;
     this.participantInfo = participantInfo;
   }
+
+  public UserRequestBean(SettingsRespBean settings, InfoBean info) {
+    super();
+    this.settings = settings;
+    this.info = info;
+  }
 }
