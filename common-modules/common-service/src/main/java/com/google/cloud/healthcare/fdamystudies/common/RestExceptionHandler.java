@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -26,9 +27,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         .body(ErrorCode.APPLICATION_ERROR);
   }
 
-  @SuppressWarnings("rawtypes")
   @ExceptionHandler(RestClientResponseException.class)
-  public ResponseEntity handleRestClientResponseException(
+  @ResponseStatus(
+      code = HttpStatus.INTERNAL_SERVER_ERROR,
+      reason = "request failed due to RestClientResponseException")
+  public ErrorResponse handleRestClientResponseException(
       HttpClientErrorException ex, WebRequest request) {
     String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
     ErrorResponse response = new ErrorResponse(ex);
@@ -36,6 +39,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         String.format(
             "%s request failed due to RestClientResponseException, response=%s", uri, response),
         ex);
-    return ResponseEntity.status(ex.getRawStatusCode()).body(response);
+    return response;
   }
 }

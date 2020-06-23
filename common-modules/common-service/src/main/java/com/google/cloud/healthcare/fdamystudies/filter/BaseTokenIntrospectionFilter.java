@@ -104,10 +104,7 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
           String.format(
               "status=%d, response=%s",
               oauthResponse.getStatusCodeValue(), oauthResponse.getBody()));
-      HttpServletResponse res = (HttpServletResponse) response;
-      res.setStatus(oauthResponse.getStatusCodeValue());
-      res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-      res.getOutputStream().write(oauthResponse.getBody().toString().getBytes());
+      setUnauthorizedResponse(response);
     }
   }
 

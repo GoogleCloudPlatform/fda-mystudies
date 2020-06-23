@@ -12,7 +12,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +61,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
     MvcResult result =
-        performPost(
-            ApiEndpoint.EVENTS.getPath(), validAuditLogEvent, headers, StringUtils.EMPTY, CREATED);
+        performPost(ApiEndpoint.EVENTS.getPath(), validAuditLogEvent, headers, "event_id", CREATED);
     int eventId = JsonPath.read(result.getResponse().getContentAsString(), "$.event_id");
     assertTrue(eventId > 0);
   }
@@ -82,8 +80,6 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", "Bearer " + UUID.randomUUID().toString());
 
-    // expect FilterChainExceptionHandler extracts status code and error message from
-    // RestClientErrorException
     performPost(
         ApiEndpoint.EVENTS.getPath(), validAuditLogEvent, headers, "404 Not Found", NOT_FOUND);
   }
