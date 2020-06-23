@@ -19,4 +19,8 @@ public class UpdateAccountInfoResponseBean {
 
   private int httpStatusCode;
   private String message;
+
+  public String toString() {
+    return this.message;
+  }
 }

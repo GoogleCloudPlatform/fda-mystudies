@@ -57,7 +57,7 @@ let kUIColorForSubmitButtonBackground = UIColor.init(
 let kNoNetworkErrorCode = -101
 let kCouldNotConnectToServerCode = -1001
 
-//Display Constants
+// MARK: - Display Constants
 let kTitleError = "Error"
 let kTitleMessage = "Message"
 let kImportantNoteMessage = "Important Note"
@@ -186,6 +186,7 @@ let kResumeSpaces = "  Resume  "
 let kStartSpaces = "  Start  "
 let kCompletedSpaces = "  Completed  "
 let kInCompletedSpaces = "  Incompleted  "
+let kStudySetupMessage = "Please wait as we set up the study for you, this may take a few seconds."
 
 // MARK: - ResourcesViewController constants
 let kResourcesTableViewCell = "ResourcesCell"
@@ -216,6 +217,7 @@ let kMonthSpaces = "  MONTH  "
 let kMonth = "MONTH"
 let kWeekSpaces = "  WEEK  "
 let kWeek = "WEEK"
+let kDashSetupMessage = "Please wait as we set up the dashboard for you, this may take a few seconds."
 
 // MARK: - Eligibility constants
 

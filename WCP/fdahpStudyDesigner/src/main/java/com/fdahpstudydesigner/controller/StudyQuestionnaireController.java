@@ -2260,6 +2260,7 @@ public class StudyQuestionnaireController {
         }
         if (null != questionnaireStepInfo) {
           questionsBo = mapper.readValue(questionnaireStepInfo, QuestionsBo.class);
+
           if (questionsBo != null) {
             if (questionsBo.getId() != null) {
               questionsBo.setModifiedBy(sesObj.getUserId());
