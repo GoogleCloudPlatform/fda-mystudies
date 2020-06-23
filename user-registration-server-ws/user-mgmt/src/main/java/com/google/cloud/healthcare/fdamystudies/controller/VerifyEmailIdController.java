@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.ws.rs.core.Context;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class VerifyEmailIdController {
 
   @PostMapping("/verifyEmailId")
   public ResponseEntity<?> verifyEmailId(
-      @RequestBody EmailIdVerificationForm verificationForm,
+      @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
       @Context HttpServletResponse response) {
@@ -56,15 +57,6 @@ public class VerifyEmailIdController {
     String isValidAppMsg = "";
     UserDetailsBO participantDetails = null;
 
-    if (verificationForm == null
-        || StringUtils.isBlank(verificationForm.getEmailId())
-        || StringUtils.isBlank(appId)
-        || StringUtils.isBlank(orgId)
-        || StringUtils.isBlank(verificationForm.getCode())) {
-      ResponseBean respBean =
-          ResponseUtil.prepareBadRequestResponse(response, AppConstants.MISSING_REQUIRED_PARAMETER);
-      return new ResponseEntity<>(respBean, HttpStatus.BAD_REQUEST);
-    }
     try {
       isValidAppMsg =
           commonService.validatedUserAppDetailsByAllApi(
