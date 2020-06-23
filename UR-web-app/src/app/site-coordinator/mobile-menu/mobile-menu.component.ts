@@ -10,7 +10,7 @@ export class MobileMenuComponent {
   navIsOpen = false;
   @Input() showSearchBar = true;
   @Input() filterQuery = '';
-  @Output('handleKeyDown') handleKeyDown: EventEmitter<
+  @Output('onKeyDown') onKeyDown: EventEmitter<
     KeyboardEvent
   > = new EventEmitter();
   showSearchOnClick = false;
@@ -19,13 +19,13 @@ export class MobileMenuComponent {
     this.navIsOpen = !this.navIsOpen;
   }
 
-  mobileHandleKeyDown(event: KeyboardEvent): void {
-    this.handleKeyDown.emit(event);
+  mobileOnKeyDown(event: KeyboardEvent): void {
+    this.onKeyDown.emit(event);
   }
-  showSearchBarOnClick() {
+  showSearchBarOnClick(): void {
     this.showSearchOnClick = true;
   }
-  hideSearchBarOnClick() {
+  hideSearchBarOnClick(): void {
     this.showSearchOnClick = false;
   }
 }

@@ -177,18 +177,6 @@
   text-align: left;
 }
 
-::-webkit-input-placeholder {
-  color: var(--oslo-gray);
-  font-weight: normal !important;
-  font-size: 13px;
-}
-
-:-ms-input-placeholder {
-  color: var(--oslo-gray);
-  font-weight: normal !important;
-  font-size: 13px;
-}
-
 ::placeholder {
   color: var(--oslo-gray);
   font-weight: normal !important;

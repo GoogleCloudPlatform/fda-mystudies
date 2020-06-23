@@ -10,7 +10,7 @@ export class SiteCoordinatorComponent {
   showSearchBar = true;
   filterQuery = '';
 
-  public handleKeyDown(event: KeyboardEvent): void {
+  public onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       // :TO DO child component search method call
     }

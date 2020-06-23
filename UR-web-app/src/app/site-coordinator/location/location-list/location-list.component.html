@@ -2,11 +2,7 @@
   <div class="max__w__1280 m-none">
     <div class="flex__justify__space-between">
       <div class="subheader__title">Locations</div>
-      <button
-        id="addLocation"
-        (click)="addLocation()"
-        class="btn btn-primary width__auto blue__btn font14"
-      >
+      <button id="addLocation" (click)="addLocation()" class="btn btn-primary width__auto blue__btn font14">
         Add Location
       </button>
     </div>
@@ -16,18 +12,11 @@
   <ng-container *ngIf="location$ | async as locations">
     <div *ngIf="locations.length != 0">
       <div class="cards1 m-none">
-        <table
-          class="table table-striped"
-          [mfData]="locations"
-          #mf="mfDataTable"
-          [mfRowsOnPage]="10"
-        >
+        <table class="table table-striped" [mfData]="locations" #mf="mfDataTable" [mfRowsOnPage]="10">
           <thead>
             <tr>
-              <span
-                class="text__387fea__12 mobile__view mr-sm"
-                style="background: transparent;"
-                >Sort By:
+              <span class="text__387fea__12 mobile__view mr-sm" style="background: transparent;">
+                Sort By:
               </span>
               <th>
                 <mySorter by="customId">Location ID</mySorter>
@@ -44,25 +33,22 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              *ngFor="let location of mf.data"
-              (click)="locationDetails(location.id)"
-            >
+            <tr class="location_row" *ngFor="let location of mf.data" (click)="locationDetails(location.id)">
               <td>
-                <span class="tbl__td__label">Location ID:</span
-                ><span class="no_st_en">{{ location.customId }}</span>
+                <span class="tbl__td__label">Location ID:</span>
+                <span class="no_st_en">{{ location.customId }}</span>
               </td>
               <td>
-                <span class="tbl__td__label">Location Name:</span
-                >{{ location.name }}
+                <span class="tbl__td__label">Location Name:</span>
+                {{ location.name }}
               </td>
               <td>
-                <span class="tbl__td__label">Associated Studies:</span
-                >{{ location.studiesCount }}
+                <span class="tbl__td__label">Associated Studies:</span>
+                {{ location.studiesCount }}
               </td>
               <td>
-                <span class="tbl__td__label">Status:</span
-                >{{ location.status == 1 ? "Active" : "DEACTIVATED" }}
+                <span class="tbl__td__label">Status:</span>
+                {{ location.status == 1 ? "Active" : "DEACTIVATED" }}
               </td>
             </tr>
           </tbody>
