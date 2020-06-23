@@ -1,11 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "include": [
-    "src/**/*.js",
-    "src/**/*.ts",
-    ".eslintrc.js",
-  ],
+  "include": ["src/**/*.js", "src/**/*.ts", ".eslintrc.js"],
   "compilerOptions": {
     "types": ["jasmine", "node"]
-  },
+  }
 }
