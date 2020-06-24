@@ -11,9 +11,9 @@ package com.google.cloud.healthcare.fdamystudies.auditlog.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,17 +24,18 @@ import lombok.Setter;
 public class AuditLogEventEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
   @Column(name = "id", updatable = false, nullable = false)
-  private long id;
+  private String id;
 
-  @Column(name = "correlation_id", nullable = false, length = 255)
+  @Column(name = "correlation_id", nullable = false, length = 36)
   private String correlationId;
 
-  @Column(name = "event_name", nullable = false, length = 255)
+  @Column(name = "event_name", nullable = false, length = 40)
   private String eventName;
 
-  @Column(name = "system_id", nullable = false, length = 255)
+  @Column(name = "system_id", nullable = false, length = 30)
   private String systemId;
 
   @Column(name = "event_timestamp", nullable = false, length = 20)
@@ -46,15 +47,54 @@ public class AuditLogEventEntity {
   @Column(name = "alert", nullable = false, length = 1)
   private boolean alert;
 
-  @Column(name = "app_id", nullable = true, length = 255)
+  @Column(name = "app_id", nullable = true, length = 100)
   private String appId;
 
-  @Column(name = "org_id", nullable = true, length = 255)
+  @Column(name = "org_id", nullable = true, length = 100)
   private String orgId;
 
-  @Column(name = "user_id", nullable = true, length = 255)
+  @Column(name = "user_id", nullable = true, length = 100)
   private String userId;
 
-  @Column(name = "event_info", nullable = false, columnDefinition = "json")
-  private String eventInfo;
+  @Column(name = "system_ip", nullable = false, length = 39)
+  private String systemIp;
+
+  @Column(name = "description", nullable = false, length = 255)
+  private String description;
+
+  @Column(name = "event_detail", nullable = false, length = 255)
+  private String eventDetail;
+
+  @Column(name = "application_version", nullable = false, length = 60)
+  private String applicationVersion;
+
+  @Column(name = "application_component_name", nullable = false, length = 100)
+  private String applicationComponentName;
+
+  @Column(name = "client_id", nullable = true, length = 100)
+  private String clientId;
+
+  @Column(name = "device_type", nullable = true, length = 10)
+  private String deviceType;
+
+  @Column(name = "request_uri", nullable = true, length = 255)
+  private String requestUri;
+
+  @Column(name = "access_level", nullable = true, length = 10)
+  private String accessLevel;
+
+  @Column(name = "device_platform", nullable = true, length = 100)
+  private String devicePlatform;
+
+  @Column(name = "resource_server", nullable = true, length = 40)
+  private String resourceServer;
+
+  @Column(name = "client_app_version", nullable = true, length = 20)
+  private String clientAppVersion;
+
+  @Column(name = "client_access_level", nullable = true, length = 20)
+  private String clientAccessLevel;
+
+  @Column(name = "platform_version", nullable = true, length = 20)
+  private String platformVersion;
 }

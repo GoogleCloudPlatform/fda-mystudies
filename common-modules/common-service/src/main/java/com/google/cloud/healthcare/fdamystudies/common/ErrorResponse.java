@@ -10,9 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.common;
 
 import java.io.IOException;
 import java.time.Instant;
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import java.util.Map;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.web.client.RestClientResponseException;
@@ -42,39 +40,16 @@ public class ErrorResponse {
     populateErrorFields(restClientResponseException);
   }
 
+  public ErrorResponse(Map<String, Object> errorAttributes) {
+    status = Integer.parseInt(errorAttributes.get("status").toString());
+    errorType = errorAttributes.get("error").toString();
+    errorDescription = errorAttributes.get("message").toString();
+  }
+
   private void populateErrorFields(RestClientResponseException restClientResponseException) {
     status = restClientResponseException.getRawStatusCode();
     errorType = restClientResponseException.getClass().getSimpleName();
-    errorDescription = restClientResponseException.getResponseBodyAsString();
-
-    // tomcat sets response body as html
-    if (StringUtils.containsIgnoreCase(errorDescription, "html")) {
-      errorDescription = extractMessageFromHtml(errorDescription);
-    }
-    errorDescription =
-        StringUtils.defaultIfEmpty(errorDescription, restClientResponseException.getMessage());
-  }
-
-  private String extractMessageFromHtml(String html) {
-    logger.entry(String.format("begin extractMessageFromHtml() with html %n%s", html));
-    Document doc = Jsoup.parse(html);
-    StringBuilder b = new StringBuilder();
-    // select <p> elements and iterate
-    doc.select("p")
-        .forEach(
-            e -> {
-              if (StringUtils.contains(e.text(), "Message")
-                  || StringUtils.contains(e.text(), "Description")) {
-                String text = e.text().substring(e.text().indexOf(StringUtils.SPACE)).trim();
-                b.append(text);
-                if (!StringUtils.endsWith(text, ".")) {
-                  b.append(". ");
-                }
-              }
-            });
-    String value = b.toString().trim();
-    logger.exit(value);
-    return value;
+    errorDescription = restClientResponseException.getMessage();
   }
 
   static class ErrorResponseSerializer extends StdSerializer<ErrorResponse> {

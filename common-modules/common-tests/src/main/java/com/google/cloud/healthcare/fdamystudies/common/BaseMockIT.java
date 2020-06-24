@@ -58,12 +58,16 @@ public class BaseMockIT {
 
   @Autowired private WireMockServer wireMockServer;
 
-  @Autowired private MockMvc mockMvc;
+  @Autowired protected MockMvc mockMvc;
 
-  @Autowired private ServletContext context;
+  @Autowired protected ServletContext servletContext;
 
   protected WireMockServer getWireMockServer() {
     return wireMockServer;
+  }
+
+  protected String getContextPath() {
+    return servletContext.getContextPath();
   }
 
   protected MvcResult performGet(
@@ -75,7 +79,7 @@ public class BaseMockIT {
       throws Exception {
 
     MockHttpServletRequestBuilder reqBuilder =
-        get(path).contextPath(context.getContextPath()).headers(headers);
+        get(path).contextPath(servletContext.getContextPath()).headers(headers);
 
     if (cookies.length > 0) {
       reqBuilder.cookie(cookies);
@@ -99,7 +103,10 @@ public class BaseMockIT {
       throws Exception {
 
     MockHttpServletRequestBuilder reqBuilder =
-        post(path).contextPath(context.getContextPath()).content(requestBody).headers(headers);
+        post(path)
+            .contextPath(servletContext.getContextPath())
+            .content(requestBody)
+            .headers(headers);
 
     if (cookies.length > 0) {
       reqBuilder.cookie(cookies);

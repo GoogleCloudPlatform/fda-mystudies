@@ -29,7 +29,6 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-    logger.entry(String.format("begin doFilterInternal() for %s", request.getRequestURI()));
     try {
       filterChain.doFilter(request, response);
     } catch (HttpClientErrorException | HttpServerErrorException e) {

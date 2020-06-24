@@ -8,62 +8,65 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.controller;
 
-import static org.junit.Assert.assertTrue;
-import java.io.IOException;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeAll;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.auditlog.common.ApiEndpoint;
-import com.google.cloud.healthcare.fdamystudies.auditlog.validator.AuditLogEventValidator;
+import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
+import com.google.cloud.healthcare.fdamystudies.auditlog.repository.AuditLogEventRepository;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.jayway.jsonpath.JsonPath;
 
 public class AuditLogEventControllerTest extends BaseMockIT {
 
-  @Autowired AuditLogEventValidator validator;
-
-  private static String validAuditLogEvent;
-
-  private static String invalidAuditLogEvent;
-
-  private static ObjectMapper objMapper = new ObjectMapper();
-
-  @BeforeAll
-  public static void loadEvents() throws JsonParseException, JsonMappingException, IOException {
-    invalidAuditLogEvent =
-        objMapper
-            .readValue(
-                AuditLogEventControllerTest.class.getResourceAsStream(
-                    "/invalid_audit_log_event.json"),
-                JsonNode.class)
-            .toString();
-
-    validAuditLogEvent =
-        objMapper
-            .readValue(
-                AuditLogEventControllerTest.class.getResourceAsStream(
-                    "/valid_audit_log_event.json"),
-                JsonNode.class)
-            .toString();
-  }
+  @Autowired private AuditLogEventRepository repository;
 
   @Test
   public void shouldSaveAuditLogEvent() throws Exception {
+    // Step-1 call API to post the audit log event
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    AuditLogEventRequest request = createAuditLogEventRequest();
+
     MvcResult result =
-        performPost(ApiEndpoint.EVENTS.getPath(), validAuditLogEvent, headers, "event_id", CREATED);
-    int eventId = JsonPath.read(result.getResponse().getContentAsString(), "$.event_id");
-    assertTrue(eventId > 0);
+        mockMvc
+            .perform(
+                post(ApiEndpoint.EVENTS.getPath())
+                    .contextPath(getContextPath())
+                    .content(asJsonString(request))
+                    .headers(headers))
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.eventId").isNotEmpty())
+            .andReturn();
+
+    // Step-2 Find AuditLogEventEntity by Id and compare with AuditLogEventRequest object
+    String eventId = JsonPath.read(result.getResponse().getContentAsString(), "$.eventId");
+    AuditLogEventEntity aleEntity = repository.findById(eventId).get();
+    assertNotNull(aleEntity);
+    assertEquals(request.getEventName(), aleEntity.getEventName());
+    assertEquals(request.getCorrelationId(), aleEntity.getCorrelationId());
+
+    // Step-3 cleanup - delete the event from database
+    repository.deleteById(eventId);
   }
 
   @Test
@@ -72,7 +75,11 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     headers.add("Authorization", INVALID_BEARER_TOKEN);
 
     performPost(
-        ApiEndpoint.EVENTS.getPath(), validAuditLogEvent, headers, "Invalid token", UNAUTHORIZED);
+        ApiEndpoint.EVENTS.getPath(),
+        asJsonString(createAuditLogEventRequest()),
+        headers,
+        "Invalid token",
+        UNAUTHORIZED);
   }
 
   @Test
@@ -81,7 +88,11 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     headers.add("Authorization", "Bearer " + UUID.randomUUID().toString());
 
     performPost(
-        ApiEndpoint.EVENTS.getPath(), validAuditLogEvent, headers, "404 Not Found", NOT_FOUND);
+        ApiEndpoint.EVENTS.getPath(),
+        asJsonString(createAuditLogEventRequest()),
+        headers,
+        "Not Found",
+        NOT_FOUND);
   }
 
   @Test
@@ -89,12 +100,26 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    performPost(
-        ApiEndpoint.EVENTS.getPath(),
-        invalidAuditLogEvent,
-        headers,
-        "extraneous key [user_id] is not permitted",
-        BAD_REQUEST);
+    AuditLogEventRequest aleRequest = new AuditLogEventRequest();
+    aleRequest.setSystemId(RandomStringUtils.randomAlphanumeric(40));
+    aleRequest.setUserId(RandomStringUtils.randomAlphanumeric(101));
+    aleRequest.setSystemIp("0.0.0.");
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.EVENTS.getPath())
+                    .contextPath(getContextPath())
+                    .content(asJsonString(aleRequest))
+                    .headers(headers))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.violations").isArray())
+            .andReturn();
+
+    String actualResponse = result.getResponse().getContentAsString();
+    String expectedResponse = readJsonFile("/expected_bad_request_response.json");
+    JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
   private HttpHeaders getCommonHeaders() {
@@ -102,5 +127,47 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
     return headers;
+  }
+
+  private AuditLogEventRequest createAuditLogEventRequest() {
+    AuditLogEventRequest aleRequest = new AuditLogEventRequest();
+    aleRequest.setUserId(UUID.randomUUID().toString());
+    aleRequest.setAccessLevel(null);
+    aleRequest.setAlert(false);
+    aleRequest.setAppId("MyStudies");
+    aleRequest.setApplicationComponentName("Auth Server");
+    aleRequest.setApplicationVersion("v1.0");
+    aleRequest.setClientId("FMSGCPARDTST");
+    aleRequest.setClientAccessLevel("System-level");
+    aleRequest.setClientAppVersion("v1.1");
+    aleRequest.setCorrelationId(UUID.randomUUID().toString());
+    aleRequest.setDescription(
+        String.format(
+            "App user registration successful for username %s and user ID %s returned to Resource Server",
+            "mock_ale@grr.la", aleRequest.getUserId()));
+    aleRequest.setDevicePlatform("Android");
+    aleRequest.setDeviceType("MOBILE");
+    aleRequest.setEventDetail("App user registration success");
+    aleRequest.setEventName("REGISTRATION_SUCCESS");
+    aleRequest.setEventTimestamp(Instant.now().toEpochMilli());
+    aleRequest.setOrgId("FDA");
+    aleRequest.setRequestUri(null);
+    aleRequest.setResourceServer("Participant Datastore");
+    aleRequest.setSystemId("FMSGCAUTHSVR");
+    aleRequest.setSystemIp(getRandomSystemIp());
+
+    return aleRequest;
+  }
+
+  private String getRandomSystemIp() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(RandomStringUtils.randomNumeric(4))
+        .append(".")
+        .append(RandomStringUtils.randomNumeric(4))
+        .append(".")
+        .append(RandomStringUtils.randomNumeric(4))
+        .append(".")
+        .append(RandomStringUtils.randomNumeric(4));
+    return sb.toString();
   }
 }

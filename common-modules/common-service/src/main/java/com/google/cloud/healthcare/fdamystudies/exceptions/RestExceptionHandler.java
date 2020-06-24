@@ -1,4 +1,4 @@
-package com.google.cloud.healthcare.fdamystudies.common;
+package com.google.cloud.healthcare.fdamystudies.exceptions;
 
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -12,6 +12,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorResponse;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -28,9 +30,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(RestClientResponseException.class)
-  @ResponseStatus(
-      code = HttpStatus.INTERNAL_SERVER_ERROR,
-      reason = "request failed due to RestClientResponseException")
+  @ResponseStatus(code = HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorResponse handleRestClientResponseException(
       HttpClientErrorException ex, WebRequest request) {
     String uri = ((ServletWebRequest) request).getRequest().getRequestURI();

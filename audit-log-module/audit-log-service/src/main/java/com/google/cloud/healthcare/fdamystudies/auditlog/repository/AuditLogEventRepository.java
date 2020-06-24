@@ -13,4 +13,4 @@ import org.springframework.stereotype.Repository;
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
 
 @Repository
-public interface AuditLogEventRepository extends JpaRepository<AuditLogEventEntity, Long> {}
+public interface AuditLogEventRepository extends JpaRepository<AuditLogEventEntity, String> {}
