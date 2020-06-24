@@ -3,45 +3,58 @@
 //  Use of this source code is governed by an MIT-style
 //  license that can be found in the LICENSE file or at
 //  https://opensource.org/licenses/MIT.
-
+//
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
-
+//
 // Server configuration
-// Sample URL format - 35.12.123.43:8081/StudyMetaData/
+// By default App will connect to network over Https, in order to connect over http
+// Change the settings in HPHC/Networking/Configurations/Environment/APIConfiguration.swift
+// Update the enum `AppProtocol` get value for Debug and Release.
+// Update the App Transport Security Settings in info.plist
 
-// Study builder ws URL
-WCP_URL = xxxxxxx
+// URL of study metadata server.
+// e.g. mystudiesdeployment.com/StudyMetaData/
+WCP_URL = xxxxxx
 
-// Response server ws URL
-RESPONSE_URL = xxxxxxx
+// URL of response datastore.
+// e.g. mystudiesdeployment.com/mystudies-response-server/
+RESPONSE_URL = xxxxxxxxx
 
-// Registration server ws URL
+// URL of different service bundles within participant datastore.
+// e.g. mystudiesdeployment.com/myStudiesUserMgmtWS/
 REGISTRATION_URL = xxxxxxx
+// e.g. mystudiesdeployment.com/myStudiesEnrollmentMgmt/
+ENROLLMENT_URL = xxxxxx
+// e.g. mystudiesdeployment.com/myStudiesConsentMgmtWS/
+CONSENTMGMT_URL = xxxxxx
 
-// Auth server ws URL
-AUTH_URL = xxxxxxx
+// URL of AuthServer.
+// e.g. mystudiesdeployment.com/AuthServer/
+AUTH_URL = xxxxxx
 
-// Enroll server ws URL
-ENROLLMENT_URL = xxxxxxx
+// This is used to generate base64 basic Authorization token for WCP WS validation.
+AUTH_USERNAME = xxxxx
+AUTH_PASSWORD = xxxxxxxxxxxx
 
-// Consent server ws URL
-CONSENTMGMT_URL = xxxxxxx
+// API_KEY is <bundleid>:<apptoken>
+// These values should match the ones set in study metadata server.
+REGISTRATIONSERVER_API_KEY = xxxxxxxx
 
-// Username for basic authentication used for WCP ws
-AUTH_USERNAME = xxxxxxxx
+// SHA-256 of the byte representation of the secret used by mobile apps.
+// In terraform deployment, this values is stored as `mystudies-ma-secret-key`
+//
+// For more details see implementation of getHashedValue in:
+// response-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/utils/ResponseServerUtil.java
+REGISTRATIONSERVER_API_SECERET = xxxxxxxxxxx
 
-// Password for basic authentication used for WCP ws
-AUTH_PASSWORD = xxxxxxxx
+// OrgID used for this application.
+ORG_ID = xxxxxx
 
-// Client ID
-REGISTRATIONSERVER_API_KEY = xxxxxxxxxxxxxxxxxxxx
-
-// Secret Key
-REGISTRATIONSERVER_API_SECERET = xxxxxxxxxxxxxxxxxxxx
-
-// ORG ID
-ORG_ID = xxxx
-
-// Application ID 
-APP_ID = xxxx
+// AppID of this application.
+// Study builder would use this appID to match studies to apps.
+//
+// should be max 15 character, human readable and URL safe.
+// If following terraform deployment steps, these APP_ID and ORG_ID
+// should match the ones you manually set in GCP secret manager.
+APP_ID = xxxxxx
