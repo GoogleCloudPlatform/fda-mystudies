@@ -37,8 +37,8 @@ export class LocationListComponent implements OnInit {
         return throwError(error);
       }),
       map(([locations, query]) => {
-        this.locations = locations;
-        return locations.filter(
+        this.locations = locations as Location[];
+        return this.locations.filter(
           (location: Location) =>
             (location.name &&
               location.name.toLowerCase().includes(query.toLowerCase())) ||

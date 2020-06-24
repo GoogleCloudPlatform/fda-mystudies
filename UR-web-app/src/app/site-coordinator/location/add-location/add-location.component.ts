@@ -1,10 +1,9 @@
-import {Component, ViewChild, TemplateRef} from '@angular/core';
+import {Component, TemplateRef} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
 import {ToastrService} from 'ngx-toastr';
-import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
-import {NgForm, NgModel} from '@angular/forms';
+import {BsModalService} from 'ngx-bootstrap/modal';
 import {ApiResponse} from 'src/app/entity/error.model';
 import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
 
@@ -27,11 +26,14 @@ export class AddLocationComponent<T> {
 
   addLocation(): void {
     this.locationService.addLocation(this.location).subscribe(
-      (data: ApiSuccessResponse) => {
-        this.toastr.success(data.successBean.message);
+      (succesResponse: unknown) => {
+        const successData = succesResponse as ApiSuccessResponse;
+        this.toastr.success(successData.successBean.message);
+        void this.router.navigate(['/coordinator/locations']);
       },
-      (error: ApiResponse) => {
-        this.toastr.error(error.error.userMessage);
+      (errorResponse: unknown) => {
+        const errorData = errorResponse as ApiResponse;
+        this.toastr.error(errorData.error.userMessage);
       },
     );
   }

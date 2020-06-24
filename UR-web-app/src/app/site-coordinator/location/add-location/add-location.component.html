@@ -2,7 +2,7 @@
     <div class="max__w__850 m-none">
         <div class="row">
             <div>
-                <a routerLink="/user/locations" class="subheader__title">
+                <a routerLink="/coordinator/locations" class="subheader__title">
                     <img src="assets/svgs/back-arrow.svg" />
                     <span>Add New Location</span>
                 </a>
@@ -18,28 +18,32 @@
                 <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
                     <div class="form-group">
                         <label for="study">Location ID</label>
-                        <input type="text" class="form-control" id="study" placeholder="Enter Location ID" [(ngModel)]="location.customId" maxlength="15" required name="loationCustomId" #loationCustomId="ngModel" />
+                        <input type="text" class="form-control" id="study" placeholder="Enter Location ID"
+                            [(ngModel)]="location.customId" maxlength="15" required name="loationCustomId"
+                            #loationCustomId="ngModel" />
                     </div>
                     <div *ngIf="
               loationCustomId.invalid &&
               (loationCustomId.dirty || loationCustomId.touched)
             ">
                         <span class="help-block with-errors error__msg" *ngIf="loationCustomId.errors.required">
-              Location ID is required.
-            </span>
+                            Location ID is required.
+                        </span>
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6 p-none">
                     <div class="form-group">
                         <label for="app">Location Name</label>
-                        <input type="text" class="form-control" id="app" placeholder="Enter Location Name" [(ngModel)]="location.name" required name="loationName" maxlength="200" #loationName="ngModel" />
+                        <input type="text" class="form-control" id="app" placeholder="Enter Location Name"
+                            [(ngModel)]="location.name" required name="loationName" maxlength="200"
+                            #loationName="ngModel" />
                     </div>
                     <div *ngIf="
               loationName.invalid && (loationName.dirty || loationName.touched)
             ">
                         <span class="help-block with-errors error__msg" *ngIf="loationName.errors.required">
-              Location Name is required.
-            </span>
+                            Location Name is required.
+                        </span>
                     </div>
                 </div>
             </div>
@@ -47,27 +51,28 @@
                 <div class="col-xs-12 col-md-12 p-none">
                     <div class="form-group">
                         <label for="Location">Description</label>
-                        <input type="text" class="form-control" id="app" placeholder="Enter Description" [(ngModel)]="location.description" required name="locationDescription" maxlength="500" #locationDescription="ngModel" />
+                        <input type="text" class="form-control" id="app" placeholder="Enter Description"
+                            [(ngModel)]="location.description" required name="locationDescription" maxlength="500"
+                            #locationDescription="ngModel" />
                     </div>
                     <div *ngIf="
               locationDescription.invalid &&
               (locationDescription.dirty || locationDescription.touched)
             ">
                         <span class="help-block with-errors error__msg" *ngIf="locationDescription.errors.required">
-              Location Description is required.
-            </span>
+                            Location Description is required.
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="btn__container">
             <button type="submit" class="btn bt__add mr-sm" [disabled]="!addLocationForm.form.valid">
-        Add
-      </button>
+                Add
+            </button>
             <button type="button" class="btn bt__cancel" #template (click)="openModal(template)">
-        Cancel
-      </button>
-            <!-- routerLink="/user/locations" -->
+                Cancel
+            </button>
         </div>
     </form>
 </div>
@@ -77,18 +82,19 @@
         <div class="row">
             <div class="col-xs-12 col-md-12 p-none">
                 <div class="form-group">
-                    You are about to leave the page and any unsaved changes will be lost. Are you sure you want to proceed
+                    You are about to leave the page and any unsaved changes will be lost. Are you sure you want to
+                    proceed
                 </div>
             </div>
         </div>
         <div class="p-xlg flex__justify__space-between">
             <div>
                 <button type="submit" class="btn bt__add mr-sm" (click)="modalRef.hide()">
-          Ok
-        </button>
+                    Ok
+                </button>
                 <button type="button" class="btn bt__cancel" (click)="modalRef.hide()">
-          Cancel
-        </button>
+                    Cancel
+                </button>
             </div>
         </div>
     </div>

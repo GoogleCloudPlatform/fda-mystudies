@@ -5,12 +5,19 @@ import {LocationDetailsComponent} from './location-details/location-details.comp
 import {LocationListComponent} from './location-list/location-list.component';
 import {NgxDataTableModule} from 'angular-9-datatable';
 import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+
 @NgModule({
   declarations: [
     AddLocationComponent,
     LocationDetailsComponent,
     LocationListComponent,
   ],
-  imports: [CommonModule, LocationRoutingModule, NgxDataTableModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    LocationRoutingModule,
+    NgxDataTableModule,
+  ],
 })
 export class LocationModule {}
