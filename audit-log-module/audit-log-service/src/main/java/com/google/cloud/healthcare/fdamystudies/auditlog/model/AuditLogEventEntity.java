@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
@@ -53,15 +54,19 @@ public class AuditLogEventEntity {
   @Column(name = "org_id", nullable = true, length = 100)
   private String orgId;
 
+  @ToString.Exclude
   @Column(name = "user_id", nullable = true, length = 100)
   private String userId;
 
+  @ToString.Exclude
   @Column(name = "system_ip", nullable = false, length = 39)
   private String systemIp;
 
+  @ToString.Exclude
   @Column(name = "description", nullable = false, length = 255)
   private String description;
 
+  @ToString.Exclude
   @Column(name = "event_detail", nullable = false, length = 255)
   private String eventDetail;
 
@@ -77,6 +82,7 @@ public class AuditLogEventEntity {
   @Column(name = "device_type", nullable = true, length = 10)
   private String deviceType;
 
+  @ToString.Exclude
   @Column(name = "request_uri", nullable = true, length = 255)
   private String requestUri;
 
