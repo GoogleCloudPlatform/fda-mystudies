@@ -1,45 +1,37 @@
-import {Component, OnInit, ViewChild, TemplateRef} from '@angular/core';
+import {Component, ViewChild, TemplateRef} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
 import {ToastrService} from 'ngx-toastr';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {NgForm, NgModel} from '@angular/forms';
+import {ApiResponse} from 'src/app/entity/error.model';
+import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
 
 @Component({
   selector: 'location-add',
   templateUrl: './add-location.component.html',
   styleUrls: ['./add-location.component.scss'],
 })
-export class AddLocationComponent implements OnInit {
-  @ViewChild('addLocationForm') addLocationForm: ngFormg;
+export class AddLocationComponent<T> {
   location: Location = new Location();
-  errorMessage = '';
-  successMessage = '';
-  modalRef: BsModalRef;
   constructor(
-    private router: Router,
-    private modalService: BsModalService,
-    private locationService: LocationService,
-    private toastr: ToastrService,
+    private readonly router: Router,
+    private readonly modalService: BsModalService,
+    private readonly locationService: LocationService,
+    private readonly toastr: ToastrService,
   ) {}
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
+  openModal(template: TemplateRef<T>): void {
+    this.modalService.show(template);
   }
-  ngOnInit() {}
 
-  addLocation() {
-    this.errorMessage = '';
-    this.successMessage = '';
+  addLocation(): void {
     this.locationService.addLocation(this.location).subscribe(
-      (data) => {
+      (data: ApiSuccessResponse) => {
         this.toastr.success(data.successBean.message);
-        // this.successMessage = "Location Added successfully."
       },
-      (error) => {
-        console.log(error);
+      (error: ApiResponse) => {
         this.toastr.error(error.error.userMessage);
-        //this.errorMessage = error.error.message;
       },
     );
   }
