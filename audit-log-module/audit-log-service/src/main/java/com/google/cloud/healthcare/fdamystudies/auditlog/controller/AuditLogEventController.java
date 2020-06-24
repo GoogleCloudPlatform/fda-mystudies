@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.auditlog.beans.AuditLogEventResponse;
 import com.google.cloud.healthcare.fdamystudies.auditlog.service.AuditLogEventService;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 
 @RestController
 @RequestMapping("/v1")

@@ -5,11 +5,11 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.google.cloud.healthcare.fdamystudies.auditlog.beans.AuditLogEventResponse;
 import com.google.cloud.healthcare.fdamystudies.auditlog.mapper.AuditLogEventMapper;
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
 import com.google.cloud.healthcare.fdamystudies.auditlog.repository.AuditLogEventRepository;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 
 @Service

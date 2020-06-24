@@ -1,9 +1,9 @@
 package com.google.cloud.healthcare.fdamystudies.auditlog.mapper;
 
 import java.time.Instant;
-import com.google.cloud.healthcare.fdamystudies.auditlog.beans.AuditLogEventResponse;
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 
 public final class AuditLogEventMapper {
 

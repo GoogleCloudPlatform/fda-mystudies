@@ -1,4 +1,4 @@
-package com.google.cloud.healthcare.fdamystudies.auditlog.beans;
+package com.google.cloud.healthcare.fdamystudies.beans;
 
 import lombok.Getter;
 import lombok.Setter;
