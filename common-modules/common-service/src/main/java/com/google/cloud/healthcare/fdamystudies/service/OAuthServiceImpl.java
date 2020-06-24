@@ -48,7 +48,7 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @Override
   public ResponseEntity<JsonNode> introspectToken(JsonNode params) {
-    logger.entry(String.format("begin introspectToken() with params=%s", params));
+    logger.entry("begin introspectToken()");
     HttpHeaders headers = new HttpHeaders();
     headers.add(CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE);
     headers.add(AUTHORIZATION, "Bearer " + getTextValue(params, TOKEN));
