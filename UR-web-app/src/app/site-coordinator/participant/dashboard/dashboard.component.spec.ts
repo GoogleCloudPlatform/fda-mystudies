@@ -6,11 +6,10 @@ describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async(async () => {
+    await TestBed.configureTestingModule({
       declarations: [DashboardComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

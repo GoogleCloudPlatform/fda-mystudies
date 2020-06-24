@@ -6,11 +6,10 @@ describe('SiteParticipantListComponent', () => {
   let component: SiteParticipantListComponent;
   let fixture: ComponentFixture<SiteParticipantListComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async(async () => {
+    await TestBed.configureTestingModule({
       declarations: [SiteParticipantListComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

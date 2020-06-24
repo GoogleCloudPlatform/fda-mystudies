@@ -4,6 +4,4 @@ import {LocationModule} from '../location.module';
 @Injectable({
   providedIn: LocationModule,
 })
-export class LocationService {
-  constructor() { }
-}
+export class LocationService {}

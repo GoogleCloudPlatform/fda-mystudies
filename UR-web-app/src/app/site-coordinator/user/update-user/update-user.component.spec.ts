@@ -6,11 +6,10 @@ describe('UpdateUserComponent', () => {
   let component: UpdateUserComponent;
   let fixture: ComponentFixture<UpdateUserComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async(async () => {
+    await TestBed.configureTestingModule({
       declarations: [UpdateUserComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

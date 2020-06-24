@@ -6,11 +6,10 @@ describe('SitecoordinatorComponent', () => {
   let component: SiteCoordinatorComponent;
   let fixture: ComponentFixture<SiteCoordinatorComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async(async () => {
+    await TestBed.configureTestingModule({
       declarations: [SiteCoordinatorComponent],
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

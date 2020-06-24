@@ -5,9 +5,6 @@ import {SiteCoordinatorComponent} from './sitecoordinator.component';
 
 @NgModule({
   declarations: [SiteCoordinatorComponent],
-  imports: [
-    CommonModule,
-    SiteCoordinatorRoutingModule,
-  ],
+  imports: [CommonModule, SiteCoordinatorRoutingModule],
 })
-export class SiteCoordinatorModule { }
+export class SiteCoordinatorModule {}
