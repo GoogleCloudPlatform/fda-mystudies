@@ -5,7 +5,7 @@ import {Location} from '@angular/common';
 
 @Injectable()
 export class EntityService<T> {
-  baseUrl = 'http://<IP>:<port>/urwebapp';
+  baseUrl = 'http://<IP>:<port>/urwebappws';
 
   constructor(private readonly http: HttpClient) {}
 
