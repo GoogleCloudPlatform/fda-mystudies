@@ -39,6 +39,8 @@ public class Studies extends RealmObject {
 
   private String hashedToken;
 
+  private String brandId;
+
   public String getHashedToken() {
     return hashedToken;
   }
@@ -117,5 +119,13 @@ public class Studies extends RealmObject {
 
   public void setBookmarked(boolean bookmarked) {
     this.bookmarked = bookmarked;
+  }
+
+  public String getBrandId() {
+    return brandId;
+  }
+
+  public void setBrandId(String brandId) {
+    this.brandId = brandId;
   }
 }

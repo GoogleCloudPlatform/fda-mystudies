@@ -131,6 +131,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private String participantId = "";
   private String hashToken = "";
   private String siteId = "";
+  private String brandId = "";
   private int score = 0;
   private int passScore = 0;
   private Consent consent;
@@ -146,6 +147,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private StudyList studyList;
   private String pdfPath;
   String sharingConsent = "n/a";
+  String firstName = "";
+  String lastName = "";
 
   public static Intent newIntent(
       Context context,
@@ -446,6 +449,26 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private void saveAndFinish() {
 
     taskResult.setEndDate(new Date());
+
+    try {
+      String formResult =
+          new Gson()
+              .toJson(
+                  taskResult
+                      .getStepResult(getResources().getString(R.string.signature_form_step))
+                      .getResults());
+      JSONObject formResultObj = new JSONObject(formResult);
+      JSONObject fullNameObj = formResultObj.getJSONObject("First Name");
+      JSONObject fullNameResult = fullNameObj.getJSONObject("results");
+
+      JSONObject lastNameObj = formResultObj.getJSONObject("Last Name");
+      JSONObject lastNameResult = lastNameObj.getJSONObject("results");
+      firstName = fullNameResult.getString("answer");
+      lastName = lastNameResult.getString("answer");
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
     if (click) {
       click = false;
       new Handler()
@@ -482,6 +505,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     HashMap<String, String> params = new HashMap<>();
     params.put("studyId", getIntent().getStringExtra(STUDYID));
     params.put("token", getIntent().getStringExtra(ENROLLID));
+    params.put("firstName", firstName);
+    params.put("lastName", lastName);
 
     HashMap<String, String> header = new HashMap<>();
     header.put(
@@ -667,6 +692,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         participantId = enrollData.getParticipantId();
         hashToken = enrollData.getHashedToken();
         siteId = enrollData.getSiteId();
+        brandId = enrollData.getBrandId();
         updateuserpreference();
 
       } else {
@@ -780,20 +806,6 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       pageText.append(System.getProperty("line.separator"));
       pageText.append(System.getProperty("line.separator"));
 
-      String formResult =
-          new Gson()
-              .toJson(
-                  taskResult
-                      .getStepResult(getResources().getString(R.string.signature_form_step))
-                      .getResults());
-      JSONObject formResultObj = new JSONObject(formResult);
-      JSONObject fullNameObj = formResultObj.getJSONObject("First Name");
-      JSONObject fullNameResult = fullNameObj.getJSONObject("results");
-
-      JSONObject lastNameObj = formResultObj.getJSONObject("Last Name");
-      JSONObject lastNameResult = lastNameObj.getJSONObject("results");
-      String firstName = fullNameResult.getString("answer");
-      String lastName = lastNameResult.getString("answer");
       pageText
           .append(getResources().getString(R.string.participans_name))
           .append(": ")

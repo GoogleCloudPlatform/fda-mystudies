@@ -15,6 +15,7 @@ public class EnrollData {
   private String participantId;
   private int code;
   private String message;
+  private String brandId;
 
   public String getParticipantId() {
     return participantId;
@@ -62,5 +63,13 @@ public class EnrollData {
 
   public void setMessage(String message) {
     this.message = message;
+  }
+
+  public String getBrandId() {
+    return brandId;
+  }
+
+  public void setBrandId(String brandId) {
+    this.brandId = brandId;
   }
 }
