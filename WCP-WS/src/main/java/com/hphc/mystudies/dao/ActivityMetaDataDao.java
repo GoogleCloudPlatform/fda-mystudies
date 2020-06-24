@@ -70,6 +70,7 @@ import com.hphc.mystudies.dto.ActiveTaskFrequencyDto;
 import com.hphc.mystudies.dto.ActiveTaskListDto;
 import com.hphc.mystudies.dto.ActiveTaskMasterAttributeDto;
 import com.hphc.mystudies.dto.AnchorDateTypeDto;
+import com.hphc.mystudies.dto.BrandProductMappingDto;
 import com.hphc.mystudies.dto.FormMappingDto;
 import com.hphc.mystudies.dto.InstructionsDto;
 import com.hphc.mystudies.dto.QuestionReponseTypeDto;
@@ -365,7 +366,8 @@ public class ActivityMetaDataDao {
   }
 
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
-      String studyId, String activityId, String activityVersion) throws DAOException {
+      String studyId, String activityId, String activityVersion, String brandId)
+      throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - studyQuestionnaireActivityMetadata() :: Starts");
     Session session = null;
     QuestionnaireActivityMetaDataResponse activityMetaDataResponse =
@@ -383,7 +385,7 @@ public class ActivityMetaDataDao {
                   .uniqueResult();
       if (studyDto != null) {
         activityStructureBean =
-            this.questionnaireMetadata(studyId, activityId, session, activityVersion);
+            this.questionnaireMetadata(studyId, activityId, session, activityVersion, brandId);
         activityMetaDataResponse.setActivity(activityStructureBean);
         activityMetaDataResponse.setMessage(StudyMetaDataConstants.SUCCESS);
       } else {
@@ -602,7 +604,7 @@ public class ActivityMetaDataDao {
 
   @SuppressWarnings("unchecked")
   public QuestionnaireActivityStructureBean questionnaireMetadata(
-      String studyId, String activityId, Session session, String activityVersion)
+      String studyId, String activityId, Session session, String activityVersion, String brandId)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - questionnaireMetadata() :: Starts");
     QuestionnaireActivityStructureBean activityStructureBean =
@@ -765,7 +767,8 @@ public class ActivityMetaDataDao {
                           questionnaireStepDetailsMap,
                           null,
                           questionaireStepsList,
-                          questionnaireDto);
+                          questionnaireDto,
+                          "");
             }
           }
 
@@ -792,7 +795,8 @@ public class ActivityMetaDataDao {
                           questionnaireStepDetailsMap,
                           questionResponseTypeMasterInfoList,
                           questionaireStepsList,
-                          questionnaireDto);
+                          questionnaireDto,
+                          brandId);
             }
           }
 
@@ -823,7 +827,8 @@ public class ActivityMetaDataDao {
                             questionnaireStepDetailsMap,
                             questionResponseTypeMasterInfoList,
                             questionaireStepsList,
-                            questionnaireDto);
+                            questionnaireDto,
+                            "");
               }
             }
           }
@@ -1541,7 +1546,8 @@ public class ActivityMetaDataDao {
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap,
       List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList,
       List<QuestionnairesStepsDto> questionaireStepsList,
-      QuestionnairesDto questionnaireDto)
+      QuestionnairesDto questionnaireDto,
+      String brandId)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getStepsInfoForQuestionnaires() :: Starts");
     TreeMap<Integer, QuestionnaireActivityStepsBean> stepsOrderSequenceTreeMap = new TreeMap<>();
@@ -1567,7 +1573,8 @@ public class ActivityMetaDataDao {
                       questionnaireStepDetailsMap,
                       questionResponseTypeMasterInfoList,
                       questionaireStepsList,
-                      questionnaireDto);
+                      questionnaireDto,
+                      brandId);
           break;
         case StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM:
           stepsOrderSequenceTreeMap =
@@ -1671,7 +1678,8 @@ public class ActivityMetaDataDao {
       Map<String, QuestionnairesStepsDto> questionnaireStepDetailsMap,
       List<QuestionResponsetypeMasterInfoDto> questionResponseTypeMasterInfoList,
       List<QuestionnairesStepsDto> questionaireStepsList,
-      QuestionnairesDto questionnaireDto)
+      QuestionnairesDto questionnaireDto,
+      String brandId)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getQuestionDetailsForQuestionnaire() :: Starts");
     List<QuestionResponseSubTypeDto> destinationConditionList = null;
@@ -1688,13 +1696,23 @@ public class ActivityMetaDataDao {
           questionBean.setType(
               StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION.toLowerCase());
           if (questionsDto.getResponseType() != null) {
+            boolean isProductSurveyPresent =
+                StringUtils.equalsIgnoreCase(
+                        questionnaireDto.getShortTitle(), StudyMetaDataConstants.PRODUCT_SURVEY)
+                    && StringUtils.equalsIgnoreCase(
+                        questionStepDetails.getStepShortTitle(),
+                        StudyMetaDataConstants.PRODUCT_QUESTION);
             for (QuestionResponsetypeMasterInfoDto masterInfo :
                 questionResponseTypeMasterInfoList) {
               if (masterInfo.getId().equals(questionsDto.getResponseType())) {
                 questionBean.setResultType(masterInfo.getResponseTypeCode());
                 questionBean.setFormat(
                     this.getQuestionaireQuestionFormatByType(
-                        questionsDto, masterInfo.getResponseTypeCode(), session));
+                        questionsDto,
+                        masterInfo.getResponseTypeCode(),
+                        session,
+                        isProductSurveyPresent,
+                        brandId));
                 break;
               }
             }
@@ -2022,7 +2040,7 @@ public class ActivityMetaDataDao {
                     formQuestionBean.setResultType(masterInfo.getResponseTypeCode());
                     formQuestionBean.setFormat(
                         this.getQuestionaireQuestionFormatByType(
-                            formQuestionDto, masterInfo.getResponseTypeCode(), session));
+                            formQuestionDto, masterInfo.getResponseTypeCode(), session, false, ""));
                     break;
                   }
                 }
@@ -2201,7 +2219,12 @@ public class ActivityMetaDataDao {
   }
 
   public Map<String, Object> getQuestionaireQuestionFormatByType(
-      QuestionsDto questionDto, String questionResultType, Session session) throws DAOException {
+      QuestionsDto questionDto,
+      String questionResultType,
+      Session session,
+      boolean isProductSurveyPresent,
+      String brandId)
+      throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - getQuestionaireQuestionFormatByType() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     QuestionReponseTypeDto reponseType = null;
@@ -2235,7 +2258,8 @@ public class ActivityMetaDataDao {
             break;
           case StudyMetaDataConstants.QUESTION_TEXT_CHOICE:
             questionFormat =
-                this.formatQuestionTextChoiceDetails(questionDto, reponseType, session);
+                this.formatQuestionTextChoiceDetails(
+                    questionDto, reponseType, session, isProductSurveyPresent, brandId);
             break;
           case StudyMetaDataConstants.QUESTION_NUMERIC:
             questionFormat = this.formatQuestionNumericDetails(reponseType);
@@ -2571,39 +2595,62 @@ public class ActivityMetaDataDao {
 
   @SuppressWarnings("unchecked")
   public Map<String, Object> formatQuestionTextChoiceDetails(
-      QuestionsDto questionDto, QuestionReponseTypeDto reponseType, Session session)
+      QuestionsDto questionDto,
+      QuestionReponseTypeDto reponseType,
+      Session session,
+      boolean isProductSurveyPresent,
+      String brandId)
       throws DAOException {
     LOGGER.info("INFO: ActivityMetaDataDao - formatQuestionTextChoiceDetails() :: Starts");
     Map<String, Object> questionFormat = new LinkedHashMap<>();
     List<QuestionResponseSubTypeDto> responseSubTypeList = null;
     List<LinkedHashMap<String, Object>> textChoiceMapList = new ArrayList<>();
     try {
-      responseSubTypeList =
-          session
-              .createQuery(
-                  "from QuestionResponseSubTypeDto QRSTDTO"
-                      + " where QRSTDTO.responseTypeId="
-                      + questionDto.getId())
-              .list();
-      if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
-        for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
-          LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
-          textChoiceMap.put(
-              "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
-          textChoiceMap.put(
-              "value", StringUtils.isEmpty(subType.getValue()) ? "" : subType.getValue());
-          textChoiceMap.put(
-              "detail",
-              StringUtils.isEmpty(subType.getDescription()) ? "" : subType.getDescription());
-          textChoiceMap.put(
-              "exclusive",
-              ((subType.getExclusive() == null)
-                      || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.NO))
-                  ? false
-                  : true);
-          textChoiceMapList.add(textChoiceMap);
+      if (isProductSurveyPresent && StringUtils.isNotBlank(brandId)) {
+        List<BrandProductMappingDto> productList =
+            session
+                .createQuery("FROM BrandProductMappingDto BPMD WHERE BPMD.brandId=:brandId")
+                .setParameter("brandId", brandId.trim())
+                .list();
+        if (productList != null && !productList.isEmpty()) {
+          for (BrandProductMappingDto product : productList) {
+            LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
+            textChoiceMap.put("text", product.getProductName());
+            textChoiceMap.put("value", product.getProductId());
+            textChoiceMap.put("detail", "");
+            textChoiceMap.put("exclusive", false);
+            textChoiceMapList.add(textChoiceMap);
+          }
+        }
+      } else {
+        responseSubTypeList =
+            session
+                .createQuery(
+                    "from QuestionResponseSubTypeDto QRSTDTO"
+                        + " where QRSTDTO.responseTypeId="
+                        + questionDto.getId())
+                .list();
+        if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
+          for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
+            LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
+            textChoiceMap.put(
+                "text", StringUtils.isEmpty(subType.getText()) ? "" : subType.getText());
+            textChoiceMap.put(
+                "value", StringUtils.isEmpty(subType.getValue()) ? "" : subType.getValue());
+            textChoiceMap.put(
+                "detail",
+                StringUtils.isEmpty(subType.getDescription()) ? "" : subType.getDescription());
+            textChoiceMap.put(
+                "exclusive",
+                ((subType.getExclusive() == null)
+                        || subType.getExclusive().equalsIgnoreCase(StudyMetaDataConstants.NO))
+                    ? false
+                    : true);
+            textChoiceMapList.add(textChoiceMap);
+          }
         }
       }
+
       // other type add destination if there start
       QuestionReponseTypeDto otherReponseSubType =
           (QuestionReponseTypeDto)

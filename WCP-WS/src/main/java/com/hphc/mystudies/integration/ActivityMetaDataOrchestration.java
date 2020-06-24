@@ -70,7 +70,8 @@ public class ActivityMetaDataOrchestration {
   }
 
   public QuestionnaireActivityMetaDataResponse studyQuestionnaireActivityMetadata(
-      String studyId, String activityId, String activityVersion) throws OrchestrationException {
+      String studyId, String activityId, String activityVersion, String brandId)
+      throws OrchestrationException {
     LOGGER.info(
         "INFO: ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: Starts");
     QuestionnaireActivityMetaDataResponse questionnaireActivityMetaDataResponse =
@@ -78,7 +79,7 @@ public class ActivityMetaDataOrchestration {
     try {
       questionnaireActivityMetaDataResponse =
           activityMetaDataDao.studyQuestionnaireActivityMetadata(
-              studyId, activityId, activityVersion);
+              studyId, activityId, activityVersion, brandId);
     } catch (Exception e) {
       LOGGER.error(
           "ActivityMetaDataOrchestration - studyQuestionnaireActivityMetadata() :: ERROR", e);
