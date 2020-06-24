@@ -21,5 +21,5 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: 'github-pr-check'
         level: error
-        workdir: ./user-registration-server-ws/user-mgmt
+        workdir: ./user-registration-server-ws/user-mgmt/src
         tool_name: user-mgmt Checks
