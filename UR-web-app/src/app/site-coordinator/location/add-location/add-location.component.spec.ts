@@ -8,6 +8,9 @@ describe('AddLocationComponent', () => {
   let component: AddLocationComponent;
   let fixture: ComponentFixture<AddLocationComponent>;
   let addLocations: AddLocationComponent;
+  let expectedloationCustomId = '1';
+  let expectedloationName = 'LocationName1';
+  let expectedlocationDescription = 'This is a test case Description';
   beforeEach(async(async () => {
     await TestBed.configureTestingModule({
       declarations: [AddLocationComponent],
@@ -33,7 +36,11 @@ describe('AddLocationComponent', () => {
 
   it('should send data on submit', () => {
     addLocations.submitted.subscribe(
-      ({loationCustomId, loationName, locationDescription}) => {
+      ({
+        loationCustomId: number,
+        loationName: string,
+        locationDescription: string,
+      }) => {
         expect(loationCustomId).toEqual(expectedloationCustomId);
         expect(loationName).toEqual(expectedloationName);
         expect(locationDescription).toEqual(expectedlocationDescription);
