@@ -1,12 +1,12 @@
 name: user-mgmt-checkstyle
 
 on: [pull_request]
+paths:
+    - 'user-registration-server-ws/user-mgmt/**'
+    - '.github/workflows/lint-user-mgmt.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: /user-registration-server-ws/user-mgmt
     name: Checkstyle job
     steps:
     - name: Checkout
