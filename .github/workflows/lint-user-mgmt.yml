@@ -1,7 +1,8 @@
 name: user-mgmt-checkstyle
 
-on: [pull_request]
-paths:
+on:
+  pull_request:
+    paths:
     - 'user-registration-server-ws/user-mgmt/**'
     - '.github/workflows/lint-user-mgmt.yml'
 jobs:
@@ -18,3 +19,4 @@ jobs:
         reporter: 'github-pr-check'
         level: error
         workdir: ./user-registration-server-ws/user-mgmt
+        tool_name: user-mgmt Checks
