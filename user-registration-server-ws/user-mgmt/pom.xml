@@ -17,7 +17,7 @@
 	<description>Project containing user management services</description>
 
 	<properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 
 		<sonar.coverage.exclusions>**/*</sonar.coverage.exclusions>
@@ -152,19 +152,19 @@
 			<version>2.0-m01</version>
 		</dependency>
 		<dependency>
-	    <groupId>com.notnoop.apns</groupId>
-	    <artifactId>apns</artifactId>
-	    <version>1.0.0.Beta6</version>
+			<groupId>com.notnoop.apns</groupId>
+			<artifactId>apns</artifactId>
+			<version>1.0.0.Beta6</version>
 		</dependency>
-                <dependency>
-                        <groupId>com.h2database</groupId>
-                        <artifactId>h2</artifactId>
-                        <scope>runtime</scope>
-                </dependency>
 		<dependency>
-		<groupId>com.google.cloud</groupId>
-		<artifactId>google-cloud-storage</artifactId>
-		<version>1.96.0</version>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
+			<version>1.96.0</version>
 		</dependency>
 	</dependencies>
 
