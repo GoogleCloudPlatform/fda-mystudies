@@ -5,11 +5,9 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 

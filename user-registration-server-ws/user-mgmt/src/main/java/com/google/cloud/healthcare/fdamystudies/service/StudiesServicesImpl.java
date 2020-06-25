@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,13 +27,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBoDao;
+import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudiesDao;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
@@ -51,7 +49,7 @@ public class StudiesServicesImpl implements StudiesServices {
 
   @Autowired private StudiesDao studiesDao;
 
-  @Autowired private AuthInfoBoDao authInfoBoDao;
+  @Autowired private AuthInfoBODao authInfoBODao;
 
   @Autowired private CommonDao commonDao;
 
@@ -72,7 +70,7 @@ public class StudiesServicesImpl implements StudiesServices {
   }
 
   @Override
-  public ErrorBean sendNotificationAction(NotificationForm notificationForm) {
+  public ErrorBean SendNotificationAction(NotificationForm notificationForm) {
     HashSet<String> studySet = new HashSet<>();
     HashSet<String> appSet = new HashSet<>();
     Map<Integer, Map<String, JSONArray>> studiesMap = null;
@@ -94,7 +92,7 @@ public class StudiesServicesImpl implements StudiesServices {
       } else {
         List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoSet(appSet);
         if (appInfos != null && !appInfos.isEmpty()) {
-          allDeviceTokens = authInfoBoDao.getDeviceTokenOfAllUsers(appInfos);
+          allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfos);
           appInfobyAppCustomId =
               appInfos
                   .stream()
@@ -153,7 +151,7 @@ public class StudiesServicesImpl implements StudiesServices {
     if (deviceTokensMap != null) {
       if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
-        pushFcmNotification(
+        pushFCMNotification(
             notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
       }
       if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
@@ -171,7 +169,7 @@ public class StudiesServicesImpl implements StudiesServices {
     if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
         && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
       notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
-      pushFcmNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      pushFCMNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
     }
     if (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null) {
       notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
@@ -179,7 +177,7 @@ public class StudiesServicesImpl implements StudiesServices {
     }
   }
 
-  public void pushFcmNotification(
+  public void pushFCMNotification(
       NotificationBean notification, AppInfoDetailsBO appPropertiesDetails) {
     String authKey = "";
     logger.info("StudiesServicesImpl - pushFCMNotification() : starts");

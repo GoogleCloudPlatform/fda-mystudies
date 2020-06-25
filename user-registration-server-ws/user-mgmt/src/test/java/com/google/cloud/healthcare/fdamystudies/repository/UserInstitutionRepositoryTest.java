@@ -22,7 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
 @DataJpaTest
 public class UserInstitutionRepositoryTest {
   private static Logger logger = LoggerFactory.getLogger(UserInstitutionRepositoryTest.class);
-  @Autowired private UserDetailsBoRepository userRepository;
+  @Autowired private UserDetailsBORepository userRepository;
   @Autowired private UserInstitutionRepository institutionRepository;
 
   @Test

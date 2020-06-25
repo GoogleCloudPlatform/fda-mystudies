@@ -43,8 +43,8 @@ public class Mail {
   // Fallback hostname if we are not authenticating.
   private static final String SMTP_RELAY_HOSTNAME = "smtp-relay.gmail.com";
   private static final String SMTP_PORT = "465";
-  private String smtpHostname = "";
-  private String smtpPortvalue = "";
+  private String smtp_Hostname = "";
+  private String smtp_portvalue = "";
   static String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
   private String sslFactory = "";
   private String fromEmailAddress = "";
@@ -131,6 +131,8 @@ public class Mail {
       // message.setContent(messageBody, "text/html");
       // Create the message part
       BodyPart messageBodyPart = new MimeBodyPart();
+      // Create a multipar message
+      Multipart multipart = new MimeMultipart();
       // Part two is attachment
       messageBodyPart = new MimeBodyPart();
       // String filename = "D:\\temp\\TestLinks.pdf"; // D:\temp\noteb.txt
@@ -139,8 +141,6 @@ public class Mail {
       messageBodyPart.setFileName(source.getName());
       messageBodyPart.setHeader("Content-Transfer-Encoding", "base64");
       messageBodyPart.setHeader("Content-Type", source.getContentType());
-      // Create a multipar message
-      Multipart multipart = new MimeMultipart();
       // Send the complete message parts
       multipart.addBodyPart(messageBodyPart);
 
@@ -167,10 +167,10 @@ public class Mail {
   // service or on authentication with email and password.
   private Properties makeProperties(Boolean useIpWhitelist) {
     Properties props = new Properties();
-    props.put("mail.smtp.host", this.getSmtpHostname());
-    props.put("mail.smtp.port", this.getSmtpPortvalue());
+    props.put("mail.smtp.host", this.getSmtp_Hostname());
+    props.put("mail.smtp.port", this.getSmtp_portvalue());
     props.put("mail.smtp.socketFactory.class", this.getSslFactory());
-    props.put("mail.smtp.socketFactory.port", this.getSmtpPortvalue());
+    props.put("mail.smtp.socketFactory.port", this.getSmtp_portvalue());
     if (useIpWhitelist) {
       props.put("mail.smtp.auth", "false");
       props.put("mail.smtp.ssl.enable", "true");
@@ -220,43 +220,43 @@ public class Mail {
     this.messageBody = messageBody;
   }
 
-  public String getSmtpHostname() {
-    if (this.smtpHostname.equals("")) {
+  public String getSmtp_Hostname() {
+    if (this.smtp_Hostname.equals("")) {
       if (useIpWhitelist) {
         return Mail.SMTP_RELAY_HOSTNAME;
       } else {
         return Mail.SMTP_HOSTNAME;
       }
     } else {
-      return this.smtpHostname;
+      return this.smtp_Hostname;
     }
   }
 
-  public void setSmtpHostname(String smtpHostname) {
-    this.smtpHostname = smtpHostname;
+  public void setSmtp_Hostname(String smtp_Hostname) {
+    this.smtp_Hostname = smtp_Hostname;
   }
 
-  public String getSmtpPortvalue() {
+  public String getSmtp_portvalue() {
     String portvalue = "";
-    if (this.smtpPortvalue.equals("")) {
+    if (this.smtp_portvalue.equals("")) {
       portvalue = Mail.SMTP_PORT;
     } else {
-      portvalue = this.smtpPortvalue;
+      portvalue = this.smtp_portvalue;
     }
 
     return portvalue;
   }
 
-  public void setSmtpPortvalue(String smtpPortvalue) {
-    this.smtpPortvalue = smtpPortvalue;
+  public void setSmtp_portvalue(String smtp_portvalue) {
+    this.smtp_portvalue = smtp_portvalue;
   }
 
-  public static String getsslFactory() {
+  public static String getSSL_FACTORY() {
     return SSL_FACTORY;
   }
 
-  public static void setsslFactory(String sslFactory) {
-    SSL_FACTORY = sslFactory;
+  public static void setSSL_FACTORY(String sSL_FACTORY) {
+    SSL_FACTORY = sSL_FACTORY;
   }
 
   public String getSslFactory() {

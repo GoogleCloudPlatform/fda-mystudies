@@ -32,7 +32,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsServiceImpl.class);
 
-  @Autowired private AuthInfoBoService authInfoService;
+  @Autowired private AuthInfoBOService authInfoService;
 
   @Autowired private UserAppDetailsService userAppDetailsService;
 

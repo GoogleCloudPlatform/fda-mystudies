@@ -67,6 +67,7 @@ public class GetUserInstitutionResourcesTest {
     String fakeInstitution = "fake_institution";
     Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
         .thenReturn(Optional.of(UserInstitution.builder().institutionId(fakeInstitution).build()));
+    String html = "<p>fake html</p>\n";
     URL path = ClassLoader.getSystemResource("fake_html.html");
     File f = new File(path.getFile());
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -81,7 +82,6 @@ public class GetUserInstitutionResourcesTest {
         getUserInstitutionResources.getInstitutionResourcesForUser("fake_user_id");
     assertThat(userResourceBeans, hasSize(1));
     assertThat(userResourceBeans.get(0).getTitle(), equalTo("fake_title.html"));
-    String html = "<p>fake html</p>\n";
     assertThat(userResourceBeans.get(0).getContent(), equalTo(html));
     assertThat(userResourceBeans.get(0).getResourcesId(), equalTo("resources:id"));
   }

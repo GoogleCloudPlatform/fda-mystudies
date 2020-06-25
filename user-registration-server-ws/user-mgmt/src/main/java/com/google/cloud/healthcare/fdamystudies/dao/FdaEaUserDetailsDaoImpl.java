@@ -23,12 +23,12 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBoRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 
 @Repository
 public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
-  @Autowired private UserDetailsBoRepository repository;
+  @Autowired private UserDetailsBORepository repository;
 
   @Autowired private EntityManagerFactory entityManagerFactory;
 

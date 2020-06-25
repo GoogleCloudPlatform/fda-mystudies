@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
@@ -56,11 +54,11 @@ public class StudiesController {
   }
 
   @PostMapping("/sendNotification")
-  public ResponseEntity<?> sendNotification(@Valid @RequestBody NotificationForm notificationForm) {
+  public ResponseEntity<?> SendNotification(@Valid @RequestBody NotificationForm notificationForm) {
     logger.info("StudiesController - SendNotification() : starts");
     ErrorBean errorBean = null;
     try {
-      errorBean = studiesServices.sendNotificationAction(notificationForm);
+      errorBean = studiesServices.SendNotificationAction(notificationForm);
       if (errorBean.getCode() != ErrorCode.EC_200.code()) {
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }

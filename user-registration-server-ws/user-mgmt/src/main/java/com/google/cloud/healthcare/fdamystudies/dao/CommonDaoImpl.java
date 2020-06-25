@@ -14,13 +14,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -30,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
@@ -268,15 +265,9 @@ public class CommonDaoImpl implements CommonDao {
         List<Object[]> rs =
             session
                 .createSQLQuery(
-                    "SELECT sp.study_info_id, GROUP_CONCAT(a.device_token) as device_token,"
-                        + "GROUP_CONCAT(a.device_type) as device_type "
-                        + "FROM participant_study_info sp, auth_info a"
-                        + " where sp.user_details_id = a.user_details_id "
-                        + "and sp.status not in('yetToJoin','withdrawn','notEligible') "
-                        + "and a.remote_notification_flag=1"
-                        + " and sp.study_info_id in (:studyIds)  "
-                        + "and (a.device_token is not NULL and a.device_token != ''"
-                        + " and a.device_type is not"
+                    "SELECT sp.study_info_id, GROUP_CONCAT(a.device_token) as device_token,GROUP_CONCAT(a.device_type) as device_type FROM participant_study_info sp, auth_info a"
+                        + " where sp.user_details_id = a.user_details_id and sp.status not in('yetToJoin','withdrawn','notEligible') and a.remote_notification_flag=1"
+                        + " and sp.study_info_id in (:studyIds)  and (a.device_token is not NULL and a.device_token != '' and a.device_type is not"
                         + " NULL and a.device_type != '') GROUP BY sp.study_info_id")
                 .setParameterList("studyIds", studyInfoIds)
                 .getResultList();
@@ -350,10 +341,10 @@ public class CommonDaoImpl implements CommonDao {
       list = session.createQuery(criteriaQuery).getResultList();
       if (!list.isEmpty()) {
         studyInfo = list.get(0);
+        UserDetailsBO userDetails = session.get(UserDetailsBO.class, id);
         criteriaQuery1 = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
         root1 = criteriaQuery1.from(ParticipantStudiesBO.class);
         predicates1[0] = criteriaBuilder.equal(root1.get("studyInfo"), studyInfo);
-        UserDetailsBO userDetails = session.get(UserDetailsBO.class, id);
         predicates1[1] = criteriaBuilder.equal(root1.get("userDetails"), userDetails);
         criteriaQuery1.select(root1).where(predicates1);
         list1 = session.createQuery(criteriaQuery1).getResultList();

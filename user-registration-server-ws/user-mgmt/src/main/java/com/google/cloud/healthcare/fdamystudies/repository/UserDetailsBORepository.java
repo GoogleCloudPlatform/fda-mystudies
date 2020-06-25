@@ -17,7 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 @Repository
 @Transactional
-public interface UserDetailsBoRepository extends JpaRepository<UserDetailsBO, Integer> {
+public interface UserDetailsBORepository extends JpaRepository<UserDetailsBO, Integer> {
 
   interface MyView {
     String getEmailCode();

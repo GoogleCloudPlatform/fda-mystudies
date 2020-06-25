@@ -128,8 +128,7 @@ public class UserRegistrationController {
             AppConstants.USER_REGD_FAILURE,
             AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
         logger.info(
-            "(URS)...DELETING record in Auth Server STARTED. Though appId "
-                + "and orgId are not valid in UserRegistration server");
+            "(URS)...DELETING record in Auth Server STARTED. Though appId and orgId are not valid in UserRegistration server");
         deleteUserFromAuthServer(authServerResponse, userForm.getEmailId());
         return makeServerError(
             401,
