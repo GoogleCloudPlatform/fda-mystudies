@@ -3,7 +3,7 @@ package com.google.cloud.healthcare.fdamystudies.auditlog.mapper;
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
-import java.time.Instant;
+import java.sql.Timestamp;
 
 public final class AuditLogEventMapper {
 
@@ -20,13 +20,12 @@ public final class AuditLogEventMapper {
     entity.setCorrelationId(aleRequest.getCorrelationId());
     entity.setClientAccessLevel(aleRequest.getClientAccessLevel());
     entity.setClientAppVersion(aleRequest.getClientAppVersion());
-    entity.setCreatedTimestamp(Instant.now().toEpochMilli());
     entity.setDescription(aleRequest.getDescription());
     entity.setDevicePlatform(aleRequest.getDevicePlatform());
     entity.setDeviceType(aleRequest.getDeviceType());
     entity.setEventDetail(aleRequest.getEventDetail());
     entity.setEventName(aleRequest.getEventName());
-    entity.setEventTimestamp(aleRequest.getEventTimestamp());
+    entity.setEventTimestamp(new Timestamp(aleRequest.getEventTimestamp()));
     entity.setOrgId(aleRequest.getOrgId());
     entity.setRequestUri(aleRequest.getRequestUri());
     entity.setResourceServer(aleRequest.getResourceServer());

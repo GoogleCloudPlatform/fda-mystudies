@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.model;
 
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -39,11 +40,19 @@ public class AuditLogEventEntity {
   @Column(name = "system_id", nullable = false, length = 30)
   private String systemId;
 
-  @Column(name = "event_timestamp", nullable = false, length = 20)
-  private long eventTimestamp;
+  @Column(
+      name = "event_timestamp",
+      nullable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP")
+  private Timestamp eventTimestamp;
 
-  @Column(name = "created_timestamp", nullable = false, length = 20)
-  private long createdTimestamp;
+  @Column(
+      name = "created_timestamp",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp createdTimestamp;
 
   @Column(name = "alert", nullable = false, length = 1)
   private boolean alert;

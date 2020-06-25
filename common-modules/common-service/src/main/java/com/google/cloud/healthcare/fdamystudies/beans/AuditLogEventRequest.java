@@ -53,6 +53,7 @@ public class AuditLogEventRequest {
   @Size(max = 100)
   private String applicationComponentName;
 
+  /** the number of milliseconds from the epoch of 1970-01-01T00:00:00Z */
   @NotNull private Long eventTimestamp;
 
   @Size(max = 100)
