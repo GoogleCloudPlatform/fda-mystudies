@@ -7,15 +7,14 @@
  */
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportBO;
+import java.util.List;
 
 @Repository
-public interface PersonalizedUserReportRepository
-    extends JpaRepository<PersonalizedUserReportBO, Integer> {
+public interface PersonalizedUserReportRepository extends JpaRepository<PersonalizedUserReportBO, Integer> {
 
-  public List<PersonalizedUserReportBO> findByUserDetailsUserIdAndStudyInfoCustomId(
-      String userId, String studyCustomId);
+	public List<PersonalizedUserReportBO> findByUserDetailsUserIdAndStudyInfoCustomId(
+			String userId, String studyCustomId);
 }

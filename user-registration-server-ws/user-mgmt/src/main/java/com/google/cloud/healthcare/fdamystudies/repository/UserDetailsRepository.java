@@ -7,13 +7,13 @@
  */
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import java.util.List;
 
 @Repository
 public interface UserDetailsRepository extends JpaRepository<UserDetailsBO, Integer> {
 
-  public List<UserDetailsBO> findByLastName(String lastname);
+	public List<UserDetailsBO> findByLastName(String lastname);
 }
