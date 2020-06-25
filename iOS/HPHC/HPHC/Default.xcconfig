@@ -8,10 +8,13 @@
 // https://help.apple.com/xcode/#/dev745c5c974
 //
 // Server configuration
-// By default App will connect to network over Https, in order to connect over http
+// By default App will connect to network over HTTPS, in order to connect over HTTP
 // Change the settings in HPHC/Networking/Configurations/Environment/APIConfiguration.swift
-// Update the enum `AppProtocol` get value for Debug and Release.
+// Update the enum `AppProtocol` getter value for Debug and Release.
+//
 // Update the App Transport Security Settings in info.plist
+// Set `Allow Arbitrary Loads` to YES and `Allow Arbitrary Loads in Web Content` to YES to connect over HTTP
+// Set `Allow Arbitrary Loads` to NO and `Allow Arbitrary Loads in Web Content` to NO to connect over HTTPS
 
 // URL of study metadata server.
 // e.g. mystudiesdeployment.com/StudyMetaData/
