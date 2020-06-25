@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY app_name "App Name">]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY app_name "App Name"><!ENTITY learn_more_txt "Learn more">]>
 <resources>
     <!--Shared Preference-->
     <string name="auth">authentication</string>
@@ -530,8 +530,17 @@
     <string name="we_will_get_back_to_you_as_soon_as_possible">We will get back to you as soon as possible.</string>
     <string name="signed_out">You have been signed out of the app.</string>
     <string name="pdf_consent_error">Error in processing consent</string>
+    <string name="delete_account_msg">This will also delete your app account.</string>
     <string name="activity_loading_msg">Please wait as we set up the study for you, this may take a few seconds</string>
-
+    <string name="rsb_consent_section_more_info_welcome">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_data_gathering">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_privacy">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_data_use">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_time_commitment">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_study_survey">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_study_tasks">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info_withdrawing">&learn_more_txt;</string>
+    <string name="rsb_consent_section_more_info">&learn_more_txt;</string>
 
     <string name="app_name">&app_name;</string>
     <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>

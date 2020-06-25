@@ -65,8 +65,6 @@ class ActivitiesViewController: UIViewController {
 
   private lazy var managedResult: [String: Any] = [:]
 
-  let labkeyResponseFetch = ResponseDataFetch()
-
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
   }
@@ -112,6 +110,8 @@ class ActivitiesViewController: UIViewController {
       for: UIControl.Event.valueChanged
     )
     tableView?.addSubview(refreshControl!)
+
+    setupStandaloneNotifications()
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -141,13 +141,13 @@ class ActivitiesViewController: UIViewController {
   }
 
   // MARK: - Helper Methods
-
-  func getLabkeyResponse() {
-
-    let ud = UserDefaults.standard
-    let key = "LabKeyResponse" + (Study.currentStudy?.studyId)!
-    if !(ud.bool(forKey: key)) {
-      labkeyResponseFetch.checkUpdates()
+  
+  private func setupStandaloneNotifications() {
+    if Utilities.isStandaloneApp() {
+      // Set notifications for standalone app here.
+      DispatchQueue.main.async {
+        StudyListViewController.configureNotifications()
+      }
     }
   }
 
@@ -184,7 +184,7 @@ class ActivitiesViewController: UIViewController {
       if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
         self.refreshControl?.endRefreshing()
       }
-      self.fetchActivityAnchorDateResponseFromLabkey()
+      self.fetchActivityAnchorDateResponse()
     }
   }
 
@@ -342,9 +342,9 @@ class ActivitiesViewController: UIViewController {
     WCPServices().getStudyUpdates(study: Study.currentStudy!, delegate: self)
   }
 
-  func fetchActivityAnchorDateResponseFromLabkey() {
+  func fetchActivityAnchorDateResponse() {
     guard let currentStudy = Study.currentStudy else { return }
-    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponseFromLabkey { (_) in
+    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { (_) in
       self.loadActivitiesFromDatabase()
     }
   }
@@ -1078,13 +1078,17 @@ extension ActivitiesViewController: ActivityFilterViewDelegate {
 extension ActivitiesViewController: NMWebServiceDelegate {
 
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    if (requestName as String == EnrollmentMethods.updateStudyState.method.methodName)
-      || (requestName as String == ResponseMethods.updateActivityState.method.methodName)
-      || (requestName as String == WCPMethods.studyDashboard.method.methodName)
-      || (requestName as String == WCPMethods.resources.method.methodName)
+    let requestName = requestName as String
+    if requestName != EnrollmentMethods.updateStudyState.method.methodName
+      && requestName != ResponseMethods.updateActivityState.method.methodName
+      && requestName != WCPMethods.studyDashboard.method.methodName
+      && requestName != WCPMethods.resources.method.methodName
     {
-    } else {
-      self.addProgressIndicator()
+      if requestName == ResponseMethods.activityState.method.methodName {
+        self.addProgressIndicator(with: kStudySetupMessage)
+      } else {
+        self.addProgressIndicator()
+      }
     }
   }
 
@@ -1096,12 +1100,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
       // get DashboardInfo
       self.sendRequestToGetDashboardInfo()
-      self.fetchActivityAnchorDateResponseFromLabkey()
-
-      if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
-        self.refreshControl?.endRefreshing()
-      }
-
+      self.fetchActivityAnchorDateResponse()
+      self.refreshControl?.endRefreshing()
       StudyUpdates.studyActivitiesUpdated = false
       // Update StudymetaData for Study
       DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
@@ -1111,11 +1111,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.createActivity()
 
     } else if requestName as String == WCPMethods.studyDashboard.method.methodName {
-      self.sendRequestToGetResourcesInfo()
-      self.getLabkeyResponse()
-
-    } else if requestName as String == WCPMethods.resources.method.methodName {
       self.removeProgressIndicator()
+      self.sendRequestToGetResourcesInfo()
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
       self.lastActivityResponse = nil

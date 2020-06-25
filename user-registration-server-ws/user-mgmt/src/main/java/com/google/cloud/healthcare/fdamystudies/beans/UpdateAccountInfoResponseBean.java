@@ -8,14 +8,19 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class UpdateAccountInfoResponseBean {
 
-  private String httpStatusCode;
-  private String code;
+  private int httpStatusCode;
   private String message;
+
+  public String toString() {
+    return this.message;
+  }
 }

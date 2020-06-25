@@ -222,7 +222,7 @@ public interface StudyMetaDataConstants {
   public static final String ANCHORDATE_TYPE_QUESTION = "date-question";
   public static final String ANCHORDATE_TYPE_ENROLLMENT = "enrollment-date";
 
-  public static final String INTERCEPTOR_URL_PING = "/ping";
+  public static final String INTERCEPTOR_URL_HEALTH = "/healthCheck";
   public static final String INTERCEPTOR_URL_MAIL = "/mail";
   public static final String INTERCEPTOR_URL_APP_VERSION = "/updateAppVersion";
   public static final String INTERCEPTOR_URL_DB_QUERY = "/testQuery";

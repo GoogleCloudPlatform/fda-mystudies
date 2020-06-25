@@ -1,0 +1,22 @@
+name: Android-Lint
+
+on:
+  pull_request:
+    paths:
+    - 'Android/**'
+    - '.github/workflows/lint-android.yml'
+jobs:
+  checkstyle_job:
+    runs-on: ubuntu-latest
+    name: Checkstyle job
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run check style
+      uses: nikitasavinov/checkstyle-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: 'github-pr-check'
+        level: error
+        workdir: ./Android
+        tool_name: Android Checks

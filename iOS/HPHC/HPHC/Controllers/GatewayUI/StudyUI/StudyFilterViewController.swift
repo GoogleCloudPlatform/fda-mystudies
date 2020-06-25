@@ -42,6 +42,14 @@ enum FilterType: String {
   case category
 }
 
+struct StudyFilter {
+  var studyStatus: [String] = []
+  var pariticipationsStatus: [String] = []
+  var categories: [String] = []
+  var bookmark = true
+  var searchText = ""
+}
+
 class StudyFilterViewController: UIViewController {
 
   // MARK: - Outlets
@@ -300,10 +308,7 @@ extension AppDelegate {
   }
 
   /// Query the filters settings.
-  func getDefaultFilterStrings() -> (
-    studyStatus: [String], pariticipationsStatus: [String], categories: [String],
-    searchText: String, bookmark: Bool
-  ) {
+  func getDefaultFilterStrings() -> StudyFilter {
 
     var studyStatus: [String] = []
     var pariticipationsStatus: [String] = []
@@ -343,9 +348,12 @@ extension AppDelegate {
       bookmark = false
     }
 
-    return (
-      studyStatus: studyStatus, pariticipationsStatus: pariticipationsStatus,
-      categories: categories, searchText: "", bookmark: bookmark
+    return StudyFilter(
+      studyStatus: studyStatus,
+      pariticipationsStatus: pariticipationsStatus,
+      categories: categories,
+      bookmark: bookmark,
+      searchText: ""
     )
   }
 
