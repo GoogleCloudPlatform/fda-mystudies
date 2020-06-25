@@ -9,11 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 
 @Component
@@ -39,8 +41,8 @@ public class EmailNotification {
       }
       mail.setFromEmailAddress(appConfig.getFromEmailAddress());
       mail.setFromEmailPass(appConfig.getFromEmailPassword());
-      mail.setSmtp_Hostname(appConfig.getSmtpHostName());
-      mail.setSmtp_portvalue(appConfig.getSmtpPortValue());
+      mail.setSmtpHostname(appConfig.getSmtpHostName());
+      mail.setSmtpPortvalue(appConfig.getSmtpPortValue());
       mail.setSslFactory(appConfig.getSslFactoryValue());
       mail.setUseIpWhitelist(appConfig.getUseIpWhitelist());
       mail.setFromDomain(appConfig.getFromDomain());

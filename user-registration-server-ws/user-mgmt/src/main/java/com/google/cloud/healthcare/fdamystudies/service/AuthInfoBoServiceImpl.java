@@ -12,15 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
+import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBoDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 
 @Service
-public class AuthInfoBOServiceImpl implements AuthInfoBOService {
+public class AuthInfoBoServiceImpl implements AuthInfoBoService {
 
-  private static final Logger logger = LoggerFactory.getLogger(AuthInfoBOServiceImpl.class);
-  @Autowired AuthInfoBODao authInfoDao;
+  private static final Logger logger = LoggerFactory.getLogger(AuthInfoBoServiceImpl.class);
+  @Autowired AuthInfoBoDao authInfoDao;
 
   @Override
   public AuthInfoBO save(AuthInfoBO authInfo) throws SystemException {

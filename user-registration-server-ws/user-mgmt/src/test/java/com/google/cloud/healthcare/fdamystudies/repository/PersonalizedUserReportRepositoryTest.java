@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import static com.google.cloud.healthcare.fdamystudies.matchers.HasReport.hasReport;
@@ -45,14 +46,14 @@ public class PersonalizedUserReportRepositoryTest {
   @Resource private StudyInfoRepository studyInfoRepository;
 
   @Test
-  public void LooksUpMostRecentReportForUserAndStudy() {
+  public void looksUpMostRecentReportForUserAndStudy() {
     UserDetailsBO user1 =
         UserDetailsBO.builder()
             .userId("user_id1")
             .email("email1@example.com")
             .firstName("First name1")
             .lastName("Last name1")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
+            .ts(new GregorianCalendar(2000, 1, 1).getTime())
             .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
             .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
             .build();
@@ -62,7 +63,7 @@ public class PersonalizedUserReportRepositoryTest {
             .email("email2@example.com")
             .firstName("First name2")
             .lastName("Last name2")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
+            .ts(new GregorianCalendar(2000, 1, 1).getTime())
             .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
             .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
             .build();

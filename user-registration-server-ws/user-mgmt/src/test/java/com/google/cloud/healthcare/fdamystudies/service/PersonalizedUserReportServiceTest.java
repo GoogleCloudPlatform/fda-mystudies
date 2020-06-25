@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static org.hamcrest.Matchers.contains;
@@ -12,20 +13,14 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
-import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
-import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.StudyInfoRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.GregorianCalendar;
 import java.util.List;
+
 import javax.annotation.Resource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +31,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportBO;
+import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyInfoRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -57,14 +61,14 @@ public class PersonalizedUserReportServiceTest {
       UserResourceBean.ResourceType.PERSONALIZED_REPORT;
 
   @Test
-  public void GetsMostRecentReportsForUserAndStudy() {
+  public void getsMostRecentReportsForUserAndStudy() {
     UserDetailsBO user1 =
         UserDetailsBO.builder()
             .userId("user_id1")
             .email("email1@example.com")
             .firstName("First name1")
             .lastName("Last name1")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
+            .ts(new GregorianCalendar(2000, 1, 1).getTime())
             .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
             .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
             .build();
@@ -74,7 +78,7 @@ public class PersonalizedUserReportServiceTest {
             .email("email2@example.com")
             .firstName("First name2")
             .lastName("Last name2")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
+            .ts(new GregorianCalendar(2000, 1, 1).getTime())
             .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
             .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
             .build();

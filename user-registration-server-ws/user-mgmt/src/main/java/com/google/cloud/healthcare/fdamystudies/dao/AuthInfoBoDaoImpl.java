@@ -22,14 +22,14 @@ import org.springframework.stereotype.Service;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoBORepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoBoRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 
 @Service
-public class AuthInfoBODaoImpl implements AuthInfoBODao {
+public class AuthInfoBoDaoImpl implements AuthInfoBoDao {
 
-  private static final Logger logger = LoggerFactory.getLogger(AuthInfoBODaoImpl.class);
-  @Autowired AuthInfoBORepository authInfoRepository;
+  private static final Logger logger = LoggerFactory.getLogger(AuthInfoBoDaoImpl.class);
+  @Autowired AuthInfoBoRepository authInfoRepository;
 
   @Override
   public AuthInfoBO save(AuthInfoBO authInfo) throws SystemException {

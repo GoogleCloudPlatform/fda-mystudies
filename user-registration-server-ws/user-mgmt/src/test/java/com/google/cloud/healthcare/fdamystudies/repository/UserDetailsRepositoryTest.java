@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import static com.google.cloud.healthcare.fdamystudies.matchers.HasLastName.hasLastName;
@@ -40,14 +41,14 @@ public class UserDetailsRepositoryTest {
   @Resource private UserDetailsRepository userDetailsRepository;
 
   @Test
-  public void FindsUsersWithLastName() {
+  public void findsUsersWithLastName() {
     UserDetailsBO user1 =
         UserDetailsBO.builder()
             .userId("user_id")
             .email("email1@example.com")
             .firstName("Given name")
             .lastName("Surname")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
+            .ts(new GregorianCalendar(2000, 1, 1).getTime())
             .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
             .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
             .build();
@@ -57,7 +58,7 @@ public class UserDetailsRepositoryTest {
             .email("email2@example.com")
             .firstName("Given name 2")
             .lastName("Surname")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
+            .ts(new GregorianCalendar(2000, 1, 1).getTime())
             .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
             .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
             .build();
@@ -67,7 +68,7 @@ public class UserDetailsRepositoryTest {
             .email("email2@example.com")
             .firstName("Given name 2")
             .lastName("NotSurname")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
+            .ts(new GregorianCalendar(2000, 1, 1).getTime())
             .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
             .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
             .build();
