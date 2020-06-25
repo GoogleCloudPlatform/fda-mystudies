@@ -10,6 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.filter;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.io.IOException;
 import java.util.Map;
 import javax.servlet.Filter;
@@ -30,10 +35,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.PathContainer;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 
 public abstract class BaseTokenIntrospectionFilter implements Filter {
 
@@ -102,8 +103,9 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
     } else {
       logger.exit(
           String.format(
-              "status=%d, response=%s",
-              oauthResponse.getStatusCodeValue(), oauthResponse.getBody()));
+              "status=%d, active=%b",
+              oauthResponse.getStatusCodeValue(),
+              oauthResponse.getBody().get(ACTIVE).booleanValue()));
       setUnauthorizedResponse(response);
     }
   }

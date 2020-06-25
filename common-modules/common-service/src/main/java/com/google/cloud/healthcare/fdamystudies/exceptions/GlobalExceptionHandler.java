@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.exceptions;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse.Violation;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.slf4j.ext.XLogger;
@@ -22,8 +24,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse.Violation;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {

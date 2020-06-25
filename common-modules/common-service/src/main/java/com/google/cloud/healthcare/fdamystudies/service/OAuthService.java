@@ -8,8 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import org.springframework.http.ResponseEntity;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.http.ResponseEntity;
 
 public interface OAuthService {
 

@@ -1,15 +1,15 @@
 package com.google.cloud.healthcare.fdamystudies.auditlog.mapper;
 
-import java.time.Instant;
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
+import java.time.Instant;
 
 public final class AuditLogEventMapper {
 
   private AuditLogEventMapper() {}
 
-  public static AuditLogEventEntity toAuditLogEventEntity(AuditLogEventRequest aleRequest) {
+  public static AuditLogEventEntity fromAuditLogEventRequest(AuditLogEventRequest aleRequest) {
     AuditLogEventEntity entity = new AuditLogEventEntity();
     entity.setAccessLevel(aleRequest.getAccessLevel());
     entity.setAlert(aleRequest.getAlert());

@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.controller;
 
+import com.google.cloud.healthcare.fdamystudies.auditlog.service.AuditLogEventService;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.ext.XLogger;
@@ -20,9 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.auditlog.service.AuditLogEventService;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 
 @RestController
 @RequestMapping("/v1")
@@ -38,12 +38,11 @@ public class AuditLogEventController {
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<AuditLogEventResponse> logEvent(
       @Valid @RequestBody AuditLogEventRequest aleRequest, HttpServletRequest request) {
-    logger.entry(
-        String.format("begin %s request with aleRequest=%s", request.getRequestURI(), aleRequest));
+    logger.entry(String.format("begin %s request", request.getRequestURI()));
 
     AuditLogEventResponse response = aleService.saveAuditLogEvent(aleRequest);
 
-    logger.exit(String.format("response=%s", response));
+    logger.exit(String.format("eventId=%s", response.getEventId()));
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 }

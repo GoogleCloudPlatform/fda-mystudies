@@ -1,5 +1,9 @@
 package com.google.cloud.healthcare.fdamystudies.filter;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorResponse;
+import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -14,10 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorResponse;
-import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 
 @Component
 @Order(1)

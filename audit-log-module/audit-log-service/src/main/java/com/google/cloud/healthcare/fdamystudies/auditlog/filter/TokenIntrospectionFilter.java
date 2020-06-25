@@ -1,5 +1,6 @@
 package com.google.cloud.healthcare.fdamystudies.auditlog.filter;
 
+import com.google.cloud.healthcare.fdamystudies.filter.BaseTokenIntrospectionFilter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-import com.google.cloud.healthcare.fdamystudies.filter.BaseTokenIntrospectionFilter;
 
 @Component
 @Order(2)

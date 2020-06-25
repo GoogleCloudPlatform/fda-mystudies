@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.controller;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
 import com.google.cloud.healthcare.fdamystudies.auditlog.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 
 public class HealthControllerTest extends BaseMockIT {
 

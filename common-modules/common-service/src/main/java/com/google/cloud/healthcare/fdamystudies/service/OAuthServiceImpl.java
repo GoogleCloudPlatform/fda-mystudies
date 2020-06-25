@@ -10,6 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.addTextFields;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import com.fasterxml.jackson.databind.JsonNode;
 
 @Service
 public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
@@ -30,6 +31,8 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   private static final String TOKEN = "token";
 
   private static final String SCOPE = "scope";
+
+  private static final String ACTIVE = "active";
 
   private static final String AUTHORIZATION = "Authorization";
 
@@ -59,7 +62,9 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     ResponseEntity<JsonNode> response =
         exchangeForJson(introspectEndpoint, headers, requestBody, HttpMethod.POST);
     logger.exit(
-        String.format("status=%d, response=%s", response.getStatusCodeValue(), response.getBody()));
+        String.format(
+            "status=%d, active=%b",
+            response.getStatusCodeValue(), response.getBody().get(ACTIVE).booleanValue()));
     return response;
   }
 }

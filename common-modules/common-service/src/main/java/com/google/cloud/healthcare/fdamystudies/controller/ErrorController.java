@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.common.ErrorResponse;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.ext.XLogger;
@@ -18,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorResponse;
 
 @Controller
 public class ErrorController extends AbstractErrorController {

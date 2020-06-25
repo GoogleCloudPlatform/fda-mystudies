@@ -16,6 +16,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.google.cloud.healthcare.fdamystudies.auditlog.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
+import com.google.cloud.healthcare.fdamystudies.auditlog.repository.AuditLogEventRepository;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.jayway.jsonpath.JsonPath;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.UUID;
@@ -27,12 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-import com.google.cloud.healthcare.fdamystudies.auditlog.common.ApiEndpoint;
-import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
-import com.google.cloud.healthcare.fdamystudies.auditlog.repository.AuditLogEventRepository;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.jayway.jsonpath.JsonPath;
 
 public class AuditLogEventControllerTest extends BaseMockIT {
 
