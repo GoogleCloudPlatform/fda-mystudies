@@ -20,3 +20,4 @@ jobs:
         level: error
         workdir: ./user-registration-server-ws/enroll-mgmt/src
         tool_name: enroll-mgmt Checks
+        
