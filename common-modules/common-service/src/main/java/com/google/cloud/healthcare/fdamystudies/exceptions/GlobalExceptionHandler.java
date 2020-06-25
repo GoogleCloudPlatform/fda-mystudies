@@ -34,15 +34,14 @@ public class GlobalExceptionHandler {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public void handleBadRequest() {}
 
-  @SuppressWarnings("rawtypes")
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   public ValidationErrorResponse handleConstraintValidationException(
       ConstraintViolationException e) {
-    logger.error("request failed with ConstraintViolationException", e);
+    logger.trace("request failed with ConstraintViolationException", e);
     ValidationErrorResponse error = new ValidationErrorResponse();
-    for (ConstraintViolation violation : e.getConstraintViolations()) {
+    for (ConstraintViolation<?> violation : e.getConstraintViolations()) {
       error
           .getViolations()
           .add(new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
