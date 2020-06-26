@@ -236,34 +236,51 @@ public class UsersDAOImpl implements UsersDAO {
     logger.info("UsersDAOImpl - enforcePasswordChange() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
-    String updateQuery = "";
-    String userAttemptQuery = "";
     try {
       // sending activationLink to all active users and send the
       // deactivate users when they active
+      List<String> SAEmailIdList = getSuperAdminList();
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       if ((userId != null) && StringUtils.isNotEmpty(email)) {
-        updateQuery =
-            "Update users set force_logout='Y', credentialsNonExpired=false WHERE user_id ="
-                + userId;
-        userAttemptQuery = "update user_attempts set attempts = 0 WHERE email_id ='" + email + "'";
-      } else {
-        updateQuery = "Update users set force_logout='Y' WHERE status=true";
-        int count = session.createSQLQuery(updateQuery).executeUpdate();
+        int count =
+            session
+                .createSQLQuery(
+                    "Update users set force_logout='Y', credentialsNonExpired=false WHERE user_id =:userId")
+                .setParameter("userId", userId)
+                .executeUpdate();
         if (count > 0) {
-          updateQuery = "Update users set credentialsNonExpired=false";
-          userAttemptQuery = "update user_attempts set attempts = 0";
-        }
-      }
-      // update password to empty and expiredTime to null
-      if (StringUtils.isNotEmpty(updateQuery)) {
-        int count = session.createSQLQuery(updateQuery).executeUpdate();
-        if (count > 0) {
-          session.createSQLQuery(userAttemptQuery).executeUpdate();
+          session
+              .createSQLQuery("update user_attempts set attempts = 0 WHERE email_id =:email")
+              .setParameter("email", email)
+              .executeUpdate();
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
+      } else {
+        int count =
+            session
+                .createSQLQuery(
+                    "Update users set force_logout='Y' WHERE status=true AND email NOT IN(:emailIds)")
+                .setParameterList("emailIds", SAEmailIdList)
+                .executeUpdate();
+        if (count > 0) {
+          int result =
+              session
+                  .createSQLQuery(
+                      "Update users set credentialsNonExpired=false WHERE email NOT IN(:emailIds)")
+                  .setParameterList("emailIds", SAEmailIdList)
+                  .executeUpdate();
+          if (result > 0) {
+            session
+                .createSQLQuery(
+                    "update user_attempts set attempts = 0 WHERE email_id NOT IN(:emailIds)")
+                .setParameterList("emailIds", SAEmailIdList)
+                .executeUpdate();
+            message = FdahpStudyDesignerConstants.SUCCESS;
+          }
+        }
       }
+
       transaction.commit();
     } catch (Exception e) {
       if (transaction != null) {
@@ -285,15 +302,16 @@ public class UsersDAOImpl implements UsersDAO {
     logger.info("UsersDAOImpl - getActiveUserEmailIds() - Starts");
     Session session = null;
     List<String> emails = null;
-    Query query = null;
     try {
+      List<String> SAEmailIdList = getSuperAdminList();
       session = hibernateTemplate.getSessionFactory().openSession();
       // sending activationLink to all active users and send the
       // deactivate users when they active
-      query =
+      Query query =
           session.createSQLQuery(
               " SELECT u.email "
-                  + "FROM users u,roles r WHERE r.role_id = u.role_id and u.status=1");
+                  + "FROM users u,roles r WHERE r.role_id = u.role_id and u.status=1 AND email NOT IN(:emailIds)");
+      query.setParameterList("emailIds", SAEmailIdList);
       emails = query.list();
     } catch (Exception e) {
       logger.error("UsersDAOImpl - getActiveUserEmailIds() - ERROR", e);

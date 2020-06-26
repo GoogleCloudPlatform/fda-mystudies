@@ -18,11 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -50,8 +50,6 @@ public class BaseMockIT {
 
   @Autowired private WireMockServer wireMockServer;
 
-  @LocalServerPort protected int randomServerPort;
-
   @Autowired private ObjectMapper objectMapper;
 
   @Autowired protected MockMvc mockMvc;
@@ -68,30 +66,32 @@ public class BaseMockIT {
     return objectMapper;
   }
 
-  protected void performPost(
+  protected MvcResult performPost(
       String path,
       String requestJson,
       HttpHeaders headers,
       String expectedTextInResponseBody,
       ResultMatcher resultMatcher)
       throws Exception {
-    mockMvc
+    return mockMvc
         .perform(post(path).content(requestJson).headers(headers))
         .andDo(print())
         .andExpect(resultMatcher)
-        .andExpect(content().string(containsString(expectedTextInResponseBody)));
+        .andExpect(content().string(containsString(expectedTextInResponseBody)))
+        .andReturn();
   }
 
-  protected void performGet(
+  protected MvcResult performGet(
       String path,
       HttpHeaders headers,
       String expectedTextInResponseBody,
       ResultMatcher resultMatcher)
       throws Exception {
-    mockMvc
+    return mockMvc
         .perform(get(path).headers(headers))
         .andDo(print())
         .andExpect(resultMatcher)
-        .andExpect(content().string(containsString(expectedTextInResponseBody)));
+        .andExpect(content().string(containsString(expectedTextInResponseBody)))
+        .andReturn();
   }
 }

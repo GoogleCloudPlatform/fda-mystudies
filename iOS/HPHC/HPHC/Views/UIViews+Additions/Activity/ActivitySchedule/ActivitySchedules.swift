@@ -102,6 +102,19 @@ class ResponseDataFetch: NMWebServiceDelegate {
 
   var dataSourceKeysForResponse: [[String: String]] = []
 
+  private var study: Study
+
+  var completion: (() -> Void)?
+
+  var isFetchComplete = false {
+    willSet {
+      let key = "Response" + study.studyId
+      UserDefaults.standard.set(newValue, forKey: key)
+    }
+  }
+
+  let fetchQueryGroup = DispatchGroup()
+
   static let responseDateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
     let locale = Locale(identifier: "en_US_POSIX")
@@ -115,31 +128,24 @@ class ResponseDataFetch: NMWebServiceDelegate {
     let formatter = DateFormatter()
     formatter.timeZone = TimeZone.current
     formatter.dateFormat = "YYYY/MM/dd HH:mm:ss"
-
     return formatter
   }()
 
-  init() {
-
+  init(study: Study) {
+    self.study = study
   }
 
   // MARK: Helper Methods
-  func checkUpdates() {
+  func checkUpdates(completion: @escaping () -> Void) {
+    self.completion = completion
     if StudyUpdates.studyActivitiesUpdated {
       self.sendRequestToGetDashboardInfo()
-
     } else {
-
       // Load Stats List from DB
-      DBHandler.loadStatisticsForStudy(studyId: (Study.currentStudy?.studyId)!) {
-        (statiticsList) in
-
-        if statiticsList.count != 0 {
+      DBHandler.loadStatisticsForStudy(studyId: study.studyId) { (statiticsList) in
+        if !statiticsList.isEmpty {
           StudyDashboard.instance.statistics = statiticsList
           self.getDataKeysForCurrentStudy()
-          let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
-          appDelegate.addAndRemoveProgress(add: true)
-
         } else {
           // Fetch DashboardInfo
           self.sendRequestToGetDashboardInfo()
@@ -149,38 +155,30 @@ class ResponseDataFetch: NMWebServiceDelegate {
   }
 
   func sendRequestToGetDashboardInfo() {
-    WCPServices().getStudyDashboardInfo(studyId: (Study.currentStudy?.studyId)!, delegate: self)
-  }
-
-  func handleExecuteSQLResponse() {
-
-    if !self.dataSourceKeysForResponse.isEmpty {
-      self.dataSourceKeysForResponse.removeFirst()
-    }
-    self.sendRequestToGetDashboardResponse()
+    WCPServices().getStudyDashboardInfo(studyId: study.studyId, delegate: self)
   }
 
   func getDataKeysForCurrentStudy() {
 
-    DBHandler.getDataSourceKeyForActivity(studyId: (Study.currentStudy?.studyId)!) {
-      (activityKeys) in
-      if activityKeys.count > 0 {
+    DBHandler.getDataSourceKeyForActivity(studyId: study.studyId) { [unowned self] (activityKeys) in
+      if !activityKeys.isEmpty {
         self.dataSourceKeysForResponse = activityKeys
         // GetDashboardResponse from server
         self.sendRequestToGetDashboardResponse()
+      } else {
+        self.isFetchComplete = true
+        self.completion?()
       }
     }
-
   }
 
   func sendRequestToGetDashboardResponse() {
 
-    if !self.dataSourceKeysForResponse.isEmpty {
-      let details = self.dataSourceKeysForResponse.first
-      let activityId = details?["activityId"]
+    for details in dataSourceKeysForResponse {
+      let activityId = details["activityId"]
       let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
         .first
-      var keys = details?["keys"] ?? ""
+      var keys = details["keys"] ?? ""
       if activity?.type == ActivityType.activeTask {
         if activity?.taskSubType == "fetalKickCounter" {
           keys = "\"count\",duration"
@@ -193,9 +191,10 @@ class ResponseDataFetch: NMWebServiceDelegate {
       guard let currentActivity = activity,
         let study = Study.currentStudy
       else {
-        handleExecuteSQLResponse()
-        return
+        continue
       }
+
+      fetchQueryGroup.enter()
       // Get Survey Response from Server
       ResponseServices().getParticipantResponse(
         activity: currentActivity,
@@ -203,56 +202,55 @@ class ResponseDataFetch: NMWebServiceDelegate {
         keys: keys,
         delegate: self
       )
-    } else {
-      // save response in database
-      let responses = StudyDashboard.instance.dashboardResponse
-      for response in responses {
+    }
+    fetchQueryGroup.notify(queue: .main) {
+      // Save responses.
+      self.saveResponsesInDB()
+    }
+  }
 
-        let activityId = response.activityId
-        let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
-          .first
-        var key = response.key
-        if activity?.type == ActivityType.activeTask {
+  private func saveResponsesInDB() {
+    // save response in database
+    let responses = StudyDashboard.instance.dashboardResponse
+    for response in responses {
 
-          if activity?.taskSubType == "fetalKickCounter"
-            || activity?.taskSubType
-              == "towerOfHanoi"
-          {
-            key = activityId!
-          }
+      let activityId = response.activityId
+      let activity = Study.currentStudy?.activities.filter({ $0.actvityId == activityId })
+        .first
+      var key = response.key
+      if activity?.type == ActivityType.activeTask {
+
+        if activity?.taskSubType == "fetalKickCounter"
+          || activity?.taskSubType
+            == "towerOfHanoi"
+        {
+          key = activityId!
         }
+      }
 
-        let values = response.values
-        for value in values {
-          let responseValue = (value["value"] as? Float)!
-          let count = (value["count"] as? Float)!
-          let dateString = value["date"] as? String ?? ""
-          // SetData Format
-          if let date = ResponseDataFetch.responseDateFormatter.date(from: dateString),
-            let key = key,
-            let activityID = activityId
-          {
-            // Save Stats to DB
-            DBHandler.saveStatisticsDataFor(
-              activityId: activityID,
-              key: key,
-              data: responseValue,
-              fkDuration: Int(count),
-              date: date
-            )
-          }
+      let values = response.values
+      for value in values {
+        let responseValue = value["value"] as? Float ?? 0
+        let count = value["count"] as? Float ?? 0
+        let dateString = value["date"] as? String ?? ""
+        // SetData Format
+        if let date = ResponseDataFetch.responseDateFormatter.date(from: dateString),
+          let key = key,
+          let activityID = activityId
+        {
+          // Save Stats to DB
+          DBHandler.saveStatisticsDataFor(
+            activityId: activityID,
+            key: key,
+            data: responseValue,
+            fkDuration: Int(count),
+            date: date
+          )
         }
       }
     }
-
-    if let studyID = Study.currentStudy?.studyId {
-      let key = "Response" + studyID
-      UserDefaults.standard.set(true, forKey: key)
-    }
-
-    if let appDelegate = UIApplication.shared.delegate as? AppDelegate {
-      appDelegate.addAndRemoveProgress(add: false)
-    }
+    isFetchComplete = true
+    completion?()
   }
 
   // MARK: Webservice Delegates
@@ -264,14 +262,14 @@ class ResponseDataFetch: NMWebServiceDelegate {
       self.getDataKeysForCurrentStudy()
 
     } else if requestName as String == ResponseMethods.getParticipantResponse.description {
-      self.handleExecuteSQLResponse()
+      fetchQueryGroup.leave()
     }
 
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     if requestName as String == ResponseMethods.getParticipantResponse.description {
-      self.handleExecuteSQLResponse()
+      fetchQueryGroup.leave()
     }
   }
 

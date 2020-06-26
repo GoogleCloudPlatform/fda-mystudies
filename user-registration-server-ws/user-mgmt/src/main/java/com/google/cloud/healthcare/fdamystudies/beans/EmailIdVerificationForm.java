@@ -8,12 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
 public class EmailIdVerificationForm {
-
-  private String code;
+  @NotBlank private String code;
+  private String emailId;
 }
