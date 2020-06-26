@@ -38,11 +38,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.controller.CleanPropertyAdvice.CustomPropertyEditor;
 import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import com.fdahpstudydesigner.service.LoginServiceImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
@@ -57,6 +60,11 @@ public class LoginController {
   @Autowired private DashBoardAndProfileService dashBoardAndProfileService;
 
   private LoginServiceImpl loginService;
+  
+  @InitBinder
+  public void bindPropertyCleaner(WebDataBinder webDataBinder) {
+    webDataBinder.registerCustomEditor(String.class, new CustomPropertyEditor());
+  }
 
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {

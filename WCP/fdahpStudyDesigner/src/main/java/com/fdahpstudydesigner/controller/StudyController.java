@@ -49,6 +49,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -76,6 +78,7 @@ import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.controller.CleanPropertyAdvice.CustomPropertyEditor;
 import com.fdahpstudydesigner.service.NotificationService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
@@ -98,6 +101,11 @@ public class StudyController {
   @Autowired private UsersService usersService;
 
   @Autowired private RestTemplate restTemplate;
+  
+  @InitBinder
+  public void bindPropertyCleaner(WebDataBinder webDataBinder) {
+    webDataBinder.registerCustomEditor(String.class, new CustomPropertyEditor());
+  }
 
   @RequestMapping("/adminStudies/actionList.do")
   public ModelAndView actionList(HttpServletRequest request) {

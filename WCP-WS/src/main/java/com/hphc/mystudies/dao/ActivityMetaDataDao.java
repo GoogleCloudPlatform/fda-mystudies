@@ -2666,7 +2666,8 @@ public class ActivityMetaDataDao {
       if ((otherReponseSubType != null)
           && (otherReponseSubType.getOtherType() != null)
           && StringUtils.isNotEmpty(otherReponseSubType.getOtherType())
-          && otherReponseSubType.getOtherType().equals("on")) {
+          && otherReponseSubType.getOtherType().equals("on")
+          && !isProductSurveyPresent) {
         LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
         textChoiceMap.put(
             "text",
