@@ -40,7 +40,8 @@ public interface StudyMetaDataConstants {
   public final String INVALID_ACTIVITY_ID = "ActivityId does not exists. Please check";
   public final String INVALID_ENROLLMENT_TOKEN =
       "Sorry, the enrollment token is not valid. Please check and try again.";
-
+  public final String INVALID_ACTIVITY_VERSION = "Invalid Activity Version.";
+  
   SimpleDateFormat SDF_DATE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
   SimpleDateFormat SDF_DATE_TIME_12 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
   SimpleDateFormat SDF_DATE = new SimpleDateFormat("yyyy-MM-dd");
@@ -300,4 +301,7 @@ public interface StudyMetaDataConstants {
   public static final String ANCHOR_TYPE_ACTIVITYRESPONSE = "ActivityResponse";
   public static final String SCHEDULETYPE_REGULAR = "Regular";
   public static final String SCHEDULETYPE_ANCHORDATE = "AnchorDate";
+  
+  public static final String PRODUCT_SURVEY = "ProductSurvey";
+  public static final String PRODUCT_QUESTION = "ProductQuestion";
 }

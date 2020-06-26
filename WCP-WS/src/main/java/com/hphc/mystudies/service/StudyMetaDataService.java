@@ -36,6 +36,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -440,6 +441,7 @@ public class StudyMetaDataService {
       @QueryParam("studyId") String studyId,
       @QueryParam("activityId") String activityId,
       @QueryParam("activityVersion") String activityVersion,
+      @QueryParam("brandId") String brandId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyActivityMetadata() :: Starts");
@@ -453,6 +455,31 @@ public class StudyMetaDataService {
       if (StringUtils.isNotEmpty(studyId)
           && StringUtils.isNotEmpty(activityId)
           && StringUtils.isNotEmpty(activityVersion)) {
+        try {
+          Float.valueOf(activityVersion);
+        } catch (Exception e) {
+          StudyMetaDataUtil.getFailureResponse(
+              ErrorCodes.STATUS_102,
+              ErrorCodes.INVALID_INPUT,
+              StudyMetaDataConstants.INVALID_ACTIVITY_VERSION,
+              response);
+          return Response.status(Response.Status.BAD_REQUEST)
+              .entity(StudyMetaDataConstants.INVALID_ACTIVITY_VERSION)
+              .build();
+        }
+
+        if (StringUtils.equalsIgnoreCase(activityId, StudyMetaDataConstants.PRODUCT_SURVEY)
+            && StringUtils.isBlank(brandId)) {
+          StudyMetaDataUtil.getFailureResponse(
+              ErrorCodes.STATUS_102,
+              ErrorCodes.INVALID_INPUT,
+              StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG,
+              response);
+          return Response.status(Response.Status.BAD_REQUEST)
+              .entity(StudyMetaDataConstants.INVALID_INPUT_ERROR_MSG)
+              .build();
+        }
+
         isValidFlag = studyMetaDataOrchestration.isValidStudy(studyId);
         if (!isValidFlag) {
           StudyMetaDataUtil.getFailureResponse(
@@ -501,7 +528,7 @@ public class StudyMetaDataService {
         } else {
           questionnaireActivityMetaDataResponse =
               activityMetaDataOrchestration.studyQuestionnaireActivityMetadata(
-                  studyId, activityId, activityVersion);
+                  studyId, activityId, activityVersion, brandId);
           if (!questionnaireActivityMetaDataResponse
               .getMessage()
               .equals(StudyMetaDataConstants.SUCCESS)) {
