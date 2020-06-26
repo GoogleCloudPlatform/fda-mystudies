@@ -8,64 +8,64 @@ export INPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies/Terraf
 export OUTPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies-test/Terraform
 
 export OLD_STATE="heroes-hat-dev-terraform-state-08679"
-export NEW_STATE=
+export NEW_STATE="validcare-research-terraform-state-09768"
 
 export OLD_PREFIX="heroes-hat-dev"
-export NEW_PREFIX=
+export NEW_PREFIX="validcare-research"
 
 export OLD_GKE_PREFIX="heroes-hat"
-export NEW_GKE_PREFIX=
+export NEW_GKE_PREFIX="validcare-research"
 
 export OLD_BIGQUERY_PREFIX="heroes_hat_dev"
-export NEW_BIGQUERY_PREFIX=
+export NEW_BIGQUERY_PREFIX="validcare-research"
 
 export OLD_FOLDER="fda-my-studies"
-export NEW_FOLDER=
+export NEW_FOLDER="fda-my-studies"
 
 export OLD_ORG_ID="707577601068"
-export NEW_ORG_ID=
+export NEW_ORG_ID="423192334367"
 
 export OLD_FOLDER_ID="440087619763"
-export NEW_FOLDER_ID=""
+export NEW_FOLDER_ID="346263855056"
 
 export OLD_BILLING_ACCOUNT="01EA90-3519E1-89CB1F"
-export NEW_BILLING_ACCOUNT=
+export NEW_BILLING_ACCOUNT="00C4F7-942DBB-FE88B3"
 
 export OLD_ADMIN_GROUP="rocketturtle-gcp-admin@rocketturtle.net"
-export NEW_ADMIN_GROUP=
+export NEW_ADMIN_GROUP="vr-gcp-admins@validcare.com"
 
 export OLD_GITHUB_ORG="GoogleCloudPlatform"
-export NEW_GITHUB_ORG=
+export NEW_GITHUB_ORG="validcare"
 
 export OLD_GITHUB_REPO="fda-mystudies"
-export NEW_GITHUB_REPO=
+export NEW_GITHUB_REPO="validcare-mystudies"
 
 export OLD_GITHUB_BRANCH="early-access"
-export NEW_GITHUB_BRANCH=
+export NEW_GITHUB_BRANCH="Prod-Release"
 
 export SRC_PROJ_BASE=${INPUT_TF_BASE}/org/folder.${OLD_FOLDER}/project.${OLD_PREFIX}
 export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PREFIX}
 
 export OLD_ADMIN_EMAIL="group:rocketturtle-gcp-admin@rocketturtle.net"
-export NEW_ADMIN_EMAIL=
+export NEW_ADMIN_EMAIL="group:vr-gcp-admins@validcare.com"
 
 export OLD_DOMAIN="rocketturtle.net"
-export NEW_DOMAIN=
+export NEW_DOMAIN="validcare.com"
 
 export OLD_AUDIT_BUCKET="7yr-org-audit-logs-08679"
-export NEW_AUDIT_BUCKET=
+export NEW_AUDIT_BUCKET="7yr-org-audit-logs-09768"
 
 export OLD_AUDIT_ST_SINK="storage-org-sink"
-export NEW_AUDIT_ST_SINK=
+export NEW_AUDIT_ST_SINK="storage-org-sink"
 
 export OLD_AUDIT_BQ_SINK="bigquery-org-sink"
-export NEW_AUDIT_BQ_SINK=
+export NEW_AUDIT_BQ_SINK="bigquery-org-sink"
 
 export OLD_CLUSTER="heroes_hat_cluster"
-export NEW_CLUSTER=
+export NEW_CLUSTER="validcare-research-cluster"
 
 export OLD_APP_ORG="Test Org"
-export NEW_APP_ORG=
+export NEW_APP_ORG="VC Org"
 
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
