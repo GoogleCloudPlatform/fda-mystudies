@@ -13,7 +13,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface OAuthService {
 
-  public ResponseEntity<JsonNode> health();
-
   public ResponseEntity<JsonNode> introspectToken(JsonNode params);
 }
