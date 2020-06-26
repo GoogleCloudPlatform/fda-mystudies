@@ -8,8 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.common;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public enum ApiEndpoint {
-  HEALTH("http://localhost:8001/audit-log-service/v1/health"),
+  HEALTH("http://localhost:8001/audit-log-service/v1/healthCheck"),
 
   EVENTS("http://localhost:8001/audit-log-service/v1/events");
 
@@ -23,7 +26,7 @@ public enum ApiEndpoint {
     return url;
   }
 
-  public String getPath() {
-    return url.substring(url.indexOf("/audit-log-service/"));
+  public String getPath() throws MalformedURLException {
+    return new URL(url).getPath();
   }
 }
