@@ -62,7 +62,8 @@ public class OAuthController {
     if (REFRESH_TOKEN.equals(paramMap.getFirst(GRANT_TYPE))) {
       validationResponse = validateRequiredParams(paramMap, REFRESH_TOKEN, REDIRECT_URI, CLIENT_ID);
     } else if (AUTHORIZATION_CODE.equals(grantType)) {
-      validationResponse = validateRequiredParams(paramMap, CODE, REDIRECT_URI, SCOPE, USER_ID, CODE_VERIFIER);
+      validationResponse =
+          validateRequiredParams(paramMap, CODE, REDIRECT_URI, SCOPE, USER_ID, CODE_VERIFIER);
     } else {
       // client_credentials grant type
       validationResponse = validateRequiredParams(paramMap, GRANT_TYPE, REDIRECT_URI, SCOPE);
