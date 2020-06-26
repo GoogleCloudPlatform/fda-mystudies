@@ -4,8 +4,8 @@
 
 export PWD=$(pwd)
 
-export INPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies/Terraform
-export OUTPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies-test/Terraform
+export INPUT_TF_BASE=/home/platform_admin_btc/Mohan/validcare-mystudies/Terraform-old
+export OUTPUT_TF_BASE=/home/platform_admin_btc/Mohan/validcare-mystudies/Terraform
 
 export OLD_STATE="heroes-hat-dev-terraform-state-08679"
 export NEW_STATE="validcare-research-terraform-state-09768"
