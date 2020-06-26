@@ -14,7 +14,7 @@
 
 project_id       = "mystudies-demo-networks"
 region           = "us-east1"
-zone             = "us-east1-a"
+zone             = "us-east1-b"
 gke_network_name = "mystudies-demo-apps-network"
 bastion_users = [
   "group:dpt-dev@hcls.joonix.net",
