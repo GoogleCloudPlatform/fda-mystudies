@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: heroes-hat-dev
+  name: validcare-research
   annotations:
     kubernetes.io/ingress.global-static-ip-name: my-studies-ingress-ip
-    networking.gke.io/managed-certificates: heroes-hat-cert
+    networking.gke.io/managed-certificates: validcare-research-cert
 spec:
   rules:
     - http:
