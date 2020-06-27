@@ -71,12 +71,12 @@ module "my_studies_sql_import_bucket" {
   # Comment out this block before the rest of this file is deployed, and then uncomment and do
   # another deployment for this iam permission.
   # ==============================================================================
-  #  iam_members = [
-  #   {
-  #    role   = "roles/storage.objectViewer"
-  #   member = "serviceAccount:${module.my_studies_cloudsql.instance_service_account_email_address}"
-  #}
-  #]
+    iam_members = [
+     {
+      role   = "roles/storage.objectViewer"
+     member = "serviceAccount:${module.my_studies_cloudsql.instance_service_account_email_address}"
+  }
+  ]
   # ==============================================================================
 }
 
