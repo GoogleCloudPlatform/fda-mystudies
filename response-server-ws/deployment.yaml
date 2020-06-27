@@ -16,7 +16,7 @@ spec:
     spec: 
       containers: 
         - name: response-server-ws 
-          image: gcr.io/validcare-research/response-server-ws:latest
+          image: gcr.io/validcare-research-apps/response-server-ws:latest
           env: 
             - name: DB_USER 
               valueFrom: 
