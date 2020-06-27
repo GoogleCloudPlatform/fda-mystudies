@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id = "validcare-research-resp-firebase"
+project_id = "validcare-research-rs-firebase"
