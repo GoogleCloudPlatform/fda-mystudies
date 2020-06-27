@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
-import java.util.Base64;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,11 +69,6 @@ public class BaseMockIT {
 
   protected String getContextPath() {
     return servletContext.getContextPath();
-  }
-
-  protected String getEncodedAuthorization(String clientId, String clientSecret) {
-    String credentials = clientId + ":" + clientSecret;
-    return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
   }
 
   protected MvcResult performGet(

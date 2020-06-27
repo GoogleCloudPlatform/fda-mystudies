@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.HealthController;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.controller.OAuthController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,12 +24,9 @@ class ApplicationTest extends BaseMockIT {
 
   @Autowired HealthController healthController;
 
-  @Autowired OAuthController oauthController;
-
   @Test
   void contextLoads() {
     assertNotNull(healthController);
-    assertNotNull(oauthController);
   }
 
   @Test
