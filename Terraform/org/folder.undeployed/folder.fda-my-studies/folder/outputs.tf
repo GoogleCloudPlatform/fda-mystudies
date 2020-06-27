@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include {
-  path = find_in_parent_folders()
-}
-
-dependency "project" {
-  config_path  = "../project"
-  skip_outputs = true
+output "name" {
+  value = google_folder.folder.name
 }

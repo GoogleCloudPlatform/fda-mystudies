@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "project_id" {
-  type = string
-}
+display_name = "fda-my-studies"
+parent       = "organizations/423192334367"
