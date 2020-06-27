@@ -16,7 +16,7 @@ spec:
     spec: 
       containers: 
         - name: response-server-ws 
-          image: gcr.io/heroes-hat-dev/response-server-ws:latest
+          image: gcr.io/validcare-research/response-server-ws:latest
           env: 
             - name: DB_USER 
               valueFrom: 
@@ -34,7 +34,7 @@ spec:
                   name: response-server-cloudsql-db-credentials 
                   key: dbname 
             - name: FIRESTORE_PROJECT_ID
-              value: "heroes-hat-dev"
+              value: "validcare-research"
             - name: AUTH_SERVER_URL
               value: "auth-server-np:50000"
             - name: REGISTRATION_CLIENT_ID
@@ -76,7 +76,7 @@ spec:
         - name: cloudsql-proxy 
           image: gcr.io/cloudsql-docker/gce-proxy:latest 
           command: ["/cloud_sql_proxy", 
-            "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306", 
+            "-instances=validcare-research-data:us-east1:my-studies=tcp:3306", 
             "-credential_file=/secrets/cloudsql/key.json"] 
           volumeMounts: 
             - name: gcloud-key-volume 
