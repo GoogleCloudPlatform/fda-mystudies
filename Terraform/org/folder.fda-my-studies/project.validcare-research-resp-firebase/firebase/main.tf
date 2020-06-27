@@ -25,37 +25,37 @@ terraform {
 }
 
 #resource "google_firebase_project" "firebase" {
- # provider = google-beta
-  #project  = var.project_id
+# provider = google-beta
+#project  = var.project_id
 #}
 #
 #resource "google_firestore_index" "activities_index" {
- # project    = var.project_id
-  #collection = "Activities"
+# project    = var.project_id
+#collection = "Activities"
 #  fields {
- #   field_path = "participantId"
-  #  order      = "ASCENDING"
- # }
- # fields {
-  #  field_path = "createdTimestamp"
-   # order      = "ASCENDING"
- # }
- # fields {
-  #  field_path = "__name__"
-   # order      = "ASCENDING"
+#   field_path = "participantId"
+#  order      = "ASCENDING"
+# }
+# fields {
+#  field_path = "createdTimestamp"
+# order      = "ASCENDING"
+# }
+# fields {
+#  field_path = "__name__"
+# order      = "ASCENDING"
 #  }
 #}
 
 #module "survey_pubsub" {
- # source  = "terraform-google-modules/pubsub/google"
- # version = "~> 1.0"
+# source  = "terraform-google-modules/pubsub/google"
+# version = "~> 1.0"
 
- # topic      = "surveyWriteTrigger"
- # project_id = var.project_id
- # pull_subscriptions = [
-  #  {
-   #   name                 = "surveyPHQDep"
-    #  ack_deadline_seconds = 10
-   # }
- # ]
+# topic      = "surveyWriteTrigger"
+# project_id = var.project_id
+# pull_subscriptions = [
+#  {
+#   name                 = "surveyPHQDep"
+#  ack_deadline_seconds = 10
+# }
+# ]
 #}
