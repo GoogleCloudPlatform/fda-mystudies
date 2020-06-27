@@ -16,7 +16,7 @@ project_id                 = "validcare-research-apps"
 network_project_id         = "validcare-research-networks"
 gke_region                 = "us-east1"
 cluster_name               = "validcare-research-cluster"
-master_authorized_networks = [{ cidr_block = "104.132.0.0/14", display_name = "Google Offices/Campuses/CorpDC" }]
+master_authorized_networks = [{ cidr_block = "35.188.202.0/24", display_name = "validcare-research" }]
 repo_owner                 = "validcare"
 repo_name                  = "validcare-mystudies"
 cloudbuild_trigger_branch  = "Prod-Release"

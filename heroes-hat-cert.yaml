@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: heroes-hat-cert
+  name: validcare-research-cert
 spec:
   domains:
-    - dev.heroes-hat.rocketturtle.net
+    - validcare-research.validcare.com

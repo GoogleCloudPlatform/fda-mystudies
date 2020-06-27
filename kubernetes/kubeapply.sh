@@ -32,7 +32,7 @@ set -e
 
 echo "=== Switching kubectl to cluster ${cluster} ==="
 read -p "Press enter to continue"
-gcloud container clusters get-credentials "${cluster}" --region="us-east1" --project="heroes-hat-dev-apps"
+gcloud container clusters get-credentials "${cluster}" --region="us-east1" --project="validcare-research-apps"
 
 for policy in $(find . -name "pod_security_policy*.yaml"); do
   echo "=== Applying ${policy} ==="
