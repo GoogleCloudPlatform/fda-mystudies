@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: user-registration-ws
-          image: gcr.io/validcare-research/user-registration-server-ws:latest
+          image: gcr.io/validcare-research-apps/user-registration-server-ws:latest
           env:
             - name: DB_USER
               valueFrom:
