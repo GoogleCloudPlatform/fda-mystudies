@@ -24,38 +24,38 @@ terraform {
   backend "gcs" {}
 }
 
-#resource "google_firebase_project" "firebase" {
- # provider = google-beta
-  #project  = var.project_id
-#}
-#
-#resource "google_firestore_index" "activities_index" {
- # project    = var.project_id
-  #collection = "Activities"
-#  fields {
- #   field_path = "participantId"
-  #  order      = "ASCENDING"
- # }
- # fields {
-  #  field_path = "createdTimestamp"
-   # order      = "ASCENDING"
- # }
- # fields {
-  #  field_path = "__name__"
-   # order      = "ASCENDING"
-#  }
-#}
+resource "google_firebase_project" "firebase" {
+  provider = google-beta
+  project  = var.project_id
+}
 
-#module "survey_pubsub" {
- # source  = "terraform-google-modules/pubsub/google"
- # version = "~> 1.0"
+resource "google_firestore_index" "activities_index" {
+  project    = var.project_id
+  collection = "Activities"
+  fields {
+    field_path = "participantId"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "createdTimestamp"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "__name__"
+    order      = "ASCENDING"
+  }
+}
 
- # topic      = "surveyWriteTrigger"
- # project_id = var.project_id
- # pull_subscriptions = [
-  #  {
-   #   name                 = "surveyPHQDep"
-    #  ack_deadline_seconds = 10
-   # }
- # ]
-#}
+module "survey_pubsub" {
+  source  = "terraform-google-modules/pubsub/google"
+  version = "~> 1.0"
+
+  topic      = "surveyWriteTrigger"
+  project_id = var.project_id
+  pull_subscriptions = [
+    {
+      name                 = "surveyPHQDep"
+      ack_deadline_seconds = 10
+    }
+  ]
+}
