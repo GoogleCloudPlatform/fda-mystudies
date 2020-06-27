@@ -1,0 +1,16 @@
+{
+	"violations": [
+		{
+			"path": "refresh_token",
+			"message": "must not be blank"
+		},
+		{
+			"path": "redirect_uri",
+			"message": "must not be blank"
+		},
+		{
+			"path": "client_id",
+			"message": "must not be blank"
+		}
+	]
+}

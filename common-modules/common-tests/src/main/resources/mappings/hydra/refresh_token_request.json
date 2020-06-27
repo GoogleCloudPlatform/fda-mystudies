@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/oauth2/token",
+		"bodyPatterns": [
+			{
+				"contains": "refresh_token"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "hydra/refresh_token_response.json"
+	}
+}
