@@ -3,11 +3,11 @@
 set -e
 
 # TODO: Change these to env variables.
-SECRET_PROJECT=heroes-hat-dev-devops
-DATA_PROJECT=heroes-hat-dev-data
-SQL_IMPORT_BUCKET=heroes-hat-dev-data-sql-import
+SECRET_PROJECT=validcare-research-devops
+DATA_PROJECT=validcare-research-data
+SQL_IMPORT_BUCKET=validcare-research-data-sql-import
 TMPFILE=$(mktemp)
-ORG_NAME="Test Org"
+ORG_NAME="VC Org"
 
 # Write user registration server db name to TMPFILE.
 echo "USE \`mystudies_userregistration\`;" >> ${TMPFILE}

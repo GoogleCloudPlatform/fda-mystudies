@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id = "707577601068"
+org_id = "423192334367"
 // Uncomment in order to limit changes to folder.
-// folder_id         = "440087619763"
-billing_account               = "01EA90-3519E1-89CB1F"
-project_id                    = "heroes-hat-dev-devops"
-state_bucket                  = "heroes-hat-dev-terraform-state-08679"
-repo_owner                    = "GoogleCloudPlatform"
-repo_name                     = "fda-mystudies"
-branch_regex                  = "^early-access$"
+// folder_id         = "346263855056"
+billing_account               = "00C4F7-942DBB-FE88B3"
+project_id                    = "validcare-research-devops"
+state_bucket                  = "validcare-research-terraform-state-09768"
+repo_owner                    = "validcare"
+repo_name                     = "validcare-mystudies"
+branch_regex                  = "^Prod-Release$"
 continuous_deployment_enabled = true
 trigger_enabled               = true
 terraform_root                = "Terraform"
 build_viewers = [
-  "group:rocketturtle-gcp-admin@rocketturtle.net",
+  "group:vr-gcp-admins@validcare.com",
 ]

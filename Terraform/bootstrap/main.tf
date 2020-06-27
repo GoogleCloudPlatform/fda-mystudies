@@ -30,7 +30,7 @@ terraform {
   # Then uncomment after initial deployment and run `terraform init`.
   # ==============================================================================
   backend "gcs" {
-    bucket = "heroes-hat-dev-terraform-state-08679"
+    bucket = "validcare-research-terraform-state-09768"
     prefix = "bootstrap"
   }
   # ==============================================================================

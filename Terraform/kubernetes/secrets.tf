@@ -95,9 +95,9 @@ resource "kubernetes_secret" "user_registration_secrets" {
     CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-urs-client-id"].secret_data
     SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-urs-secret-key"].secret_data
     # TODO: This value should come from the name of my_studies_consent_documents_bucket in the data project.
-    GCP_BUCKET_NAME = "heroes-hat-dev-my-studies-consent-documents"
+    GCP_BUCKET_NAME = "validcare-research-my-studies-consent-documents"
     # TODO: This value should come from the name of my_studies_institution_resources_bucket in the data project.
-    INSTITUTION_RESOURCES_BUCKET_NAME = "heroes-hat-dev-my-studies-institution-resources"
+    INSTITUTION_RESOURCES_BUCKET_NAME = "validcare-research-my-studies-institution-resources"
   }
 }
 
@@ -109,7 +109,7 @@ resource "kubernetes_secret" "study_designer_secrets" {
   data = {
     CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
     SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
-    BASE_URL   = "tf-dev.heroes-hat.rocketturtle.net"
+    BASE_URL   = "tf-dev.validcare-research.validcare.com"
   }
 }
 
@@ -121,7 +121,7 @@ resource "kubernetes_secret" "study_meta_data_secrets" {
   data = {
     CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
     SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
-    BASE_URL   = "tf-dev.heroes-hat.rocketturtle.net"
+    BASE_URL   = "tf-dev.validcare-research.validcare.com"
   }
 }
 

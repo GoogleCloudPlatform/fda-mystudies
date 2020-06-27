@@ -18,6 +18,6 @@ include {
 
 dependencies {
   paths = [
-    "../project.heroes-hat-dev-audit/project",
+    "../project.validcare-research-audit/project",
   ]
 }

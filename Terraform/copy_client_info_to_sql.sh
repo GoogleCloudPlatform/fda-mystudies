@@ -2,9 +2,9 @@
 # Script to copy client id and secret keys from gcloud secret to CloudSQL.
 set -e
 
-SECRET_PROJECT=heroes-hat-dev-devops
-DATA_PROJECT=heroes-hat-dev-data
-SQL_IMPORT_BUCKET=heroes-hat-dev-data-sql-import
+SECRET_PROJECT=validcare-research-devops
+DATA_PROJECT=validcare-research-data
+SQL_IMPORT_BUCKET=validcare-research-data-sql-import
 TMPFILE=$(mktemp)
 
 # Write auth server db name to TMPFILE.

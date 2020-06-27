@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id         = "heroes-hat-dev-apps"
-secrets_project_id = "heroes-hat-dev-devops"
-cluster_name       = "heroes-hat-cluster"
+project_id         = "validcare-research-apps"
+secrets_project_id = "validcare-research-devops"
+cluster_name       = "validcare-research-cluster"
 cluster_location   = "us-east1"

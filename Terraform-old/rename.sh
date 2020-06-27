@@ -4,8 +4,8 @@
 
 export PWD=$(pwd)
 
-export INPUT_TF_BASE=/home/platform_admin_btc/Mohan/validcare-mystudies/Terraform-old
-export OUTPUT_TF_BASE=/home/platform_admin_btc/Mohan/validcare-mystudies/Terraform
+export INPUT_TF_BASE=/home/platform_admin_btc/Mohan-Sat/validcare-mystudies/Terraform-old
+export OUTPUT_TF_BASE=/home/platform_admin_btc/Mohan-Sat/validcare-mystudies/Terraform
 
 export OLD_STATE="heroes-hat-dev-terraform-state-08679"
 export NEW_STATE="validcare-research-terraform-state-09768"
@@ -98,9 +98,9 @@ do
 done
 
 # Deployment Phase 2 - Uncomment after Phase 1 is deployed
-# cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
-# cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
-# cp -r ${SRC_PROJ_BASE}-resp-firebase/iam ${DST_PROJ_BASE}-resp-firebase/
+ cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
+ cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
+ cp -r ${SRC_PROJ_BASE}-resp-firebase/iam ${DST_PROJ_BASE}-resp-firebase/
 
 # Deployment Phase 3 - Uncomment after Phase 1, 2 are deployed
 # cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/

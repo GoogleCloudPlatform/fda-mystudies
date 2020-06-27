@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id = "707577601068"
+org_id = "423192334367"
 allowed_shared_vpc_host_projects = [
-  "projects/heroes-hat-dev-networks",
+  "projects/validcare-research-networks",
 ]

@@ -13,4 +13,4 @@
 # limitations under the License.
 
 display_name = "fda-my-studies"
-parent       = "organizations/707577601068"
+parent       = "organizations/423192334367"

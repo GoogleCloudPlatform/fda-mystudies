@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-org_id       = "707577601068"
-project_id   = "heroes-hat-dev-audit"
+org_id       = "423192334367"
+project_id   = "validcare-research-audit"
 dataset_name = "1yr_org_audit_logs"
-bucket_name  = "7yr-org-audit-logs-08679"
-auditors     = "group:rocketturtle-gcp-admin@rocketturtle.net"
+bucket_name  = "7yr-org-audit-logs-09768"
+auditors     = "group:vr-gcp-admins@validcare.com"

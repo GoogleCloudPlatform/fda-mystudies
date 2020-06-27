@@ -92,7 +92,7 @@ To see what resources each deployment provisions, check out the comments in each
   |- project.{PREFIX}-audit: the project to hold all audit logs for the org.
   |- audit: deployment to setup auditing for the org.
   |- iam: org level iam definitions such as org admins.
-  |- folder.fda-mystudies: folder to hold all projects related to FDA MyStudies.
+  |- folder.validcare-mystudies: folder to hold all projects related to FDA MyStudies.
     |- project.{PREFIX}-apps: apps project and resources (GKE)
     |- project.{PREFIX}-data: data project and resources (GCS buckets, CloudSQL instances)
     |- project.{PREFIX}-networks: network project and resources (VPC)
@@ -196,7 +196,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Uncomment [Deployment Phase 2](./rename.sh#L101-L103)
 
-1. Comment out [Firestore location and Index](./org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase/main.tf#L27-L61).
+1. Comment out [Firestore location and Index](./org/folder.fda-my-studies/project.validcare-research-resp-firebase/firebase/main.tf#L27-L61).
 
 1. run [rename.sh](./rename.sh).
 
@@ -216,7 +216,7 @@ To see what resources each deployment provisions, check out the comments in each
         where the apps will be running.
     1. Click "CREATE DATABASE" button.
 
-1. Uncomment [Firestore location and Index](./org/folder.fda-my-studies/project.heroes-hat-dev-resp-firebase/firebase/main.tf#L27-L61) and run [rename.sh](./rename.sh).
+1. Uncomment [Firestore location and Index](./org/folder.fda-my-studies/project.validcare-research-resp-firebase/firebase/main.tf#L27-L61) and run [rename.sh](./rename.sh).
 
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs.
@@ -230,7 +230,7 @@ To see what resources each deployment provisions, check out the comments in each
 1. Go to the target diretory.
 
 1. Comment out the entire file
-    [cloudbuild.tf](./org/folder.fda-my-studies/project.heroes-hat-dev-apps/apps/cloudbuild.tf).
+    [cloudbuild.tf](./org/folder.fda-my-studies/project.validcare-research-apps/apps/cloudbuild.tf).
     This file contains Cloud Build Triggers to auto generate Docker containers
     when new commits are merged to certain branches. Uncomment later if you
     would like to use this feature and follow documentation in that file to
@@ -249,14 +249,14 @@ To see what resources each deployment provisions, check out the comments in each
 1. Go to the target diretory.
 
 1. Comment out
-    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-L79).
+    [iam_members](./org/folder.fda-my-studies/project.validcare-research-data/data/main.tf#L74-L79).
 
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review
     approvals. The CD job will then deploy the Phase 4 resources for you.
 
 1. Uncomment
-    [iam_members](./org/folder.fda-my-studies/project.heroes-hat-dev-data/data/main.tf#L74-L79).
+    [iam_members](./org/folder.fda-my-studies/project.validcare-research-data/data/main.tf#L74-L79).
 
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review

@@ -30,7 +30,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "heroes-hat-dev-terraform-state-08679"
+    bucket = "validcare-research-terraform-state-09768"
     prefix = "cicd/manual"
   }
 }
