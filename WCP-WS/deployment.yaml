@@ -17,7 +17,7 @@ spec:
     spec: 
       containers: 
         - name: study-meta-data 
-          image: gcr.io/validcare-research/study-meta-data:latest
+          image: gcr.io/validcare-research-apps/study-meta-data:latest
           env: 
             - name: DB_USER 
               valueFrom: 
