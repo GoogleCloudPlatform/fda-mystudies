@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: user-registration-ws
-          image: gcr.io/heroes-hat-dev/user-registration-server-ws:latest
+          image: gcr.io/validcare-research/user-registration-server-ws:latest
           env:
             - name: DB_USER
               valueFrom:
@@ -88,7 +88,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=heroes-hat-dev:us-east1:my-studies2=tcp:3306",
+            "-instances=validcare-research-data:us-east1:my-studies=tcp:3306",
             "-credential_file=/secrets/cloudsql/key.json"]
           volumeMounts:
             - name: gcloud-key-volume
