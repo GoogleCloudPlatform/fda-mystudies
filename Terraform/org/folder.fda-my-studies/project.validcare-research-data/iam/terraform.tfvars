@@ -12,9 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name            = "validcare-research-resp-firebase"
-org_id          = "423192334367"
-billing_account = "00C4F7-942DBB-FE88B3"
-apis = [
-  "firebase.googleapis.com",
-]
+project_id = "validcare-research-data"

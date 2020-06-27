@@ -12,9 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name            = "validcare-research-resp-firebase"
-org_id          = "423192334367"
-billing_account = "00C4F7-942DBB-FE88B3"
-apis = [
-  "firebase.googleapis.com",
-]
+project_id                 = "validcare-research-apps"
+network_project_id         = "validcare-research-networks"
+gke_region                 = "us-east1"
+cluster_name               = "validcare-research-cluster"
+master_authorized_networks = [{ cidr_block = "104.132.0.0/14", display_name = "Google Offices/Campuses/CorpDC" }]
+repo_owner                 = "validcare"
+repo_name                  = "validcare-mystudies"
+cloudbuild_trigger_branch  = "Prod-Release"
+dns_name                   = "validcare-research"
+dns_domain                 = "validcare-research.validcare.com."

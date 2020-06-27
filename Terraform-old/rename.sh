@@ -106,8 +106,8 @@ done
   cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
 
 # Deployment Phase 4 - Uncomment after Phase 1, 2, 3 are deployed
-# cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
-# cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
+ cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
+ cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
 
 cd ${OUTPUT_TF_BASE}
 

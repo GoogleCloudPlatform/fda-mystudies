@@ -12,9 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name            = "validcare-research-resp-firebase"
-org_id          = "423192334367"
-billing_account = "00C4F7-942DBB-FE88B3"
-apis = [
-  "firebase.googleapis.com",
-]
+# DNS sets up nameservers to connect to the GKE clusters.
+module "dns" {
+  source  = "terraform-google-modules/cloud-dns/google"
+  version = "3.0.1"
+
+  name       = var.dns_name
+  project_id = var.project_id
+  type       = "public"
+  domain     = var.dns_domain
+
+  recordsets = [{
+    name = "tf-dev"
+    type = "A"
+    ttl  = 30
+    records = [
+      google_compute_global_address.ingress_static_ip.address,
+    ]
+  }]
+}

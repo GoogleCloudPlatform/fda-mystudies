@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name            = "validcare-research-resp-firebase"
-org_id          = "423192334367"
-billing_account = "00C4F7-942DBB-FE88B3"
-apis = [
-  "firebase.googleapis.com",
-]
+variable "project_id" {
+  type = string
+}
+
+variable "sql_clients" {
+  description = "Clients who have access to the SQL instances in this project"
+  type        = list(string)
+}
