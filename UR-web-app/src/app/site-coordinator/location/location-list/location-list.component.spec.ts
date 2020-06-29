@@ -102,7 +102,6 @@ describe('LocationsListComponent', () => {
 
     it('should get the Location List via refresh function', fakeAsync(() => {
       component.location$.subscribe((locations) => {
-        console.log(locations);
         expect(locations.length).toEqual(2);
       });
     }));

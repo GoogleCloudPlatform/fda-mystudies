@@ -9,7 +9,6 @@ import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/error.model';
 import {throwError, of} from 'rxjs';
 import {Location} from '../shared/location.model';
-
 describe('LocationService', () => {
   let locationService: LocationService;
   const expectedLocations = [
@@ -20,7 +19,6 @@ describe('LocationService', () => {
       description: 'location-descp-updatedj',
       status: '1',
       studiesCount: 0,
-      studies: [],
     },
     {
       id: 3,
@@ -29,9 +27,20 @@ describe('LocationService', () => {
       description: 'location-descp-updated',
       status: '0',
       studiesCount: 0,
-      studies: [],
     },
   ];
+  const expectedNewPostData = {
+    id: 0,
+    status: '0',
+    customId: 'customIDlocation',
+    name: 'Location Name',
+    description: 'location Decription',
+    studiesCount: 0,
+  };
+  const expectedResponse = {
+    code: 200,
+    message: ' Location added Succesfully',
+  };
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -68,6 +77,29 @@ describe('LocationService', () => {
       );
 
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
+  });
+
+  it('should post the  expected new Locations data', () => {
+    const entityServicespyobj = jasmine.createSpyObj<EntityService<unknown>>(
+      'EntityService',
+      ['post'],
+    );
+    locationService = new LocationService(entityServicespyobj);
+
+    entityServicespyobj.post.and.returnValue(of(expectedResponse));
+
+    locationService
+      .addLocation(expectedNewPostData)
+      .subscribe(
+        (succesResponse: unknown) =>
+          expect(succesResponse).toEqual(
+            expectedResponse,
+            '{code:200,message:Location added Succesfully}',
+          ),
+        fail,
+      );
+
+    expect(entityServicespyobj.post.calls.count()).toBe(1, 'one call');
   });
 
   it('should return an error when the server returns a 401', fakeAsync(() => {
@@ -115,6 +147,123 @@ describe('LocationService', () => {
       () => fail('expected an error, not locations'),
       (error: ApiResponse) => {
         expect(error.error.userMessage).toBe('Bad Request');
+      },
+    );
+  }));
+
+  it('add location should return an error when the server returns a 400 ', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['post'],
+    );
+    locationService = new LocationService(entityServicespy);
+    const errorResponses: ApiResponse = {
+      error: {
+        userMessage: 'customId already exists',
+        type: 'error',
+        detailMessage: 'customId already exists',
+      },
+    };
+
+    entityServicespy.post.and.returnValue(throwError(errorResponses));
+    tick(40);
+    locationService.addLocation(expectedNewPostData).subscribe(
+      () => fail('expected an error'),
+      (error: ApiResponse) => {
+        expect(error.error.userMessage).toBe('customId already exists');
+      },
+    );
+  }));
+  it('add location should return an error when mandatory field customId is empty/null ', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['post'],
+    );
+    const expectedMissingPostData = {
+      id: 0,
+      status: '0',
+      customId: '',
+      name: 'Location Name',
+      description: 'location Decription',
+      studiesCount: 0,
+    };
+    locationService = new LocationService(entityServicespy);
+    const errorResponses: ApiResponse = {
+      error: {
+        userMessage: 'Missing required argument',
+        type: 'error',
+        detailMessage: 'Missing required argument',
+      },
+    };
+
+    entityServicespy.post.and.returnValue(throwError(errorResponses));
+    tick(40);
+    locationService.addLocation(expectedMissingPostData).subscribe(
+      () => fail('expected an error'),
+      (error: ApiResponse) => {
+        expect(error.error.userMessage).toBe('Missing required argument');
+      },
+    );
+  }));
+  it('add location should return an error when mandatory name field is empty/null ', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['post'],
+    );
+    const expectedMissingPostData = {
+      id: 0,
+      status: '0',
+      customId: 'customID',
+      name: '',
+      description: 'location Decription',
+      studiesCount: 0,
+    };
+    locationService = new LocationService(entityServicespy);
+    const errorResponses: ApiResponse = {
+      error: {
+        userMessage: 'Missing required argument',
+        type: 'error',
+        detailMessage: 'Missing required argument',
+      },
+    };
+
+    entityServicespy.post.and.returnValue(throwError(errorResponses));
+    tick(40);
+    locationService.addLocation(expectedMissingPostData).subscribe(
+      () => fail('expected an error'),
+      (error: ApiResponse) => {
+        expect(error.error.userMessage).toBe('Missing required argument');
+      },
+    );
+  }));
+  it('add location should return an error when mandatory description field is empty/null ', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['post'],
+    );
+    const expectedMissingPostData = {
+      id: 0,
+      status: '0',
+      customId: 'customID',
+      name: 'Loacation test',
+      description: '',
+      studiesCount: 0,
+    };
+    locationService = new LocationService(entityServicespy);
+    const errorResponses: ApiResponse = {
+      error: {
+        userMessage: 'Missing required argument',
+        type: 'error',
+        detailMessage: 'Missing required argument',
+      },
+    };
+
+    entityServicespy.post.and.returnValue(throwError(errorResponses));
+    tick(40);
+    locationService.addLocation(expectedMissingPostData).subscribe(
+      () => fail('expected an error'),
+      (error: ApiResponse) => {
+        expect(error.error.userMessage).toBe('Missing required argument');
       },
     );
   }));

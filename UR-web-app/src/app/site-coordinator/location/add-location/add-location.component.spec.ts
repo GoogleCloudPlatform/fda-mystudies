@@ -1,101 +1,149 @@
-import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
-
+import {
+  async,
+  ComponentFixture,
+  TestBed,
+  fakeAsync,
+  tick,
+} from '@angular/core/testing';
+import {DebugElement} from '@angular/core';
 import {AddLocationComponent} from './add-location.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Component} from '@angular/core';
+import {LocationService} from '../shared/location.service';
+import {ToastrModule} from 'ngx-toastr';
+import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
+import {RouterTestingModule} from '@angular/router/testing';
+import {LocationModule} from '../location.module';
+import {FormsModule, ReactiveFormsModule, NgForm} from '@angular/forms';
+import {EntityService} from 'src/app/service/entity.service';
+import {HttpClientModule} from '@angular/common/http';
+import {By} from '@angular/platform-browser';
 
 describe('AddLocationComponent', () => {
   let component: AddLocationComponent;
   let fixture: ComponentFixture<AddLocationComponent>;
-  let addLocations: AddLocationComponent;
-  let expectedloationCustomId = '1';
-  let expectedloationName = 'LocationName1';
-  let expectedlocationDescription = 'This is a test case Description';
-  beforeEach(async(async () => {
-    await TestBed.configureTestingModule({
+  let form: DebugElement;
+  let submitLocation: DebugElement;
+  let locationCustomIde1: DebugElement;
+  let locationNamee1: DebugElement;
+  let locationDescriptione1: DebugElement;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
       declarations: [AddLocationComponent],
-      imports: [FormsModule, ReactiveFormsModule],
-    }).compileComponents();
+      imports: [
+        ModalModule.forRoot(),
+        RouterTestingModule,
+        LocationModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ToastrModule.forRoot({
+          positionClass: 'toast-top-center',
+          preventDuplicates: true,
+          enableHtml: true,
+        }),
+      ],
+      providers: [NgForm, EntityService, LocationService, BsModalService],
+    });
   }));
 
-  beforeEach(() => {
+  beforeEach(async(() => {
     fixture = TestBed.createComponent(AddLocationComponent);
     component = fixture.componentInstance;
+    form = fixture.debugElement.query(By.css('form'));
+    submitLocation = fixture.debugElement.query(
+      By.css('button[type="submit"]'),
+    );
+    locationCustomIde1 = fixture.debugElement.query(
+      By.css('input[id=locationCustomId]'),
+    );
+    locationNamee1 = fixture.debugElement.query(
+      By.css('input[id=locationName]'),
+    );
+    locationDescriptione1 = fixture.debugElement.query(
+      By.css('input[id=locationDescription]'),
+    );
+
     fixture.detectChanges();
-  });
-  beforeEach(inject(
-    [AddLocationComponent],
-    (addLocationForm: AddLocationComponent) => {
-      addLocations = addLocationForm;
-    },
-  ));
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should send data on submit', () => {
-    addLocations.submitted.subscribe(
-      ({
-        loationCustomId: number,
-        loationName: string,
-        locationDescription: string,
-      }) => {
-        expect(loationCustomId).toEqual(expectedloationCustomId);
-        expect(loationName).toEqual(expectedloationName);
-        expect(locationDescription).toEqual(expectedlocationDescription);
-      },
-    );
-
-    addLocations.onSubmit({
-      loationCustomId: expectedloationCustomId,
-      loationName: expectedloationName,
-      locationDescription: expectedlocationDescription,
-    });
+  it('should not create a template-driven form when ngNoForm is used', () => {
+    fixture.detectChanges();
+    expect(fixture.debugElement.children[0].providerTokens.length).toEqual(0);
   });
+  it('Locations value to input properties on form load', () => {
+    const submitButton = submitLocation.nativeElement as HTMLInputElement;
+    component.enabled = false;
+    fixture.detectChanges();
+    expect(submitButton.disabled).toBeTruthy();
+  });
+  it('should add novalidate by default to form element', fakeAsync(() => {
+    fixture.detectChanges();
+    tick();
+    const formTest = form.nativeElement as HTMLFormElement;
+    expect(formTest.getAttribute('novalidate')).toEqual('');
+  }));
+
+  it('should set status classes with ngModelGroup and ngForm', fakeAsync(() => {
+    fixture.detectChanges();
+
+    const input = fixture.debugElement.query(By.css('input'));
+    const inputFormElement = input.nativeElement as HTMLElement;
+
+    void fixture.whenStable().then(() => {
+      fixture.detectChanges();
+
+      expect(inputFormElement.classList.length).toEqual(4);
+      expect(inputFormElement.classList.value).toEqual(
+        'form-control ng-untouched ng-pristine ng-invalid',
+      );
+
+      dispatchEvent(new Event('input'));
+      tick();
+      fixture.detectChanges();
+    });
+  }));
+
+  it('Entering value in input controls and emit output events', fakeAsync(() => {
+    fixture.componentInstance.location.customId = 'customid3';
+    fixture.componentInstance.location.name = 'Location Name';
+    fixture.componentInstance.location.description =
+      'This is location Description';
+    void fixture.whenStable().then(() => {
+      const submitButton = submitLocation.nativeElement as HTMLInputElement;
+      const customIdInput = locationCustomIde1.nativeElement as HTMLInputElement;
+      const nameInput = locationNamee1.nativeElement as HTMLInputElement;
+      const descriptionInput = locationDescriptione1.nativeElement as HTMLInputElement;
+      customIdInput.value = 'customid3';
+      nameInput.value = 'Location Name';
+      descriptionInput.value = 'This is location Description';
+      dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      tick();
+      submitButton.click();
+      fixture.detectChanges();
+      expect(component.location.customId).toEqual('customid3');
+      expect(component.location.name).toEqual('Location Name');
+      expect(component.location.description).toEqual(
+        'This is location Description',
+      );
+    });
+  }));
+
+  it('should reset the form submit state when reset button is clicked', fakeAsync(() => {
+    const forms = fixture.debugElement.children[0].injector.get(NgForm);
+    const formEl = fixture.debugElement.query(By.css('form'));
+
+    dispatchEvent(new Event(formEl.nativeElement));
+    fixture.detectChanges();
+    tick();
+    expect(forms.valid).toBe(true);
+
+    dispatchEvent(new Event(formEl.nativeElement));
+    fixture.detectChanges();
+    tick();
+    expect(forms.valid).toBe(true);
+  }));
 });
-
-// describe('Shallow', () => {
-//   let component: AddLocationComponent;
-//   let fixture: ComponentFixture<AddLocationComponent>;
-//   let element;
-
-//   let addLocations: AddLocationComponent;
-//   beforeEach(async(() => {
-//     await TestBed.configureTestingModule({
-//       declarations: [AddLocationComponent],
-//       imports: [FormsModule, ReactiveFormsModule],
-//     }).compileComponents();
-//   }));
-
-//   it('should send credentials on submit', () => {
-//     fixture = TestBed.createComponent(AddLocationComponent);
-//     component = fixture.componentInstance;
-//     const element = fixture.nativeElement;
-
-//     fixture.detectChanges();
-
-//     element.querySelector('#loationCustomId').value = expectedloationCustomId;
-//     element.querySelector('#loationCustomId').dispatchEvent(new Event('input'));
-//     element.querySelector('#loationName').value = expectedloationName;
-//     element.querySelector('#loationName').dispatchEvent(new Event('input'));
-//     element.querySelector(
-//       '#locationDescription',
-//     ).value = expectedlocationDescription;
-//     element
-//       .querySelector('#locationDescription')
-//       .dispatchEvent(new Event('input'));
-
-//     fixture.detectChanges();
-
-//     component.submitted.subscribe(
-//       ({loationCustomId, loationName, locationDescription}) => {
-//         expect(loationCustomId).toEqual(expectedloationCustomId);
-//         expect(loationName).toEqual(expectedloationName);
-//         expect(locationDescription).toEqual(expectedlocationDescription);
-//       },
-//     );
-
-//     element.querySelector('button[type="submit"]').click();
-//   });
-// });
