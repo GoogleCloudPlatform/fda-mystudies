@@ -5,6 +5,5 @@ import {AccountProfileComponent} from './account-profile/account-profile.compone
 @NgModule({
   declarations: [AccountProfileComponent],
   imports: [CommonModule, AccountRoutingModule],
-  providers: [],
 })
 export class AccountModule {}
