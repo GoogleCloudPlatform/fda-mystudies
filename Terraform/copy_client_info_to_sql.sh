@@ -19,7 +19,7 @@ do
   CLIENT_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mystudies-${APP_CODE_LOWER}-client-id`
   SECRET_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mystudies-${APP_CODE_LOWER}-secret-key`
   echo "REPLACE INTO client_info (client_info_id,app_code,client_id,secret_key) VALUES(${i},\"${APP_CODE}\",\"${CLIENT_ID}\",\"${SECRET_KEY}\");" >> ${TMPFILE}
-  ((i=i+1))
+  i=$((i+1))
 done
 
 # Upload TMPFILE to GCS.
