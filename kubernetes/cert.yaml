@@ -4,4 +4,4 @@ metadata:
   name: validcare-research-cert
 spec:
   domains:
-    - validcare-research.validcare.com
+    - vr.validcare-research.validcare.com
