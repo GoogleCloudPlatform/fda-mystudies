@@ -1,0 +1,48 @@
+{
+	"violations": [
+		{
+			"path": "systemId",
+			"message": "size must be between 0 and 30"
+		},
+		{
+			"path": "eventTimestamp",
+			"message": "must not be null"
+		},
+		{
+			"path": "userId",
+			"message": "size must be between 0 and 100"
+		},
+		{
+			"path": "eventDetail",
+			"message": "must not be blank"
+		},
+		{
+			"path": "description",
+			"message": "must not be blank"
+		},
+		{
+			"path": "alert",
+			"message": "must not be null"
+		},
+		{
+			"path": "systemIp",
+			"message": "size must be between 7 and 39"
+		},
+		{
+			"path": "correlationId",
+			"message": "must not be blank"
+		},
+		{
+			"path": "applicationComponentName",
+			"message": "must not be blank"
+		},
+		{
+			"path": "applicationVersion",
+			"message": "must not be blank"
+		},
+		{
+			"path": "eventName",
+			"message": "must not be blank"
+		}
+	]
+}
