@@ -95,6 +95,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `temp_password_date` datetime DEFAULT NULL,
   `user_id` varchar(255) DEFAULT NULL,
   `password_expire_date` datetime DEFAULT NULL,
+   `locked_account_temp_pwd` varchar(255) DEFAULT NULL,
+  `locked_account_temp_pwd_expire_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
