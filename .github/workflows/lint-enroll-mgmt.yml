@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /user-registration-server-ws/enroll-mgmt
+        working-directory: /user-registration-server-ws/enroll-mgmt/src
     name: Checkstyle job
     steps:
     - name: Checkout
