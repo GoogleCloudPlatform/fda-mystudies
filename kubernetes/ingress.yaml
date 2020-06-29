@@ -4,7 +4,7 @@ metadata:
   name: validcare-research
   annotations:
     kubernetes.io/ingress.global-static-ip-name: my-studies-ingress-ip
-    networking.gke.io/managed-certificates: validcare-research-cert
+    networking.gke.io/managed-certificates: vr-validcare-research-cert
 spec:
   rules:
     - http:
