@@ -9,9 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import javax.validation.constraints.NotNull;
-
 import org.springframework.lang.Nullable;
-
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 

@@ -9,9 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import javax.validation.constraints.NotNull;
-
 import org.springframework.lang.Nullable;
-
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;

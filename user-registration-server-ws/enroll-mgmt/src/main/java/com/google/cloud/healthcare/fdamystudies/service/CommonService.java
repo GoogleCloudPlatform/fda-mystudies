@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.util.List;
-
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;

@@ -1,11 +1,12 @@
-/*
- * Copyright 2020 Google LLC
+/**
+ * *****************************************************************************
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * <p>Copyright 2020 Google LLC
+ *
+ * <p>Use of this source code is governed by an MIT-style license that can be found in the LICENSE
+ * file or at https://opensource.org/licenses/MIT.
+ * *****************************************************************************
  */
-
 package com.google.cloud.healthcare.fdamystudies;
 
 // @Configuration
@@ -50,19 +51,19 @@ public class AppConfig {
     return new JpaTransactionManager(entityManagerFactory);
   }
 
-  //@Bean
+  //	@Bean
   public TokenStore tokenStore() {
     return new JdbcTokenStore(dataSource());
   }
 
-  //@Primary
-  //@Bean
+  //	@Primary
+  //	@Bean
   public RemoteTokenServices tokenService() {
     RemoteTokenServices tokenService = new RemoteTokenServices();
     tokenService.setCheckTokenEndpointUrl(
         "http://localhost:8080/spring-security-oauth-server/oauth/check_token");
-    //tokenService.setClientId("fooClientIdPassword");
-    //tokenService.setClientId("clientIdPassword");
+    //	    tokenService.setClientId("fooClientIdPassword");
+    //	    tokenService.setClientId("clientIdPassword");
     tokenService.setClientId("sampleClientId");
     tokenService.setClientSecret("secret");
     return tokenService;

@@ -10,12 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -54,7 +52,7 @@ public class UserSupportServiceImpl implements UserSupportService {
     logger.info("AppMetaDataOrchestration - contactUsDetails() :: Starts");
     boolean isEmailSent = false;
     try {
-
+      String contactUsSubject = appConfig.getContactusMailSubject() + subject;
       String contactUsContent = appConfig.getContactusMailBody();
       Map<String, String> emailMap = new HashMap<String, String>();
       emailMap.put("$firstName", firstName);
@@ -62,7 +60,6 @@ public class UserSupportServiceImpl implements UserSupportService {
       emailMap.put("$subject", subject);
       emailMap.put("$body", body);
       String dynamicContent = MyStudiesUserRegUtil.generateEmailContent(contactUsContent, emailMap);
-      String contactUsSubject = appConfig.getContactusMailSubject() + subject;
       isEmailSent =
           emailNotification.sendEmailNotification(
               contactUsSubject, dynamicContent, appConfig.getContactusToEmail(), null, null);

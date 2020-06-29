@@ -8,19 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportBO;
+import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
-import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportBO;
-import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
 
 @Service
 public class PersonalizedUserReportService {
@@ -31,9 +29,7 @@ public class PersonalizedUserReportService {
       UserResourceBean.ResourceType.PERSONALIZED_REPORT;
 
   public List<UserResourceBean> getLatestPersonalizedUserReports(String userId, String studyId) {
-    return repository
-        .findByUserDetailsUserIdAndStudyInfoCustomId(userId, studyId)
-        .stream()
+    return repository.findByUserDetailsUserIdAndStudyInfoCustomId(userId, studyId).stream()
         .collect(
             Collectors.toMap(
                 PersonalizedUserReportBO::getReportTitle,
@@ -42,14 +38,8 @@ public class PersonalizedUserReportService {
                     Comparator.comparing(PersonalizedUserReportBO::getCreationTime))))
         .entrySet()
         .stream()
-        .filter(e -> e.getValue().getCreationTime() != null)
-        .sorted(
-            Comparator.comparing(
-                    e ->
-                        ((Map.Entry<String, PersonalizedUserReportBO>) e)
-                            .getValue()
-                            .getCreationTime())
-                .reversed())
+        .filter(e -> e.getValue().getCreationTime()!=null)
+        .sorted(Comparator.comparing(e -> ((Map.Entry<String, PersonalizedUserReportBO>) e).getValue().getCreationTime()).reversed())
         .map(
             e ->
                 new UserResourceBean(

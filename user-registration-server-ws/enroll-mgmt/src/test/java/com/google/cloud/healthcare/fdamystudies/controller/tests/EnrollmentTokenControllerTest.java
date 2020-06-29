@@ -1,11 +1,9 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;

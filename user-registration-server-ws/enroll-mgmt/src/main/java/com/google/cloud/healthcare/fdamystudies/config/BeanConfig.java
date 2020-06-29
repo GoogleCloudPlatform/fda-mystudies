@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 import com.google.cloud.healthcare.fdamystudies.util.AuthenticationFilter;
 
 @EnableScheduling

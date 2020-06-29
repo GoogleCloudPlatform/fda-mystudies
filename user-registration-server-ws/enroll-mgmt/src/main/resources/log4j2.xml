@@ -9,6 +9,7 @@
 		<Console name="Console" target="SYSTEM_OUT" follow="true">
 			<PatternLayout pattern="${LOG_PATTERN}" />
 		</Console>
+
 		<RollingFile name="appLog"
 			fileName="/opt/tomcat/logs/fda-mystudies/enrollment-token-management-server.log"
 			filePattern="/opt/tomcat/logs/fda-mystudies/enrollment-token-management-server-%d{yyyy-MM-dd}-%i.log">
@@ -18,6 +19,7 @@
 			</Policies>
 			<DefaultRolloverStrategy max="1" />
 		</RollingFile>
+
 		<RollingFile name="debugLog"
 			fileName="/opt/tomcat/logs/fda-mystudies/enrollment-token-management-server-debug.log"
 			filePattern="/opt/tomcat/logs/fda-mystudies/enrollment-token-management-server-debug-%d{yyyy-MM-dd}-%i.log">
@@ -27,19 +29,22 @@
 			</Policies>
 			<DefaultRolloverStrategy max="1" />
 		</RollingFile>
+
 	</Appenders>
 	<Loggers>
-		<Logger
-			name="com.fda-mystudies-enrollment-token-management-server"
+
+		<Logger name="com.fda-mystudies-enrollment-token-management-server"
 			additivity="false">
 			<AppenderRef ref="appLog" />
 			<AppenderRef ref="Console" />
 		</Logger>
-		<Logger
-			name="com.fda-mystudies-enrollment-token-management-server"
+
+		<Logger name="com.fda-mystudies-enrollment-token-management-server"
 			additivity="false" level="debug">
 			<AppenderRef ref="debugLog" />
 		</Logger>
+
+
 		<Root level="info">
 			<AppenderRef ref="Console" />
 			<AppenderRef ref="FILE" />

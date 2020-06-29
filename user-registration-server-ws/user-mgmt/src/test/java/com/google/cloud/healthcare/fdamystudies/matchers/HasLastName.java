@@ -5,14 +5,12 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.matchers;
 
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 public class HasLastName extends TypeSafeMatcher<UserDetailsBO> {
 
@@ -24,7 +22,7 @@ public class HasLastName extends TypeSafeMatcher<UserDetailsBO> {
 
   @Override
   protected boolean matchesSafely(UserDetailsBO userDetails) {
-    return userDetails.getLastName() == this.lastName;
+	  return userDetails.getLastName() == this.lastName;
   }
 
   @Override

@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,10 +19,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -78,7 +77,7 @@ public class UserDetailsBO implements Serializable, Cloneable {
   private Boolean touchId = false;
 
   @Column(name = "_ts")
-  private Date ts;
+  private Date _ts;
 
   @Column(name = "use_pass_code", columnDefinition = "TINYINT(1)")
   private Boolean usePassCode = false;
@@ -97,6 +96,9 @@ public class UserDetailsBO implements Serializable, Cloneable {
 
   // Use UserInstitution class to access institution.
   @Getter(AccessLevel.NONE)
-  @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+  @OneToOne(
+          mappedBy = "user",
+          fetch = FetchType.LAZY
+  )
   private UserInstitution userInstitution;
 }

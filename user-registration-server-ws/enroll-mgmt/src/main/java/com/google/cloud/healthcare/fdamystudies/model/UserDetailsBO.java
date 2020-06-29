@@ -11,14 +11,12 @@ package com.google.cloud.healthcare.fdamystudies.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -69,7 +67,7 @@ public class UserDetailsBO implements Serializable {
   private Boolean touchId = false;
 
   @Column(name = "_ts")
-  private Date ts;
+  private Date _ts;
 
   @Column(name = "use_pass_code", columnDefinition = "TINYINT(1)")
   private Boolean usePassCode = false;

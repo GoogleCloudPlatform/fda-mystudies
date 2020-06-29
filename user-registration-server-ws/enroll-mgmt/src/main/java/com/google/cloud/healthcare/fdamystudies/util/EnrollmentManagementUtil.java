@@ -15,9 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-
 import javax.validation.constraints.NotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
