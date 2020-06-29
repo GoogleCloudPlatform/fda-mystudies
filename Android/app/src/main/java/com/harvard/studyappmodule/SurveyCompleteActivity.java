@@ -173,9 +173,11 @@ public class SurveyCompleteActivity extends AppCompatActivity
       processResponsejson.put("orgId", AppConfig.ORG_ID_VALUE);
       processResponsejson.put("siteId", studies.getSiteId());
 
+
       JSONObject infoJson = new JSONObject();
       infoJson.put("studyId", studies.getStudyId());
       infoJson.put("studyVersion", studies.getVersion());
+      infoJson.put("brandId", studies.getBrandId());
       infoJson.put("activityId", activities.getActivityId());
       infoJson.put("name", activityObj.getMetadata().getName());
       infoJson.put("version", activities.getActivityVersion());

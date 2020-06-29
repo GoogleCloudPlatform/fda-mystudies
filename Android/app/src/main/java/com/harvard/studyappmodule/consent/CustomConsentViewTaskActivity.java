@@ -649,6 +649,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           participantId,
           siteId,
           hashToken,
+          brandId,
           AppController.getHelperSharedPreference()
               .readPreference(
                   CustomConsentViewTaskActivity.this,
