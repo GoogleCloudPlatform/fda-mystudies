@@ -5,20 +5,16 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
-import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
-import com.google.cloud.healthcare.fdamystudies.service.PersonalizedUserReportService;
-import com.google.cloud.healthcare.fdamystudies.util.GetUserInstitutionResources;
 import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -31,6 +27,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
+import com.google.cloud.healthcare.fdamystudies.service.PersonalizedUserReportService;
+import com.google.cloud.healthcare.fdamystudies.util.GetUserInstitutionResources;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(
@@ -53,7 +56,7 @@ public class PersonalizedResourcesControllerTest {
       UserResourceBean.ResourceType.INSTITUTION_RESOURCE;
 
   @Test
-  public void ReturnsUserResources() throws Exception {
+  public void returnsUserResources() throws Exception {
     Mockito.when(
             commonService.validateAccessToken(
                 "test_user_id", "test_access_token", "test_client_token"))
@@ -110,7 +113,7 @@ public class PersonalizedResourcesControllerTest {
   }
 
   @Test
-  public void FailsToAuthenticate() throws Exception {
+  public void failsToAuthenticate() throws Exception {
     Mockito.when(commonService.validateAccessToken(anyString(), anyString(), anyString()))
         .thenReturn(0);
     mvc.perform(

@@ -1,25 +1,24 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = { "email.whitelisted_domains=domain1.com,domain2.net" })
+@SpringBootTest(properties = {"email.whitelisted_domains=domain1.com,domain2.net"})
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
 public class UserDomainWhitelistTest {
 
-  @Autowired
-  UserDomainWhitelist whitelist;
+  @Autowired UserDomainWhitelist whitelist;
 
   @Test
   public void isWhitelisted() {

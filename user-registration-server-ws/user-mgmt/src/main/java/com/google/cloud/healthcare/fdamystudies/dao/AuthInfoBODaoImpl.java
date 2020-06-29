@@ -12,11 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
@@ -42,7 +44,9 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
         logger.error("AuthInfoBODaoImpl save(): ", e);
         throw new SystemException();
       }
-    } else return null;
+    } else {
+      return null;
+    }
   }
 
   @Override

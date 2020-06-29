@@ -14,5 +14,5 @@ import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 public interface StudiesServices {
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean);
 
-  public ErrorBean SendNotificationAction(NotificationForm notificationForm);
+  public ErrorBean sendNotificationAction(NotificationForm notificationForm);
 }

@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
@@ -104,10 +106,9 @@ public class EnrollmentTokenController {
                 response);
             return null;
           }
-        }
-        // Allow for the possibility that someone can enroll without using an enrollment
-        // token
-        else if (enrollmentTokenfService.enrollmentTokenRequired(enrollmentBean.getStudyId())) {
+          // Allow for the possibility that someone can enroll without using
+          // an enrollment token
+        } else if (enrollmentTokenfService.enrollmentTokenRequired(enrollmentBean.getStudyId())) {
           ErrorResponseUtil.getFailureResponse(
               ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
               ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),

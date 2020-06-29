@@ -1,10 +1,19 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
-import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
-import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
-import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
-import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
-import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,84 +25,64 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
+import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
+import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
+import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
 public class GetUserInstitutionResourcesTest {
-    @MockBean
-    UserInstitutionRepository userInstitutionRepository;
+  @MockBean UserInstitutionRepository userInstitutionRepository;
 
-    @MockBean
-    CloudStorageService cloudStorageService;
+  @MockBean CloudStorageService cloudStorageService;
 
-    @Autowired
-    GetUserInstitutionResources getUserInstitutionResources;
+  @Autowired GetUserInstitutionResources getUserInstitutionResources;
 
-    @Test
-    public void noUserFound() {
-        assertThat(getUserInstitutionResources.getInstitutionResourcesForUser(
-                "missing_id"), hasSize(0));
-        verify(userInstitutionRepository, times(1)).findByUserUserId("missing_id");
-    }
+  @Test
+  public void noUserFound() {
+    assertThat(
+        getUserInstitutionResources.getInstitutionResourcesForUser("missing_id"), hasSize(0));
+    verify(userInstitutionRepository, times(1)).findByUserUserId("missing_id");
+  }
 
-    @Test
-    public void noInstitutionResourcesFound() {
-        String fakeInstitution = "fake_institution";
-        Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id")).thenReturn(Optional.of(UserInstitution.builder()
-                .institutionId(fakeInstitution)
-                .build()));
-        Mockito.when(cloudStorageService.getAllInstitutionResources(
-                "fake_institution")).thenReturn(new ArrayList<>());
+  @Test
+  public void noInstitutionResourcesFound() {
+    String fakeInstitution = "fake_institution";
+    Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
+        .thenReturn(Optional.of(UserInstitution.builder().institutionId(fakeInstitution).build()));
+    Mockito.when(cloudStorageService.getAllInstitutionResources("fake_institution"))
+        .thenReturn(new ArrayList<>());
 
-        assertThat(getUserInstitutionResources.getInstitutionResourcesForUser(
-                "fake_user_id"), hasSize(0));
-        verify(cloudStorageService, times(1)).getAllInstitutionResources(fakeInstitution);
+    assertThat(
+        getUserInstitutionResources.getInstitutionResourcesForUser("fake_user_id"), hasSize(0));
+    verify(cloudStorageService, times(1)).getAllInstitutionResources(fakeInstitution);
+  }
 
-    }
-
-    @Test
-    public void returnsInstitution() throws IOException {
-        String fakeInstitution = "fake_institution";
-        Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
-                .thenReturn(Optional.of(UserInstitution.builder()
-                        .institutionId(fakeInstitution)
-                        .build()));
-        String html = "<p>fake html</p>\n";
-        URL path = ClassLoader.getSystemResource("fake_html.html");
-        File f = new File(path.getFile());
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byteArrayOutputStream.write(FileUtils.readFileToByteArray(f));
-        ArrayList<CloudStorageService.InstitutionResource> resources =
-                new ArrayList<>();
-        resources.add(new CloudStorageService.InstitutionResource(
-                "fake_title.html",
-                byteArrayOutputStream,
-                "id"));
-        Mockito.when(cloudStorageService.getAllInstitutionResources(
-                fakeInstitution)).thenReturn(resources);
-        List<UserResourceBean> userResourceBeans =
-                getUserInstitutionResources.getInstitutionResourcesForUser(
-                        "fake_user_id");
-        assertThat(userResourceBeans, hasSize(1));
-        assertThat(userResourceBeans.get(0).getTitle(),
-                equalTo("fake_title.html"));
-        assertThat(userResourceBeans.get(0).getContent(), equalTo(html));
-        assertThat(userResourceBeans.get(0).getResourcesId(), equalTo("resources:id"));
-
-    }
+  @Test
+  public void returnsInstitution() throws IOException {
+    String fakeInstitution = "fake_institution";
+    Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
+        .thenReturn(Optional.of(UserInstitution.builder().institutionId(fakeInstitution).build()));
+    URL path = ClassLoader.getSystemResource("fake_html.html");
+    File f = new File(path.getFile());
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    byteArrayOutputStream.write(FileUtils.readFileToByteArray(f));
+    ArrayList<CloudStorageService.InstitutionResource> resources = new ArrayList<>();
+    resources.add(
+        new CloudStorageService.InstitutionResource(
+            "fake_title.html", byteArrayOutputStream, "id"));
+    Mockito.when(cloudStorageService.getAllInstitutionResources(fakeInstitution))
+        .thenReturn(resources);
+    List<UserResourceBean> userResourceBeans =
+        getUserInstitutionResources.getInstitutionResourcesForUser("fake_user_id");
+    assertThat(userResourceBeans, hasSize(1));
+    assertThat(userResourceBeans.get(0).getTitle(), equalTo("fake_title.html"));
+    String html = "<p>fake html</p>\n";
+    assertThat(userResourceBeans.get(0).getContent(), equalTo(html));
+    assertThat(userResourceBeans.get(0).getResourcesId(), equalTo("resources:id"));
+  }
 }

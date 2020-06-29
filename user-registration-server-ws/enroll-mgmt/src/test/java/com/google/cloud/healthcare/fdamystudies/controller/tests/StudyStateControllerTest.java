@@ -3,15 +3,16 @@ package com.google.cloud.healthcare.fdamystudies.controller.tests;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MvcResult;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -24,8 +25,6 @@ import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.jayway.jsonpath.JsonPath;
-import net.minidev.json.JSONArray;
 
 public class StudyStateControllerTest extends BaseMockIT {
 
@@ -64,17 +63,21 @@ public class StudyStateControllerTest extends BaseMockIT {
     performPost(UPDATE_STUDY_STATE_PATH, requestJson, headers, Constants.SUCCESS, OK);
 
     MvcResult result = performGet(STUDY_STATE_PATH, headers, Constants.SUCCESS.toUpperCase(), OK);
-    
-    StudyStateResponse response = getObjectMapper().readValue(result.getResponse().getContentAsString(),
-            StudyStateResponse.class);
-        Optional<StudyStateBean> study = response.getStudies().stream()
+
+    StudyStateResponse response =
+        getObjectMapper()
+            .readValue(result.getResponse().getContentAsString(), StudyStateResponse.class);
+    Optional<StudyStateBean> study =
+        response
+            .getStudies()
+            .stream()
             .filter(s -> s.getStudyId().equals(Constants.STUDYOF_HEALTH))
             .findFirst();
 
-        assertTrue(study.isPresent());
-        assertTrue(study.get().getBookmarked());
-        assertEquals(Constants.COMPLETION, study.get().getCompletion());
-        assertEquals(Constants.ADHERENCE, study.get().getAdherence());
+    assertTrue(study.isPresent());
+    assertTrue(study.get().getBookmarked());
+    assertEquals(Constants.COMPLETION, study.get().getCompletion());
+    assertEquals(Constants.ADHERENCE, study.get().getAdherence());
   }
 
   @Test
@@ -137,14 +140,18 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     MvcResult result = performGet(STUDY_STATE_PATH, headers, Constants.SUCCESS.toUpperCase(), OK);
 
-    StudyStateResponse response = getObjectMapper().readValue(result.getResponse().getContentAsString(),
-            StudyStateResponse.class);
-        Optional<StudyStateBean> study = response.getStudies().stream()
+    StudyStateResponse response =
+        getObjectMapper()
+            .readValue(result.getResponse().getContentAsString(), StudyStateResponse.class);
+    Optional<StudyStateBean> study =
+        response
+            .getStudies()
+            .stream()
             .filter(s -> s.getParticipantId().equals(Constants.PARTICIPANT_ID))
             .findFirst();
 
-        assertTrue(study.isPresent());
-        assertEquals(AppConstants.WITHDRAWN, study.get().getStatus());
+    assertTrue(study.isPresent());
+    assertEquals(AppConstants.WITHDRAWN, study.get().getStatus());
   }
 
   @Test

@@ -13,11 +13,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
@@ -248,8 +250,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             studyBean = new WithdrawFromStudyBean();
             participantId = commonDao.getParticicpantId(userDetailsId, studyReqBean.getStudyId());
             studyReqBean.setStudyId(studyReqBean.getStudyId());
-            if (participantId != null && !participantId.isEmpty())
+            if (participantId != null && !participantId.isEmpty()) {
               studyBean.setParticipantId(participantId);
+            }
             studyBean.setDelete(studyReqBean.getDelete());
             studyBean.setStudyId(studyReqBean.getStudyId());
             deleteData.add(studyReqBean.getStudyId());

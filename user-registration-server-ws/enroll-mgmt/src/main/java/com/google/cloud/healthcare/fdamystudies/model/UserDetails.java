@@ -2,12 +2,14 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -57,7 +59,7 @@ public class UserDetails {
   private Boolean touchId = false;
 
   @Column(name = "_ts")
-  private Date _ts;
+  private Date ts;
 
   @Column(name = "use_pass_code", columnDefinition = "TINYINT(1)")
   private Boolean usePassCode = false;

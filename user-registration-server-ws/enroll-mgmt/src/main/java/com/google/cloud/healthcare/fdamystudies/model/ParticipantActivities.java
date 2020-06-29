@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +22,7 @@ public class ParticipantActivities {
   private Integer id;
 
   @Column(name = "_ts")
-  private String _ts;
+  private String ts;
 
   @Column(name = "participant_id")
   private String participantId;

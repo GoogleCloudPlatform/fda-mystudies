@@ -9,7 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
+
 import org.springframework.stereotype.Repository;
+
 import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;

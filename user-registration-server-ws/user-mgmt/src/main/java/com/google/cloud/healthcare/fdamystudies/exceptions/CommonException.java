@@ -15,9 +15,9 @@ public abstract class CommonException extends Exception {
 
   private String errorCode;
 
-  public CommonException(String pErrorCode, Throwable arg1) {
-    super(pErrorCode, arg1);
-    errorCode = pErrorCode;
+  public CommonException(String perrorCode, Throwable arg1) {
+    super(perrorCode, arg1);
+    errorCode = perrorCode;
   }
 
   public String getErrorCode() {

@@ -14,11 +14,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -28,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
@@ -341,10 +344,10 @@ public class CommonDaoImpl implements CommonDao {
       list = session.createQuery(criteriaQuery).getResultList();
       if (!list.isEmpty()) {
         studyInfo = list.get(0);
-        UserDetailsBO userDetails = session.get(UserDetailsBO.class, id);
         criteriaQuery1 = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
         root1 = criteriaQuery1.from(ParticipantStudiesBO.class);
         predicates1[0] = criteriaBuilder.equal(root1.get("studyInfo"), studyInfo);
+        UserDetailsBO userDetails = session.get(UserDetailsBO.class, id);
         predicates1[1] = criteriaBuilder.equal(root1.get("userDetails"), userDetails);
         criteriaQuery1.select(root1).where(predicates1);
         list1 = session.createQuery(criteriaQuery1).getResultList();

@@ -1,14 +1,17 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
+
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import javax.annotation.PostConstruct;
+
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 
 @Component
 public class UserDomainWhitelist {
@@ -26,7 +29,7 @@ public class UserDomainWhitelist {
     if (domains.isEmpty()) {
       logger.info("No user domain whitelist specified. All domains allowed.");
       whitelistedDomains = Optional.empty();
-    }else {
+    } else {
       logger.info("User domain whitelist specified. Will filter non-whitelisted domains.");
       whitelistedDomains = Optional.of(new HashSet<String>(Arrays.asList(domains.split(",", -1))));
     }
@@ -35,8 +38,9 @@ public class UserDomainWhitelist {
   // Returns true if an email address domain is whitelisted for use. If no whitelist is present
   // then returns true by default.
   public Boolean isValidDomain(String email) {
-    if (!whitelistedDomains.isPresent()) return true;
+    if (!whitelistedDomains.isPresent()) {
+      return true;
+    }
     return whitelistedDomains.get().contains(email.substring(email.lastIndexOf("@") + 1));
   }
 };
-

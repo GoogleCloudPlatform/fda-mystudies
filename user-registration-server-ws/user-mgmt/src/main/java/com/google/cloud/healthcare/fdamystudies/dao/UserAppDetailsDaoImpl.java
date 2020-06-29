@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
@@ -35,6 +36,8 @@ public class UserAppDetailsDaoImpl implements UserAppDetailsDao {
         logger.error("UserAppDetailsDaoImpl loadEmailCodeByUserId(): ", e);
         throw new SystemException();
       }
-    } else return null;
+    } else {
+      return null;
+    }
   }
 }

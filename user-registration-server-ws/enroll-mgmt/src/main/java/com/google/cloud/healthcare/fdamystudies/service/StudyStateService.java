@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.util.List;
+
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
