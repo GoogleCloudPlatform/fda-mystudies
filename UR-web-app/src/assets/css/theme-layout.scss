@@ -180,8 +180,6 @@
     background: var(--white) !important;
     display: block;
     margin-bottom: 12px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
     border-radius: 10px;
     box-shadow: 0px 1px 5px 0px rgba(204, 215, 226, 1);
   }
@@ -239,6 +237,9 @@
   }
   .bg__white .search__user__details {
     min-width: 100% !important;
+  }
+  .search__ {
+    min-width: 265px !important;
   }
 }
 
@@ -304,6 +305,9 @@
   }
   .mb__mb-sm {
     margin-bottom: 20px;
+  }
+  .search__ {
+    min-width: 300px !important;
   }
 }
 

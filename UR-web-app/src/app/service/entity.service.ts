@@ -13,6 +13,10 @@ export class EntityService<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.post<T>(serviceUrl, bodydata);
   }
+  getCollection(urlpath: string): Observable<T[]> {
+    const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
+    return this.http.get<T[]>(serviceUrl);
+  }
   get(urlpath: string): Observable<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.get<T>(serviceUrl);
