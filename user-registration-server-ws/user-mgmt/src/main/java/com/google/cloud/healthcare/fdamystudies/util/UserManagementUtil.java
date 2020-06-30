@@ -203,6 +203,7 @@ public class UserManagementUtil {
   public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
       String userId, String clientToken, String accessToken) {
     logger.info("UserRegistrationController.deleteUserInfoInAuthServer() - starts");
+
     DeleteAccountInfoResponseBean authResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
