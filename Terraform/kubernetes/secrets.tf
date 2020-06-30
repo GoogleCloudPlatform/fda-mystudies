@@ -109,7 +109,7 @@ resource "kubernetes_secret" "study_designer_secrets" {
   data = {
     CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
     SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
-    BASE_URL   = "tf-dev.validcare-research.validcare.com"
+    BASE_URL   = "vr.validcare-research.validcare.com"
   }
 }
 
@@ -121,7 +121,7 @@ resource "kubernetes_secret" "study_meta_data_secrets" {
   data = {
     CLIENT_ID  = data.google_secret_manager_secret_version.secrets["mystudies-wcp-client-id"].secret_data
     SECRET_KEY = data.google_secret_manager_secret_version.secrets["mystudies-wcp-secret-key"].secret_data
-    BASE_URL   = "tf-dev.validcare-research.validcare.com"
+    BASE_URL   = "vr.validcare-research.validcare.com"
   }
 }
 
