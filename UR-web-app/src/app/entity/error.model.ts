@@ -1,8 +1,8 @@
-export class ApiResponse {
-  error = new Error();
+export interface ApiResponse {
+  error: Error;
 }
-export class Error {
-  detailMessage = '';
-  type = '';
-  userMessage = '';
+export interface Error {
+  detailMessage: string;
+  type: string;
+  userMessage: string;
 }
