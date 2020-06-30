@@ -58,8 +58,6 @@ import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 public class UserDetailsServiceImpl implements UserDetailsService {
   private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
-  @Autowired private UserRepository userRepo;
-
   @Autowired private SessionRepository session;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
@@ -68,7 +66,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired private EmailNotification emailNotification;
 
-  @Autowired private UserRepository userRepository;
+  @Autowired private UserRepository userRepo;
 
   @Autowired private LoginAttemptRepository loginAttemptRepo;
 
@@ -78,6 +76,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   public DaoUserBO loadUserByEmailIdAndAppIdAndOrgIdAndAppCode(
       String userName, String appId, String orgId, String appCode) throws SystemException {
     logger.info("UserDetailsServiceImpl loadUserByEmailIdAndAppIdAndOrgIdAndAppCode() - starts");
+    if (appId == null || appId == "") {
+      logger.warn("appId is empty");
+    }
+    if (orgId == null || orgId == "") {
+      logger.warn("orgId is empty");
+    }
+    if (appCode == null || appCode == "") {
+      logger.warn("appCode is empty");
+    }
     try {
       DaoUserBO daoUser = null;
       if ((userName != null)) {
@@ -228,7 +235,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       if (sessionDetails != null) {
         if (sessionDetails.getUserId().equals(userId)) {
 
-          DaoUserBO userInfo = userRepository.findByUserId(userId);
+          DaoUserBO userInfo = userRepo.findByUserId(userId);
 
           if (userInfo != null) {
             if (appCode.equals(userInfo.getAppCode())) {
@@ -282,12 +289,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         DaoUserBO userDetails = null;
         if ("MA".equals(checkCredentialRequest.getAppCode())) {
           userDetails =
-              userRepository.findByEmailIdAndAppIdAndOrgIdAndAppCode(
+                userRepo.findByEmailIdAndAppIdAndOrgIdAndAppCode(
                   checkCredentialRequest.getEmailId(), checkCredentialRequest.getAppId(),
                   checkCredentialRequest.getOrgId(), checkCredentialRequest.getAppCode());
         } else {
           userDetails =
-              userRepository.findByEmailIdAndAppCode(
+                userRepo.findByEmailIdAndAppCode(
                   checkCredentialRequest.getEmailId(), checkCredentialRequest.getAppCode());
         }
 
