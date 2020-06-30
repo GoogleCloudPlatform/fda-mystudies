@@ -46,4 +46,6 @@ public final class AuthScimConstants {
   public static final String SALT = "salt";
 
   public static final String HASH = "hash";
+
+  public static final String CHANGE_PASSWORD = "change_password";
 }

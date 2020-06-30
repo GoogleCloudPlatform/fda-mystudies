@@ -31,6 +31,16 @@ public enum ErrorCode {
 
   UNAUTHORIZED(401, "EC-401", "Unauthorized", "Invalid token"),
 
+  USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found"),
+
+  CURRENT_PASSWORD_INVALID(400, "EC-119", Constants.BAD_REQUEST, "Current password is invalid"),
+
+  ENFORCE_PASSWORD_HISTORY(
+      400,
+      "EC-105",
+      Constants.BAD_REQUEST,
+      "Your new password cannot repeat any of your previous 10 passwords;"),
+
   EMAIL_EXISTS(
       409,
       "EC-101",

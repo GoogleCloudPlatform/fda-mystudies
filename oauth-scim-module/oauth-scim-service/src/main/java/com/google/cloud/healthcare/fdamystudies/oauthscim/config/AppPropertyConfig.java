@@ -23,4 +23,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${oauth.scim.service.password.expiry.days:90}")
   private int passwordExpiryDays;
+
+  @Value("${oauth.scim.service.password.history.max.size:10}")
+  private int passwordHistoryMaxSize;
 }
