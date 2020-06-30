@@ -212,7 +212,7 @@
   var isChanged = true;
   $(document).ready(function (e) {
     // Internet Explorer 6-11
-    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    var isIE = false || !!document.documentMode;
 
     // Edge 20+
     var isEdge = !isIE && !!window.StyleMedia;
@@ -235,7 +235,7 @@
       if (e.which == 13) {
         if (isFromValid($("#loginForm"))) {
           e.target.blur();
-          $(".askSignInCls").removeClass('hide');
+          $('#loginBtnId').click();
         }
       }
     });
@@ -266,7 +266,7 @@
     }
 
     // Internet Explorer 6-11
-    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    var isIE = false || !!document.documentMode;
     // Edge 20+
     var isEdge = !isIE && !!window.StyleMedia;
 

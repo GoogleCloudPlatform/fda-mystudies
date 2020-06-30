@@ -219,35 +219,7 @@ $(document).ready(function(){
     	$("#titleContainer").show();
     	$("#consentItemTitleId").prop('required',true);
     }
-    //submit the form
-    $("#doneId").on('click', function(){
-    	$("#doneId").prop('disabled', true);
-    	valid =  maxLenValEditor();
-    	if( isFromValid("#consentInfoFormId") && valid){
-    		var visualStepData = '';
-    		
-    		visualStepData = $('input[name=visualStep]:checked').val();
-    		if(visualStepData != '' && visualStepData!= null && typeof visualStepData != 'undefined'){
-    			
-    			var elaboratedContent = $('#elaboratedRTE').summernote('code');
-            	elaboratedContent = replaceSpecialCharacters(elaboratedContent);
-            	var briefSummaryText = replaceSpecialCharacters($("#briefSummary").val());
-            	$("#elaborated").val(elaboratedContent);
-            	$("#briefSummary").val(briefSummaryText);
-            	var displayTitleText = $("#displayTitle").val();
-            	displayTitleText = replaceSpecialCharacters(displayTitleText);
-            	$("#displayTitle").val(displayTitleText);
-        		$("#consentInfoFormId").submit();
-        		
-    		}else{
-    			$('.visualStepDiv').addClass('has-error has-danger');
-    			$('.visualStepDiv').find(".help-block").empty().html('<ul class="list-unstyled"><li>Please choose one visual step</li></ul>');
-    			$("#doneId").prop('disabled', false);
-    		}
-    	}else{
-    		$("#doneId").prop('disabled', false);
-    	}
-    });
+    addDefaultData();
 });
 
 						<c:if test="${actionPage eq 'view'}">
@@ -602,7 +574,7 @@ function addDefaultData(){
 				});
 	}
 	<c:if test="${actionPage eq 'view'}">
-	    $'#elaboratedRTE').summernote('disable');
+	    $('#elaboratedRTE').summernote('disable');
 	</c:if>
 
 	
