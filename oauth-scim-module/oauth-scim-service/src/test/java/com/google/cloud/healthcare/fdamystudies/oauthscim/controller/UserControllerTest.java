@@ -408,7 +408,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(11)
+  @Order(12)
   public void shouldDeleteTheUser() {
     // cleanup - delete the user from database
     repository.deleteByUserId(userId);
