@@ -6,9 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "brand_product_mapping")
+@Table(
+    name = "brand_product_mapping",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"brand_id", "product_id"}))
 public class BrandProductMappingDto {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +21,14 @@ public class BrandProductMappingDto {
   @Column(name = "brand_id")
   private String brandId;
 
-  @Column(name = "brand_name")
-  private String brandName;
-
   @Column(name = "product_id")
   private String productId;
 
   @Column(name = "product_name")
   private String productName;
+
+  @Column(name = "product_description")
+  private String productDescription;
 
   public int getId() {
     return id;
@@ -43,14 +46,6 @@ public class BrandProductMappingDto {
     this.brandId = brandId;
   }
 
-  public String getBrandName() {
-    return brandName;
-  }
-
-  public void setBrandName(String brandName) {
-    this.brandName = brandName;
-  }
-
   public String getProductId() {
     return productId;
   }
@@ -63,7 +58,15 @@ public class BrandProductMappingDto {
     return productName;
   }
 
-  public void setProductDetails(String productDetails) {
-    this.productName = productDetails;
+  public void setProductName(String productName) {
+    this.productName = productName;
+  }
+
+  public String getProductDescription() {
+    return productDescription;
+  }
+
+  public void setProductDescription(String productDescription) {
+    this.productDescription = productDescription;
   }
 }
