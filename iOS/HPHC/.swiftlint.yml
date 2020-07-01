@@ -12,6 +12,22 @@ disabled_rules:
   - file_length
   - todo
   - function_parameter_count
+  - opening_brace
+  - redundant_string_enum_value
+  - class_delegate_protocol
+  - unneeded_break_in_switch
+  - weak_delegate
+  - legacy_constructor
+  - for_where
+  - multiple_closures_with_trailing_closure
+  - valid_ibinspectable
+  - identifier_name
+  - leading_whitespace
+  - unused_enumerated
+  - colon
+  - closure_parameter_position
+  - type_name
+  - large_tuple 
 line_length:
   ignores_interpolated_strings: true
   ignores_comments: true
