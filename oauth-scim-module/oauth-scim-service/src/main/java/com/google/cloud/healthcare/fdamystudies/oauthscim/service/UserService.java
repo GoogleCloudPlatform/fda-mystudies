@@ -20,4 +20,7 @@ public interface UserService {
 
   public UpdateUserResponse updateUser(UpdateUserRequest userRequest)
       throws JsonProcessingException;
+
+  public UpdateUserResponse resetPassword(UpdateUserRequest userRequest)
+      throws JsonProcessingException;
 }

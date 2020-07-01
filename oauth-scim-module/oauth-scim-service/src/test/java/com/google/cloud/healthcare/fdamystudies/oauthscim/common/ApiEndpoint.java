@@ -18,7 +18,9 @@ public enum ApiEndpoint {
 
   USERS("http://localhost:8002/oauth-scim-service/v1/users"),
 
-  USER("http://localhost:8002/oauth-scim-service/v1/users/{userId}");
+  USER("http://localhost:8002/oauth-scim-service/v1/users/{userId}"),
+
+  RESET_PASSWORD("http://localhost:8002/oauth-scim-service/v1/user/reset_password");
 
   private String url;
 

@@ -48,4 +48,8 @@ public final class AuthScimConstants {
   public static final String HASH = "hash";
 
   public static final String CHANGE_PASSWORD = "change_password";
+
+  public static final String FORGOT_PASSWORD = "forgot_password";
+
+  public static final int TEMP_PASSWORD_LENGTH = 12;
 }

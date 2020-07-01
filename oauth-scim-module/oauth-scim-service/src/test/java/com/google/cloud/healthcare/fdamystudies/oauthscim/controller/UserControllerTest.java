@@ -16,6 +16,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJson
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CHANGE_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRES_AT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
@@ -23,6 +24,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -57,6 +59,12 @@ import org.springframework.test.web.servlet.MvcResult;
 @TestMethodOrder(OrderAnnotation.class)
 public class UserControllerTest extends BaseMockIT {
 
+  private static final String APP_ID_VALUE = "MyStudies";
+
+  private static final String ORG_ID_VALUE = "FDA";
+
+  private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
+
   private static final String CURRENT_PASSWORD_VALUE = "M0ck!tPassword";
 
   private static final String NEW_PASSWORD_VALUE = "M0ck!tPassword2";
@@ -64,6 +72,8 @@ public class UserControllerTest extends BaseMockIT {
   @Autowired private UserRepository repository;
 
   private static String userId;
+
+  private static String saltAfterChangePassword;
 
   @Test
   @Order(1)
@@ -297,6 +307,9 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(expectedPasswordHash, actualPasswordHash);
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
+
+    // required to assert the salt after reset password
+    saltAfterChangePassword = salt;
   }
 
   @Test
@@ -326,6 +339,76 @@ public class UserControllerTest extends BaseMockIT {
 
   @Test
   @Order(10)
+  public void shouldReturnBadRequestForForgotPasswordAction()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    UpdateUserRequest userRequest = new UpdateUserRequest();
+    userRequest.setAction(FORGOT_PASSWORD);
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                put(ApiEndpoint.RESET_PASSWORD.getPath())
+                    .contextPath(getContextPath())
+                    .content(asJsonString(userRequest))
+                    .headers(headers))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.violations").isArray())
+            .andReturn();
+
+    String actualResponse = result.getResponse().getContentAsString();
+    String expectedResponse = readJsonFile("/response/forgot_password_bad_request.json");
+    JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+  }
+
+  @Test
+  @Order(11)
+  public void shouldSendPasswordResetEmailAndUpdateThePassword()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    UpdateUserRequest userRequest = new UpdateUserRequest();
+    userRequest.setAction(FORGOT_PASSWORD);
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setOrgId(ORG_ID_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+
+    mockMvc
+        .perform(
+            put(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value("Your password has been changed successfully!"));
+
+    // Step-2 Find UserEntity by userId and then compare the password hash values
+    UserEntity userEntity = repository.findByUserId(userId).get();
+    assertNotNull(userEntity);
+    assertEquals(EMAIL_VALUE, userEntity.getEmail());
+    assertEquals(ORG_ID_VALUE, userEntity.getOrgId());
+    assertEquals(APP_ID_VALUE, userEntity.getAppId());
+
+    // Step 2A- assert password hash value and password_history size
+    JsonNode userInfoNode = toJsonNode(userEntity.getUserInfo());
+    JsonNode passwordNode = userInfoNode.get(PASSWORD);
+    String salt = getTextValue(passwordNode, SALT);
+    String actualPasswordHash = getTextValue(passwordNode, HASH);
+    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+
+    assertNotEquals(saltAfterChangePassword, salt);
+    assertNotEquals(expectedPasswordHash, actualPasswordHash);
+    assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
+    assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 3);
+  }
+
+  @Test
+  @Order(11)
   public void shouldDeleteTheUser() {
     // cleanup - delete the user from database
     repository.deleteByUserId(userId);
@@ -340,9 +423,9 @@ public class UserControllerTest extends BaseMockIT {
 
   private UserRequest createUserRequest() {
     UserRequest userRequest = new UserRequest();
-    userRequest.setAppId("MyStudies");
-    userRequest.setOrgId("FDA");
-    userRequest.setEmail("mockit_oauth_scim_user@grr.la");
+    userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setOrgId(ORG_ID_VALUE);
+    userRequest.setEmail(EMAIL_VALUE);
     userRequest.setPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     return userRequest;

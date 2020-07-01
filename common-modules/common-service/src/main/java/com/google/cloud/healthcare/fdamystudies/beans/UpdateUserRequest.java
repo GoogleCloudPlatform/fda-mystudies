@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -48,5 +49,16 @@ public class UpdateUserRequest {
   @NotNull
   private String action;
 
+  @ToString.Exclude
+  @Size(max = 320)
+  @Email
+  private String email;
+
   @ToString.Exclude private String userId;
+
+  @Size(max = 100)
+  private String appId;
+
+  @Size(max = 100)
+  private String orgId;
 }

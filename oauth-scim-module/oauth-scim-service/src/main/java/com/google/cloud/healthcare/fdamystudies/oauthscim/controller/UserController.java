@@ -36,6 +36,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 public class UserController {
 
+  private static final String VALIDATION_ERROS_LOG = "validation erros=%s";
+
+  private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_S_REQUEST_LOG = "begin %s request";
+
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
   @Autowired private UserService userService;
@@ -46,7 +52,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserResponse> createUser(
       @Valid @RequestBody UserRequest userRequest, HttpServletRequest request) {
-    logger.entry(String.format("begin %s request", request.getRequestURI()));
+    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
     UserResponse userResponse = userService.createUser(userRequest);
 
     int status =
@@ -54,7 +60,7 @@ public class UserController {
             ? HttpStatus.CREATED.value()
             : userResponse.getHttpStatusCode();
 
-    logger.exit(String.format("status=%d", status));
+    logger.exit(String.format(STATUS_LOG, status));
     return ResponseEntity.status(status).body(userResponse);
   }
 
@@ -67,11 +73,11 @@ public class UserController {
       @Valid @RequestBody UpdateUserRequest userRequest,
       HttpServletRequest request)
       throws JsonProcessingException {
-    logger.entry(String.format("begin %s request", request.getRequestURI()));
+    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
     userRequest.setUserId(userId);
     ValidationErrorResponse validationResult = UserValidator.validate(userRequest);
     if (validationResult.hasErrors()) {
-      logger.exit(String.format("validation errros=%s", validationResult));
+      logger.exit(String.format(VALIDATION_ERROS_LOG, validationResult));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
     }
 
@@ -81,7 +87,31 @@ public class UserController {
             ? HttpStatus.OK.value()
             : userResponse.getHttpStatusCode();
 
-    logger.exit(String.format("status=%d", status));
+    logger.exit(String.format(STATUS_LOG, status));
+    return ResponseEntity.status(status).body(userResponse);
+  }
+
+  @PutMapping(
+      value = "/user/reset_password",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> resetPassword(
+      @Valid @RequestBody UpdateUserRequest userRequest, HttpServletRequest request)
+      throws JsonProcessingException {
+    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+    ValidationErrorResponse validationResult = UserValidator.validate(userRequest);
+    if (validationResult.hasErrors()) {
+      logger.exit(String.format(VALIDATION_ERROS_LOG, validationResult));
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
+    }
+
+    UpdateUserResponse userResponse = userService.resetPassword(userRequest);
+    int status =
+        StringUtils.isEmpty(userResponse.getErrorDescription())
+            ? HttpStatus.OK.value()
+            : userResponse.getHttpStatusCode();
+
+    logger.exit(String.format(STATUS_LOG, status));
     return ResponseEntity.status(status).body(userResponse);
   }
 }
