@@ -468,7 +468,7 @@ public class StudyMetaDataService {
               .build();
         }
 
-        if (StringUtils.equalsIgnoreCase(activityId, StudyMetaDataConstants.PRODUCT_SURVEY)
+        if (StringUtils.equalsIgnoreCase(activityId, StudyMetaDataConstants.MEDICAL_HIST)
             && StringUtils.isBlank(brandId)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_102,
