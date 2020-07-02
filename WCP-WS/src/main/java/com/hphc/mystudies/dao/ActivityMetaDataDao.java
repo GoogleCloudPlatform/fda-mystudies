@@ -2617,7 +2617,7 @@ public class ActivityMetaDataDao {
             LinkedHashMap<String, Object> textChoiceMap = new LinkedHashMap<>();
             textChoiceMap.put("text", product.getProductName());
             textChoiceMap.put("value", product.getProductId());
-            textChoiceMap.put("detail", "");
+            textChoiceMap.put("detail", product.getProductDescription());
             textChoiceMap.put("exclusive", false);
             textChoiceMapList.add(textChoiceMap);
           }
