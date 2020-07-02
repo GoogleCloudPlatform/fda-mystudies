@@ -1,7 +1,13 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,8 +27,10 @@ import com.google.cloud.healthcare.fdamystudies.controller.StudiesController;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
+import com.google.cloud.healthcare.fdamystudies.service.StudiesServicesImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 
 public class StudiesControllerTest extends BaseMockIT {
 
@@ -32,6 +40,8 @@ public class StudiesControllerTest extends BaseMockIT {
   @Autowired StudiesController studiesController;
   @Autowired StudiesServices studiesServices;
   @Autowired CommonDaoImpl commonDao;
+
+  @Autowired StudiesServicesImpl serviceImpl;
 
   @Test
   public void contextLoads() {
@@ -130,21 +140,47 @@ public class StudiesControllerTest extends BaseMockIT {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
 
+    // StudyLevel notificationType
     String requestJson =
         getNotificationForm(
             Constants.STUDY_ID,
             Constants.CUSTOM_STUDY_ID,
-            Constants.APP_ID_HEADER,
+            Constants.APP_ID_VALUE,
             Constants.STUDY_LEVEL);
-    performPost(
-        SEND_NOTIFICATION_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
+
+    mockMvc
+        .perform(post(SEND_NOTIFICATION_PATH).content(requestJson).headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
+        .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
+        .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
+        .andExpect(jsonPath("$.response.results[0].error", is("NotRegistered")));
+
+    // GatewayLevel notificationType
+    requestJson =
+        getNotificationForm(
+            Constants.STUDY_ID,
+            Constants.CUSTOM_STUDY_ID,
+            Constants.APP_ID_VALUE,
+            Constants.GATEWAY_LEVEL);
+
+    mockMvc
+        .perform(post(SEND_NOTIFICATION_PATH).content(requestJson).headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
+        .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
+        .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
+        .andExpect(jsonPath("$.response.results[0].error", is("NotRegistered")));
   }
 
   private String getNotificationForm(
       String studyId, String customStudyId, String appId, String notificationType)
       throws JsonProcessingException {
-    NotificationBean notificationBean =
-        new NotificationBean(studyId, customStudyId, appId, notificationType);
+
+    NotificationBean notificationBean = null;
+    notificationBean = new NotificationBean(studyId, customStudyId, appId, notificationType);
     List<NotificationBean> list = new ArrayList<NotificationBean>();
     list.add(notificationBean);
     NotificationForm notificationForm = new NotificationForm(list);

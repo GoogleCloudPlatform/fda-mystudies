@@ -42,4 +42,5 @@ public final class Constants {
   public static final String INVALID_STUDY_ID = "132";
   public static final String NOTIFICATION_TYPE = "ST";
   public static final String STUDY_LEVEL = "ST";
+  public static final String GATEWAY_LEVEL = "GT";
 }
