@@ -8,6 +8,7 @@
 package com.google.cloud.healthcare.fdamystudies.bean;
 
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,4 +28,5 @@ public class ActivityResponseBean {
   private ActivityMetadataBean metadata = new ActivityMetadataBean();
   private ActivityResponseDataStructureBean data = new ActivityResponseDataStructureBean();
   private String createdTimestamp;
+  private String brandId;
 }

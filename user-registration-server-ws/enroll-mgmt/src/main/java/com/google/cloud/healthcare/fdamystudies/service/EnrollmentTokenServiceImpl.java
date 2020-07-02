@@ -9,10 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.EnrollmentTokenDao;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
@@ -85,7 +87,11 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String shortName, String tokenValue, String userId)
+      @NotNull String shortName,
+      String tokenValue,
+      String userId,
+      String firstName,
+      String lastName)
       throws SystemException, InvalidRequestException, UnAuthorizedRequestException {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
     EnrollmentResponseBean participantBean = null;
@@ -102,7 +108,9 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
               tokenValue,
               commonService.getUserInfoDetails(userId),
               isTokenRequired,
-              participantId);
+              participantId,
+              firstName,
+              lastName);
       if (participantBean != null) {
         participantBean.setHashedToken(hashedTokenValue);
         participantBean.setParticipantId(participantId);
