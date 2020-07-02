@@ -1,15 +1,8 @@
-import {
-  Component,
-  TemplateRef,
-  Input,
-  Output,
-  EventEmitter,
-} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
 import {ToastrService} from 'ngx-toastr';
-import {BsModalService} from 'ngx-bootstrap/modal';
 import {ApiResponse} from 'src/app/entity/error.model';
 import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
 
@@ -24,13 +17,9 @@ export class AddLocationComponent {
   location: Location = new Location();
   constructor(
     private readonly router: Router,
-    private readonly modalService: BsModalService,
     private readonly locationService: LocationService,
     private readonly toastr: ToastrService,
   ) {}
-  openModal(template: TemplateRef<unknown>): void {
-    this.modalService.show(template);
-  }
 
   addLocation(): void {
     this.locationService.addLocation(this.location).subscribe(
