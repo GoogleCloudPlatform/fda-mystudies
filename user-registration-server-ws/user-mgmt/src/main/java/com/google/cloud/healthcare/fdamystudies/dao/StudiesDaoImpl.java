@@ -9,11 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.List;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
@@ -29,7 +32,6 @@ import com.google.cloud.healthcare.fdamystudies.model.LocationBo;
 import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
 import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
@@ -150,8 +152,7 @@ public class StudiesDaoImpl implements StudiesDao {
         studyInfo.setCreatedOn(UserManagementUtil.getCurrentUtilDateTime());
         int generatedStudyid = (int) session.save(studyInfo);
 
-        if (!StringUtils.isBlank(studyMetadataBean.getStudyType())
-            && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {
+        if (!StringUtils.isBlank(studyMetadataBean.getStudyType())) {
           LocationBo defaultLocation =
               (LocationBo)
                   session.createQuery("from LocationBo where isdefault='Y'").getSingleResult();
