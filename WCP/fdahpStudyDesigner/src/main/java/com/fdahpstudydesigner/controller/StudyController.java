@@ -101,11 +101,11 @@ public class StudyController {
   @Autowired private UsersService usersService;
 
   @Autowired private RestTemplate restTemplate;
-  
-  @InitBinder
+
+  /*@InitBinder
   public void bindPropertyCleaner(WebDataBinder webDataBinder) {
     webDataBinder.registerCustomEditor(String.class, new CustomPropertyEditor());
-  }
+  }*/
 
   @RequestMapping("/adminStudies/actionList.do")
   public ModelAndView actionList(HttpServletRequest request) {
