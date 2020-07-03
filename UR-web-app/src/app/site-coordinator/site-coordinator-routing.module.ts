@@ -1,23 +1,17 @@
 import {NgModule} from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 import {SiteCoordinatorComponent} from './sitecoordinator.component';
-import {ParticipantModule} from './participant/participant.module';
 import {AccountModule} from './account/account.module';
 import {LocationModule} from './location/location.module';
 import {UserModule} from './user/user.module';
+import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
+import {StudiesModule} from './studies/studies.module';
 
 const routes: Routes = [
   {
     path: '',
     component: SiteCoordinatorComponent,
     children: [
-      {
-        path: 'participants',
-        loadChildren: async (): Promise<ParticipantModule> =>
-          import('./participant/participant.module').then(
-            (m) => m.ParticipantModule,
-          ),
-      },
       {
         path: 'accounts',
         loadChildren: async (): Promise<AccountModule> =>
@@ -33,7 +27,21 @@ const routes: Routes = [
         loadChildren: async (): Promise<UserModule> =>
           import('./user/user.module').then((m) => m.UserModule),
       },
-      {path: '', redirectTo: 'participants', pathMatch: 'full'},
+      {
+        path: '',
+        component: DashboardHeaderComponent,
+        children: [
+          {
+            path: 'studies',
+            loadChildren: async (): Promise<StudiesModule> =>
+              import('./studies/studies.module').then((m) => m.StudiesModule),
+          },
+          {
+            path: '',
+            redirectTo: 'studies',
+          },
+        ],
+      },
     ],
   },
 ];
