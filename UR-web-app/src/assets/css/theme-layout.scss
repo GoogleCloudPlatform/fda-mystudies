@@ -242,6 +242,14 @@
     }
 }
 
+@media (max-width: 760px) {
+    .tool::after {
+        font-size: 0.75em;
+        margin-left: -5em;
+        width: 10em;
+    }
+}
+
 @media (min-width: 768px) {
     .modal {
         top: 12% !important;
