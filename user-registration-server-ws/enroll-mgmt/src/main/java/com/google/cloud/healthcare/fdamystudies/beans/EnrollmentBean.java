@@ -22,4 +22,6 @@ import lombok.ToString;
 public class EnrollmentBean {
   private String token;
   private String studyId;
+  private String firstName;
+  private String lastName;
 }

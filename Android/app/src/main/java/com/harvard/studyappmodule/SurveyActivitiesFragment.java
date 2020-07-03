@@ -2637,7 +2637,9 @@ public class SurveyActivitiesFragment extends Fragment
             + "&activityId="
             + activityId
             + "&activityVersion="
-            + activityVersion;
+            + activityVersion
+            + "&brandId="
+            + ((SurveyActivity) context).getBrandId();
     WcpConfigEvent wcpConfigEvent =
         new WcpConfigEvent(
             "get",

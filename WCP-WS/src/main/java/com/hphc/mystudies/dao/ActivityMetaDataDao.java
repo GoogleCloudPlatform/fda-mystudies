@@ -1698,10 +1698,10 @@ public class ActivityMetaDataDao {
           if (questionsDto.getResponseType() != null) {
             boolean isProductSurveyPresent =
                 StringUtils.equalsIgnoreCase(
-                        questionnaireDto.getShortTitle(), StudyMetaDataConstants.PRODUCT_SURVEY)
+                        questionnaireDto.getShortTitle(), StudyMetaDataConstants.MEDICAL_HIST)
                     && StringUtils.equalsIgnoreCase(
                         questionStepDetails.getStepShortTitle(),
-                        StudyMetaDataConstants.PRODUCT_QUESTION);
+                        StudyMetaDataConstants.PRODUCT_SELECT);
             for (QuestionResponsetypeMasterInfoDto masterInfo :
                 questionResponseTypeMasterInfoList) {
               if (masterInfo.getId().equals(questionsDto.getResponseType())) {

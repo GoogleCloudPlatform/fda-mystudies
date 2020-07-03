@@ -10,12 +10,15 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -23,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySite;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
@@ -120,7 +124,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               .createQuery(
                   "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR"
                       + " where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id"
-                      + " and PS.status='Enrolled' and PR.enrollmentToken=:token and SB.customId=:studyId")
+                      + " and PS.status in ('Enrolled','Withdrawn','inProgress') and PR.enrollmentToken=:token and SB.customId=:studyId")
               .setParameter("token", tokenValue)
               .setParameter("studyId", studyId)
               .getResultList();
@@ -172,7 +176,9 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
       String tokenValue,
       UserDetailsBO userDetail,
       boolean isTokenRequired,
-      String participantid) {
+      String participantid,
+      String firstName,
+      String lastName) {
     logger.info("EnrollmentTokenDaoImpl enrollParticipant() - Started ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
@@ -202,6 +208,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     Predicate[] sitePredicates = new Predicate[1];
     List<SiteBo> siteList = null;
     SiteBo site = null;
+    
+    CriteriaUpdate<ParticipantRegistrySite> particiRegSiteCriteriaUpdate = null;
+    Root<ParticipantRegistrySite> participantRegSiteRoot = null;
+    List<Predicate> particiRegSitePredicates = new ArrayList<>();
 
     ParticipantStudiesBO participants = null;
     ParticipantRegistrySite participantregistrySite = null;
@@ -230,6 +240,11 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               session.createQuery(participantRegistryCriteria).getResultList();
           if (!participantRegistryList.isEmpty()) {
             participantRegistry = participantRegistryList.get(0);
+
+            participantRegistry.setFirstName(firstName);
+            participantRegistry.setLastName(lastName);
+
+            session.save(participantRegistry);
 
             siteBoList =
                 session
@@ -267,6 +282,18 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
                 countAddParticipant = (Integer) session.save(participants);
               }
               if (countAddParticipant > 0) {
+                //update onboardingstatus to 'E' in ParticipantRegistrySite on successfull enrolled
+                particiRegSiteCriteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantRegistrySite.class);
+                participantRegSiteRoot = particiRegSiteCriteriaUpdate.from(ParticipantRegistrySite.class);
+                particiRegSiteCriteriaUpdate.set("onboardingStatus", "E");
+                particiRegSitePredicates.add(
+                    criteriaBuilder.equal(participantRegSiteRoot.get("enrollmentToken"), tokenValue));
+                particiRegSitePredicates.add(
+                    criteriaBuilder.equal(participantRegSiteRoot.get("sites"), siteBo));
+                particiRegSitePredicates.add(
+                    criteriaBuilder.equal(participantRegSiteRoot.get("studyInfo"), studyInfoBO));
+                particiRegSiteCriteriaUpdate.where(particiRegSitePredicates.toArray(new Predicate[particiRegSitePredicates.size()]));
+                session.createQuery(particiRegSiteCriteriaUpdate).executeUpdate(); 
                 isUpdated = true;
               }
             }
@@ -274,6 +301,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           if ((countAddParticipant > 0 && isUpdated)) {
             participantBeans.setAppToken(participantid);
             participantBeans.setSiteId(participants.getSiteBo().getId());
+            participantBeans.setBrandId(participantRegistry.getBrandId());
           }
         } else {
           participantregistrySite = new ParticipantRegistrySite();

@@ -17,6 +17,7 @@ import java.lang.reflect.Method;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityMetaDataBean;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
@@ -126,7 +128,10 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
                   AppConstants.ACTIVITY_ID_KEY, studyActivityMetadataRequestBean.getActivityId())
               .queryParam(
                   AppConstants.ACTIVITY_VERSION_PARAM,
-                  studyActivityMetadataRequestBean.getActivityVersion());
+                  studyActivityMetadataRequestBean.getActivityVersion())
+              .queryParam(
+                  AppConstants.ACTIVITY_BRAND_ID_PARAM,
+                  studyActivityMetadataRequestBean.getBrandId());
       logger.debug(studyMetadataUriBuilder.toUriString());
       responseEntity =
           restTemplate.exchange(

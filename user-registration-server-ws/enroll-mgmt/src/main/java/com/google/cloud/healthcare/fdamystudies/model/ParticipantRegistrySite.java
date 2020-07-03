@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -70,4 +72,13 @@ public class ParticipantRegistrySite implements Serializable {
 
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
+
+  @Column(name = "first_name", columnDefinition = "VARCHAR(255)")
+  private String firstName = "";
+
+  @Column(name = "last_name ", columnDefinition = "VARCHAR(255)")
+  private String lastName = "";
+
+  @Column(name = "brand_id", columnDefinition = "VARCHAR(255)")
+  private String brandId = "";
 }

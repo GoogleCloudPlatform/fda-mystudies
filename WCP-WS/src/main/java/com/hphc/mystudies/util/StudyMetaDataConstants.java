@@ -302,6 +302,6 @@ public interface StudyMetaDataConstants {
   public static final String SCHEDULETYPE_REGULAR = "Regular";
   public static final String SCHEDULETYPE_ANCHORDATE = "AnchorDate";
   
-  public static final String PRODUCT_SURVEY = "ProductSurvey";
-  public static final String PRODUCT_QUESTION = "ProductQuestion";
+  public static final String MEDICAL_HIST = "MedicalHist";
+  public static final String PRODUCT_SELECT = "ProductSelect";
 }

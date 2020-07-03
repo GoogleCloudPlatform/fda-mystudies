@@ -47,6 +47,7 @@ import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.LogoutEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
+import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
@@ -585,6 +586,15 @@ public class SurveyActivity extends AppCompatActivity
 
   public String getStudyId() {
     return studyId;
+  }
+
+  public String getBrandId() {
+    Studies studies = dbServiceSubscriber.getStudies(studyId, realm);
+    if (studies != null && studies.getBrandId() != null) {
+      return studies.getBrandId();
+    } else {
+      return "";
+    }
   }
 
   @Override
