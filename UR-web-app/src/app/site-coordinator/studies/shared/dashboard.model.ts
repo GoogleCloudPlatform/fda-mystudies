@@ -10,6 +10,7 @@ export interface DashboardModel {
   sites: Site[];
   studyPermission: number;
   totalSitesCount: number;
+  type: string;
 }
 export interface Site {
   edit: number;

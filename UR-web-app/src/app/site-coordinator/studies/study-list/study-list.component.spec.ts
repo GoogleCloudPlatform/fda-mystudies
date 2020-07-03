@@ -60,17 +60,46 @@ describe('StudyListComponent', () => {
         component = fixture.componentInstance;
         const expectedStudyList: Observable<DashboardModel[]> = of([
           {
-            appId: 'dsdssd',
-            appInfoId: 2,
-            customId: 'dsasd',
-            enrolledCount: 3,
-            enrollmentPercentage: 25,
+            appId: '',
+            appInfoId: 0,
+            customId: 'NewStudyTest',
+            enrolledCount: 41,
+            enrollmentPercentage: 38,
+            id: 1,
+            invitedCount: 0,
+            name: 'New Study Test',
+            sites: [],
+            studyPermission: 0,
+            totalSitesCount: 16,
+            type: 'OPEN',
+          },
+          {
+            appId: '',
+            appInfoId: 0,
+            customId: 'OpenStudy',
+            enrolledCount: 5,
+            enrollmentPercentage: 0,
             id: 12,
-            invitedCount: 2,
-            name: 'dsadasd',
+            invitedCount: 9,
+            name: 'Open Study 02',
+            sites: [],
+            studyPermission: 1,
+            totalSitesCount: 5,
+            type: 'OPEN',
+          },
+          {
+            appId: '',
+            appInfoId: 0,
+            customId: 'ClosedStudy',
+            enrolledCount: 54,
+            enrollmentPercentage: 17,
+            id: 14,
+            invitedCount: 0,
+            name: 'Closed Study',
             sites: [],
             studyPermission: 2,
-            totalSitesCount: 2,
+            totalSitesCount: 6,
+            type: 'CLOSE',
           },
         ]);
         studyServiceSpy.getStudies.and.returnValue(expectedStudyList);
@@ -109,14 +138,14 @@ describe('StudyListComponent', () => {
     });
     it('should get the studies List via refresh function', fakeAsync(() => {
       component.study$.subscribe((studies) => {
-        expect(studies.length).toEqual(1);
+        expect(studies.length).toEqual(3);
       });
     }));
-    it('should DISPLAY Locations', () => {
+    it('should DISPLAY All Studies', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       fixture.detectChanges();
       expect(compiled.querySelectorAll('.studies_row').length).toBe(
-        1,
+        3,
         'should display all studies list',
       );
     });
