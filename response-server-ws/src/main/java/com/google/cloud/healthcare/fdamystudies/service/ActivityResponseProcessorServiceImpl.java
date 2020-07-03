@@ -399,6 +399,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         AppConstants.SHARING_CONSENT_KEY, questionnaireActivityResponseBean.getSharingConsent());
     dataToStoreActivityResults.put(
         AppConstants.CREATED_TS_KEY, questionnaireActivityResponseBean.getCreatedTimestamp());
+    dataToStoreActivityResults.put(
+        AppConstants.ACTIVITY_BRAND_ID_PARAM, questionnaireActivityResponseBean.getBrandId());
   }
 
   private String getRawJsonInputData(Object argBean) {

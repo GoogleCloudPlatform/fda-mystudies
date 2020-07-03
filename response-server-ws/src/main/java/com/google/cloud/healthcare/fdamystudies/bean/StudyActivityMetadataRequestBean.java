@@ -19,4 +19,5 @@ public class StudyActivityMetadataRequestBean {
   private String studyId = null;
   private String activityId = null;
   private String activityVersion = null;
+  private String brandId;
 }

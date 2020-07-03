@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
@@ -68,6 +70,7 @@ public class ProcessActivityResponseController {
     String activityVersion = null;
     String participantId = null;
     String secureEnrollmentToken = null;
+    String brandId = null;
     boolean savedResponseData = false;
     try {
       orgId = questionnaireActivityResponseBean.getOrgId();
@@ -77,13 +80,16 @@ public class ProcessActivityResponseController {
       activityVersion = questionnaireActivityResponseBean.getMetadata().getVersion();
       participantId = questionnaireActivityResponseBean.getParticipantId();
       secureEnrollmentToken = questionnaireActivityResponseBean.getTokenIdentifier();
+      brandId = questionnaireActivityResponseBean.getBrandId();
       logger.debug(
           "Input values are :\n Study Id: "
               + studyId
               + "\n Activity Id: "
               + activityId
               + "\n Activity Version: "
-              + activityVersion);
+              + activityVersion
+              + "\n BrandId: "
+              + brandId);
       if (StringUtils.isBlank(orgId)
           || StringUtils.isBlank(applicationId)
           || StringUtils.isBlank(secureEnrollmentToken)
@@ -105,6 +111,25 @@ public class ProcessActivityResponseController {
                 ErrorCode.EC_701.errorMessage());
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
+
+      if (StringUtils.equalsIgnoreCase(activityId, AppConstants.PRODUCT_SURVEY)
+          && StringUtils.isBlank(brandId)) {
+        logger.error(
+            "Input values are :\n Study Id: "
+                + studyId
+                + "\n Activity Id: "
+                + activityId
+                + "\n Activity Version: "
+                + activityVersion);
+        ErrorBean errorBean =
+            AppUtil.dynamicResponse(
+                ErrorCode.EC_711.code(),
+                ErrorCode.EC_711.errorMessage(),
+                AppConstants.ERROR_STR,
+                ErrorCode.EC_711.errorMessage());
+        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+      }
+
       // Check if participant is valid
       ParticipantBo participantBo = new ParticipantBo();
       participantBo.setTokenIdentifier(secureEnrollmentToken);
@@ -119,6 +144,7 @@ public class ProcessActivityResponseController {
         studyActivityMetadataRequestBean.setStudyId(studyId);
         studyActivityMetadataRequestBean.setActivityId(activityId);
         studyActivityMetadataRequestBean.setActivityVersion(activityVersion);
+        studyActivityMetadataRequestBean.setBrandId(brandId);
         QuestionnaireActivityStructureBean activityMetadatFromWcp =
             studyMetadataService.getStudyActivityMetadata(
                 orgId, applicationId, studyActivityMetadataRequestBean);

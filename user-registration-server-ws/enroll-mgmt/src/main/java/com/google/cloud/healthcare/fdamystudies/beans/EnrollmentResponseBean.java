@@ -23,4 +23,5 @@ public class EnrollmentResponseBean {
   private String participantId;
   private Integer code;
   private String message;
+  private String brandId;
 }

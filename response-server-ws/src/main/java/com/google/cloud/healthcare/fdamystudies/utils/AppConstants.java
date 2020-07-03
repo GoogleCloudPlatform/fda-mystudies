@@ -75,4 +75,8 @@ public class AppConstants {
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
   public static final String COMMA_STR = ",";
+
+  public static final String ACTIVITY_BRAND_ID_PARAM = "brandId";
+
+  public static final String PRODUCT_SURVEY = "ProductSurvey";
 }
