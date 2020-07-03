@@ -4,7 +4,10 @@ import {
   ComponentFixture,
   fakeAsync,
 } from '@angular/core/testing';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {
+  BrowserAnimationsModule,
+  NoopAnimationsModule,
+} from '@angular/platform-browser/animations';
 import {StudyListComponent} from './study-list.component';
 
 import {HttpClientModule} from '@angular/common/http';
@@ -12,9 +15,12 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
 import {of, Observable} from 'rxjs';
+import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
+
 import {StudiesModule} from '../studies.module';
 import {StudiesService} from '../shared/studies.service';
 import {DashboardModel} from '../shared/dashboard.model';
+import {SiteCoordinatorModule} from '../../site-coordinator.module';
 
 describe('StudyListComponent', () => {
   let component: StudyListComponent;
@@ -28,10 +34,13 @@ describe('StudyListComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [StudyListComponent],
       imports: [
-        RouterTestingModule,
-        StudiesModule,
+        SiteCoordinatorModule,
         BrowserAnimationsModule,
+        StudiesModule,
+        NoopAnimationsModule,
         HttpClientModule,
+        RouterTestingModule.withRoutes([]),
+        ModalModule.forRoot(),
         ToastrModule.forRoot({
           positionClass: 'toast-top-center',
           preventDuplicates: true,
@@ -40,6 +49,8 @@ describe('StudyListComponent', () => {
       ],
       providers: [
         EntityService,
+        BsModalService,
+        BsModalRef,
         {provide: StudiesService, useValue: studyServiceSpy},
       ],
     })

@@ -39,6 +39,7 @@ const routes: Routes = [
           {
             path: '',
             redirectTo: 'studies',
+            pathMatch: 'full',
           },
         ],
       },
