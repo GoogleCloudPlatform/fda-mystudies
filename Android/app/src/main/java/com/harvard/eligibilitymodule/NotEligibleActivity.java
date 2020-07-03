@@ -120,6 +120,7 @@ public class NotEligibleActivity extends AppCompatActivity
         "",
         "",
         "",
+        "",
         "");
   }
 

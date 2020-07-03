@@ -897,6 +897,7 @@ public class DbServiceSubscriber {
           String participantId,
           String siteId,
           String hashToken,
+          String brandId,
           String version) {
     realm = AppController.getRealmobj(context);
     Studies studies = realm.where(Studies.class).equalTo("studyId", studyId).findFirst();
@@ -908,6 +909,7 @@ public class DbServiceSubscriber {
       studies.setParticipantId(participantId);
       studies.setSiteId(siteId);
       studies.setHashedToken(hashToken);
+      studies.setBrandId(brandId);
     } else {
       Studies studies1 = new Studies();
       studies1.setStudyId(studyId);
@@ -916,7 +918,7 @@ public class DbServiceSubscriber {
       studies1.setVersion(version);
       studies1.setEnrolledDate(enrolleddate);
       studies1.setParticipantId(participantId);
-      studies1.setParticipantId(participantId);
+      studies1.setBrandId(brandId);
       studies1.setSiteId(siteId);
       studies1.setHashedToken(hashToken);
       StudyData studyData = getStudyPreferencesListFromDB(realm);
