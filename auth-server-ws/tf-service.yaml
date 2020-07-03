@@ -17,4 +17,4 @@ spec:
     - protocol: TCP
       port: 50000
       targetPort: 8080
-      name: http
+      #name: http
