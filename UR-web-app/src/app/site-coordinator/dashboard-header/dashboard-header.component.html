@@ -1,7 +1,10 @@
-<nav *ngIf="showNavBar" mat-tab-nav-bar>
-    <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.link" routerLinkActive #rla="routerLinkActive"
-        [active]="rla.isActive">
-        {{link.label}}
-    </a>
-</nav>
+<div class="subheader">
+    <ul *ngIf="showNavBar" mat-tab-nav-bar class="max__w__1280 subheader__menu nav nav-tabs">
+        <li *ngFor="let link of navLinks">
+            <a mat-tab-link [routerLink]="link.link" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive">
+        {{ link.label }}
+      </a>
+        </li>
+    </ul>
+</div>
 <router-outlet></router-outlet>
