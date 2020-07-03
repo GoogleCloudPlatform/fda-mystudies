@@ -9,13 +9,16 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.validator.UserValidator;
+import java.net.UnknownHostException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -97,7 +100,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resetPassword(
       @Valid @RequestBody UpdateUserRequest userRequest, HttpServletRequest request)
-      throws JsonProcessingException {
+      throws JsonProcessingException, UnknownHostException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
     ValidationErrorResponse validationResult = UserValidator.validate(userRequest);
     if (validationResult.hasErrors()) {
@@ -105,7 +108,8 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
     }
 
-    UpdateUserResponse userResponse = userService.resetPassword(userRequest);
+    AuditLogEventRequest aleRequest = AuditEventMapper.fromHttpServletRequest(request);
+    UpdateUserResponse userResponse = userService.resetPassword(userRequest, aleRequest);
     int status =
         StringUtils.isEmpty(userResponse.getErrorDescription())
             ? HttpStatus.OK.value()

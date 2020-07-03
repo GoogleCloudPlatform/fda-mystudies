@@ -25,6 +25,11 @@ import org.springframework.util.MultiValueMap;
 @Service
 class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
+  private static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
+      "application/x-www-form-urlencoded;charset=UTF-8";
+
+  private static final String CONTENT_TYPE = "Content-Type";
+
   @Value("${security.oauth2.hydra.token_endpoint}")
   private String tokenEndpoint;
 
@@ -44,6 +49,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   public ResponseEntity<JsonNode> getToken(
       MultiValueMap<String, String> paramMap, HttpHeaders headers) {
+    headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
 
     if (REFRESH_TOKEN.equals(paramMap.getFirst(GRANT_TYPE))) {
       headers.set(AUTHORIZATION, encodedAuthorization);

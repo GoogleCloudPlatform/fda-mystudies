@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
@@ -36,6 +37,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
@@ -61,6 +64,8 @@ public class UserServiceImpl implements UserService {
   @Autowired private AppPropertyConfig appConfig;
 
   @Autowired private EmailService emailService;
+
+  @Autowired private AuthScimAuditLogHelper aleHelper;
 
   @Override
   public UserResponse createUser(UserRequest userRequest) {
@@ -126,33 +131,40 @@ public class UserServiceImpl implements UserService {
     return new UpdateUserResponse(ErrorCode.APPLICATION_ERROR);
   }
 
-  public UpdateUserResponse resetPassword(UpdateUserRequest userRequest)
+  public UpdateUserResponse resetPassword(
+      UpdateUserRequest userRequest, AuditLogEventRequest aleRequest)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
         repository.findByAppIdAndOrgIdAndEmail(
             userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
     if (entity.isPresent()) {
+      UserEntity userEntity = entity.get();
+      aleRequest.setUserId(userEntity.getUserId());
       String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
       EmailResponse emailResponse = sendPasswordResetEmail(userRequest, tempPassword);
 
       if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-        UserEntity userEntity = entity.get();
+
         ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
         setPasswordAndPasswordHistoryFields(tempPassword, userInfo);
         userEntity.setUserInfo(userInfo.toString());
         repository.saveAndFlush(userEntity);
-        logger.exit("password changed successfully!");
-        return new UpdateUserResponse(
-            HttpStatus.OK, "Your password has been changed successfully!");
+
+        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_SUCCESS, aleRequest);
+
+        logger.exit("Password reset successful.");
+        return new UpdateUserResponse(HttpStatus.OK, "Password reset successful");
       } else {
         logger.exit(
             String.format(
-                "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
+                "Password reset failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
+
+        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_FAILED, aleRequest);
         return new UpdateUserResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
       }
     }
-    logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
+    logger.exit(String.format("Password reset failed, error code=%s", ErrorCode.USER_NOT_FOUND));
     return new UpdateUserResponse(ErrorCode.USER_NOT_FOUND);
   }
 

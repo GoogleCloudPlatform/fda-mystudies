@@ -16,12 +16,17 @@ import java.util.Calendar;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
+@ConditionalOnProperty(
+    value = "commonservice.email.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class EmailServiceImpl implements EmailService {
 
   private XLogger logger = XLoggerFactory.getXLogger(EmailServiceImpl.class.getName());

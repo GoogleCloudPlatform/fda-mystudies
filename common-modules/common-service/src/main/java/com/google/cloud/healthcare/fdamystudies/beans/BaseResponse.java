@@ -13,8 +13,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
+@Setter
 @Getter
 @JsonInclude(Include.NON_NULL)
 public class BaseResponse {

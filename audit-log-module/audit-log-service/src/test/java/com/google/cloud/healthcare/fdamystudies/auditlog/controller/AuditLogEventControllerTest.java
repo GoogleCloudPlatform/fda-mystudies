@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.controller;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static org.junit.Assert.assertNotNull;
@@ -17,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.auditlog.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
 import com.google.cloud.healthcare.fdamystudies.auditlog.repository.AuditLogEventRepository;
@@ -27,7 +31,10 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +42,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
+@TestMethodOrder(OrderAnnotation.class)
 public class AuditLogEventControllerTest extends BaseMockIT {
 
   @Autowired private AuditLogEventRepository repository;
 
   @Test
+  @Order(1)
   public void shouldSaveAuditLogEvent() throws Exception {
     // Step-1 call API to post the audit log event
     HttpHeaders headers = getCommonHeaders();
@@ -68,9 +77,15 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     // Step-3 cleanup - delete the event from database
     repository.deleteById(eventId);
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
+  @Order(2)
   public void shouldReturnUnauthorized() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", INVALID_BEARER_TOKEN);
@@ -81,12 +96,19 @@ public class AuditLogEventControllerTest extends BaseMockIT {
         headers,
         "Invalid token",
         UNAUTHORIZED);
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(INVALID_TOKEN)));
   }
 
   @Test
+  @Order(3)
   public void shouldReturnNotFoundForRestClientErrorException() throws Exception {
     HttpHeaders headers = getCommonHeaders();
-    headers.add("Authorization", "Bearer " + UUID.randomUUID().toString());
+    String token = UUID.randomUUID().toString();
+    headers.add("Authorization", "Bearer " + token);
 
     performPost(
         ApiEndpoint.EVENTS.getPath(),
@@ -94,9 +116,15 @@ public class AuditLogEventControllerTest extends BaseMockIT {
         headers,
         "Not Found",
         NOT_FOUND);
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(token)));
   }
 
   @Test
+  @Order(4)
   public void shouldReturnBadRequestForInvalidContent() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
@@ -105,6 +133,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     aleRequest.setSystemId(RandomStringUtils.randomAlphanumeric(40));
     aleRequest.setUserId(RandomStringUtils.randomAlphanumeric(101));
     aleRequest.setSystemIp("0.0.0.");
+    aleRequest.setClientIp(getRandomSystemIp());
 
     MvcResult result =
         mockMvc
@@ -121,6 +150,11 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    verify(
+        2,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   private HttpHeaders getCommonHeaders() {
@@ -156,6 +190,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     aleRequest.setResourceServer("Participant Datastore");
     aleRequest.setSystemId("FMSGCAUTHSVR");
     aleRequest.setSystemIp(getRandomSystemIp());
+    aleRequest.setClientIp(getRandomSystemIp());
 
     return aleRequest;
   }
