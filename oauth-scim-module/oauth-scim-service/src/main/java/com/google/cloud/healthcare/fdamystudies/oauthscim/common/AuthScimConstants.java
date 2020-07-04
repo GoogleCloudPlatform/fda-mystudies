@@ -35,7 +35,7 @@ public final class AuthScimConstants {
   public static final String AUTHORIZATION_CODE = "authorization_code";
 
   /** to revoke previous session tokens. */
-  public static final String USER_ID = "user_id";
+  public static final String USER_ID = "userId";
 
   public static final String PASSWORD_HISTORY = "password_history";
 
@@ -52,4 +52,8 @@ public final class AuthScimConstants {
   public static final String FORGOT_PASSWORD = "forgot_password";
 
   public static final int TEMP_PASSWORD_LENGTH = 12;
+
+  public static final String TOKEN = "token";
+
+  public static final String CORRELATION_ID = "correlation_id";
 }

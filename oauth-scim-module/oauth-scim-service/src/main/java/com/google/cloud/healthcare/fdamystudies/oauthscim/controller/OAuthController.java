@@ -17,6 +17,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_URI;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SCOPE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,6 +44,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1")
 public class OAuthController {
 
+  private static final String STATUS_400_AND_ERRORS_LOG = "status=400 and errors=%s";
+
+  private static final String STATUS_D_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "begin %s request";
+
   private XLogger logger = XLoggerFactory.getXLogger(OAuthController.class.getName());
 
   @Autowired private OAuthService oauthService;
@@ -55,7 +62,7 @@ public class OAuthController {
       @RequestParam MultiValueMap<String, String> paramMap,
       @RequestHeader HttpHeaders headers,
       HttpServletRequest request) {
-    logger.entry(String.format("begin %s request", request.getRequestURI()));
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
 
     String grantType = paramMap.getFirst(GRANT_TYPE);
 
@@ -71,13 +78,59 @@ public class OAuthController {
     }
 
     if (errors.hasErrors()) {
-      logger.exit(String.format("status=400 and errors=%s", errors));
+      logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     // get token from hydra
     ResponseEntity<JsonNode> response = oauthService.getToken(paramMap, headers);
-    logger.exit(String.format("status=%d", response.getStatusCodeValue()));
+    logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
+    return response;
+  }
+
+  @PostMapping(
+      value = "/oauth2/revoke",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public ResponseEntity<?> revokeToken(
+      @RequestParam MultiValueMap<String, String> paramMap,
+      HttpServletRequest request,
+      @RequestHeader HttpHeaders headers) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    // validate required params
+    ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
+    if (errors.hasErrors()) {
+      logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    // revoke tokens
+    ResponseEntity<JsonNode> response = oauthService.revokeToken(paramMap, headers);
+    logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
+    return response;
+  }
+
+  @PostMapping(
+      value = "/oauth2/introspect",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+  public ResponseEntity<?> introspectToken(
+      @RequestParam MultiValueMap<String, String> paramMap,
+      HttpServletRequest request,
+      @RequestHeader HttpHeaders headers) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    // validate required params
+    ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
+    if (errors.hasErrors()) {
+      logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    // revoke tokens
+    ResponseEntity<JsonNode> response = oauthService.introspectToken(paramMap, headers);
+    logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
     return response;
   }
 }

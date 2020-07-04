@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextV
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Base64;
+import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -71,6 +72,14 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   @Value("${security.oauth2.token_endpoint:}")
   private String tokenEndpoint;
 
+  private String encodedAuthorization;
+
+  @PostConstruct
+  public void init() {
+    String credentials = clientId + ":" + clientSecret;
+    encodedAuthorization = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+  }
+
   @Override
   public ResponseEntity<JsonNode> introspectToken(JsonNode params) {
     logger.entry("begin introspectToken()");
@@ -117,7 +126,7 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   private ResponseEntity<JsonNode> getToken() {
     HttpHeaders headers = new HttpHeaders();
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
-    headers.add(AUTHORIZATION, getEncodedAuthorization(clientId, clientSecret));
+    headers.add(AUTHORIZATION, encodedAuthorization);
 
     MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
     requestBody.add(GRANT_TYPE, "client_credentials");
@@ -135,10 +144,5 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     }
 
     return response;
-  }
-
-  protected String getEncodedAuthorization(String clientId, String clientSecret) {
-    String credentials = clientId + ":" + clientSecret;
-    return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
   }
 }

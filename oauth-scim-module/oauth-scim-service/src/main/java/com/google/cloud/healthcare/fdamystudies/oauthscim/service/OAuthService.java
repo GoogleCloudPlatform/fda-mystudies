@@ -17,4 +17,10 @@ public interface OAuthService {
 
   public ResponseEntity<JsonNode> getToken(
       MultiValueMap<String, String> paramMap, HttpHeaders headers);
+
+  public ResponseEntity<JsonNode> revokeToken(
+      MultiValueMap<String, String> paramMap, HttpHeaders headers);
+
+  public ResponseEntity<JsonNode> introspectToken(
+      MultiValueMap<String, String> paramMap, HttpHeaders headers);
 }
