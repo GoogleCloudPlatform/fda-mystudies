@@ -16,6 +16,4 @@ public interface AuditEventService {
 
   public AuditLogEventResponse postAuditLogEvent(
       AuditLogEvent eventEnum, AuditLogEventRequest aleRequest);
-
-  public void resendAuditLogEvents();
 }
