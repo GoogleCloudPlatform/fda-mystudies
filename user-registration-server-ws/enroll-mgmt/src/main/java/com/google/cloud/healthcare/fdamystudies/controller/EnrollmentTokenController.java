@@ -98,7 +98,7 @@ public class EnrollmentTokenController {
                 response);
             return null;
           } else if (!enrollmentTokenfService.isValidStudyToken(
-              enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
+              enrollmentBean.getToken(), enrollmentBean.getStudyId(),userId)) {
             ErrorResponseUtil.getFailureResponse(
                 ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -161,7 +161,7 @@ public class EnrollmentTokenController {
                     enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
                   if (enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
                     if (enrollmentTokenfService.isValidStudyToken(
-                        enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
+                        enrollmentBean.getToken(), enrollmentBean.getStudyId(),userId)) {
                       respBean =
                           enrollmentTokenfService.enrollParticipant(
                               enrollmentBean.getStudyId(),

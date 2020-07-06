@@ -76,7 +76,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
+  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId,@NotNull String emailId) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyInfoBO> studyInfoBoCriteria = null;
@@ -93,9 +93,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           session
               .createQuery(
                   "from ParticipantRegistrySite PS where studyInfo.customId =:studyId and"
-                      + " enrollmentToken=:token")
+                      + " enrollmentToken=:token and email=:emailId")
               .setParameter("studyId", studyId)
               .setParameter("token", token)
+              .setParameter("emailId", emailId)
               .getResultList();
 
       if (!participantRegistrySite.isEmpty()) {
