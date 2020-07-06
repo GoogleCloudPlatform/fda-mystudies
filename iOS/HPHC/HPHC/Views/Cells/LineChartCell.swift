@@ -718,7 +718,7 @@ class LineChartCell: GraphChartTableViewCell {
 
     if charActivity?.type == .activeTask {
       var title = (xAxisTitles[atIndex] as? String)!
-      title = title + "\n" + "\(value)"
+      title += "\n" + "\(value)"
       xAxisTitles[atIndex] = title
     }
 

@@ -1516,12 +1516,12 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
               case .any:
 
                 if answeredSet.isSubset(of: correctAnswerSet) {
-                  userScore = userScore + 1
+                  userScore += 1
                 }
               case .all:
 
                 if answeredSet == correctAnswerSet {
-                  userScore = userScore + 1
+                  userScore += 1
                 }
               }
 
