@@ -262,6 +262,44 @@ public class OAuthControllerTest extends BaseMockIT {
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
+  @Test
+  @Order(9)
+  public void shouldReturnBadRequestForRevokeToken() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.REVOKE_TOKEN.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.violations[0].path").value("token"))
+        .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
+  }
+
+  @Test
+  @Order(10)
+  public void shouldReturnBadRequestForIntrospectToken() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.TOKEN_INTROSPECT.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.violations[0].path").value("token"))
+        .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
+  }
+
   private HttpHeaders getCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
