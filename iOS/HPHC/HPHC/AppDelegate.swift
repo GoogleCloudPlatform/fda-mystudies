@@ -564,7 +564,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         (dashboardTabBarVC.viewControllers?.first as? UINavigationController)?
         .topViewController as? ActivitiesViewController
       {
-        activitiesVC.userDidnavigatonFromNotification()
+        activitiesVC.userDidNavigateFromNotification()
       }
     } else if let leftController =
       (menuVC as? FDASlideMenuViewController)?.leftViewController
