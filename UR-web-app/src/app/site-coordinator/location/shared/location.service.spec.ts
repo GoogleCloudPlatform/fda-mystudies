@@ -126,31 +126,6 @@ describe('LocationService', () => {
     );
   }));
 
-  it('should return an error when the server returns a 400', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      ['getCollection'],
-    );
-    locationService = new LocationService(entityServicespy);
-    const errorResponses: ApiResponse = {
-      error: {
-        userMessage: 'Bad Request',
-        type: 'error',
-        detailMessage:
-          'Missing request header userId for method parameter of type Integer',
-      },
-    };
-
-    entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
-    tick(40);
-    locationService.getLocations().subscribe(
-      () => fail('expected an error, not locations'),
-      (error: ApiResponse) => {
-        expect(error.error.userMessage).toBe('Bad Request');
-      },
-    );
-  }));
-
   it('add location should return an error when the server returns a 400 ', fakeAsync(() => {
     const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
       'EntityService',
@@ -171,99 +146,6 @@ describe('LocationService', () => {
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.error.userMessage).toBe('customId already exists');
-      },
-    );
-  }));
-  it('add location should return an error when mandatory field customId is empty/null ', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      ['post'],
-    );
-    const expectedMissingPostData = {
-      id: 0,
-      status: '0',
-      customId: '',
-      name: 'Location Name',
-      description: 'location Decription',
-      studiesCount: 0,
-    };
-    locationService = new LocationService(entityServicespy);
-    const errorResponses: ApiResponse = {
-      error: {
-        userMessage: 'Missing required argument',
-        type: 'error',
-        detailMessage: 'Missing required argument',
-      },
-    };
-
-    entityServicespy.post.and.returnValue(throwError(errorResponses));
-    tick(40);
-    locationService.addLocation(expectedMissingPostData).subscribe(
-      () => fail('expected an error'),
-      (error: ApiResponse) => {
-        expect(error.error.userMessage).toBe('Missing required argument');
-      },
-    );
-  }));
-  it('add location should return an error when mandatory name field is empty/null ', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      ['post'],
-    );
-    const expectedMissingPostData = {
-      id: 0,
-      status: '0',
-      customId: 'customID',
-      name: '',
-      description: 'location Decription',
-      studiesCount: 0,
-    };
-    locationService = new LocationService(entityServicespy);
-    const errorResponses: ApiResponse = {
-      error: {
-        userMessage: 'Missing required argument',
-        type: 'error',
-        detailMessage: 'Missing required argument',
-      },
-    };
-
-    entityServicespy.post.and.returnValue(throwError(errorResponses));
-    tick(40);
-    locationService.addLocation(expectedMissingPostData).subscribe(
-      () => fail('expected an error'),
-      (error: ApiResponse) => {
-        expect(error.error.userMessage).toBe('Missing required argument');
-      },
-    );
-  }));
-  it('add location should return an error when mandatory description field is empty/null ', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      ['post'],
-    );
-    const expectedMissingPostData = {
-      id: 0,
-      status: '0',
-      customId: 'customID',
-      name: 'Loacation test',
-      description: '',
-      studiesCount: 0,
-    };
-    locationService = new LocationService(entityServicespy);
-    const errorResponses: ApiResponse = {
-      error: {
-        userMessage: 'Missing required argument',
-        type: 'error',
-        detailMessage: 'Missing required argument',
-      },
-    };
-
-    entityServicespy.post.and.returnValue(throwError(errorResponses));
-    tick(40);
-    locationService.addLocation(expectedMissingPostData).subscribe(
-      () => fail('expected an error'),
-      (error: ApiResponse) => {
-        expect(error.error.userMessage).toBe('Missing required argument');
       },
     );
   }));

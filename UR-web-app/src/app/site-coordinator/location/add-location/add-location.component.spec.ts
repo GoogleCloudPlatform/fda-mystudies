@@ -12,7 +12,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {RouterTestingModule} from '@angular/router/testing';
 import {LocationModule} from '../location.module';
-import {FormsModule, ReactiveFormsModule, NgForm} from '@angular/forms';
+import {FormsModule, NgForm} from '@angular/forms';
 import {EntityService} from 'src/app/service/entity.service';
 import {HttpClientModule} from '@angular/common/http';
 import {By} from '@angular/platform-browser';
@@ -20,7 +20,6 @@ import {By} from '@angular/platform-browser';
 describe('AddLocationComponent', () => {
   let component: AddLocationComponent;
   let fixture: ComponentFixture<AddLocationComponent>;
-  let form: DebugElement;
   let submitLocation: DebugElement;
   let locationCustomIde1: DebugElement;
   let locationNamee1: DebugElement;
@@ -35,7 +34,6 @@ describe('AddLocationComponent', () => {
         LocationModule,
         HttpClientModule,
         FormsModule,
-        ReactiveFormsModule,
         ToastrModule.forRoot({
           positionClass: 'toast-top-center',
           preventDuplicates: true,
@@ -49,7 +47,6 @@ describe('AddLocationComponent', () => {
   beforeEach(async(() => {
     fixture = TestBed.createComponent(AddLocationComponent);
     component = fixture.componentInstance;
-    form = fixture.debugElement.query(By.css('form'));
     submitLocation = fixture.debugElement.query(
       By.css('button[type="submit"]'),
     );
@@ -79,32 +76,6 @@ describe('AddLocationComponent', () => {
     fixture.detectChanges();
     expect(submitButton.disabled).toBeTruthy();
   });
-  it('should add novalidate by default to form element', fakeAsync(() => {
-    fixture.detectChanges();
-    tick();
-    const formTest = form.nativeElement as HTMLFormElement;
-    expect(formTest.getAttribute('novalidate')).toEqual('');
-  }));
-
-  it('should set status classes with ngModelGroup and ngForm', fakeAsync(() => {
-    fixture.detectChanges();
-
-    const input = fixture.debugElement.query(By.css('input'));
-    const inputFormElement = input.nativeElement as HTMLElement;
-
-    void fixture.whenStable().then(() => {
-      fixture.detectChanges();
-
-      expect(inputFormElement.classList.length).toEqual(4);
-      expect(inputFormElement.classList.value).toEqual(
-        'form-control ng-untouched ng-pristine ng-invalid',
-      );
-
-      dispatchEvent(new Event('input'));
-      tick();
-      fixture.detectChanges();
-    });
-  }));
 
   it('Entering value in input controls and emit output events', fakeAsync(() => {
     fixture.componentInstance.location.customId = 'customid3';

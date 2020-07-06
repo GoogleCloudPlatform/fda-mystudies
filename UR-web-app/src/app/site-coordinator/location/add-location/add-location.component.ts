@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
@@ -13,7 +13,6 @@ import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
 })
 export class AddLocationComponent {
   @Input() enabled = true;
-  @Output() onFormSubmit: EventEmitter<unknown> = new EventEmitter<unknown>();
   location: Location = new Location();
   constructor(
     private readonly router: Router,

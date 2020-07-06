@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Location} from '@angular/common';
+import {environment} from 'src/environments/environment';
 
 @Injectable()
 export class EntityService<T> {
-  baseUrl = 'http://35.222.67.4:8086/urwebappws';
+  baseUrl = environment.baseUrl;
 
   constructor(private readonly http: HttpClient) {}
 
