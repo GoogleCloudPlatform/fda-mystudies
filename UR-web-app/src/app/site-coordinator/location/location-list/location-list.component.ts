@@ -37,7 +37,7 @@ export class LocationListComponent implements OnInit {
         return throwError(error);
       }),
       map(([locations, query]) => {
-        this.locations = locations as Location[];
+        this.locations = locations;
         return this.locations.filter(
           (location: Location) =>
             (location.name &&

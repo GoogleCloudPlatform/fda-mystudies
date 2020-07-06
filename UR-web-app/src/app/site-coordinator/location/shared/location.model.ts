@@ -1,13 +1,16 @@
-export class Location {
-  id = 0;
+import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
+import {ApiResponse} from 'src/app/entity/error.model';
 
-  name = '';
+export interface Location extends ApiSuccessResponse, ApiResponse {
+  id: number;
 
-  customId = '';
+  name: string;
 
-  description = '';
+  customId: string;
 
-  status = '';
+  description: string;
 
-  studiesCount = 0;
+  status: string;
+
+  studiesCount: number;
 }
