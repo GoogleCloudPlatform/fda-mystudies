@@ -32,10 +32,6 @@ export class LocationListComponent implements OnInit {
       this.locationService.getLocations(),
       this.query$,
     ).pipe(
-      catchError((error: ApiResponse) => {
-        this.toastr.error(error.error.userMessage);
-        return throwError(error);
-      }),
       map(([locations, query]) => {
         this.locations = locations;
         return locations.filter(
