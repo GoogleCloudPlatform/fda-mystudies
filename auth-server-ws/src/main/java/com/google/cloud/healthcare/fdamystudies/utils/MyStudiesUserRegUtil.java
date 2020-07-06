@@ -89,7 +89,7 @@ public class MyStudiesUserRegUtil {
             + " which has been sent to your registered email. "
             + "If not received, would you like to resend verification link?"),
 
-    INVALID_USERNAME_PASSWORD_MSG("Invalid username or password"),
+   INVALID_USERNAME_PASSWORD_MSG("Email or password is invalid. If you have not registered, please Sign Up"),
 
     PASSWORD_EXPIRED("Password has expired"),
 
