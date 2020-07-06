@@ -1606,6 +1606,12 @@ class DBHandler: NSObject {
 
   }
 
+  class func isChartsAvailable(for studyID: String) -> Bool {
+    guard let realm = DBHandler.getRealmObject() else { return false }
+    return !realm.objects(DBCharts.self)
+      .filter("studyId == %@", studyID).isEmpty
+  }
+
   /// Saves Statistics data for actvity into DB.
   /// - Parameters:
   ///   - activityId: ActivityID for which stats to be saved.
