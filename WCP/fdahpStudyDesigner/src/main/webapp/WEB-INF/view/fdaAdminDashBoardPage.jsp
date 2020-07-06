@@ -116,9 +116,9 @@
       </div>
     </div>
     <div class="footer">
-      <span>Copyright Placeholder</span><span><a href="/studybuilder/terms.do" id=""
+      <span>© 2020 ValidCare LLC</span><span><a href="https://validcare.com/study-lft-terms-of-use/" id=""
                                                  target="_blank">Terms</a></span><span><a
-            href="/studybuilder/privacyPolicy.do" id="" target="_blank">Privacy Policy</a></span>
+            href="https://validcare.com/study-lft-privacy-policy/" id="" target="_blank">Privacy Policy</a></span>
     </div>
     <!--container-->
   </div>
