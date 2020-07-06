@@ -1,7 +1,6 @@
 included:
   - HPHC 
 disabled_rules:
-  - force_try
   - type_body_length
   - function_body_length
   - trailing_whitespace
