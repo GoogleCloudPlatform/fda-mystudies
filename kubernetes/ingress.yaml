@@ -5,7 +5,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: my-studies-ingress-ip
     networking.gke.io/managed-certificates: vr-validcare-research-cert
-    kubernetes.io/ingress.allow-http: "false"
+    #kubernetes.io/ingress.allow-http: "false"
 spec:
   rules:
     - http:
