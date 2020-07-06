@@ -25,7 +25,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                # The "fda_resources" should eventually come from an environment variable.
+                # The "fda_resources" should eventually come from an environment variables.
                 command: ["gcsfuse", "-o", "nonempty", "validcare-research-my-studies-fda-resources", "/usr/local/tomcat/webapps/fdaResources"]
             preStop:
               exec:
