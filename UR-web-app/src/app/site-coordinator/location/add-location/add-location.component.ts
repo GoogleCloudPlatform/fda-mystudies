@@ -3,8 +3,6 @@ import {Router} from '@angular/router';
 import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
 import {ToastrService} from 'ngx-toastr';
-import {ApiResponse} from 'src/app/entity/error.model';
-import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
 
 @Component({
   selector: 'location-add',
@@ -13,7 +11,7 @@ import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
 })
 export class AddLocationComponent {
   @Input() enabled = true;
-  location: Location = new Location();
+  location = <Location>{};
   constructor(
     private readonly router: Router,
     private readonly locationService: LocationService,
@@ -22,14 +20,14 @@ export class AddLocationComponent {
 
   addLocation(): void {
     this.locationService.addLocation(this.location).subscribe(
-      (succesResponse: unknown) => {
-        const successData = succesResponse as ApiSuccessResponse;
-        this.toastr.success(successData.successBean.message);
+      (succesResponse: Location) => {
+        const success = succesResponse.successBean;
+        this.toastr.success(success.message);
         void this.router.navigate(['/coordinator/locations']);
       },
-      (errorResponse: unknown) => {
-        const errorData = errorResponse as ApiResponse;
-        this.toastr.error(errorData.error.userMessage);
+      (errorResponse: Location) => {
+        const errs = errorResponse.error;
+        this.toastr.error(errs.userMessage);
       },
     );
   }

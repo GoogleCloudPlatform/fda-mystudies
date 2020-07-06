@@ -7,11 +7,11 @@ import {Location} from '../shared/location.model';
   providedIn: 'root',
 })
 export class LocationService {
-  constructor(private readonly entityService: EntityService<unknown>) {}
-  getLocations(): Observable<unknown[]> {
+  constructor(private readonly entityService: EntityService<Location>) {}
+  getLocations(): Observable<Location[]> {
     return this.entityService.getCollection('locations');
   }
-  addLocation(location: Location): Observable<unknown> {
+  addLocation(location: Location): Observable<Location> {
     return this.entityService.post(JSON.stringify(location), 'locations');
   }
 }
