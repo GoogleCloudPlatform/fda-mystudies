@@ -124,4 +124,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${cloud.institution.bucket}")
   private String institutionBucketName;
+  
+  @Value("${auth.server.deactivateurl}")
+  private String authServerDeactivateUrl;
 }
