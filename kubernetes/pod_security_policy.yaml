@@ -15,7 +15,7 @@ metadata:
 spec:
   privileged: true
   # Required to prevent escalations to root.
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
   # This is redundant with non-root + disallow privilege escalation,
   # but we can provide it for defense in depth.
   requiredDropCapabilities:
