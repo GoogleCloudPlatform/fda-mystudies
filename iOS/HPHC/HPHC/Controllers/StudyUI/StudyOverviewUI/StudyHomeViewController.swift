@@ -221,6 +221,8 @@ class StudyHomeViewController: UIViewController {
         buttonBack.setImage(UIImage(named: "menu_icn"), for: .normal)
         buttonBack.tag = 200
         slideMenuController()?.leftPanGesture?.isEnabled = false
+      } else if loadViewFrom == .resource {
+        buttonBack.isHidden = false
       }
     }
   }
