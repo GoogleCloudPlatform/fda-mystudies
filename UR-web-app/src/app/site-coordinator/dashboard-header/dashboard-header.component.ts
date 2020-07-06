@@ -12,7 +12,6 @@ export interface NavLink {
 })
 export class DashboardHeaderComponent implements OnInit {
   navLinks: NavLink[];
-  activeLinkIndex = 0;
   showNavBar = true;
   constructor(private readonly router: Router) {
     this.navLinks = [
@@ -38,7 +37,6 @@ export class DashboardHeaderComponent implements OnInit {
       for (const navLink of this.navLinks) {
         if (navLink.link === this.router.url) {
           this.showNavBar = true;
-          this.activeLinkIndex = this.navLinks.indexOf(navLink);
           break;
         } else {
           this.showNavBar = false;

@@ -1,4 +1,4 @@
-export interface DashboardModel {
+export interface Study {
   appId: string;
   appInfoId: number;
   customId: string;
@@ -11,6 +11,7 @@ export interface DashboardModel {
   studyPermission: number;
   totalSitesCount: number;
   type: string;
+  logo: string;
 }
 export interface Site {
   edit: number;

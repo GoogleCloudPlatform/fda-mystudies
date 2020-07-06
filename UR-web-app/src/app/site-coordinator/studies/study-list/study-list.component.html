@@ -8,9 +8,8 @@
                         class="flex__justify__space-between flex__wrap">
                         <div class="">
                             <div class="flex__ flex__row align__items__center">
-                                <div class="img__container__left">
-                                    <img class="" src="assets/images/site-list-tab.gif"
-                                        alt="A Study for Pregnant Women" />
+                                <div class="img__container__left" *ngIf="study.logo">
+                                    <img class="" [src]="study.logo" />
                                 </div>
                                 <div>
                                     <div class="blue__text__md text-capitalize">
@@ -21,8 +20,12 @@
                                     </div>
                                     <div class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none">
                                         <div class="col-xs-6 col-md-12 p-none">
-                                            <span *ngIf="study.type != 'OPEN'">{{ study.totalSitesCount }}
-                                                sites</span><span *ngIf="study.type == 'OPEN'">Open Study</span>
+                                            <span *ngIf="study.type != 'OPEN'">
+                                                {{ study.totalSitesCount }}sites
+                                            </span>
+                                            <span *ngIf="study.type == 'OPEN'">
+                                                Open Study
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -44,22 +47,32 @@
                             ? 'orange__text__sm'
                             : 'green__text__sm'
                         ">
-                                                <span *ngIf="study.invitedCount != 0">{{ study.enrolledCount }} /
-                                                    {{ study.invitedCount }}</span><span
-                                                    *ngIf="study.invitedCount == 0">N/A</span>
+                                                <span *ngIf="study.invitedCount != 0">
+                                                    {{ study.enrolledCount }} / {{ study.invitedCount }}
+                                                </span>
+                                                <span *ngIf="study.invitedCount == 0">
+                                                    N/A
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="text-right progress__bar__next">
                                     <div class="progress-bar-next__title">
-                                        <span
-                                            *ngIf="study.invitedCount != 0">{{ study.enrollmentPercentage | number: ".2-2" }}%</span><span
-                                            *ngIf="study.invitedCount == 0">N/A</span>
+                                        <span *ngIf="study.invitedCount != 0">
+                                            {{ study.enrollmentPercentage | number: ".2-2" }}%
+                                        </span>
+                                        <span *ngIf="study.invitedCount == 0">
+                                            N/A
+                                        </span>
                                     </div>
                                     <div class="text-grey__sm">
-                                        <span *ngIf="study.type != 'OPEN'">Enrolled / Invited</span><span
-                                            *ngIf="study.type == 'OPEN'">Enrolled / Target</span>
+                                        <span *ngIf="study.type != 'OPEN'">
+                                            Enrolled / Invited
+                                        </span>
+                                        <span *ngIf="study.type == 'OPEN'">
+                                            Enrolled / Target
+                                        </span>
                                     </div>
                                 </div>
                             </div>

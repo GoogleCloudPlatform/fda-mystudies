@@ -19,7 +19,7 @@ import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
 
 import {StudiesModule} from '../studies.module';
 import {StudiesService} from '../shared/studies.service';
-import {DashboardModel} from '../shared/dashboard.model';
+import {Study} from '../shared/study.model';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
 
 describe('StudyListComponent', () => {
@@ -58,7 +58,7 @@ describe('StudyListComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(StudyListComponent);
         component = fixture.componentInstance;
-        const expectedStudyList: Observable<DashboardModel[]> = of([
+        const expectedStudyList: Observable<Study[]> = of([
           {
             appId: '',
             appInfoId: 0,
@@ -72,6 +72,7 @@ describe('StudyListComponent', () => {
             studyPermission: 0,
             totalSitesCount: 16,
             type: 'OPEN',
+            logo: '/path_to_img/',
           },
           {
             appId: '',
@@ -86,6 +87,7 @@ describe('StudyListComponent', () => {
             studyPermission: 1,
             totalSitesCount: 5,
             type: 'OPEN',
+            logo: '/path_to_img/',
           },
           {
             appId: '',
@@ -100,6 +102,7 @@ describe('StudyListComponent', () => {
             studyPermission: 2,
             totalSitesCount: 6,
             type: 'CLOSE',
+            logo: '/path_to_img/',
           },
         ]);
         studyServiceSpy.getStudies.and.returnValue(expectedStudyList);
@@ -116,12 +119,7 @@ describe('StudyListComponent', () => {
       'should not have studies before ngOnInit',
     );
   });
-  it('should NOT have studies immediately after ngOnInit', () => {
-    expect(component.studies.length).toBe(
-      0,
-      'should not have studies until service promise resolves',
-    );
-  });
+
   describe('after get studies', () => {
     beforeEach(async(() => {
       fixture.detectChanges();
@@ -129,19 +127,13 @@ describe('StudyListComponent', () => {
         fixture.detectChanges();
       });
     }));
-    it('should not have search box ', () => {
-      const compiled = fixture.nativeElement as HTMLElement;
-      expect(compiled.querySelector('.search-icon')?.classList.length).toBe(
-        undefined,
-        'should not have search box',
-      );
-    });
+
     it('should get the studies List via refresh function', fakeAsync(() => {
       component.study$.subscribe((studies) => {
         expect(studies.length).toEqual(3);
       });
     }));
-    it('should DISPLAY All Studies', () => {
+    it('should display all studies', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       fixture.detectChanges();
       expect(compiled.querySelectorAll('.studies_row').length).toBe(

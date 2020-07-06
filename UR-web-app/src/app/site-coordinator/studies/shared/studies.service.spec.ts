@@ -6,7 +6,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/error.model';
 import {throwError, of} from 'rxjs';
-import {DashboardModel} from '../shared/dashboard.model';
+import {Study} from './study.model';
 import {StudiesService} from './studies.service';
 
 describe('StudiesService', () => {
@@ -25,6 +25,7 @@ describe('StudiesService', () => {
       studyPermission: 0,
       totalSitesCount: 16,
       type: 'OPEN',
+      logo: '/path_to_img/',
     },
     {
       appId: '',
@@ -39,6 +40,7 @@ describe('StudiesService', () => {
       studyPermission: 1,
       totalSitesCount: 5,
       type: 'OPEN',
+      logo: '/path_to_img/',
     },
     {
       appId: '',
@@ -53,6 +55,7 @@ describe('StudiesService', () => {
       studyPermission: 2,
       totalSitesCount: 6,
       type: 'CLOSE',
+      logo: '/path_to_img/',
     },
   ];
   beforeEach(() => {
@@ -74,10 +77,11 @@ describe('StudiesService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return expected Studies List', () => {
-    const entityServicespy = jasmine.createSpyObj<
-      EntityService<DashboardModel>
-    >('EntityService', ['getCollection']);
+  it('should return expected Studies List', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
+      'EntityService',
+      ['getCollection'],
+    );
     studiesService = new StudiesService(entityServicespy);
 
     entityServicespy.getCollection.and.returnValue(of(expectedStudies));
@@ -90,34 +94,13 @@ describe('StudiesService', () => {
       );
 
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
-  });
-  it('should return an error when the server returns a 401', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<
-      EntityService<DashboardModel>
-    >('EntityService', ['getCollection']);
-    studiesService = new StudiesService(entityServicespy);
-    const errorResponse: ApiResponse = {
-      error: {
-        userMessage: 'User does not exist',
-        type: 'error',
-        detailMessage: '404 Cant able to get the details',
-      },
-    };
-
-    entityServicespy.getCollection.and.returnValue(throwError(errorResponse));
-
-    studiesService.getStudies().subscribe(
-      () => fail('expected an error'),
-      (error: ApiResponse) => {
-        expect(error.error.userMessage).toContain('User does not exist');
-      },
-    );
   }));
 
   it('should return an error when the server returns a 400', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<
-      EntityService<DashboardModel>
-    >('EntityService', ['getCollection']);
+    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
+      'EntityService',
+      ['getCollection'],
+    );
     studiesService = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
       error: {

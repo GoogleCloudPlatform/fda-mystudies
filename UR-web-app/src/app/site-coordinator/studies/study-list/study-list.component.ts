@@ -5,7 +5,7 @@ import {ApiResponse} from 'src/app/entity/error.model';
 import {throwError, BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {DashboardModel} from '../shared/dashboard.model';
+import {Study} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
 @Component({
   selector: 'app-study-list',
@@ -14,8 +14,8 @@ import {StudiesService} from '../shared/studies.service';
 })
 export class StudyListComponent implements OnInit {
   query$ = new BehaviorSubject('');
-  study$: Observable<DashboardModel[]> = of([]);
-  studies: DashboardModel[] = [];
+  study$: Observable<Study[]> = of([]);
+  studies: Study[] = [];
   constructor(
     private readonly studiesService: StudiesService,
     private readonly router: Router,
@@ -36,9 +36,9 @@ export class StudyListComponent implements OnInit {
         return throwError(error);
       }),
       map(([studies, query]) => {
-        this.studies = studies as DashboardModel[];
+        this.studies = studies;
         return this.studies.filter(
-          (study: DashboardModel) =>
+          (study: Study) =>
             (study.name &&
               study.name.toLowerCase().includes(query.toLowerCase())) ||
             (study.customId &&
