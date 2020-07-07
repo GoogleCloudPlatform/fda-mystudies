@@ -40,19 +40,15 @@ public class AuditLogEventEntity {
   @Column(name = "system_id", nullable = false, length = 30)
   private String systemId;
 
-  @Column(
-      name = "event_timestamp",
-      nullable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP")
-  private Timestamp eventTimestamp;
+  @Column(name = "occurred", nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
+  private Timestamp occurred;
 
   @Column(
-      name = "created_timestamp",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp createdTimestamp;
+  private Timestamp created;
 
   @Column(name = "alert", nullable = false, length = 1)
   private boolean alert;
