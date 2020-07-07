@@ -18,7 +18,7 @@ public class TokenUtil {
   private TokenUtil() {}
 
   public static String randomString(int length) {
-		StringBuilder sb = new StringBuilder(length);
+    StringBuilder sb = new StringBuilder(length);
     for (int i = 0; i < length; i++) {
       sb.append(SOURCE.charAt(secureRnd.nextInt(SOURCE.length())));
     }
