@@ -1,12 +1,16 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -24,9 +28,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.config.AppConfig;
 import com.google.cloud.healthcare.fdamystudies.controller.UserProfileController;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -41,11 +45,15 @@ public class UserProfileControllerTest extends BaseMockIT {
   private static final String DEACTIVATE_PATH = "/deactivate";
   private static final String RESEND_CONFIRMATION_PATH = "/resendConfirmation";
 
-  @Autowired UserProfileController profileController;
-  @Autowired UserManagementProfileService profileService;
-  @Autowired FdaEaUserDetailsServiceImpl service;
-  @Autowired TestRestTemplate restTemplate;
-  @Autowired UserDetailsBORepository repository;
+  @Autowired private UserProfileController profileController;
+
+  @Autowired private UserManagementProfileService profileService;
+
+  @Autowired private FdaEaUserDetailsServiceImpl service;
+
+  @Autowired private TestRestTemplate restTemplate;
+
+  @Autowired private AppConfig appconfig;
 
   @Value("${auth.server.deactivateUrl}")
   private String deactivateUrl;
@@ -93,7 +101,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     MvcResult result = performGet(USER_PROFILE_PATH, headers, OK);
     boolean remote =
         JsonPath.read(result.getResponse().getContentAsString(), "$.settings.remoteNotifications");
-    assertEquals(true, remote);
+    assertTrue(remote);
   }
 
   @Test
@@ -161,6 +169,14 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, Constants.SUCCESS, OK);
+
+    verify(appconfig.emailNotification(), times(1))
+        .sendEmailNotification(
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.any(),
+            Mockito.any());
   }
 
   private String getLoginBean(String emailId, String password) throws JsonProcessingException {

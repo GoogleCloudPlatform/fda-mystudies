@@ -155,7 +155,9 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
         .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
         .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
-        .andExpect(jsonPath("$.response.results[0].error", is("NotRegistered")));
+        .andExpect(
+            jsonPath(
+                "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
 
     // GatewayLevel notificationType
     requestJson =
@@ -172,7 +174,9 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
         .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
         .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
-        .andExpect(jsonPath("$.response.results[0].error", is("NotRegistered")));
+        .andExpect(
+            jsonPath(
+                "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
   }
 
   private String getNotificationForm(
