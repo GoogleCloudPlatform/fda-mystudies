@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import org.springframework.http.HttpStatus;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 
 public class UpdateUserResponse extends BaseResponse {
 
@@ -19,7 +19,7 @@ public class UpdateUserResponse extends BaseResponse {
     super(errorCode);
   }
 
-  public UpdateUserResponse(HttpStatus httpStatus, String message) {
-    super(httpStatus, message);
+  public UpdateUserResponse(MessageCode messageCode) {
+    super(messageCode);
   }
 }

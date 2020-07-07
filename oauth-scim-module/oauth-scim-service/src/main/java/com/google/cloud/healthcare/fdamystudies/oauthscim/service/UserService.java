@@ -9,6 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
@@ -21,6 +23,6 @@ public interface UserService {
   public UpdateUserResponse updateUser(UpdateUserRequest userRequest)
       throws JsonProcessingException;
 
-  public UpdateUserResponse resetPassword(UpdateUserRequest userRequest)
+  public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordRequest)
       throws JsonProcessingException;
 }

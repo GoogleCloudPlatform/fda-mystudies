@@ -9,6 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
@@ -91,27 +93,19 @@ public class UserController {
     return ResponseEntity.status(status).body(userResponse);
   }
 
-  @PutMapping(
+  @PostMapping(
       value = "/user/reset_password",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resetPassword(
-      @Valid @RequestBody UpdateUserRequest userRequest, HttpServletRequest request)
+      @Valid @RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
-    ValidationErrorResponse validationResult = UserValidator.validate(userRequest);
-    if (validationResult.hasErrors()) {
-      logger.exit(String.format(VALIDATION_ERROS_LOG, validationResult));
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
-    }
 
-    UpdateUserResponse userResponse = userService.resetPassword(userRequest);
-    int status =
-        StringUtils.isEmpty(userResponse.getErrorDescription())
-            ? HttpStatus.OK.value()
-            : userResponse.getHttpStatusCode();
+    ResetPasswordResponse resetPasswordResponse = userService.resetPassword(resetPasswordRequest);
 
-    logger.exit(String.format(STATUS_LOG, status));
-    return ResponseEntity.status(status).body(userResponse);
+    logger.exit(String.format(STATUS_LOG, resetPasswordResponse.getHttpStatusCode()));
+    return ResponseEntity.status(resetPasswordResponse.getHttpStatusCode())
+        .body(resetPasswordResponse);
   }
 }

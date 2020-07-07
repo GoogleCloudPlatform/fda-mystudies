@@ -29,12 +29,15 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
@@ -126,46 +129,50 @@ public class UserServiceImpl implements UserService {
     return new UpdateUserResponse(ErrorCode.APPLICATION_ERROR);
   }
 
-  public UpdateUserResponse resetPassword(UpdateUserRequest userRequest)
+  public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordRequest)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
         repository.findByAppIdAndOrgIdAndEmail(
-            userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
-    if (entity.isPresent()) {
-      String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
-      EmailResponse emailResponse = sendPasswordResetEmail(userRequest, tempPassword);
+            resetPasswordRequest.getAppId(),
+            resetPasswordRequest.getOrgId(),
+            resetPasswordRequest.getEmail());
 
-      if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-        UserEntity userEntity = entity.get();
-        ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
-        setPasswordAndPasswordHistoryFields(tempPassword, userInfo);
-        userEntity.setUserInfo(userInfo.toString());
-        repository.saveAndFlush(userEntity);
-        logger.exit("password changed successfully!");
-        return new UpdateUserResponse(
-            HttpStatus.OK, "Your password has been changed successfully!");
-      } else {
-        logger.exit(
-            String.format(
-                "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
-        return new UpdateUserResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
-      }
+    if (!entity.isPresent()) {
+      logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
+      return new ResetPasswordResponse(ErrorCode.USER_NOT_FOUND);
     }
-    logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
-    return new UpdateUserResponse(ErrorCode.USER_NOT_FOUND);
+
+    String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
+    EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
+
+    if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
+      UserEntity userEntity = entity.get();
+      ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+      setPasswordAndPasswordHistoryFields(tempPassword, userInfo);
+      userEntity.setUserInfo(userInfo.toString());
+      repository.saveAndFlush(userEntity);
+      logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
+      return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
+    } else {
+      logger.exit(
+          String.format(
+              "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
+      return new ResetPasswordResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
+    }
   }
 
-  private EmailResponse sendPasswordResetEmail(UpdateUserRequest userRequest, String tempPassword) {
+  private EmailResponse sendPasswordResetEmail(
+      ResetPasswordRequest resetPasswordRequest, String tempPassword) {
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("orgId", userRequest.getOrgId());
-    templateArgs.put("appId", userRequest.getAppId());
+    templateArgs.put("orgId", resetPasswordRequest.getOrgId());
+    templateArgs.put("appId", resetPasswordRequest.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),
-            new String[] {userRequest.getEmail()},
+            new String[] {resetPasswordRequest.getEmail()},
             null,
             null,
             appConfig.getMailResetPasswordSubject(),
@@ -195,7 +202,7 @@ public class UserServiceImpl implements UserService {
       setPasswordAndPasswordHistoryFields(userRequest.getNewPassword(), userInfo);
       userEntity.setUserInfo(userInfo.toString());
       repository.saveAndFlush(userEntity);
-      return new UpdateUserResponse(HttpStatus.OK, "Your password has been changed successfully!");
+      return new UpdateUserResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
     } else {
       return new UpdateUserResponse(ErrorCode.USER_NOT_FOUND);
     }
