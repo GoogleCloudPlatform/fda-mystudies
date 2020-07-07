@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -388,7 +388,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
 
-    verify(emailSender, atLeast(1)).send(isA(SimpleMailMessage.class));
+    verify(emailSender, times(1)).send(isA(SimpleMailMessage.class));
 
     // Step-2 Find UserEntity by userId and then compare the password hash values
     UserEntity userEntity = repository.findByUserId(userId).get();
