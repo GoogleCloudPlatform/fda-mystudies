@@ -102,19 +102,4 @@ describe('AddLocationComponent', () => {
       );
     });
   }));
-
-  it('should reset the form submit state when reset button is clicked', fakeAsync(() => {
-    const forms = fixture.debugElement.children[0].injector.get(NgForm);
-    const formEl = fixture.debugElement.query(By.css('form'));
-
-    dispatchEvent(new Event(formEl.nativeElement));
-    fixture.detectChanges();
-    tick();
-    expect(forms.valid).toBe(true);
-
-    dispatchEvent(new Event(formEl.nativeElement));
-    fixture.detectChanges();
-    tick();
-    expect(forms.valid).toBe(true);
-  }));
 });
