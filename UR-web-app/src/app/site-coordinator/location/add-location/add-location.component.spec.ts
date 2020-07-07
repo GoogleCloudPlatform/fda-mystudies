@@ -77,7 +77,7 @@ describe('AddLocationComponent', () => {
     expect(submitButton.disabled).toBeTruthy();
   });
 
-  it('Entering value in input controls and emit output events', fakeAsync(() => {
+  it('Entering value in input controls and check the same value', fakeAsync(() => {
     fixture.componentInstance.location.customId = 'customid3';
     fixture.componentInstance.location.name = 'Location Name';
     fixture.componentInstance.location.description =
