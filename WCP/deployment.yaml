@@ -19,9 +19,9 @@ spec:
           image: gcr.io/validcare-research-apps/study-designer:latest
           securityContext:
             privileged: true
-            capabilities:
-              add:
-                - SYS_ADMIN
+            #capabilities:
+             # add:
+               # - SYS_ADMIN
           lifecycle:
             postStart:
               exec:
