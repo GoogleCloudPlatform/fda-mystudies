@@ -91,7 +91,6 @@ class VerificationViewController: UIViewController {
     } else {
       UserServices().verifyEmail(
         emailId: self.emailId!,
-        userId: "",
         verificationCode: (self.textFieldVerificationCode?.text)!,
         delegate: self
       )
@@ -103,7 +102,6 @@ class VerificationViewController: UIViewController {
     if (textFieldVerificationCode?.text?.count)! > 0 {
       UserServices().verifyEmail(
         emailId: User.currentUser.emailId!,
-        userId: User.currentUser.userId!,
         verificationCode: (self.textFieldVerificationCode?.text)!,
         delegate: self
       )

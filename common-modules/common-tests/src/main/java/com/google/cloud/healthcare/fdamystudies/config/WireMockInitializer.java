@@ -8,14 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextClosedEvent;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.common.ClasspathFileSource;
 import com.github.tomakehurst.wiremock.common.FileSource;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextClosedEvent;
 
 public class WireMockInitializer
     implements ApplicationContextInitializer<ConfigurableApplicationContext> {

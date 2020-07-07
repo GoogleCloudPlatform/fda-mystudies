@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.auditlog;
+package com.google.cloud.healthcare.fdamystudies;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
