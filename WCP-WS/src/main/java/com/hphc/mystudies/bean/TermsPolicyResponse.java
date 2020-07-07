@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,40 +24,35 @@ package com.hphc.mystudies.bean;
 
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides application privacy, terms of use details in response.
- * 
- * @author BTC
- *
- */
 public class TermsPolicyResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private String terms = "";
-	private String privacy = "";
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  private String terms = "";
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  private String privacy = "";
 
-	public String getTerms() {
-		return terms;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setTerms(String terms) {
-		this.terms = terms;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public String getPrivacy() {
-		return privacy;
-	}
+  public String getTerms() {
+    return terms;
+  }
 
-	public void setPrivacy(String privacy) {
-		this.privacy = privacy;
-	}
+  public void setTerms(String terms) {
+    this.terms = terms;
+  }
 
+  public String getPrivacy() {
+    return privacy;
+  }
+
+  public void setPrivacy(String privacy) {
+    this.privacy = privacy;
+  }
 }

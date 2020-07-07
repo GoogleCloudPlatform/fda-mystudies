@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,68 +25,65 @@ package com.hphc.mystudies.bean;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Provides chart details i.e. configuration information, chart datasource
- * information {@link ChartDataSourceBean} etc
- * 
- * @author BTC
- *
- */
 public class ChartsBean {
 
-	private String title = "";
-	private String displayName = "";
-	private String type = "";
-	private Map<String, Object> configuration = new HashMap<>();
-	private boolean scrollable = true;
-	private ChartDataSourceBean dataSource = new ChartDataSourceBean();
+  private String title = "";
 
-	public String getTitle() {
-		return title;
-	}
+  private String displayName = "";
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  private String type = "";
 
-	public String getDisplayName() {
-		return displayName;
-	}
+  private Map<String, Object> configuration = new HashMap<>();
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+  private boolean scrollable = true;
 
-	public String getType() {
-		return type;
-	}
+  private ChartDataSourceBean dataSource = new ChartDataSourceBean();
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public Map<String, Object> getConfiguration() {
-		return configuration;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setConfiguration(Map<String, Object> configuration) {
-		this.configuration = configuration;
-	}
+  public String getDisplayName() {
+    return displayName;
+  }
 
-	public boolean isScrollable() {
-		return scrollable;
-	}
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
 
-	public void setScrollable(boolean scrollable) {
-		this.scrollable = scrollable;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public ChartDataSourceBean getDataSource() {
-		return dataSource;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setDataSource(ChartDataSourceBean dataSource) {
-		this.dataSource = dataSource;
-	}
+  public Map<String, Object> getConfiguration() {
+    return configuration;
+  }
 
+  public void setConfiguration(Map<String, Object> configuration) {
+    this.configuration = configuration;
+  }
+
+  public boolean isScrollable() {
+    return scrollable;
+  }
+
+  public void setScrollable(boolean scrollable) {
+    this.scrollable = scrollable;
+  }
+
+  public ChartDataSourceBean getDataSource() {
+    return dataSource;
+  }
+
+  public void setDataSource(ChartDataSourceBean dataSource) {
+    this.dataSource = dataSource;
+  }
 }

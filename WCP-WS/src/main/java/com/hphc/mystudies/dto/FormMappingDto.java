@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,76 +30,66 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides information about questions mapped to form step {@link FormDto}.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "form_mapping")
 public class FormMappingDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4348587952657053397L;
+  private static final long serialVersionUID = -4348587952657053397L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "form_id")
-	private Integer formId;
+  @Column(name = "form_id")
+  private Integer formId;
 
-	@Column(name = "question_id")
-	private Integer questionId;
+  @Column(name = "question_id")
+  private Integer questionId;
 
-	@Column(name = "sequence_no")
-	private Integer sequenceNo;
+  @Column(name = "sequence_no")
+  private Integer sequenceNo;
 
-	@Column(name = "active")
-	private Boolean active = true;
+  @Column(name = "active")
+  private Boolean active = true;
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public Integer getFormId() {
-		return formId;
-	}
+  public Integer getFormId() {
+    return formId;
+  }
 
-	public void setFormId(Integer formId) {
-		this.formId = formId;
-	}
+  public void setFormId(Integer formId) {
+    this.formId = formId;
+  }
 
-	public Integer getQuestionId() {
-		return questionId;
-	}
+  public Integer getQuestionId() {
+    return questionId;
+  }
 
-	public void setQuestionId(Integer questionId) {
-		this.questionId = questionId;
-	}
+  public void setQuestionId(Integer questionId) {
+    this.questionId = questionId;
+  }
 
-	public Integer getSequenceNo() {
-		return sequenceNo;
-	}
+  public Integer getSequenceNo() {
+    return sequenceNo;
+  }
 
-	public void setSequenceNo(Integer sequenceNo) {
-		this.sequenceNo = sequenceNo;
-	}
+  public void setSequenceNo(Integer sequenceNo) {
+    this.sequenceNo = sequenceNo;
+  }
 
-	public Boolean getActive() {
-		return active;
-	}
+  public Boolean getActive() {
+    return active;
+  }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 }

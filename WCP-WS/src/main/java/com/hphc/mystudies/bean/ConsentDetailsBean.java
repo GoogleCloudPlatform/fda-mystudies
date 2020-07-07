@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,60 +25,55 @@ package com.hphc.mystudies.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Provides brief description about the consent like version of consent,
- * comprehension test details {@link ComprehensionDetailsBean}, sharing details
- * {@link SharingBean} and consent review details {@link ReviewBean}
- * 
- * @author BTC
- *
- */
 public class ConsentDetailsBean {
 
-	private String version = "";
-	private List<ConsentBean> visualScreens = new ArrayList<>();
-	private ComprehensionDetailsBean comprehension = new ComprehensionDetailsBean();
-	private SharingBean sharing = new SharingBean();
-	private ReviewBean review = new ReviewBean();
+  private String version = "";
 
-	public String getVersion() {
-		return version;
-	}
+  private List<ConsentBean> visualScreens = new ArrayList<>();
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+  private ComprehensionDetailsBean comprehension = new ComprehensionDetailsBean();
 
-	public List<ConsentBean> getVisualScreens() {
-		return visualScreens;
-	}
+  private SharingBean sharing = new SharingBean();
 
-	public void setVisualScreens(List<ConsentBean> visualScreens) {
-		this.visualScreens = visualScreens;
-	}
+  private ReviewBean review = new ReviewBean();
 
-	public ComprehensionDetailsBean getComprehension() {
-		return comprehension;
-	}
+  public String getVersion() {
+    return version;
+  }
 
-	public void setComprehension(ComprehensionDetailsBean comprehension) {
-		this.comprehension = comprehension;
-	}
+  public void setVersion(String version) {
+    this.version = version;
+  }
 
-	public SharingBean getSharing() {
-		return sharing;
-	}
+  public List<ConsentBean> getVisualScreens() {
+    return visualScreens;
+  }
 
-	public void setSharing(SharingBean sharing) {
-		this.sharing = sharing;
-	}
+  public void setVisualScreens(List<ConsentBean> visualScreens) {
+    this.visualScreens = visualScreens;
+  }
 
-	public ReviewBean getReview() {
-		return review;
-	}
+  public ComprehensionDetailsBean getComprehension() {
+    return comprehension;
+  }
 
-	public void setReview(ReviewBean review) {
-		this.review = review;
-	}
+  public void setComprehension(ComprehensionDetailsBean comprehension) {
+    this.comprehension = comprehension;
+  }
 
+  public SharingBean getSharing() {
+    return sharing;
+  }
+
+  public void setSharing(SharingBean sharing) {
+    this.sharing = sharing;
+  }
+
+  public ReviewBean getReview() {
+    return review;
+  }
+
+  public void setReview(ReviewBean review) {
+    this.review = review;
+  }
 }

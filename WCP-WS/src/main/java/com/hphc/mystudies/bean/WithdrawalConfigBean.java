@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,31 +22,25 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides withdrawal configuration details.
- * 
- * @author BTC
- *
- */
 public class WithdrawalConfigBean {
 
-	private String type = "";
-	private String message = "";
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private String message = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getMessage() {
-		return message;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
+  public void setMessage(String message) {
+    this.message = message;
+  }
 }

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
-    tool:context="com.harvard.studyAppModule.ResourcesFragment">
+    tool:context="com.harvard.studyappmodule.ResourcesFragment">
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/hrLine1"

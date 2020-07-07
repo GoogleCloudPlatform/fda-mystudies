@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="com.harvard.userModule.VerificationStepActivity">
+    tools:context="com.harvard.usermodule.VerificationStepActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/topView"
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/imageView"

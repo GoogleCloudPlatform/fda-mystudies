@@ -1,9 +1,31 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.bo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,369 +36,370 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Type;
-
-/**
- * The persistent class for the questionnaires database table.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "questionnaires")
 @NamedQueries({
-		@NamedQuery(name = "QuestionnaireBo.findAll", query = "SELECT q FROM QuestionnaireBo q"),
-		@NamedQuery(name = "getQuestionariesByStudyId", query = " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC"),
-		@NamedQuery(name = "checkQuestionnaireShortTitle", query = "From QuestionnaireBo QBO where QBO.studyId=:studyId and QBO.shortTitle=:shortTitle"),
-		@NamedQuery(name = "getQuestionariesByStudyIdDone", query = " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC"),
-		@NamedQuery(name = "updateStudyQuestionnaireVersion", query = "UPDATE QuestionnaireBo SET live=2 WHERE customStudyId=:customStudyId and live=1"),
-		@NamedQuery(name = "updateQuestionnaireStartDate", query = "update QuestionnaireBo SET studyLifetimeStart=:studyLifetimeStart where id=:id"), })
+  @NamedQuery(name = "QuestionnaireBo.findAll", query = "SELECT q FROM QuestionnaireBo q"),
+  @NamedQuery(
+      name = "getQuestionariesByStudyId",
+      query =
+          " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC"),
+  @NamedQuery(
+      name = "checkQuestionnaireShortTitle",
+      query = "From QuestionnaireBo QBO where QBO.studyId=:studyId and QBO.shortTitle=:shortTitle"),
+  @NamedQuery(
+      name = "getQuestionariesByStudyIdDone",
+      query =
+          " From QuestionnaireBo QBO WHERE QBO.studyId =:studyId and QBO.active=1 order by QBO.createdDate DESC"),
+  @NamedQuery(
+      name = "updateStudyQuestionnaireVersion",
+      query = "UPDATE QuestionnaireBo SET live=2 WHERE customStudyId=:customStudyId and live=1"),
+  @NamedQuery(
+      name = "updateQuestionnaireStartDate",
+      query = "update QuestionnaireBo SET studyLifetimeStart=:studyLifetimeStart where id=:id"),
+})
 public class QuestionnaireBo implements Serializable {
-	private static final long serialVersionUID = 1L;
 
-	@Column(name = "active")
-	private Boolean active;
+  private static final long serialVersionUID = 1L;
 
-	@Column(name = "branching")
-	private Boolean branching = false;
+  @Column(name = "active")
+  private Boolean active;
 
-	@Column(name = "created_by")
-	private Integer createdBy;
+  @Column(name = "branching")
+  private Boolean branching = false;
 
-	@Column(name = "created_date")
-	private String createdDate;
+  @Column(name = "created_by")
+  private Integer createdBy;
 
-	@Transient
-	private String currentFrequency;
+  @Column(name = "created_date")
+  private String createdDate;
 
-	@Column(name = "custom_study_id")
-	private String customStudyId;
+  @Transient private String currentFrequency;
 
-	@Column(name = "day_of_the_week")
-	private String dayOfTheWeek;
+  @Column(name = "custom_study_id")
+  private String customStudyId;
 
-	@Column(name = "frequency")
-	private String frequency;
+  @Column(name = "day_of_the_week")
+  private String dayOfTheWeek;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Column(name = "frequency")
+  private String frequency;
 
-	@Column(name = "is_Change")
-	private Integer isChange = 0;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "is_live")
-	private Integer live = 0;
+  @Column(name = "is_Change")
+  private Integer isChange = 0;
 
-	@Column(name = "modified_by")
-	private Integer modifiedBy;
+  @Column(name = "is_live")
+  private Integer live = 0;
 
-	@Column(name = "modified_date")
-	private String modifiedDate;
+  @Column(name = "modified_by")
+  private Integer modifiedBy;
 
-	@Transient
-	private String previousFrequency;
+  @Column(name = "modified_date")
+  private String modifiedDate;
 
-	@Transient
-	private List<QuestionnaireCustomScheduleBo> questionnaireCustomScheduleBo = new ArrayList<>();
+  @Transient private String previousFrequency;
 
-	@Transient
-	private QuestionnairesFrequenciesBo questionnairesFrequenciesBo = new QuestionnairesFrequenciesBo();
+  @Transient
+  private List<QuestionnaireCustomScheduleBo> questionnaireCustomScheduleBo = new ArrayList<>();
 
-	@Transient
-	private List<QuestionnairesFrequenciesBo> questionnairesFrequenciesList = new ArrayList<>();
+  @Transient
+  private QuestionnairesFrequenciesBo questionnairesFrequenciesBo =
+      new QuestionnairesFrequenciesBo();
 
-	@Transient
-	private String questionnarieVersion = "";
+  @Transient
+  private List<QuestionnairesFrequenciesBo> questionnairesFrequenciesList = new ArrayList<>();
 
-	@Column(name = "repeat_questionnaire")
-	private Integer repeatQuestionnaire;
+  @Transient private String questionnarieVersion = "";
 
-	@Column(name = "short_title")
-	private String shortTitle;
+  @Column(name = "repeat_questionnaire")
+  private Integer repeatQuestionnaire;
 
-	@Transient
-	private Integer shortTitleDuplicate = 0;
+  @Column(name = "short_title")
+  private String shortTitle;
 
-	@Column(name = "status")
-	private Boolean status;
+  @Transient private Integer shortTitleDuplicate = 0;
 
-	@Column(name = "study_id")
-	private Integer studyId;
+  @Column(name = "status")
+  private Boolean status;
 
-	@Column(name = "study_lifetime_end")
-	private String studyLifetimeEnd;
+  @Column(name = "study_id")
+  private Integer studyId;
 
-	@Column(name = "study_lifetime_start")
-	private String studyLifetimeStart;
+  @Column(name = "study_lifetime_end")
+  private String studyLifetimeEnd;
 
-	@Column(name = "title")
-	private String title;
+  @Column(name = "study_lifetime_start")
+  private String studyLifetimeStart;
 
-	@Transient
-	private String type;
+  @Column(name = "title")
+  private String title;
 
-	@Column(name = "version")
-	private Float version = 0f;
-	
-	@Column(name = "schedule_type")
-	private String scheduleType = "";
-	
-	@Column(name = "anchor_date_id")
-	private Integer anchorDateId;
-	
-	@Transient
-	private boolean anchorQuestionnaireExist = false;
+  @Transient private String type;
 
-	public Boolean getActive() {
-		return active;
-	}
+  @Column(name = "version")
+  private Float version = 0f;
 
-	public Boolean getBranching() {
-		return branching;
-	}
+  @Column(name = "schedule_type")
+  private String scheduleType = "";
 
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
+  @Column(name = "anchor_date_id")
+  private Integer anchorDateId;
 
-	public String getCreatedDate() {
-		return createdDate;
-	}
+  @Transient private boolean anchorQuestionnaireExist = false;
 
-	public String getCurrentFrequency() {
-		return currentFrequency;
-	}
+  public Boolean getActive() {
+    return active;
+  }
 
-	public String getCustomStudyId() {
-		return customStudyId;
-	}
+  public Boolean getBranching() {
+    return branching;
+  }
 
-	public String getDayOfTheWeek() {
-		return dayOfTheWeek;
-	}
+  public Integer getCreatedBy() {
+    return createdBy;
+  }
 
-	public String getFrequency() {
-		return this.frequency;
-	}
+  public String getCreatedDate() {
+    return createdDate;
+  }
 
-	public Integer getId() {
-		return this.id;
-	}
+  public String getCurrentFrequency() {
+    return currentFrequency;
+  }
 
-	public Integer getIsChange() {
-		return isChange;
-	}
+  public String getCustomStudyId() {
+    return customStudyId;
+  }
 
-	public Integer getLive() {
-		return live;
-	}
+  public String getDayOfTheWeek() {
+    return dayOfTheWeek;
+  }
 
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
+  public String getFrequency() {
+    return this.frequency;
+  }
 
-	public String getModifiedDate() {
-		return modifiedDate;
-	}
+  public Integer getId() {
+    return this.id;
+  }
 
-	public String getPreviousFrequency() {
-		return previousFrequency;
-	}
+  public Integer getIsChange() {
+    return isChange;
+  }
 
-	public List<QuestionnaireCustomScheduleBo> getQuestionnaireCustomScheduleBo() {
-		return questionnaireCustomScheduleBo;
-	}
+  public Integer getLive() {
+    return live;
+  }
 
-	public QuestionnairesFrequenciesBo getQuestionnairesFrequenciesBo() {
-		return questionnairesFrequenciesBo;
-	}
+  public Integer getModifiedBy() {
+    return modifiedBy;
+  }
 
-	public List<QuestionnairesFrequenciesBo> getQuestionnairesFrequenciesList() {
-		return questionnairesFrequenciesList;
-	}
+  public String getModifiedDate() {
+    return modifiedDate;
+  }
 
-	public String getQuestionnarieVersion() {
-		return questionnarieVersion;
-	}
+  public String getPreviousFrequency() {
+    return previousFrequency;
+  }
 
-	public Integer getRepeatQuestionnaire() {
-		return repeatQuestionnaire;
-	}
+  public List<QuestionnaireCustomScheduleBo> getQuestionnaireCustomScheduleBo() {
+    return questionnaireCustomScheduleBo;
+  }
 
-	public String getShortTitle() {
-		return shortTitle;
-	}
+  public QuestionnairesFrequenciesBo getQuestionnairesFrequenciesBo() {
+    return questionnairesFrequenciesBo;
+  }
 
-	public Integer getShortTitleDuplicate() {
-		return shortTitleDuplicate;
-	}
+  public List<QuestionnairesFrequenciesBo> getQuestionnairesFrequenciesList() {
+    return questionnairesFrequenciesList;
+  }
 
-	public Boolean getStatus() {
-		return status;
-	}
+  public String getQuestionnarieVersion() {
+    return questionnarieVersion;
+  }
 
-	public Integer getStudyId() {
-		return this.studyId;
-	}
+  public Integer getRepeatQuestionnaire() {
+    return repeatQuestionnaire;
+  }
 
-	public String getStudyLifetimeEnd() {
-		return this.studyLifetimeEnd;
-	}
+  public String getShortTitle() {
+    return shortTitle;
+  }
 
-	public String getStudyLifetimeStart() {
-		return this.studyLifetimeStart;
-	}
+  public Integer getShortTitleDuplicate() {
+    return shortTitleDuplicate;
+  }
 
-	public String getTitle() {
-		return this.title;
-	}
+  public Boolean getStatus() {
+    return status;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public Integer getStudyId() {
+    return this.studyId;
+  }
 
-	public Float getVersion() {
-		return version;
-	}
+  public String getStudyLifetimeEnd() {
+    return this.studyLifetimeEnd;
+  }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+  public String getStudyLifetimeStart() {
+    return this.studyLifetimeStart;
+  }
 
-	public void setBranching(Boolean branching) {
-		this.branching = branching;
-	}
+  public String getTitle() {
+    return this.title;
+  }
 
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setCreatedDate(String createdDate) {
-		this.createdDate = createdDate;
-	}
+  public Float getVersion() {
+    return version;
+  }
 
-	public void setCurrentFrequency(String currentFrequency) {
-		this.currentFrequency = currentFrequency;
-	}
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
-	public void setCustomStudyId(String customStudyId) {
-		this.customStudyId = customStudyId;
-	}
+  public void setBranching(Boolean branching) {
+    this.branching = branching;
+  }
 
-	public void setDayOfTheWeek(String dayOfTheWeek) {
-		this.dayOfTheWeek = dayOfTheWeek;
-	}
+  public void setCreatedBy(Integer createdBy) {
+    this.createdBy = createdBy;
+  }
 
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
+  public void setCreatedDate(String createdDate) {
+    this.createdDate = createdDate;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setCurrentFrequency(String currentFrequency) {
+    this.currentFrequency = currentFrequency;
+  }
 
-	public void setIsChange(Integer isChange) {
-		this.isChange = isChange;
-	}
-
-	public void setLive(Integer live) {
-		this.live = live;
-	}
-
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public void setModifiedDate(String modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
-
-	public void setPreviousFrequency(String previousFrequency) {
-		this.previousFrequency = previousFrequency;
-	}
-
-	public void setQuestionnaireCustomScheduleBo(
-			List<QuestionnaireCustomScheduleBo> questionnaireCustomScheduleBo) {
-		this.questionnaireCustomScheduleBo = questionnaireCustomScheduleBo;
-	}
-
-	public void setQuestionnairesFrequenciesBo(
-			QuestionnairesFrequenciesBo questionnairesFrequenciesBo) {
-		this.questionnairesFrequenciesBo = questionnairesFrequenciesBo;
-	}
-
-	public void setQuestionnairesFrequenciesList(
-			List<QuestionnairesFrequenciesBo> questionnairesFrequenciesList) {
-		this.questionnairesFrequenciesList = questionnairesFrequenciesList;
-	}
-
-	public void setQuestionnarieVersion(String questionnarieVersion) {
-		this.questionnarieVersion = questionnarieVersion;
-	}
-
-	public void setRepeatQuestionnaire(Integer repeatQuestionnaire) {
-		this.repeatQuestionnaire = repeatQuestionnaire;
-	}
-
-	public void setShortTitle(String shortTitle) {
-		this.shortTitle = shortTitle;
-	}
-
-	public void setShortTitleDuplicate(Integer shortTitleDuplicate) {
-		this.shortTitleDuplicate = shortTitleDuplicate;
-	}
-
-	public void setStatus(Boolean status) {
-		this.status = status;
-	}
-
-	public void setStudyId(Integer studyId) {
-		this.studyId = studyId;
-	}
-
-	public void setStudyLifetimeEnd(String studyLifetimeEnd) {
-		this.studyLifetimeEnd = studyLifetimeEnd;
-	}
-
-	public void setStudyLifetimeStart(String studyLifetimeStart) {
-		this.studyLifetimeStart = studyLifetimeStart;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public void setVersion(Float version) {
-		this.version = version;
-	}
-
-	public String getScheduleType() {
-		return scheduleType;
-	}
-
-	public void setScheduleType(String scheduleType) {
-		this.scheduleType = scheduleType;
-	}
-
-	public Integer getAnchorDateId() {
-		return anchorDateId;
-	}
-
-	public void setAnchorDateId(Integer anchorDateId) {
-		this.anchorDateId = anchorDateId;
-	}
-
-	public boolean isAnchorQuestionnaireExist() {
-		return anchorQuestionnaireExist;
-	}
-
-	public void setAnchorQuestionnaireExist(boolean anchorQuestionnaireExist) {
-		this.anchorQuestionnaireExist = anchorQuestionnaireExist;
-	}
+  public void setCustomStudyId(String customStudyId) {
+    this.customStudyId = customStudyId;
+  }
+
+  public void setDayOfTheWeek(String dayOfTheWeek) {
+    this.dayOfTheWeek = dayOfTheWeek;
+  }
+
+  public void setFrequency(String frequency) {
+    this.frequency = frequency;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public void setIsChange(Integer isChange) {
+    this.isChange = isChange;
+  }
+
+  public void setLive(Integer live) {
+    this.live = live;
+  }
+
+  public void setModifiedBy(Integer modifiedBy) {
+    this.modifiedBy = modifiedBy;
+  }
+
+  public void setModifiedDate(String modifiedDate) {
+    this.modifiedDate = modifiedDate;
+  }
+
+  public void setPreviousFrequency(String previousFrequency) {
+    this.previousFrequency = previousFrequency;
+  }
+
+  public void setQuestionnaireCustomScheduleBo(
+      List<QuestionnaireCustomScheduleBo> questionnaireCustomScheduleBo) {
+    this.questionnaireCustomScheduleBo = questionnaireCustomScheduleBo;
+  }
+
+  public void setQuestionnairesFrequenciesBo(
+      QuestionnairesFrequenciesBo questionnairesFrequenciesBo) {
+    this.questionnairesFrequenciesBo = questionnairesFrequenciesBo;
+  }
+
+  public void setQuestionnairesFrequenciesList(
+      List<QuestionnairesFrequenciesBo> questionnairesFrequenciesList) {
+    this.questionnairesFrequenciesList = questionnairesFrequenciesList;
+  }
+
+  public void setQuestionnarieVersion(String questionnarieVersion) {
+    this.questionnarieVersion = questionnarieVersion;
+  }
+
+  public void setRepeatQuestionnaire(Integer repeatQuestionnaire) {
+    this.repeatQuestionnaire = repeatQuestionnaire;
+  }
+
+  public void setShortTitle(String shortTitle) {
+    this.shortTitle = shortTitle;
+  }
+
+  public void setShortTitleDuplicate(Integer shortTitleDuplicate) {
+    this.shortTitleDuplicate = shortTitleDuplicate;
+  }
+
+  public void setStatus(Boolean status) {
+    this.status = status;
+  }
+
+  public void setStudyId(Integer studyId) {
+    this.studyId = studyId;
+  }
+
+  public void setStudyLifetimeEnd(String studyLifetimeEnd) {
+    this.studyLifetimeEnd = studyLifetimeEnd;
+  }
+
+  public void setStudyLifetimeStart(String studyLifetimeStart) {
+    this.studyLifetimeStart = studyLifetimeStart;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public void setVersion(Float version) {
+    this.version = version;
+  }
+
+  public String getScheduleType() {
+    return scheduleType;
+  }
+
+  public void setScheduleType(String scheduleType) {
+    this.scheduleType = scheduleType;
+  }
+
+  public Integer getAnchorDateId() {
+    return anchorDateId;
+  }
+
+  public void setAnchorDateId(Integer anchorDateId) {
+    this.anchorDateId = anchorDateId;
+  }
+
+  public boolean isAnchorQuestionnaireExist() {
+    return anchorQuestionnaireExist;
+  }
+
+  public void setAnchorQuestionnaireExist(boolean anchorQuestionnaireExist) {
+    this.anchorQuestionnaireExist = anchorQuestionnaireExist;
+  }
 }

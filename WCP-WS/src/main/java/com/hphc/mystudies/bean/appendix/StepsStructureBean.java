@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -27,158 +27,165 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Provides steps metadata information.
- * 
- * @author BTC
- *
- */
 public class StepsStructureBean {
 
-	private String type = "";
-	private String resultType = "";
-	private String key = "";
-	private String title = "";
-	private String text = "";
-	private String image = "";
-	private boolean skippable = false;
-	private Map<String, Object> destinations = new HashMap<>();
-	private String groupName = "";
-	private String phi = "";
-	private boolean repeatable = false;
-	private String repeatableText = "";
-	private List<String> randomizationSets = new ArrayList<>();
-	private List<ResourceContextStructureBean> resourceContext = new ArrayList<>();
-	private List<StepsStructureBean> steps = new ArrayList<>();
-	private Map<String, List<Object>> format = new HashMap<>();
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private String resultType = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private String key = "";
 
-	public String getResultType() {
-		return resultType;
-	}
+  private String title = "";
 
-	public void setResultType(String resultType) {
-		this.resultType = resultType;
-	}
+  private String text = "";
 
-	public String getKey() {
-		return key;
-	}
+  private String image = "";
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+  private boolean skippable = false;
 
-	public String getTitle() {
-		return title;
-	}
+  private Map<String, Object> destinations = new HashMap<>();
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  private String groupName = "";
 
-	public String getText() {
-		return text;
-	}
+  private String phi = "";
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  private boolean repeatable = false;
 
-	public String getImage() {
-		return image;
-	}
+  private String repeatableText = "";
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+  private List<String> randomizationSets = new ArrayList<>();
 
-	public boolean isSkippable() {
-		return skippable;
-	}
+  private List<ResourceContextStructureBean> resourceContext = new ArrayList<>();
 
-	public void setSkippable(boolean skippable) {
-		this.skippable = skippable;
-	}
+  private List<StepsStructureBean> steps = new ArrayList<>();
 
-	public Map<String, Object> getDestinations() {
-		return destinations;
-	}
+  private Map<String, List<Object>> format = new HashMap<>();
 
-	public void setDestinations(Map<String, Object> destinations) {
-		this.destinations = destinations;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getGroupName() {
-		return groupName;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
+  public String getResultType() {
+    return resultType;
+  }
 
-	public String getPhi() {
-		return phi;
-	}
+  public void setResultType(String resultType) {
+    this.resultType = resultType;
+  }
 
-	public void setPhi(String phi) {
-		this.phi = phi;
-	}
+  public String getKey() {
+    return key;
+  }
 
-	public boolean isRepeatable() {
-		return repeatable;
-	}
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-	public void setRepeatable(boolean repeatable) {
-		this.repeatable = repeatable;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getRepeatableText() {
-		return repeatableText;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setRepeatableText(String repeatableText) {
-		this.repeatableText = repeatableText;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public List<String> getRandomizationSets() {
-		return randomizationSets;
-	}
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	public void setRandomizationSets(List<String> randomizationSets) {
-		this.randomizationSets = randomizationSets;
-	}
+  public String getImage() {
+    return image;
+  }
 
-	public List<ResourceContextStructureBean> getResourceContext() {
-		return resourceContext;
-	}
+  public void setImage(String image) {
+    this.image = image;
+  }
 
-	public void setResourceContext(
-			List<ResourceContextStructureBean> resourceContext) {
-		this.resourceContext = resourceContext;
-	}
+  public boolean isSkippable() {
+    return skippable;
+  }
 
-	public List<StepsStructureBean> getSteps() {
-		return steps;
-	}
+  public void setSkippable(boolean skippable) {
+    this.skippable = skippable;
+  }
 
-	public void setSteps(List<StepsStructureBean> steps) {
-		this.steps = steps;
-	}
+  public Map<String, Object> getDestinations() {
+    return destinations;
+  }
 
-	public Map<String, List<Object>> getFormat() {
-		return format;
-	}
+  public void setDestinations(Map<String, Object> destinations) {
+    this.destinations = destinations;
+  }
 
-	public void setFormat(Map<String, List<Object>> format) {
-		this.format = format;
-	}
+  public String getGroupName() {
+    return groupName;
+  }
 
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
+  public String getPhi() {
+    return phi;
+  }
+
+  public void setPhi(String phi) {
+    this.phi = phi;
+  }
+
+  public boolean isRepeatable() {
+    return repeatable;
+  }
+
+  public void setRepeatable(boolean repeatable) {
+    this.repeatable = repeatable;
+  }
+
+  public String getRepeatableText() {
+    return repeatableText;
+  }
+
+  public void setRepeatableText(String repeatableText) {
+    this.repeatableText = repeatableText;
+  }
+
+  public List<String> getRandomizationSets() {
+    return randomizationSets;
+  }
+
+  public void setRandomizationSets(List<String> randomizationSets) {
+    this.randomizationSets = randomizationSets;
+  }
+
+  public List<ResourceContextStructureBean> getResourceContext() {
+    return resourceContext;
+  }
+
+  public void setResourceContext(List<ResourceContextStructureBean> resourceContext) {
+    this.resourceContext = resourceContext;
+  }
+
+  public List<StepsStructureBean> getSteps() {
+    return steps;
+  }
+
+  public void setSteps(List<StepsStructureBean> steps) {
+    this.steps = steps;
+  }
+
+  public Map<String, List<Object>> getFormat() {
+    return format;
+  }
+
+  public void setFormat(Map<String, List<Object>> format) {
+    this.format = format;
+  }
 }

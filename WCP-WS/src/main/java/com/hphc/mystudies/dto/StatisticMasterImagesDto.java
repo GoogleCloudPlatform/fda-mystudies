@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,43 +30,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides statistics image details for the identifier.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "statistic_master_images")
 public class StatisticMasterImagesDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2694988134032652377L;
+  private static final long serialVersionUID = 2694988134032652377L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "statistic_image_id")
-	private Integer statisticImageId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "statistic_image_id")
+  private Integer statisticImageId;
 
-	@Column(name = "value")
-	private String value;
+  @Column(name = "value")
+  private String value;
 
-	public Integer getStatisticImageId() {
-		return statisticImageId;
-	}
+  public Integer getStatisticImageId() {
+    return statisticImageId;
+  }
 
-	public void setStatisticImageId(Integer statisticImageId) {
-		this.statisticImageId = statisticImageId;
-	}
+  public void setStatisticImageId(Integer statisticImageId) {
+    this.statisticImageId = statisticImageId;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
-
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

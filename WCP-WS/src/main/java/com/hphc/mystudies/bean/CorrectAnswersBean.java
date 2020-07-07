@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,40 +22,35 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides details about the correct answers for comprehension test
- * 
- * @author BTC
- *
- */
 public class CorrectAnswersBean {
 
-	private String key = "";
-	private String[] answer = {};
-	private String evaluation = "";
+  private String key = "";
 
-	public String getKey() {
-		return key;
-	}
+  private String[] answer = {};
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+  private String evaluation = "";
 
-	public String[] getAnswer() {
-		return answer;
-	}
+  public String getKey() {
+    return key;
+  }
 
-	public void setAnswer(String[] answer) {
-		this.answer = answer;
-	}
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-	public String getEvaluation() {
-		return evaluation;
-	}
+  public String[] getAnswer() {
+    return answer;
+  }
 
-	public void setEvaluation(String evaluation) {
-		this.evaluation = evaluation;
-	}
+  public void setAnswer(String[] answer) {
+    this.answer = answer;
+  }
 
+  public String getEvaluation() {
+    return evaluation;
+  }
+
+  public void setEvaluation(String evaluation) {
+    this.evaluation = evaluation;
+  }
 }

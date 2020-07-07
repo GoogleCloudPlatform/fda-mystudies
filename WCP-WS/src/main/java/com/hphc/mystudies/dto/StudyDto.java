@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,479 +23,471 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 
-/**
- * Provides metadata information about study.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "studies")
 @NamedQueries({
-
-		@NamedQuery(name = "studyDetailsByStudyId", query = "from StudyDto SDTO"
-				+ " where SDTO.id =:id"),
-
-		@NamedQuery(name = "getStudyIdByCustomStudyId", query = "select SDTO.id"
-				+ " from StudyDto SDTO"
-				+ " where SDTO.customStudyId =:customStudyId"),
-
-		@NamedQuery(name = "getLiveStudyIdByCustomStudyId", query = "from StudyDto SDTO"
-				+ " where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
-
-		@NamedQuery(name = "getPublishedStudyByCustomId", query = "from StudyDto SDTO"
-				+ " where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
-
-		@NamedQuery(name = "getActivityUpdatedOrNotByStudyIdAndVersion", query = "from StudyDto SDTO"
-				+ " where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"), })
+  @NamedQuery(name = "studyDetailsByStudyId", query = "from StudyDto SDTO" + " where SDTO.id =:id"),
+  @NamedQuery(
+      name = "getStudyIdByCustomStudyId",
+      query =
+          "select SDTO.id" + " from StudyDto SDTO" + " where SDTO.customStudyId =:customStudyId"),
+  @NamedQuery(
+      name = "getLiveStudyIdByCustomStudyId",
+      query = "from StudyDto SDTO" + " where SDTO.customStudyId =:customStudyId and SDTO.live=1"),
+  @NamedQuery(
+      name = "getPublishedStudyByCustomId",
+      query =
+          "from StudyDto SDTO"
+              + " where SDTO.customStudyId =:customStudyId and SDTO.status='Pre-launch(Published)'"),
+  @NamedQuery(
+      name = "getActivityUpdatedOrNotByStudyIdAndVersion",
+      query =
+          "from StudyDto SDTO"
+              + " where SDTO.customStudyId =:customStudyId and ROUND(SDTO.version,1)=:version"),
+})
 public class StudyDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5843091568457462789L;
+  private static final long serialVersionUID = -5843091568457462789L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "custom_study_id")
-	private String customStudyId;
+  @Column(name = "custom_study_id")
+  private String customStudyId;
 
-	@Column(name = "name")
-	private String name;
+  @Column(name = "name")
+  private String name;
 
-	@Column(name = "full_name")
-	private String fullName;
+  @Column(name = "full_name")
+  private String fullName;
 
-	@Column(name = "type")
-	private String type;
+  @Column(name = "type")
+  private String type;
 
-	@Column(name = "platform")
-	private String platform;
+  @Column(name = "platform")
+  private String platform;
 
-	@Column(name = "category")
-	private String category;
+  @Column(name = "category")
+  private String category;
 
-	@Column(name = "research_sponsor")
-	private String researchSponsor;
+  @Column(name = "research_sponsor")
+  private String researchSponsor;
 
-	@Column(name = "data_partner")
-	private String dataPartner;
+  @Column(name = "data_partner")
+  private String dataPartner;
 
-	@Column(name = "tentative_duration")
-	private Integer tentativeDuration;
+  @Column(name = "tentative_duration")
+  private Integer tentativeDuration;
 
-	@Column(name = "tentative_duration_weekmonth")
-	private String tentativeDurationWeekmonth;
+  @Column(name = "tentative_duration_weekmonth")
+  private String tentativeDurationWeekmonth;
 
-	@Column(name = "description")
-	private String description;
+  @Column(name = "description")
+  private String description;
 
-	@Column(name = "enrolling_participants")
-	private String enrollingParticipants;
+  @Column(name = "enrolling_participants")
+  private String enrollingParticipants;
 
-	@Column(name = "retain_participant")
-	private String retainParticipant;
+  @Column(name = "retain_participant")
+  private String retainParticipant;
 
-	@Column(name = "allow_rejoin")
-	private String allowRejoin;
+  @Column(name = "allow_rejoin")
+  private String allowRejoin;
 
-	@Column(name = "allow_rejoin_text")
-	private String allowRejoinText;
+  @Column(name = "allow_rejoin_text")
+  private String allowRejoinText;
 
-	@Column(name = "irb_review")
-	private String irbReview;
+  @Column(name = "irb_review")
+  private String irbReview;
 
-	@Column(name = "inbox_email_address")
-	private String inboxEmailAddress;
+  @Column(name = "inbox_email_address")
+  private String inboxEmailAddress;
 
-	@Column(name = "created_on")
-	private String createdOn;
+  @Column(name = "created_on")
+  private String createdOn;
 
-	@Column(name = "modified_on")
-	private String modifiedOn;
+  @Column(name = "modified_on")
+  private String modifiedOn;
 
-	@Column(name = "created_by")
-	private Integer createdBy;
+  @Column(name = "created_by")
+  private Integer createdBy;
 
-	@Column(name = "modified_by")
-	private Integer modifiedBy;
+  @Column(name = "modified_by")
+  private Integer modifiedBy;
 
-	@Column(name = "status")
-	private String status;
+  @Column(name = "status")
+  private String status;
 
-	@Column(name = "sequence_number")
-	private Integer sequenceNumber;
+  @Column(name = "sequence_number")
+  private Integer sequenceNumber;
 
-	@Column(name = "thumbnail_image")
-	private String thumbnailImage;
+  @Column(name = "thumbnail_image")
+  private String thumbnailImage;
 
-	@Column(name = "media_link")
-	private String mediaLink;
+  @Column(name = "media_link")
+  private String mediaLink;
 
-	@Column(name = "study_website")
-	private String studyWebsite;
+  @Column(name = "study_website")
+  private String studyWebsite;
 
-	@Column(name = "study_tagline")
-	private String studyTagline;
+  @Column(name = "study_tagline")
+  private String studyTagline;
 
-	@Column(name = "version")
-	private Float version = 0f;
+  @Column(name = "version")
+  private Float version = 0f;
 
-	@Column(name = "study_lunched_date")
-	private String studylunchDate;
+  @Column(name = "study_lunched_date")
+  private String studylunchDate;
 
-	@Column(name = "study_pre_active_flag")
-	@Type(type = "yes_no")
-	private boolean studyPreActiveFlag = false;
+  @Column(name = "study_pre_active_flag")
+  @Type(type = "yes_no")
+  private boolean studyPreActiveFlag = false;
 
-	@Column(name = "is_live")
-	private Integer live = 0;
+  @Column(name = "is_live")
+  private Integer live = 0;
 
-	@Column(name = "has_study_draft")
-	private Integer hasStudyDraft = 0;
+  @Column(name = "has_study_draft")
+  private Integer hasStudyDraft = 0;
 
-	@Column(name = "has_activity_draft")
-	private Integer hasActivityDraft = 0;
+  @Column(name = "has_activity_draft")
+  private Integer hasActivityDraft = 0;
 
-	@Column(name = "has_consent_draft")
-	private Integer hasConsentDraft = 0;
+  @Column(name = "has_consent_draft")
+  private Integer hasConsentDraft = 0;
 
-	@Column(name = "has_questionnaire_draft")
-	private Integer hasQuestionnaireDraft = 0;
+  @Column(name = "has_questionnaire_draft")
+  private Integer hasQuestionnaireDraft = 0;
 
-	@Column(name = "has_activitetask_draft")
-	private Integer hasActivetaskDraft = 0;
-	
-	@Column(name = "app_id")
-	private String appId;
-	
-	@Column(name = "org_id")
-	private String orgId;
+  @Column(name = "has_activitetask_draft")
+  private Integer hasActivetaskDraft = 0;
 
-	public Integer getId() {
-		return id;
-	}
+  @Column(name = "app_id")
+  private String appId;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  @Column(name = "org_id")
+  private String orgId;
 
-	public String getCustomStudyId() {
-		return customStudyId;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setCustomStudyId(String customStudyId) {
-		this.customStudyId = customStudyId;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public String getName() {
-		return name;
-	}
+  public String getCustomStudyId() {
+    return customStudyId;
+  }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+  public void setCustomStudyId(String customStudyId) {
+    this.customStudyId = customStudyId;
+  }
 
-	public String getFullName() {
-		return fullName;
-	}
+  public String getName() {
+    return name;
+  }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+  public void setName(String name) {
+    this.name = name;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getFullName() {
+    return fullName;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
+  }
 
-	public String getPlatform() {
-		return platform;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getCategory() {
-		return category;
-	}
+  public String getPlatform() {
+    return platform;
+  }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
 
-	public String getResearchSponsor() {
-		return researchSponsor;
-	}
+  public String getCategory() {
+    return category;
+  }
 
-	public void setResearchSponsor(String researchSponsor) {
-		this.researchSponsor = researchSponsor;
-	}
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-	public String getDataPartner() {
-		return dataPartner;
-	}
+  public String getResearchSponsor() {
+    return researchSponsor;
+  }
 
-	public void setDataPartner(String dataPartner) {
-		this.dataPartner = dataPartner;
-	}
+  public void setResearchSponsor(String researchSponsor) {
+    this.researchSponsor = researchSponsor;
+  }
 
-	public Integer getTentativeDuration() {
-		return tentativeDuration;
-	}
+  public String getDataPartner() {
+    return dataPartner;
+  }
 
-	public void setTentativeDuration(Integer tentativeDuration) {
-		this.tentativeDuration = tentativeDuration;
-	}
+  public void setDataPartner(String dataPartner) {
+    this.dataPartner = dataPartner;
+  }
 
-	public String getTentativeDurationWeekmonth() {
-		return tentativeDurationWeekmonth;
-	}
+  public Integer getTentativeDuration() {
+    return tentativeDuration;
+  }
 
-	public void setTentativeDurationWeekmonth(String tentativeDurationWeekmonth) {
-		this.tentativeDurationWeekmonth = tentativeDurationWeekmonth;
-	}
+  public void setTentativeDuration(Integer tentativeDuration) {
+    this.tentativeDuration = tentativeDuration;
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public String getTentativeDurationWeekmonth() {
+    return tentativeDurationWeekmonth;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setTentativeDurationWeekmonth(String tentativeDurationWeekmonth) {
+    this.tentativeDurationWeekmonth = tentativeDurationWeekmonth;
+  }
 
-	public String getEnrollingParticipants() {
-		return enrollingParticipants;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public void setEnrollingParticipants(String enrollingParticipants) {
-		this.enrollingParticipants = enrollingParticipants;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public String getRetainParticipant() {
-		return retainParticipant;
-	}
+  public String getEnrollingParticipants() {
+    return enrollingParticipants;
+  }
 
-	public void setRetainParticipant(String retainParticipant) {
-		this.retainParticipant = retainParticipant;
-	}
+  public void setEnrollingParticipants(String enrollingParticipants) {
+    this.enrollingParticipants = enrollingParticipants;
+  }
 
-	public String getAllowRejoin() {
-		return allowRejoin;
-	}
+  public String getRetainParticipant() {
+    return retainParticipant;
+  }
 
-	public void setAllowRejoin(String allowRejoin) {
-		this.allowRejoin = allowRejoin;
-	}
+  public void setRetainParticipant(String retainParticipant) {
+    this.retainParticipant = retainParticipant;
+  }
 
-	public String getAllowRejoinText() {
-		return allowRejoinText;
-	}
+  public String getAllowRejoin() {
+    return allowRejoin;
+  }
 
-	public void setAllowRejoinText(String allowRejoinText) {
-		this.allowRejoinText = allowRejoinText;
-	}
+  public void setAllowRejoin(String allowRejoin) {
+    this.allowRejoin = allowRejoin;
+  }
 
-	public String getIrbReview() {
-		return irbReview;
-	}
+  public String getAllowRejoinText() {
+    return allowRejoinText;
+  }
 
-	public void setIrbReview(String irbReview) {
-		this.irbReview = irbReview;
-	}
+  public void setAllowRejoinText(String allowRejoinText) {
+    this.allowRejoinText = allowRejoinText;
+  }
 
-	public String getInboxEmailAddress() {
-		return inboxEmailAddress;
-	}
+  public String getIrbReview() {
+    return irbReview;
+  }
 
-	public void setInboxEmailAddress(String inboxEmailAddress) {
-		this.inboxEmailAddress = inboxEmailAddress;
-	}
+  public void setIrbReview(String irbReview) {
+    this.irbReview = irbReview;
+  }
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
+  public String getInboxEmailAddress() {
+    return inboxEmailAddress;
+  }
 
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
+  public void setInboxEmailAddress(String inboxEmailAddress) {
+    this.inboxEmailAddress = inboxEmailAddress;
+  }
 
-	public String getModifiedOn() {
-		return modifiedOn;
-	}
+  public String getCreatedOn() {
+    return createdOn;
+  }
 
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
+  public String getModifiedOn() {
+    return modifiedOn;
+  }
 
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
+  public void setModifiedOn(String modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
 
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
+  public Integer getCreatedBy() {
+    return createdBy;
+  }
 
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+  public void setCreatedBy(Integer createdBy) {
+    this.createdBy = createdBy;
+  }
 
-	public String getStatus() {
-		return status;
-	}
+  public Integer getModifiedBy() {
+    return modifiedBy;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+  public void setModifiedBy(Integer modifiedBy) {
+    this.modifiedBy = modifiedBy;
+  }
 
-	public Integer getSequenceNumber() {
-		return sequenceNumber;
-	}
+  public String getStatus() {
+    return status;
+  }
 
-	public void setSequenceNumber(Integer sequenceNumber) {
-		this.sequenceNumber = sequenceNumber;
-	}
+  public void setStatus(String status) {
+    this.status = status;
+  }
 
-	public String getThumbnailImage() {
-		return thumbnailImage;
-	}
+  public Integer getSequenceNumber() {
+    return sequenceNumber;
+  }
 
-	public void setThumbnailImage(String thumbnailImage) {
-		this.thumbnailImage = thumbnailImage;
-	}
+  public void setSequenceNumber(Integer sequenceNumber) {
+    this.sequenceNumber = sequenceNumber;
+  }
 
-	public String getMediaLink() {
-		return mediaLink;
-	}
+  public String getThumbnailImage() {
+    return thumbnailImage;
+  }
 
-	public void setMediaLink(String mediaLink) {
-		this.mediaLink = mediaLink;
-	}
+  public void setThumbnailImage(String thumbnailImage) {
+    this.thumbnailImage = thumbnailImage;
+  }
 
-	public String getStudyWebsite() {
-		return studyWebsite;
-	}
+  public String getMediaLink() {
+    return mediaLink;
+  }
 
-	public void setStudyWebsite(String studyWebsite) {
-		this.studyWebsite = studyWebsite;
-	}
+  public void setMediaLink(String mediaLink) {
+    this.mediaLink = mediaLink;
+  }
 
-	public String getStudyTagline() {
-		return studyTagline;
-	}
+  public String getStudyWebsite() {
+    return studyWebsite;
+  }
 
-	public void setStudyTagline(String studyTagline) {
-		this.studyTagline = studyTagline;
-	}
+  public void setStudyWebsite(String studyWebsite) {
+    this.studyWebsite = studyWebsite;
+  }
 
-	public Float getVersion() {
-		return version;
-	}
+  public String getStudyTagline() {
+    return studyTagline;
+  }
 
-	public void setVersion(Float version) {
-		this.version = version;
-	}
+  public void setStudyTagline(String studyTagline) {
+    this.studyTagline = studyTagline;
+  }
 
-	public String getStudylunchDate() {
-		return studylunchDate;
-	}
+  public Float getVersion() {
+    return version;
+  }
 
-	public void setStudylunchDate(String studylunchDate) {
-		this.studylunchDate = studylunchDate;
-	}
+  public void setVersion(Float version) {
+    this.version = version;
+  }
 
-	public boolean isStudyPreActiveFlag() {
-		return studyPreActiveFlag;
-	}
+  public String getStudylunchDate() {
+    return studylunchDate;
+  }
 
-	public void setStudyPreActiveFlag(boolean studyPreActiveFlag) {
-		this.studyPreActiveFlag = studyPreActiveFlag;
-	}
+  public void setStudylunchDate(String studylunchDate) {
+    this.studylunchDate = studylunchDate;
+  }
 
-	public Integer getLive() {
-		return live;
-	}
+  public boolean isStudyPreActiveFlag() {
+    return studyPreActiveFlag;
+  }
 
-	public void setLive(Integer live) {
-		this.live = live;
-	}
+  public void setStudyPreActiveFlag(boolean studyPreActiveFlag) {
+    this.studyPreActiveFlag = studyPreActiveFlag;
+  }
 
-	public Integer getHasStudyDraft() {
-		return hasStudyDraft;
-	}
+  public Integer getLive() {
+    return live;
+  }
 
-	public void setHasStudyDraft(Integer hasStudyDraft) {
-		this.hasStudyDraft = hasStudyDraft;
-	}
+  public void setLive(Integer live) {
+    this.live = live;
+  }
 
-	public Integer getHasActivityDraft() {
-		return hasActivityDraft;
-	}
+  public Integer getHasStudyDraft() {
+    return hasStudyDraft;
+  }
 
-	public void setHasActivityDraft(Integer hasActivityDraft) {
-		this.hasActivityDraft = hasActivityDraft;
-	}
+  public void setHasStudyDraft(Integer hasStudyDraft) {
+    this.hasStudyDraft = hasStudyDraft;
+  }
 
-	public Integer getHasConsentDraft() {
-		return hasConsentDraft;
-	}
+  public Integer getHasActivityDraft() {
+    return hasActivityDraft;
+  }
 
-	public void setHasConsentDraft(Integer hasConsentDraft) {
-		this.hasConsentDraft = hasConsentDraft;
-	}
+  public void setHasActivityDraft(Integer hasActivityDraft) {
+    this.hasActivityDraft = hasActivityDraft;
+  }
 
-	public Integer getHasQuestionnaireDraft() {
-		return hasQuestionnaireDraft;
-	}
+  public Integer getHasConsentDraft() {
+    return hasConsentDraft;
+  }
 
-	public void setHasQuestionnaireDraft(Integer hasQuestionnaireDraft) {
-		this.hasQuestionnaireDraft = hasQuestionnaireDraft;
-	}
+  public void setHasConsentDraft(Integer hasConsentDraft) {
+    this.hasConsentDraft = hasConsentDraft;
+  }
 
-	public Integer getHasActivetaskDraft() {
-		return hasActivetaskDraft;
-	}
+  public Integer getHasQuestionnaireDraft() {
+    return hasQuestionnaireDraft;
+  }
 
-	public void setHasActivetaskDraft(Integer hasActivetaskDraft) {
-		this.hasActivetaskDraft = hasActivetaskDraft;
-	}
+  public void setHasQuestionnaireDraft(Integer hasQuestionnaireDraft) {
+    this.hasQuestionnaireDraft = hasQuestionnaireDraft;
+  }
 
-	public String getAppId() {
-		return appId;
-	}
+  public Integer getHasActivetaskDraft() {
+    return hasActivetaskDraft;
+  }
 
-	public void setAppId(String appId) {
-		this.appId = appId;
-	}
+  public void setHasActivetaskDraft(Integer hasActivetaskDraft) {
+    this.hasActivetaskDraft = hasActivetaskDraft;
+  }
 
-	public String getOrgId() {
-		return orgId;
-	}
+  public String getAppId() {
+    return appId;
+  }
 
-	public void setOrgId(String orgId) {
-		this.orgId = orgId;
-	}
+  public void setAppId(String appId) {
+    this.appId = appId;
+  }
+
+  public String getOrgId() {
+    return orgId;
+  }
+
+  public void setOrgId(String orgId) {
+    this.orgId = orgId;
+  }
 }

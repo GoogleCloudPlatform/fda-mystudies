@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -26,51 +26,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Provides eligibility metadata details i.e. type of eligibility, title,
- * eligibility questions {@link QuestionnaireActivityStepsBean}, correct
- * answers.
- * 
- * @author BTC
- *
- */
 public class EligibilityBean {
 
-	private String type = "";
-	private String tokenTitle = "";
-	private List<QuestionnaireActivityStepsBean> test = new ArrayList<>();
-	private List<HashMap<String, Object>> correctAnswers = new ArrayList<>();
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private String tokenTitle = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private List<QuestionnaireActivityStepsBean> test = new ArrayList<>();
 
-	public String getTokenTitle() {
-		return tokenTitle;
-	}
+  private List<HashMap<String, Object>> correctAnswers = new ArrayList<>();
 
-	public void setTokenTitle(String tokenTitle) {
-		this.tokenTitle = tokenTitle;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public List<QuestionnaireActivityStepsBean> getTest() {
-		return test;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setTest(List<QuestionnaireActivityStepsBean> test) {
-		this.test = test;
-	}
+  public String getTokenTitle() {
+    return tokenTitle;
+  }
 
-	public List<HashMap<String, Object>> getCorrectAnswers() {
-		return correctAnswers;
-	}
+  public void setTokenTitle(String tokenTitle) {
+    this.tokenTitle = tokenTitle;
+  }
 
-	public void setCorrectAnswers(List<HashMap<String, Object>> correctAnswers) {
-		this.correctAnswers = correctAnswers;
-	}
+  public List<QuestionnaireActivityStepsBean> getTest() {
+    return test;
+  }
 
+  public void setTest(List<QuestionnaireActivityStepsBean> test) {
+    this.test = test;
+  }
+
+  public List<HashMap<String, Object>> getCorrectAnswers() {
+    return correctAnswers;
+  }
+
+  public void setCorrectAnswers(List<HashMap<String, Object>> correctAnswers) {
+    this.correctAnswers = correctAnswers;
+  }
 }

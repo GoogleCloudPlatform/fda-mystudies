@@ -15,7 +15,7 @@
 		<spring.security.version>3.2.3.RELEASE</spring.security.version>
 	</properties>
 	<build>
-		<finalName>fdahpStudyDesigner</finalName>
+		<finalName>studybuilder</finalName>
 		<plugins>
 			<!-- Maven Tomcat Plugin -->
 			<plugin>
@@ -476,6 +476,11 @@
 			<groupId>com.udojava</groupId>
 			<artifactId>EvalEx</artifactId>
 			<version>1.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.10</version>
 		</dependency>
 	</dependencies>
 </project>

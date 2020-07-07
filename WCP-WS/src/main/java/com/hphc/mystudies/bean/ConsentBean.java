@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,76 +22,75 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides consent details.
- * 
- * @author BTC
- *
- */
 public class ConsentBean {
 
-	private String type = "";
-	private String title = "";
-	private String text = "";
-	private String description = "";
-	private String html = "";
-	private String url = "";
-	private boolean visualStep = false;
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private String title = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private String text = "";
 
-	public String getTitle() {
-		return title;
-	}
+  private String description = "";
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  private String html = "";
 
-	public String getText() {
-		return text;
-	}
+  private String url = "";
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  private boolean visualStep = false;
 
-	public String getDescription() {
-		return description;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getHtml() {
-		return html;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setHtml(String html) {
-		this.html = html;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public String getUrl() {
-		return url;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	public boolean isVisualStep() {
-		return visualStep;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public void setVisualStep(boolean visualStep) {
-		this.visualStep = visualStep;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
+  public String getHtml() {
+    return html;
+  }
+
+  public void setHtml(String html) {
+    this.html = html;
+  }
+
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
+  public boolean isVisualStep() {
+    return visualStep;
+  }
+
+  public void setVisualStep(boolean visualStep) {
+    this.visualStep = visualStep;
+  }
 }

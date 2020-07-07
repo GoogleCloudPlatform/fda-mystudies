@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,137 +23,129 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Type;
 
-/**
- * Provides attribute configuration details of available active tasks.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "active_task_master_attribute")
-@NamedQueries(value = {
-
-@NamedQuery(name = "getActiveTaskMasterListFromIds", query = "from ActiveTaskMasterAttributeDto ATMADTO"
-		+ " where ATMADTO.masterId IN (:taskMasterAttrIdList)"), })
+@NamedQueries(
+    value = {
+      @NamedQuery(
+          name = "getActiveTaskMasterListFromIds",
+          query =
+              "from ActiveTaskMasterAttributeDto ATMADTO"
+                  + " where ATMADTO.masterId IN (:taskMasterAttrIdList)"),
+    })
 public class ActiveTaskMasterAttributeDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3945410061495684065L;
+  private static final long serialVersionUID = 3945410061495684065L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "active_task_master_attr_id")
-	private Integer masterId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "active_task_master_attr_id")
+  private Integer masterId;
 
-	@Column(name = "task_type_id")
-	private Integer taskTypeId;
+  @Column(name = "task_type_id")
+  private Integer taskTypeId;
 
-	@Column(name = "order_by")
-	private Integer orderByTaskType;
+  @Column(name = "order_by")
+  private Integer orderByTaskType;
 
-	@Column(name = "attribute_type")
-	private String attributeType;
+  @Column(name = "attribute_type")
+  private String attributeType;
 
-	@Column(name = "attribute_name")
-	private String attributeName;
+  @Column(name = "attribute_name")
+  private String attributeName;
 
-	@Column(name = "display_name")
-	private String displayName;
+  @Column(name = "display_name")
+  private String displayName;
 
-	@Column(name = "attribute_data_type")
-	private String attributeDataType;
+  @Column(name = "attribute_data_type")
+  private String attributeDataType;
 
-	@Column(name = "add_to_dashboard")
-	@Type(type = "yes_no")
-	private boolean addToDashboard = false;
+  @Column(name = "add_to_dashboard")
+  @Type(type = "yes_no")
+  private boolean addToDashboard = false;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	public Integer getMasterId() {
-		return masterId;
-	}
+  public Integer getMasterId() {
+    return masterId;
+  }
 
-	public void setMasterId(Integer masterId) {
-		this.masterId = masterId;
-	}
+  public void setMasterId(Integer masterId) {
+    this.masterId = masterId;
+  }
 
-	public Integer getTaskTypeId() {
-		return taskTypeId;
-	}
+  public Integer getTaskTypeId() {
+    return taskTypeId;
+  }
 
-	public void setTaskTypeId(Integer taskTypeId) {
-		this.taskTypeId = taskTypeId;
-	}
+  public void setTaskTypeId(Integer taskTypeId) {
+    this.taskTypeId = taskTypeId;
+  }
 
-	public Integer getOrderByTaskType() {
-		return orderByTaskType;
-	}
+  public Integer getOrderByTaskType() {
+    return orderByTaskType;
+  }
 
-	public void setOrderByTaskType(Integer orderByTaskType) {
-		this.orderByTaskType = orderByTaskType;
-	}
+  public void setOrderByTaskType(Integer orderByTaskType) {
+    this.orderByTaskType = orderByTaskType;
+  }
 
-	public String getAttributeType() {
-		return attributeType;
-	}
+  public String getAttributeType() {
+    return attributeType;
+  }
 
-	public void setAttributeType(String attributeType) {
-		this.attributeType = attributeType;
-	}
+  public void setAttributeType(String attributeType) {
+    this.attributeType = attributeType;
+  }
 
-	public String getAttributeName() {
-		return attributeName;
-	}
+  public String getAttributeName() {
+    return attributeName;
+  }
 
-	public void setAttributeName(String attributeName) {
-		this.attributeName = attributeName;
-	}
+  public void setAttributeName(String attributeName) {
+    this.attributeName = attributeName;
+  }
 
-	public String getDisplayName() {
-		return displayName;
-	}
+  public String getDisplayName() {
+    return displayName;
+  }
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
 
-	public String getAttributeDataType() {
-		return attributeDataType;
-	}
+  public String getAttributeDataType() {
+    return attributeDataType;
+  }
 
-	public void setAttributeDataType(String attributeDataType) {
-		this.attributeDataType = attributeDataType;
-	}
+  public void setAttributeDataType(String attributeDataType) {
+    this.attributeDataType = attributeDataType;
+  }
 
-	public boolean isAddToDashboard() {
-		return addToDashboard;
-	}
+  public boolean isAddToDashboard() {
+    return addToDashboard;
+  }
 
-	public void setAddToDashboard(boolean addToDashboard) {
-		this.addToDashboard = addToDashboard;
-	}
+  public void setAddToDashboard(boolean addToDashboard) {
+    this.addToDashboard = addToDashboard;
+  }
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
-
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 }
