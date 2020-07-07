@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,58 +25,55 @@ package com.hphc.mystudies.bean.appendix;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Provides question format structure details.
- * 
- * @author BTC
- *
- */
 public class FormatStructureBean {
 
-	List<String> textChoices = new ArrayList<>();
-	private String unit = "";
-	private int minValue = 0;
-	private int maxValue = 0;
-	private String placeholder = "";
+  List<String> textChoices = new ArrayList<>();
 
-	public List<String> getTextChoices() {
-		return textChoices;
-	}
+  private String unit = "";
 
-	public void setTextChoices(List<String> textChoices) {
-		this.textChoices = textChoices;
-	}
+  private int minValue = 0;
 
-	public String getUnit() {
-		return unit;
-	}
+  private int maxValue = 0;
 
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
+  private String placeholder = "";
 
-	public int getMinValue() {
-		return minValue;
-	}
+  public List<String> getTextChoices() {
+    return textChoices;
+  }
 
-	public void setMinValue(int minValue) {
-		this.minValue = minValue;
-	}
+  public void setTextChoices(List<String> textChoices) {
+    this.textChoices = textChoices;
+  }
 
-	public int getMaxValue() {
-		return maxValue;
-	}
+  public String getUnit() {
+    return unit;
+  }
 
-	public void setMaxValue(int maxValue) {
-		this.maxValue = maxValue;
-	}
+  public void setUnit(String unit) {
+    this.unit = unit;
+  }
 
-	public String getPlaceholder() {
-		return placeholder;
-	}
+  public int getMinValue() {
+    return minValue;
+  }
 
-	public void setPlaceholder(String placeholder) {
-		this.placeholder = placeholder;
-	}
+  public void setMinValue(int minValue) {
+    this.minValue = minValue;
+  }
 
+  public int getMaxValue() {
+    return maxValue;
+  }
+
+  public void setMaxValue(int maxValue) {
+    this.maxValue = maxValue;
+  }
+
+  public String getPlaceholder() {
+    return placeholder;
+  }
+
+  public void setPlaceholder(String placeholder) {
+    this.placeholder = placeholder;
+  }
 }

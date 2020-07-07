@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,40 +24,35 @@ package com.hphc.mystudies.bean;
 
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides eligibility {@link EligibilityBean} and consent
- * {@link ConsentDetailsBean} metadata details in the response.
- * 
- * @author BTC
- *
- */
 public class EligibilityConsentResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private EligibilityBean eligibility = new EligibilityBean();
-	private ConsentDetailsBean consent = new ConsentDetailsBean();
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  private EligibilityBean eligibility = new EligibilityBean();
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  private ConsentDetailsBean consent = new ConsentDetailsBean();
 
-	public EligibilityBean getEligibility() {
-		return eligibility;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setEligibility(EligibilityBean eligibility) {
-		this.eligibility = eligibility;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public ConsentDetailsBean getConsent() {
-		return consent;
-	}
+  public EligibilityBean getEligibility() {
+    return eligibility;
+  }
 
-	public void setConsent(ConsentDetailsBean consent) {
-		this.consent = consent;
-	}
+  public void setEligibility(EligibilityBean eligibility) {
+    this.eligibility = eligibility;
+  }
+
+  public ConsentDetailsBean getConsent() {
+    return consent;
+  }
+
+  public void setConsent(ConsentDetailsBean consent) {
+    this.consent = consent;
+  }
 }

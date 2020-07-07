@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,31 +22,25 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides consent review details.
- * 
- * @author BTC
- *
- */
 public class ReviewBean {
 
-	private String reasonForConsent = "";
-	private String reviewHTML = "";
+  private String reasonForConsent = "";
 
-	public String getReasonForConsent() {
-		return reasonForConsent;
-	}
+  private String reviewHTML = "";
 
-	public void setReasonForConsent(String reasonForConsent) {
-		this.reasonForConsent = reasonForConsent;
-	}
+  public String getReasonForConsent() {
+    return reasonForConsent;
+  }
 
-	public String getReviewHTML() {
-		return reviewHTML;
-	}
+  public void setReasonForConsent(String reasonForConsent) {
+    this.reasonForConsent = reasonForConsent;
+  }
 
-	public void setReviewHTML(String reviewHTML) {
-		this.reviewHTML = reviewHTML;
-	}
+  public String getReviewHTML() {
+    return reviewHTML;
+  }
 
+  public void setReviewHTML(String reviewHTML) {
+    this.reviewHTML = reviewHTML;
+  }
 }

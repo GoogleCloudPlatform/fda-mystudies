@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,39 +22,35 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides study settings details.
- * 
- * @author BTC
- *
- */
 public class SettingsBean {
 
-	private boolean enrolling = false;
-	private String platform = "";
-	private boolean rejoin = false;
+  private boolean enrolling = false;
 
-	public boolean isEnrolling() {
-		return enrolling;
-	}
+  private String platform = "";
 
-	public void setEnrolling(boolean enrolling) {
-		this.enrolling = enrolling;
-	}
+  private boolean rejoin = false;
 
-	public String getPlatform() {
-		return platform;
-	}
+  public boolean isEnrolling() {
+    return enrolling;
+  }
 
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
+  public void setEnrolling(boolean enrolling) {
+    this.enrolling = enrolling;
+  }
 
-	public boolean isRejoin() {
-		return rejoin;
-	}
+  public String getPlatform() {
+    return platform;
+  }
 
-	public void setRejoin(boolean rejoin) {
-		this.rejoin = rejoin;
-	}
+  public void setPlatform(String platform) {
+    this.platform = platform;
+  }
+
+  public boolean isRejoin() {
+    return rejoin;
+  }
+
+  public void setRejoin(boolean rejoin) {
+    this.rejoin = rejoin;
+  }
 }

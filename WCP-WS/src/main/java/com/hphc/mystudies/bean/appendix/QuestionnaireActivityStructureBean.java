@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,45 +24,38 @@ package com.hphc.mystudies.bean.appendix;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.hphc.mystudies.bean.ActivityMetadataBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityStepsBean;
 
-/**
- * Provides questionnaire activity metadata information
- * {@link ActivityMetadataBean} and activity steps details
- * {@link QuestionnaireActivityStepsBean}.
- * 
- * @author BTC
- *
- */
 public class QuestionnaireActivityStructureBean {
 
-	private String type = "";
-	private ActivityMetadataBean metadata = new ActivityMetadataBean();
-	private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private ActivityMetadataBean metadata = new ActivityMetadataBean();
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private List<QuestionnaireActivityStepsBean> steps = new ArrayList<>();
 
-	public ActivityMetadataBean getMetadata() {
-		return metadata;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setMetadata(ActivityMetadataBean metadata) {
-		this.metadata = metadata;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public List<QuestionnaireActivityStepsBean> getSteps() {
-		return steps;
-	}
+  public ActivityMetadataBean getMetadata() {
+    return metadata;
+  }
 
-	public void setSteps(List<QuestionnaireActivityStepsBean> steps) {
-		this.steps = steps;
-	}
+  public void setMetadata(ActivityMetadataBean metadata) {
+    this.metadata = metadata;
+  }
+
+  public List<QuestionnaireActivityStepsBean> getSteps() {
+    return steps;
+  }
+
+  public void setSteps(List<QuestionnaireActivityStepsBean> steps) {
+    this.steps = steps;
+  }
 }

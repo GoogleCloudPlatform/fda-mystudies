@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,98 +30,88 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides line chart configuration details.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "line_chart")
 public class LineChartDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8093637693491035141L;
+  private static final long serialVersionUID = -8093637693491035141L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "line_chartcol")
-	private String lineChartcol;
+  @Column(name = "line_chartcol")
+  private String lineChartcol;
 
-	@Column(name = "no_data_text")
-	private String noDataText;
+  @Column(name = "no_data_text")
+  private String noDataText;
 
-	@Column(name = "show_ver_hor_line")
-	private Integer showVerHorLine;
+  @Column(name = "show_ver_hor_line")
+  private Integer showVerHorLine;
 
-	@Column(name = "x_axis_color")
-	private String xAxisColor;
+  @Column(name = "x_axis_color")
+  private String xAxisColor;
 
-	@Column(name = "y_axis_color")
-	private String yAxisColor;
+  @Column(name = "y_axis_color")
+  private String yAxisColor;
 
-	@Column(name = "animation_needed")
-	private Integer animationNeeded;
+  @Column(name = "animation_needed")
+  private Integer animationNeeded;
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public String getLineChartcol() {
-		return lineChartcol;
-	}
+  public String getLineChartcol() {
+    return lineChartcol;
+  }
 
-	public void setLineChartcol(String lineChartcol) {
-		this.lineChartcol = lineChartcol;
-	}
+  public void setLineChartcol(String lineChartcol) {
+    this.lineChartcol = lineChartcol;
+  }
 
-	public String getNoDataText() {
-		return noDataText;
-	}
+  public String getNoDataText() {
+    return noDataText;
+  }
 
-	public void setNoDataText(String noDataText) {
-		this.noDataText = noDataText;
-	}
+  public void setNoDataText(String noDataText) {
+    this.noDataText = noDataText;
+  }
 
-	public Integer getShowVerHorLine() {
-		return showVerHorLine;
-	}
+  public Integer getShowVerHorLine() {
+    return showVerHorLine;
+  }
 
-	public void setShowVerHorLine(Integer showVerHorLine) {
-		this.showVerHorLine = showVerHorLine;
-	}
+  public void setShowVerHorLine(Integer showVerHorLine) {
+    this.showVerHorLine = showVerHorLine;
+  }
 
-	public String getxAxisColor() {
-		return xAxisColor;
-	}
+  public String getxAxisColor() {
+    return xAxisColor;
+  }
 
-	public void setxAxisColor(String xAxisColor) {
-		this.xAxisColor = xAxisColor;
-	}
+  public void setxAxisColor(String xAxisColor) {
+    this.xAxisColor = xAxisColor;
+  }
 
-	public String getyAxisColor() {
-		return yAxisColor;
-	}
+  public String getyAxisColor() {
+    return yAxisColor;
+  }
 
-	public void setyAxisColor(String yAxisColor) {
-		this.yAxisColor = yAxisColor;
-	}
+  public void setyAxisColor(String yAxisColor) {
+    this.yAxisColor = yAxisColor;
+  }
 
-	public Integer getAnimationNeeded() {
-		return animationNeeded;
-	}
+  public Integer getAnimationNeeded() {
+    return animationNeeded;
+  }
 
-	public void setAnimationNeeded(Integer animationNeeded) {
-		this.animationNeeded = animationNeeded;
-	}
-
+  public void setAnimationNeeded(Integer animationNeeded) {
+    this.animationNeeded = animationNeeded;
+  }
 }

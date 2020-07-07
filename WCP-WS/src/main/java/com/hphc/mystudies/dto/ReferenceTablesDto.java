@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,70 +30,55 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides study category information for the below categories:
- * <ol>
- * <li>Categories
- * <li>Data Partner
- * <li>Research Sponsors
- * <ol>
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "reference_tables")
 public class ReferenceTablesDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7979150175337442310L;
+  private static final long serialVersionUID = 7979150175337442310L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "str_value")
-	private String value;
+  @Column(name = "str_value")
+  private String value;
 
-	@Column(name = "category")
-	private String category;
+  @Column(name = "category")
+  private String category;
 
-	@Column(name = "type")
-	private String type;
+  @Column(name = "type")
+  private String type;
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public String getValue() {
-		return value;
-	}
+  public String getValue() {
+    return value;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 
-	public String getCategory() {
-		return category;
-	}
+  public String getCategory() {
+    return category;
+  }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-	public String getType() {
-		return type;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
+  public void setType(String type) {
+    this.type = type;
+  }
 }

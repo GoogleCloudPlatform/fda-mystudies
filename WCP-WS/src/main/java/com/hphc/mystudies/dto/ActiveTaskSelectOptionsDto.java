@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,54 +30,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provide active task selection details.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "active_task_select_options")
 public class ActiveTaskSelectOptionsDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3788580522549249379L;
+  private static final long serialVersionUID = 3788580522549249379L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "active_task_select_options_id")
-	private Integer activeTaskSelectOptionsId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "active_task_select_options_id")
+  private Integer activeTaskSelectOptionsId;
 
-	@Column(name = "active_task_master_attr_id")
-	private Integer activeTaskMasterAttrId;
+  @Column(name = "active_task_master_attr_id")
+  private Integer activeTaskMasterAttrId;
 
-	@Column(name = "option_val")
-	private String optionVal;
+  @Column(name = "option_val")
+  private String optionVal;
 
-	public Integer getActiveTaskSelectOptionsId() {
-		return activeTaskSelectOptionsId;
-	}
+  public Integer getActiveTaskSelectOptionsId() {
+    return activeTaskSelectOptionsId;
+  }
 
-	public void setActiveTaskSelectOptionsId(Integer activeTaskSelectOptionsId) {
-		this.activeTaskSelectOptionsId = activeTaskSelectOptionsId;
-	}
+  public void setActiveTaskSelectOptionsId(Integer activeTaskSelectOptionsId) {
+    this.activeTaskSelectOptionsId = activeTaskSelectOptionsId;
+  }
 
-	public Integer getActiveTaskMasterAttrId() {
-		return activeTaskMasterAttrId;
-	}
+  public Integer getActiveTaskMasterAttrId() {
+    return activeTaskMasterAttrId;
+  }
 
-	public void setActiveTaskMasterAttrId(Integer activeTaskMasterAttrId) {
-		this.activeTaskMasterAttrId = activeTaskMasterAttrId;
-	}
+  public void setActiveTaskMasterAttrId(Integer activeTaskMasterAttrId) {
+    this.activeTaskMasterAttrId = activeTaskMasterAttrId;
+  }
 
-	public String getOptionVal() {
-		return optionVal;
-	}
+  public String getOptionVal() {
+    return optionVal;
+  }
 
-	public void setOptionVal(String optionVal) {
-		this.optionVal = optionVal;
-	}
-
+  public void setOptionVal(String optionVal) {
+    this.optionVal = optionVal;
+  }
 }

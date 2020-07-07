@@ -1,7 +1,29 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.bo;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,313 +31,305 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * The persistent class for the resources database table.
- * 
- * @author BTC
- *
- */
-
 @Entity
 @Table(name = "resources")
-@NamedQueries({ @NamedQuery(name = "getResourceInfo", query = "SELECT RBO FROM ResourceBO RBO WHERE RBO.id =:resourceInfoId"), })
+@NamedQueries({
+  @NamedQuery(
+      name = "getResourceInfo",
+      query = "SELECT RBO FROM ResourceBO RBO WHERE RBO.id =:resourceInfoId"),
+})
 public class ResourceBO implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -4548349227102496191L;
+  private static final long serialVersionUID = -4548349227102496191L;
 
-	@Column(name = "action", length = 1)
-	private boolean action;
+  @Column(name = "action", length = 1)
+  private boolean action;
 
-	@Column(name = "created_by")
-	private Integer createdBy;
+  @Column(name = "created_by")
+  private Integer createdBy;
 
-	@Column(name = "created_on")
-	private String createdOn;
+  @Column(name = "created_on")
+  private String createdOn;
 
-	@Column(name = "end_date")
-	private String endDate;
+  @Column(name = "end_date")
+  private String endDate;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "modified_by")
-	private Integer modifiedBy;
+  @Column(name = "modified_by")
+  private Integer modifiedBy;
 
-	@Column(name = "modified_on")
-	private String modifiedOn;
+  @Column(name = "modified_on")
+  private String modifiedOn;
 
-	@Transient
-	private MultipartFile pdfFile;
+  @Transient private MultipartFile pdfFile;
 
-	@Column(name = "pdf_name")
-	private String pdfName;
+  @Column(name = "pdf_name")
+  private String pdfName;
 
-	@Column(name = "pdf_url")
-	private String pdfUrl;
+  @Column(name = "pdf_url")
+  private String pdfUrl;
 
-	@Column(name = "resource_text")
-	private String resourceText;
+  @Column(name = "resource_text")
+  private String resourceText;
 
-	@Column(name = "resource_type", length = 1)
-	private boolean resourceType;
+  @Column(name = "resource_type", length = 1)
+  private boolean resourceType;
 
-	@Column(name = "resource_visibility", length = 1)
-	private boolean resourceVisibility;
+  @Column(name = "resource_visibility", length = 1)
+  private boolean resourceVisibility;
 
-	@Column(name = "rich_text")
-	private String richText;
+  @Column(name = "rich_text")
+  private String richText;
 
-	@Column(name = "sequence_no")
-	private Integer sequenceNo = 0;
+  @Column(name = "sequence_no")
+  private Integer sequenceNo = 0;
 
-	@Column(name = "start_date")
-	private String startDate;
+  @Column(name = "start_date")
+  private String startDate;
 
-	@Column(name = "status", length = 1)
-	private boolean status;
+  @Column(name = "status", length = 1)
+  private boolean status;
 
-	@Column(name = "study_id")
-	private Integer studyId;
+  @Column(name = "study_id")
+  private Integer studyId;
 
-	@Column(name = "study_protocol", length = 1)
-	private boolean studyProtocol;
+  @Column(name = "study_protocol", length = 1)
+  private boolean studyProtocol;
 
-	@Column(name = "text_or_pdf", length = 1)
-	private boolean textOrPdf;
+  @Column(name = "text_or_pdf", length = 1)
+  private boolean textOrPdf;
 
-	@Column(name = "time_period_from_days")
-	private Integer timePeriodFromDays;
+  @Column(name = "time_period_from_days")
+  private Integer timePeriodFromDays;
 
-	@Column(name = "time_period_to_days")
-	private Integer timePeriodToDays;
+  @Column(name = "time_period_to_days")
+  private Integer timePeriodToDays;
 
-	@Column(name = "title")
-	private String title;
+  @Column(name = "title")
+  private String title;
 
-	@Column(name = "x_days_sign", length = 1)
-	private boolean xDaysSign = false;
+  @Column(name = "x_days_sign", length = 1)
+  private boolean xDaysSign = false;
 
-	@Column(name = "y_days_sign", length = 1)
-	private boolean yDaysSign = false;
-	
-	@Column(name = "anchor_date_id")
-	private Integer anchorDateId;
+  @Column(name = "y_days_sign", length = 1)
+  private boolean yDaysSign = false;
 
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
+  @Column(name = "anchor_date_id")
+  private Integer anchorDateId;
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
+  public Integer getCreatedBy() {
+    return createdBy;
+  }
 
-	public String getEndDate() {
-		return endDate;
-	}
+  public String getCreatedOn() {
+    return createdOn;
+  }
 
-	public Integer getId() {
-		return id;
-	}
+  public String getEndDate() {
+    return endDate;
+  }
 
-	public Integer getModifiedBy() {
-		return modifiedBy;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public String getModifiedOn() {
-		return modifiedOn;
-	}
+  public Integer getModifiedBy() {
+    return modifiedBy;
+  }
 
-	public MultipartFile getPdfFile() {
-		return pdfFile;
-	}
+  public String getModifiedOn() {
+    return modifiedOn;
+  }
 
-	public String getPdfName() {
-		return pdfName;
-	}
+  public MultipartFile getPdfFile() {
+    return pdfFile;
+  }
 
-	public String getPdfUrl() {
-		return pdfUrl;
-	}
+  public String getPdfName() {
+    return pdfName;
+  }
 
-	public String getResourceText() {
-		return resourceText;
-	}
+  public String getPdfUrl() {
+    return pdfUrl;
+  }
 
-	public String getRichText() {
-		return richText;
-	}
+  public String getResourceText() {
+    return resourceText;
+  }
 
-	public Integer getSequenceNo() {
-		return sequenceNo;
-	}
+  public String getRichText() {
+    return richText;
+  }
 
-	public String getStartDate() {
-		return startDate;
-	}
+  public Integer getSequenceNo() {
+    return sequenceNo;
+  }
 
-	public Integer getStudyId() {
-		return studyId;
-	}
+  public String getStartDate() {
+    return startDate;
+  }
 
-	public Integer getTimePeriodFromDays() {
-		return timePeriodFromDays;
-	}
+  public Integer getStudyId() {
+    return studyId;
+  }
 
-	public Integer getTimePeriodToDays() {
-		return timePeriodToDays;
-	}
+  public Integer getTimePeriodFromDays() {
+    return timePeriodFromDays;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public Integer getTimePeriodToDays() {
+    return timePeriodToDays;
+  }
 
-	public boolean isAction() {
-		return action;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public boolean isResourceType() {
-		return resourceType;
-	}
+  public boolean isAction() {
+    return action;
+  }
 
-	public boolean isResourceVisibility() {
-		return resourceVisibility;
-	}
+  public boolean isResourceType() {
+    return resourceType;
+  }
 
-	public boolean isStatus() {
-		return status;
-	}
+  public boolean isResourceVisibility() {
+    return resourceVisibility;
+  }
 
-	public boolean isStudyProtocol() {
-		return studyProtocol;
-	}
+  public boolean isStatus() {
+    return status;
+  }
 
-	public boolean isTextOrPdf() {
-		return textOrPdf;
-	}
+  public boolean isStudyProtocol() {
+    return studyProtocol;
+  }
 
-	public boolean isxDaysSign() {
-		return xDaysSign;
-	}
+  public boolean isTextOrPdf() {
+    return textOrPdf;
+  }
 
-	public boolean isyDaysSign() {
-		return yDaysSign;
-	}
+  public boolean isxDaysSign() {
+    return xDaysSign;
+  }
 
-	public void setAction(boolean action) {
-		this.action = action;
-	}
+  public boolean isyDaysSign() {
+    return yDaysSign;
+  }
 
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
+  public void setAction(boolean action) {
+    this.action = action;
+  }
 
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
+  public void setCreatedBy(Integer createdBy) {
+    this.createdBy = createdBy;
+  }
 
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
 
-	public void setModifiedBy(Integer modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public void setModifiedOn(String modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
+  public void setModifiedBy(Integer modifiedBy) {
+    this.modifiedBy = modifiedBy;
+  }
 
-	public void setPdfFile(MultipartFile pdfFile) {
-		this.pdfFile = pdfFile;
-	}
+  public void setModifiedOn(String modifiedOn) {
+    this.modifiedOn = modifiedOn;
+  }
 
-	public void setPdfName(String pdfName) {
-		this.pdfName = pdfName;
-	}
+  public void setPdfFile(MultipartFile pdfFile) {
+    this.pdfFile = pdfFile;
+  }
 
-	public void setPdfUrl(String pdfUrl) {
-		this.pdfUrl = pdfUrl;
-	}
+  public void setPdfName(String pdfName) {
+    this.pdfName = pdfName;
+  }
 
-	public void setResourceText(String resourceText) {
-		this.resourceText = resourceText;
-	}
+  public void setPdfUrl(String pdfUrl) {
+    this.pdfUrl = pdfUrl;
+  }
 
-	public void setResourceType(boolean resourceType) {
-		this.resourceType = resourceType;
-	}
+  public void setResourceText(String resourceText) {
+    this.resourceText = resourceText;
+  }
 
-	public void setResourceVisibility(boolean resourceVisibility) {
-		this.resourceVisibility = resourceVisibility;
-	}
+  public void setResourceType(boolean resourceType) {
+    this.resourceType = resourceType;
+  }
 
-	public void setRichText(String richText) {
-		this.richText = richText;
-	}
+  public void setResourceVisibility(boolean resourceVisibility) {
+    this.resourceVisibility = resourceVisibility;
+  }
 
-	public void setSequenceNo(Integer sequenceNo) {
-		this.sequenceNo = sequenceNo;
-	}
+  public void setRichText(String richText) {
+    this.richText = richText;
+  }
 
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
+  public void setSequenceNo(Integer sequenceNo) {
+    this.sequenceNo = sequenceNo;
+  }
 
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
+  public void setStartDate(String startDate) {
+    this.startDate = startDate;
+  }
 
-	public void setStudyId(Integer studyId) {
-		this.studyId = studyId;
-	}
+  public void setStatus(boolean status) {
+    this.status = status;
+  }
 
-	public void setStudyProtocol(boolean studyProtocol) {
-		this.studyProtocol = studyProtocol;
-	}
+  public void setStudyId(Integer studyId) {
+    this.studyId = studyId;
+  }
 
-	public void setTextOrPdf(boolean textOrPdf) {
-		this.textOrPdf = textOrPdf;
-	}
+  public void setStudyProtocol(boolean studyProtocol) {
+    this.studyProtocol = studyProtocol;
+  }
 
-	public void setTimePeriodFromDays(Integer timePeriodFromDays) {
-		this.timePeriodFromDays = timePeriodFromDays;
-	}
+  public void setTextOrPdf(boolean textOrPdf) {
+    this.textOrPdf = textOrPdf;
+  }
 
-	public void setTimePeriodToDays(Integer timePeriodToDays) {
-		this.timePeriodToDays = timePeriodToDays;
-	}
+  public void setTimePeriodFromDays(Integer timePeriodFromDays) {
+    this.timePeriodFromDays = timePeriodFromDays;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setTimePeriodToDays(Integer timePeriodToDays) {
+    this.timePeriodToDays = timePeriodToDays;
+  }
 
-	public void setxDaysSign(boolean xDaysSign) {
-		this.xDaysSign = xDaysSign;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setyDaysSign(boolean yDaysSign) {
-		this.yDaysSign = yDaysSign;
-	}
+  public void setxDaysSign(boolean xDaysSign) {
+    this.xDaysSign = xDaysSign;
+  }
 
-	public Integer getAnchorDateId() {
-		return anchorDateId;
-	}
+  public void setyDaysSign(boolean yDaysSign) {
+    this.yDaysSign = yDaysSign;
+  }
 
-	public void setAnchorDateId(Integer anchorDateId) {
-		this.anchorDateId = anchorDateId;
-	}
+  public Integer getAnchorDateId() {
+    return anchorDateId;
+  }
+
+  public void setAnchorDateId(Integer anchorDateId) {
+    this.anchorDateId = anchorDateId;
+  }
 }

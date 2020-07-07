@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,44 +24,37 @@ package com.hphc.mystudies.bean;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides gateway details {@link InfoBean} and resources
- * {@link GatewayInfoResourceBean}
- * 
- * @author BTC
- *
- */
 public class GatewayInfoResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private List<InfoBean> info = new ArrayList<>();
-	private List<GatewayInfoResourceBean> resources = new ArrayList<>();
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  private List<InfoBean> info = new ArrayList<>();
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  private List<GatewayInfoResourceBean> resources = new ArrayList<>();
 
-	public List<InfoBean> getInfo() {
-		return info;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setInfo(List<InfoBean> info) {
-		this.info = info;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public List<GatewayInfoResourceBean> getResources() {
-		return resources;
-	}
+  public List<InfoBean> getInfo() {
+    return info;
+  }
 
-	public void setResources(List<GatewayInfoResourceBean> resources) {
-		this.resources = resources;
-	}
+  public void setInfo(List<InfoBean> info) {
+    this.info = info;
+  }
 
+  public List<GatewayInfoResourceBean> getResources() {
+    return resources;
+  }
+
+  public void setResources(List<GatewayInfoResourceBean> resources) {
+    this.resources = resources;
+  }
 }

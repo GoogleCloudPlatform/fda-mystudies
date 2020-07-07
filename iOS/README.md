@@ -1,73 +1,27 @@
-# My Studies
-My Studies is an open-source project to take part in health surveys. ‘My Studies’ is developed using [ResearchKit](https://github.com/ResearchKit/ResearchKit#charts) which is an open-source framework provided by Apple.
-My Studies project is FISMA & HIPPA compliant.
+![Build iOS](https://github.com/GoogleCloudPlatform/fda-mystudies/workflows/Build%20iOS/badge.svg) 
+![SwiftLint](https://github.com/GoogleCloudPlatform/fda-mystudies/workflows/SwiftLint/badge.svg)
+
 # Requirements
-My Studies requires Xcode 11 or newer and can be run on iOS 11 and above.
+FDA MyStudies iOS app requires Xcode 11 or newer and can be run on iOS 11 and above.
+
 # Backend Server Integration
-My Studies fetches all the Studies, Activities, Consent and Resources from the backend, and responses provided by users is stored on the backend.
-#### Registration Server
-Registration Server stores user information & user’s status for each study and activity.
-Once you have successfully setup Registration Server, replace registration server URL in RegistrationServerConfiguration.swift
-```swift
-struct RegistrationServerURLConstants {
-//TODO: Set the server end points
+FDA MyStudies Mobile Apps fetch all the Studies, Activities, Consent and Resources from Study Builder and datastores, and post responses provided by users to the Response datastore. In order for this app to communicate with the appropriate underlying services, you need to set up the following services and provide the appropriate URLs and credentials via app's configuration file:
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
+#### Partcipant Datastore
+Partcipant Datastore stores participants' information, their consent status and consent document once provided.
 
-}
-```
+#### Study Builder
+Study Builder provides the platform to create study, activities, consent, and resources.
 
-#### WCP Server
-WCP Server provides the platform to create study, activities, consent, and Resources.
-Once you have successfully setup WCP Server, replace server URL in WCPConfiguration.swift
-```swift
-struct WCPServerURLConstants {
-//TODO: Set the server end points
+#### Response Datastore
+Response Datastore stores users’ responses to all study activities.
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
-}
-```
-#### Response Server
-Response Server stores all user’s response to each study activity.
-Once you have successfully setup WCP Server, replace server URL in ResponseServerConfiguration.swift
-```swift
-struct ResponseServerURLConstants {
-//TODO: Set the server end points
+#### Auth Server
+Handles authentication of the App with different backends.
 
-static let ProductionURL = "Your production server URL"
-static let DevelopmentURL = "Your development server URL"
+#### Creating Build Configuration Files
+1. To create a build configuration file, open HPHC.xcworkspace, select the “File > New File…” menu item (⌘n), scroll down to the section labeled “Other”, and select the Configuration Settings File template. Next, save it somewhere in your project directory, making sure to add it to your desired targets.
+2. Once you’ve created an xcconfig file, you can assign it to one or more build configurations for their associated targets.
+3. Go to project info settings.
+4. Under build configuration, select the configuration settings file for project(not for any target) you created in Step 1.
 
-}
-```
-
-# Author
-Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
-
-# License
-License Agreement for FDA My Studies
-Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-hereby granted, free of charge, to any person obtaining a copy of this software and associated
-documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
-limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
-Software, and to permit persons to whom the Software is furnished to do so, subject to the following
-conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial
-portions of the Software.
-Funding Source: Food and Drug Administration (“Funding Agency”) effective 18 September 2014 as
-Contract no. HHSF22320140030I/HHSF22301006T (the “Prime Contract”).
-THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
-OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-# Libraries We Used
-[IQKeyboardManagerSwift](https://github.com/hackiftekhar/IQKeyboardManager)
-[SlideMenuControllerSwift](https://github.com/dekatotoro/SlideMenuControllerSwift)
-[Crashlytics](https://cocoapods.org/pods/Crashlytics)
-[SDWebImage](https://github.com/rs/SDWebImage)
-[RealmSwift](https://github.com/realm/realm-cocoa)
-[CryptoSwift](https://github.com/krzyzanowskim/CryptoSwift)
-[ActionSheetPicker-3.0](https://github.com/skywinder/ActionSheetPicker-3.0)

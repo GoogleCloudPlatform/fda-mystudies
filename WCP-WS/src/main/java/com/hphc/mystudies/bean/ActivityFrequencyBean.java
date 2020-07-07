@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,40 +25,35 @@ package com.hphc.mystudies.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Provides activity frequency information {@link ActivityFrequencyScheduleBean}
- * and frequency type
- * 
- * @author BTC
- *
- */
 public class ActivityFrequencyBean {
 
-	private String type = "";
-	private List<ActivityFrequencyScheduleBean> runs = new ArrayList<>();
-	private List<ActivityFrequencyAnchorRunsBean> anchorRuns = new ArrayList<>();
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private List<ActivityFrequencyScheduleBean> runs = new ArrayList<>();
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private List<ActivityFrequencyAnchorRunsBean> anchorRuns = new ArrayList<>();
 
-	public List<ActivityFrequencyScheduleBean> getRuns() {
-		return runs;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setRuns(List<ActivityFrequencyScheduleBean> runs) {
-		this.runs = runs;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public List<ActivityFrequencyAnchorRunsBean> getAnchorRuns() {
-		return anchorRuns;
-	}
+  public List<ActivityFrequencyScheduleBean> getRuns() {
+    return runs;
+  }
 
-	public void setAnchorRuns(List<ActivityFrequencyAnchorRunsBean> anchorRuns) {
-		this.anchorRuns = anchorRuns;
-	}
+  public void setRuns(List<ActivityFrequencyScheduleBean> runs) {
+    this.runs = runs;
+  }
+
+  public List<ActivityFrequencyAnchorRunsBean> getAnchorRuns() {
+    return anchorRuns;
+  }
+
+  public void setAnchorRuns(List<ActivityFrequencyAnchorRunsBean> anchorRuns) {
+    this.anchorRuns = anchorRuns;
+  }
 }

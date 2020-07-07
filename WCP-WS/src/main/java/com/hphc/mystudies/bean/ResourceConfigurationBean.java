@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,49 +22,45 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides configuration details for resource.
- * 
- * @author BTC
- *
- */
 public class ResourceConfigurationBean {
 
-	private String availableDate = "";
-	private String expiryDate = "";
-	private Integer startDays = 0;
-	private Integer endDays = 0;
+  private String availableDate = "";
 
-	public String getAvailableDate() {
-		return availableDate;
-	}
+  private String expiryDate = "";
 
-	public void setAvailableDate(String availableDate) {
-		this.availableDate = availableDate;
-	}
+  private Integer startDays = 0;
 
-	public String getExpiryDate() {
-		return expiryDate;
-	}
+  private Integer endDays = 0;
 
-	public void setExpiryDate(String expiryDate) {
-		this.expiryDate = expiryDate;
-	}
+  public String getAvailableDate() {
+    return availableDate;
+  }
 
-	public Integer getStartDays() {
-		return startDays;
-	}
+  public void setAvailableDate(String availableDate) {
+    this.availableDate = availableDate;
+  }
 
-	public void setStartDays(Integer startDays) {
-		this.startDays = startDays;
-	}
+  public String getExpiryDate() {
+    return expiryDate;
+  }
 
-	public Integer getEndDays() {
-		return endDays;
-	}
+  public void setExpiryDate(String expiryDate) {
+    this.expiryDate = expiryDate;
+  }
 
-	public void setEndDays(Integer endDays) {
-		this.endDays = endDays;
-	}
+  public Integer getStartDays() {
+    return startDays;
+  }
 
+  public void setStartDays(Integer startDays) {
+    this.startDays = startDays;
+  }
+
+  public Integer getEndDays() {
+    return endDays;
+  }
+
+  public void setEndDays(Integer endDays) {
+    this.endDays = endDays;
+  }
 }

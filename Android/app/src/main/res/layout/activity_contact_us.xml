@@ -1,31 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_signup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="com.harvard.userModule.SignupActivity">
+    tools:context="com.harvard.usermodule.SignupActivity">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/submitButton"
-        style="@style/TextType2"
-        android:layout_marginBottom="15dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/rectangle_black_white"
-        android:gravity="center"
-        android:text="@string/submit"
-        android:textColor="@color/colorPrimary" />
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/hrline8"
+    <RelativeLayout
+        android:id="@+id/submitButtonlayout"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/submitButton"
-        android:layout_marginBottom="15dp"
-        android:background="@color/colorSecondaryBg" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <TextView
+            android:id="@+id/info_txt"
+            style="@style/contactUsTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/we_will_get_back_to_you_as_soon_as_possible"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/hrline8"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/info_txt"
+            android:layout_marginBottom="10dp"
+            android:background="@color/colorSecondaryBg" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/submitButton"
+            style="@style/TextType2"
+            android:layout_below="@+id/hrline8"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rectangle_black_white"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:textColor="@color/colorPrimary" />
+    </RelativeLayout>
+
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/topView"
@@ -76,12 +95,12 @@
         android:background="@color/colorSecondaryBg" />
 
     <RelativeLayout
-        android:layout_below="@+id/hrLine1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:layout_above="@+id/submitButton"
+        android:layout_above="@+id/submitButtonlayout"
+        android:layout_below="@+id/hrLine1"
         android:layout_marginBottom="15dp"
+        android:fillViewport="true"
         android:scrollbars="none">
 
         <RelativeLayout
@@ -93,8 +112,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/firstName"
@@ -104,12 +123,12 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/edittxt_firstName"
                     style="@style/signUpEditText"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
                     android:hint="@string/enter_first_name"
+                    android:imeOptions="actionNext"
                     android:inputType="textVisiblePassword"
                     android:maxLength="32"
                     android:maxLines="1"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
-                    android:imeOptions="actionNext"
                     android:singleLine="true"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
@@ -128,8 +147,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_first_name"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/email_label"
@@ -140,10 +159,10 @@
                     android:id="@+id/edittxt_email"
                     style="@style/signUpEditText"
                     android:hint="@string/enter_email"
-                    android:singleLine="true"
-                    android:maxLines="1"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
                 <android.support.v7.widget.AppCompatTextView
@@ -161,8 +180,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_email"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/subject_label"
@@ -172,14 +191,14 @@
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/edittxt_subject"
                     style="@style/signUpEditText"
-                    android:hint="@string/enter_subject"
-                    android:textCursorDrawable="@drawable/custom_cursor_drawable"
                     android:layout_alignParentTop="true"
-                    android:maxLines="1"
-                    android:imeOptions="actionNext"
-                    android:singleLine="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:hint="@string/enter_subject"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/hrline6"
@@ -196,8 +215,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_subject"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
 
                 <android.support.v7.widget.AppCompatTextView
@@ -209,14 +228,14 @@
                     android:id="@+id/edittxt_message"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="18dp"
-                    android:gravity="top"
-                    android:textColorHint="@color/colorSecondary"
                     android:layout_below="@+id/message_label"
+                    android:layout_marginTop="18dp"
+                    android:background="@null"
+                    android:gravity="top"
                     android:hint=""
                     android:textColor="@color/colorPrimaryBlack"
-                    android:textCursorDrawable="@drawable/custom_cursor_drawable"
-                    android:background="@null" />
+                    android:textColorHint="@color/colorSecondary"
+                    android:textCursorDrawable="@drawable/custom_cursor_drawable" />
 
             </RelativeLayout>
 
