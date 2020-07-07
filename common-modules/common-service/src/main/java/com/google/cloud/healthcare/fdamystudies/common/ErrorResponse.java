@@ -8,28 +8,48 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.io.IOException;
-import java.time.Instant;
-import org.springframework.web.client.RestClientResponseException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.Map;
 import lombok.Getter;
 import lombok.ToString;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.web.client.RestClientResponseException;
 
 @Getter
 @ToString
 @JsonSerialize(using = ErrorResponse.ErrorResponseSerializer.class)
 public class ErrorResponse {
 
-  private String requestUri;
+  private XLogger logger = XLoggerFactory.getXLogger(ErrorResponse.class.getName());
 
-  private RestClientResponseException restClientResponseException;
+  private String errorDescription;
 
-  public ErrorResponse(String requestUri, RestClientResponseException restClientResponseException) {
-    this.requestUri = requestUri;
-    this.restClientResponseException = restClientResponseException;
+  private String errorType;
+
+  private int status;
+
+  private long timestamp = Instant.now().toEpochMilli();
+
+  public ErrorResponse(RestClientResponseException restClientResponseException) {
+    populateErrorFields(restClientResponseException);
+  }
+
+  public ErrorResponse(Map<String, Object> errorAttributes) {
+    status = Integer.parseInt(errorAttributes.get("status").toString());
+    errorType = errorAttributes.get("error").toString();
+    errorDescription = errorAttributes.get("message").toString();
+  }
+
+  private void populateErrorFields(RestClientResponseException restClientResponseException) {
+    status = restClientResponseException.getRawStatusCode();
+    errorType = restClientResponseException.getClass().getSimpleName();
+    errorDescription = restClientResponseException.getMessage();
   }
 
   static class ErrorResponseSerializer extends StdSerializer<ErrorResponse> {
@@ -47,12 +67,10 @@ public class ErrorResponse {
         SerializerProvider serializerProvider)
         throws IOException {
       jsonGenerator.writeStartObject();
-      jsonGenerator.writeNumberField(
-          "status", errorResponse.getRestClientResponseException().getRawStatusCode());
-      jsonGenerator.writeStringField(
-          "error_description", errorResponse.getRestClientResponseException().getMessage());
-      jsonGenerator.writeNumberField("timestamp", Instant.now().toEpochMilli());
-      jsonGenerator.writeStringField("path", errorResponse.getRequestUri());
+      jsonGenerator.writeNumberField("status", errorResponse.status);
+      jsonGenerator.writeStringField("error_type", errorResponse.errorType);
+      jsonGenerator.writeNumberField("timestamp", errorResponse.timestamp);
+      jsonGenerator.writeStringField("error_description", errorResponse.errorDescription);
       jsonGenerator.writeEndObject();
     }
   }

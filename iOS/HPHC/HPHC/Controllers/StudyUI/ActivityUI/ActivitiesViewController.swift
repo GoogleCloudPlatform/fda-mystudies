@@ -928,7 +928,12 @@ extension ActivitiesViewController: UITableViewDataSource {
       // Cell Data Setup
       cell.backgroundColor = UIColor.clear
       let availabilityStatus = ActivityAvailabilityStatus(rawValue: indexPath.section)
-
+      // Disable selection for past and upcoming activities.
+      if availabilityStatus == .past || availabilityStatus == .upcoming {
+        cell.isUserInteractionEnabled = false
+      } else {
+        cell.isUserInteractionEnabled = true
+      }
       let activity = activities[indexPath.row]
 
       // check for scheduled frequency
