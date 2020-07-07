@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,67 +22,65 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides consent document sharing details.
- * 
- * @author BTC
- *
- */
 public class SharingBean {
 
-	private String title = "";
-	private String text = "";
-	private String shortDesc = "";
-	private String longDesc = "";
-	private String learnMore = "";
-	private boolean allowWithoutSharing = false;
+  private String title = "";
 
-	public String getTitle() {
-		return title;
-	}
+  private String text = "";
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  private String shortDesc = "";
 
-	public String getText() {
-		return text;
-	}
+  private String longDesc = "";
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  private String learnMore = "";
 
-	public String getShortDesc() {
-		return shortDesc;
-	}
+  private boolean allowWithoutSharing = false;
 
-	public void setShortDesc(String shortDesc) {
-		this.shortDesc = shortDesc;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getLongDesc() {
-		return longDesc;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setLongDesc(String longDesc) {
-		this.longDesc = longDesc;
-	}
+  public String getText() {
+    return text;
+  }
 
-	public String getLearnMore() {
-		return learnMore;
-	}
+  public void setText(String text) {
+    this.text = text;
+  }
 
-	public void setLearnMore(String learnMore) {
-		this.learnMore = learnMore;
-	}
+  public String getShortDesc() {
+    return shortDesc;
+  }
 
-	public boolean isAllowWithoutSharing() {
-		return allowWithoutSharing;
-	}
+  public void setShortDesc(String shortDesc) {
+    this.shortDesc = shortDesc;
+  }
 
-	public void setAllowWithoutSharing(boolean allowWithoutSharing) {
-		this.allowWithoutSharing = allowWithoutSharing;
-	}
+  public String getLongDesc() {
+    return longDesc;
+  }
 
+  public void setLongDesc(String longDesc) {
+    this.longDesc = longDesc;
+  }
+
+  public String getLearnMore() {
+    return learnMore;
+  }
+
+  public void setLearnMore(String learnMore) {
+    this.learnMore = learnMore;
+  }
+
+  public boolean isAllowWithoutSharing() {
+    return allowWithoutSharing;
+  }
+
+  public void setAllowWithoutSharing(boolean allowWithoutSharing) {
+    this.allowWithoutSharing = allowWithoutSharing;
+  }
 }

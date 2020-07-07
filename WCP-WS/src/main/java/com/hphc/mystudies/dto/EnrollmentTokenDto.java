@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,53 +30,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "enrollment_token")
 public class EnrollmentTokenDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 191073853377443228L;
+  private static final long serialVersionUID = 191073853377443228L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "token_id")
-	private Integer tokenId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "token_id")
+  private Integer tokenId;
 
-	@Column(name = "enrollment_token")
-	private String enrollmentToken;
+  @Column(name = "enrollment_token")
+  private String enrollmentToken;
 
-	@Column(name = "created_on")
-	private String createdOn;
+  @Column(name = "created_on")
+  private String createdOn;
 
-	public Integer getTokenId() {
-		return tokenId;
-	}
+  public Integer getTokenId() {
+    return tokenId;
+  }
 
-	public void setTokenId(Integer tokenId) {
-		this.tokenId = tokenId;
-	}
+  public void setTokenId(Integer tokenId) {
+    this.tokenId = tokenId;
+  }
 
-	public String getEnrollmentToken() {
-		return enrollmentToken;
-	}
+  public String getEnrollmentToken() {
+    return enrollmentToken;
+  }
 
-	public void setEnrollmentToken(String enrollmentToken) {
-		this.enrollmentToken = enrollmentToken;
-	}
+  public void setEnrollmentToken(String enrollmentToken) {
+    this.enrollmentToken = enrollmentToken;
+  }
 
-	public String getCreatedOn() {
-		return createdOn;
-	}
+  public String getCreatedOn() {
+    return createdOn;
+  }
 
-	public void setCreatedOn(String createdOn) {
-		this.createdOn = createdOn;
-	}
-
+  public void setCreatedOn(String createdOn) {
+    this.createdOn = createdOn;
+  }
 }

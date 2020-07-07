@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,76 +30,66 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides question response types information.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "questions_response_type")
 public class QuestionsResponseTypeDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7963662243467298886L;
+  private static final long serialVersionUID = -7963662243467298886L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "question_id")
-	private Integer questionId;
+  @Column(name = "question_id")
+  private Integer questionId;
 
-	@Column(name = "parameter_name")
-	private String parameterName;
+  @Column(name = "parameter_name")
+  private String parameterName;
 
-	@Column(name = "parameter_value")
-	private String parameterValue;
+  @Column(name = "parameter_value")
+  private String parameterValue;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public Integer getQuestionId() {
-		return questionId;
-	}
+  public Integer getQuestionId() {
+    return questionId;
+  }
 
-	public void setQuestionId(Integer questionId) {
-		this.questionId = questionId;
-	}
+  public void setQuestionId(Integer questionId) {
+    this.questionId = questionId;
+  }
 
-	public String getParameterName() {
-		return parameterName;
-	}
+  public String getParameterName() {
+    return parameterName;
+  }
 
-	public void setParameterName(String parameterName) {
-		this.parameterName = parameterName;
-	}
+  public void setParameterName(String parameterName) {
+    this.parameterName = parameterName;
+  }
 
-	public String getParameterValue() {
-		return parameterValue;
-	}
+  public String getParameterValue() {
+    return parameterValue;
+  }
 
-	public void setParameterValue(String parameterValue) {
-		this.parameterValue = parameterValue;
-	}
-
+  public void setParameterValue(String parameterValue) {
+    this.parameterValue = parameterValue;
+  }
 }

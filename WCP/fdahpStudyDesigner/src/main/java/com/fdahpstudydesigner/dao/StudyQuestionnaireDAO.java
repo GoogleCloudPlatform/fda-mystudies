@@ -1,11 +1,32 @@
+/*
+ * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
+ * following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial
+ * portions of the Software.
+ *
+ * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
+ * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+ * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.fdahpstudydesigner.dao;
 
 import java.util.List;
 import java.util.SortedMap;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.HealthKitKeysInfo;
@@ -19,108 +40,123 @@ import com.fdahpstudydesigner.bo.StudyVersionBo;
 import com.fdahpstudydesigner.util.SessionObject;
 
 public interface StudyQuestionnaireDAO {
-	public String checkFromQuestionShortTitle(Integer questionnaireId,
-			String shortTitle, String questionnaireShortTitle,
-			String customStudyId);
 
-	public String checkQuestionnaireResponseTypeValidation(Integer studyId,
-			String customStudyId);
+  public String checkFromQuestionShortTitle(
+      Integer questionnaireId,
+      String shortTitle,
+      String questionnaireShortTitle,
+      String customStudyId);
 
-	public String checkQuestionnaireShortTitle(Integer studyId,
-			String shortTitle, String customStudyId);
+  public String checkQuestionnaireResponseTypeValidation(Integer studyId, String customStudyId);
 
-	public String checkQuestionnaireStepShortTitle(Integer questionnaireId,
-			String stepType, String shortTitle, String questionnaireShortTitle,
-			String customStudyId);
+  public String checkQuestionnaireShortTitle(
+      Integer studyId, String shortTitle, String customStudyId);
 
-	public String checkStatShortTitle(Integer studyId, String shortTitle,
-			String customStudyId);
+  public String checkQuestionnaireStepShortTitle(
+      Integer questionnaireId,
+      String stepType,
+      String shortTitle,
+      String questionnaireShortTitle,
+      String customStudyId);
 
-	public QuestionnaireBo copyStudyQuestionnaireBo(Integer questionnaireId,
-			String customStudyId, SessionObject sessionObject);
+  public String checkStatShortTitle(Integer studyId, String shortTitle, String customStudyId);
 
-	public String deleteFromStepQuestion(Integer formId, Integer questionId,
-			SessionObject sessionObject, String customStudyId);
+  public QuestionnaireBo copyStudyQuestionnaireBo(
+      Integer questionnaireId, String customStudyId, SessionObject sessionObject);
 
-	public String deleteQuestionnaireStep(Integer stepId,
-			Integer questionnaireId, String stepType,
-			SessionObject sessionObject, String customStudyId);
+  public String deleteFromStepQuestion(
+      Integer formId, Integer questionId, SessionObject sessionObject, String customStudyId);
 
-	public String deleteQuestuionnaireInfo(Integer studyId,
-			Integer questionnaireId, SessionObject sessionObject,
-			String customStudyId);
+  public String deleteQuestionnaireStep(
+      Integer stepId,
+      Integer questionnaireId,
+      String stepType,
+      SessionObject sessionObject,
+      String customStudyId);
 
-	public List<HealthKitKeysInfo> getHeanlthKitKeyInfoList();
+  public String deleteQuestuionnaireInfo(
+      Integer studyId, Integer questionnaireId, SessionObject sessionObject, String customStudyId);
 
-	public InstructionsBo getInstructionsBo(Integer instructionId,
-			String questionnaireShortTitle, String customStudyId,
-			Integer questionnaireId);
+  public List<HealthKitKeysInfo> getHeanlthKitKeyInfoList();
 
-	public List<QuestionConditionBranchBo> getQuestionConditionalBranchingLogic(
-			Session session, Integer questionId);
+  public InstructionsBo getInstructionsBo(
+      Integer instructionId,
+      String questionnaireShortTitle,
+      String customStudyId,
+      Integer questionnaireId);
 
-	public QuestionnaireBo getQuestionnaireById(Integer questionnaireId,
-			String customStudyId);
+  public List<QuestionConditionBranchBo> getQuestionConditionalBranchingLogic(
+      Session session, Integer questionId);
 
-	public List<QuestionnairesStepsBo> getQuestionnairesStepsList(
-			Integer questionnaireId, Integer sequenceNo);
+  public QuestionnaireBo getQuestionnaireById(Integer questionnaireId, String customStudyId);
 
-	public QuestionnairesStepsBo getQuestionnaireStep(Integer stepId,
-			String stepType, String questionnaireShortTitle,
-			String customStudyId, Integer questionnaireId);
+  public List<QuestionnairesStepsBo> getQuestionnairesStepsList(
+      Integer questionnaireId, Integer sequenceNo);
 
-	public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(
-			Integer questionnaireId);
+  public QuestionnairesStepsBo getQuestionnaireStep(
+      Integer stepId,
+      String stepType,
+      String questionnaireShortTitle,
+      String customStudyId,
+      Integer questionnaireId);
 
-	public List<QuestionResponseTypeMasterInfoBo> getQuestionReponseTypeList();
+  public SortedMap<Integer, QuestionnaireStepBean> getQuestionnaireStepList(
+      Integer questionnaireId);
 
-	public QuestionsBo getQuestionsById(Integer questionId,
-			String questionnaireShortTitle, String customStudyId);
+  public List<QuestionResponseTypeMasterInfoBo> getQuestionReponseTypeList();
 
-	public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(
-			String studyId, Boolean isLive);
+  public QuestionsBo getQuestionsById(
+      Integer questionId, String questionnaireShortTitle, String customStudyId);
 
-	public Boolean isAnchorDateExistsForStudy(Integer studyId,
-			String customStudyId);
+  public List<QuestionnaireBo> getStudyQuestionnairesByStudyId(String studyId, Boolean isLive);
 
-	public Boolean isQuestionnairesCompleted(Integer studyId);
+  public Boolean isAnchorDateExistsForStudy(Integer studyId, String customStudyId);
 
-	public String reOrderFormStepQuestions(Integer formId, int oldOrderNumber,
-			int newOrderNumber);
+  public Boolean isQuestionnairesCompleted(Integer studyId);
 
-	public String reOrderQuestionnaireSteps(Integer questionnaireId,
-			int oldOrderNumber, int newOrderNumber);
+  public String reOrderFormStepQuestions(Integer formId, int oldOrderNumber, int newOrderNumber);
 
-	public QuestionnairesStepsBo saveOrUpdateFromQuestionnaireStep(
-			QuestionnairesStepsBo questionnairesStepsBo, SessionObject sesObj,
-			String customStudyId);
+  public String reOrderQuestionnaireSteps(
+      Integer questionnaireId, int oldOrderNumber, int newOrderNumber);
 
-	public InstructionsBo saveOrUpdateInstructionsBo(
-			InstructionsBo instructionsBo, SessionObject sessionObject,
-			String customStudyId);
+  public QuestionnairesStepsBo saveOrUpdateFromQuestionnaireStep(
+      QuestionnairesStepsBo questionnairesStepsBo, SessionObject sesObj, String customStudyId);
 
-	public QuestionsBo saveOrUpdateQuestion(QuestionsBo questionsBo);
+  public InstructionsBo saveOrUpdateInstructionsBo(
+      InstructionsBo instructionsBo, SessionObject sessionObject, String customStudyId);
 
-	public QuestionnaireBo saveORUpdateQuestionnaire(
-			QuestionnaireBo questionnaireBo, SessionObject sessionObject,
-			String customStudyId);
+  public QuestionsBo saveOrUpdateQuestion(QuestionsBo questionsBo);
 
-	public QuestionnairesStepsBo saveOrUpdateQuestionStep(
-			QuestionnairesStepsBo questionnairesStepsBo,
-			SessionObject sessionObject, String customStudyId);
+  public QuestionnaireBo saveORUpdateQuestionnaire(
+      QuestionnaireBo questionnaireBo, SessionObject sessionObject, String customStudyId);
 
-	public String validateLineChartSchedule(Integer questionnaireId,
-			String frequency);
+  public QuestionnairesStepsBo saveOrUpdateQuestionStep(
+      QuestionnairesStepsBo questionnairesStepsBo,
+      SessionObject sessionObject,
+      String customStudyId);
 
-	public String validateRepetableFormQuestionStats(Integer formId);
-	
-	public String checkUniqueAnchorDateName(String anchordateText, String customStudyId, String anchorDateId);
-	
-	public Integer getStudyIdByCustomStudy( Session session, String customStudyId);
-	
-	public List<AnchorDateTypeBo> getAnchorTypesByStudyId(String customStudyId);
-	
-	public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId);
-	
-	public String updateAnchordateInQuestionnaire(Session session, Transaction transaction, StudyVersionBo studyVersionBo, Integer questionnaireId,SessionObject sessionObject,Integer studyId, Integer stepId, Integer questionId, String stepType, boolean isChange);
+  public String validateLineChartSchedule(Integer questionnaireId, String frequency);
+
+  public String validateRepetableFormQuestionStats(Integer formId);
+
+  public String checkUniqueAnchorDateName(
+      String anchordateText, String customStudyId, String anchorDateId);
+
+  public Integer getStudyIdByCustomStudy(Session session, String customStudyId);
+
+  public List<AnchorDateTypeBo> getAnchorTypesByStudyId(String customStudyId);
+
+  public boolean isAnchorDateExistByQuestionnaire(Integer questionnaireId);
+
+  public String updateAnchordateInQuestionnaire(
+      Session session,
+      Transaction transaction,
+      StudyVersionBo studyVersionBo,
+      Integer questionnaireId,
+      SessionObject sessionObject,
+      Integer studyId,
+      Integer stepId,
+      Integer questionId,
+      String stepType,
+      boolean isChange);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,40 +22,35 @@
  */
 package com.hphc.mystudies.bean.appendix;
 
-/**
- * Provides activity frequency details.
- * 
- * @author BTC
- *
- */
 public class FrequencyBean {
 
-	private String frequency = "";
-	private String startDate = "";
-	private String endDate = "";
+  private String frequency = "";
 
-	public String getFrequency() {
-		return frequency;
-	}
+  private String startDate = "";
 
-	public void setFrequency(String frequency) {
-		this.frequency = frequency;
-	}
+  private String endDate = "";
 
-	public String getStartDate() {
-		return startDate;
-	}
+  public String getFrequency() {
+    return frequency;
+  }
 
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
+  public void setFrequency(String frequency) {
+    this.frequency = frequency;
+  }
 
-	public String getEndDate() {
-		return endDate;
-	}
+  public String getStartDate() {
+    return startDate;
+  }
 
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
+  public void setStartDate(String startDate) {
+    this.startDate = startDate;
+  }
 
+  public String getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(String endDate) {
+    this.endDate = endDate;
+  }
 }

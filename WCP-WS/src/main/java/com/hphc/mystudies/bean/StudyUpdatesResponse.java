@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,41 +24,35 @@ package com.hphc.mystudies.bean;
 
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides study updates information {@link StudyUpdatesBean} and live study
- * version.
- * 
- * @author BTC
- *
- */
 public class StudyUpdatesResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private StudyUpdatesBean updates = new StudyUpdatesBean();
-	private String currentVersion = "";
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  private StudyUpdatesBean updates = new StudyUpdatesBean();
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  private String currentVersion = "";
 
-	public StudyUpdatesBean getUpdates() {
-		return updates;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setUpdates(StudyUpdatesBean updates) {
-		this.updates = updates;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public String getCurrentVersion() {
-		return currentVersion;
-	}
+  public StudyUpdatesBean getUpdates() {
+    return updates;
+  }
 
-	public void setCurrentVersion(String currentVersion) {
-		this.currentVersion = currentVersion;
-	}
+  public void setUpdates(StudyUpdatesBean updates) {
+    this.updates = updates;
+  }
 
+  public String getCurrentVersion() {
+    return currentVersion;
+  }
+
+  public void setCurrentVersion(String currentVersion) {
+    this.currentVersion = currentVersion;
+  }
 }

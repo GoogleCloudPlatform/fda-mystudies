@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,32 +24,25 @@ package com.hphc.mystudies.bean;
 
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides fetal kick count activity details.
- * 
- * @author BTC
- *
- */
 public class FetalKickCounterFormatBean {
 
-	private Integer duration = Integer
-			.parseInt(StudyMetaDataConstants.FETAL_MAX_DURATION);
-	private Integer kickCount = StudyMetaDataConstants.MAX_KICK_COUNT;
+  private Integer duration = Integer.parseInt(StudyMetaDataConstants.FETAL_MAX_DURATION);
 
-	public Integer getDuration() {
-		return duration;
-	}
+  private Integer kickCount = StudyMetaDataConstants.MAX_KICK_COUNT;
 
-	public void setDuration(Integer duration) {
-		this.duration = duration;
-	}
+  public Integer getDuration() {
+    return duration;
+  }
 
-	public Integer getKickCount() {
-		return kickCount;
-	}
+  public void setDuration(Integer duration) {
+    this.duration = duration;
+  }
 
-	public void setKickCount(Integer kickCount) {
-		this.kickCount = kickCount;
-	}
+  public Integer getKickCount() {
+    return kickCount;
+  }
 
+  public void setKickCount(Integer kickCount) {
+    this.kickCount = kickCount;
+  }
 }

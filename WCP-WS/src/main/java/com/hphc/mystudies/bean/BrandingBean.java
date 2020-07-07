@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,49 +22,45 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides branding information of study.
- * 
- * @author BTC
- *
- */
 public class BrandingBean {
 
-	private String titleFont = "";
-	private String bgColor = "";
-	private String tintColor = "";
-	private String logo = "";
+  private String titleFont = "";
 
-	public String getTitleFont() {
-		return titleFont;
-	}
+  private String bgColor = "";
 
-	public void setTitleFont(String titleFont) {
-		this.titleFont = titleFont;
-	}
+  private String tintColor = "";
 
-	public String getBgColor() {
-		return bgColor;
-	}
+  private String logo = "";
 
-	public void setBgColor(String bgColor) {
-		this.bgColor = bgColor;
-	}
+  public String getTitleFont() {
+    return titleFont;
+  }
 
-	public String getTintColor() {
-		return tintColor;
-	}
+  public void setTitleFont(String titleFont) {
+    this.titleFont = titleFont;
+  }
 
-	public void setTintColor(String tintColor) {
-		this.tintColor = tintColor;
-	}
+  public String getBgColor() {
+    return bgColor;
+  }
 
-	public String getLogo() {
-		return logo;
-	}
+  public void setBgColor(String bgColor) {
+    this.bgColor = bgColor;
+  }
 
-	public void setLogo(String logo) {
-		this.logo = logo;
-	}
+  public String getTintColor() {
+    return tintColor;
+  }
 
+  public void setTintColor(String tintColor) {
+    this.tintColor = tintColor;
+  }
+
+  public String getLogo() {
+    return logo;
+  }
+
+  public void setLogo(String logo) {
+    this.logo = logo;
+  }
 }

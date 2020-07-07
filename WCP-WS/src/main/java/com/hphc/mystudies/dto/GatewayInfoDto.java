@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,77 +23,67 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
 
-/**
- * Provides gateway information.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "gateway_info")
-@NamedQueries({ @NamedQuery(name = "getGatewayInfo", query = " from GatewayInfoDto GWID "), })
+@NamedQueries({
+  @NamedQuery(name = "getGatewayInfo", query = " from GatewayInfoDto GWID "),
+})
 public class GatewayInfoDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1150671454003333803L;
+  private static final long serialVersionUID = 1150671454003333803L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "video_url")
-	private String videoUrl;
+  @Column(name = "video_url")
+  private String videoUrl;
 
-	@Column(name = "email_inbox_address")
-	private String emailInboxAddress;
+  @Column(name = "email_inbox_address")
+  private String emailInboxAddress;
 
-	@Column(name = "fda_website_url")
-	private String fdaWebsiteUrl;
+  @Column(name = "fda_website_url")
+  private String fdaWebsiteUrl;
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public String getVideoUrl() {
-		return videoUrl;
-	}
+  public String getVideoUrl() {
+    return videoUrl;
+  }
 
-	public void setVideoUrl(String videoUrl) {
-		this.videoUrl = videoUrl;
-	}
+  public void setVideoUrl(String videoUrl) {
+    this.videoUrl = videoUrl;
+  }
 
-	public String getEmailInboxAddress() {
-		return emailInboxAddress;
-	}
+  public String getEmailInboxAddress() {
+    return emailInboxAddress;
+  }
 
-	public void setEmailInboxAddress(String emailInboxAddress) {
-		this.emailInboxAddress = emailInboxAddress;
-	}
+  public void setEmailInboxAddress(String emailInboxAddress) {
+    this.emailInboxAddress = emailInboxAddress;
+  }
 
-	public String getFdaWebsiteUrl() {
-		return fdaWebsiteUrl;
-	}
+  public String getFdaWebsiteUrl() {
+    return fdaWebsiteUrl;
+  }
 
-	public void setFdaWebsiteUrl(String fdaWebsiteUrl) {
-		this.fdaWebsiteUrl = fdaWebsiteUrl;
-	}
-
+  public void setFdaWebsiteUrl(String fdaWebsiteUrl) {
+    this.fdaWebsiteUrl = fdaWebsiteUrl;
+  }
 }

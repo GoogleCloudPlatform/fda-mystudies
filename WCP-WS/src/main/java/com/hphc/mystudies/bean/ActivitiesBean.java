@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,131 +22,134 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides activity details like activity identifier, activity version,
- * activity title, activity type, frequency details
- * {@link ActivityFrequencyBean}, start and end time of activity etc
- * 
- * @author BTC
- *
- */
 public class ActivitiesBean {
 
-	private String activityId = "";
-	private String activityVersion = "";
-	private String title = "";
-	private String type = "";
-	private String startTime = "";
-	private String endTime = "";
-	private Boolean branching = false;
-	private String lastModified = "";
-	private String state = "";
-	private String taskSubType = "";
-	private String schedulingType = "";
-	private ActivityAnchorDateBean anchorDate = new ActivityAnchorDateBean();
-	private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
+  private String activityId = "";
 
-	public String getActivityId() {
-		return activityId;
-	}
+  private String activityVersion = "";
 
-	public String getTaskSubType() {
-		return taskSubType;
-	}
+  private String title = "";
 
-	public void setTaskSubType(String taskSubType) {
-		this.taskSubType = taskSubType;
-	}
+  private String type = "";
 
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+  private String startTime = "";
 
-	public String getActivityVersion() {
-		return activityVersion;
-	}
+  private String endTime = "";
 
-	public void setActivityVersion(String activityVersion) {
-		this.activityVersion = activityVersion;
-	}
+  private Boolean branching = false;
 
-	public String getTitle() {
-		return title;
-	}
+  private String lastModified = "";
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  private String state = "";
 
-	public String getType() {
-		return type;
-	}
+  private String taskSubType = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private String schedulingType = "";
 
-	public String getStartTime() {
-		return startTime;
-	}
+  private ActivityAnchorDateBean anchorDate = new ActivityAnchorDateBean();
+  private ActivityFrequencyBean frequency = new ActivityFrequencyBean();
 
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
+  public String getActivityId() {
+    return activityId;
+  }
 
-	public String getEndTime() {
-		return endTime;
-	}
+  public String getTaskSubType() {
+    return taskSubType;
+  }
 
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
+  public void setTaskSubType(String taskSubType) {
+    this.taskSubType = taskSubType;
+  }
 
-	public Boolean getBranching() {
-		return branching;
-	}
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-	public void setBranching(Boolean branching) {
-		this.branching = branching;
-	}
+  public String getActivityVersion() {
+    return activityVersion;
+  }
 
-	public String getLastModified() {
-		return lastModified;
-	}
+  public void setActivityVersion(String activityVersion) {
+    this.activityVersion = activityVersion;
+  }
 
-	public void setLastModified(String lastModified) {
-		this.lastModified = lastModified;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getState() {
-		return state;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public ActivityFrequencyBean getFrequency() {
-		return frequency;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setFrequency(ActivityFrequencyBean frequency) {
-		this.frequency = frequency;
-	}
+  public String getStartTime() {
+    return startTime;
+  }
 
-	public String getSchedulingType() {
-		return schedulingType;
-	}
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
 
-	public void setSchedulingType(String schedulingType) {
-		this.schedulingType = schedulingType;
-	}
+  public String getEndTime() {
+    return endTime;
+  }
 
-	public ActivityAnchorDateBean getAnchorDate() {
-		return anchorDate;
-	}
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
 
-	public void setAnchorDate(ActivityAnchorDateBean anchorDate) {
-		this.anchorDate = anchorDate;
-	}
+  public Boolean getBranching() {
+    return branching;
+  }
+
+  public void setBranching(Boolean branching) {
+    this.branching = branching;
+  }
+
+  public String getLastModified() {
+    return lastModified;
+  }
+
+  public void setLastModified(String lastModified) {
+    this.lastModified = lastModified;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state;
+  }
+
+  public ActivityFrequencyBean getFrequency() {
+    return frequency;
+  }
+
+  public void setFrequency(ActivityFrequencyBean frequency) {
+    this.frequency = frequency;
+  }
+
+  public String getSchedulingType() {
+    return schedulingType;
+  }
+
+  public void setSchedulingType(String schedulingType) {
+    this.schedulingType = schedulingType;
+  }
+
+  public ActivityAnchorDateBean getAnchorDate() {
+    return anchorDate;
+  }
+
+  public void setAnchorDate(ActivityAnchorDateBean anchorDate) {
+    this.anchorDate = anchorDate;
+  }
 }

@@ -1,0 +1,25 @@
+name: response-server-checkstyle
+
+on:
+  pull_request:
+    paths:
+    - 'response-server-ws/**'
+    - '.github/workflows/lint-response-server.yml'
+jobs:
+  checkstyle_job:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: /response-server-ws
+    name: Checkstyle job
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Run check style
+      uses: nikitasavinov/checkstyle-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        reporter: 'github-pr-check'
+        level: warning
+        workdir: ./response-server-ws
+        tool_name: response-server Checks

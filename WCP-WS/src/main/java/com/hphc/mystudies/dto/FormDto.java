@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,54 +30,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides form questionnaire step {@link QuestionnairesStepsDto} details.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "form")
 public class FormDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -8069151978635052398L;
+  private static final long serialVersionUID = -8069151978635052398L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "form_id")
-	private Integer formId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "form_id")
+  private Integer formId;
 
-	@Column(name = "study_version")
-	private Integer studyVersion = 1;
+  @Column(name = "study_version")
+  private Integer studyVersion = 1;
 
-	@Column(name = "active")
-	private Boolean active;
+  @Column(name = "active")
+  private Boolean active;
 
-	public Integer getFormId() {
-		return formId;
-	}
+  public Integer getFormId() {
+    return formId;
+  }
 
-	public void setFormId(Integer formId) {
-		this.formId = formId;
-	}
+  public void setFormId(Integer formId) {
+    this.formId = formId;
+  }
 
-	public Integer getStudyVersion() {
-		return studyVersion;
-	}
+  public Integer getStudyVersion() {
+    return studyVersion;
+  }
 
-	public void setStudyVersion(Integer studyVersion) {
-		this.studyVersion = studyVersion;
-	}
+  public void setStudyVersion(Integer studyVersion) {
+    this.studyVersion = studyVersion;
+  }
 
-	public Boolean getActive() {
-		return active;
-	}
+  public Boolean getActive() {
+    return active;
+  }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 }

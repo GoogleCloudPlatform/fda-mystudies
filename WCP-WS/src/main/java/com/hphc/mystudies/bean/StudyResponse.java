@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,33 +24,27 @@ package com.hphc.mystudies.bean;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides studies metadata details {@link StudyBean} in response.
- * 
- * @author BTC
- *
- */
 public class StudyResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private List<StudyBean> studies = new ArrayList<>();
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  private List<StudyBean> studies = new ArrayList<>();
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public List<StudyBean> getStudies() {
-		return studies;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public void setStudies(List<StudyBean> studies) {
-		this.studies = studies;
-	}
+  public List<StudyBean> getStudies() {
+    return studies;
+  }
+
+  public void setStudies(List<StudyBean> studies) {
+    this.studies = studies;
+  }
 }

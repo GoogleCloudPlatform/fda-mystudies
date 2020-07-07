@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,32 +25,25 @@ package com.hphc.mystudies.bean;
 import com.hphc.mystudies.bean.appendix.QuestionnaireActivityStructureBean;
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides questionnaire activity metadata details
- * {@link QuestionnaireActivityStructureBean} in response.
- * 
- * @author BTC
- *
- */
 public class QuestionnaireActivityMetaDataResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private QuestionnaireActivityStructureBean activity = new QuestionnaireActivityStructureBean();
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  private QuestionnaireActivityStructureBean activity = new QuestionnaireActivityStructureBean();
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public QuestionnaireActivityStructureBean getActivity() {
-		return activity;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public void setActivity(QuestionnaireActivityStructureBean activity) {
-		this.activity = activity;
-	}
+  public QuestionnaireActivityStructureBean getActivity() {
+    return activity;
+  }
 
+  public void setActivity(QuestionnaireActivityStructureBean activity) {
+    this.activity = activity;
+  }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -25,31 +25,25 @@ package com.hphc.mystudies.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Provides activity charts {@link ChartsBean} and statistics
- * {@link StatisticsBean} information.
- * 
- * @author BTC
- *
- */
 public class DashboardBean {
 
-	private List<StatisticsBean> statistics = new ArrayList<>();
-	private List<ChartsBean> charts = new ArrayList<>();
+  private List<StatisticsBean> statistics = new ArrayList<>();
 
-	public List<StatisticsBean> getStatistics() {
-		return statistics;
-	}
+  private List<ChartsBean> charts = new ArrayList<>();
 
-	public void setStatistics(List<StatisticsBean> statistics) {
-		this.statistics = statistics;
-	}
+  public List<StatisticsBean> getStatistics() {
+    return statistics;
+  }
 
-	public List<ChartsBean> getCharts() {
-		return charts;
-	}
+  public void setStatistics(List<StatisticsBean> statistics) {
+    this.statistics = statistics;
+  }
 
-	public void setCharts(List<ChartsBean> charts) {
-		this.charts = charts;
-	}
+  public List<ChartsBean> getCharts() {
+    return charts;
+  }
+
+  public void setCharts(List<ChartsBean> charts) {
+    this.charts = charts;
+  }
 }

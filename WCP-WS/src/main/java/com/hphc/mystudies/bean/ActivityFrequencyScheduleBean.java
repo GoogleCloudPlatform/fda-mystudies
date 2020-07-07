@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,31 +22,25 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides start and end time of activity
- * 
- * @author BTC
- *
- */
 public class ActivityFrequencyScheduleBean {
 
-	private String startTime = "";
-	private String endTime = "";
+  private String startTime = "";
 
-	public String getStartTime() {
-		return startTime;
-	}
+  private String endTime = "";
 
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
+  public String getStartTime() {
+    return startTime;
+  }
 
-	public String getEndTime() {
-		return endTime;
-	}
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
 
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
+  public String getEndTime() {
+    return endTime;
+  }
 
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
 }

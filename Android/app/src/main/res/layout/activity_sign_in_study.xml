@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@android:color/white"
-    tool:context="com.harvard.studyAppModule.StudySignInActivity">
+    tool:context="com.harvard.studyappmodule.StudySignInActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/topView"
@@ -33,7 +33,7 @@
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/fda_listen"
                     style="@style/TextType2"
-                    android:text="@string/fda_listens"
+                    android:text="@string/app_name"
                     android:textColor="@color/colorPrimary" />
             </RelativeLayout>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,68 +22,65 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides chart data source information and activity dashboard details
- * {@link DashboardActivityBean}
- * 
- * @author BTC
- *
- */
 public class ChartDataSourceBean {
 
-	private String type = "";
-	private String key = "";
-	private DashboardActivityBean activity = new DashboardActivityBean();
-	private String timeRangeType = "";
-	private String startTime = "";
-	private String endTime = "";
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private String key = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private DashboardActivityBean activity = new DashboardActivityBean();
 
-	public String getKey() {
-		return key;
-	}
+  private String timeRangeType = "";
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+  private String startTime = "";
 
-	public DashboardActivityBean getActivity() {
-		return activity;
-	}
+  private String endTime = "";
 
-	public void setActivity(DashboardActivityBean activity) {
-		this.activity = activity;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public String getTimeRangeType() {
-		return timeRangeType;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public void setTimeRangeType(String timeRangeType) {
-		this.timeRangeType = timeRangeType;
-	}
+  public String getKey() {
+    return key;
+  }
 
-	public String getStartTime() {
-		return startTime;
-	}
+  public void setKey(String key) {
+    this.key = key;
+  }
 
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
+  public DashboardActivityBean getActivity() {
+    return activity;
+  }
 
-	public String getEndTime() {
-		return endTime;
-	}
+  public void setActivity(DashboardActivityBean activity) {
+    this.activity = activity;
+  }
 
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
+  public String getTimeRangeType() {
+    return timeRangeType;
+  }
 
+  public void setTimeRangeType(String timeRangeType) {
+    this.timeRangeType = timeRangeType;
+  }
+
+  public String getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(String startTime) {
+    this.startTime = startTime;
+  }
+
+  public String getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
+  }
 }

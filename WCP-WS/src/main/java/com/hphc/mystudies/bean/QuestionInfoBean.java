@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,40 +22,35 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides questions information.
- * 
- * @author BTC
- *
- */
 public class QuestionInfoBean {
 
-	private String activityId = "";
-	private String activityVersion = "";
-	private String key = "";
+  private String activityId = "";
 
-	public String getActivityId() {
-		return activityId;
-	}
+  private String activityVersion = "";
 
-	public void setActivityId(String activityId) {
-		this.activityId = activityId;
-	}
+  private String key = "";
 
-	public String getActivityVersion() {
-		return activityVersion;
-	}
+  public String getActivityId() {
+    return activityId;
+  }
 
-	public void setActivityVersion(String activityVersion) {
-		this.activityVersion = activityVersion;
-	}
+  public void setActivityId(String activityId) {
+    this.activityId = activityId;
+  }
 
-	public String getKey() {
-		return key;
-	}
+  public String getActivityVersion() {
+    return activityVersion;
+  }
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+  public void setActivityVersion(String activityVersion) {
+    this.activityVersion = activityVersion;
+  }
 
+  public String getKey() {
+    return key;
+  }
+
+  public void setKey(String key) {
+    this.key = key;
+  }
 }

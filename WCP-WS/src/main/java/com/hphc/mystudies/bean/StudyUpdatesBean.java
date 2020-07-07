@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,58 +22,55 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides study updates information.
- * 
- * @author BTC
- *
- */
 public class StudyUpdatesBean {
 
-	private Boolean consent = false;
-	private Boolean activities = false;
-	private Boolean resources = false;
-	private Boolean info = false;
-	private String status = "";
+  private Boolean consent = false;
 
-	public Boolean getConsent() {
-		return consent;
-	}
+  private Boolean activities = false;
 
-	public void setConsent(Boolean consent) {
-		this.consent = consent;
-	}
+  private Boolean resources = false;
 
-	public Boolean getActivities() {
-		return activities;
-	}
+  private Boolean info = false;
 
-	public void setActivities(Boolean activities) {
-		this.activities = activities;
-	}
+  private String status = "";
 
-	public Boolean getResources() {
-		return resources;
-	}
+  public Boolean getConsent() {
+    return consent;
+  }
 
-	public void setResources(Boolean resources) {
-		this.resources = resources;
-	}
+  public void setConsent(Boolean consent) {
+    this.consent = consent;
+  }
 
-	public Boolean getInfo() {
-		return info;
-	}
+  public Boolean getActivities() {
+    return activities;
+  }
 
-	public void setInfo(Boolean info) {
-		this.info = info;
-	}
+  public void setActivities(Boolean activities) {
+    this.activities = activities;
+  }
 
-	public String getStatus() {
-		return status;
-	}
+  public Boolean getResources() {
+    return resources;
+  }
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+  public void setResources(Boolean resources) {
+    this.resources = resources;
+  }
 
+  public Boolean getInfo() {
+    return info;
+  }
+
+  public void setInfo(Boolean info) {
+    this.info = info;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
 }

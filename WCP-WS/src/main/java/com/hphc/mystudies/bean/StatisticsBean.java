@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,68 +22,65 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides activity statistics details and data source details
- * {@link StatisticsDataSourceBean}
- * 
- * @author BTC
- *
- */
 public class StatisticsBean {
 
-	private String title = "";
-	private String displayName = "";
-	private String statType = "";
-	private String unit = "";
-	private String calculation = "";
-	private StatisticsDataSourceBean dataSource = new StatisticsDataSourceBean();
+  private String title = "";
 
-	public String getTitle() {
-		return title;
-	}
+  private String displayName = "";
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  private String statType = "";
 
-	public String getDisplayName() {
-		return displayName;
-	}
+  private String unit = "";
 
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
+  private String calculation = "";
 
-	public String getStatType() {
-		return statType;
-	}
+  private StatisticsDataSourceBean dataSource = new StatisticsDataSourceBean();
 
-	public void setStatType(String statType) {
-		this.statType = statType;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getUnit() {
-		return unit;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
+  public String getDisplayName() {
+    return displayName;
+  }
 
-	public String getCalculation() {
-		return calculation;
-	}
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
 
-	public void setCalculation(String calculation) {
-		this.calculation = calculation;
-	}
+  public String getStatType() {
+    return statType;
+  }
 
-	public StatisticsDataSourceBean getDataSource() {
-		return dataSource;
-	}
+  public void setStatType(String statType) {
+    this.statType = statType;
+  }
 
-	public void setDataSource(StatisticsDataSourceBean dataSource) {
-		this.dataSource = dataSource;
-	}
+  public String getUnit() {
+    return unit;
+  }
 
+  public void setUnit(String unit) {
+    this.unit = unit;
+  }
+
+  public String getCalculation() {
+    return calculation;
+  }
+
+  public void setCalculation(String calculation) {
+    this.calculation = calculation;
+  }
+
+  public StatisticsDataSourceBean getDataSource() {
+    return dataSource;
+  }
+
+  public void setDataSource(StatisticsDataSourceBean dataSource) {
+    this.dataSource = dataSource;
+  }
 }
