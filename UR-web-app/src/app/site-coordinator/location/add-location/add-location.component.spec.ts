@@ -21,9 +21,9 @@ describe('AddLocationComponent', () => {
   let component: AddLocationComponent;
   let fixture: ComponentFixture<AddLocationComponent>;
   let submitLocation: DebugElement;
-  let locationCustomIde1: DebugElement;
-  let locationNamee1: DebugElement;
-  let locationDescriptione1: DebugElement;
+  let customIdInput: DebugElement;
+  let nameInput: DebugElement;
+  let descriptionInput: DebugElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -47,29 +47,29 @@ describe('AddLocationComponent', () => {
   beforeEach(async(() => {
     fixture = TestBed.createComponent(AddLocationComponent);
     component = fixture.componentInstance;
-    submitLocation = fixture.debugElement.query(
-      By.css('button[type="submit"]'),
-    );
-    locationCustomIde1 = fixture.debugElement.query(
-      By.css('input[id=locationCustomId]'),
-    );
-    locationNamee1 = fixture.debugElement.query(
-      By.css('input[id=locationName]'),
-    );
-    locationDescriptione1 = fixture.debugElement.query(
-      By.css('input[id=locationDescription]'),
-    );
 
+    submitLocation = fixture.debugElement.query(By.css('[name="add"]'));
+    customIdInput = fixture.debugElement.query(By.css('[name="customId"]'));
+    nameInput = fixture.debugElement.query(By.css('[name="name"]'));
+    descriptionInput = fixture.debugElement.query(
+      By.css('[name="description"]'),
+    );
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should not create a template-driven form when ngNoForm is used', () => {
+
+  it('should not show a validation error if the input field is filled', () => {
+    component.location.customId = 'customid3';
+    component.location.name = 'Location Name';
+    component.location.description = 'This is location Description';
     fixture.detectChanges();
-    expect(fixture.debugElement.children[0].providerTokens.length).toEqual(0);
+    const Errormsg = fixture.debugElement.query(By.css('.validation-error'));
+    expect(Errormsg).toBeFalsy();
   });
+
   it('Locations value to input properties on form load', () => {
     const submitButton = submitLocation.nativeElement as HTMLInputElement;
     component.enabled = false;
@@ -84,12 +84,12 @@ describe('AddLocationComponent', () => {
       'This is location Description';
     void fixture.whenStable().then(() => {
       const submitButton = submitLocation.nativeElement as HTMLInputElement;
-      const customIdInput = locationCustomIde1.nativeElement as HTMLInputElement;
-      const nameInput = locationNamee1.nativeElement as HTMLInputElement;
-      const descriptionInput = locationDescriptione1.nativeElement as HTMLInputElement;
-      customIdInput.value = 'customid3';
-      nameInput.value = 'Location Name';
-      descriptionInput.value = 'This is location Description';
+      const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
+      const nameInputs = nameInput.nativeElement as HTMLInputElement;
+      const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+      customIdInputs.value = 'customid3';
+      nameInputs.value = 'Location Name';
+      descriptionInputs.value = 'This is location Description';
       dispatchEvent(new Event('input'));
       fixture.detectChanges();
       tick();

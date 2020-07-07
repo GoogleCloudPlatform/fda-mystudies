@@ -18,31 +18,36 @@
                 <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
                     <div class="form-group">
                         <label for="study">Location ID</label>
-                        <input type="text" class="form-control" id="locationCustomId" placeholder="Enter Location ID"
-                            [(ngModel)]="location.customId" maxlength="15" required name="locationCustomId"
-                            #locationCustomId="ngModel" />
+                        <input type="text" class="form-control" placeholder="Enter Location ID"
+                            [(ngModel)]="location.customId" maxlength="15" required name="customId"
+                            #customId="ngModel" />
                     </div>
-                    <div *ngIf="
-              locationCustomId.invalid &&
-              (locationCustomId.dirty || locationCustomId.touched)
+                    <div class="validation-error" *ngIf="
+              customId.invalid &&
+              (customId.dirty || customId.touched)
             ">
-                        <span class="help-block with-errors error__msg" *ngIf="locationCustomId.errors.required">
+                        <span class="help-block with-errors error__msg" *ngIf="customId.errors.required">
                             Location ID is required.
+                        </span>
+                        <span class="help-block with-errors error__msg" *ngIf="customId.errors.maxlength">
+                            Location ID can be max 15 characters long.
                         </span>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6 p-none">
+                <div class=" col-xs-12 col-md-6 p-none">
                     <div class="form-group">
                         <label for="app">Location Name</label>
-                        <input type="text" class="form-control" id="locationName" placeholder="Enter Location Name"
-                            [(ngModel)]="location.name" required name="locationName" maxlength="200"
-                            #locationName="ngModel" />
+                        <input type="text" class="form-control" placeholder="Enter Location Name"
+                            [(ngModel)]="location.name" required name="name" maxlength="200" #name="ngModel" />
                     </div>
-                    <div *ngIf="
-              locationName.invalid && (locationName.dirty || locationName.touched)
+                    <div class="validation-error" *ngIf="
+              name.invalid && (name.dirty || name.touched)
             ">
-                        <span class="help-block with-errors error__msg" *ngIf="locationName.errors.required">
+                        <span class="help-block with-errors error__msg" *ngIf="name.errors.required">
                             Location Name is required.
+                        </span>
+                        <span class="help-block with-errors error__msg" *ngIf="name.errors.maxlength">
+                            Location Name can be max 200 characters long.
                         </span>
                     </div>
                 </div>
@@ -51,26 +56,29 @@
                 <div class="col-xs-12 col-md-12 p-none">
                     <div class="form-group">
                         <label for="Location">Description</label>
-                        <input type="text" class="form-control" id="locationDescription" placeholder="Enter Description"
-                            [(ngModel)]="location.description" required name="locationDescription" maxlength="500"
-                            #locationDescription="ngModel" />
+                        <input type="text" class="form-control" placeholder="Enter Description"
+                            [(ngModel)]="location.description" required name="description" maxlength="500"
+                            #description="ngModel" />
                     </div>
-                    <div *ngIf="
-              locationDescription.invalid &&
-              (locationDescription.dirty || locationDescription.touched)
+                    <div class="validation-error" *ngIf="
+              description.invalid &&
+              (description.dirty || description.touched)
             ">
-                        <span class="help-block with-errors error__msg" *ngIf="locationDescription.errors.required">
+                        <span class="help-block with-errors error__msg" *ngIf="description.errors.required">
                             Location Description is required.
+                        </span>
+                        <span class="help-block with-errors error__msg" *ngIf="description.errors.maxlength">
+                            Location Description can be max 500 characters long.
                         </span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="btn__container">
-            <button type="submit" class="btn bt__add mr-sm" [disabled]="!addLocationForm.form.valid">
+            <button name="add" type="submit" class="btn bt__add mr-sm" [disabled]="!addLocationForm.form.valid">
                 Add
             </button>
-            <button type="button" class="btn bt__cancel" routerLink="/coordinator/locations">
+            <button name="cancel" type="button" class="btn bt__cancel" routerLink="/coordinator/locations">
                 Cancel
             </button>
         </div>

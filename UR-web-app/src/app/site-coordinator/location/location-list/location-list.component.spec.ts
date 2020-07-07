@@ -54,6 +54,8 @@ describe('LocationsListComponent', () => {
             description: 'location-descp-updatedj',
             status: '1',
             studiesCount: 0,
+            successBean: {message: '', code: ''},
+            error: {detailMessage: '', type: '', userMessage: ''},
           },
           {
             id: 3,
@@ -62,6 +64,8 @@ describe('LocationsListComponent', () => {
             description: 'location-descp-updated',
             status: '0',
             studiesCount: 0,
+            successBean: {message: '', code: ''},
+            error: {detailMessage: '', type: '', userMessage: ''},
           },
         ]);
         locationServiceSpy.getLocations.and.returnValue(expectedList);

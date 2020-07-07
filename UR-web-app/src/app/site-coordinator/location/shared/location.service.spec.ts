@@ -19,6 +19,8 @@ describe('LocationService', () => {
       description: 'location-descp-updatedj',
       status: '1',
       studiesCount: 0,
+      successBean: {message: '', code: ''},
+      error: {detailMessage: '', type: '', userMessage: ''},
     },
     {
       id: 3,
@@ -27,19 +29,29 @@ describe('LocationService', () => {
       description: 'location-descp-updated',
       status: '0',
       studiesCount: 0,
+      successBean: {message: '', code: ''},
+      error: {detailMessage: '', type: '', userMessage: ''},
     },
   ];
-  const expectedNewPostData = {
+  const expectedLocation: Location = {
     id: 0,
     status: '0',
     customId: 'customIDlocation',
     name: 'Location Name',
     description: 'location Decription',
     studiesCount: 0,
+    successBean: {message: '', code: ''},
+    error: {detailMessage: '', type: '', userMessage: ''},
   };
   const expectedResponse = {
-    code: 200,
-    message: ' Location added Succesfully',
+    id: 0,
+    status: '0',
+    customId: '',
+    name: '',
+    description: '',
+    studiesCount: 0,
+    successBean: {code: '200', message: ' Location added Succesfully'},
+    error: {detailMessage: '', type: '', userMessage: ''},
   };
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -80,7 +92,7 @@ describe('LocationService', () => {
   });
 
   it('should post the  expected new Locations data', () => {
-    const entityServicespyobj = jasmine.createSpyObj<EntityService<unknown>>(
+    const entityServicespyobj = jasmine.createSpyObj<EntityService<Location>>(
       'EntityService',
       ['post'],
     );
@@ -89,9 +101,9 @@ describe('LocationService', () => {
     entityServicespyobj.post.and.returnValue(of(expectedResponse));
 
     locationService
-      .addLocation(expectedNewPostData)
+      .addLocation(expectedLocation)
       .subscribe(
-        (succesResponse: unknown) =>
+        (succesResponse: Location) =>
           expect(succesResponse).toEqual(
             expectedResponse,
             '{code:200,message:Location added Succesfully}',
@@ -142,7 +154,7 @@ describe('LocationService', () => {
 
     entityServicespy.post.and.returnValue(throwError(errorResponses));
     tick(40);
-    locationService.addLocation(expectedNewPostData).subscribe(
+    locationService.addLocation(expectedLocation).subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.error.userMessage).toBe('customId already exists');
