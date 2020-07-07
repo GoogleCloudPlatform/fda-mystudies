@@ -1,3 +1,5 @@
+import {Site} from './site.model';
+
 export interface Study {
   appId: string;
   appInfoId: number;
@@ -12,13 +14,4 @@ export interface Study {
   totalSitesCount: number;
   type: string;
   logo: string;
-}
-export interface Site {
-  edit: number;
-  enrolledCount: number;
-  enrollmentPercentage: number;
-  id: number;
-  invitedCount: number;
-  name: string;
-  status: string;
 }

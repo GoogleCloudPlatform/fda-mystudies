@@ -39,15 +39,22 @@ export class StudyListComponent implements OnInit {
         this.studies = studies;
         return this.studies.filter(
           (study: Study) =>
-            (study.name &&
-              study.name.toLowerCase().includes(query.toLowerCase())) ||
-            (study.customId &&
-              study.customId.toLowerCase().includes(query.toLowerCase())),
+            study.name.toLowerCase().includes(query.toLowerCase()) ||
+            study.customId.toLowerCase().includes(query.toLowerCase()),
         );
       }),
     );
   }
   search(query: string): void {
     this.query$.next(query.trim());
+  }
+  progressBarColor(study: Study): string {
+    if (study.enrollmentPercentage < 30) {
+      return 'red__text__sm';
+    } else if (study.enrollmentPercentage < 70) {
+      return 'orange__text__sm';
+    } else {
+      return 'green__text__sm';
+    }
   }
 }
