@@ -1529,9 +1529,9 @@ Below is a list of studies that you are a part of and information on how your re
                     </view>
                     <navigationItem key="navigationItem" id="BGP-ID-Ow1"/>
                     <connections>
-                        <outlet property="LabelHeaderDescription" destination="Xbh-R9-X5r" id="Wbe-9k-VYM"/>
                         <outlet property="buttonDeleteAccount" destination="AqF-5D-BJY" id="Cnp-ws-oax"/>
                         <outlet property="buttonDoNotDeleteAccount" destination="lQD-pA-Zjm" id="yXK-Yg-fDR"/>
+                        <outlet property="headerDescriptionLbl" destination="Xbh-R9-X5r" id="zsL-lM-eT4"/>
                         <outlet property="tableViewConfirmation" destination="jkc-0v-3Yb" id="CiU-9K-bXe"/>
                         <outlet property="tableViewFooterViewConfirmation" destination="oVn-su-3K1" id="nXS-7v-6Wt"/>
                         <outlet property="tableViewHeaderViewConfirmation" destination="L25-As-XPh" id="caD-hG-jDx"/>
