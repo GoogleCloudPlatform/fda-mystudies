@@ -11,15 +11,15 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import org.springframework.http.HttpStatus;
 
-public class UpdateUserResponse extends BaseResponse {
+public class ChangePasswordResponse extends BaseResponse {
 
-  public UpdateUserResponse() {}
+  public ChangePasswordResponse() {}
 
-  public UpdateUserResponse(ErrorCode errorCode) {
+  public ChangePasswordResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public UpdateUserResponse(HttpStatus httpStatus, String message) {
+  public ChangePasswordResponse(HttpStatus httpStatus, String message) {
     super(httpStatus, message);
   }
 }

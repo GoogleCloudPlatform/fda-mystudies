@@ -25,8 +25,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
@@ -106,45 +106,40 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UpdateUserResponse updateUser(UpdateUserRequest userRequest)
+  public ChangePasswordResponse changePassword(ChangePasswordRequest userRequest)
       throws JsonProcessingException {
-    logger.entry(String.format("begin updateUser() for %s action", userRequest.getAction()));
-    if ("change_password".equalsIgnoreCase(userRequest.getAction())) {
-      return changePassword(userRequest);
-    }
-
-    return new UpdateUserResponse(ErrorCode.APPLICATION_ERROR);
-  }
-
-  private UpdateUserResponse changePassword(UpdateUserRequest userRequest)
-      throws JsonProcessingException {
+    logger.entry("begin updateUser()");
     Optional<UserEntity> optionalEntity = repository.findByUserId(userRequest.getUserId());
-    if (optionalEntity.isPresent()) {
-      UserEntity userEntity = optionalEntity.get();
-      ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
-      ArrayNode passwordHistory =
-          userInfo.hasNonNull(PASSWORD_HISTORY)
-              ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
-              : createArrayNode();
-      JsonNode currentPwdNode = userInfo.get(PASSWORD);
 
-      ErrorCode errorCode = validatePasswords(userRequest, currentPwdNode, passwordHistory);
-      if (errorCode != null) {
-        logger.exit(String.format("change password failed with error code=%s", errorCode));
-        return new UpdateUserResponse(errorCode);
-      }
-
-      setPasswordAndPasswordHistoryFields(userRequest.getNewPassword(), userInfo);
-      userEntity.setUserInfo(userInfo.toString());
-      repository.saveAndFlush(userEntity);
-      return new UpdateUserResponse(HttpStatus.OK, "Your password has been changed successfully!");
-    } else {
-      return new UpdateUserResponse(ErrorCode.USER_NOT_FOUND);
+    if (!optionalEntity.isPresent()) {
+      logger.exit(ErrorCode.USER_NOT_FOUND);
+      return new ChangePasswordResponse(ErrorCode.USER_NOT_FOUND);
     }
+
+    UserEntity userEntity = optionalEntity.get();
+    ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+    ArrayNode passwordHistory =
+        userInfo.hasNonNull(PASSWORD_HISTORY)
+            ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
+            : createArrayNode();
+    JsonNode currentPwdNode = userInfo.get(PASSWORD);
+
+    ErrorCode errorCode = validatePasswords(userRequest, currentPwdNode, passwordHistory);
+    if (errorCode != null) {
+      logger.exit(String.format("change password failed with error code=%s", errorCode));
+      return new ChangePasswordResponse(errorCode);
+    }
+
+    setPasswordAndPasswordHistoryFields(userRequest.getNewPassword(), userInfo);
+    userEntity.setUserInfo(userInfo.toString());
+    repository.saveAndFlush(userEntity);
+    logger.exit("Your password has been changed successfully!");
+    return new ChangePasswordResponse(
+        HttpStatus.OK, "Your password has been changed successfully!");
   }
 
   private ErrorCode validatePasswords(
-      UpdateUserRequest userRequest, JsonNode passwordNode, ArrayNode passwordHistory) {
+      ChangePasswordRequest userRequest, JsonNode passwordNode, ArrayNode passwordHistory) {
 
     // determine whether the current password matches the password stored in database
     String hash = getTextValue(passwordNode, HASH);

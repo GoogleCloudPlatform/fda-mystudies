@@ -14,7 +14,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonSt
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CHANGE_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRES_AT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
@@ -31,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -66,7 +65,6 @@ public class UserControllerTest extends BaseMockIT {
   private static String userId;
 
   @Test
-  @Order(1)
   public void shouldReturnUnauthorized() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", INVALID_BEARER_TOKEN);
@@ -80,7 +78,6 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(2)
   public void shouldReturnBadRequestForInvalidContent() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
@@ -106,7 +103,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(3)
+  @Order(1)
   public void shouldCreateANewUser() throws Exception {
     // Step-1 call API to create an user account in oauth scim database
     HttpHeaders headers = getCommonHeaders();
@@ -140,7 +137,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(4)
+  @Order(2)
   public void shouldReturnEmailExistsErrorCode() throws Exception {
     // Step-1 call API to create an user account in oauth scim database
     HttpHeaders headers = getCommonHeaders();
@@ -161,22 +158,19 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(5)
   public void shouldReturnBadRequestForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    // Step-1 assert validation errors from validation annotations
-    UpdateUserRequest userRequest = new UpdateUserRequest();
+    ChangePasswordRequest userRequest = new ChangePasswordRequest();
     userRequest.setNewPassword("new_password");
     userRequest.setCurrentPassword("example_current_password");
-    userRequest.setAction("password_reset");
 
     MvcResult result =
         mockMvc
             .perform(
-                put(ApiEndpoint.USER.getPath(), IdGenerator.id())
+                put(ApiEndpoint.CHANGE_PASSWORD.getPath(), IdGenerator.id())
                     .contextPath(getContextPath())
                     .content(asJsonString(userRequest))
                     .headers(headers))
@@ -189,43 +183,22 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse =
         readJsonFile("/response/change_password_bad_request_response_from_annotations.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
-
-    // Step-2 assert validation errors from UserRequestValidator
-    userRequest = new UpdateUserRequest();
-    userRequest.setAction(CHANGE_PASSWORD);
-
-    result =
-        mockMvc
-            .perform(
-                put(ApiEndpoint.USER.getPath(), IdGenerator.id())
-                    .contextPath(getContextPath())
-                    .content(asJsonString(userRequest))
-                    .headers(headers))
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.violations").isArray())
-            .andReturn();
-
-    actualResponse = result.getResponse().getContentAsString();
-    expectedResponse = readJsonFile("/response/change_password_bad_request_from_validator.json");
-    JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
-  @Order(6)
+  @Order(3)
   public void shouldReturnCurrentPasswordInvalidErrroCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword("CurrentM0ck!tPassword");
     request.setNewPassword("NewM0ck!tPassword");
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -237,20 +210,18 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(7)
   public void shouldReturnUserNotFoundErrroCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(CURRENT_PASSWORD_VALUE);
     request.setNewPassword(NEW_PASSWORD_VALUE);
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), IdGenerator.id())
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), IdGenerator.id())
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -261,21 +232,20 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(8)
+  @Order(4)
   public void shouldChangeThePassword()
       throws MalformedURLException, JsonProcessingException, Exception {
     // Step-1 Call PUT method to change the password
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(CURRENT_PASSWORD_VALUE);
     request.setNewPassword(NEW_PASSWORD_VALUE);
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -300,20 +270,19 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(9)
+  @Order(5)
   public void shouldReturnEnforcePasswordHistoryErrroCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(NEW_PASSWORD_VALUE);
     request.setNewPassword(CURRENT_PASSWORD_VALUE);
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -325,7 +294,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(10)
+  @Order(6)
   public void shouldDeleteTheUser() {
     // cleanup - delete the user from database
     repository.deleteByUserId(userId);
