@@ -12,10 +12,7 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,13 +37,16 @@ import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.jayway.jsonpath.JsonPath;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class UserProfileControllerTest extends BaseMockIT {
 
   private static final String PING_PATH = "/ping";
+
   private static final String USER_PROFILE_PATH = "/userProfile";
+
   private static final String UPDATE_USER_PROFILE_PATH = "/updateUserProfile";
+
   private static final String DEACTIVATE_PATH = "/deactivate";
+
   private static final String RESEND_CONFIRMATION_PATH = "/resendConfirmation";
 
   @Autowired private UserProfileController profileController;
@@ -63,7 +63,6 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;
 
-  @Order(1)
   @Test
   public void contextLoads() {
     assertNotNull(profileController);
@@ -72,20 +71,17 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertNotNull(service);
   }
 
-  @Order(2)
   @Test
   public void ping() throws Exception {
     performGet(PING_PATH, TestUtils.getCommonHeaders(Constants.USER_ID_HEADER), OK);
   }
 
-  @Order(3)
   @Test
   public void getUserProfileSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
     performGet(USER_PROFILE_PATH, headers, "cdash93@gmail.com", OK);
   }
 
-  @Order(4)
   @Test
   public void getUserProfileBadRequest() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
@@ -95,7 +91,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     performGet(USER_PROFILE_PATH, headers, BAD_REQUEST);
   }
 
-  @Order(5)
   @Test
   public void updateUserProfileSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
@@ -111,7 +106,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertTrue(remote);
   }
 
-  @Order(6)
   @Test
   public void deactivateAccountSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
@@ -134,7 +128,6 @@ public class UserProfileControllerTest extends BaseMockIT {
                 "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=1&deleteResponses=delete")));
   }
 
-  @Order(7)
   @Test
   public void deactivateAccountBadRequest() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
@@ -144,11 +137,8 @@ public class UserProfileControllerTest extends BaseMockIT {
     DeactivateAcctBean acctBean = new DeactivateAcctBean();
     String requestJson = getObjectMapper().writeValueAsString(acctBean);
     performDelete(DEACTIVATE_PATH, requestJson, headers, "", BAD_REQUEST);
-
-    verify(2, postRequestedFor(urlEqualTo("/AuthServer/deactivate")));
   }
 
-  @Order(8)
   @Test
   public void resendConfirmationBadRequest() throws Exception {
 
@@ -169,7 +159,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
-  @Order(9)
   @Test
   public void resendConfirmationSuccess() throws Exception {
     HttpHeaders headers =
