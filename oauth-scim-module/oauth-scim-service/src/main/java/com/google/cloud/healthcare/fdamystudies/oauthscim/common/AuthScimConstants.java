@@ -26,6 +26,8 @@ public final class AuthScimConstants {
 
   public static final String AUTHORIZATION = "Authorization";
 
+  public static final String CLIENT_CREDENTIALS = "client_credentials";
+
   public static final String CLIENT_ID = "client_id";
 
   public static final String AUTHORIZATION_CODE = "authorization_code";
