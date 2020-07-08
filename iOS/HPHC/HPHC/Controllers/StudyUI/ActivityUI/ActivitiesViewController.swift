@@ -741,6 +741,7 @@ class ActivitiesViewController: UIViewController {
       activityId: activityID,
       response: self.lastActivityResponse ?? [:]
     )
+    lastActivityResponse = [:]
     if lifeTimeUpdated {
       self.loadActivitiesFromDatabase()
     } else {
@@ -1119,7 +1120,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.removeProgressIndicator()
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
-      self.lastActivityResponse = nil
       self.removeProgressIndicator()
       self.updateRunStatusToComplete()
       self.checkForActivitiesUpdates()
@@ -1186,8 +1186,9 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
         self.updateRunStatusToComplete()
+      } else {
+        self.lastActivityResponse = nil
       }
-      self.lastActivityResponse = nil
 
     default: break
     }
