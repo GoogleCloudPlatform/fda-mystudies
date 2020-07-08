@@ -642,6 +642,10 @@ class UserStudyStatus {
 
   }
 
+  struct JSONKey {
+    static let brandID = "brandId"
+  }
+
   lazy var bookmarked: Bool = false
   lazy var studyId: String = ""
   lazy var status: StudyStatus = .yetToJoin
@@ -656,6 +660,9 @@ class UserStudyStatus {
   var participantId: String?
   var siteID: String!
   var tokenIdentifier: String!
+
+  /// Product response specfic ID.
+  var brandID: String!
 
   init() {}
 
@@ -682,6 +689,7 @@ class UserStudyStatus {
       }
       self.siteID = detail["siteId"] as? String ?? ""
       self.tokenIdentifier = detail["hashedToken"] as? String ?? ""
+      self.brandID = detail[JSONKey.brandID] as? String ?? ""
       if Utilities.isValidValue(someObject: detail[kStudyEnrolledDate] as AnyObject) {
         self.joiningDate = Utilities.getDateFromString(
           dateString: (detail[kStudyEnrolledDate] as? String)!

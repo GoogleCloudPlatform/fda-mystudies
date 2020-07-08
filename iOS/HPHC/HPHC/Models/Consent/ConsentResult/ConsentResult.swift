@@ -36,6 +36,12 @@ class ConsentResult {
   var token: String?
   var consentPath: String?
 
+  /// First Name provided by user in consent.
+  var firstName: String?
+
+  /// Last Name provided by user in consent.
+  var lastName: String?
+
   /// Initializer
   init() {
 
@@ -65,6 +71,8 @@ class ConsentResult {
         } else if let signatureStepResult: ORKConsentSignatureResult? =
           (stepResult as? ORKStepResult)!.results?[0] as? ORKConsentSignatureResult?
         {
+          self.firstName = signatureStepResult?.signature?.givenName
+          self.lastName = signatureStepResult?.signature?.familyName
 
           signatureStepResult?.apply(to: self.consentDocument!)
 
