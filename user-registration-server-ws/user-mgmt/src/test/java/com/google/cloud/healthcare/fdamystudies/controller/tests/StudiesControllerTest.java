@@ -27,7 +27,6 @@ import com.google.cloud.healthcare.fdamystudies.controller.StudiesController;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
-import com.google.cloud.healthcare.fdamystudies.service.StudiesServicesImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
@@ -35,13 +34,14 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 public class StudiesControllerTest extends BaseMockIT {
 
   private static final String STUDY_METADATA_PATH = "/studies/studymetadata";
+
   private static final String SEND_NOTIFICATION_PATH = "/studies/sendNotification";
 
-  @Autowired StudiesController studiesController;
-  @Autowired StudiesServices studiesServices;
-  @Autowired CommonDaoImpl commonDao;
+  @Autowired private StudiesController studiesController;
 
-  @Autowired StudiesServicesImpl serviceImpl;
+  @Autowired private StudiesServices studiesServices;
+
+  @Autowired private CommonDaoImpl commonDao;
 
   @Test
   public void contextLoads() {
@@ -155,7 +155,9 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
         .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
         .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
-        .andExpect(jsonPath("$.response.results[0].error", is("NotRegistered")));
+        .andExpect(
+            jsonPath(
+                "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
 
     // GatewayLevel notificationType
     requestJson =
@@ -172,7 +174,9 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
         .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
         .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
-        .andExpect(jsonPath("$.response.results[0].error", is("NotRegistered")));
+        .andExpect(
+            jsonPath(
+                "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
   }
 
   private String getNotificationForm(

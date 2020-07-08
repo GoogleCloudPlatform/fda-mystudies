@@ -1,5 +1,8 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,11 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.config.AppTestConfig;
 import com.google.cloud.healthcare.fdamystudies.controller.UserProfileController;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
@@ -56,10 +55,6 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Autowired private UserManagementProfileService profileService;
 
   @Autowired private FdaEaUserDetailsServiceImpl service;
-
-  @Autowired private TestRestTemplate restTemplate;
-
-  @Autowired private AppTestConfig appConfig;
 
   @Autowired private EmailNotification emailNotification;
 
@@ -126,17 +121,12 @@ public class UserProfileControllerTest extends BaseMockIT {
     UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
     assertEquals(3, daoResp.getStatus());
 
-    HttpEntity<String> responseEntity = new HttpEntity<String>(headers);
-    ResponseEntity<String> response =
-        restTemplate.postForEntity(deactivateUrl, responseEntity, String.class);
-    assertEquals("1", response.getBody());
-
-    response =
-        restTemplate.postForEntity(
-            withdrawUrl + "?studyId=studyId1&participantId=1&deleteResponses=delete",
-            responseEntity,
-            String.class);
-    assertEquals(200, response.getStatusCodeValue());
+    verify(1, postRequestedFor(urlEqualTo("/AuthServer/deactivate")));
+    verify(
+        1,
+        postRequestedFor(
+            urlEqualTo(
+                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=1&deleteResponses=delete")));
   }
 
   @Test
