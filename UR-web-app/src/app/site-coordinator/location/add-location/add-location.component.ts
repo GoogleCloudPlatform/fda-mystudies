@@ -12,7 +12,6 @@ import {Subscription} from 'rxjs';
 })
 export class AddLocationComponent {
   @Input() enabled = true;
-  @Output() onFormSubmit: EventEmitter<unknown> = new EventEmitter<unknown>();
   location = <Location>{};
   sub: Subscription = new Subscription();
   constructor(

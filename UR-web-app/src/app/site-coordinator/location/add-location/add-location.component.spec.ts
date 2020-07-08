@@ -88,7 +88,7 @@ describe('AddLocationComponent', () => {
     expect(submitButton.disabled).toBeTruthy();
   });
 
-  it('Entering value in input controls and check the same value', fakeAsync(async () => {
+  it('Entering value in input controls and check the same value and submit', fakeAsync(async () => {
     const expectedResponse = {
       id: 0,
       customId: 'customid3',
