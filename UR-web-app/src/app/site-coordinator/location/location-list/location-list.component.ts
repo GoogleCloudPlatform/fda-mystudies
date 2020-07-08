@@ -3,9 +3,8 @@ import {LocationService} from '../shared/location.service';
 import {Location} from '../shared/location.model';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {ApiResponse} from 'src/app/entity/error.model';
-import {throwError, BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 
 @Component({
@@ -32,10 +31,6 @@ export class LocationListComponent implements OnInit {
       this.locationService.getLocations(),
       this.query$,
     ).pipe(
-      catchError((error: ApiResponse) => {
-        this.toastr.error(error.error.userMessage);
-        return throwError(error);
-      }),
       map(([locations, query]) => {
         this.locations = locations;
         return locations.filter(

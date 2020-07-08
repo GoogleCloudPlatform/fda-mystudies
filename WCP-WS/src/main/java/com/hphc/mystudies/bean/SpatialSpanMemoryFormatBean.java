@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,94 +22,95 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides spatial span memory active task metadata details.
- * 
- * @author BTC
- *
- */
 public class SpatialSpanMemoryFormatBean {
 
-	private Integer initialSpan = 0;
-	private Integer minimumSpan = 0;
-	private Integer maximumSpan = 0;
-	private Float playSpeed = 0F;
-	private Integer maximumTests = 0;
-	private Integer maximumConsecutiveFailures = 0;
-	private String customTargetImage = "";
-	private String customTargetPluralName = "";
-	private boolean requireReversal = false;
+  private Integer initialSpan = 0;
 
-	public Integer getInitialSpan() {
-		return initialSpan;
-	}
+  private Integer minimumSpan = 0;
 
-	public void setInitialSpan(Integer initialSpan) {
-		this.initialSpan = initialSpan;
-	}
+  private Integer maximumSpan = 0;
 
-	public Integer getMinimumSpan() {
-		return minimumSpan;
-	}
+  private Float playSpeed = 0F;
 
-	public void setMinimumSpan(Integer minimumSpan) {
-		this.minimumSpan = minimumSpan;
-	}
+  private Integer maximumTests = 0;
 
-	public Integer getMaximumSpan() {
-		return maximumSpan;
-	}
+  private Integer maximumConsecutiveFailures = 0;
 
-	public void setMaximumSpan(Integer maximumSpan) {
-		this.maximumSpan = maximumSpan;
-	}
+  private String customTargetImage = "";
 
-	public Float getPlaySpeed() {
-		return playSpeed;
-	}
+  private String customTargetPluralName = "";
 
-	public void setPlaySpeed(Float playSpeed) {
-		this.playSpeed = playSpeed;
-	}
+  private boolean requireReversal = false;
 
-	public Integer getMaximumTests() {
-		return maximumTests;
-	}
+  public Integer getInitialSpan() {
+    return initialSpan;
+  }
 
-	public void setMaximumTests(Integer maximumTests) {
-		this.maximumTests = maximumTests;
-	}
+  public void setInitialSpan(Integer initialSpan) {
+    this.initialSpan = initialSpan;
+  }
 
-	public Integer getMaximumConsecutiveFailures() {
-		return maximumConsecutiveFailures;
-	}
+  public Integer getMinimumSpan() {
+    return minimumSpan;
+  }
 
-	public void setMaximumConsecutiveFailures(Integer maximumConsecutiveFailures) {
-		this.maximumConsecutiveFailures = maximumConsecutiveFailures;
-	}
+  public void setMinimumSpan(Integer minimumSpan) {
+    this.minimumSpan = minimumSpan;
+  }
 
-	public String getCustomTargetImage() {
-		return customTargetImage;
-	}
+  public Integer getMaximumSpan() {
+    return maximumSpan;
+  }
 
-	public void setCustomTargetImage(String customTargetImage) {
-		this.customTargetImage = customTargetImage;
-	}
+  public void setMaximumSpan(Integer maximumSpan) {
+    this.maximumSpan = maximumSpan;
+  }
 
-	public String getCustomTargetPluralName() {
-		return customTargetPluralName;
-	}
+  public Float getPlaySpeed() {
+    return playSpeed;
+  }
 
-	public void setCustomTargetPluralName(String customTargetPluralName) {
-		this.customTargetPluralName = customTargetPluralName;
-	}
+  public void setPlaySpeed(Float playSpeed) {
+    this.playSpeed = playSpeed;
+  }
 
-	public boolean isRequireReversal() {
-		return requireReversal;
-	}
+  public Integer getMaximumTests() {
+    return maximumTests;
+  }
 
-	public void setRequireReversal(boolean requireReversal) {
-		this.requireReversal = requireReversal;
-	}
+  public void setMaximumTests(Integer maximumTests) {
+    this.maximumTests = maximumTests;
+  }
 
+  public Integer getMaximumConsecutiveFailures() {
+    return maximumConsecutiveFailures;
+  }
+
+  public void setMaximumConsecutiveFailures(Integer maximumConsecutiveFailures) {
+    this.maximumConsecutiveFailures = maximumConsecutiveFailures;
+  }
+
+  public String getCustomTargetImage() {
+    return customTargetImage;
+  }
+
+  public void setCustomTargetImage(String customTargetImage) {
+    this.customTargetImage = customTargetImage;
+  }
+
+  public String getCustomTargetPluralName() {
+    return customTargetPluralName;
+  }
+
+  public void setCustomTargetPluralName(String customTargetPluralName) {
+    this.customTargetPluralName = customTargetPluralName;
+  }
+
+  public boolean isRequireReversal() {
+    return requireReversal;
+  }
+
+  public void setRequireReversal(boolean requireReversal) {
+    this.requireReversal = requireReversal;
+  }
 }

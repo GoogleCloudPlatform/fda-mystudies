@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,58 +22,55 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides study details.
- * 
- * @author BTC
- *
- */
 public class InfoBean {
 
-	private String type = "";
-	private String image = "";
-	private String title = "";
-	private String text = "";
-	private String videoLink = "";
+  private String type = "";
 
-	public String getType() {
-		return type;
-	}
+  private String image = "";
 
-	public void setType(String type) {
-		this.type = type;
-	}
+  private String title = "";
 
-	public String getImage() {
-		return image;
-	}
+  private String text = "";
 
-	public void setImage(String image) {
-		this.image = image;
-	}
+  private String videoLink = "";
 
-	public String getTitle() {
-		return title;
-	}
+  public String getType() {
+    return type;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public void setType(String type) {
+    this.type = type;
+  }
 
-	public String getText() {
-		return text;
-	}
+  public String getImage() {
+    return image;
+  }
 
-	public void setText(String text) {
-		this.text = text;
-	}
+  public void setImage(String image) {
+    this.image = image;
+  }
 
-	public String getVideoLink() {
-		return videoLink;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public void setVideoLink(String videoLink) {
-		this.videoLink = videoLink;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
+  public String getText() {
+    return text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public String getVideoLink() {
+    return videoLink;
+  }
+
+  public void setVideoLink(String videoLink) {
+    this.videoLink = videoLink;
+  }
 }

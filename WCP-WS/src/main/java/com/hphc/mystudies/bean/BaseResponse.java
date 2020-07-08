@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,40 +22,35 @@
  */
 package com.hphc.mystudies.bean;
 
-/**
- * Provides error details in response.
- * 
- * @author BTC
- *
- */
 public class BaseResponse {
 
-	private String errorMessage = "";
-	private String errorCode = "";
-	private String resultType = "";
+  private String errorMessage = "";
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
+  private String errorCode = "";
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
+  private String resultType = "";
 
-	public String getErrorCode() {
-		return errorCode;
-	}
+  public String getErrorMessage() {
+    return errorMessage;
+  }
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
+  }
 
-	public String getResultType() {
-		return resultType;
-	}
+  public String getErrorCode() {
+    return errorCode;
+  }
 
-	public void setResultType(String resultType) {
-		this.resultType = resultType;
-	}
+  public void setErrorCode(String errorCode) {
+    this.errorCode = errorCode;
+  }
 
+  public String getResultType() {
+    return resultType;
+  }
+
+  public void setResultType(String resultType) {
+    this.resultType = resultType;
+  }
 }

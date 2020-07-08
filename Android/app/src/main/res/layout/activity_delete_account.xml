@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="com.harvard.studyAppModule.DeleteAccountActivity">
+    tools:context="com.harvard.studyappmodule.DeleteAccountActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/topView"

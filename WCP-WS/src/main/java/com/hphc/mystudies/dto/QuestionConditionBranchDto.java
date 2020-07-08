@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,103 +32,96 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-/**
- * Provides question conditional branching details.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "question_condtion_branching")
 @NamedQueries({
-
-@NamedQuery(name = "getQuestionConditionBranchList", query = "from QuestionConditionBranchDto QCBDTO"
-		+ " where QCBDTO.questionId =:questionId"
-		+ " ORDER BY QCBDTO.sequenceNo"), })
+  @NamedQuery(
+      name = "getQuestionConditionBranchList",
+      query =
+          "from QuestionConditionBranchDto QCBDTO"
+              + " where QCBDTO.questionId =:questionId"
+              + " ORDER BY QCBDTO.sequenceNo"),
+})
 public class QuestionConditionBranchDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2517716372949869931L;
+  private static final long serialVersionUID = 2517716372949869931L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "condition_id")
-	private Integer conditionId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "condition_id")
+  private Integer conditionId;
 
-	@Column(name = "question_id")
-	private Integer questionId;
+  @Column(name = "question_id")
+  private Integer questionId;
 
-	@Column(name = "input_type")
-	private String inputType;
+  @Column(name = "input_type")
+  private String inputType;
 
-	@Column(name = "input_type_value")
-	private String inputTypeValue;
+  @Column(name = "input_type_value")
+  private String inputTypeValue;
 
-	@Column(name = "sequence_no")
-	private Integer sequenceNo;
+  @Column(name = "sequence_no")
+  private Integer sequenceNo;
 
-	@Column(name = "parent_sequence_no")
-	private Integer parentSequenceNo;
+  @Column(name = "parent_sequence_no")
+  private Integer parentSequenceNo;
 
-	@Column(name = "active")
-	private Boolean active;
+  @Column(name = "active")
+  private Boolean active;
 
-	public Integer getConditionId() {
-		return conditionId;
-	}
+  public Integer getConditionId() {
+    return conditionId;
+  }
 
-	public void setConditionId(Integer conditionId) {
-		this.conditionId = conditionId;
-	}
+  public void setConditionId(Integer conditionId) {
+    this.conditionId = conditionId;
+  }
 
-	public Integer getQuestionId() {
-		return questionId;
-	}
+  public Integer getQuestionId() {
+    return questionId;
+  }
 
-	public void setQuestionId(Integer questionId) {
-		this.questionId = questionId;
-	}
+  public void setQuestionId(Integer questionId) {
+    this.questionId = questionId;
+  }
 
-	public String getInputType() {
-		return inputType;
-	}
+  public String getInputType() {
+    return inputType;
+  }
 
-	public void setInputType(String inputType) {
-		this.inputType = inputType;
-	}
+  public void setInputType(String inputType) {
+    this.inputType = inputType;
+  }
 
-	public String getInputTypeValue() {
-		return inputTypeValue;
-	}
+  public String getInputTypeValue() {
+    return inputTypeValue;
+  }
 
-	public void setInputTypeValue(String inputTypeValue) {
-		this.inputTypeValue = inputTypeValue;
-	}
+  public void setInputTypeValue(String inputTypeValue) {
+    this.inputTypeValue = inputTypeValue;
+  }
 
-	public Integer getSequenceNo() {
-		return sequenceNo;
-	}
+  public Integer getSequenceNo() {
+    return sequenceNo;
+  }
 
-	public void setSequenceNo(Integer sequenceNo) {
-		this.sequenceNo = sequenceNo;
-	}
+  public void setSequenceNo(Integer sequenceNo) {
+    this.sequenceNo = sequenceNo;
+  }
 
-	public Integer getParentSequenceNo() {
-		return parentSequenceNo;
-	}
+  public Integer getParentSequenceNo() {
+    return parentSequenceNo;
+  }
 
-	public void setParentSequenceNo(Integer parentSequenceNo) {
-		this.parentSequenceNo = parentSequenceNo;
-	}
+  public void setParentSequenceNo(Integer parentSequenceNo) {
+    this.parentSequenceNo = parentSequenceNo;
+  }
 
-	public Boolean getActive() {
-		return active;
-	}
+  public Boolean getActive() {
+    return active;
+  }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
-
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 }

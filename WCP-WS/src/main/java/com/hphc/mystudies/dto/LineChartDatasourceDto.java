@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -23,7 +23,6 @@
 package com.hphc.mystudies.dto;
 
 import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,65 +30,55 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Provides line chart datasource details for the activity.
- * 
- * @author BTC
- *
- */
 @Entity
 @Table(name = "line_chart_datasource")
 public class LineChartDatasourceDto implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5758103951133634472L;
+  private static final long serialVersionUID = -5758103951133634472L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id")
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id")
+  private Integer id;
 
-	@Column(name = "data_source_id")
-	private Integer dataSourceId;
+  @Column(name = "data_source_id")
+  private Integer dataSourceId;
 
-	@Column(name = "plot_color")
-	private String plot_color;
+  @Column(name = "plot_color")
+  private String plotColor;
 
-	@Column(name = "line_chart_id")
-	private Integer lineChartId;
+  @Column(name = "line_chart_id")
+  private Integer lineChartId;
 
-	public Integer getId() {
-		return id;
-	}
+  public Integer getId() {
+    return id;
+  }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-	public Integer getDataSourceId() {
-		return dataSourceId;
-	}
+  public Integer getDataSourceId() {
+    return dataSourceId;
+  }
 
-	public void setDataSourceId(Integer dataSourceId) {
-		this.dataSourceId = dataSourceId;
-	}
+  public void setDataSourceId(Integer dataSourceId) {
+    this.dataSourceId = dataSourceId;
+  }
 
-	public String getPlot_color() {
-		return plot_color;
-	}
+  public String getPlotColor() {
+    return plotColor;
+  }
 
-	public void setPlot_color(String plot_color) {
-		this.plot_color = plot_color;
-	}
+  public void setPlotColor(String plotColor) {
+    this.plotColor = plotColor;
+  }
 
-	public Integer getLineChartId() {
-		return lineChartId;
-	}
+  public Integer getLineChartId() {
+    return lineChartId;
+  }
 
-	public void setLineChartId(Integer lineChartId) {
-		this.lineChartId = lineChartId;
-	}
-
+  public void setLineChartId(Integer lineChartId) {
+    this.lineChartId = lineChartId;
+  }
 }

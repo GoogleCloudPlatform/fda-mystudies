@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -24,63 +24,57 @@ package com.hphc.mystudies.bean;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.hphc.mystudies.util.StudyMetaDataConstants;
 
-/**
- * Provides study metadata information in response. i.e. study details
- * {@link InfoBean}, anchor date details {@link AnchorDateBean} and withdrawal
- * configuration details {@link WithdrawalConfigBean}.
- * 
- * @author BTC
- *
- */
 public class StudyInfoResponse {
 
-	private String message = StudyMetaDataConstants.FAILURE;
-	private String studyWebsite = "";
-	private List<InfoBean> info = new ArrayList<>();
-	private AnchorDateBean anchorDate = new AnchorDateBean();
-	private WithdrawalConfigBean withdrawalConfig = new WithdrawalConfigBean();
+  private String message = StudyMetaDataConstants.FAILURE;
 
-	public String getMessage() {
-		return message;
-	}
+  private String studyWebsite = "";
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+  private List<InfoBean> info = new ArrayList<>();
 
-	public String getStudyWebsite() {
-		return studyWebsite;
-	}
+  private AnchorDateBean anchorDate = new AnchorDateBean();
 
-	public void setStudyWebsite(String studyWebsite) {
-		this.studyWebsite = studyWebsite;
-	}
+  private WithdrawalConfigBean withdrawalConfig = new WithdrawalConfigBean();
 
-	public List<InfoBean> getInfo() {
-		return info;
-	}
+  public String getMessage() {
+    return message;
+  }
 
-	public void setInfo(List<InfoBean> info) {
-		this.info = info;
-	}
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-	public AnchorDateBean getAnchorDate() {
-		return anchorDate;
-	}
+  public String getStudyWebsite() {
+    return studyWebsite;
+  }
 
-	public void setAnchorDate(AnchorDateBean anchorDate) {
-		this.anchorDate = anchorDate;
-	}
+  public void setStudyWebsite(String studyWebsite) {
+    this.studyWebsite = studyWebsite;
+  }
 
-	public WithdrawalConfigBean getWithdrawalConfig() {
-		return withdrawalConfig;
-	}
+  public List<InfoBean> getInfo() {
+    return info;
+  }
 
-	public void setWithdrawalConfig(WithdrawalConfigBean withdrawalConfig) {
-		this.withdrawalConfig = withdrawalConfig;
-	}
+  public void setInfo(List<InfoBean> info) {
+    this.info = info;
+  }
 
+  public AnchorDateBean getAnchorDate() {
+    return anchorDate;
+  }
+
+  public void setAnchorDate(AnchorDateBean anchorDate) {
+    this.anchorDate = anchorDate;
+  }
+
+  public WithdrawalConfigBean getWithdrawalConfig() {
+    return withdrawalConfig;
+  }
+
+  public void setWithdrawalConfig(WithdrawalConfigBean withdrawalConfig) {
+    this.withdrawalConfig = withdrawalConfig;
+  }
 }

@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical"
-              tools:context="com.harvard.passcodeModule.PasscodeSetupActivity">
+    xmlns:passcodeView="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.harvard.passcodemodule.PasscodeSetupActivity">
 
-    <include layout="@layout/top_bar_layout"/>
+    <include layout="@layout/top_bar_layout" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/setup_info"
+            style="@style/signUpTextField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/container"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="50dp"
+            android:gravity="center"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="@string/passcode_setup"
+            android:textSize="13sp" />
+
         <RelativeLayout
+            android:id="@+id/container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true">
@@ -30,9 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="20dp"
-                    android:background="@drawable/fda_logo2"
-                    android:gravity="center"
-                    />
+                    android:background="@drawable/logo2"
+                    android:gravity="center" />
 
                 <TextView
                     android:id="@+id/passcodetitle"
@@ -43,8 +57,7 @@
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:text="@string/enter_passcode"
-                    android:textSize="15sp"
-                    />
+                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/passcodedesc"
@@ -55,10 +68,10 @@
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:text="@string/enter_passcode_to_access_app"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
             </LinearLayout>
 
-            <com.harvard.passcodeModule.PasscodeView
+            <com.harvard.passcodemodule.PasscodeView
                 android:id="@+id/passcode_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +80,7 @@
                 android:layout_marginTop="10dp"
                 passcodeView:digitColorFilled="@color/colorPrimary"
                 passcodeView:digitRadius="@dimen/radius"
-                passcodeView:numDigits="4"/>
+                passcodeView:numDigits="4" />
 
             <TextView
                 android:id="@+id/forgot"
@@ -75,11 +88,10 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/passcode_view"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="50dp"
                 android:text="@string/forgot_passcode_signin_again"
-                android:textColor="@color/colorPrimaryDark"
-                />
+                android:textColor="@color/colorPrimaryDark" />
         </RelativeLayout>
     </RelativeLayout>
 

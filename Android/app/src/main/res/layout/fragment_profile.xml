@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context="com.harvard.studyAppModule.ProfileFragment">
+    tools:context="com.harvard.studyappmodule.ProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,8 +23,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="18dp"
+                android:paddingRight="20dp"
                 android:visibility="gone">
 
                 <android.support.v7.widget.AppCompatTextView
@@ -63,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_first_name"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="18dp"
+                android:paddingRight="20dp"
                 android:visibility="gone">
 
                 <android.support.v7.widget.AppCompatTextView
@@ -97,13 +97,13 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_last_name"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="18dp"
+                android:paddingRight="20dp">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/email_label"
                     style="@style/profileTextField"
-                    android:text="@string/email_id" />
+                    android:text="@string/username" />
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/edittxt_email"
@@ -129,8 +129,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rel_email"
                 android:paddingLeft="20dp"
-                android:paddingRight="10dp"
-                android:paddingTop="8dp">
+                android:paddingTop="8dp"
+                android:paddingRight="10dp">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/password_label"
@@ -159,12 +159,10 @@
                 android:id="@+id/rel_passcode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_password"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:paddingTop="18dp">
+                android:paddingTop="8dp"
+                android:paddingRight="10dp">
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/passcode_label"
@@ -194,12 +192,12 @@
                 android:id="@+id/rel_use_passcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_passcode"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="18dp"
+                android:paddingRight="20dp"
                 android:visibility="visible">
 
                 <Switch
@@ -223,8 +221,8 @@
                         style="@style/profileTextField"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:text="@string/use_passcode_txt" />
 
@@ -244,12 +242,12 @@
                 android:id="@+id/rel_use_touch_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_use_passcode"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="18dp"
+                android:paddingRight="20dp"
                 android:visibility="gone">
 
                 <Switch
@@ -274,8 +272,8 @@
                         style="@style/TextType2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:text="@string/touch_txt"
                         android:textColor="@color/colorPrimaryBlack" />
@@ -296,12 +294,12 @@
                 android:id="@+id/rel_recv_push_notifctn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_use_touch_id"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="18dp"
+                android:paddingRight="20dp"
                 android:visibility="visible">
 
                 <Switch
@@ -323,8 +321,8 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/recv_push_notifctn_label"
                         style="@style/profileTextField"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:text="@string/receive_push_notifctn" />
 
@@ -344,12 +342,12 @@
                 android:id="@+id/rel_recv_stdy_actrem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_recv_push_notifctn"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:paddingLeft="20dp"
-                android:paddingRight="20dp"
                 android:paddingTop="18dp"
+                android:paddingRight="20dp"
                 android:visibility="visible">
 
                 <Switch
@@ -371,8 +369,8 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/recv_stdy_actrem_label"
                         style="@style/profileTextField"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:text="@string/recv_stdy_actrem" />
 
@@ -392,13 +390,13 @@
                 android:id="@+id/rel_reminder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/rel_recv_stdy_actrem"
-                android:paddingBottom="18dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:paddingLeft="20dp"
-                android:paddingRight="12dp"
                 android:paddingTop="18dp"
+                android:paddingRight="12dp"
+                android:paddingBottom="18dp"
                 android:visibility="invisible">
 
                 <RelativeLayout
@@ -428,8 +426,8 @@
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/reminder_label"
                         style="@style/TextType2"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
                         android:text="@string/reminder"
                         android:textColor="@color/colorSecondary" />
@@ -455,8 +453,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@id/signOutButton"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@color/colorSecondaryBg" />
 
             <android.support.v7.widget.AppCompatTextView

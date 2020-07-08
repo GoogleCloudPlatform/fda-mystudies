@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright Â© 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
@@ -22,103 +22,85 @@
  */
 package com.hphc.mystudies.util;
 
-/**
- * Provides enumerations used across the application
- * 
- * @author BTC
- *
- */
 public enum StudyMetaDataEnum {
+  RP_AUTHORIZATION("Authorization"),
 
-	// Request @param keys
-	RP_AUTHORIZATION("Authorization"), 
-	
-	RP_STUDY_IDENTIFIER("studyId"), 
-	
-	RP_CONSENT_VERSION("consentVersion"), 
-	
-	RP_ACTIVITY_IDENTIFIER("activityId"), 
-	
-	RP_ACTIVITY_VERSION("activityVersion"), 
-	
-	RP_SKIP("skip"), 
-	
-	RP_SUBJECT("subject"), 
-	
-	RP_BODY("body"), 
-	
-	RP_FIRST_NAME("firstName"), 
-	
-	RP_EMAIL("email"), 
-	
-	RP_APP_VERSION("appVersion"), 
-	
-	RP_STUDY_VERSION("studyVersion"), 
-	
-	RP_FORCE_UPDATE("forceUpdate"), 
-	
-	RP_OS_TYPE("osType"), 
-	
-	RP_BUNDLE_IDENTIFIER("bundleId"), 
-	
-	RP_MESSAGE("message"), 
-	
-	RP_QUERY("dbQuery"),
+  RP_STUDY_IDENTIFIER("studyId"),
 
-	// Query @param keys
-	QF_BUNDLE_ID("bundleId"), 
-	
-	QF_OS_TYPE("osType"), 
-	
-	QF_CUSTOM_STUDY_ID("customStudyId"), 
-	
-	QF_STUDY_VERSION("studyVersion"), 
-	
-	QF_VERSION("version"), 
-	
-	QF_LIVE("live"), 
-	
-	QF_ACTIVE("active"), 
-	
-	QF_SHORT_TITLE("shortTitle"), 
-	
-	QF_ACTIVE_TASK_ID("activeTaskId"), 
-	
-	QF_QUESTIONNAIRE_ID("questionnairesId"), 
-	
-	QF_RESPONSE_TYPE_ID("responseTypeId"), 
-	
-	QF_TYPE("type"), 
-	
-	QF_STATUS("status"), 
-	
-	QF_STUDY_ID("studyId");
+  RP_CONSENT_VERSION("consentVersion"),
 
-	private final String value;
+  RP_ACTIVITY_IDENTIFIER("activityId"),
 
-	/**
-	 * @param value
-	 */
-	private StudyMetaDataEnum(String value) {
-		this.value = value;
-	}
+  RP_ACTIVITY_VERSION("activityVersion"),
 
-	public String value() {
-		return this.value;
-	}
+  RP_SKIP("skip"),
 
-	/**
-	 * @author BTC
-	 * @param value
-	 * @return {@link StudyMetaDataEnum}
-	 */
-	public static StudyMetaDataEnum fromValue(String value) {
-		for (StudyMetaDataEnum smde : StudyMetaDataEnum.values()) {
-			if (smde.value.equals(value)) {
-				return smde;
-			}
-		}
-		throw new IllegalArgumentException("No matching constant for [" + value
-				+ "]");
-	}
+  RP_SUBJECT("subject"),
+
+  RP_BODY("body"),
+
+  RP_FIRST_NAME("firstName"),
+
+  RP_EMAIL("email"),
+
+  RP_APP_VERSION("appVersion"),
+
+  RP_STUDY_VERSION("studyVersion"),
+
+  RP_FORCE_UPDATE("forceUpdate"),
+
+  RP_OS_TYPE("osType"),
+
+  RP_BUNDLE_IDENTIFIER("bundleId"),
+
+  RP_MESSAGE("message"),
+
+  RP_QUERY("dbQuery"),
+
+  QF_BUNDLE_ID("bundleId"),
+
+  QF_OS_TYPE("osType"),
+
+  QF_CUSTOM_STUDY_ID("customStudyId"),
+
+  QF_STUDY_VERSION("studyVersion"),
+
+  QF_VERSION("version"),
+
+  QF_LIVE("live"),
+
+  QF_ACTIVE("active"),
+
+  QF_SHORT_TITLE("shortTitle"),
+
+  QF_ACTIVE_TASK_ID("activeTaskId"),
+
+  QF_QUESTIONNAIRE_ID("questionnairesId"),
+
+  QF_RESPONSE_TYPE_ID("responseTypeId"),
+
+  QF_TYPE("type"),
+
+  QF_STATUS("status"),
+
+  QF_STUDY_ID("studyId");
+
+  private final String value;
+
+  private StudyMetaDataEnum(String value) {
+    this.value = value;
+  }
+
+  public String value() {
+    return this.value;
+  }
+
+  public static StudyMetaDataEnum fromValue(String value) {
+    for (StudyMetaDataEnum smde : StudyMetaDataEnum.values()) {
+      if (smde.value.equals(value)) {
+        return smde;
+      }
+    }
+    throw new IllegalArgumentException("No matching constant for [" + value + "]");
+  }
 }
