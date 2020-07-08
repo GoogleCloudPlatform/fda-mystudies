@@ -10,11 +10,11 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-	<artifactId>user-registration-service</artifactId>
+	<artifactId>participant-manager-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>user-registration-service</name>
-	<description>User Registration Service</description>
+	<name>participant-manager-service</name>
+	<description>Paricipant Manager Service</description>
 
 	<properties>
 		<start-class>com.google.cloud.healthcare.fdamystudies.Application</start-class>
@@ -112,7 +112,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>user-registration-service</finalName>
+		<finalName>participant-manager-service</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
