@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, EventEmitter, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
@@ -12,6 +12,7 @@ import {Subscription} from 'rxjs';
 })
 export class AddLocationComponent {
   @Input() enabled = true;
+  @Output() onFormSubmit: EventEmitter<unknown> = new EventEmitter<unknown>();
   location = <Location>{};
   sub: Subscription = new Subscription();
   constructor(
@@ -21,8 +22,8 @@ export class AddLocationComponent {
   ) {}
 
   addLocation(): void {
-    this.sub = this.locationService.addLocation(this.location).subscribe(() => {
-      this.toastr.success('New location added Successfully');
+    this.locationService.addLocation(this.location).subscribe(() => {
+      this.toastr.success('New location added successfully');
       void this.router.navigate(['/coordinator/locations']);
     });
   }

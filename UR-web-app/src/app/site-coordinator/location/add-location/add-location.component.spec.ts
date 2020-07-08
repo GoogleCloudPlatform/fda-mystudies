@@ -24,8 +24,12 @@ describe('AddLocationComponent', () => {
   let customIdInput: DebugElement;
   let nameInput: DebugElement;
   let descriptionInput: DebugElement;
-
+  let locationsServiceSpy: jasmine.SpyObj<LocationService>;
   beforeEach(async(() => {
+    locationsServiceSpy = jasmine.createSpyObj<LocationService>(
+      'LocationService',
+      ['addLocation'],
+    );
     TestBed.configureTestingModule({
       declarations: [AddLocationComponent],
       imports: [
@@ -40,7 +44,12 @@ describe('AddLocationComponent', () => {
           enableHtml: true,
         }),
       ],
-      providers: [NgForm, EntityService, LocationService, BsModalService],
+      providers: [
+        NgForm,
+        EntityService,
+        BsModalService,
+        {provide: LocationService, useValue: locationsServiceSpy},
+      ],
     });
   }));
 
@@ -48,7 +57,9 @@ describe('AddLocationComponent', () => {
     fixture = TestBed.createComponent(AddLocationComponent);
     component = fixture.componentInstance;
 
-    submitLocation = fixture.debugElement.query(By.css('[name="add"]'));
+    submitLocation = fixture.debugElement.query(
+      By.css('button[type="submit"]'),
+    );
     customIdInput = fixture.debugElement.query(By.css('[name="customId"]'));
     nameInput = fixture.debugElement.query(By.css('[name="name"]'));
     descriptionInput = fixture.debugElement.query(
@@ -66,40 +77,52 @@ describe('AddLocationComponent', () => {
     component.location.name = 'Location Name';
     component.location.description = 'This is location Description';
     fixture.detectChanges();
-    const Errormsg = fixture.debugElement.query(By.css('.validation-error'));
-    expect(Errormsg).toBeFalsy();
+    const errorMsg = fixture.debugElement.query(By.css('.validation-error'));
+    expect(errorMsg).toBeFalsy();
   });
 
-  it('Locations value to input properties on form load', () => {
+  it('should check form submit button is disabled when loaded', () => {
     const submitButton = submitLocation.nativeElement as HTMLInputElement;
     component.enabled = false;
     fixture.detectChanges();
     expect(submitButton.disabled).toBeTruthy();
   });
 
-  it('Entering value in input controls and check the same value', fakeAsync(() => {
+  it('Entering value in input controls and check the same value', fakeAsync(async () => {
+    const expectedResponse = {
+      id: 0,
+      customId: 'customid3',
+      name: 'Location Name',
+      description: 'This is location Description',
+      status: '1',
+      studiesCount: 0,
+      successBean: {message: 'location added successfully', code: '200 ok'},
+      error: {detailMessage: '', type: '', userMessage: ''},
+    };
     fixture.componentInstance.location.customId = 'customid3';
     fixture.componentInstance.location.name = 'Location Name';
     fixture.componentInstance.location.description =
       'This is location Description';
-    void fixture.whenStable().then(() => {
-      const submitButton = submitLocation.nativeElement as HTMLInputElement;
-      const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
-      const nameInputs = nameInput.nativeElement as HTMLInputElement;
-      const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
-      customIdInputs.value = 'customid3';
-      nameInputs.value = 'Location Name';
-      descriptionInputs.value = 'This is location Description';
-      dispatchEvent(new Event('input'));
-      fixture.detectChanges();
-      tick();
-      submitButton.click();
-      fixture.detectChanges();
-      expect(component.location.customId).toEqual('customid3');
-      expect(component.location.name).toEqual('Location Name');
-      expect(component.location.description).toEqual(
-        'This is location Description',
-      );
-    });
+    await fixture.whenStable();
+    const submitButton = submitLocation.nativeElement as HTMLInputElement;
+    const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
+    const nameInputs = nameInput.nativeElement as HTMLInputElement;
+    const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+    customIdInputs.value = 'customid3';
+    nameInputs.value = 'Location Name';
+    descriptionInputs.value = 'This is location Description';
+    dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    tick();
+    submitButton.click();
+    locationsServiceSpy.addLocation(expectedResponse);
+    fixture.detectChanges();
+    expect(locationsServiceSpy.addLocation).toHaveBeenCalled();
+    expect(locationsServiceSpy.addLocation.calls.count()).toBe(1, 'one call');
+    expect(component.location.customId).toEqual('customid3');
+    expect(component.location.name).toEqual('Location Name');
+    expect(component.location.description).toEqual(
+      'This is location Description',
+    );
   }));
 });

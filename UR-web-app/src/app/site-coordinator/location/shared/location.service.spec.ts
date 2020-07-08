@@ -1,4 +1,4 @@
-import {TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed, fakeAsync} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {LocationService} from './location.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
@@ -114,7 +114,7 @@ describe('LocationService', () => {
     expect(entityServicespyobj.post.calls.count()).toBe(1, 'one call');
   });
 
-  it('should return an error when the server returns a 401', fakeAsync(() => {
+  it('should return an error when the server returns a error status code', fakeAsync(() => {
     const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
       'EntityService',
       ['getCollection'],
@@ -134,30 +134,6 @@ describe('LocationService', () => {
       () => fail('expected an error, not locations'),
       (error: ApiResponse) => {
         expect(error.error.userMessage).toContain('User does not exist');
-      },
-    );
-  }));
-
-  it('add location should return an error when the server returns a 400 ', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      ['post'],
-    );
-    locationService = new LocationService(entityServicespy);
-    const errorResponses: ApiResponse = {
-      error: {
-        userMessage: 'customId already exists',
-        type: 'error',
-        detailMessage: 'customId already exists',
-      },
-    };
-
-    entityServicespy.post.and.returnValue(throwError(errorResponses));
-    tick(40);
-    locationService.addLocation(expectedLocation).subscribe(
-      () => fail('expected an error'),
-      (error: ApiResponse) => {
-        expect(error.error.userMessage).toBe('customId already exists');
       },
     );
   }));
