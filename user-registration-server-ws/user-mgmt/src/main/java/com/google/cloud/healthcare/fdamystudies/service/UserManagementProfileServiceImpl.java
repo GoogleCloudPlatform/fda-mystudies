@@ -13,11 +13,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
@@ -312,8 +314,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       emailMap.put("$orgName", "Test Org");
       dynamicContent = MyStudiesUserRegUtil.generateEmailContent(content, emailMap);
       isSent =
-          emailNotification.sendEmailNotification(
-              subject, dynamicContent, emailId, new ArrayList<>(), new ArrayList<>());
+          emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
       if (!isSent) {
         isEmailSent = 1;
       } else {
