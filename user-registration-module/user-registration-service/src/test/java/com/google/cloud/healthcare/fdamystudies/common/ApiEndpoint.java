@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.auditlog.common;
+package com.google.cloud.healthcare.fdamystudies.common;
 
 import java.net.MalformedURLException;
 import java.net.URL;
