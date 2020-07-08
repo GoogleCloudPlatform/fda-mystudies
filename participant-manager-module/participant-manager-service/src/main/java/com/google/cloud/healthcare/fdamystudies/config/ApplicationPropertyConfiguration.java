@@ -19,7 +19,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Configuration
-public class ApplicationConfiguratation {
+public class ApplicationPropertyConfiguration {
   // application-appConfig.properties properties
 
   @Value("${sessionTimeOutInMinutes}")
