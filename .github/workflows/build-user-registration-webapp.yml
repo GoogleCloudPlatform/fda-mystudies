@@ -5,7 +5,6 @@ on:
       - "UR-web-app/**"
       - ".github/workflows/build-user-registration-webapp.yml"
 
-
 jobs:
   build:
     defaults:
@@ -28,3 +27,7 @@ jobs:
         run: |
           npm ci
           npm run build:ci
+
+      - name: npm run test
+        run: |
+          npm run test:ci
