@@ -203,10 +203,12 @@ class WCPServices: NSObject {
   ) {
     self.delegate = delegate
     let method = WCPMethods.activity.method
+    let brandID = Study.currentStudy?.userParticipateState.brandID ?? ""
     let headerParams = [
       kStudyId: studyId,
       kActivityId: activityId,
       kActivityVersion: activityVersion,
+      UserStudyStatus.JSONKey.brandID: brandID,
     ]
     self.sendRequestWith(method: method, params: headerParams, headers: nil)
   }

@@ -52,7 +52,7 @@ class DBStudy: Object {
   // Study state info
 
   @objc dynamic var participatedStatus: Int = 0
-
+  @objc dynamic var brandID: String?
   @objc dynamic var participatedId: String?
   @objc dynamic var siteID: String?
   @objc dynamic var tokenIdentifier: String?

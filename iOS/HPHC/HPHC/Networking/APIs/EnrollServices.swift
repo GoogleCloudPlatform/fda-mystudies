@@ -15,6 +15,11 @@ class EnrollServices: NSObject {
   var method: Method!
   var failedRequestServices = FailedUserServices()
 
+  struct JSONKey {
+    static let firstName = "firstName"
+    static let lastName = "lastName"
+  }
+
   // MARK: - Requests
 
   /// Creates a request to withdraw from `Study`
@@ -109,13 +114,19 @@ class EnrollServices: NSObject {
   ///   - studyId: ID of `Study`
   ///   - token: Enrollment Token Id
   ///   - delegate: Class object to receive response
-  func enrollForStudy(studyId: String, token: String, delegate: NMWebServiceDelegate) {
+  func enrollForStudy(
+    studyId: String,
+    result: ConsentResult?,
+    delegate: NMWebServiceDelegate
+  ) {
     self.delegate = delegate
     let method = EnrollmentMethods.enroll.method
 
     let params = [
-      kEnrollmentToken: token,
+      kEnrollmentToken: result?.token ?? "",
       kStudyId: studyId,
+      JSONKey.firstName: result?.firstName ?? "",
+      JSONKey.lastName: result?.lastName ?? "",
     ]
     let headers: [String: String] = [
       "userId": User.currentUser.userId ?? "",
