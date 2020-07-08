@@ -24,11 +24,7 @@ public final class AuthScimConstants {
 
   public static final String REFRESH_TOKEN = "refresh_token";
 
-  public static final String CONTENT_TYPE = "Content-Type";
-
   public static final String AUTHORIZATION = "Authorization";
-
-  public static final String CLIENT_CREDENTIALS = "client_credentials";
 
   public static final String CLIENT_ID = "client_id";
 
@@ -46,6 +42,4 @@ public final class AuthScimConstants {
   public static final String SALT = "salt";
 
   public static final String HASH = "hash";
-
-  public static final String CHANGE_PASSWORD = "change_password";
 }
