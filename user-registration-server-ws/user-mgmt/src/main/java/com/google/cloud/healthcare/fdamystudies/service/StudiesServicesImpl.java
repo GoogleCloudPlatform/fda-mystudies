@@ -96,6 +96,7 @@ public class StudiesServicesImpl implements StudiesServices {
       }
 
       if (appSet == null && appSet.isEmpty()) {
+        logger.debug("appset is empty return bad request");
         return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
       } else {
         List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoSet(appSet);
@@ -151,6 +152,10 @@ public class StudiesServicesImpl implements StudiesServices {
             }
           }
         } else {
+          logger.debug(
+              String.format(
+                  "hasDeviceToken=%b and studiesMap=%b",
+                  allDeviceTokens != null, studiesMap != null));
           return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
         }
       }
