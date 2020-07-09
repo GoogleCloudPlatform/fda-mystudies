@@ -74,9 +74,9 @@ android {
     productFlavors {
         fda {
             dimension 'version'
-            applicationId "com.harvard.fda"
-            versionCode 15
-            versionName "1.0"
+            applicationId "com.validcare.research"
+            versionCode 101
+            versionName "2.01"
         }
     }
 }

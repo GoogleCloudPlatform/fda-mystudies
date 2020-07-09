@@ -4,9 +4,9 @@
 <array>
 	<dict>
 		<key>title</key>
-		<string>Welcome! </string>
+		<string>Welcome to ValidCare Study</string>
 		<key>text</key>
-		<string>Overview description here.</string>
+		<string>Health and wellness research powered by you!</string>
 		<key>type</key>
 		<string>video</string>
 		<key>image</key>
@@ -16,9 +16,9 @@
 	</dict>
 	<dict>
 		<key>title</key>
-		<string>Leveraging the Power of Mobility for Research </string>
+		<string>Your Contributions Help You &amp; Others Like You</string>
 		<key>text</key>
-		<string>Overview description here.</string>
+		<string>Thanks for your interest in joining us in leading-edge research about how food, supplements, and drugs may affect you and your health and well-being.  Your contributions provide you insight into how what you use or consume affects you, but you also contribute to determining optimal use for people like you.</string>
 		<key>type</key>
 		<string></string>
 		<key>image</key>

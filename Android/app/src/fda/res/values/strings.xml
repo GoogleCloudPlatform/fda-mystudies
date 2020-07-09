@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY app_name "App Name">
+    <!ENTITY app_name "ValidCare Study">
     ]>
 
 <resources>
     <string name="app_name">&app_name;</string>
-    <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
-    <string name="website"></string>
-    <string name="websitetxt">App Website</string>
-    <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
-    <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
-    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
-    <string name="delete_message">Are you sure you wish to permanently delete your FDA MyStudies Gateway app account?  You will need to register again if you wish to join a study.</string>
-    <string name="studie_your_enrolled">It\'s been a while since you visited the App Name app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
-    <string name="termsurl"></string>
-    <string name="privacyurl"></string>
+    <string name="poweredby">© 2020 ValidCare LLC</string>
+    <string name="website">https://validcare.com</string>
+    <string name="websitetxt">ValidCare</string>
+    <string name="gateway_des">Health research powered by you!</string>
+    <string name="gateway_des1">Thanks for your interest in joining us in leading-edge research about how food, supplements, and drugs may affect you and your health and well-being.  Your contributions provide you insight into how what you use or consume affects you, but you also contribute to determining optimal use for people like you.</string>
+    <string name="delete_account_content">You have chosen to delete your ValidCare Study account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_message">Are you sure you wish to permanently delete your ValidCare Study account?  You will need to register again if you wish to join a study.</string>
+    <string name="studie_your_enrolled">It\'s been a while since you\'ve contributed. Please consider continuing your participation in important studies in which you\'re enrolled.</string>
+    <string name="termsurl">https://validcare.com/study-lft-terms-of-use/</string>
+    <string name="privacyurl">https://validcare.com/study-lft-privacy-policy/</string>
     <string name="view_consent">View Consent</string>
     <string name="visit_website">Visit Website</string>
     <string name="join_study">Join Study</string>
