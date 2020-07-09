@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public ChangePasswordResponse changePassword(ChangePasswordRequest userRequest)
       throws JsonProcessingException {
-    logger.entry("begin updateUser()");
+    logger.entry("begin changePassword()");
     Optional<UserEntity> optionalEntity = repository.findByUserId(userRequest.getUserId());
 
     if (!optionalEntity.isPresent()) {
