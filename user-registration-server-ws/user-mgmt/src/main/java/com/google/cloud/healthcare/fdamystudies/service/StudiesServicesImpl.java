@@ -100,6 +100,7 @@ public class StudiesServicesImpl implements StudiesServices {
         return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
       } else {
         List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoSet(appSet);
+        logger.debug(String.format("hasAppInfos=%b", (appInfos != null && !appInfos.isEmpty())));
         if (appInfos != null && !appInfos.isEmpty()) {
           allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfos);
           appInfobyAppCustomId =
@@ -107,7 +108,7 @@ public class StudiesServicesImpl implements StudiesServices {
                   .stream()
                   .collect(Collectors.toMap(AppInfoDetailsBO::getAppId, Function.identity()));
         }
-
+        logger.debug(String.format("hasStudiesSet=%b", (studySet != null && !studySet.isEmpty())));
         if (studySet != null && !studySet.isEmpty()) {
           List<StudyInfoBO> studyInfos = commonDao.getStudyInfoSet(studySet);
           if (studyInfos != null && !studyInfos.isEmpty()) {
@@ -129,6 +130,11 @@ public class StudiesServicesImpl implements StudiesServices {
                   sendGatewaylevelNotification(
                       allDeviceTokens, appInfobyAppCustomId, notificationBean);
 
+              logger.debug(
+                  String.format(
+                      "status=%d and fcmNotificationResponse=%s",
+                      fcmNotificationResponse.getStatus(),
+                      fcmNotificationResponse.getFcmResponse()));
               return new ErrorBean(
                   ErrorCode.EC_200.code(),
                   ErrorCode.EC_200.errorMessage(),
@@ -145,6 +151,11 @@ public class StudiesServicesImpl implements StudiesServices {
                   sendStudyLevelNotification(
                       studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);
 
+              logger.debug(
+                  String.format(
+                      "status=%d and fcmNotificationResponse=%s",
+                      fcmNotificationResponse.getStatus(),
+                      fcmNotificationResponse.getFcmResponse()));
               return new ErrorBean(
                   ErrorCode.EC_200.code(),
                   ErrorCode.EC_200.errorMessage(),
@@ -154,8 +165,9 @@ public class StudiesServicesImpl implements StudiesServices {
         } else {
           logger.debug(
               String.format(
-                  "hasDeviceToken=%b and studiesMap=%b",
-                  allDeviceTokens != null, studiesMap != null));
+                  "hasDeviceTokens=%b and hasElementsInStudiesMap=%b",
+                  (allDeviceTokens != null && !allDeviceTokens.isEmpty()),
+                  (studiesMap != null && !studiesMap.isEmpty())));
           return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
         }
       }
