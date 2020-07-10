@@ -25,29 +25,11 @@ public class RedirectConfig implements Serializable {
   @Value("${participant.manager.callback-url}")
   private String participantManagerCallbackUrl;
 
-  @Value("${participant.manager.forgot-password-url}")
-  private String participantManagerForgotPasswordUrl;
-
-  @Value("${participant.manager.signup-url}")
-  private String participantManagerSignupUrl;
-
   @Value("${mystudies.ios.app.callback-url}")
   private String myStudiesIosAppCallbackUrl;
 
-  @Value("${mystudies.ios.app.forgot-password-url}")
-  private String myStudiesIosAppForgotPasswordUrl;
-
-  @Value("${mystudies.ios.app.signup-url}")
-  private String myStudiesIosAppSignupUrl;
-
   @Value("${mystudies.android.app.callback-url}")
   private String myStudiesAndroidAppCallbackUrl;
-
-  @Value("${mystudies.android.app.forgot-password-url}")
-  private String myStudiesAndroidAppForgotPasswordUrl;
-
-  @Value("${mystudies.android.app.signup-url}")
-  private String myStudiesAndroidAppSignupUrl;
 
   public String getCallbackUrl(String devicePlatform) {
     if (ANDROID.getValue().equalsIgnoreCase(devicePlatform)) {
@@ -56,23 +38,5 @@ public class RedirectConfig implements Serializable {
       return myStudiesIosAppCallbackUrl;
     }
     return participantManagerCallbackUrl;
-  }
-
-  public String getForgotPasswordUrl(String devicePlatform) {
-    if (ANDROID.getValue().equalsIgnoreCase(devicePlatform)) {
-      return myStudiesAndroidAppForgotPasswordUrl;
-    } else if (IOS.getValue().equalsIgnoreCase(devicePlatform)) {
-      return myStudiesIosAppForgotPasswordUrl;
-    }
-    return participantManagerForgotPasswordUrl;
-  }
-
-  public String getSignupUrl(String devicePlatform) {
-    if (ANDROID.getValue().equalsIgnoreCase(devicePlatform)) {
-      return myStudiesAndroidAppSignupUrl;
-    } else if (IOS.getValue().equalsIgnoreCase(devicePlatform)) {
-      return myStudiesIosAppSignupUrl;
-    }
-    return participantManagerSignupUrl;
   }
 }
