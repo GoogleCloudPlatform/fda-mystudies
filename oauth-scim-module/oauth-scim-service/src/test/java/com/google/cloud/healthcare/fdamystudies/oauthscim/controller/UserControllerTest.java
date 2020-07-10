@@ -187,7 +187,7 @@ public class UserControllerTest extends BaseMockIT {
 
   @Test
   @Order(3)
-  public void shouldReturnCurrentPasswordInvalidErrroCodeForChangePasswordAction()
+  public void shouldReturnCurrentPasswordInvalidErrorCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
@@ -210,7 +210,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnUserNotFoundErrroCodeForChangePasswordAction()
+  public void shouldReturnUserNotFoundErrorCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);

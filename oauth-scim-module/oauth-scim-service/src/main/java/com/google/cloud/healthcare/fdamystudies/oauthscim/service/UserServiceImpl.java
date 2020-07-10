@@ -124,7 +124,8 @@ public class UserServiceImpl implements UserService {
             : createArrayNode();
     JsonNode currentPwdNode = userInfo.get(PASSWORD);
 
-    ErrorCode errorCode = validatePasswords(userRequest, currentPwdNode, passwordHistory);
+    ErrorCode errorCode =
+        validateChangePasswordRequest(userRequest, currentPwdNode, passwordHistory);
     if (errorCode != null) {
       logger.exit(String.format("change password failed with error code=%s", errorCode));
       return new ChangePasswordResponse(errorCode);
@@ -138,7 +139,7 @@ public class UserServiceImpl implements UserService {
         HttpStatus.OK, "Your password has been changed successfully!");
   }
 
-  private ErrorCode validatePasswords(
+  private ErrorCode validateChangePasswordRequest(
       ChangePasswordRequest userRequest, JsonNode passwordNode, ArrayNode passwordHistory) {
 
     // determine whether the current password matches the password stored in database
