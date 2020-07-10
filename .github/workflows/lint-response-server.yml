@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: response-server-module/response-server-ws
+        working-directory: /response-server-module/response-server-ws
     name: Checkstyle job
     steps:
     - name: Checkout
@@ -19,7 +19,7 @@ jobs:
       uses: nikitasavinov/checkstyle-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: 'github-pr-review'
+        reporter: 'github-pr-check'
         level: error
         workdir: ./response-server-module/response-server-ws
         tool_name: response-server Checks
