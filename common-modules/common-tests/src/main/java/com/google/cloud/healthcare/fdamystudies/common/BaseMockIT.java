@@ -52,6 +52,8 @@ public class BaseMockIT {
 
   protected static final String INVALID_TOKEN = "cd57710c-1d19-4058-8bfe-a6aac3a39e35";
 
+  protected static final String AUTH_CODE_VALUE = "28889b79-d7c6-4fe3-990c-bd239c6ce199";
+
   protected static final ResultMatcher OK = status().isOk();
 
   protected static final ResultMatcher BAD_REQUEST = status().isBadRequest();

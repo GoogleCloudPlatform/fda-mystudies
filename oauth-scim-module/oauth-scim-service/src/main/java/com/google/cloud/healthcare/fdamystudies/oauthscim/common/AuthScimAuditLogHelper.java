@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthScimAuditLogHelper {
 
-  @Autowired AuditEventService aleService;
+  @Autowired private AuditEventService aleService;
 
   public AuditLogEventResponse logEvent(AuditLogEvent eventEnum, AuditLogEventRequest aleRequest) {
     Map<String, String> values = new HashMap<>();

@@ -24,6 +24,8 @@ public enum ApiEndpoint {
 
   REVOKE_TOKEN("http://localhost:8002/oauth-scim-service/v1/oauth2/revoke"),
 
+  LOGIN_PAGE("http://localhost:8002/oauth-scim-service/login"),
+
   TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/v1/oauth2/introspect");
 
   private String url;

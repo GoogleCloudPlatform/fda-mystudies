@@ -14,6 +14,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -25,4 +27,6 @@ public interface UserService {
   public UpdateUserResponse resetPassword(
       UpdateUserRequest userRequest, AuditLogEventRequest aleRequest)
       throws JsonProcessingException;
+
+  public Optional<UserEntity> findUserByTempRegId(String tempRegId);
 }

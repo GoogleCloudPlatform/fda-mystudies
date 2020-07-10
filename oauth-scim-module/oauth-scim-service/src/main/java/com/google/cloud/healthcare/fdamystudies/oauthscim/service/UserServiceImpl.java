@@ -237,4 +237,10 @@ public class UserServiceImpl implements UserService {
     }
     return null;
   }
+
+  @Override
+  public Optional<UserEntity> findUserByTempRegId(String tempRegId) {
+    logger.entry("begin findUserByTempRegId()");
+    return repository.findByTempRegId(tempRegId);
+  }
 }
