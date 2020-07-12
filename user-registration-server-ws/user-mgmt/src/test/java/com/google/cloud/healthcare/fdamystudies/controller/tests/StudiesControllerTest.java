@@ -13,7 +13,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,7 @@ import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 
+@TestMethodOrder(OrderAnnotation.class)
 public class StudiesControllerTest extends BaseMockIT {
 
   private static final String STUDY_METADATA_PATH = "/studies/studymetadata";
@@ -43,6 +47,7 @@ public class StudiesControllerTest extends BaseMockIT {
 
   @Autowired private CommonDaoImpl commonDao;
 
+  @Order(1)
   @Test
   public void contextLoads() {
     assertNotNull(studiesController);
@@ -68,6 +73,7 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.ORG_ID_VALUE);
   }
 
+  @Order(2)
   @Test
   public void addUpdateStudyMetadataSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
@@ -87,6 +93,7 @@ public class StudiesControllerTest extends BaseMockIT {
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
   }
 
+  @Order(3)
   @Test
   public void addUpdateStudyMetadataBadRequest() throws Exception {
 
@@ -117,6 +124,7 @@ public class StudiesControllerTest extends BaseMockIT {
     performPost(STUDY_METADATA_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
+  @Order(4)
   @Test
   public void sendNotificationBadRequest() throws Exception {
 
@@ -135,6 +143,7 @@ public class StudiesControllerTest extends BaseMockIT {
     performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
+  @Order(5)
   @Test
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers =
