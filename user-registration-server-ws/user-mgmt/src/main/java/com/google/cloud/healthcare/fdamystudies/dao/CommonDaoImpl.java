@@ -274,7 +274,6 @@ public class CommonDaoImpl implements CommonDao {
                         + " NULL and a.device_type != '') GROUP BY sp.study_info_id")
                 .setParameterList("studyIds", studyInfoIds)
                 .getResultList();
-        logger.info("CommonDaoImpl.getStudyLevelDeviceToken() ResultSet size::" + rs.size());
         if (rs != null) {
           for (Object[] objects : rs) {
 

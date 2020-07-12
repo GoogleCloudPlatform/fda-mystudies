@@ -127,16 +127,23 @@ public class StudiesControllerTest extends BaseMockIT {
     NotificationForm notificationForm = null;
     String requestJson = getObjectMapper().writeValueAsString(notificationForm);
     performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
+  }
+
+  @Test
+  public void sendEmptyNotificationTypeBadRequest() throws Exception {
+
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
 
     // empty notificationType
-    requestJson =
+    String requestJson =
         getNotificationForm(
             Constants.STUDY_ID, Constants.CUSTOM_STUDY_ID, Constants.APP_ID_HEADER, "");
     performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
   @Test
-  public void sendNotificationSuccess() throws Exception {
+  public void sendStudyLevelNotificationSuccess() throws Exception {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
 
@@ -158,9 +165,15 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
+  }
+
+  @Test
+  public void sendGatewayLevelNotificationSuccess() throws Exception {
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
 
     // GatewayLevel notificationType
-    requestJson =
+    String requestJson =
         getNotificationForm(
             Constants.STUDY_ID,
             Constants.CUSTOM_STUDY_ID,
