@@ -139,7 +139,8 @@ public class StudiesServicesImpl implements StudiesServices {
                 && studyInfobyStudyCustomId != null
                 && studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()) != null
                 && studiesMap != null) {
-
+              logger.info(
+                  "StudiesServicesImpl.SendNotificationAction() " + AppConstants.STUDY_LEVEL);
               fcmNotificationResponse =
                   sendStudyLevelNotification(
                       studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);
@@ -170,12 +171,7 @@ public class StudiesServicesImpl implements StudiesServices {
     Map<String, JSONArray> deviceTokensMap =
         studiesMap.get(studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
     notificationBean.setNotificationType(AppConstants.STUDY);
-    logger.info(
-        "StudiesServicesImpl.sendStudyLevelNotification() size ::: " + deviceTokensMap.size());
     if (deviceTokensMap != null) {
-      logger.info(
-          "StudiesServicesImpl.sendStudyLevelNotification() DEVICE_ANDROID ::: "
-              + deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
       if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
         return pushFCMNotification(
