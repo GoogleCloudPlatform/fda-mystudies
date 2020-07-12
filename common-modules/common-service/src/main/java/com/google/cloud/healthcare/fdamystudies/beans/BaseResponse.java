@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,5 +49,10 @@ public class BaseResponse {
   public BaseResponse(HttpStatus httpStatus, String message) {
     this.httpStatusCode = httpStatus.value();
     this.message = message;
+  }
+
+  @JsonIgnore
+  public boolean is2xxSuccessful() {
+    return HttpStatus.valueOf(httpStatusCode).is2xxSuccessful();
   }
 }

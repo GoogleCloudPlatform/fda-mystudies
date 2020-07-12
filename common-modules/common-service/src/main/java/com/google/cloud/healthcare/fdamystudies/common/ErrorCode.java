@@ -31,9 +31,31 @@ public enum ErrorCode {
 
   UNAUTHORIZED(401, "EC-401", "Unauthorized", "Invalid token"),
 
+  TEMP_PASSWORD_EXPIRED(
+      401,
+      "EC-110",
+      Constants.BAD_REQUEST,
+      "Your temporary password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+
+  PASSWORD_EXPIRED(
+      401,
+      "EC-111",
+      Constants.BAD_REQUEST,
+      "Your password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+
   USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found"),
 
+  ACCOUNT_DEACTIVATED(403, "EC-116", Constants.BAD_REQUEST, "Your account has been deactivated."),
+
+  PENDING_CONFIRMATION(
+      403,
+      "EC-117",
+      Constants.BAD_REQUEST,
+      "Your account has not been activated yet. Account need to be activated by an activation link that arrives via email to the address you provided."),
+
   CURRENT_PASSWORD_INVALID(400, "EC-119", Constants.BAD_REQUEST, "Current password is invalid"),
+
+  INVALID_LOGIN_CREDENTIALS(400, "EC-120", Constants.BAD_REQUEST, "Invalid email or password."),
 
   ENFORCE_PASSWORD_HISTORY(
       400,
