@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import javax.validation.constraints.NotBlank;
@@ -54,7 +62,7 @@ public class AuditLogEventRequest {
   private String applicationComponentName;
 
   /** the number of milliseconds from the epoch of 1970-01-01T00:00:00Z */
-  @NotNull private Long eventTimestamp;
+  @NotNull private Long occured;
 
   @Size(max = 100)
   private String appId;

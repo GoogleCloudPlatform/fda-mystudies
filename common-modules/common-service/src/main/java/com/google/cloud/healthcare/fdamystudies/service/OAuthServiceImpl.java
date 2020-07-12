@@ -45,11 +45,6 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   private String introspectEndpoint;
 
   @Override
-  public ResponseEntity<JsonNode> health() {
-    return getForJson(healthEndpoint);
-  }
-
-  @Override
   public ResponseEntity<JsonNode> introspectToken(JsonNode params) {
     logger.entry("begin introspectToken()");
     HttpHeaders headers = new HttpHeaders();
