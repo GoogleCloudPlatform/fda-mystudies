@@ -67,7 +67,7 @@ public class GetUserInstitutionResourcesTest {
     String fakeInstitution = "fake_institution";
     Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
         .thenReturn(Optional.of(UserInstitution.builder().institutionId(fakeInstitution).build()));
-    String html = "<p>fake html</p>\r\n";
+    String html = "<p>fake html</p>\n";
     URL path = ClassLoader.getSystemResource("fake_html.html");
     File f = new File(path.getFile());
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
