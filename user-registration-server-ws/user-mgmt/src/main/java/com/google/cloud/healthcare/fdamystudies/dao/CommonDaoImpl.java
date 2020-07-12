@@ -265,7 +265,6 @@ public class CommonDaoImpl implements CommonDao {
 
         List<Integer> studyInfoIds =
             studyInfos.stream().map(a -> a.getId()).distinct().collect(Collectors.toList());
-        logger.info("CommonDaoImpl.getStudyLevelDeviceToken() Study List :" + studyInfoIds);
         List<Object[]> rs =
             session
                 .createSQLQuery(
