@@ -1,10 +1,19 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
-import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
-import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
-import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
-import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
-import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,19 +25,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
+import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
+import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
+import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -66,7 +67,7 @@ public class GetUserInstitutionResourcesTest {
     String fakeInstitution = "fake_institution";
     Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
         .thenReturn(Optional.of(UserInstitution.builder().institutionId(fakeInstitution).build()));
-    String html = "<p>fake html</p>\n";
+    String html = "<p>fake html</p>\r\n";
     URL path = ClassLoader.getSystemResource("fake_html.html");
     File f = new File(path.getFile());
     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
