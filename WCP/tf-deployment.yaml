@@ -109,7 +109,7 @@ spec:
       - name: gcloud-key-volume
         secret:
           secretName: study-designer-gcloud-key
-          volumeMounts:
+        volumeMounts:
           - name: us-newyork
             mountPath: /etc/localtime
       volumes:
