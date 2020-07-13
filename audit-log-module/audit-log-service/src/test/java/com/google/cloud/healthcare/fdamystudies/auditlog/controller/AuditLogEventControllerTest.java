@@ -150,7 +150,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     aleRequest.setDeviceType("MOBILE");
     aleRequest.setEventDetail("App user registration success");
     aleRequest.setEventName("REGISTRATION_SUCCESS");
-    aleRequest.setEventTimestamp(Instant.now().toEpochMilli());
+    aleRequest.setOccured(Instant.now().toEpochMilli());
     aleRequest.setOrgId("FDA");
     aleRequest.setRequestUri(null);
     aleRequest.setResourceServer("Participant Datastore");

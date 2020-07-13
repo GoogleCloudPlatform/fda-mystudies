@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.auditlog.mapper;
 
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
@@ -25,7 +33,7 @@ public final class AuditLogEventMapper {
     entity.setDeviceType(aleRequest.getDeviceType());
     entity.setEventDetail(aleRequest.getEventDetail());
     entity.setEventName(aleRequest.getEventName());
-    entity.setEventTimestamp(new Timestamp(aleRequest.getEventTimestamp()));
+    entity.setOccurred(new Timestamp(aleRequest.getOccured()));
     entity.setOrgId(aleRequest.getOrgId());
     entity.setRequestUri(aleRequest.getRequestUri());
     entity.setResourceServer(aleRequest.getResourceServer());

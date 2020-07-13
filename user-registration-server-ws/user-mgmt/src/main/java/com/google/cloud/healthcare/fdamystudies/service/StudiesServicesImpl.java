@@ -146,7 +146,8 @@ public class StudiesServicesImpl implements StudiesServices {
                 && studyInfobyStudyCustomId != null
                 && studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()) != null
                 && studiesMap != null) {
-
+              logger.info(
+                  "StudiesServicesImpl.SendNotificationAction() " + AppConstants.STUDY_LEVEL);
               fcmNotificationResponse =
                   sendStudyLevelNotification(
                       studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);

@@ -32,7 +32,7 @@ INSERT INTO `participant_registry_site` (`id`, `site_id`, `study_info_id`, `emai
 	(35, 1, 1, 'pqr@gf.com', '2020-02-07 20:38:36', 'D', 'dfdsg', '2020-02-09 18:42:34', '2020-02-09 18:42:32', 3, 0);
 
 INSERT INTO `participant_study_info` (`participant_study_info_id`, `participant_id`, `study_info_id`, `participant_registry_site_id`, `site_id`, `user_details_id`, `status`, `bookmark`, `enrolled_date`, `completion`, `adherence`, `withdrawal_date`) VALUES
-	(101, '1', 2, 33, 1, 44, 'Withdrawn', 1, '2020-02-06 14:07:29', 45, 20, '2020-02-10 14:03:14'),
+	(101, '1', 2, 33, 1, 44, 'yetToJoin', 1, '2020-02-06 14:07:29', 45, 20, '2020-02-10 14:03:14'),
 	(102, '2', 1, 34, 1, 44, 'Enrolled', 0, '2020-02-06 14:07:31', 50, 36, '2020-02-06 14:07:31'),
 	(103, '3', 4, 33, 1, 44, 'Withdrawn', 1, '2020-02-06 14:07:29', 45, 20, '2020-02-10 14:03:14');
 	
