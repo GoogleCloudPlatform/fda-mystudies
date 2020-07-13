@@ -49,6 +49,15 @@ resource "google_secret_manager_secret" "secrets" {
     # AppId and OrgId for the mobile app. This needs to be in the app_info and org_info table in user registration database.
     "mobile-app-appid",
     "mobile-app-orgid",
+    # bundleID used for the Android App.
+    "android-bundle-id",
+    # found under settings > cloud messaging in the android app defined in your firebase project.
+    "android-server-key",
+    # bundleID used to build and distribute the iOS App.
+    "ios-bundle-id",
+    # certificate and password generated for APNs.
+    "ios-certificate",
+    "ios-certificate-password",
   ])
 
   secret_id = each.key
