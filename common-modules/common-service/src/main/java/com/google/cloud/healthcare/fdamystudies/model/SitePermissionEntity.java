@@ -58,7 +58,7 @@ public class SitePermissionEntity implements Serializable {
   @JoinColumn(name = "site_id")
   private SiteEntity site;
 
-  @Column(name = "edit")
+  @Column(name = "edit", length = 100)
   private Integer canEdit;
 
   @Column(
@@ -68,6 +68,6 @@ public class SitePermissionEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 }
