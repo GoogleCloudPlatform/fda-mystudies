@@ -115,4 +115,4 @@ spec:
       volumes:
       - name: us-newyork
         hostPath:
-        path: /usr/share/zoneinfo/America/New_York
+          path: /usr/share/zoneinfo/America/New_York
