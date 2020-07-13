@@ -59,8 +59,8 @@ public class StudyPermissionEntity implements Serializable {
   @JoinColumn(name = "ur_admin_user_id")
   private UserRegAdminEntity urAdminUser;
 
-  @Column(name = "edit")
-  private Integer edit = 0;
+  @Column(name = "edit", length = 100)
+  private Integer edit;
 
   @Column(
       name = "created",
@@ -69,6 +69,6 @@ public class StudyPermissionEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", nullable = false, length = 64)
   private String createdBy;
 }
