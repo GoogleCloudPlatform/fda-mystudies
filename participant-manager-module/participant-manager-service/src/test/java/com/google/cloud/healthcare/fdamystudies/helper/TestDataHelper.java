@@ -13,6 +13,8 @@ import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
@@ -57,11 +59,16 @@ public class TestDataHelper {
     userRegAdminEntity.setEmail(EMAIL_VALUE);
     userRegAdminEntity.setFirstName("mockito");
     userRegAdminEntity.setLastName("mockito_last_name");
-    userRegAdminEntity.setManageLocations(2);
-    userRegAdminEntity.setStatus(1);
+    userRegAdminEntity.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
     return userRegAdminEntity;
+  }
+
+  public UserRegAdminEntity createUserRegAdmin() {
+    UserRegAdminEntity userRegAdminEntity = newUserRegAdminEntity();
+    return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
   }
 
   public StudyEntity newStudyEntity() {

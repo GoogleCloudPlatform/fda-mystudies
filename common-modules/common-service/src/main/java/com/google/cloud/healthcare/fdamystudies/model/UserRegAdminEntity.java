@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,6 +25,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.annotation.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -50,36 +52,35 @@ public class UserRegAdminEntity implements Serializable {
   private String id;
 
   @ToString.Exclude
-  @Column(name = "email")
+  @Column(name = "email", length = 320)
   private String email;
 
-  @Column(name = "ur_admin_auth_id")
+  @ToString.Exclude
+  @Column(name = "ur_admin_auth_id", length = 255)
   private String urAdminAuthId;
 
   @ToString.Exclude
-  @Column(name = "first_name")
+  @Column(name = "first_name", length = 100)
   private String firstName;
 
   @ToString.Exclude
-  @Column(name = "last_name")
+  @Column(name = "last_name", length = 100)
   private String lastName;
 
   @ToString.Exclude
-  @Column(name = "phone_number")
+  @Column(name = "phone_number", length = 20)
   private String phoneNumber;
 
-  @Column(name = "email_changed")
-  private Integer emailChanged;
+  @Column(name = "email_changed", length = 1)
+  private boolean emailChanged;
 
-  @ToString.Exclude
-  @Column(name = "status")
+  @Column(name = "status", length = 1)
   private Integer status;
 
-  @ToString.Exclude
-  @Column(name = "super_admin")
-  private Boolean superAdmin;
+  @Column(name = "super_admin", length = 1)
+  private boolean superAdmin;
 
-  @Column(name = "manage_locations")
+  @Column(name = "manage_locations", length = 1)
   private Integer manageLocations;
 
   @Column(
@@ -89,17 +90,15 @@ public class UserRegAdminEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @ToString.Exclude
+  @Column(name = "created_by", length = 20)
   private String createdBy;
 
-  @Column(
-      name = "security_code_expire_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "security_code_expire_date", columnDefinition = "TIMESTAMP")
   private Timestamp securityCodeExpireDate;
 
-  @Column(name = "security_code")
+  @ToString.Exclude
+  @Column(name = "security_code", length = 50)
   private String securityCode;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")
@@ -124,5 +123,10 @@ public class UserRegAdminEntity implements Serializable {
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
     sitePermissions.add(sitePermission);
     sitePermission.setUrAdminUser(this);
+  }
+
+  @Transient
+  public boolean isActive() {
+    return Optional.ofNullable(status).orElse(0) == 1;
   }
 }

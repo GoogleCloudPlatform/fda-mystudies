@@ -14,7 +14,9 @@ import java.net.URL;
 public enum ApiEndpoint {
   HEALTH("http://localhost:8080/participant-manager-service/v1/healthCheck"),
 
-  ADD_NEW_SITE("http://localhost:8080/participant-manager-service/sites");
+  ADD_NEW_SITE("http://localhost:8080/participant-manager-service/sites"),
+
+  ADD_NEW_LOCATION("http://localhost:8080/participant-manager-service/locations");
 
   private String url;
 
