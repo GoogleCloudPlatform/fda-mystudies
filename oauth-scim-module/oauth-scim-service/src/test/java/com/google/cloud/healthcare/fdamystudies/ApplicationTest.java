@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.auditlog;
+package com.google.cloud.healthcare.fdamystudies;
 
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -14,22 +14,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.google.cloud.healthcare.fdamystudies.auditlog.common.ApiEndpoint;
-import com.google.cloud.healthcare.fdamystudies.auditlog.controller.AuditLogEventController;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.HealthController;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class ApplicationTest extends BaseMockIT {
 
-  @Autowired AuditLogEventController auditController;
-
   @Autowired HealthController healthController;
 
   @Test
   void contextLoads() {
-    assertNotNull(auditController);
     assertNotNull(healthController);
   }
 
