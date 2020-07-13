@@ -109,10 +109,10 @@ spec:
       - name: gcloud-key-volume
         secret:
           secretName: study-designer-gcloud-key
-         volumeMounts:
-         - name: us-newyork
-         mountPath: /etc/localtime
-     volumes:
-     - name: us-newyork
-      hostPath:
+          volumeMounts:
+          - name: us-newyork
+            mountPath: /etc/localtime
+      volumes:
+      - name: us-newyork
+        hostPath:
         path: /usr/share/zoneinfo/America/New_York
