@@ -23,25 +23,22 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "sites_permissions")
+@Table(name = "study_permissions")
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SitePermissionEntity implements Serializable {
+public class StudyPermissionEntity implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = -9223143734827095684L;
 
   @ToString.Exclude
   @Id
@@ -51,23 +48,19 @@ public class SitePermissionEntity implements Serializable {
   private String id;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "ur_admin_user_id", insertable = true, updatable = true)
-  private UserRegAdminEntity urAdminUser;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "site_id")
-  private SiteEntity site;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "app_info_id")
   private AppEntity appInfo;
 
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "study_id")
+  private StudyEntity study;
+
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "ur_admin_user_id")
+  private UserRegAdminEntity urAdminUser;
+
   @Column(name = "edit")
-  private Integer canEdit;
+  private Integer edit = 0;
 
   @Column(
       name = "created",

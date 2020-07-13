@@ -10,36 +10,34 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "sites_permissions")
+@Table(name = "org_info")
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SitePermissionEntity implements Serializable {
+public class OrgInfoEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -50,27 +48,14 @@ public class SitePermissionEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "ur_admin_user_id", insertable = true, updatable = true)
-  private UserRegAdminEntity urAdminUser;
+  @Column(name = "name")
+  private String name;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "site_id")
-  private SiteEntity site;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
-
-  @Column(name = "edit")
-  private Integer canEdit;
+  @Column(name = "org_id")
+  private String orgId;
 
   @Column(
-      name = "created",
+      name = "created_on",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -78,4 +63,22 @@ public class SitePermissionEntity implements Serializable {
 
   @Column(name = "created_by")
   private String createdBy;
+
+  @Column(name = "modified_by")
+  private String modifiedBy;
+
+  @Column(
+      name = "modified_date",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp modified;
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "orgInfo")
+  private List<AppEntity> apps = new ArrayList<>();
+
+  public void addAppEntity(AppEntity appEntity) {
+    apps.add(appEntity);
+    appEntity.setOrgInfo(this);
+  }
 }

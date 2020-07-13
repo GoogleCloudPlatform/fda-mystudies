@@ -25,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import lombok.Getter;
@@ -34,14 +35,14 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "sites")
+@Table(name = "study_info")
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SiteEntity implements Serializable {
+public class StudyEntity implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 5392367043067145963L;
 
   @ToString.Exclude
   @Id
@@ -50,25 +51,25 @@ public class SiteEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "location_id", insertable = true, updatable = true)
-  private LocationEntity location;
+  @Column(name = "custom_id")
+  private String customId;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
-
-  @Column(name = "status")
-  private Integer status;
-
-  @Column(name = "target_enrollment")
-  private Integer targetEnrollment;
+  @ManyToOne
+  @JoinColumn(name = "app_info_id", insertable = true, updatable = true)
+  private AppEntity appInfo;
 
   @Column(name = "name")
   private String name;
 
+  @Column(name = "description")
+  @Type(type = "text")
+  private String description;
+
+  @Column(name = "type")
+  private String type;
+
   @Column(
-      name = "created",
+      name = "created_on",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -78,20 +79,54 @@ public class SiteEntity implements Serializable {
   private String createdBy;
 
   @Column(
-      name = "modified",
+      name = "modified_date",
       insertable = false,
       updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
   @Column(name = "modified_by")
   private String modifiedBy;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
+  @Column(name = "version")
+  private Float version;
+
+  @Column(name = "status")
+  private String status;
+
+  @Column(name = "category")
+  private String category;
+
+  @Column(name = "tagline")
+  private String tagline;
+
+  @Column(name = "sponsor")
+  private String sponsor;
+
+  @Column(name = "enrolling")
+  private String enrolling;
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  private List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
+
+  public void addStudyPermissionEntity(StudyPermissionEntity studyPermission) {
+    studyPermissions.add(studyPermission);
+    studyPermission.setStudy(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  private List<SiteEntity> sites = new ArrayList<>();
+
+  public void addSiteEntity(SiteEntity site) {
+    sites.add(site);
+    site.setStudy(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
   private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
 
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
     sitePermissions.add(sitePermission);
-    sitePermission.setSite(this);
+    sitePermission.setStudy(this);
   }
 }
