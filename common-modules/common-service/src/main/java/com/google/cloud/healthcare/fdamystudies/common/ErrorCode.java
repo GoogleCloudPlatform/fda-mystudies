@@ -30,6 +30,12 @@ public enum ErrorCode {
       "Malformed request syntax or invalid request message framing."),
 
   UNAUTHORIZED(401, "EC-401", "Unauthorized", "Invalid token"),
+  
+  ACCOUNT_LOCKED(
+      400,
+      "EC-107",
+      Constants.BAD_REQUEST,
+      "Due to consecutive failed sign-in attempts with incorrect password, your account has been locked for a period of 15 minutes. Please check your registered email inbox for assistance to reset your password in this period or wait until the lock period is over to sign in again."),
 
   TEMP_PASSWORD_EXPIRED(
       401,

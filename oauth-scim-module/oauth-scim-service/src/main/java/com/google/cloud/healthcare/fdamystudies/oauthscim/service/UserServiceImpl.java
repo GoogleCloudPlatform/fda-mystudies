@@ -305,6 +305,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private EmailResponse sendAccountLockedEmail(UserEntity user, String tempPassword) {
+    logger.entry("sendAccountLockedEmail()");
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("appId", user.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
@@ -318,7 +319,10 @@ public class UserServiceImpl implements UserService {
             appConfig.getMailAccountLockedSubject(),
             appConfig.getMailAccountLockedBody(),
             templateArgs);
-    return emailService.sendSimpleMail(emailRequest);
+    EmailResponse emailResponse = emailService.sendSimpleMail(emailRequest);
+    logger.exit(
+        String.format("send account locked email status=%d", emailResponse.getHttpStatusCode()));
+    return emailResponse;
   }
 
   private AuthenticationResponse updateInvalidLoginAttempts(
@@ -339,9 +343,14 @@ public class UserServiceImpl implements UserService {
     userInfo.put(LOGIN_ATTEMPTS, ++loginAttempts);
 
     userEntity.setUserInfo(userInfo.toString());
-    repository.saveAndFlush(userEntity);
+    userEntity = repository.saveAndFlush(userEntity);
 
-    return new AuthenticationResponse(ErrorCode.INVALID_LOGIN_CREDENTIALS);
+    ErrorCode ec =
+        UserAccountStatus.ACCOUNT_LOCKED.equals(UserAccountStatus.valueOf(userEntity.getStatus()))
+            ? ErrorCode.ACCOUNT_LOCKED
+            : ErrorCode.INVALID_LOGIN_CREDENTIALS;
+
+    return new AuthenticationResponse(ec);
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
@@ -368,6 +377,7 @@ public class UserServiceImpl implements UserService {
     AuthenticationResponse authenticationResponse = new AuthenticationResponse();
     authenticationResponse.setUserId(userEntity.getUserId());
     authenticationResponse.setAccountStatus(userEntity.getStatus());
+    authenticationResponse.setHttpStatusCode(HttpStatus.OK.value());
     return authenticationResponse;
   }
 
