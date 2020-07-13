@@ -54,10 +54,6 @@ public class SiteEntity implements Serializable {
   @JoinColumn(name = "location_id", insertable = true, updatable = true)
   private LocationEntity location;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
-
   @Column(name = "status")
   private Integer status;
 

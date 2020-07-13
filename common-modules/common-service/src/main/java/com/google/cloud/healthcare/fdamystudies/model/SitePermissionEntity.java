@@ -55,16 +55,8 @@ public class SitePermissionEntity implements Serializable {
   private UserRegAdminEntity urAdminUser;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "site_id")
   private SiteEntity site;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
 
   @Column(name = "edit")
   private Integer canEdit;
