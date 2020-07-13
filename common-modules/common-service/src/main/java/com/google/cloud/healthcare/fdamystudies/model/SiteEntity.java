@@ -57,14 +57,14 @@ public class SiteEntity implements Serializable {
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "study_id", insertable = true, updatable = true)
   private StudyEntity study;
+  @Column(name = "status", length = 100)
 
-  @Column(name = "status")
   private Integer status;
 
-  @Column(name = "target_enrollment")
+  @Column(name = "target_enrollment", length = 100)
   private Integer targetEnrollment;
 
-  @Column(name = "name")
+  @Column(name = "name", length = 100)
   private String name;
 
   @Column(
@@ -74,7 +74,7 @@ public class SiteEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by", nullable = false, length = 64)
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
   @Column(
@@ -84,7 +84,8 @@ public class SiteEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Timestamp modified;
 
-  @Column(name = "modified_by", nullable = false, length = 64)
+
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
