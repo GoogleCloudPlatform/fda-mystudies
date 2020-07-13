@@ -80,7 +80,6 @@
   .progress-bar-next__title {
     color: var(--pigeon-gray);
     font-size: 312.5%;
-    line-height: 312.5%;
   }
   .subheader__menu {
     justify-content: center;
@@ -240,6 +239,14 @@
   }
   .search__ {
     min-width: 265px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .tool::after {
+    font-size: 0.75em;
+    margin-left: -5em;
+    width: 10em;
   }
 }
 

@@ -6,13 +6,15 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
+    "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadless",
     "lint": "eslint --quiet . --ext .js,.ts",
     "lint:fix": "npm run lint -- --fix",
     "e2e": "ng e2e",
     "build:prod": "ng build --prod",
     "clean": "rimraf ./dist",
+    "format:fix": "prettier --write \"**/*.{ts,js,json,scss,svg}\"",
     "build:ci": "npm run clean && npm run lint && npm run format:check && npm run build:prod",
-    "format:check": "prettier --check \"**/*.{ts,js,json}\""
+    "format:check": "prettier --check \"**/*.{ts,js,json,scss,svg}\""
   },
   "private": true,
   "dependencies": {
