@@ -33,7 +33,7 @@
     <string name="feedback">LEAVE US YOUR FEEDBACK</string>
     <string name="feedback_text">We\'d love to hear from you! Please share your thoughts on how we can improve your experience of participating in health studies and contributing to a healthier world! Your feedback will be anonymous.</string>
     <string name="enter_confirm_password">confirm password</string>
-    <string name="enter_contact_us">Please let us know what you need help with. We will get back to you at the earliest.</string>
+    <string name="enter_contact_us">Please let us know what you need help with. We will get back to you quickly.</string>
     <string name="agree">I Agree to the Terms and Privacy Policy</string>
     <string name="submit">Submit</string>
     <string name="verification_step">Verification Step</string>
@@ -44,7 +44,7 @@
     <string name="resend">Resend Verification Code</string>
     <string name="congrats_txt">Congrats!</string>
     <string name="survey_completed">Activity Completed</string>
-    <string name="signup_process_complete">Thank you for registering. Your app account is now set up and ready to use.</string>
+    <string name="signup_process_complete">Thank you for registering. Your account is now set up and ready to use.</string>
     <string name="next">Next</string>
     <string name="setup_passcode">Create Passcode</string>
     <string name="sign_in">SIGN IN</string>
@@ -57,7 +57,7 @@
     <string name="new_usr_signup">New User? Sign Up</string>
     <string name="use_touch_id">Use Touch ID</string>
     <string name="or">OR</string>
-    <string name="passcode_to_access_app">Enter Passcode to\n access app</string>
+    <string name="passcode_to_access_app">Enter Passcode</string>
     <string name="notifictions">NOTIFICATIONS</string>
     <string name="resources">RESOURCES</string>
     <string name="reachout">REACH OUT</string>
@@ -74,7 +74,7 @@
     <string name="delete_my_account">Delete My Account</string>
     <string name="update">Update</string>
     <string name="get_started">Get Started</string>
-    <string name="gateway_welcome">Welcome!</string>
+    <string name="gateway_welcome">Welcome to ValidCare Study</string>
     <string name="gateway_welcome1">Leveraging the Power of Mobility for Research</string>
     <string name="gateway_welcome2">Improving Health Outcomes</string>
     <string name="gateway_welcome3">Protecting Your Privacy</string>
@@ -118,7 +118,7 @@
     <string name="side_menu_version">v</string>
 
     <string name="survey">Survey</string>
-    <string name="no_study">Sorry, no studies available right now. Please remain signed in to get notified when there are new studies available. </string>
+    <string name="no_study">Sorry, no studies are available right now. Please remain signed in to get notified when new studies become available. </string>
     <string name="surveyjsonname">survey.json</string>
 
 
@@ -129,8 +129,8 @@
     <string name="review">Review</string>
 
     <string name="verification_email_content1">An email has been sent to</string>
-    <string name="verification_email_content2">. Please type in the Verification Code received in the email to complete the verification step.</string>
-    <string name="verification_email_signin">Your registered email is pending verification. Please type in the Verification Code received in the email to complete this step and proceed to using the app.</string>
+    <string name="verification_email_content2">. Please enter the Verification Code received in the email to complete the verification step.</string>
+    <string name="verification_email_signin">Your registered email is pending verification. Please enter the Verification Code received in the email to complete this step and proceed to using the app.</string>
     <string name="verification_email_forgotpassword">Your registered email</string>
     <string name="verification_email_forgotpassword1"> is pending verification. Enter the Verification Code received on this email to complete verification and try the Forgot Password action again.</string>
     <!--error messages-->
@@ -140,19 +140,19 @@
     <string name="password_old_empty">Please enter your current password.</string>
     <string name="confirm_password_empty">Please confirm the password.</string>
     <string name="enter_all_field_empty">Please enter all the fields.</string>
-    <string name="password_mismatch_validation">New password and confirm password does not match.</string>
+    <string name="password_mismatch_validation">Confirm password must match new password.</string>
     <string name="email_validation">Please enter valid email address.</string>
     <string name="validation_code_error">Please enter verification code.</string>
     <string name="terms_and_condition_validation">Please agree to terms and conditions.</string>
     <string name="account_verification">your account is verified.</string>
     <string name="password_validation">Your password must contain :
                                        8 to 64 characters,lower case letter,upper case letter,numeric,special characters !  # $ % &amp; \' () * + , - . : ; &lt; &gt; = ? @ [] ^ _  { } | ~</string>
-    <string name="signout_message">Are you sure you want to signout ?</string>
+    <string name="signout_message">Are you sure you want to sign-out ?</string>
     <string name="password_same_error">Old password and New password should not be same.</string>
-    <string name="password_mismatch_error">The Password and Confirm password fields don\'t match.</string>
-    <string name="password_mismatch_error1">New password and confirm password fields don\'t match.</string>
+    <string name="password_mismatch_error">The Password and Confirm password don\'t match.</string>
+    <string name="password_mismatch_error1">New password and confirm password don\'t match.</string>
     <string name="password_change_message">Your password has been changed successfully</string>
-    <string name="password_change_message_signin">Your password has been changed successfully. Please login again</string>
+    <string name="password_change_message_signin">Your password has been changed successfully. Please login with your new credentials.</string>
     <string name="email_verification">An email verification link has been sent to your registered email.</string>
     <string name="verify_email">Please verify your email address.</string>
     <string name="registration_message">Registration (or sign up) for the app  is requested only to provide you with a seamless experience of using the app. Your registration information does not become part of the data collected for any study(ies) housed in the app.  Each study has its own consent process and your data for the study will not be collected without you providing your informed consent prior to joining the study.</string>
@@ -160,9 +160,9 @@
     <string name="resend_success">An email verification code has been sent to your registered email.</string>
 
 
-    <string name="consentthanksmsg">Thanks for providing consent for this Study</string>
+    <string name="consentthanksmsg">Thanks for providing consent for this study</string>
     <string name="studystartmsg">You can now start using the app to participate in the study.</string>
-    <string name="viewpdf">View/Email eConsent PDF</string>
+    <string name="viewpdf">View or Email my Consent PDF</string>
 
     <string name="eligibility">ELIGIBILITY</string>
 
@@ -363,8 +363,8 @@
     <string name="charttag">activityId</string>
     <string name="signed_consent">SignedConsent</string>
     <string name="permission_enable_message">Please enable the permission from settings to share the PDF</string>
-    <string name="leave_study_retained_message">Are you sure? Tap Ok to confirm.</string>
-    <string name="leave_study_deleted_message">Are you sure? Tap Ok to confirm.</string>
+    <string name="leave_study_retained_message">Are you sure? Tap OK to confirm.</string>
+    <string name="leave_study_deleted_message">Are you sure? Tap OK to confirm.</string>
     <string name="leave_study_retained_or_deleted_message">You are choosing to leave the study. Please choose if your response data can be retained and used for research purposes OR if your response data should be deleted.</string>
     <string name="consent_complete">Please complete the Consent to continue</string>
     <string name="studyPaused">This study is paused.</string>
@@ -443,10 +443,10 @@
     <string name="your_participation_important">is now available. Your participation is important. Please visit the study to complete it now.</string>
     <string name="step_couldnt_add">from step couldn\'t add</string>
     <string name="cm">CM</string>
-    <string name="permission_deny">Unable to get current location due to permission deny</string>
-    <string name="unable_search_loc">Unable to search location. If issue continuous please restart the device.</string>
+    <string name="permission_deny">Unable to get current location due to permission denial</string>
+    <string name="unable_search_loc">Unable to search location. If issue continuous please restart your device.</string>
     <string name="selected_location">selected location</string>
-    <string name="search_data_empty">Sorry, no studies found. Please try different filter options.</string>
+    <string name="search_data_empty">Sorry, no studies were found. Consider different filter options.</string>
     <string name="delete">DELETE</string>
     <string name="retain_my_data_caps">RETAIN MY DATA</string>
     <string name="cancel_caps">CANCEL</string>
@@ -462,7 +462,7 @@
     <string name="privacy_policy2">Privacy Policy</string>
     <string name="not_able_to_login">Not able to login</string>
     <string name="i_agree">I Agree to the</string>
-    <string name="unable_to_signup">Unable to Signup</string>
+    <string name="unable_to_signup">Unable to Sign Up</string>
     <string name="please_enter_key">Please enter a key</string>
     <string name="search_data_not_available">Sorry, no Studies found. Please check the spelling or try a different search.</string>
     <string name="please_review_the_updated_consent">Please review the updated consent</string>
@@ -506,13 +506,13 @@
     <string name="connection_timeout">Connection Timeout</string>
     <string name="fetal_kick_recorder_activity">Fetal Kick Recorder Activity - Started</string>
     <string name="fetal_kick_recorder_activity_in_progress">Fetal Kick Recorder Activity - In Progress</string>
-    <string name="noteligibledesc">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies as they are available in the app. </string>
+    <string name="noteligibledesc">Sorry, you are not eligible for participation in this study. We thank you for your interest and time, and encourage you to explore other studies relevant to you. </string>
     <string name="you_are_eligible">Eligibility Confirmed</string>
     <string name="validated">Eligibility Confirmed</string>
     <string name="continuetxt">Continue</string>
     <string name="ComprehensionSuccessDesc">You answered all of the questions correctly. Tap Next to continue.</string>
     <string name="great_job">Great Job!</string>
-    <string name="consentfailuremsgdesc">You answered one or more questions wrong. We want to make sure you understand what this study is about and what is involved. Review the consent information screens and try again.</string>
+    <string name="consentfailuremsgdesc">You answered one or more questions incorrectly. We want to make sure you understand what this study is about and what is involved. Review the consent information screens and try again.</string>
     <string name="try_again">Try Again</string>
     <string name="retry">Retry</string>
 
@@ -520,32 +520,32 @@
 
 
     <string name="activetaskremindertxt">Reminder: The fetal kick activity timer is currently running. Please record kicks or movements you have felt in the app.</string>
-    <string name="notificatinturnoffnotification">Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity in a timely manner.</string>
+    <string name="notificatinturnoffnotification">Stay up-to-date! Turn ON notifications and reminders in app and phone settings to get notified about study activity.</string>
     <string name="enable_location_permission">Please allow the app to access the device location to continue</string>
-    <string name="permission_denied">Permission denied to read/write files</string>
+    <string name="permission_denied">Permission denied to read or write files</string>
     <string name="app_standalone">Standalone</string>
     <string name="app_gateway">Gateway</string>
-    <string name="otherValuetxt">Please provide an input for the text field too.</string>
-    <string name="passcode_setup">A passcode helps with quick and secure access to the app. You can turn off the passcode at any time by using a setting provided in the app.</string>
+    <string name="otherValuetxt">Please provide information for the text field too.</string>
+    <string name="passcode_setup">A passcode helps with quick and secure access to ValidCare Study. You may turn off the passcode at any time using settings within the app.</string>
     <string name="we_will_get_back_to_you_as_soon_as_possible">We will get back to you as soon as possible.</string>
-    <string name="signed_out">You have been signed out of the app.</string>
+    <string name="signed_out">You have been signed out of ValidCare Study.</string>
     <string name="pdf_consent_error">Error in processing consent</string>
-    <string name="delete_account_msg">This will also delete your app account.</string>
+    <string name="delete_account_msg">This will also delete your account.</string>
     <string name="activity_loading_msg">Please wait as we set up the study for you, this may take a few seconds</string>
 
     <string name="app_name">&app_name;</string>
-    <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
-    <string name="website">https://www.google.com/</string>
-    <string name="websitetxt">App Website</string>
-    <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
+    <string name="poweredby">Powered by ValidCare</string>
+    <string name="website">https://validcare.com/</string>
+    <string name="websitetxt">ValidCare</string>
+    <string name="gateway_des">&lt;ValidCare Study allows you to participate in&gt;</string>
     <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
-    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
-    <string name="delete_message">Are you sure you wish to permanently delete your FDA MyStudies Gateway app account?  You will need to register again if you wish to join a study.</string>
-    <string name="studie_your_enrolled">It\'s been a while since you visited the FDA MyStudies app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
-    <string name="termsurl">https://www.google.com/</string>
-    <string name="privacyurl">https://www.google.com/</string>
+    <string name="delete_account_content">You have chosen to delete your ValidCare Study account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_message">Are you sure you wish to permanently delete your ValidCare Study account?  You will need to register again if you wish to join a study.</string>
+    <string name="studie_your_enrolled">It\'s been a while since you visited ValidCare Study. Please consider continuing participating in any studies in which you\'re eligible or enrolled.</string>
+    <string name="termsurl">https://validcare.com/study-lft-terms-of-use/</string>
+    <string name="privacyurl">https://validcare.com/study-lft-privacy-policy/</string>
     <string name="view_consent">View Consent</string>
-    <string name="visit_website">Visit Website</string>
+    <string name="visit_website">ValidCare</string>
     <string name="join_study">Join Study</string>
     <string name="clientToken">clientToken</string>
 

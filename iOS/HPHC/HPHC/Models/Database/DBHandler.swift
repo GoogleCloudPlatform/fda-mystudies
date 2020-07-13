@@ -177,6 +177,7 @@ class DBHandler: NSObject {
             dbStudy?.participatedStatus = studyStatus.status.rawValue
             dbStudy?.participatedId = studyStatus.participantId
             dbStudy?.siteID = studyStatus.siteID
+            dbStudy?.brandID = studyStatus.brandID
             dbStudy?.tokenIdentifier = studyStatus.tokenIdentifier
             dbStudy?.joiningDate = studyStatus.joiningDate
             dbStudy?.completion = studyStatus.completion
@@ -229,6 +230,7 @@ class DBHandler: NSObject {
       dbStudy.participatedStatus = userStudyStatus.status.rawValue
       dbStudy.participatedId = userStudyStatus.participantId
       dbStudy.siteID = userStudyStatus.siteID
+      dbStudy.brandID = userStudyStatus.brandID
       dbStudy.tokenIdentifier = userStudyStatus.tokenIdentifier
       dbStudy.joiningDate = userStudyStatus.joiningDate
       dbStudy.completion = userStudyStatus.completion
@@ -289,7 +291,7 @@ class DBHandler: NSObject {
       participatedStatus.adherence = dbStudy.adherence
       participatedStatus.completion = dbStudy.completion
       participatedStatus.joiningDate = dbStudy.joiningDate
-
+      participatedStatus.brandID = dbStudy.brandID
       study.userParticipateState = participatedStatus
 
       // Append to user class participatesStudies also
@@ -495,6 +497,7 @@ class DBHandler: NSObject {
         dbStudy?.joiningDate = studyStatus.joiningDate
         dbStudy?.completion = studyStatus.completion
         dbStudy?.adherence = studyStatus.adherence
+        dbStudy?.brandID = studyStatus.brandID
       }
     }
   }

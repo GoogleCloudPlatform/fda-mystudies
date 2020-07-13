@@ -119,6 +119,9 @@ public interface StudyMetaDataConstants {
   public static final String QUESTIONAIRE_STEP_TYPE_INSTRUCTION = "Instruction";
   public static final String QUESTIONAIRE_STEP_TYPE_QUESTION = "Question";
   public static final String QUESTIONAIRE_STEP_TYPE_FORM = "Form";
+  
+  public static final String ELIGIBILITY_TEXT = "Answer these questions to determine your eligibility for the study:";
+  public static final String COMPREHENSION_TEXT = "By answering the following questions about the consent, you confirm the following:";
 
   public static final String FREQUENCY_TYPE_ONE_TIME = "One time";
   public static final String FREQUENCY_TYPE_WITHIN_A_DAY = "Within a day";

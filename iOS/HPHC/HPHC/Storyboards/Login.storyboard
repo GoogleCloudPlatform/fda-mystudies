@@ -16,7 +16,7 @@
         <!--Home View Controller-->
         <scene sceneID="BW6-xM-cJn">
             <objects>
-                <viewController storyboardIdentifier="HomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="35J-FP-kDe" customClass="HomeViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="35J-FP-kDe" customClass="HomeViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="KB9-1S-d5W">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -166,7 +166,7 @@
         <!--Sign Up View Controller-->
         <scene sceneID="3pS-vh-67E">
             <objects>
-                <viewController storyboardIdentifier="SignUpViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0Vw-2B-bh0" customClass="SignUpViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignUpViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0Vw-2B-bh0" customClass="SignUpViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MMA-nl-fji">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -208,7 +208,7 @@
                                                 <action selector="agreeButtonAction:" destination="0Vw-2B-bh0" eventType="touchUpInside" id="AWk-PU-8Q7"/>
                                             </connections>
                                         </button>
-                                        <textView clipsSubviews="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3tc-VH-6CI" customClass="LinkTextView" customModule="GCPMyStudies" customModuleProvider="target">
+                                        <textView clipsSubviews="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3tc-VH-6CI" customClass="LinkTextView" customModule="ValidCare_Study" customModuleProvider="target">
                                             <rect key="frame" x="49" y="20" width="346" height="64"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -268,7 +268,7 @@
                                     </constraints>
                                 </view>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommonDetailsCell" rowHeight="62" id="CCX-dp-GMs" customClass="SignUpTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommonDetailsCell" rowHeight="62" id="CCX-dp-GMs" customClass="SignUpTableViewCell" customModule="ValidCare_Study" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CCX-dp-GMs" id="HO0-G6-1Al">
@@ -375,7 +375,7 @@
         <!--Page View Controller-->
         <scene sceneID="sGH-Wv-EgY">
             <objects>
-                <pageViewController storyboardIdentifier="PageViewController" autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="iKt-1T-sAG" customClass="PageViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <pageViewController storyboardIdentifier="PageViewController" autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="iKt-1T-sAG" customClass="PageViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <nil key="simulatedTopBarMetrics"/>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jko-8N-yFH" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -385,7 +385,7 @@
         <!--First Gateway Overview View Controller-->
         <scene sceneID="p0B-P3-hHQ">
             <objects>
-                <viewController storyboardIdentifier="FirstViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="q1c-F7-xg0" customClass="FirstGatewayOverviewViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FirstViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="q1c-F7-xg0" customClass="FirstGatewayOverviewViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZuF-Og-5eT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -401,8 +401,8 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="overviewLogo" translatesAutoresizingMaskIntoConstraints="NO" id="bww-YG-caD">
                                 <rect key="frame" x="134.5" y="141" width="145" height="69"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Ciy-R8-Rn9">
-                                <rect key="frame" x="150" y="279" width="114" height="36"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Welcome!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="Ciy-R8-Rn9">
+                                <rect key="frame" x="26" y="279" width="368" height="36"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -414,7 +414,7 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N7H-ey-5oY">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N7H-ey-5oY">
                                 <rect key="frame" x="126.5" y="554.5" width="159" height="39.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="N7H-ey-5oY" secondAttribute="height" multiplier="16:4" id="Iht-RR-2IM"/>
@@ -449,7 +449,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Ciy-R8-Rn9" firstAttribute="width" secondItem="ZuF-Og-5eT" secondAttribute="width" multiplier="0.274667" id="0LU-8s-dKU"/>
+                            <constraint firstItem="Ciy-R8-Rn9" firstAttribute="width" secondItem="ZuF-Og-5eT" secondAttribute="width" multiplier="0.89955" id="0LU-8s-dKU"/>
                             <constraint firstItem="vIh-lT-4bl" firstAttribute="centerY" secondItem="ZuF-Og-5eT" secondAttribute="centerY" multiplier="1.65967" id="4Fk-lC-Fh9"/>
                             <constraint firstItem="Mhn-wP-OGh" firstAttribute="centerY" secondItem="ZuF-Og-5eT" secondAttribute="centerY" multiplier="0.89955" id="8ee-uL-uGv"/>
                             <constraint firstItem="vIh-lT-4bl" firstAttribute="width" secondItem="ZuF-Og-5eT" secondAttribute="width" multiplier="152/375" id="9Ry-CP-US8"/>
@@ -490,12 +490,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pV0-nB-Fl5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="829.60000000000002" y="361.16941529235385"/>
+            <point key="canvasLocation" x="828.98550724637687" y="360.9375"/>
         </scene>
         <!--Second Gateway Overview View Controller-->
         <scene sceneID="lv7-bL-5k5">
             <objects>
-                <viewController storyboardIdentifier="SecondViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="VsY-HQ-RAI" customClass="SecondGatewayOverviewViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SecondViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="VsY-HQ-RAI" customClass="SecondGatewayOverviewViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="srV-ZZ-1rU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -617,7 +617,7 @@
         <!--Sign In View Controller-->
         <scene sceneID="Wzw-LZ-jON">
             <objects>
-                <viewController storyboardIdentifier="SignInViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="A51-y2-CGR" customClass="SignInViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignInViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="A51-y2-CGR" customClass="SignInViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rvK-l9-jc7">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -639,7 +639,7 @@
                                     <constraint firstAttribute="height" constant="140" id="S9i-b1-mhZ"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DetailsCell" rowHeight="62" id="JAX-jX-xGG" customClass="SignInTableViewCell" customModule="GCPMyStudies" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="DetailsCell" rowHeight="62" id="JAX-jX-xGG" customClass="SignInTableViewCell" customModule="ValidCare_Study" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="62"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="JAX-jX-xGG" id="rDE-gj-WFC">
@@ -730,7 +730,7 @@
                                     <segue destination="0Vw-2B-bh0" kind="show" id="VqN-my-PFn"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kEu-ol-yfS" customClass="LinkTextView" customModule="GCPMyStudies" customModuleProvider="target">
+                            <textView clipsSubviews="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kEu-ol-yfS" customClass="LinkTextView" customModule="ValidCare_Study" customModuleProvider="target">
                                 <rect key="frame" x="10" y="601" width="394" height="74"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -815,7 +815,7 @@
         <!--Forgot Password View Controller-->
         <scene sceneID="TRs-tS-d3H">
             <objects>
-                <viewController id="Gsh-dt-7LH" customClass="ForgotPasswordViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="Gsh-dt-7LH" customClass="ForgotPasswordViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Eef-xR-ZGp">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -905,7 +905,7 @@
         <!--Verification View Controller-->
         <scene sceneID="lrB-zr-Jf9">
             <objects>
-                <viewController id="slw-Bf-fNL" customClass="VerificationViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="slw-Bf-fNL" customClass="VerificationViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wKW-wP-MYg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1028,7 +1028,7 @@
         <!--Sign Up Complete View Controller-->
         <scene sceneID="cUY-UG-3yT">
             <objects>
-                <viewController id="3kT-ho-jWT" customClass="SignUpCompleteViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="3kT-ho-jWT" customClass="SignUpCompleteViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="VJ3-1A-2qP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1105,7 +1105,7 @@
         <!--Verification View Controller-->
         <scene sceneID="vdI-lO-BU2">
             <objects>
-                <viewController id="KuI-8R-b3A" customClass="VerificationViewController" customModule="GCPMyStudies" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="KuI-8R-b3A" customClass="VerificationViewController" customModule="ValidCare_Study" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lbX-gl-2N5">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1233,7 +1233,7 @@
         <image name="backIcon" width="23" height="18"/>
         <image name="checked" width="18" height="18"/>
         <image name="notChecked" width="18" height="18"/>
-        <image name="overviewLogo" width="73.5" height="69"/>
+        <image name="overviewLogo" width="201" height="69"/>
         <image name="successBlueBig" width="122.5" height="120"/>
         <image name="watchVideo" width="119.5" height="27"/>
         <image name="welcomeBg" width="375" height="667"/>

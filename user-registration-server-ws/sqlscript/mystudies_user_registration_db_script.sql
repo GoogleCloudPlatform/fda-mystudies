@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `app_info` (
   `from_email_id` varchar(255) DEFAULT NULL,
   `from_email_password` varchar(255) DEFAULT NULL,
   `ios_bundle_id` varchar(255) DEFAULT NULL,
-  `ios_certificate` varchar(255) DEFAULT NULL,
+  `ios_certificate` varchar(7000) DEFAULT NULL,
   `ios_certificate_password` varchar(255) DEFAULT NULL,
   `method_handler` tinyint(1) DEFAULT NULL,
   `modified_by` int(20) DEFAULT NULL,

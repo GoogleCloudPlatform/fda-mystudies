@@ -225,7 +225,6 @@ class StudyHomeViewController: UIViewController {
     }
   }
 
-  
   fileprivate func updateViewsStatus() {
     if let totalSections = Study.currentStudy?.overview.sections.count,
       totalSections <= 1
@@ -267,7 +266,7 @@ class StudyHomeViewController: UIViewController {
 
     EnrollServices().enrollForStudy(
       studyId: (Study.currentStudy?.studyId)!,
-      token: (ConsentBuilder.currentConsent?.consentResult?.token)!,
+      result: ConsentBuilder.currentConsent?.consentResult,
       delegate: self
     )
 
@@ -813,6 +812,7 @@ class StudyHomeViewController: UIViewController {
 
       let siteID = response["siteId"] as? String ?? ""
       let tokenIdentifier = response["hashedToken"] as? String ?? ""
+      let brandID = response[UserStudyStatus.JSONKey.brandID] as? String ?? ""
       // update token
       let currentUserStudyStatus = User.currentUser.updateStudyStatus(
         studyId: (Study.currentStudy?.studyId)!,
@@ -821,6 +821,7 @@ class StudyHomeViewController: UIViewController {
       currentUserStudyStatus.tokenIdentifier = tokenIdentifier
       currentUserStudyStatus.participantId = apptoken
       currentUserStudyStatus.siteID = siteID
+      currentUserStudyStatus.brandID = brandID
       Study.currentStudy?.userParticipateState = currentUserStudyStatus
 
       DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)

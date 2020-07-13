@@ -125,6 +125,7 @@ class ResponseServices: NSObject {
           kActivityInfoMetaData: info,
           kParticipantId: userStudyStatus.participantId ?? "",
           JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
+          UserStudyStatus.JSONKey.brandID: userStudyStatus.brandID ?? "",
           JSONKey.siteID: userStudyStatus.siteID ?? "",
           kActivityResponseData: responseData,
           JSONKey.applicationId: AppConfiguration.appID,

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>989164671755-hdrlkf5ho8lt1gj8b09c4ecl7hiqqqg0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.989164671755-hdrlkf5ho8lt1gj8b09c4ecl7hiqqqg0</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAPm8OHuepEgCUzWsFIkkyEkcSfNNS2TFI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>989164671755</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.validcare.research</string>
+	<key>PROJECT_ID</key>
+	<string>validcare-research-firebase</string>
+	<key>STORAGE_BUCKET</key>
+	<string>validcare-research-firebase.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:989164671755:ios:badb0ef63acd9c755a880e</string>
+	<key>DATABASE_URL</key>
+	<string>https://validcare-research-firebase.firebaseio.com</string>
+</dict>
+</plist>

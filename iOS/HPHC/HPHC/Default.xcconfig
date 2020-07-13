@@ -7,41 +7,73 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-// Server configuration
+// Back-end configuration
+//
+// By default App will connect to network over https
+// To connect over http:
+// - Change the settings in HPHC/Networking/Configurations/Environment/APIConfiguration.swift
+// - Update the enum `AppProtocol` get value for Debug and Release.
+// - Update the App Transport Security Settings in info.plist
+
 // Sample URL format - 35.12.123.43:8081/StudyMetaData/
 
-// Study builder ws URL
-WCP_URL = xxxxxxx
+// Study Builder URL (study metadata)
+// WCP_URL = 35.238.48.157:8083/StudyMetaData/
+WCP_URL = vr.validcare-research.validcare.com/StudyMetaData/
 
-// Response server ws URL
-RESPONSE_URL = xxxxxxx
+// Response Server URL
+// RESPONSE_URL = 35.193.185.224:8084/mystudies-response-server/
+RESPONSE_URL = vr.validcare-research.validcare.com/mystudies-response-server/
 
-// Registration server ws URL
-REGISTRATION_URL = xxxxxxx
+// Registration Server URL
+// REGISTRATION_URL = 35.193.185.224:8082/myStudiesUserMgmtWS/
+REGISTRATION_URL = vr.validcare-research.validcare.com/myStudiesUserMgmtWS/
 
-// Auth server ws URL
-AUTH_URL = xxxxxxx
+// Auth Server URL
+// AUTH_URL = 35.193.185.224:8085/AuthServer/
+AUTH_URL = vr.validcare-research.validcare.com/AuthServer/
 
-// Enroll server ws URL
-ENROLLMENT_URL = xxxxxxx
+// Enroll Server URL
+// ENROLLMENT_URL = 35.193.185.224:8083/myStudiesEnrollmentMgmt/
+ENROLLMENT_URL = vr.validcare-research.validcare.com/myStudiesEnrollmentMgmt/
 
-// Consent server ws URL
-CONSENTMGMT_URL = xxxxxxx
+// Consent Server URL
+// CONSENTMGMT_URL = 35.193.185.224:8081/myStudiesConsentMgmtWS/
+CONSENTMGMT_URL = vr.validcare-research.validcare.com/myStudiesConsentMgmtWS/
 
-// Username for basic authentication used for WCP ws
-AUTH_USERNAME = xxxxxxxx
+// Username for basic authentication for WCP (generates base64 basic Autherization token for WCP WS bundle validation)
+// AUTH_USERNAME = AvxfEsgX9u
+AUTH_USERNAME = AvxfEsgX9u
 
-// Password for basic authentication used for WCP ws
-AUTH_PASSWORD = xxxxxxxx
+// Password for basic authentication used for WCP
+// AUTH_PASSWORD = ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916
+AUTH_PASSWORD = ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916
 
-// Client ID
-REGISTRATIONSERVER_API_KEY = xxxxxxxxxxxxxxxxxxxx
+// Client ID / API_KEY is <bundleid>:<apptoken> (must match key set in Study metadata server)
+// REGISTRATIONSERVER_API_KEY = e9460733-4289-4239-997c-293a4690219b
+// REGISTRATIONSERVER_API_KEY = nrWIy9JtJu:a7296a62-44e8-4a06-8d85-50bc861d6c64
 
 // Secret Key
-REGISTRATIONSERVER_API_SECERET = xxxxxxxxxxxxxxxxxxxx
+// SHA-256 of the byte representation of the secret used by mobile apps.
+// In terraform deployment, this values is stored as `mystudies-ma-secret-key`
+//
+// For more details see implementation of getHashedValue in:
+// response-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/utils/ResponseServerUtil.java
+// REGISTRATIONSERVER_API_SECERET = 1661baf3628234a2fc3922032b5bb5042246ee8a3b1ad86f89d360597608a8ed
+// REGISTRATIONSERVER_API_SECERET = e258118b46b842ba97cbe74df65f01ef068c504c514b7a16c886f8bc544daf7f
+// REGISTRATIONSERVER_API_SECERET = test_client_id_ma
+
+
+REGISTRATIONSERVER_API_KEY = test_client_id_ma
+REGISTRATIONSERVER_API_SECERET = e258118b46b842ba97cbe74df65f01ef068c504c514b7a16c886f8bc544daf7f
+
 
 // ORG ID
-ORG_ID = xxxx
+// If following terraform deployment steps, these APP_ID and ORG_ID should match the ones you manually set in GCP secret manager
+// ORG_ID = OrgName
+ORG_ID = ValidCare
 
-// Application ID 
-APP_ID = xxxx
+// Application ID
+// Study Builder uses this appID to match studies to apps; max 15 character, human readable and URL safe.
+// APP_ID = GCPMS001
+APP_ID = VCSTUDY

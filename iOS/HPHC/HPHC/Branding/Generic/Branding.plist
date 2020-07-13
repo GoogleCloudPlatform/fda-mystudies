@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>ProductTitleName</key>
-	<string>App Name</string>
+	<string>ValidCare Study</string>
 	<key>StandaloneStudyId</key>
 	<string>SingleStudy01</string>
 	<key>IsStandaloneStudyApp</key>
@@ -19,22 +19,22 @@
 	<key>LeaveStudy</key>
 	<string>Leave Study</string>
 	<key>LeaveStudyConfirmationText</key>
-	<string>If you tap “Proceed” you will no longer be able to use this app for eye doctor appointments and medication tracking</string>
+	<string>If you tap “Proceed” you will no longer be able to use this app for this ValidCare study.</string>
 	<key>WebsiteLink</key>
-	<string></string>
+	<string>https://validcare.com</string>
 	<key>WebsiteButtonTitle</key>
-	<string>App Website</string>
+	<string>ValidCare</string>
 	<key>TermsAndConditionURL</key>
-	<string></string>
+	<string>https://validcare.com/study-lft-terms-of-use/</string>
 	<key>PrivacyPolicyURL</key>
-	<string></string>
+	<string>https://validcare.com/study-lft-privacy-policy/</string>
 	<key>ValidatedTitle</key>
 	<string>Eligibility Confirmed</string>
 	<key>AllowFeedback</key>
 	<true/>
 	<key>NavigationTitleName</key>
-	<string>App Name</string>
+	<string>ValidCare Study</string>
 	<key>PoweredByTitleName</key>
-	<string>Powered by FDA MyStudies on Google Cloud</string>
+	<string>© 2020 ValidCare LLC</string>
 </dict>
 </plist>

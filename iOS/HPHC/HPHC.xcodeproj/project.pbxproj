@@ -233,6 +233,7 @@
 		94FF031F1E952B0A009F191B /* ReachoutOptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94FF031E1E952B0A009F191B /* ReachoutOptionCell.swift */; };
 		951EC5B5601293CE0771D248 /* libPods-HPHCTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AF448A6C2B509B3DB605C42 /* libPods-HPHCTests.a */; };
 		972663AD23F7242B537B8E82 /* Pods_HPHC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EC9CA22924E3FDD2E7D31960 /* Pods_HPHC.framework */; };
+		D2CE3EC524AD111C00413534 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D2CE3EC224AD111C00413534 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -322,7 +323,7 @@
 		6E5287B02237EB820083DF33 /* ActivityTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityTest.swift; sourceTree = "<group>"; };
 		6E61BCC31F27262F00C156B9 /* ComprehensionFailure.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ComprehensionFailure.xib; sourceTree = "<group>"; };
 		6E61BCC51F27271000C156B9 /* ComprehensionFailure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComprehensionFailure.swift; sourceTree = "<group>"; };
-		6E7D2D561E433E8700763D4C /* FDA MyStudies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "FDA MyStudies.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E7D2D561E433E8700763D4C /* ValidCare Study.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ValidCare Study.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E7D2D591E433E8800763D4C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6E7D2D5E1E433E8800763D4C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6E7D2D601E433E8800763D4C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -420,7 +421,6 @@
 		6F2392DD2423E0F300013AC0 /* EnrollServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollServices.swift; sourceTree = "<group>"; };
 		6F4E1B2A24223C210051D3E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
-		6F589EAC246185A50014FE20 /* QA.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = QA.xcconfig; path = ../../../../../../Desktop/QA.xcconfig; sourceTree = "<group>"; };
 		6F83039424864431009409A5 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		6F83039924864D6B009409A5 /* LocalizableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizableString.swift; sourceTree = "<group>"; };
 		6F83039A24864D6B009409A5 /* Localizable.strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable.strings.txt; sourceTree = "<group>"; };
@@ -530,6 +530,7 @@
 		94FF031A1E95275D009F191B /* ReachoutOptionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachoutOptionsViewController.swift; sourceTree = "<group>"; };
 		94FF031E1E952B0A009F191B /* ReachoutOptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReachoutOptionCell.swift; sourceTree = "<group>"; };
 		A2CE974C81943F2AB0C602C1 /* Pods-HPHCTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPHCTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HPHCTests/Pods-HPHCTests.release.xcconfig"; sourceTree = "<group>"; };
+		D2CE3EC224AD111C00413534 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		E4CF7BB238C017BF7E2A6346 /* Pods_HPHCUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPHCUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC9CA22924E3FDD2E7D31960 /* Pods_HPHC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HPHC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -663,7 +664,7 @@
 		6E7D2D571E433E8700763D4C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6E7D2D561E433E8700763D4C /* FDA MyStudies.app */,
+				6E7D2D561E433E8700763D4C /* ValidCare Study.app */,
 				7878B31A2216C6E10052FC23 /* HPHCTests.xctest */,
 				89055918230149AD005FB284 /* HPHCUITests.xctest */,
 			);
@@ -673,7 +674,7 @@
 		6E7D2D581E433E8700763D4C /* HPHC */ = {
 			isa = PBXGroup;
 			children = (
-				6F589EAC246185A50014FE20 /* QA.xcconfig */,
+				D2CE3EC224AD111C00413534 /* GoogleService-Info.plist */,
 				6F07148824279452002749DA /* Default.xcconfig */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
 				6FE00CD5238FEDE80067A7B8 /* Utils */,
@@ -1744,7 +1745,7 @@
 			);
 			name = HPHC;
 			productName = FDA;
-			productReference = 6E7D2D561E433E8700763D4C /* FDA MyStudies.app */;
+			productReference = 6E7D2D561E433E8700763D4C /* ValidCare Study.app */;
 			productType = "com.apple.product-type.application";
 		};
 		7878B3192216C6E10052FC23 /* HPHCTests */ = {
@@ -1798,7 +1799,7 @@
 				TargetAttributes = {
 					6E7D2D551E433E8700763D4C = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 3485DDCN2M;
+						DevelopmentTeam = FV8LM93U7M;
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -1942,6 +1943,7 @@
 				6ED134381E5F1B110090C976 /* Consent.json in Resources */,
 				94B3DD541E6ED8E500327AE5 /* SignInPlist.plist in Resources */,
 				6EDDB65A1EE05E4C00C79337 /* NewProgressView.xib in Resources */,
+				D2CE3EC524AD111C00413534 /* GoogleService-Info.plist in Resources */,
 				6EDDB6611EE05FDC00C79337 /* fda_preload.gif in Resources */,
 				4833E9E31E712C2B0032D244 /* StudyOverview.plist in Resources */,
 				6F4E1B2D24223C210051D3E2 /* README.md in Resources */,
@@ -2382,11 +2384,9 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2402,7 +2402,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
@@ -2445,7 +2444,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -2471,42 +2469,28 @@
 			baseConfigurationReference = 7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_ID = "mystudies-demo";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				AUTH_PASSWORD = "";
-				AUTH_URL = "/AuthServer/";
-				AUTH_USERNAME = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CONSENTMGMT_URL = dev.heroes-hat.rocketturtle.net/myStudiesConsentMgmtWS/;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 101;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 3485DDCN2M;
+				DEVELOPMENT_TEAM = FV8LM93U7M;
 				ENABLE_BITCODE = NO;
-				ENROLLMENT_URL = dev.heroes-hat.rocketturtle.net/myStudiesEnrollmentMgmt/;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				ORG_ID = OrgName;
-				PRODUCT_BUNDLE_IDENTIFIER = com.google.FDAMyStudies;
-				PRODUCT_NAME = "FDA MyStudies";
+				MARKETING_VERSION = 2.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.validcare.research;
+				PRODUCT_NAME = "ValidCare Study";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				REGISTRATIONSERVER_API_KEY = test_client_id_ma;
-				REGISTRATIONSERVER_API_SECERET = "";
-				REGISTRATION_URL = dev.heroes-hat.rocketturtle.net/myStudiesUserMgmtWS/;
-				RESPONSE_URL = "dev.heroes-hat.rocketturtle.net/mystudies-response-server/";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WCP_URL = dev.heroes-hat.rocketturtle.net/StudyMetaData/;
 			};
 			name = Debug;
 		};
@@ -2515,40 +2499,27 @@
 			baseConfigurationReference = 3BCFFA0DAD500A9A04C582CD /* Pods-HPHC.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				APP_ID = "mystudies-demo";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				AUTH_PASSWORD = "";
-				AUTH_URL = dev.heroes-hat.rocketturtle.net/AuthServer/;
-				AUTH_USERNAME = "";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CONSENTMGMT_URL = dev.heroes-hat.rocketturtle.net/myStudiesConsentMgmtWS/;
-				CURRENT_PROJECT_VERSION = 30;
+				CURRENT_PROJECT_VERSION = 101;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 3485DDCN2M;
+				DEVELOPMENT_TEAM = FV8LM93U7M;
 				ENABLE_BITCODE = NO;
-				ENROLLMENT_URL = dev.heroes-hat.rocketturtle.net/myStudiesEnrollmentMgmt/;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
-				ORG_ID = OrgName;
-				PRODUCT_BUNDLE_IDENTIFIER = com.google.FDAMyStudies;
-				PRODUCT_NAME = "FDA MyStudies";
+				MARKETING_VERSION = 2.10;
+				PRODUCT_BUNDLE_IDENTIFIER = com.validcare.research;
+				PRODUCT_NAME = "ValidCare Study";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				REGISTRATIONSERVER_API_KEY = test_client_id_ma;
-				REGISTRATIONSERVER_API_SECERET = "";
-				REGISTRATION_URL = dev.heroes-hat.rocketturtle.net/myStudiesUserMgmtWS/;
-				RESPONSE_URL = "dev.heroes-hat.rocketturtle.net/mystudies-response-server/";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-				WCP_URL = dev.heroes-hat.rocketturtle.net/StudyMetaData/;
 			};
 			name = Release;
 		};

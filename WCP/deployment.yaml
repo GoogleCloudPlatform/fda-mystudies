@@ -19,14 +19,14 @@ spec:
           image: gcr.io/validcare-research-apps/study-designer:latest
           securityContext:
             privileged: true
-            capabilities:
-              add:
-                - SYS_ADMIN
+            #capabilities:
+             # add:
+               # - SYS_ADMIN
           lifecycle:
             postStart:
               exec:
-                # The "fda_resources" should eventually come from an environment variable.
-                command: ["gcsfuse", "-o", "nonempty", "fda_resources", "/usr/local/tomcat/webapps/fdaResources"]
+                # The "fda_resources" should eventually come from an environment variables.
+                command: ["gcsfuse", "-o", "nonempty", "validcare-research-my-studies-fda-resources", "/usr/local/tomcat/webapps/fdaResources"]
             preStop:
               exec:
                 command: ["fusermount", "-u", "/usr/local/tomcat/webapps/fdaResources"]          

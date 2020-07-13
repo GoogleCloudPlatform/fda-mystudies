@@ -390,7 +390,7 @@ public class NotificationModuleSubscriber {
     description = notificationTest;
     Calendar time = Calendar.getInstance();
     time.setTime(date);
-    String title = "MyStudies";
+    String title = "ValidCare Study";
     int notificationId = new Random().nextInt(10000);
     NotificationDbResources notificationDb = new NotificationDbResources();
     notificationDb.setStudyId(studyId);
