@@ -112,7 +112,7 @@ done
 cd ${OUTPUT_TF_BASE}
 
 # Globally unique resources or resources that cannot reuse the same name right after destroying.
-files=$(find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md -o -name copy_client_info_to_sql.sh -o -name copy_mobile_app_info_to_sql.sh)
+files=$(find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md -o -name copy_client_info_to_sql.sh -o -name copy_mobile_app_info_to_sql.sh -o -name copy_push_notification_info_to_sql.sh)
 for f in $files
 do 
   sed -i "s|${OLD_STATE}|${NEW_STATE}|" $f

@@ -275,3 +275,23 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.
+
+### Phase 5: Mobile app setups
+
+1. Build and destribute iOS and Android apps following their individual instructions.
+
+1. Once you have setup push notification for the apps, copy the values to their corresponding secrets:
+```
+# bundleID used for the Android App.
+android-bundle-id
+# found under settings > cloud messaging in the android app defined in your firebase project.
+android-server-key
+# bundleID used to build and distribute the iOS App.
+ios-bundle-id
+# certificate and password generated for APNs.
+ios-certificate
+ios-certificate-password
+```
+
+1. Run [copy_push_notification_info_to_sql.sh](./copy_push_notification_info_to_sql.sh)
+    script to copy push notification info from secrets into CloudSQL.
