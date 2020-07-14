@@ -23,6 +23,6 @@ public interface UserService {
       throws JsonProcessingException;
 
   public UpdateUserResponse resetPassword(
-      UpdateUserRequest userRequest, AuditLogEventRequest aleRequest)
+      UpdateUserRequest userRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
 }

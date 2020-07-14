@@ -15,11 +15,11 @@ import lombok.Getter;
 public enum AuthScimEvent implements AuditLogEvent {
   PASSWORD_RESET_SUCCESS(
       false,
-      Constants.APP_USER,
-      Constants.FMSGCAUTHSVR,
-      Constants.FMSGCMOBAPP,
-      Constants.APP_LEVEL,
-      Constants.PARTICIPANT_DATASTORE,
+      Constant.APP_USER,
+      Constant.SYSTEM_ID,
+      Constant.CLIENT_ID,
+      Constant.APP_LEVEL,
+      Constant.PARTICIPANT_DATASTORE,
       "Password reset success",
       "Password reset for User ID ${user_id} was successful.",
       "PASSWORD_RESET_SUCCESS",
@@ -27,11 +27,11 @@ public enum AuthScimEvent implements AuditLogEvent {
 
   PASSWORD_RESET_FAILED(
       false,
-      Constants.APP_USER,
-      Constants.FMSGCAUTHSVR,
-      Constants.FMSGCMOBAPP,
-      Constants.APP_LEVEL,
-      Constants.PARTICIPANT_DATASTORE,
+      Constant.APP_USER,
+      Constant.SYSTEM_ID,
+      Constant.CLIENT_ID,
+      Constant.APP_LEVEL,
+      Constant.PARTICIPANT_DATASTORE,
       "Password reset failure",
       "Password reset for User ID ${user_id}, failed.",
       "PASSWORD_RESET_FAILED",
@@ -50,36 +50,38 @@ public enum AuthScimEvent implements AuditLogEvent {
 
   private AuthScimEvent(
       boolean alert,
-      String accessLevel,
-      String systemId,
-      String clientId,
-      String clientAccessLevel,
-      String resourceServer,
+      Constant accessLevel,
+      Constant systemId,
+      Constant clientId,
+      Constant clientAccessLevel,
+      Constant resourceServer,
       String eventDetail,
       String description,
       String eventName,
       boolean fallback) {
     this.alert = alert;
-    this.accessLevel = accessLevel;
-    this.systemId = systemId;
-    this.clientId = clientId;
-    this.clientAccessLevel = clientAccessLevel;
-    this.resourceServer = resourceServer;
+    this.accessLevel = accessLevel.value;
+    this.systemId = systemId.value;
+    this.clientId = clientId.value;
+    this.clientAccessLevel = clientAccessLevel.value;
+    this.resourceServer = resourceServer.value;
     this.description = description;
     this.eventDetail = eventDetail;
     this.eventName = eventName;
     this.fallback = fallback;
   }
 
-  private static class Constants {
-    private static final String APP_LEVEL = "App-level";
+  private enum Constant {
+    APP_LEVEL("App-level"),
+    APP_USER("App User"),
+    PARTICIPANT_DATASTORE("Participant Datastore"),
+    SYSTEM_ID("FMSGCAUTHSVR"),
+    CLIENT_ID("FMSGCMOBAPP");
 
-    private static final String FMSGCAUTHSVR = "FMSGCAUTHSVR";
+    private final String value;
 
-    private static final String APP_USER = "App User";
-
-    private static final String PARTICIPANT_DATASTORE = "Participant Datastore";
-
-    private static final String FMSGCMOBAPP = "FMSGCMOBAPP";
+    private Constant(String value) {
+      this.value = value;
+    }
   }
 }

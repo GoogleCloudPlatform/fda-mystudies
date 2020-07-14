@@ -15,12 +15,12 @@ public class AuthScimAuditLogHelper {
 
   @Autowired AuditEventService aleService;
 
-  public AuditLogEventResponse logEvent(AuditLogEvent eventEnum, AuditLogEventRequest aleRequest) {
+  public AuditLogEventResponse logEvent(AuditLogEvent eventEnum, AuditLogEventRequest auditRequest) {
     Map<String, String> values = new HashMap<>();
-    values.put("user_id", aleRequest.getUserId());
+    values.put("user_id", auditRequest.getUserId());
     String description =
         PlaceholderReplacer.replaceNamedPlaceholders(eventEnum.getDescription(), values);
-    aleRequest.setDescription(description);
-    return aleService.postAuditLogEvent(eventEnum, aleRequest);
+    auditRequest.setDescription(description);
+    return aleService.postAuditLogEvent(eventEnum, auditRequest);
   }
 }

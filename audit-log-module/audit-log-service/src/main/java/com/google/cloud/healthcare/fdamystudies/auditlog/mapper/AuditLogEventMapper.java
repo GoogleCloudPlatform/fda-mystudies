@@ -17,29 +17,29 @@ public final class AuditLogEventMapper {
 
   private AuditLogEventMapper() {}
 
-  public static AuditLogEventEntity fromAuditLogEventRequest(AuditLogEventRequest aleRequest) {
+  public static AuditLogEventEntity fromAuditLogEventRequest(AuditLogEventRequest auditRequest) {
     AuditLogEventEntity entity = new AuditLogEventEntity();
-    entity.setAccessLevel(aleRequest.getAccessLevel());
-    entity.setAlert(aleRequest.getAlert());
-    entity.setAppId(aleRequest.getAppId());
-    entity.setApplicationComponentName(aleRequest.getApplicationComponentName());
-    entity.setApplicationVersion(aleRequest.getApplicationVersion());
-    entity.setClientId(aleRequest.getClientId());
-    entity.setCorrelationId(aleRequest.getCorrelationId());
-    entity.setClientAccessLevel(aleRequest.getClientAccessLevel());
-    entity.setClientAppVersion(aleRequest.getClientAppVersion());
-    entity.setDescription(aleRequest.getDescription());
-    entity.setDevicePlatform(aleRequest.getDevicePlatform());
-    entity.setDeviceType(aleRequest.getDeviceType());
-    entity.setEventDetail(aleRequest.getEventDetail());
-    entity.setEventName(aleRequest.getEventName());
-    entity.setOccurred(new Timestamp(aleRequest.getOccured()));
-    entity.setOrgId(aleRequest.getOrgId());
-    entity.setRequestUri(aleRequest.getRequestUri());
-    entity.setResourceServer(aleRequest.getResourceServer());
-    entity.setSystemId(aleRequest.getSystemId());
-    entity.setSystemIp(aleRequest.getSystemIp());
-    entity.setUserId(aleRequest.getUserId());
+    entity.setAccessLevel(auditRequest.getAccessLevel());
+    entity.setAlert(auditRequest.getAlert());
+    entity.setAppId(auditRequest.getAppId());
+    entity.setApplicationComponentName(auditRequest.getApplicationComponentName());
+    entity.setApplicationVersion(auditRequest.getApplicationVersion());
+    entity.setClientId(auditRequest.getClientId());
+    entity.setCorrelationId(auditRequest.getCorrelationId());
+    entity.setClientAccessLevel(auditRequest.getClientAccessLevel());
+    entity.setClientAppVersion(auditRequest.getClientAppVersion());
+    entity.setDescription(auditRequest.getDescription());
+    entity.setDevicePlatform(auditRequest.getDevicePlatform());
+    entity.setDeviceType(auditRequest.getDeviceType());
+    entity.setEventDetail(auditRequest.getEventDetail());
+    entity.setEventName(auditRequest.getEventName());
+    entity.setOccurred(new Timestamp(auditRequest.getOccured()));
+    entity.setOrgId(auditRequest.getOrgId());
+    entity.setRequestUri(auditRequest.getRequestUri());
+    entity.setResourceServer(auditRequest.getResourceServer());
+    entity.setSystemId(auditRequest.getSystemId());
+    entity.setSystemIp(auditRequest.getSystemIp());
+    entity.setUserId(auditRequest.getUserId());
     return entity;
   }
 

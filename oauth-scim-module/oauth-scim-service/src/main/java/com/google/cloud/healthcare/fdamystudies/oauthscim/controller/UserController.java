@@ -108,8 +108,8 @@ public class UserController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
     }
 
-    AuditLogEventRequest aleRequest = AuditEventMapper.fromHttpServletRequest(request);
-    UpdateUserResponse userResponse = userService.resetPassword(userRequest, aleRequest);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    UpdateUserResponse userResponse = userService.resetPassword(userRequest, auditRequest);
     int status =
         StringUtils.isEmpty(userResponse.getErrorDescription())
             ? HttpStatus.OK.value()

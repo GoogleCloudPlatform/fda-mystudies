@@ -52,4 +52,8 @@ public abstract class BaseServiceImpl {
   protected RestTemplate getRestTemplate() {
     return restTemplate;
   }
+
+  protected boolean isSuccessful(ResponseEntity<?> response) {
+    return response.getStatusCode().is2xxSuccessful();
+  }
 }

@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.addTextFields;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 
@@ -34,9 +35,6 @@ import org.springframework.util.MultiValueMap;
 public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private XLogger logger = XLoggerFactory.getXLogger(OAuthServiceImpl.class.getName());
-
-  private static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
-      "application/x-www-form-urlencoded;charset=UTF-8";
 
   private static final String TOKEN = "token";
 
@@ -102,7 +100,7 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   public String getNewAccessToken() {
     logger.entry("begin getNewAccessToken()");
     ResponseEntity<JsonNode> response = getToken();
-    if (response.getStatusCode().is2xxSuccessful()) {
+    if (isSuccessful(response)) {
       this.accessToken = response.getBody().get(ACCESS_TOKEN).textValue();
       logger.exit(String.format("status=%d", response.getStatusCodeValue()));
     } else {

@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
@@ -24,9 +25,6 @@ import org.springframework.util.MultiValueMap;
 
 @Service
 class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
-
-  private static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
-      "application/x-www-form-urlencoded;charset=UTF-8";
 
   private static final String CONTENT_TYPE = "Content-Type";
 

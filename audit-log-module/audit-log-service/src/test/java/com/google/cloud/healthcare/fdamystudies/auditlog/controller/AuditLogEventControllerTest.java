@@ -129,18 +129,18 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    AuditLogEventRequest aleRequest = new AuditLogEventRequest();
-    aleRequest.setSystemId(RandomStringUtils.randomAlphanumeric(40));
-    aleRequest.setUserId(RandomStringUtils.randomAlphanumeric(101));
-    aleRequest.setSystemIp("0.0.0.");
-    aleRequest.setClientIp(getRandomSystemIp());
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSystemId(RandomStringUtils.randomAlphanumeric(40));
+    auditRequest.setUserId(RandomStringUtils.randomAlphanumeric(101));
+    auditRequest.setSystemIp("0.0.0.");
+    auditRequest.setClientIp(getRandomSystemIp());
 
     MvcResult result =
         mockMvc
             .perform(
                 post(ApiEndpoint.EVENTS.getPath())
                     .contextPath(getContextPath())
-                    .content(asJsonString(aleRequest))
+                    .content(asJsonString(auditRequest))
                     .headers(headers))
             .andDo(print())
             .andExpect(status().isBadRequest())
@@ -165,34 +165,34 @@ public class AuditLogEventControllerTest extends BaseMockIT {
   }
 
   private AuditLogEventRequest createAuditLogEventRequest() {
-    AuditLogEventRequest aleRequest = new AuditLogEventRequest();
-    aleRequest.setUserId(UUID.randomUUID().toString());
-    aleRequest.setAccessLevel(null);
-    aleRequest.setAlert(false);
-    aleRequest.setAppId("MyStudies");
-    aleRequest.setApplicationComponentName("Auth Server");
-    aleRequest.setApplicationVersion("v1.0");
-    aleRequest.setClientId("FMSGCPARDTST");
-    aleRequest.setClientAccessLevel("System-level");
-    aleRequest.setClientAppVersion("v1.1");
-    aleRequest.setCorrelationId(UUID.randomUUID().toString());
-    aleRequest.setDescription(
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(UUID.randomUUID().toString());
+    auditRequest.setAccessLevel(null);
+    auditRequest.setAlert(false);
+    auditRequest.setAppId("MyStudies");
+    auditRequest.setApplicationComponentName("Auth Server");
+    auditRequest.setApplicationVersion("v1.0");
+    auditRequest.setClientId("FMSGCPARDTST");
+    auditRequest.setClientAccessLevel("System-level");
+    auditRequest.setClientAppVersion("v1.1");
+    auditRequest.setCorrelationId(UUID.randomUUID().toString());
+    auditRequest.setDescription(
         String.format(
             "App user registration successful for username %s and user ID %s returned to Resource Server",
-            "mock_ale@grr.la", aleRequest.getUserId()));
-    aleRequest.setDevicePlatform("Android");
-    aleRequest.setDeviceType("MOBILE");
-    aleRequest.setEventDetail("App user registration success");
-    aleRequest.setEventName("REGISTRATION_SUCCESS");
-    aleRequest.setOccured(Instant.now().toEpochMilli());
-    aleRequest.setOrgId("FDA");
-    aleRequest.setRequestUri(null);
-    aleRequest.setResourceServer("Participant Datastore");
-    aleRequest.setSystemId("FMSGCAUTHSVR");
-    aleRequest.setSystemIp(getRandomSystemIp());
-    aleRequest.setClientIp(getRandomSystemIp());
+            "mock_ale@grr.la", auditRequest.getUserId()));
+    auditRequest.setDevicePlatform("Android");
+    auditRequest.setDeviceType("MOBILE");
+    auditRequest.setEventDetail("App user registration success");
+    auditRequest.setEventName("REGISTRATION_SUCCESS");
+    auditRequest.setOccured(Instant.now().toEpochMilli());
+    auditRequest.setOrgId("FDA");
+    auditRequest.setRequestUri(null);
+    auditRequest.setResourceServer("Participant Datastore");
+    auditRequest.setSystemId("FMSGCAUTHSVR");
+    auditRequest.setSystemIp(getRandomSystemIp());
+    auditRequest.setClientIp(getRandomSystemIp());
 
-    return aleRequest;
+    return auditRequest;
   }
 
   private String getRandomSystemIp() {

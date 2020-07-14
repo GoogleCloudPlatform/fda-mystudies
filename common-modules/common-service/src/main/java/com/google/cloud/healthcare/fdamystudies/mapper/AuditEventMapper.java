@@ -30,19 +30,19 @@ public final class AuditEventMapper {
 
   public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request)
       throws UnknownHostException {
-    AuditLogEventRequest aleRequest = new AuditLogEventRequest();
-    aleRequest.setOrgId(getValue(request, ORG_ID));
-    aleRequest.setAppId(getValue(request, APP_ID));
-    aleRequest.setClientAppVersion(getValue(request, CLIENT_APP_VERSION));
-    aleRequest.setCorrelationId(getValue(request, CORRELATION_ID));
-    aleRequest.setDeviceType(getValue(request, DEVICE_TYPE));
-    aleRequest.setDevicePlatform(getValue(request, DEVICE_PLATFORM));
-    aleRequest.setClientId(getValue(request, CLIENT_ID));
-    aleRequest.setUserId(getValue(request, USER_ID));
-    aleRequest.setClientIp(getClientIP(request));
-    aleRequest.setRequestUri(request.getRequestURI());
-    aleRequest.setSystemIp(InetAddress.getLocalHost().getHostAddress());
-    return aleRequest;
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setOrgId(getValue(request, ORG_ID));
+    auditRequest.setAppId(getValue(request, APP_ID));
+    auditRequest.setClientAppVersion(getValue(request, CLIENT_APP_VERSION));
+    auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
+    auditRequest.setDeviceType(getValue(request, DEVICE_TYPE));
+    auditRequest.setDevicePlatform(getValue(request, DEVICE_PLATFORM));
+    auditRequest.setClientId(getValue(request, CLIENT_ID));
+    auditRequest.setUserId(getValue(request, USER_ID));
+    auditRequest.setClientIp(getClientIP(request));
+    auditRequest.setRequestUri(request.getRequestURI());
+    auditRequest.setSystemIp(InetAddress.getLocalHost().getHostAddress());
+    return auditRequest;
   }
 
   private static String getValue(HttpServletRequest request, String name) {

@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
   }
 
   public UpdateUserResponse resetPassword(
-      UpdateUserRequest userRequest, AuditLogEventRequest aleRequest)
+      UpdateUserRequest userRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
             userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
     if (entity.isPresent()) {
       UserEntity userEntity = entity.get();
-      aleRequest.setUserId(userEntity.getUserId());
+      auditRequest.setUserId(userEntity.getUserId());
       String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
       EmailResponse emailResponse = sendPasswordResetEmail(userRequest, tempPassword);
 
@@ -151,7 +151,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserInfo(userInfo.toString());
         repository.saveAndFlush(userEntity);
 
-        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_SUCCESS, aleRequest);
+        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_SUCCESS, auditRequest);
 
         logger.exit("Password reset successful.");
         return new UpdateUserResponse(HttpStatus.OK, "Password reset successful");
@@ -160,7 +160,7 @@ public class UserServiceImpl implements UserService {
             String.format(
                 "Password reset failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
 
-        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_FAILED, aleRequest);
+        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_FAILED, auditRequest);
         return new UpdateUserResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
       }
     }

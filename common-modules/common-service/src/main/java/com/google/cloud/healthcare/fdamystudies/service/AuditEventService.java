@@ -15,5 +15,5 @@ import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 public interface AuditEventService {
 
   public AuditLogEventResponse postAuditLogEvent(
-      AuditLogEvent eventEnum, AuditLogEventRequest aleRequest);
+      AuditLogEvent eventEnum, AuditLogEventRequest auditRequest);
 }

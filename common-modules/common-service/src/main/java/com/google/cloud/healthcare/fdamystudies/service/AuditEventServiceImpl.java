@@ -53,21 +53,21 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
 
   @Override
   public AuditLogEventResponse postAuditLogEvent(
-      AuditLogEvent eventEnum, AuditLogEventRequest aleRequest) {
+      AuditLogEvent eventEnum, AuditLogEventRequest auditRequest) {
     logger.entry(String.format("begin postAuditLogEvent() for %s event", eventEnum.getEventName()));
 
     // prepare the request for POST method
-    aleRequest.setEventName(eventEnum.getEventName());
-    aleRequest.setAlert(eventEnum.isAlert());
-    aleRequest.setSystemId(eventEnum.getSystemId());
-    aleRequest.setAccessLevel(eventEnum.getAccessLevel());
-    aleRequest.setClientId(eventEnum.getClientId());
-    aleRequest.setClientAccessLevel(eventEnum.getClientAccessLevel());
-    aleRequest.setResourceServer(eventEnum.getResourceServer());
-    aleRequest.setEventDetail(eventEnum.getEventDetail());
-    aleRequest.setOccured(Instant.now().toEpochMilli());
+    auditRequest.setEventName(eventEnum.getEventName());
+    auditRequest.setAlert(eventEnum.isAlert());
+    auditRequest.setSystemId(eventEnum.getSystemId());
+    auditRequest.setAccessLevel(eventEnum.getAccessLevel());
+    auditRequest.setClientId(eventEnum.getClientId());
+    auditRequest.setClientAccessLevel(eventEnum.getClientAccessLevel());
+    auditRequest.setResourceServer(eventEnum.getResourceServer());
+    auditRequest.setEventDetail(eventEnum.getEventDetail());
+    auditRequest.setOccured(Instant.now().toEpochMilli());
 
-    JsonNode requestBody = getObjectMapper().convertValue(aleRequest, JsonNode.class);
+    JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
 
     AuditLogEventResponse aleResponse = callEventsApi(requestBody);
 

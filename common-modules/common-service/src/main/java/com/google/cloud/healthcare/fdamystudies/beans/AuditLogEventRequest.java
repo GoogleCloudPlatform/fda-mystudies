@@ -40,7 +40,6 @@ public class AuditLogEventRequest {
 
   @NotBlank
   @Size(min = 7, max = 39)
-  @ToString.Exclude
   private String systemIp;
 
   @NotBlank
