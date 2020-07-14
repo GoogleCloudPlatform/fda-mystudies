@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.ext.XLogger;
@@ -36,7 +38,7 @@ public class AppController {
 
   @GetMapping
   public ResponseEntity<AppResponse> getApps(
-      @RequestHeader String userId, HttpServletRequest request) {
+      @RequestHeader(name = USER_ID_HEADER) String userId, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AppResponse appResponse = appService.getApps(userId);
     logger.exit(String.format(STATUS_LOG, appResponse.getHttpStatusCode()));
