@@ -155,4 +155,20 @@ public class AppEntity implements Serializable {
     studyPermissions.add(studyPermission);
     studyPermission.setAppInfo(this);
   }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  private List<UserDetailsEntity> userDetails = new ArrayList<>();
+
+  public void addUserDetailsEntity(UserDetailsEntity userDetail) {
+    userDetails.add(userDetail);
+    userDetail.setAppInfo(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  private List<StudyEntity> studies = new ArrayList<>();
+
+  public void addStudyEntity(StudyEntity study) {
+    studies.add(study);
+    study.setAppInfo(this);
+  }
 }

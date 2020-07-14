@@ -31,16 +31,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Setter
-@Getter
-@Entity
-@Table(name = "sites")
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SiteEntity implements Serializable {
-
+@Setter
+@Getter
+@Entity
+@Table(name = "participant_registry_site")
+public class ParticipantRegistrySiteEntity implements Serializable {
   private static final long serialVersionUID = 1L;
 
   @ToString.Exclude
@@ -50,22 +49,52 @@ public class SiteEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "location_id", insertable = true, updatable = true)
-  private LocationEntity location;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "site_id", insertable = true, updatable = false)
+  private SiteEntity site;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "study_info_id", insertable = true, updatable = true)
   private StudyEntity study;
 
-  @Column(name = "status")
-  private Integer status;
+  @ToString.Exclude
+  @Column(name = "email")
+  private String email;
 
-  @Column(name = "target_enrollment")
-  private Integer targetEnrollment;
-
+  @ToString.Exclude
   @Column(name = "name")
   private String name;
+
+  @Column(
+      name = "invitation_date",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp invitationDate;
+
+  @Column(name = "invitation_count", nullable = false)
+  private Long invitationCount;
+
+  @Column(
+      name = "disabled_date",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp disabledDate;
+
+  @Column(
+      name = "enrollment_token_expiry",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp enrollmentTokenExpiry;
+
+  @ToString.Exclude
+  @Column(name = "onboarding_status")
+  private String onboardingStatus;
+
+  @Column(name = "enrollment_token")
+  private String enrollmentToken;
 
   @Column(
       name = "created",
@@ -77,38 +106,14 @@ public class SiteEntity implements Serializable {
   @Column(name = "created_by")
   private String createdBy;
 
-  @Column(
-      name = "modified",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-  private Timestamp modified;
-
-  @Column(name = "modified_by")
-  private String modifiedBy;
-
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
-  private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
-
-  public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
-    sitePermissions.add(sitePermission);
-    sitePermission.setSite(this);
-  }
-
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
-  private List<ParticipantRegistrySiteEntity> participantRegistrySites = new ArrayList<>();
-
-  public void addParticipantRegistrySiteEntity(
-      ParticipantRegistrySiteEntity participantRegistrySite) {
-    participantRegistrySites.add(participantRegistrySite);
-    participantRegistrySite.setSite(this);
-  }
-
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "participantRegistrySite")
   private List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
 
   public void addParticipantStudiesEntity(ParticipantStudyEntity participantStudiesEntity) {
     participantStudies.add(participantStudiesEntity);
-    participantStudiesEntity.setSite(this);
+    participantStudiesEntity.setParticipantRegistrySite(this);
   }
 }

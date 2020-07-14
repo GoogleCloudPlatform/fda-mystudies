@@ -5,7 +5,6 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import java.util.List;
@@ -13,17 +12,19 @@ import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 
-@Repository
 @ConditionalOnProperty(
     value = "participant.manager.repository.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public interface SitePermissionRepository extends JpaRepository<SitePermissionEntity, String> {
-  @Query(
-      "SELECT sp FROM SitePermissionEntity sp WHERE sp.urAdminUser.id=:userId ORDER BY sp.created DESC")
-  public List<SitePermissionEntity> findSitePermissionByUserId(String userId);
+@Repository
+public interface ParticipantStudyRepository extends JpaRepository<ParticipantStudyEntity, String> {
+
+  @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.site.id in (:siteIds)")
+  public List<ParticipantStudyEntity> findParticipantsEnrollmentsOfSites(
+      @Param("siteIds") List<String> usersSiteIds);
 }

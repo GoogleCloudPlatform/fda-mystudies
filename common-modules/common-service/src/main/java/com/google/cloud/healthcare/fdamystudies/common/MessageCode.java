@@ -28,7 +28,9 @@ import lombok.ToString;
 public enum MessageCode {
   ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
 
-  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully");
+  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
+
+  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0001", "Get Apps successfull");
 
   private final HttpStatus httpStatus;
   private final String code;
