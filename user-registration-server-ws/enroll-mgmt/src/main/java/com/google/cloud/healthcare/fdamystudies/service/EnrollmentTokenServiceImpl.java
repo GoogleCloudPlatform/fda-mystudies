@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.dao.EnrollmentTokenDao;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 
 @Service
@@ -59,11 +60,13 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
+  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId,@NotNull String userId) {
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
     boolean isValidStudyToken = false;
     try {
-      isValidStudyToken = enrollmentTokenDao.isValidStudyToken(token, studyId);
+      //added to fetch registered email
+      UserDetailsBO userDetails=commonService.getUserInfoDetails(userId);
+      isValidStudyToken = enrollmentTokenDao.isValidStudyToken(token, studyId,userDetails.getEmail());
     } catch (Exception e) {
       logger.error("EnrollmentTokenServiceImpl isValidStudyToken() - error ", e);
     }
