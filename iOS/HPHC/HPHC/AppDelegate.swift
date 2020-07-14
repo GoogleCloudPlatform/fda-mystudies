@@ -259,7 +259,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     if number >= 1 {
       self.updateNotification()
     }
-
+    // Clear the delivered notifications when user enter's in the app.
+    DispatchQueue.main.async {
+      LocalNotification.removeAllDeliveredNotifications()
+    }
     // Check For Updates
     self.checkForAppUpdate()
   }
@@ -267,6 +270,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationDidBecomeActive(_ application: UIApplication) {
 
     UIApplication.shared.applicationIconBadgeNumber = 0
+    // Clear the delivered notifications when user enter's in the app.
+    DispatchQueue.main.async {
+      LocalNotification.removeAllDeliveredNotifications()
+    }
 
     if self.appIsResignedButDidNotEnteredBackground! {
 
