@@ -1,8 +1,8 @@
-FROM maven:3.6.3-jdk-11-openj9 AS maven_builder
-COPY audit-log-module /app/audit-log-module/
-COPY common-modules /app/common-modules/
+FROM mohankgonthina/commonmodule:latest AS maven_builder
+COPY audit-log-service /app/audit-log-module/audit-log-service/
+COPY pom.xml /app/audit-log-module/
 WORKDIR /app/audit-log-module/
-RUN mvn clean package
+RUN mvn clean package -Pqa -Dmaven.test.skip=true
 
 #Torun
 FROM tomcat:9.0.33-jdk11-openjdk
