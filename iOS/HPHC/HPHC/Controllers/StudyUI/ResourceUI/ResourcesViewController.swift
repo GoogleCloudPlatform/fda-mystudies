@@ -146,8 +146,8 @@ class ResourcesViewController: UIViewController {
   }
 
   func loadResourceFromDatabase() {
-
-    DBHandler.loadResourcesForStudy(studyId: (Study.currentStudy?.studyId)!) { (resources) in
+    guard let studyID = Study.currentStudy?.studyId else {return}
+    DBHandler.loadResourcesForStudy(studyId: studyID) { (resources) in
       Study.currentStudy?.resources = resources
       self.handleResourcesReponse()
       self.updateAnchorDateLifeTime()
