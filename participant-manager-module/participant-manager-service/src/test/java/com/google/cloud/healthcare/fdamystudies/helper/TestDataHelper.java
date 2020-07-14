@@ -126,6 +126,7 @@ public class TestDataHelper {
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
     StudyEntity studyEntity = new StudyEntity();
+    studyEntity.setType("CLOSE");
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEdit(EDIT_VALUE);
@@ -190,5 +191,16 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = newUserDetails();
     userDetailsEntity.setAppInfo(appEntity);
     return userDetailsRepository.saveAndFlush(userDetailsEntity);
+  }
+
+  public SiteEntity createSiteEntitywithStudy(
+      UserRegAdminEntity userRegAdminEntity, StudyEntity studyEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(userRegAdminEntity);
+    sitePermissionEntity.setSite(siteEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
   }
 }
