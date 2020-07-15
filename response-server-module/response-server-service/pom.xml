@@ -14,17 +14,26 @@ https://opensource.org/licenses/MIT.  -->
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-	<artifactId>fda-mystudies-response-server</artifactId>
+	<artifactId>response-server-service</artifactId>
 	<packaging>war</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>fda-mystudies-response-server</name>
+	<name>response-server-service</name>
 	<description>Response Server web service components for the FDA MyStudies Open Implementation</description>
 
 	<properties>
 		<java.version>1.8</java.version>
+    <clover.version>4.4.1</clover.version>
+    <common.text.version>1.8</common.text.version>
+    <wiremock.version>2.26.3</wiremock.version>
 	</properties>
 	<build>
 	<finalName>mystudies-response-server</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -37,6 +46,23 @@ https://opensource.org/licenses/MIT.  -->
 					<execution>
 						<goals>
 							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+				<version>${clover.version}</version>
+				<configuration>
+					<excludesList>**/*ExcludedFile.*</excludesList>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>instrument</goal>
+							<goal>clover</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -65,18 +91,7 @@ https://opensource.org/licenses/MIT.  -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+	
 		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -141,6 +156,69 @@ https://opensource.org/licenses/MIT.  -->
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.0-m01</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+			<artifactId>common-service</artifactId>
+			<version>0.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+			<artifactId>common-tests</artifactId>
+			<version>0.0.1-RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>20.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.collections</groupId>
+			<artifactId>google-collections</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+		</dependency>
 	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<spring.profiles.active>local</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>mockit</id>
+			<properties>
+				<spring.profiles.active>mockit</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active>
+			</properties>
+		</profile>
+		<profile>
+			<id>qa</id>
+			<properties>
+				<spring.profiles.active>qa</spring.profiles.active>
+			</properties>
+		</profile>
+	</profiles>
 </project>

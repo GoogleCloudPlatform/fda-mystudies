@@ -19,7 +19,7 @@ import lombok.Setter;
 @Getter
 @Configuration
 @PropertySources({
-  @PropertySource("classpath:application-appConfig.properties"),
+  @PropertySource("classpath:application-appConfig-${spring.profiles.active}.properties"),
   @PropertySource("classpath:application-${spring.profiles.active}.properties")
 })
 public class ApplicationConfiguration {

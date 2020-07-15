@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.google.cloud.healthcare.fdamystudies"})
 public class FdaMystudiesResponseServerApplication {
 
   public static void main(String[] args) {
