@@ -37,7 +37,7 @@ enum API {
       #if DEBUG
         return http
       #else
-        return http
+        return https
       #endif
     }
   }
