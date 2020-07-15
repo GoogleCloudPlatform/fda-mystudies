@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to copy AppId and OrgId from gcloud secret to CloudSQL.
+# Script to copy Push Notification info from gcloud secret to CloudSQL.
 set -e
 
 # TODO: Change these to env variables.
