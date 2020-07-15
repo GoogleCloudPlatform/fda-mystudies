@@ -1,6 +1,6 @@
 PODS:
-  - ActionSheetPicker-3.0 (2.4.2)
-  - CryptoSwift (1.3.0)
+  - ActionSheetPicker-3.0 (2.5.0)
+  - CryptoSwift (1.3.1)
   - Embassy (4.1.1)
   - EnvoyAmbassador (4.0.5):
     - Embassy (~> 4.0)
@@ -13,14 +13,14 @@ PODS:
   - Mockingjay/XCTest (3.0.0-alpha.1):
     - Mockingjay/Core
   - ReachabilitySwift (5.0.0)
-  - Realm (4.3.2):
-    - Realm/Headers (= 4.3.2)
-  - Realm/Headers (4.3.2)
-  - RealmSwift (4.3.2):
-    - Realm (= 4.3.2)
-  - SDWebImage (5.6.0):
-    - SDWebImage/Core (= 5.6.0)
-  - SDWebImage/Core (5.6.0)
+  - Realm (5.2.0):
+    - Realm/Headers (= 5.2.0)
+  - Realm/Headers (5.2.0)
+  - RealmSwift (5.2.0):
+    - Realm (= 5.2.0)
+  - SDWebImage (5.8.3):
+    - SDWebImage/Core (= 5.8.3)
+  - SDWebImage/Core (5.8.3)
   - SlideMenuControllerSwift (5.0.0)
   - Toast-Swift (5.0.1)
   - URITemplate (3.0.0)
@@ -64,20 +64,20 @@ CHECKOUT OPTIONS:
     :git: https://github.com/AtomicSLLC/SlideMenuControllerSwift.git
 
 SPEC CHECKSUMS:
-  ActionSheetPicker-3.0: 5b62e07b00bd970509cf5ece99cb7447eae5dd0d
-  CryptoSwift: 1283821600233bdbeb96d7b389c3288c3bf77211
+  ActionSheetPicker-3.0: 6d79f6f3b98e2b21d218dd65a39f634ff37a27e5
+  CryptoSwift: f12f037f6d0fcd6d48c96db0071b653de64e6c4d
   Embassy: eb36dc783ea20b792426461bbaff8c3f256e0331
   EnvoyAmbassador: 21cef10e70d003801c68ba5281948684a4e25486
   IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
   Mockingjay: 0f7c5aa49c7f1b95621cee3c79b557141f5a225c
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  Realm: 5e92902e2875dff4bb0fd02f67bb737c3d5db2bc
-  RealmSwift: 9a360fc7bae04fc2e308a34fbd899d5faa2d6b22
-  SDWebImage: 21b19f56b4226cdfe3aefe4e6848dc43ed129a86
+  Realm: f749c723e272f08fdf1939af5e61d2bd09b203e8
+  RealmSwift: bf0ab78b52c5bafba8b3ad73be8dfb4c1ea5cf01
+  SDWebImage: 112503ec94a5a2a41869503844a15e8d8f1ead5c
   SlideMenuControllerSwift: d740ea24105a658fe6a8c256f2bf5832fee7c047
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   URITemplate: 58e0d47f967006c5d59888af5356c4a8ed3b197d
 
-PODFILE CHECKSUM: 2dc0b4ec9bd27956cea5255e3388f437fa61298e
+PODFILE CHECKSUM: de88d5576d14d4a994b9b4a144c60d074f7c63a3
 
-COCOAPODS: 1.9.2
+COCOAPODS: 1.9.3

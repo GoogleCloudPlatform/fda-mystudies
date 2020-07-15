@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		041AEB90AC42096B113333ED /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		481DFA4C1E6EEB70004C39EF /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481DFA4B1E6EEB70004C39EF /* WebViewController.swift */; };
 		482062521E68532300C7A7AF /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482062511E68532300C7A7AF /* UIUtilities.swift */; };
 		482CC61E1EC5F52E00BFE8C6 /* KDCircularProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482CC61D1EC5F52E00BFE8C6 /* KDCircularProgress.swift */; };
@@ -36,7 +35,6 @@
 		6E5287B12237EB820083DF33 /* ActivityTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E5287B02237EB820083DF33 /* ActivityTest.swift */; };
 		6E61BCC41F27262F00C156B9 /* ComprehensionFailure.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E61BCC31F27262F00C156B9 /* ComprehensionFailure.xib */; };
 		6E61BCC61F27271000C156B9 /* ComprehensionFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E61BCC51F27271000C156B9 /* ComprehensionFailure.swift */; };
-		6E7D2D5A1E433E8800763D4C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7D2D591E433E8800763D4C /* AppDelegate.swift */; };
 		6E7D2D8A1E43400100763D4C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7D2D891E43400100763D4C /* User.swift */; };
 		6E7D2D8C1E4340B200763D4C /* UserProfile.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D8B1E4340B200763D4C /* UserProfile.plist */; };
 		6E7D2D8E1E43445600763D4C /* UserPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E7D2D8D1E43445600763D4C /* UserPreferences.plist */; };
@@ -122,6 +120,9 @@
 		6F214B9424603EFE008F2742 /* WKWebView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */; };
 		6F214B9624603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
+		6F2CE77024BDF7ED00F2F4A7 /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2CE76C24BDF7B500F2F4A7 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6F2CE77124BDF82600F2F4A7 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F2CE76C24BDF7B500F2F4A7 /* ResearchKit.framework */; };
+		6F2CE77424BDFF3F00F2F4A7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E7D2D591E433E8800763D4C /* AppDelegate.swift */; };
 		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
 		6F4E1B2D24223C210051D3E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
 		6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */; };
@@ -161,8 +162,6 @@
 		89AD25AA23D7241900F9450C /* AuthServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD25A923D7241900F9450C /* AuthServerConfiguration.swift */; };
 		89AD25AC23D7295A00F9450C /* AuthServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AD25AB23D7295A00F9450C /* AuthServices.swift */; };
 		89CD64BA2244CAA600008178 /* ResourceAnchorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CD64B92244CAA600008178 /* ResourceAnchorTest.swift */; };
-		89EDB46C2271EFDF0070F16C /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */; };
-		89EDB46D2271EFDF0070F16C /* ResearchKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		940577A81E767AC60043215C /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940577A71E767AC60043215C /* ChangePasswordViewController.swift */; };
 		940577AC1E767C8D0043215C /* ChangePasswordData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 940577AB1E767C8D0043215C /* ChangePasswordData.plist */; };
 		941909B51E52FA9B001B01C5 /* Study.swift in Sources */ = {isa = PBXBuildFile; fileRef = 941909B41E52FA9B001B01C5 /* Study.swift */; };
@@ -237,19 +236,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		6EF0BC3B2223D1D6004F2357 /* PBXContainerItemProxy */ = {
+		6F2CE76B24BDF7B500F2F4A7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */;
+			containerPortal = 6F2CE76524BDF7B400F2F4A7 /* ResearchKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = B183A5951A8535D100C76870;
 			remoteInfo = ResearchKit;
 		};
-		6EF0BC3D2223D1D6004F2357 /* PBXContainerItemProxy */ = {
+		6F2CE76D24BDF7B500F2F4A7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */;
+			containerPortal = 6F2CE76524BDF7B400F2F4A7 /* ResearchKit.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
 			remoteInfo = ResearchKitTests;
+		};
+		6F2CE77224BDF85800F2F4A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6F2CE76524BDF7B400F2F4A7 /* ResearchKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = B183A4731A8535D100C76870;
+			remoteInfo = ResearchKit;
 		};
 		7878B31F2216C6E20052FC23 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -265,13 +271,6 @@
 			remoteGlobalIDString = 6E7D2D551E433E8700763D4C;
 			remoteInfo = HPHC;
 		};
-		89EDB46E2271EFDF0070F16C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = B183A4731A8535D100C76870;
-			remoteInfo = ResearchKit;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -281,7 +280,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				89EDB46D2271EFDF0070F16C /* ResearchKit.framework in Embed Frameworks */,
+				6F2CE77024BDF7ED00F2F4A7 /* ResearchKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -409,7 +408,6 @@
 		6EED7B3C1E65752C002C1FA3 /* FetalKickCounterTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetalKickCounterTask.swift; sourceTree = "<group>"; };
 		6EF0466A1ED1C943008098BB /* DBNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DBNotification.swift; sourceTree = "<group>"; };
 		6EF05A981E4DC36400CD7661 /* StepProvider.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = StepProvider.plist; sourceTree = "<group>"; };
-		6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ResearchKit.xcodeproj; sourceTree = "<group>"; };
 		6EF2FCEE1E72CDE900B5F212 /* LeftMenuResourceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftMenuResourceTableViewCell.swift; sourceTree = "<group>"; };
 		6F0221772264729D00A2DBC8 /* TextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextChoiceCell.xib; sourceTree = "<group>"; };
 		6F0221782264729E00A2DBC8 /* OtherTextChoiceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OtherTextChoiceCell.xib; sourceTree = "<group>"; };
@@ -419,6 +417,7 @@
 		6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebView+Extensions.swift"; sourceTree = "<group>"; };
 		6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIPrintPageRenderer+Extensions.swift"; sourceTree = "<group>"; };
 		6F2392DD2423E0F300013AC0 /* EnrollServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollServices.swift; sourceTree = "<group>"; };
+		6F2CE76524BDF7B400F2F4A7 /* ResearchKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = ResearchKit.xcodeproj; sourceTree = "<group>"; };
 		6F4E1B2A24223C210051D3E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		6F83039424864431009409A5 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
@@ -540,10 +539,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F2CE77124BDF82600F2F4A7 /* ResearchKit.framework in Frameworks */,
 				6EEBA47A1F25FAA100FB0258 /* HealthKit.framework in Frameworks */,
 				972663AD23F7242B537B8E82 /* Pods_HPHC.framework in Frameworks */,
-				89EDB46C2271EFDF0070F16C /* ResearchKit.framework in Frameworks */,
-				041AEB90AC42096B113333ED /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,7 +649,7 @@
 			isa = PBXGroup;
 			children = (
 				6F4E1B2A24223C210051D3E2 /* README.md */,
-				6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */,
+				6F2CE76524BDF7B400F2F4A7 /* ResearchKit.xcodeproj */,
 				6E7D2D581E433E8700763D4C /* HPHC */,
 				7878B31B2216C6E20052FC23 /* HPHCTests */,
 				89055919230149AD005FB284 /* HPHCUITests */,
@@ -987,15 +985,6 @@
 			path = FetalKickCounterStep;
 			sourceTree = "<group>";
 		};
-		6EF0BC362223D1D5004F2357 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */,
-				6EF0BC3E2223D1D6004F2357 /* ResearchKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		6F10BB15234DDFDA006388E2 /* Branding */ = {
 			isa = PBXGroup;
 			children = (
@@ -1004,6 +993,15 @@
 				6F99755E242387300044944E /* AppConfiguration.swift */,
 			);
 			path = Branding;
+			sourceTree = "<group>";
+		};
+		6F2CE76624BDF7B400F2F4A7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6F2CE76C24BDF7B500F2F4A7 /* ResearchKit.framework */,
+				6F2CE76E24BDF7B500F2F4A7 /* ResearchKitTests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		6F83039824864D6B009409A5 /* Localizable */ = {
@@ -1741,7 +1739,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				89EDB46F2271EFDF0070F16C /* PBXTargetDependency */,
+				6F2CE77324BDF85800F2F4A7 /* PBXTargetDependency */,
 			);
 			name = HPHC;
 			productName = FDA;
@@ -1799,7 +1797,7 @@
 				TargetAttributes = {
 					6E7D2D551E433E8700763D4C = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = FV8LM93U7M;
+						DevelopmentTeam = 3485DDCN2M;
 						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -1879,8 +1877,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 6EF0BC362223D1D5004F2357 /* Products */;
-					ProjectRef = 6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */;
+					ProductGroup = 6F2CE76624BDF7B400F2F4A7 /* Products */;
+					ProjectRef = 6F2CE76524BDF7B400F2F4A7 /* ResearchKit.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1893,18 +1891,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		6EF0BC3C2223D1D6004F2357 /* ResearchKit.framework */ = {
+		6F2CE76C24BDF7B500F2F4A7 /* ResearchKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = ResearchKit.framework;
-			remoteRef = 6EF0BC3B2223D1D6004F2357 /* PBXContainerItemProxy */;
+			remoteRef = 6F2CE76B24BDF7B500F2F4A7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		6EF0BC3E2223D1D6004F2357 /* ResearchKitTests.xctest */ = {
+		6F2CE76E24BDF7B500F2F4A7 /* ResearchKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = ResearchKitTests.xctest;
-			remoteRef = 6EF0BC3D2223D1D6004F2357 /* PBXContainerItemProxy */;
+			remoteRef = 6F2CE76D24BDF7B500F2F4A7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2125,6 +2123,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F2CE77424BDFF3F00F2F4A7 /* AppDelegate.swift in Sources */,
 				94334F881E70055A00755444 /* UIApplication+Extensions.swift in Sources */,
 				94334F871E70055A00755444 /* UIViewController+Extensions.swift in Sources */,
 				94B3DD591E6ED8E500327AE5 /* SignUpTableViewCell.swift in Sources */,
@@ -2179,7 +2178,6 @@
 				94B3DD531E6ED8E500327AE5 /* ForgotPasswordViewController.swift in Sources */,
 				94CD96E91E4AF61800946477 /* NetworkManager.swift in Sources */,
 				94334F801E6FE65600755444 /* FDASlideMenuViewController.swift in Sources */,
-				6E7D2D5A1E433E8800763D4C /* AppDelegate.swift in Sources */,
 				4833E9DF1E7126900032D244 /* StudyHomeViewController.swift in Sources */,
 				6ED1D06F1EA884BD00E5A794 /* ConsentPdfViewerStepViewController.swift in Sources */,
 				6E8D910D223B9FD800C082C9 /* Dictionary+Extensions.swift in Sources */,
@@ -2314,6 +2312,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6F2CE77324BDF85800F2F4A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ResearchKit;
+			targetProxy = 6F2CE77224BDF85800F2F4A7 /* PBXContainerItemProxy */;
+		};
 		7878B3202216C6E20052FC23 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6E7D2D551E433E8700763D4C /* HPHC */;
@@ -2323,11 +2326,6 @@
 			isa = PBXTargetDependency;
 			target = 6E7D2D551E433E8700763D4C /* HPHC */;
 			targetProxy = 8905591D230149AD005FB284 /* PBXContainerItemProxy */;
-		};
-		89EDB46F2271EFDF0070F16C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ResearchKit;
-			targetProxy = 89EDB46E2271EFDF0070F16C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2468,7 +2466,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
@@ -2477,13 +2475,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 101;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = FV8LM93U7M;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.10;
-				PRODUCT_BUNDLE_IDENTIFIER = com.validcare.research;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.demo;
 				PRODUCT_NAME = "ValidCare Study";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
@@ -2498,7 +2496,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3BCFFA0DAD500A9A04C582CD /* Pods-HPHC.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = HPHC/FDA.entitlements;
@@ -2507,13 +2505,13 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 101;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FV8LM93U7M;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 2.10;
-				PRODUCT_BUNDLE_IDENTIFIER = com.validcare.research;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.demo;
 				PRODUCT_NAME = "ValidCare Study";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "HPHC/Utils/Helpers/FDA-Bridging-Header.h";
