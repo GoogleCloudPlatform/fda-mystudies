@@ -708,7 +708,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     guard
       ((viewController.presentedViewController as? ORKTaskViewController)?
-        .currentStepViewController as? ORKPasscodeStepViewController) == nil
+        .currentStepViewController)?.step?.identifier
+        != kPasscodeStepIdentifier
     else { return }  // If already presented. Return.
     if User.currentUser.userType == .loggedInUser {  // FDA user
 
@@ -935,7 +936,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private func refreshStudyActivitiesState(with userInfo: JSONDictionary) {
     guard let currentStudyID = Study.currentStudy?.studyId,
       let studyID = userInfo["studyId"] as? String,
-      currentStudyID == studyID else { return }
+      currentStudyID == studyID
+    else { return }
     DispatchQueue.main.async {
       NotificationCenter.default.post(name: kRefreshActivities, object: nil)
     }
