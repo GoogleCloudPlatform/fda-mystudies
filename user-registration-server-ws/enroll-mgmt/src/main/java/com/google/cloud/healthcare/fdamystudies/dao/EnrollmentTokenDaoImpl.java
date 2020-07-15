@@ -10,12 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -23,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySite;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
@@ -72,7 +75,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
+  public boolean isValidStudyToken(
+      @NotNull String token, @NotNull String studyId, @NotNull String emailId) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyInfoBO> studyInfoBoCriteria = null;
@@ -89,9 +93,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           session
               .createQuery(
                   "from ParticipantRegistrySite PS where studyInfo.customId =:studyId and"
-                      + " enrollmentToken=:token")
+                      + " enrollmentToken=:token and email=:emailId")
               .setParameter("studyId", studyId)
               .setParameter("token", token)
+              .setParameter("emailId", emailId)
               .getResultList();
 
       if (!participantRegistrySite.isEmpty()) {
@@ -120,7 +125,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               .createQuery(
                   "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR"
                       + " where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id"
-                      + " and PS.status='Enrolled' and PR.enrollmentToken=:token and SB.customId=:studyId")
+                      + " and PS.status in ('Enrolled','Withdrawn','inProgress') and PR.enrollmentToken=:token and SB.customId=:studyId")
               .setParameter("token", tokenValue)
               .setParameter("studyId", studyId)
               .getResultList();

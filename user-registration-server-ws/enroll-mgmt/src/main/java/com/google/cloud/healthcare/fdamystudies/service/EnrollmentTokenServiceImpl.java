@@ -9,15 +9,18 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import javax.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.EnrollmentTokenDao;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 
 @Service
@@ -57,11 +60,15 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
+  public boolean isValidStudyToken(
+      @NotNull String token, @NotNull String studyId, @NotNull String userId) {
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
     boolean isValidStudyToken = false;
     try {
-      isValidStudyToken = enrollmentTokenDao.isValidStudyToken(token, studyId);
+      // fetching registered emailid
+      UserDetailsBO userDetails = commonService.getUserInfoDetails(userId);
+      isValidStudyToken =
+          enrollmentTokenDao.isValidStudyToken(token, studyId, userDetails.getEmail());
     } catch (Exception e) {
       logger.error("EnrollmentTokenServiceImpl isValidStudyToken() - error ", e);
     }

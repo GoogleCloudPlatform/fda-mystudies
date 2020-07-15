@@ -9,7 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import javax.validation.constraints.NotNull;
+
 import org.springframework.lang.Nullable;
+
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
@@ -21,7 +23,8 @@ public interface EnrollmentTokenService {
 
   public boolean hasParticipant(@NotNull String shortName, @NotNull String tokenValue);
 
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String shortName);
+  public boolean isValidStudyToken(
+      @NotNull String token, @NotNull String shortName, @NotNull String userId);
 
   public boolean enrollmentTokenRequired(@NotNull String shortName);
 
