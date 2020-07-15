@@ -4,4 +4,4 @@ metadata:
   name: mystudies-demo-cert
 spec:
   domains:
-    - mystudies.hcls.joonix.net
+    - demo.mystudies.hcls.joonix.net
