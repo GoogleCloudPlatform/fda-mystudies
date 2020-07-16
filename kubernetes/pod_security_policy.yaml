@@ -18,7 +18,7 @@ spec:
   allowPrivilegeEscalation: true
   # This is redundant with non-root + disallow privilege escalation,
   # but we can provide it for defense in depth.
-  requiredDropCapabilities: 
+  requiredDropCapabilities:
     - ALL
   # Allow core volume types.
   volumes:
