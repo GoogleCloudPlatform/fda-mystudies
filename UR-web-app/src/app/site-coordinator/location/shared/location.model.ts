@@ -1,7 +1,6 @@
-import {ApiSuccessResponse} from 'src/app/entity/sucess.model';
-import {ApiResponse} from 'src/app/entity/error.model';
+import {ApiResponse} from 'src/app/entity/api.response.model';
 
-export interface Location extends ApiSuccessResponse, ApiResponse {
+export interface Location extends ApiResponse {
   id: number;
 
   name: string;

@@ -198,15 +198,15 @@ ul li {
 }
 
 .text-center {
-  text-align: center !important;
+  text-align: center;
 }
 
 .text-left {
-  text-align: left !important;
+  text-align: left;
 }
 
 .text-right {
-  text-align: right !important;
+  text-align: right;
 }
 
 a:hover,
@@ -596,7 +596,7 @@ footer ul li:last-child a {
 }
 
 .flex-wrap-unset {
-  flex-wrap: unset !important;
+  flex-wrap: unset;
 }
 
 .progress-label {
@@ -1687,7 +1687,7 @@ div.show + div {
 }
 
 .participant__label {
-  color: var(--space-gray) !important;
+  color: var(--space-gray);
   font-size: 87.5%;
 }
 
@@ -1700,7 +1700,7 @@ div.show + div {
 }
 
 .font11 {
-  font-size: 68.8% !important;
+  font-size: 68.8%;
 }
 
 .form-control:disabled,
@@ -1777,9 +1777,9 @@ div.show + div {
 pre {
   background: var(--white);
   display: inline-block;
-  font-size: 0.55em;
-  margin-top: 2em;
-  padding: 1em;
+  font-size: 55%;
+  margin-top: 32px;
+  padding: 16px;
 }
 
 .tool {
@@ -1864,7 +1864,7 @@ ul.subheader__menu li a.active {
 .subheader {
   height: 67px;
   line-height: 59px;
-  padding: 0 !important;
+  padding: 0;
 }
 
 .dashboard-card__title {
@@ -1878,13 +1878,13 @@ ul.subheader__menu li a.active {
 
 .form-item__element--select:invalid {
   color: var(--oslo-gray);
-  font-weight: normal !important;
+  font-weight: normal;
   font-size: 100%;
 }
 
 .form-item__element--select [disabled] {
   color: var(--oslo-gray);
-  font-weight: normal !important;
+  font-weight: normal;
   font-size: 100%;
 }
 

@@ -3,7 +3,7 @@
         <div class="row">
             <div>
                 <a routerLink="/coordinator/locations" class="subheader__title">
-                    <img src="assets/svgs/back-arrow.svg" />
+                    <img src="assets/svgs/back-arrow.svg" alt="" />
                     <span>Add New Location</span>
                 </a>
             </div>
@@ -30,7 +30,11 @@
                             Location ID is required.
                         </span>
                         <span class="help-block with-errors error__msg" *ngIf="customId.errors.maxlength">
-                            Location ID can be max 15 characters long.
+                            Location ID exceeds max length (15 characters).
+                        </span>
+                        <span class="help-block with-errors error__msg"
+                            *ngIf="!customId.errors.required && !customId.errors.maxlength">
+                            Location ID is invalid.
                         </span>
                     </div>
                 </div>
@@ -47,7 +51,11 @@
                             Location Name is required.
                         </span>
                         <span class="help-block with-errors error__msg" *ngIf="name.errors.maxlength">
-                            Location Name can be max 200 characters long.
+                            Location Name exceeds max length (200 characters).
+                        </span>
+                        <span class="help-block with-errors error__msg"
+                            *ngIf="!name.errors.required && !name.errors.maxlength">
+                            Location Name is invalid.
                         </span>
                     </div>
                 </div>
@@ -68,7 +76,11 @@
                             Location Description is required.
                         </span>
                         <span class="help-block with-errors error__msg" *ngIf="description.errors.maxlength">
-                            Location Description can be max 500 characters long.
+                            Location Description exceeds max length (500 characters).
+                        </span>
+                        <span class="help-block with-errors error__msg"
+                            *ngIf="!description.errors.required && !description.errors.maxlength">
+                            Location Description is invalid.
                         </span>
                     </div>
                 </div>

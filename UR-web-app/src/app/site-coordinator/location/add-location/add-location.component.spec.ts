@@ -8,7 +8,7 @@ import {
 import {DebugElement} from '@angular/core';
 import {AddLocationComponent} from './add-location.component';
 import {LocationService} from '../shared/location.service';
-import {ToastrModule} from 'ngx-toastr';
+import {ToastrModule, ToastrService} from 'ngx-toastr';
 import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {RouterTestingModule} from '@angular/router/testing';
 import {LocationModule} from '../location.module';
@@ -16,7 +16,8 @@ import {FormsModule, NgForm} from '@angular/forms';
 import {EntityService} from 'src/app/service/entity.service';
 import {HttpClientModule} from '@angular/common/http';
 import {By} from '@angular/platform-browser';
-
+import {of} from 'rxjs';
+import {Location} from '../shared/location.model';
 describe('AddLocationComponent', () => {
   let component: AddLocationComponent;
   let fixture: ComponentFixture<AddLocationComponent>;
@@ -47,16 +48,20 @@ describe('AddLocationComponent', () => {
       providers: [
         NgForm,
         EntityService,
+        ToastrService,
         BsModalService,
-        {provide: LocationService, useValue: locationsServiceSpy},
+        {
+          provide: LocationService,
+          useValue: locationsServiceSpy,
+          useClass: locationsServiceSpy,
+        },
       ],
     });
   }));
-
   beforeEach(async(() => {
     fixture = TestBed.createComponent(AddLocationComponent);
     component = fixture.componentInstance;
-
+    fixture.detectChanges();
     submitLocation = fixture.debugElement.query(
       By.css('button[type="submit"]'),
     );
@@ -71,14 +76,47 @@ describe('AddLocationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
   it('should not show a validation error if the input field is filled', () => {
-    component.location.customId = 'customid3';
-    component.location.name = 'Location Name';
-    component.location.description = 'This is location Description';
+    const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
+    const nameInputs = nameInput.nativeElement as HTMLInputElement;
+    const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+    customIdInputs.value = 'customid3';
+    nameInputs.value = 'Location Name';
+    descriptionInputs.value = 'Testing description value';
     fixture.detectChanges();
     const errorMsg = fixture.debugElement.query(By.css('.validation-error'));
+    const errorHelpBlock = fixture.debugElement.query(
+      By.css('.help-block.with-errors'),
+    );
+    expect(errorHelpBlock).toBeFalsy();
     expect(errorMsg).toBeFalsy();
+  });
+
+  it('should show  validation error if the input field is empty', async () => {
+    const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
+    customIdInputs.value = '';
+    customIdInputs.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const errorMsg = fixture.debugElement.query(By.css('.validation-error'));
+    const errorHelpBlock = fixture.debugElement.query(By.css('.with-errors'));
+    expect(customIdInputs.required).toBeTrue();
+    expect(errorHelpBlock).toBeTruthy();
+    expect(errorMsg).toBeTruthy();
+  });
+
+  it('should show  validation error if the input field exceeds max charecter', async () => {
+    const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
+    customIdInputs.value = 'checking max charecter';
+    customIdInputs.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    const errorMsg = fixture.debugElement.query(By.css('.validation-error'));
+    const errorHelpBlock = fixture.debugElement.query(
+      By.css('.help-block.with-errors'),
+    );
+    expect(errorHelpBlock).toBeTruthy();
+    expect(errorMsg).toBeTruthy();
   });
 
   it('should check form submit button is disabled when loaded', () => {
@@ -88,21 +126,21 @@ describe('AddLocationComponent', () => {
     expect(submitButton.disabled).toBeTruthy();
   });
 
-  it('Entering value in input controls and check the same value and submit', fakeAsync(async () => {
-    const expectedResponse = {
+  it('should set the form value before submit and expect same', fakeAsync(async () => {
+    const expectedResponse: Location = {
       id: 0,
       customId: 'customid3',
       name: 'Location Name',
-      description: 'This is location Description',
+      description: `A location description includes the location details and related information so that the user is able to understand more about the location. The description gives the user an idea of the location or explain the location details.`,
       status: '1',
       studiesCount: 0,
-      successBean: {message: 'location added successfully', code: '200 ok'},
-      error: {detailMessage: '', type: '', userMessage: ''},
+      message: 'New location added successfully',
+      code: 'MSG_001',
     };
+    locationsServiceSpy.addLocation.and.returnValue(of(expectedResponse));
     fixture.componentInstance.location.customId = 'customid3';
     fixture.componentInstance.location.name = 'Location Name';
-    fixture.componentInstance.location.description =
-      'This is location Description';
+    fixture.componentInstance.location.description = `A location description includes the location details and related information so that the user is able to understand more about the location. The description gives the user an idea of the location or explain the location details.`;
     await fixture.whenStable();
     const submitButton = submitLocation.nativeElement as HTMLInputElement;
     const customIdInputs = customIdInput.nativeElement as HTMLInputElement;
@@ -110,19 +148,23 @@ describe('AddLocationComponent', () => {
     const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
     customIdInputs.value = 'customid3';
     nameInputs.value = 'Location Name';
-    descriptionInputs.value = 'This is location Description';
+    descriptionInputs.value = `A location description includes the location details and related information so that the user is able to understand more about the location. The description gives the user an idea of the location or explain the location details.`;
     dispatchEvent(new Event('input'));
     fixture.detectChanges();
     tick();
     submitButton.click();
-    locationsServiceSpy.addLocation(expectedResponse);
     fixture.detectChanges();
-    expect(locationsServiceSpy.addLocation).toHaveBeenCalled();
-    expect(locationsServiceSpy.addLocation.calls.count()).toBe(1, 'one call');
+    await fixture.whenStable();
     expect(component.location.customId).toEqual('customid3');
     expect(component.location.name).toEqual('Location Name');
     expect(component.location.description).toEqual(
-      'This is location Description',
+      'A location description includes the location details and related information so that the user is able to understand more about the location. The description gives the user an idea of the location or explain the location details.',
     );
+  }));
+  it('should click on submit button and check service is called', fakeAsync(() => {
+    const submitSpy = spyOn(component, 'addLocation');
+    const submitButton = submitLocation.nativeElement as HTMLInputElement;
+    submitButton.click();
+    expect(submitSpy).toHaveBeenCalledTimes(1);
   }));
 });

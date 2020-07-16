@@ -6,9 +6,9 @@ import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {EntityService} from '../../../service/entity.service';
-import {ApiResponse} from 'src/app/entity/error.model';
 import {throwError, of} from 'rxjs';
 import {Location} from '../shared/location.model';
+import {ApiResponse} from 'src/app/entity/api.response.model';
 describe('LocationService', () => {
   let locationService: LocationService;
   const expectedLocations = [
@@ -19,8 +19,8 @@ describe('LocationService', () => {
       description: 'location-descp-updatedj',
       status: '1',
       studiesCount: 0,
-      successBean: {message: '', code: ''},
-      error: {detailMessage: '', type: '', userMessage: ''},
+      message: '',
+      code: '',
     },
     {
       id: 3,
@@ -29,8 +29,8 @@ describe('LocationService', () => {
       description: 'location-descp-updated',
       status: '0',
       studiesCount: 0,
-      successBean: {message: '', code: ''},
-      error: {detailMessage: '', type: '', userMessage: ''},
+      message: '',
+      code: '',
     },
   ];
   const expectedLocation: Location = {
@@ -40,8 +40,8 @@ describe('LocationService', () => {
     name: 'Location Name',
     description: 'location Decription',
     studiesCount: 0,
-    successBean: {message: '', code: ''},
-    error: {detailMessage: '', type: '', userMessage: ''},
+    message: '',
+    code: '',
   };
   const expectedResponse = {
     id: 0,
@@ -50,8 +50,8 @@ describe('LocationService', () => {
     name: '',
     description: '',
     studiesCount: 0,
-    successBean: {code: '200', message: ' Location added Succesfully'},
-    error: {detailMessage: '', type: '', userMessage: ''},
+    message: '',
+    code: '',
   };
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -106,7 +106,7 @@ describe('LocationService', () => {
         (succesResponse: Location) =>
           expect(succesResponse).toEqual(
             expectedResponse,
-            '{code:200,message:Location added Succesfully}',
+            '{code:200,message:New location added successfully}',
           ),
         fail,
       );
@@ -121,11 +121,8 @@ describe('LocationService', () => {
     );
     locationService = new LocationService(entityServicespy);
     const errorResponse: ApiResponse = {
-      error: {
-        userMessage: 'User does not exist',
-        type: 'error',
-        detailMessage: '404 Cant able to get details',
-      },
+      message: 'User does not exist',
+      code: 'MSG_013',
     };
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponse));
@@ -133,7 +130,7 @@ describe('LocationService', () => {
     locationService.getLocations().subscribe(
       () => fail('expected an error, not locations'),
       (error: ApiResponse) => {
-        expect(error.error.userMessage).toContain('User does not exist');
+        expect(error.message).toContain('User does not exist');
       },
     );
   }));
