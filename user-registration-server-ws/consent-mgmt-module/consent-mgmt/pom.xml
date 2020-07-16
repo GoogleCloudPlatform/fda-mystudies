@@ -10,17 +10,18 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-	<artifactId>UserManagementServiceBundle</artifactId>
+	<artifactId>ConsentMgmtServicesWs</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	<name>UserManagementServices</name>
+	<name>ConsentMgmtServicesWs</name>
 	<description>Project containing user management services</description>
 
 	<properties>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
-
-		<sonar.coverage.exclusions>**/*</sonar.coverage.exclusions>
+		<junit-jupiter.version>5.5.2</junit-jupiter.version>
+		<wiremock.version>2.26.3</wiremock.version>
+		<clover.version>4.4.1</clover.version>
+		<mockito.version>2.24.0</mockito.version>
 	</properties>
 
 	<dependencies>
@@ -33,6 +34,16 @@
 					<artifactId>spring-boot-starter-logging</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-storage</artifactId>
+			<version>1.96.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -87,6 +98,17 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+			<artifactId>common-service</artifactId>
+			<version>0.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+			<artifactId>common-tests</artifactId>
+			<version>0.0.1-RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -99,6 +121,53 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>junit</groupId>
+					<artifactId>junit</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.vaadin.external.google</groupId>
+					<artifactId>android-json</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>${wiremock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-runner</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -146,30 +215,22 @@
 			<artifactId>json</artifactId>
 			<version>20190722</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>javax.ws.rs</groupId>
 			<artifactId>javax.ws.rs-api</artifactId>
 			<version>2.0-m01</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.google.cloud/google-cloud-contrib -->
 		<dependency>
-	    <groupId>com.notnoop.apns</groupId>
-	    <artifactId>apns</artifactId>
-	    <version>1.0.0.Beta6</version>
-		</dependency>
-                <dependency>
-                        <groupId>com.h2database</groupId>
-                        <artifactId>h2</artifactId>
-                        <scope>runtime</scope>
-                </dependency>
-		<dependency>
-		<groupId>com.google.cloud</groupId>
-		<artifactId>google-cloud-storage</artifactId>
-		<version>1.96.0</version>
+	  		<groupId>com.google.cloud</groupId>
+	  		<artifactId>google-cloud-storage</artifactId>
+	  		<version>1.102.0</version>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<finalName>myStudiesUserMgmtWS</finalName>
+		<finalName>myStudiesConsentMgmtWS</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -186,7 +247,31 @@
 					<password>jbo55@dmin</password>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+				<version>${clover.version}</version>
+				<configuration>
+					<excludesList>**/*ExcludedFile.*</excludesList>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>instrument</goal>
+							<goal>clover</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
-
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.openclover</groupId>
+				<artifactId>clover-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

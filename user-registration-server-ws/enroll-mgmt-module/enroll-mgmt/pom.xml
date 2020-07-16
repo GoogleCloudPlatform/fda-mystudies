@@ -96,6 +96,17 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+			<artifactId>common-service</artifactId>
+			<version>0.0.1-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
+			<artifactId>common-tests</artifactId>
+			<version>0.0.1-RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
