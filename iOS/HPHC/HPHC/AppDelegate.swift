@@ -65,7 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   /// Register for Remote Notification
   func askForNotification() {
-    UNUserNotificationCenter.current().delegate = self
     UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, _) in
       // 1. Check if permission granted
       guard granted else { return }
@@ -176,7 +175,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     // Override point for customization after application launch.
-
+    UNUserNotificationCenter.current().delegate = self
     self.isAppLaunched = true
     IQKeyboardManager.shared.enable = true
     self.customizeNavigationBar()
@@ -546,34 +545,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var initialVC: UIViewController?
 
     // getting topmost visible controller
-    let navigationController = (self.window?.rootViewController as? UINavigationController)!
-    let menuVC = navigationController.viewControllers.last
-    if menuVC is FDASlideMenuViewController {
-      let mainController = (menuVC as? FDASlideMenuViewController)!.mainViewController
+    let navigationController = self.window?.rootViewController as? UINavigationController
+    let menuVC = navigationController?.viewControllers.last
+    if let menuVC = menuVC as? FDASlideMenuViewController {
+      let mainController = menuVC.mainViewController
       if mainController is UINavigationController {
-        let nav = (mainController as? UINavigationController)!
-        initialVC = nav.viewControllers.last
+        initialVC = (mainController as? UINavigationController)?.viewControllers.last
       }
     }
 
     NotificationHandler.instance.appOpenFromNotification = true
-    NotificationHandler.instance.studyId = (userInfoDetails[kStudyId] as? String)!
-    NotificationHandler.instance.activityId = (userInfoDetails[kActivityId] as? String)!
+    NotificationHandler.instance.studyId = userInfoDetails[kStudyId] as? String ?? ""
+    NotificationHandler.instance.activityId = userInfoDetails[kActivityId] as? String ?? ""
 
-    if !(initialVC is UITabBarController) {
-      // push tabbar and switch to activty tab
-      if !(initialVC is StudyListViewController) {
-
-        let leftController =
-          ((menuVC as? FDASlideMenuViewController)!.leftViewController
-          as? LeftMenuViewController)!
-        leftController.changeViewController(.studyList)
-        leftController.createLeftmenuItems()
+    if let dashboardTabBarVC = initialVC as? UITabBarController {
+      dashboardTabBarVC.selectedIndex = 0  // Go to activities screen.
+      if let activitiesVC =
+        (dashboardTabBarVC.viewControllers?.first as? UINavigationController)?
+        .topViewController as? ActivitiesViewController
+      {
+        activitiesVC.userDidNavigateFromNotification()
       }
-    } else {
-      // switch to activty tab
-      (initialVC as? UITabBarController)!.selectedIndex = 0
+    } else if let leftController =
+      (menuVC as? FDASlideMenuViewController)?.leftViewController
+      as? LeftMenuViewController
+    {
+      leftController.changeViewController(.studyList)
+      leftController.createLeftmenuItems()
     }
+
   }
 
   /// Handler for local & remote notification
@@ -935,7 +935,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private func refreshStudyActivitiesState(with userInfo: JSONDictionary) {
     guard let currentStudyID = Study.currentStudy?.studyId,
       let studyID = userInfo["studyId"] as? String,
-      currentStudyID == studyID else { return }
+      currentStudyID == studyID
+    else { return }
     DispatchQueue.main.async {
       NotificationCenter.default.post(name: kRefreshActivities, object: nil)
     }
@@ -1760,12 +1761,9 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
       self.updateNotification()
 
     } else {
-      if UIApplication.shared.applicationState == UIApplication.State.background
-        || (UIApplication.shared.applicationState == UIApplication.State.inactive)
-      {
-        self.handleLocalNotification(userInfoDetails: (userInfo as? [String: Any])!)
-      }
+      self.handleLocalNotification(userInfoDetails: userInfo as? JSONDictionary ?? [:])
     }
+    completionHandler()
   }
 }
 
