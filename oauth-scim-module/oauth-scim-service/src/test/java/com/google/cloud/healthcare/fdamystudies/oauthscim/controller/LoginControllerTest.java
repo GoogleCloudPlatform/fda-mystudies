@@ -49,6 +49,8 @@ import org.springframework.util.MultiValueMap;
 @TestMethodOrder(OrderAnnotation.class)
 public class LoginControllerTest extends BaseMockIT {
 
+  private static final int MAX_LOGIN_ATTEMPTS = 5;
+
   private static final String PASSWORD_VALUE = "0Auth_scim_service_mock!t";
 
   private static final String LOGIN_CHALLENGE_VALUE = "d9d3ff8a-0c93-466a-bc4f-bf8b0d3d5453";
@@ -227,7 +229,11 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie orgIdCookie = new Cookie(ORG_ID, "FDA");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
 
-    for (int i = 1; i <= 5; i++) {
+    ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
+    for (int loginAttempts = 1; loginAttempts <= MAX_LOGIN_ATTEMPTS; loginAttempts++) {
+      if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
+        expectedErrorCode = ErrorCode.ACCOUNT_LOCKED;
+      }
       mockMvc
           .perform(
               post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -235,19 +241,8 @@ public class LoginControllerTest extends BaseMockIT {
                   .params(requestParams)
                   .cookie(appIdCookie, orgIdCookie, loginChallenge))
           .andDo(print())
-          .andExpect(
-              content()
-                  .string(containsString(ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription())));
+          .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
     }
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.LOGIN_PAGE.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .cookie(appIdCookie, orgIdCookie, loginChallenge))
-        .andDo(print())
-        .andExpect(content().string(containsString(ErrorCode.ACCOUNT_LOCKED.getDescription())));
 
     // Step-3 expect account status changed to ACCOUNT_LOCKED
     userEntity = userRepository.findByUserId(userResponse.getUserId()).get();

@@ -41,6 +41,8 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private static final String CONTENT_TYPE = "Content-Type";
 
+  private static final int REMEMBER_FOR_SECONDS = 3600;
+
   @Value("${security.oauth2.hydra.token_endpoint}")
   private String tokenEndpoint;
 
@@ -125,7 +127,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     ObjectNode requestParams = JsonUtils.getObjectNode();
     requestParams.put("subject", email);
     requestParams.put("remember", true);
-    requestParams.put("remember_for", 3600);
+    requestParams.put("remember_for", REMEMBER_FOR_SECONDS);
 
     HttpEntity<Object> requestEntity = new HttpEntity<>(requestParams, headers);
 
