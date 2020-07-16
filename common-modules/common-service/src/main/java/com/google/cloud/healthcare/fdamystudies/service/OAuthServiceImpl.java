@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.addTextFields;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Service
 public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
@@ -38,10 +39,7 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private static final String CONTENT_TYPE = "Content-Type";
 
-  @Value("${security.oauth2.health_endpoint}")
-  private String healthEndpoint;
-
-  @Value("${security.oauth2.introspection_endpoint}")
+  @Value("${security.oauth2.introspection_endpoint:}")
   private String introspectEndpoint;
 
   @Override
