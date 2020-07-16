@@ -18,7 +18,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextV
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CHANGE_PASSWORD;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRES_AT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
@@ -167,7 +167,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2A- assert password and password_history fields
     JsonNode userInfo = toJsonNode(userEntity.getUserInfo());
-    assertTrue(userInfo.get(PASSWORD).get(EXPIRES_AT).isLong());
+    assertTrue(userInfo.get(PASSWORD).get(EXPIRE_TIMESTAMP).isLong());
     assertTrue(userInfo.get(PASSWORD_HISTORY).isArray());
 
     verify(
