@@ -19,7 +19,7 @@ jobs:
       uses: nikitasavinov/checkstyle-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: 'github-pr-check'
+        reporter: 'github-pr-review'
         level: warning
         workdir: ./user-registration-server-ws/consent-mgmt-module/consent-mgmt/src
         tool_name: consent-mgmt Checks
