@@ -3,6 +3,7 @@ package com.google.cloud.healthcare.fdamystudies.controller.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -11,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
+import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.StudiesController;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
@@ -23,6 +27,8 @@ import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 public class StudiesControllerTest extends BaseMockIT {
 
   private static final String STUDY_METADATA_PATH = "/studies/studymetadata";
+
+  private static final String SEND_NOTIFICATION_PATH = "/studies/sendNotification";
 
   @Autowired private StudiesController studiesController;
 
@@ -102,5 +108,35 @@ public class StudiesControllerTest extends BaseMockIT {
     metadataBean.setOrgId("");
     requestJson = getObjectMapper().writeValueAsString(metadataBean);
     performPost(STUDY_METADATA_PATH, requestJson, headers, "", BAD_REQUEST);
+  }
+
+  @Test
+  public void sendNotificationBadRequest() throws Exception {
+
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
+
+    // null body
+    NotificationForm notificationForm = null;
+    String requestJson = getObjectMapper().writeValueAsString(notificationForm);
+    performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    // empty notificationType
+    requestJson =
+        getNotificationForm(
+            Constants.STUDY_ID, Constants.CUSTOM_STUDY_ID, Constants.APP_ID_HEADER, "");
+    performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
+  }
+
+  private String getNotificationForm(
+      String studyId, String customStudyId, String appId, String notificationType)
+      throws JsonProcessingException {
+
+    NotificationBean notificationBean = null;
+    notificationBean = new NotificationBean(studyId, customStudyId, appId, notificationType);
+    List<NotificationBean> list = new ArrayList<NotificationBean>();
+    list.add(notificationBean);
+    NotificationForm notificationForm = new NotificationForm(list);
+    return getObjectMapper().writeValueAsString(notificationForm);
   }
 }
