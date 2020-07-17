@@ -682,9 +682,7 @@ class ActivitiesViewController: UIViewController {
       ud.set(totalIncompletedRuns, forKey: missedKey)
       if previousMissed < totalIncompletedRuns {
         // show alert
-        let message =
-          "We noticed you missed an activity in " + (Study.currentStudy?.name!)!
-          + " today. That’s ok! We know you’re busy, but we encourage you to complete study activities before they expire."
+        let message = LocalizableString.missedActivity.localizedString
         UIUtilities.showAlertWithMessage(alertMessage: message)
       }
     }

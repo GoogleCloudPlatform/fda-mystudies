@@ -13,10 +13,16 @@ enum LocalizableString: String {
   case connectionProblem = "There was a problem, please try again."
   case ok = "Ok"
 
-  // MARK: Resources
+  // MARK: - Resources
   case resourceNotAvailable = "This resource is currently unavailable."
   case aboutStudy = "About the Study"
   case leaveSubtitle = "This will also delete your app account."
 
+  // MARK: - Activities 
+  case missedActivity =
+  """
+  It appears you’ve missed a few study activities in the period you were away.
+  This is a gentle reminder to visit the app regularly to complete pending study activities, if any.
+  """
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }
