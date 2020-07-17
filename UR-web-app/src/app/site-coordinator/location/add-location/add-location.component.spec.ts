@@ -62,9 +62,7 @@ describe('AddLocationComponent', () => {
     fixture = TestBed.createComponent(AddLocationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    submitLocation = fixture.debugElement.query(
-      By.css('button[type="submit"]'),
-    );
+    submitLocation = fixture.debugElement.query(By.css('[name="add"]'));
     customIdInput = fixture.debugElement.query(By.css('[name="customId"]'));
     nameInput = fixture.debugElement.query(By.css('[name="name"]'));
     descriptionInput = fixture.debugElement.query(
