@@ -113,7 +113,6 @@ public class LoginController {
 
   @RequestMapping("/appDetails.do")
   public ModelAndView appDetails() {
-    logger.info("LoginController - appDetails()");
     return new ModelAndView("appDetails");
   }
 
