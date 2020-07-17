@@ -6,20 +6,25 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.InfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -41,6 +46,8 @@ public class UserProfileControllerTest extends BaseMockIT {
   private static final String UPDATE_USER_PROFILE_PATH = "/updateUserProfile";
 
   private static final String DEACTIVATE_PATH = "/deactivate";
+
+  private static final String RESEND_CONFIRMATION_PATH = "/resendConfirmation";
 
   @Autowired private UserProfileController profileController;
 
@@ -130,5 +137,47 @@ public class UserProfileControllerTest extends BaseMockIT {
     DeactivateAcctBean acctBean = new DeactivateAcctBean();
     String requestJson = getObjectMapper().writeValueAsString(acctBean);
     performDelete(DEACTIVATE_PATH, requestJson, headers, "", BAD_REQUEST);
+  }
+
+  @Test
+  public void resendConfirmationBadRequest() throws Exception {
+
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+
+    // without email
+    String requestJson = getLoginBean("", Constants.PASSWORD);
+    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    // invalid email
+    requestJson = getLoginBean(Constants.INVALID_EMAIL, Constants.PASSWORD);
+    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    // without appId
+    headers.set(Constants.APP_ID_HEADER, "");
+    requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
+    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
+  }
+
+  @Test
+  public void resendConfirmationSuccess() throws Exception {
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+
+    String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
+    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, Constants.SUCCESS, OK);
+
+    verify(appconfig.emailNotification(), times(1))
+        .sendEmailNotification(
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.anyString(),
+            Mockito.any(),
+            Mockito.any());
+  }
+
+  private String getLoginBean(String emailId, String password) throws JsonProcessingException {
+    LoginBean loginBean = new LoginBean(emailId, password);
+    return getObjectMapper().writeValueAsString(loginBean);
   }
 }
