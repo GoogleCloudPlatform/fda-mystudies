@@ -186,6 +186,7 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
+
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -305,7 +306,8 @@ public class SurveyActivitiesFragment extends Fragment
       AppController.getHelperProgressDialog()
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
-      AppController.getHelperProgressDialog().showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
+      AppController.getHelperProgressDialog()
+          .showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
     }
 
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
@@ -2235,6 +2237,7 @@ public class SurveyActivitiesFragment extends Fragment
       if (motivationalNotification == null) {
         if (completion >= 100) {
           hundredPc = true;
+          fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
               context.getResources().getString(R.string.study)
@@ -2247,15 +2250,20 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
-
+          SetDialogHelper.setNeutralDialog(
+              context,
+              context.getResources().getString(R.string.study)
+                  + " "
+                  + title
+                  + " "
+                  + context.getResources().getString(R.string.percent_complete2),
+              false,
+              context.getResources().getString(R.string.ok),
+              context.getResources().getString(R.string.app_name));
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.missed_activity)
-                  + " "
-                  + ((SurveyActivity) context).getTitle1()
-                  + " "
-                  + context.getResources().getString(R.string.we_encourage),
+              context.getResources().getString(R.string.missed_activity),
               false,
               context.getResources().getString(R.string.ok),
               context.getResources().getString(R.string.app_name));
@@ -2263,6 +2271,7 @@ public class SurveyActivitiesFragment extends Fragment
       } else if (!motivationalNotification.isFiftyPc() && !motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
           hundredPc = true;
+          fiftyPc = true;
           SetDialogHelper.setNeutralDialog(
               context,
               context.getResources().getString(R.string.study)
@@ -2275,6 +2284,23 @@ public class SurveyActivitiesFragment extends Fragment
               context.getResources().getString(R.string.app_name));
         } else if (completion >= 50) {
           fiftyPc = true;
+          SetDialogHelper.setNeutralDialog(
+              context,
+              context.getResources().getString(R.string.study)
+                  + " "
+                  + title
+                  + " "
+                  + context.getResources().getString(R.string.percent_complete2),
+              false,
+              context.getResources().getString(R.string.ok),
+              context.getResources().getString(R.string.app_name));
+        } else if (motivationalNotification.getMissed() != missed) {
+          SetDialogHelper.setNeutralDialog(
+              context,
+              context.getResources().getString(R.string.missed_activity),
+              false,
+              context.getResources().getString(R.string.ok),
+              context.getResources().getString(R.string.app_name));
         }
       } else if (!motivationalNotification.isHundredPc()) {
         if (completion >= 100) {
@@ -2289,33 +2315,19 @@ public class SurveyActivitiesFragment extends Fragment
               false,
               context.getResources().getString(R.string.ok),
               context.getResources().getString(R.string.app_name));
-        }
-
-      } else if (!motivationalNotification.isFiftyPc()) {
-        if (!motivationalNotification.isHundredPc() && completion >= 50) {
-          fiftyPc = true;
+        } else if (motivationalNotification.getMissed() != missed) {
           SetDialogHelper.setNeutralDialog(
               context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete1),
+              context.getResources().getString(R.string.missed_activity),
               false,
               context.getResources().getString(R.string.ok),
               context.getResources().getString(R.string.app_name));
-        } else if (motivationalNotification.isHundredPc()) {
-          fiftyPc = true;
         }
 
       } else if (motivationalNotification.getMissed() != missed) {
         SetDialogHelper.setNeutralDialog(
             context,
-            context.getResources().getString(R.string.missed_activity)
-                + " "
-                + ((SurveyActivity) context).getTitle1()
-                + " "
-                + context.getResources().getString(R.string.we_encourage),
+            context.getResources().getString(R.string.missed_activity),
             false,
             context.getResources().getString(R.string.ok),
             context.getResources().getString(R.string.app_name));
