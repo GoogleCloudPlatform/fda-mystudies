@@ -589,10 +589,10 @@ public class AuthenticationController {
                   appCode,
                   userDetails,
                   response);
-
         } else {
           if (participantDetails.getLockedAccountTempPassword() == null) {
-            userDetailsService.sendEmailOnAccountLocking(loginRequest.getEmailId(), appCode);
+            userDetailsService.sendEmailOnAccountLocking(
+                loginRequest.getEmailId(), appId, orgId, appCode);
           }
           loginResp = MyStudiesUserRegUtil.loginResponse(response, AppConstants.ACCOUNT_LOCKED);
           logger.info("AuthenticationController login() - ends with ACCOUNT_LOCKED");
@@ -631,7 +631,8 @@ public class AuthenticationController {
 
         } else if (loginResp.getCode() == ErrorCode.EC_102.code()) {
           boolean sentMessage =
-              userDetailsService.sendEmailOnAccountLocking(loginRequest.getEmailId(), appCode);
+              userDetailsService.sendEmailOnAccountLocking(
+                  loginRequest.getEmailId(), appId, orgId, appCode);
           if (sentMessage) {
             loginResp = MyStudiesUserRegUtil.loginResponse(response, AppConstants.ACCOUNT_LOCKED);
             logger.info("AuthenticationController login() - ends with ACCOUNT_LOCKED");
