@@ -64,11 +64,11 @@ public class LocationEntity implements Serializable {
   private String isdefault;
 
   @Column(
-      name = "created",
+      name = "created_time",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp created;
+  private Timestamp createdTime;
 
   @Column(name = "created_by")
   private String createdBy;

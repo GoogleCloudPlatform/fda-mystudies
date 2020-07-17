@@ -64,21 +64,21 @@ public class SiteEntity implements Serializable {
   private String name;
 
   @Column(
-      name = "created",
+      name = "created_time",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp created;
+  private Timestamp createdTime;
 
   @Column(name = "created_by", length = 64)
   private String createdBy;
 
   @Column(
-      name = "modified",
+      name = "modified_time",
       insertable = false,
       updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-  private Timestamp modified;
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp modifiedTime;
 
   @Column(name = "modified_by", length = 64)
   private String modifiedBy;

@@ -69,7 +69,7 @@ public class UserRegAdminEntity implements Serializable {
   private String phoneNumber;
 
   @Column(name = "email_changed")
-  private Integer emailChanged;
+  private Boolean emailChanged;
 
   @ToString.Exclude
   @Column(name = "status")
@@ -83,11 +83,11 @@ public class UserRegAdminEntity implements Serializable {
   private Integer manageLocations;
 
   @Column(
-      name = "created",
+      name = "created_time",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp created;
+  private Timestamp createdTime;
 
   @Column(name = "created_by")
   private String createdBy;
