@@ -330,9 +330,9 @@ public class UserServiceImpl implements UserService {
 
     int loginAttempts =
         userInfo.hasNonNull(LOGIN_ATTEMPTS) ? userInfo.get(LOGIN_ATTEMPTS).intValue() : 0;
-    loginAttempts = loginAttempts + 1;
-    userInfo.put(LOGIN_ATTEMPTS, loginAttempts);
-    if (loginAttempts >= appConfig.getMaxInvalidLoginAttempts()) {
+    userInfo.put(LOGIN_ATTEMPTS, ++loginAttempts);
+
+    if (userInfo.get(LOGIN_ATTEMPTS).intValue() >= appConfig.getMaxInvalidLoginAttempts()) {
       String tempPassword = PasswordGenerator.generate(12);
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
