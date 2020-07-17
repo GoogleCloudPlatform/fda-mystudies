@@ -706,12 +706,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   /// - Parameter viewController: Instance of `UIViewController`
   func checkPasscode(viewController: UIViewController) {
 
+    guard
+      ((viewController.presentedViewController as? ORKTaskViewController)?
+        .currentStepViewController as? ORKPasscodeStepViewController) == nil
+    else { return }  // If already presented. Return.
     if User.currentUser.userType == .loggedInUser {  // FDA user
 
       if User.currentUser.settings?.passcode! == true {
         // Passcode already exist
         if ORKPasscodeViewController.isPasscodeStoredInKeychain() == false {
-
           let passcodeStep = ORKPasscodeStep(identifier: kPasscodeStepIdentifier)
           passcodeStep.passcodeType = .type4Digit
           passcodeStep.text = kSetPasscodeDescription
@@ -1516,12 +1519,12 @@ extension AppDelegate: ORKTaskViewControllerDelegate {
               case .any:
 
                 if answeredSet.isSubset(of: correctAnswerSet) {
-                  userScore = userScore + 1
+                  userScore += 1
                 }
               case .all:
 
                 if answeredSet == correctAnswerSet {
-                  userScore = userScore + 1
+                  userScore += 1
                 }
               }
 

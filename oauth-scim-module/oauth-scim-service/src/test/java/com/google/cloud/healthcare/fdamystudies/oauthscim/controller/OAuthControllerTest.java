@@ -54,7 +54,7 @@ public class OAuthControllerTest extends BaseMockIT {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    headers.set("Authorization", "Basic " + getEncodedAuthorization(clientId, clientSecret));
+    headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
 
@@ -132,7 +132,7 @@ public class OAuthControllerTest extends BaseMockIT {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-    headers.set("Authorization", "Basic " + getEncodedAuthorization(clientId, clientSecret));
+    headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, CLIENT_CREDENTIALS);

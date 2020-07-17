@@ -22,11 +22,11 @@ import UIKit
 
 class DBHandler: NSObject {
 
-  private static var realm: Realm = {
+  private static var realm: Realm? = {
     let key = FDAKeychain.shared[kRealmEncryptionKeychainKey]
     let data = Data.init(base64Encoded: key!)
     let encryptionConfig = Realm.Configuration(encryptionKey: data)
-    return try! Realm(configuration: encryptionConfig)
+    return try? Realm(configuration: encryptionConfig)
   }()
 
   class func getRealmObject() -> Realm? {
@@ -111,18 +111,6 @@ class DBHandler: NSObject {
       dbUser?.localNotificationEnabled = (user.settings?.localNotifications)!
       dbUser?.remoteNotificationEnabled = (user.settings?.remoteNotifications)!
 
-    }
-  }
-
-  class func resetAuthToken() {
-
-    let realm = try! Realm()
-    let dbUsers = realm.objects(DBUser.self)
-    let dbUser = dbUsers.last
-
-    try? realm.write {
-      dbUser?.authToken = ""
-      dbUser?.userType = UserType.anonymousUser.rawValue
     }
   }
 
