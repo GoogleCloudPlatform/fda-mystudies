@@ -6,14 +6,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -157,23 +154,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     headers.set(Constants.APP_ID_HEADER, "");
     requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, "", BAD_REQUEST);
-  }
-
-  @Test
-  public void resendConfirmationSuccess() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
-
-    String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
-    performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, Constants.SUCCESS, OK);
-
-    verify(appconfig.emailNotification(), times(1))
-        .sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.anyString(),
-            Mockito.any(),
-            Mockito.any());
   }
 
   private String getLoginBean(String emailId, String password) throws JsonProcessingException {
