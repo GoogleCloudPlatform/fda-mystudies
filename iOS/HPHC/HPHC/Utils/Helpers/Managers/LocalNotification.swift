@@ -424,4 +424,10 @@ class NotificationHandler: NSObject {
   var activityId: String! = ""
   var appOpenFromNotification = false
   static var instance = NotificationHandler()
+
+  func reset() {
+    self.studyId = ""
+    self.activityId = ""
+    self.appOpenFromNotification = false
+  }
 }
