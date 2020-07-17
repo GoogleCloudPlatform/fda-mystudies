@@ -45,6 +45,24 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void sendNotificationBadRequest() throws Exception {
+
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
+
+    // null body
+    NotificationForm notificationForm = null;
+    String requestJson = getObjectMapper().writeValueAsString(notificationForm);
+    performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    // empty notificationType
+    requestJson =
+        getNotificationForm(
+            Constants.STUDY_ID, Constants.CUSTOM_STUDY_ID, Constants.APP_ID_HEADER, "");
+    performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
+  }
+
+  @Test
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
