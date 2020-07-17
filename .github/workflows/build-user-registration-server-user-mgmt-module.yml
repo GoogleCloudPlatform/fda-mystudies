@@ -1,9 +1,9 @@
 on:
   pull_request:
     paths:
-    - 'user-registration-server-ws/consent-mgmt/**'
-    - '.github/workflows/build-user-registration-server-consent.yml'
-name: Build user-registration-server-ws-consent
+    - 'user-registration-server-ws/user-mgmt-module/**'
+    - '.github/workflows/build-user-registration-server-user-mgmt-module.yml'
+name: Build user-registration-server-ws-user-mgmt-module
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,5 +15,5 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-          cd user-registration-server-ws/consent-mgmt
+          cd user-registration-server-ws/user-mgmt-module
           mvn -B package --file pom.xml
