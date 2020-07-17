@@ -1,13 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +23,6 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 
 public class StudiesControllerTest extends BaseMockIT {
 
@@ -133,50 +126,6 @@ public class StudiesControllerTest extends BaseMockIT {
         getNotificationForm(
             Constants.STUDY_ID, Constants.CUSTOM_STUDY_ID, Constants.APP_ID_HEADER, "");
     performPost(SEND_NOTIFICATION_PATH, requestJson, headers, "", BAD_REQUEST);
-  }
-
-  @Test
-  public void sendNotificationSuccess() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
-
-    // StudyLevel notificationType
-    String requestJson =
-        getNotificationForm(
-            Constants.STUDY_ID,
-            Constants.CUSTOM_STUDY_ID,
-            Constants.APP_ID_VALUE,
-            Constants.STUDY_LEVEL);
-
-    mockMvc
-        .perform(post(SEND_NOTIFICATION_PATH).content(requestJson).headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
-        .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
-        .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
-        .andExpect(
-            jsonPath(
-                "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
-
-    // GatewayLevel notificationType
-    requestJson =
-        getNotificationForm(
-            Constants.STUDY_ID,
-            Constants.CUSTOM_STUDY_ID,
-            Constants.APP_ID_VALUE,
-            Constants.GATEWAY_LEVEL);
-
-    mockMvc
-        .perform(post(SEND_NOTIFICATION_PATH).content(requestJson).headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message", is(ErrorCode.EC_200.errorMessage())))
-        .andExpect(jsonPath("$.code", is(ErrorCode.EC_200.code())))
-        .andExpect(jsonPath("$.response.multicast_id", greaterThan(0L)))
-        .andExpect(
-            jsonPath(
-                "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
   }
 
   private String getNotificationForm(
