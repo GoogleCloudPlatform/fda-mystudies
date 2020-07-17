@@ -71,6 +71,6 @@ public interface UserDetailsService {
 
   public String savePasswordHistory(String userId, String password, String salt);
 
-  public boolean sendEmailOnAccountLocking(String emailId, String appCode)
+  public boolean sendEmailOnAccountLocking(String emailId, String appId, String orgId, String appCode)
       throws UserNotFoundException, IllegalArgumentException;
 }

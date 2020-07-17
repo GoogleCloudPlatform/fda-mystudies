@@ -619,7 +619,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   }
 
   @Override
-  public boolean sendEmailOnAccountLocking(String emailId, String appCode)
+  public boolean sendEmailOnAccountLocking(
+      String emailId, String appId, String orgId, String appCode)
       throws UserNotFoundException, IllegalArgumentException {
     logger.info("UserDetailsServiceImpl sendEmailOnAccountLocking() - starts");
     boolean result = false;
@@ -630,7 +631,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       throw new IllegalArgumentException();
     }
 
-    DaoUserBO userInfo = userRepo.findByEmailIdAndAppCode(emailId, appCode);
+    DaoUserBO userInfo =
+        userRepo.findByEmailIdAndAppIdAndOrgIdAndAppCode(emailId, appId, orgId, appCode);
     if (userInfo == null) {
       logger.info(AppConstants.SEND_EMAIL_ON_ACCOUNT_LOCKING_RESPONSE);
       throw new UserNotFoundException();
