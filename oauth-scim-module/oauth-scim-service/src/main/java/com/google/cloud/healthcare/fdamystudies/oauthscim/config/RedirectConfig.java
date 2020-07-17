@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 import static com.google.cloud.healthcare.fdamystudies.common.DevicePlatform.ANDROID;
 import static com.google.cloud.healthcare.fdamystudies.common.DevicePlatform.IOS;
 
+import com.google.cloud.healthcare.fdamystudies.common.DevicePlatform;
 import java.io.Serializable;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,9 +33,9 @@ public class RedirectConfig implements Serializable {
   private String myStudiesAndroidAppCallbackUrl;
 
   public String getCallbackUrl(String devicePlatform) {
-    if (ANDROID.getValue().equalsIgnoreCase(devicePlatform)) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
       return myStudiesAndroidAppCallbackUrl;
-    } else if (IOS.getValue().equalsIgnoreCase(devicePlatform)) {
+    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
       return myStudiesIosAppCallbackUrl;
     }
     return participantManagerCallbackUrl;
