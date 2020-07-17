@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -23,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionReposito
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -52,16 +55,21 @@ public class TestDataHelper {
 
   @Autowired AppRepository appRepository;
 
+  @Autowired private SiteRepository siteRepository;
+
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(EMAIL_VALUE);
     userRegAdminEntity.setFirstName("mockito");
     userRegAdminEntity.setLastName("mockito_last_name");
-    userRegAdminEntity.setManageLocations(2);
-    userRegAdminEntity.setStatus(1);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
     return userRegAdminEntity;
+  }
+
+  public UserRegAdminEntity createUserRegAdmin() {
+    UserRegAdminEntity userRegAdminEntity = newUserRegAdminEntity();
+    return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
   }
 
   public StudyEntity newStudyEntity() {
@@ -102,11 +110,41 @@ public class TestDataHelper {
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
     StudyEntity studyEntity = new StudyEntity();
+    studyEntity.setType("CLOSE");
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEdit(EDIT_VALUE);
     studyPermissionEntity.setAppInfo(appEntity);
     studyEntity.addStudyPermissionEntity(studyPermissionEntity);
     return studyRepository.saveAndFlush(studyEntity);
+  }
+
+  public SiteEntity newSiteEntity() {
+    SiteEntity siteEntity = new SiteEntity();
+    siteEntity.setName("siteName");
+
+    return siteEntity;
+  }
+
+  public SiteEntity createSiteEntity(
+      StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setAppInfo(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
+  }
+
+  public SiteEntity createSiteEntitywithStudy(
+      UserRegAdminEntity userRegAdminEntity, StudyEntity studyEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(userRegAdminEntity);
+    sitePermissionEntity.setSite(siteEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
   }
 }

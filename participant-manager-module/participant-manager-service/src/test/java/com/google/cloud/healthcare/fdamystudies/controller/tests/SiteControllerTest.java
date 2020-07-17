@@ -53,7 +53,7 @@ import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.google.cloud.healthcare.fdamystudies.util.Constants;
 import com.jayway.jsonpath.JsonPath;
 
-public class SitesControllerTest extends BaseMockIT {
+public class SiteControllerTest extends BaseMockIT {
 
   private static String siteId;
 
@@ -66,6 +66,7 @@ public class SitesControllerTest extends BaseMockIT {
   private StudyEntity studyEntity;
   private LocationEntity locationEntity;
   private AppEntity appEntity;
+  private SiteEntity siteEntiy;
 
   @BeforeEach
   public void setUp() {
@@ -73,6 +74,7 @@ public class SitesControllerTest extends BaseMockIT {
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
+    siteEntiy = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
   }
 
   @Test
@@ -158,12 +160,33 @@ public class SitesControllerTest extends BaseMockIT {
     assertEquals(sitePermissionEntity.getCreatedBy(), userRegAdminEntity.getId());
   }
 
+  @Test
+  public void shouldReturnSiteExists() throws Exception {
+    HttpHeaders headers = newCommonHeaders();
+    SiteRequest siteRequest = newSiteRequest();
+
+    siteEntiy.setStudy(studyEntity);
+    siteEntiy.setLocation(locationEntity);
+    siteEntiy = testDataHelper.getSiteRepository().saveAndFlush(siteEntiy);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ADD_NEW_SITE.getPath())
+                .content(JsonUtils.asJsonString(siteRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.SITE_EXISTS.getDescription())));
+  }
+
   @AfterEach
   public void cleanUp() {
     if (StringUtils.isNotEmpty(siteId)) {
       siteRepository.deleteById(siteId);
       siteId = null;
     }
+    testDataHelper.getSiteRepository().deleteAll();
     testDataHelper.getStudyRepository().delete(studyEntity);
     testDataHelper.getAppRepository().delete(appEntity);
     testDataHelper.getUserRegAdminRepository().delete(userRegAdminEntity);
