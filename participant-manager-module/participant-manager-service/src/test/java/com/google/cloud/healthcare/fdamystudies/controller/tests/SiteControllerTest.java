@@ -161,14 +161,19 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnSiteExists() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
-    SiteRequest siteRequest = newSiteRequest();
-
+  public void shouldReturnSiteExistsError() throws Exception {
+    // Step 1: create a site using study and location entities
     siteEntiy.setStudy(studyEntity);
     siteEntiy.setLocation(locationEntity);
     siteEntiy = testDataHelper.getSiteRepository().saveAndFlush(siteEntiy);
 
+    // Step 2: create site request using same study and location ids
+    SiteRequest siteRequest = new SiteRequest();
+    siteRequest.setStudyId(studyEntity.getId());
+    siteRequest.setLocationId(locationEntity.getId());
+
+    // Step 3: call the API and expect SITE_EXSTS error
+    HttpHeaders headers = newCommonHeaders();
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_NEW_SITE.getPath())
