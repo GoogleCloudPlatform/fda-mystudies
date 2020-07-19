@@ -86,4 +86,8 @@ public final class AuthScimConstants {
   public static final String ACCOUNT_LOCK_EMAIL_TIMESTAMP = "account_lock_email_timestamp";
 
   public static final String CONSENT_CHALLENGE = "consent_challenge";
+
+  public static final String FORGOT_PASSWORD_LINK = "forgot_password_link";
+
+  public static final String SIGNUP_LINK = "signup_link";
 }
