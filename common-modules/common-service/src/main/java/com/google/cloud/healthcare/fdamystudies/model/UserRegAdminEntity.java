@@ -83,11 +83,11 @@ public class UserRegAdminEntity implements Serializable {
   private Integer manageLocations;
 
   @Column(
-      name = "created_time",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp createdTime;
+  private Timestamp created;
 
   @Column(name = "created_by")
   private String createdBy;
