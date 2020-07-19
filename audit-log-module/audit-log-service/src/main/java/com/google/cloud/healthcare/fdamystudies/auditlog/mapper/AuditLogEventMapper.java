@@ -34,7 +34,6 @@ public final class AuditLogEventMapper {
     entity.setEventDetail(aleRequest.getEventDetail());
     entity.setEventName(aleRequest.getEventName());
     entity.setOccurred(new Timestamp(aleRequest.getOccured()));
-    entity.setOrgId(aleRequest.getOrgId());
     entity.setRequestUri(aleRequest.getRequestUri());
     entity.setResourceServer(aleRequest.getResourceServer());
     entity.setSystemId(aleRequest.getSystemId());

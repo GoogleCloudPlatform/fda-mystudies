@@ -56,9 +56,6 @@ public class AuditLogEventEntity {
   @Column(name = "app_id", nullable = true, length = 100)
   private String appId;
 
-  @Column(name = "org_id", nullable = true, length = 100)
-  private String orgId;
-
   @ToString.Exclude
   @Column(name = "user_id", nullable = true, length = 100)
   private String userId;

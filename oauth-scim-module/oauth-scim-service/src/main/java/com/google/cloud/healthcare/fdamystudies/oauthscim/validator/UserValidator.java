@@ -57,9 +57,6 @@ public final class UserValidator {
       if (StringUtils.isEmpty(request.getAppId())) {
         error.getViolations().add(new Violation("appId", MUST_NOT_BE_BLANK));
       }
-      if (StringUtils.isEmpty(request.getOrgId())) {
-        error.getViolations().add(new Violation("orgId", MUST_NOT_BE_BLANK));
-      }
     }
 
     return error;

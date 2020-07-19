@@ -21,7 +21,6 @@ public final class UserMapper {
     UserEntity entity = new UserEntity();
     entity.setAppId(userRequest.getAppId());
     entity.setEmail(userRequest.getEmail());
-    entity.setOrgId(userRequest.getOrgId());
     entity.setStatus(userRequest.getStatus());
     entity.setTempRegId(IdGenerator.id());
     entity.setUserId(IdGenerator.id());

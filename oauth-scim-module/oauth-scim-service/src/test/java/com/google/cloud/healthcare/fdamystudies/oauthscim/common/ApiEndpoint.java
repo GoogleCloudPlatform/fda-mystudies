@@ -12,23 +12,23 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  HEALTH("http://localhost:8002/oauth-scim-service/v1/healthCheck"),
+  HEALTH("http://localhost:8002/oauth-scim-service/healthCheck"),
 
-  TOKEN("http://localhost:8002/oauth-scim-service/v1/oauth2/token"),
+  TOKEN("http://localhost:8002/oauth-scim-service/oauth2/token"),
 
-  USERS("http://localhost:8002/oauth-scim-service/v1/users"),
+  USERS("http://localhost:8002/oauth-scim-service/users"),
 
-  USER("http://localhost:8002/oauth-scim-service/v1/users/{userId}"),
+  USER("http://localhost:8002/oauth-scim-service/users/{userId}"),
 
-  RESET_PASSWORD("http://localhost:8002/oauth-scim-service/v1/user/reset_password"),
+  RESET_PASSWORD("http://localhost:8002/oauth-scim-service/user/reset_password"),
 
-  REVOKE_TOKEN("http://localhost:8002/oauth-scim-service/v1/oauth2/revoke"),
+  REVOKE_TOKEN("http://localhost:8002/oauth-scim-service/oauth2/revoke"),
 
   LOGIN_PAGE("http://localhost:8002/oauth-scim-service/login"),
 
   CONSENT_PAGE("http://localhost:8002/oauth-scim-service/consent"),
 
-  TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/v1/oauth2/introspect");
+  TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/oauth2/introspect");
 
   private String url;
 

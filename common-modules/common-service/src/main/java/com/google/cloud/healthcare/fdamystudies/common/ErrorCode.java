@@ -30,7 +30,7 @@ public enum ErrorCode {
       "Malformed request syntax or invalid request message framing."),
 
   UNAUTHORIZED(401, "EC-401", "Unauthorized", "Invalid token"),
-  
+
   ACCOUNT_LOCKED(
       400,
       "EC-107",

@@ -80,8 +80,7 @@ public class UserServiceImpl implements UserService {
 
     // check if the email already been used
     Optional<UserEntity> user =
-        repository.findByAppIdAndOrgIdAndEmail(
-            userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
+        repository.findByAppIdAndEmail(userRequest.getAppId(), userRequest.getEmail());
 
     if (user.isPresent()) {
       UserResponse userResponse = new UserResponse(ErrorCode.EMAIL_EXISTS);
@@ -161,8 +160,7 @@ public class UserServiceImpl implements UserService {
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
-        repository.findByAppIdAndOrgIdAndEmail(
-            userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
+        repository.findByAppIdAndEmail(userRequest.getAppId(), userRequest.getEmail());
     if (entity.isPresent()) {
       UserEntity userEntity = entity.get();
       aleRequest.setUserId(userEntity.getUserId());
@@ -196,7 +194,6 @@ public class UserServiceImpl implements UserService {
 
   private EmailResponse sendPasswordResetEmail(UpdateUserRequest userRequest, String tempPassword) {
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("orgId", userRequest.getOrgId());
     templateArgs.put("appId", userRequest.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
@@ -276,7 +273,7 @@ public class UserServiceImpl implements UserService {
     logger.entry("begin authenticate(user)");
     // check if the email present in the database
     Optional<UserEntity> optUserEntity =
-        repository.findByAppIdAndOrgIdAndEmail(user.getAppId(), user.getOrgId(), user.getEmail());
+        repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
 
     if (!optUserEntity.isPresent()) {
       return new AuthenticationResponse(ErrorCode.USER_NOT_FOUND);

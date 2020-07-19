@@ -58,7 +58,4 @@ public class UpdateUserRequest {
 
   @Size(max = 100)
   private String appId;
-
-  @Size(max = 100)
-  private String orgId;
 }

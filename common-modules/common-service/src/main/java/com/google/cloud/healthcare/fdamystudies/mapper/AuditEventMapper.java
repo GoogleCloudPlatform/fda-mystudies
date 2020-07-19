@@ -26,12 +26,9 @@ public final class AuditEventMapper {
 
   private static final String USER_ID = "userId";
 
-  private static final String ORG_ID = "orgId";
-
   public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request)
       throws UnknownHostException {
     AuditLogEventRequest aleRequest = new AuditLogEventRequest();
-    aleRequest.setOrgId(getValue(request, ORG_ID));
     aleRequest.setAppId(getValue(request, APP_ID));
     aleRequest.setClientAppVersion(getValue(request, CLIENT_APP_VERSION));
     aleRequest.setCorrelationId(getValue(request, CORRELATION_ID));

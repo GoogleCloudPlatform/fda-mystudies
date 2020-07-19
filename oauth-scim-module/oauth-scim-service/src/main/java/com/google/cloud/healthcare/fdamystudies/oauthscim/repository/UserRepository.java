@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-  public Optional<UserEntity> findByAppIdAndOrgIdAndEmail(String appId, String orgId, String email);
+  public Optional<UserEntity> findByAppIdAndEmail(String appId, String email);
 
   @Transactional
   public long deleteByUserId(String userId);

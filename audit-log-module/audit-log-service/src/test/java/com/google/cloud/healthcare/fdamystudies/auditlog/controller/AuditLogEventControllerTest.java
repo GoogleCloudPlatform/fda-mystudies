@@ -80,7 +80,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -99,7 +99,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(INVALID_TOKEN)));
   }
 
@@ -119,7 +119,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(token)));
   }
 
@@ -153,7 +153,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     verify(
         2,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -185,7 +185,6 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     aleRequest.setEventDetail("App user registration success");
     aleRequest.setEventName("REGISTRATION_SUCCESS");
     aleRequest.setOccured(Instant.now().toEpochMilli());
-    aleRequest.setOrgId("FDA");
     aleRequest.setRequestUri(null);
     aleRequest.setResourceServer("Participant Datastore");
     aleRequest.setSystemId("FMSGCAUTHSVR");

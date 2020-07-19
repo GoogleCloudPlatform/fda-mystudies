@@ -28,10 +28,6 @@ public class UserRequest {
   @Size(max = 100)
   private String appId;
 
-  @NotBlank
-  @Size(max = 100)
-  private String orgId;
-
   @ToString.Exclude
   @NotBlank
   @Size(max = 320)

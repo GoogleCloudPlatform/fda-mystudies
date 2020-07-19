@@ -73,9 +73,6 @@ public class AuditLogEventRequest {
   private String appId;
 
   @Size(max = 100)
-  private String orgId;
-
-  @Size(max = 100)
   private String clientId;
 
   @Size(max = 10)
