@@ -56,5 +56,4 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${cookie.secure:true}")
   private boolean secureCookie;
-
 }

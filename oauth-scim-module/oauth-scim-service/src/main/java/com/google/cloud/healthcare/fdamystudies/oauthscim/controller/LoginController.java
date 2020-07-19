@@ -26,7 +26,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
@@ -145,7 +144,7 @@ public class LoginController {
     AuthenticationResponse authenticationResponse = userService.authenticate(user);
     if (authenticationResponse.is2xxSuccessful()) {
       logger.exit("authentication success, redirect to consent page");
-      addCookie(request, response, USER_ID, authenticationResponse.getUserId());
+      addCookie(response, USER_ID, authenticationResponse.getUserId());
     } else {
       logger.error(
           String.format(
@@ -170,7 +169,7 @@ public class LoginController {
       return LOGIN;
     } else {
       logger.exit("tempRegId is valid, return to consent page");
-      addCookie(request, response, USER_ID, optUser.get().getUserId());
+      addCookie(response, USER_ID, optUser.get().getUserId());
       return redirectToConsentPage(loginChallenge, email, response);
     }
   }
