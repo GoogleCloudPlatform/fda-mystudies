@@ -146,7 +146,7 @@ public class LoginController {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
     if (StringUtils.isNotEmpty(tempRegId)) {
-      return redirectToLoginOrConsentPage(email, tempRegId, loginChallenge, request, response);
+      return autoSignInOrReturnLoginPage(tempRegId, loginChallenge, request, response);
     }
 
     // validate user credentials
@@ -178,8 +178,7 @@ public class LoginController {
     return redirectToConsentPage(loginChallenge, email, request, response);
   }
 
-  private String redirectToLoginOrConsentPage(
-      String email,
+  private String autoSignInOrReturnLoginPage(
       String tempRegId,
       String loginChallenge,
       HttpServletRequest request,
@@ -187,11 +186,14 @@ public class LoginController {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
     if (!optUser.isPresent()) {
       logger.exit("tempRegId is invalid, return to login page");
+      deleteCookie(response, TEMP_REG_ID);
       return LOGIN;
     } else {
+      UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
-      addCookie(response, USER_ID, optUser.get().getUserId());
-      return redirectToConsentPage(loginChallenge, email, request, response);
+      addCookie(response, USER_ID, user.getUserId());
+      userService.resetTempRegId(user.getUserId());
+      return redirectToConsentPage(loginChallenge, user.getEmail(), request, response);
     }
   }
 
@@ -239,7 +241,16 @@ public class LoginController {
     // tempRegId for auto signin after signup
     if (StringUtils.isNotEmpty(tempRegId)) {
       Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
-      return optUser.isPresent() ? "signin" : LOGIN;
+      if (optUser.isPresent()) {
+        UserEntity user = optUser.get();
+        logger.exit("tempRegId is valid, return to auto signin page");
+        addCookie(response, USER_ID, user.getUserId());
+        return "signin";
+      }
+
+      logger.exit("tempRegId is invalid, return to login page");
+      deleteCookie(response, TEMP_REG_ID);
+      return LOGIN;
     }
     return LOGIN;
   }
@@ -280,6 +291,15 @@ public class LoginController {
   public void addCookie(HttpServletResponse response, String cookieName, String cookieValue) {
     Cookie cookie = new Cookie(cookieName, cookieValue);
     cookie.setMaxAge(600);
+    cookie.setSecure(appConfig.isSecureCookie());
+    cookie.setHttpOnly(true);
+    cookie.setPath("/");
+    response.addCookie(cookie);
+  }
+
+  public void deleteCookie(HttpServletResponse response, String cookieName) {
+    Cookie cookie = new Cookie(cookieName, null);
+    cookie.setMaxAge(0);
     cookie.setSecure(appConfig.isSecureCookie());
     cookie.setHttpOnly(true);
     cookie.setPath("/");

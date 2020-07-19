@@ -50,7 +50,9 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EmailService;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -60,6 +62,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -75,6 +78,7 @@ public class UserServiceImpl implements UserService {
   @Autowired private AuthScimAuditLogHelper aleHelper;
 
   @Override
+  @Transactional
   public UserResponse createUser(UserRequest userRequest) {
     logger.entry("begin createUser()");
 
@@ -145,6 +149,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public UpdateUserResponse updateUser(UpdateUserRequest userRequest)
       throws JsonProcessingException {
     logger.entry(String.format("begin updateUser() for %s action", userRequest.getAction()));
@@ -155,6 +160,8 @@ public class UserServiceImpl implements UserService {
     return new UpdateUserResponse(ErrorCode.APPLICATION_ERROR);
   }
 
+  @Override
+  @Transactional
   public UpdateUserResponse resetPassword(
       UpdateUserRequest userRequest, AuditLogEventRequest aleRequest)
       throws JsonProcessingException {
@@ -264,11 +271,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<UserEntity> findUserByTempRegId(String tempRegId) {
-    logger.entry("begin findUserByTempRegId()");
     return repository.findByTempRegId(tempRegId);
   }
 
   @Override
+  @Transactional
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
     // check if the email present in the database
@@ -399,5 +406,20 @@ public class UserServiceImpl implements UserService {
     return (passwordNode.hasNonNull(EXPIRE_TIMESTAMP)
             && Instant.now().toEpochMilli() > passwordNode.get(EXPIRE_TIMESTAMP).longValue()
         || passwordNode.hasNonNull(OTP_USED) && passwordNode.get(OTP_USED).booleanValue());
+  }
+
+  @Override
+  public void resetTempRegId(String userId) {
+    repository.resetTempRegId(userId);
+  }
+
+  @Override
+  @Transactional
+  public void removeExpiredTempRegIds() {
+    long timeInMillis =
+        Instant.now()
+            .minus(appConfig.getTempRegIdExpiryMinutes(), ChronoUnit.MINUTES)
+            .toEpochMilli();
+    repository.updateTempRegId(new Timestamp(timeInMillis));
   }
 }

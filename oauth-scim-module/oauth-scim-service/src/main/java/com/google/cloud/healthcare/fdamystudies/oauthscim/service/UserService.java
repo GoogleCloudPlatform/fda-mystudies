@@ -32,4 +32,8 @@ public interface UserService {
   public Optional<UserEntity> findUserByTempRegId(String tempRegId);
 
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException;
+
+  public void resetTempRegId(String userId);
+
+  public void removeExpiredTempRegIds();
 }

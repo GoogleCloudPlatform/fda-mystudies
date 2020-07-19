@@ -33,6 +33,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestClientResponseException;
 
 @Service
@@ -58,6 +59,7 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
   @Autowired private OAuthService oauthService;
 
   @Override
+  @Transactional
   public AuditLogEventResponse postAuditLogEvent(
       AuditLogEvent eventEnum, AuditLogEventRequest aleRequest) {
     logger.entry(String.format("begin postAuditLogEvent() for %s event", eventEnum.getEventName()));
@@ -123,7 +125,8 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
             "%s event not received/processed by the central audit log system.", eventName));
   }
 
-  private AuditLogEventResponse saveAuditLogEvent(JsonNode requestBody, int httpStatus) {
+  @Transactional
+  public AuditLogEventResponse saveAuditLogEvent(JsonNode requestBody, int httpStatus) {
     AuditEventEntity auditLogEventEntity = new AuditEventEntity();
     auditLogEventEntity.setEventRequest(requestBody.toString());
     auditLogEventEntity.setRetryCount(0);
@@ -134,7 +137,8 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
     return new AuditLogEventResponse(HttpStatus.ACCEPTED, "event saved for task scheduler");
   }
 
-  private void updateAuditLogEventStatus(
+  @Transactional
+  public void updateAuditLogEventStatus(
       String id, AuditLogEventStatus aleStatus, int httpStatusCode) {
     Optional<AuditEventEntity> record = auditEventRepository.findById(id);
     if (record.isPresent()) {
@@ -148,6 +152,7 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
   }
 
   @Override
+  @Transactional
   public void resendAuditLogEvents() {
     logger.entry("begin resendLogAuditEvents() with no args");
     try {
