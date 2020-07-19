@@ -23,4 +23,13 @@ public enum DevicePlatform {
   private final String value;
 
   private final String description;
+
+  public static DevicePlatform fromString(String value) {
+    for (DevicePlatform devicePlatform : DevicePlatform.values()) {
+      if (devicePlatform.value.equalsIgnoreCase(value)) {
+        return devicePlatform;
+      }
+    }
+    return null;
+  }
 }

@@ -53,4 +53,8 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${oauth.scim.service.email.account.locked.content}")
   private String mailAccountLockedBody;
+
+  @Value("${cookie.secure:true}")
+  private boolean secureCookie;
+
 }

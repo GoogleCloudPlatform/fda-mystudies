@@ -8,8 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CookieUtils.addCookie;
-import static com.google.cloud.healthcare.fdamystudies.common.CookieUtils.addCookies;
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_APP_VERSION;
@@ -28,16 +26,19 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.util.Optional;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -72,8 +73,10 @@ public class LoginController {
 
   @Autowired private RedirectConfig redirectConfig;
 
+  @Autowired private AppPropertyConfig appConfig;
+
   @GetMapping(value = "/login")
-  public String authorize(
+  public String login(
       @RequestParam(name = LOGIN_CHALLENGE, required = false) String loginChallenge,
       @RequestParam(required = false) String code,
       HttpServletRequest request,
@@ -94,9 +97,9 @@ public class LoginController {
     // show or skip login page
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
     paramMap.add(LOGIN_CHALLENGE, loginChallenge);
-    ResponseEntity<JsonNode> requestLoginResponse = oauthService.requestLogin(paramMap);
-    if (requestLoginResponse.getStatusCode().is2xxSuccessful()) {
-      JsonNode responseBody = requestLoginResponse.getBody();
+    ResponseEntity<JsonNode> loginResponse = oauthService.requestLogin(paramMap);
+    if (loginResponse.getStatusCode().is2xxSuccessful()) {
+      JsonNode responseBody = loginResponse.getBody();
       if (skipLogin(responseBody)) {
         logger.exit("skip login, return to callback URL");
         return redirectToCallbackUrl(request, code, response);
@@ -197,9 +200,8 @@ public class LoginController {
     MultiValueMap<String, String> qsParams =
         UriComponentsBuilder.fromUriString(requestUrl).build().getQueryParams();
 
-    addCookie(request, response, LOGIN_CHALLENGE, loginChallenge);
+    addCookie(response, LOGIN_CHALLENGE, loginChallenge);
     addCookies(
-        request,
         response,
         qsParams,
         APP_ID,
@@ -237,5 +239,21 @@ public class LoginController {
     response.setHeader("Location", redirectUrl);
     response.setStatus(HttpStatus.FOUND.value());
     return "redirect:" + redirectUrl;
+  }
+
+  public void addCookies(
+      HttpServletResponse response, MultiValueMap<String, String> params, String... cookieNames) {
+    for (String cookieName : cookieNames) {
+      addCookie(response, cookieName, params.getFirst(cookieName));
+    }
+  }
+
+  public void addCookie(HttpServletResponse response, String cookieName, String cookieValue) {
+    Cookie cookie = new Cookie(cookieName, cookieValue);
+    cookie.setMaxAge(600);
+    cookie.setSecure(appConfig.isSecureCookie());
+    cookie.setHttpOnly(true);
+    cookie.setPath("/");
+    response.addCookie(cookie);
   }
 }
