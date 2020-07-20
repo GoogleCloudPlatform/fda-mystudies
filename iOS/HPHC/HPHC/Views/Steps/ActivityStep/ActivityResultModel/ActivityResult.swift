@@ -53,8 +53,6 @@ class ActivityResult {
         == 0
     {
 
-      var i = 0
-
       for stepResult in taskResult.results! {
         let activityStepResult: ActivityStepResult? = ActivityStepResult()
 
@@ -93,7 +91,6 @@ class ActivityResult {
             }
           }
         }
-        i = i + 1
       }
     }
   }
