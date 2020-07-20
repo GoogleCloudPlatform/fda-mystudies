@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -50,7 +52,6 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
-import com.google.cloud.healthcare.fdamystudies.util.Constants;
 import com.jayway.jsonpath.JsonPath;
 
 public class SiteControllerTest extends BaseMockIT {
@@ -109,12 +110,12 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedForAddNewSite() throws Exception {
     // pre-condition: deny study permission
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEdit(Constants.VIEW_VALUE);
+    studyPermissionEntity.setEditPermission(VIEW_VALUE);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     // pre-condition: deny app permission
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
-    appPermissionEntity.setEdit(Constants.VIEW_VALUE);
+    appPermissionEntity.setEditPermission(VIEW_VALUE);
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
     HttpHeaders headers = newCommonHeaders();
     SiteRequest siteRequest = newSiteRequest();
@@ -130,7 +131,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.SITE_PERMISSION_ACEESS_DENIED.getDescription())));
+                is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
   }
 
   @Test
@@ -200,7 +201,7 @@ public class SiteControllerTest extends BaseMockIT {
 
   private HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
-    headers.add(Constants.USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
     return headers;

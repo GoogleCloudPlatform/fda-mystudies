@@ -75,7 +75,7 @@ public class StudyEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by", nullable = false, length = 64)
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
   @Column(
@@ -85,7 +85,7 @@ public class StudyEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
-  @Column(name = "modified_by", nullable = false, length = 64)
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
   @Column(name = "version", length = 100)
