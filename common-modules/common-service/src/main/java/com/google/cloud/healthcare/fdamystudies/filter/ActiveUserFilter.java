@@ -30,6 +30,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -45,6 +46,10 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 
 @Component
 @Order(3)
+@ConditionalOnProperty(
+    value = "commonservice.activeuser.filter.enabled",
+    havingValue = "true",
+    matchIfMissing = false)
 public class ActiveUserFilter implements Filter {
 
   private XLogger logger = XLoggerFactory.getXLogger(ActiveUserFilter.class.getName());
