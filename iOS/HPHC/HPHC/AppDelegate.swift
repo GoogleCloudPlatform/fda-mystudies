@@ -715,7 +715,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     guard
       ((viewController.presentedViewController as? ORKTaskViewController)?
-        .currentStepViewController as? ORKPasscodeStepViewController) == nil
+        .currentStepViewController)?.step?.identifier
+        != kPasscodeStepIdentifier
     else { return }  // If already presented. Return.
     if User.currentUser.userType == .loggedInUser {  // FDA user
 
