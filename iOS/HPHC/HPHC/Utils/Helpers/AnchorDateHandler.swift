@@ -48,6 +48,15 @@ class AnchorDateHandler {
   var handler: AnchordDateFetchCompletionHandler!
   var study: Study
 
+  static let anchorDateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    let locale = Locale(identifier: "en_US_POSIX")
+    dateFormatter.timeZone = TimeZone.current
+    dateFormatter.locale = locale
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    return dateFormatter
+  }()
+
   init(study: Study) {
     self.study = study
   }
@@ -237,7 +246,7 @@ class AnchorDateHandler {
                 as? [String: String],
               let anchorDateString = anchorDateObject["value"]
             {
-              let date = ResponseDataFetch.responseDateFormatter.date(from: anchorDateString)
+              let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString)
               emptyAnchorDateDetail.anchorDate = date
               completion()
             } else {
