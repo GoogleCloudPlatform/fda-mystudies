@@ -136,15 +136,4 @@ public class TestDataHelper {
     siteEntity.addSitePermissionEntity(sitePermissionEntity);
     return siteRepository.saveAndFlush(siteEntity);
   }
-
-  public SiteEntity createSiteEntitywithStudy(
-      UserRegAdminEntity userRegAdminEntity, StudyEntity studyEntity) {
-    SiteEntity siteEntity = newSiteEntity();
-    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setStudy(studyEntity);
-    sitePermissionEntity.setUrAdminUser(userRegAdminEntity);
-    sitePermissionEntity.setSite(siteEntity);
-    siteEntity.addSitePermissionEntity(sitePermissionEntity);
-    return siteRepository.saveAndFlush(siteEntity);
-  }
 }
