@@ -13,7 +13,7 @@ import java.net.URL;
 
 public enum ApiEndpoint {
   HEALTH("http://localhost:8004/mystudies-response-server/healthCheck"),
-  PARTICIPANTID("http://localhost:8004/mystudies-response-server//participant/add");
+  PARTICIPANTID("http://localhost:8004/mystudies-response-server/participant/add");
 
   private String url;
 
