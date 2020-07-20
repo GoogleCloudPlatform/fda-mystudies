@@ -55,8 +55,8 @@ public class AppPermissionEntity implements Serializable {
   @JoinColumn(name = "app_info_id")
   private AppEntity appInfo;
 
-  @Column(name = "edit")
-  private Integer edit;
+  @Column(name = "edit_permission", nullable = true, length = 1)
+  private Integer editPermission;
 
   @Column(
       name = "created",
@@ -65,6 +65,6 @@ public class AppPermissionEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", nullable = false, length = 64)
   private String createdBy;
 }

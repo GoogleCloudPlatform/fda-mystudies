@@ -12,10 +12,6 @@ public final class Constants {
 
   private Constants() {}
 
-  public static final int VIEW_VALUE = 0;
-
-  public static final int EDIT_VALUE = 1;
-
   public static final String USER_ID_HEADER = "UserId";
 
   public static final int ACTIVE = 1;
