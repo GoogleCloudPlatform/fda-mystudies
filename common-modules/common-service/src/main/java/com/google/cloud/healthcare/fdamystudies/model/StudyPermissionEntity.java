@@ -59,7 +59,7 @@ public class StudyPermissionEntity implements Serializable {
   @JoinColumn(name = "ur_admin_user_id")
   private UserRegAdminEntity urAdminUser;
 
-  @Column(name = "edit_permission", length = 1)
+  @Column(name = "edit_permission", nullable = true, length = 1)
   private Integer editPermission;
 
   @Column(
