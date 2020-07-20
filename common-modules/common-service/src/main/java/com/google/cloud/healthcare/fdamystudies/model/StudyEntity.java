@@ -69,7 +69,7 @@ public class StudyEntity implements Serializable {
   private String type;
 
   @Column(
-      name = "created_on",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -79,7 +79,7 @@ public class StudyEntity implements Serializable {
   private String createdBy;
 
   @Column(
-      name = "modified_date",
+      name = "modified",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

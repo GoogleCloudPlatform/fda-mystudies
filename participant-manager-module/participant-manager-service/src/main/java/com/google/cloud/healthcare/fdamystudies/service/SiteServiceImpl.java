@@ -104,8 +104,8 @@ public class SiteServiceImpl implements SiteService {
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
         logger.exit(String.format("editValue=%d", Permission.READ_EDIT));
-        return studyPermission.getEdit() == Permission.READ_EDIT.value()
-            || appPermission.getEdit() == Permission.READ_EDIT.value();
+        return studyPermission.getEditPermission() == Permission.READ_EDIT.value()
+            || appPermission.getEditPermission() == Permission.READ_EDIT.value();
       }
     }
     logger.exit("default permission is edit, return true");
@@ -120,11 +120,11 @@ public class SiteServiceImpl implements SiteService {
         studyPermissionRepository.findByStudyId(studyId);
 
     SiteEntity site = new SiteEntity();
-    Optional<StudyEntity> studyInfo = studyRepository.findByStudyId(studyId);
+    Optional<StudyEntity> studyInfo = studyRepository.findById(studyId);
     if (studyInfo.isPresent()) {
       site.setStudy(studyInfo.get());
     }
-    Optional<LocationEntity> location = locationRepository.findByLocationId(locationId);
+    Optional<LocationEntity> location = locationRepository.findById(locationId);
     if (location.isPresent()) {
       site.setLocation(location.get());
     }
@@ -146,12 +146,12 @@ public class SiteServiceImpl implements SiteService {
       Integer editPermission =
           studyPermission.getUrAdminUser().getId().equals(userId)
               ? Permission.READ_EDIT.value()
-              : studyPermission.getEdit();
+              : studyPermission.getEditPermission();
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
       sitePermission.setStudy(studyPermission.getStudy());
       sitePermission.setAppInfo(studyPermission.getAppInfo());
-      sitePermission.setCanEdit(editPermission);
+      sitePermission.setEditPermission(editPermission);
       sitePermission.setCreatedBy(userId);
       site.addSitePermissionEntity(sitePermission);
     }

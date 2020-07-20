@@ -55,8 +55,8 @@ public class AppPermissionEntity implements Serializable {
   @JoinColumn(name = "app_info_id")
   private AppEntity appInfo;
 
-  @Column(name = "edit")
-  private Integer edit;
+  @Column(name = "edit_permission")
+  private Integer editPermission;
 
   @Column(
       name = "created",

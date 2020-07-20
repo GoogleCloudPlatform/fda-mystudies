@@ -119,14 +119,14 @@ public class AppEntity implements Serializable {
   private String modifiedBy;
 
   @Column(
-      name = "modified_date",
+      name = "modified",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
   @Column(
-      name = "created_on",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

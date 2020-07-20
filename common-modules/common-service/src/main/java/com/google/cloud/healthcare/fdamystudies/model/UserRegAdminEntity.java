@@ -69,7 +69,7 @@ public class UserRegAdminEntity implements Serializable {
   private String phoneNumber;
 
   @Column(name = "email_changed")
-  private Integer emailChanged;
+  private Boolean emailChanged;
 
   @ToString.Exclude
   @Column(name = "status")
