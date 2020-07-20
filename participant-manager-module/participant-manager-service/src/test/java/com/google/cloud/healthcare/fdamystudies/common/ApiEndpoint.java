@@ -20,7 +20,9 @@ public enum ApiEndpoint {
 
   GET_APPS("http://localhost:8080/participant-manager-service/apps"),
 
-  GET_STUDIES("http://localhost:8080/participant-manager-service/studies");
+  GET_STUDIES("http://localhost:8080/participant-manager-service/studies"),
+
+  UPDATE_LOCATION("http://localhost:8080/participant-manager-service/locations/{locationId}");
 
   private String url;
 

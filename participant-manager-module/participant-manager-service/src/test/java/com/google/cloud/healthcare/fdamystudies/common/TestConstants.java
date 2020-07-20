@@ -10,4 +10,8 @@ public final class TestConstants {
   public static final String LOCATION_DESCRIPTION_VALUE = "Marlborough, MA";
 
   public static final String USER_ID_HEADER = "userId";
+
+  public static final String UPDATE_LOCATION_DESCRIPTION_VALUE = "Marlborough, Massachusetts";
+
+  public static final String UPDATE_LOCATION_NAME_VALUE = "Cedar Hill, Marlborough ";
 }

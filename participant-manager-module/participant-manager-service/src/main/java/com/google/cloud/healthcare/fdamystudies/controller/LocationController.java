@@ -17,13 +17,16 @@ import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
 
 @RestController
@@ -44,6 +47,25 @@ public class LocationController {
     locationRequest.setUserId(userId);
 
     LocationResponse locationResponse = locationService.addNewLocation(locationRequest);
+
+    logger.exit(
+        String.format(
+            "status=%d and locationId=%s",
+            locationResponse.getHttpStatusCode(), locationResponse.getLocationId()));
+    return ResponseEntity.status(locationResponse.getHttpStatusCode()).body(locationResponse);
+  }
+
+  @PutMapping("/locations/{locationId}")
+  public ResponseEntity<LocationResponse> updateLocation(
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @Valid @RequestBody UpdateLocationRequest locationRequest,
+      @PathVariable String locationId,
+      HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    locationRequest.setLocationId(locationId);
+    locationRequest.setUserId(userId);
+    LocationResponse locationResponse = locationService.updateLocation(locationRequest);
 
     logger.exit(
         String.format(

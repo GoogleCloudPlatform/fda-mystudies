@@ -123,7 +123,7 @@ public class SiteServiceImpl implements SiteService {
     if (studyInfo.isPresent()) {
       site.setStudy(studyInfo.get());
     }
-    Optional<LocationEntity> location = locationRepository.findByLocationId(locationId);
+    Optional<LocationEntity> location = locationRepository.findById(locationId);
     if (location.isPresent()) {
       site.setLocation(location.get());
     }

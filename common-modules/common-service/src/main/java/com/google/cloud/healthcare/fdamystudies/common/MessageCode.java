@@ -32,7 +32,13 @@ public enum MessageCode {
 
   GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get apps successfull"),
 
-  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfull");
+  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfull"),
+
+  DECOMMISSION_SUCCESS(HttpStatus.OK, "MSG-0003", "Decommission successfully"),
+
+  REACTIVE_SUCCESS(HttpStatus.OK, "MSG-0004", "Reactivate successfully"),
+
+  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully");
 
   private final HttpStatus httpStatus;
   private final String code;
