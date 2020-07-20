@@ -13,11 +13,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
@@ -88,6 +90,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     ErrorBean errorBean = null;
     UserDetailsBO userDetailsBO = null;
     AuthInfoBO authInfo = null;
+    String deviceToken=null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
       if (user != null && userDetailsBO != null) {
@@ -114,6 +117,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
                 if ((user.getInfo().getDeviceToken() != null)
                     && !StringUtils.isEmpty(user.getInfo().getDeviceToken())) {
                   authInfo.setDeviceToken(user.getInfo().getDeviceToken());
+                }
+                //To maintain single session and update old device token
+                //when user changed the device from android to IOS or vice versa
+                else if(!StringUtils.isBlank(authInfo.getDeviceToken())){
+                    authInfo.setDeviceToken(null);
                 }
 
                 authInfo.setModifiedOn(new Date());
