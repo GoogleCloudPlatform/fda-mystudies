@@ -8,10 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public final class DateTimeUtils {
+
+  public static final SimpleDateFormat SDF_DATE_TIME = new SimpleDateFormat("MM/dd/yyyy");
 
   private DateTimeUtils() {}
 
@@ -21,5 +25,12 @@ public final class DateTimeUtils {
     instant = instant.plus(hours, ChronoUnit.HOURS);
     instant = instant.plus(minutes, ChronoUnit.MINUTES);
     return instant.toEpochMilli();
+  }
+
+  public static String format(Timestamp timestamp) {
+    if (timestamp != null) {
+      return SDF_DATE_TIME.format(timestamp);
+    }
+    return null;
   }
 }

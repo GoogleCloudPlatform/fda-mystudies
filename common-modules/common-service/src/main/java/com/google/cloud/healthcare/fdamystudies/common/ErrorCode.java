@@ -104,7 +104,10 @@ public enum ErrorCode {
       400, "EC_887", Constants.BAD_REQUEST, "Can't reactive an already active location"),
 
   LOCATION_UPDATE_DENIED(
-      403, "EC-882", "Forbidden", "You do not have permission to update the location");
+      403, "EC-882", "Forbidden", "You do not have permission to update the location"),
+
+  STUDY_PERMISSION_ACCESS_DENIED(
+      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have study permission");
 
   private final int status;
   private final String code;

@@ -38,7 +38,10 @@ public enum MessageCode {
 
   REACTIVE_SUCCESS(HttpStatus.OK, "MSG-0004", "Reactivate successfully"),
 
-  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully");
+  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully"),
+
+  GET_PARTICIPANT_REGISTRY_SUCCESS(
+      HttpStatus.OK, "MSG-0008", "Get participant registry successfull");
 
   private final HttpStatus httpStatus;
   private final String code;
