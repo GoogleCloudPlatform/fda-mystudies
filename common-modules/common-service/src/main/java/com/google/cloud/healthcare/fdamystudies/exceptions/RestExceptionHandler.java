@@ -28,9 +28,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   private XLogger logger = XLoggerFactory.getXLogger(RestExceptionHandler.class.getName());
 
-  @SuppressWarnings("rawtypes")
   @ExceptionHandler(Exception.class)
-  public ResponseEntity handleSystemException(Exception ex, WebRequest request) {
+  public ResponseEntity<?> handleSystemException(Exception ex, WebRequest request) {
     String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
     logger.error(String.format("%s request failed with an exception", uri), ex);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
