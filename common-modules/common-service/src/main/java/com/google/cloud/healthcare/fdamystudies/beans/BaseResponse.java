@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @JsonInclude(Include.NON_NULL)
@@ -30,6 +31,9 @@ public class BaseResponse {
   @JsonProperty("error_description")
   private String errorDescription;
 
+  @JsonProperty("message")
+  private String message;
+
   public BaseResponse() {}
 
   public BaseResponse(ErrorCode errorCode) {
@@ -37,5 +41,10 @@ public class BaseResponse {
     this.errorCode = errorCode.getCode();
     this.errorType = errorCode.getErrorType();
     this.errorDescription = errorCode.getDescription();
+  }
+
+  public BaseResponse(HttpStatus httpStatus, String message) {
+    this.httpStatusCode = httpStatus.value();
+    this.message = message;
   }
 }

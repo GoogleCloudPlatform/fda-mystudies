@@ -27,6 +27,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "users")
 public class UserEntity {
 
+  @ToString.Exclude
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
