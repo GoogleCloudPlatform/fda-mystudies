@@ -14,7 +14,9 @@ import java.net.URL;
 public enum ApiEndpoint {
   HEALTH("http://localhost:8002/oauth-scim-service/healthCheck"),
 
-  TOKEN("http://localhost:8002/oauth-scim-service/oauth2/token");
+  TOKEN("http://localhost:8002/oauth-scim-service/oauth2/token"),
+
+  USERS("http://localhost:8002/oauth-scim-service/v1/users");
 
   private String url;
 

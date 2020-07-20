@@ -1,0 +1,24 @@
+{
+	"violations": [
+		{
+			"path": "password",
+			"message": "Your password does not meet the required criteria."
+		},
+		{
+			"path": "status",
+			"message": "must not be null"
+		},
+		{
+			"path": "email",
+			"message": "must be a well-formed email address"
+		},
+		{
+			"path": "appId",
+			"message": "must not be blank"
+		},
+		{
+			"path": "orgId",
+			"message": "must not be blank"
+		}
+	]
+}

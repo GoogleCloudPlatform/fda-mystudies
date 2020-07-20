@@ -8,11 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +29,15 @@ public final class JsonUtils {
     return getObjectMapper().createObjectNode();
   }
 
-  public static String readJsonFile(String filepath)
-      throws JsonParseException, JsonMappingException, IOException {
+  public static JsonNode toJsonNode(String jsonTree) throws JsonProcessingException {
+    return getObjectMapper().readTree(jsonTree);
+  }
+
+  public static ArrayNode createArrayNode() {
+    return getObjectMapper().createArrayNode();
+  }
+
+  public static String readJsonFile(String filepath) throws IOException {
     return getObjectMapper()
         .readValue(JsonUtils.class.getResourceAsStream(filepath), JsonNode.class)
         .toString();

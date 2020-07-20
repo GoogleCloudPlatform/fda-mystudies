@@ -36,4 +36,14 @@ public final class AuthScimConstants {
 
   /** to revoke previous session tokens. */
   public static final String USER_ID = "user_id";
+
+  public static final String PASSWORD_HISTORY = "password_history";
+
+  public static final String PASSWORD = "password";
+
+  public static final String EXPIRES_AT = "expires_at";
+
+  public static final String SALT = "salt";
+
+  public static final String HASH = "hash";
 }
