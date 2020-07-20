@@ -25,7 +25,6 @@ INSERT INTO `user_details` (`user_details_id`, `user_id`, `app_info_id`, `email`
 	
 INSERT INTO `participant_registry_site` (`id`, `site_id`, `study_info_id`, `email`, `invitation_date`, `onboarding_status`, `enrollment_token`, `enrollment_token_expiry`, `created`, `created_by`, `invitation_count`) VALUES
 	(30, 1, 1, 'cdash93@gmail.com', '2020-02-07 20:37:25', 'I', 'BSEEMNH6', '2020-02-09 18:42:32', '2020-02-09 18:42:32', 2, 0),
-	(33, 1, 1, 'cdash93@gmail.com', '2020-02-07 20:37:25', 'I', 'BSEEMNH6', '2020-02-09 18:42:32', '2020-02-09 18:42:32', 2, 0),
 	(34, 1, 4, 'abcd@gf.com', '2020-02-07 20:38:36', 'N', 'YB0CZICQ', '2020-02-09 18:42:34', '2020-02-09 18:42:32', 3, 0),
 	(35, 1, 3, 'pqr@gf.com', '2020-02-07 20:38:36', 'D', 'YB0CZICQ', '2020-02-09 18:42:34', '2020-02-09 18:42:32', 3, 0),
 	(36, 1, 1, 'cdash93@gmail.com', '2020-02-07 20:38:36', 'D', '6DL0POQF', '2020-02-09 18:42:34', '2020-02-09 18:42:32', 3, 0),

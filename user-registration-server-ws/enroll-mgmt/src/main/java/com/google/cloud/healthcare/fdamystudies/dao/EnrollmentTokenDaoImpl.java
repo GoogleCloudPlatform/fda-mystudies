@@ -75,8 +75,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean isValidStudyToken(
-      @NotNull String token, @NotNull String studyId, @NotNull String emailId) {
+  public boolean isEnrollmentTokenValid(
+      @NotNull String token, @NotNull String studyId, @NotNull String email) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyInfoBO> studyInfoBoCriteria = null;
@@ -93,10 +93,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           session
               .createQuery(
                   "from ParticipantRegistrySite PS where studyInfo.customId =:studyId and"
-                      + " enrollmentToken=:token and email=:emailId")
+                      + " enrollmentToken=:token and email=:email")
               .setParameter("studyId", studyId)
               .setParameter("token", token)
-              .setParameter("emailId", emailId)
+              .setParameter("email", email)
               .getResultList();
 
       if (!participantRegistrySite.isEmpty()) {
@@ -125,7 +125,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               .createQuery(
                   "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR"
                       + " where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id"
-                      + " and PS.status in ('Enrolled','Withdrawn','inProgress') and PR.enrollmentToken=:token and SB.customId=:studyId")
+                      + " and PS.status in ('Enrolled','Withdrawn','inProgress') "
+                      + "and PR.enrollmentToken=:token and SB.customId=:studyId")
               .setParameter("token", tokenValue)
               .setParameter("studyId", studyId)
               .getResultList();

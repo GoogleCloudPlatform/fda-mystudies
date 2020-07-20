@@ -19,16 +19,16 @@ import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestExc
 
 public interface EnrollmentTokenService {
 
-  public boolean studyExists(@NotNull String shortName);
+  public boolean studyExists(@NotNull String studyId);
 
-  public boolean hasParticipant(@NotNull String shortName, @NotNull String tokenValue);
+  public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue);
 
-  public boolean isValidStudyToken(
-      @NotNull String token, @NotNull String shortName, @NotNull String userId);
+  public boolean isEnrollmentTokenValid(
+      @NotNull String token, @NotNull String studyId, @NotNull String userId);
 
-  public boolean enrollmentTokenRequired(@NotNull String shortName);
+  public boolean enrollmentTokenRequired(@NotNull String studyId);
 
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String shortName, @Nullable String tokenValue, String userId)
+      @NotNull String studyId, @Nullable String tokenValue, String userId)
       throws SystemException, InvalidRequestException, UnAuthorizedRequestException;
 }

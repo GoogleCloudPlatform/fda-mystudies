@@ -60,7 +60,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
-  public boolean isValidStudyToken(
+  public boolean isEnrollmentTokenValid(
       @NotNull String token, @NotNull String studyId, @NotNull String userId) {
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
     boolean isValidStudyToken = false;
@@ -68,7 +68,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       // fetching registered emailid
       UserDetailsBO userDetails = commonService.getUserInfoDetails(userId);
       isValidStudyToken =
-          enrollmentTokenDao.isValidStudyToken(token, studyId, userDetails.getEmail());
+          enrollmentTokenDao.isEnrollmentTokenValid(token, studyId, userDetails.getEmail());
     } catch (Exception e) {
       logger.error("EnrollmentTokenServiceImpl isValidStudyToken() - error ", e);
     }
@@ -92,7 +92,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String shortName, String tokenValue, String userId)
+      @NotNull String studyId, String tokenValue, String userId)
       throws SystemException, InvalidRequestException, UnAuthorizedRequestException {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
     EnrollmentResponseBean participantBean = null;
@@ -100,12 +100,12 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     boolean isTokenRequired = false;
     String participantId = "";
     try {
-      isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
+      isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(studyId);
       hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue);
-      participantId = enrollUtil.getParticipantId("", hashedTokenValue, shortName);
+      participantId = enrollUtil.getParticipantId("", hashedTokenValue, studyId);
       participantBean =
           enrollmentTokenDao.enrollParticipant(
-              shortName,
+              studyId,
               tokenValue,
               commonService.getUserInfoDetails(userId),
               isTokenRequired,

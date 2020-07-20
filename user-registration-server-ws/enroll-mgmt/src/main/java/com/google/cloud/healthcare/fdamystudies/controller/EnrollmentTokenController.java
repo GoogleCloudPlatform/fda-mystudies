@@ -97,7 +97,7 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
                 response);
             return null;
-          } else if (!enrollmentTokenfService.isValidStudyToken(
+          } else if (!enrollmentTokenfService.isEnrollmentTokenValid(
               enrollmentBean.getToken(), enrollmentBean.getStudyId(), userId)) {
             ErrorResponseUtil.getFailureResponse(
                 ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
@@ -160,7 +160,7 @@ public class EnrollmentTokenController {
                 if (!enrollmentTokenfService.hasParticipant(
                     enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
                   if (enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
-                    if (enrollmentTokenfService.isValidStudyToken(
+                    if (enrollmentTokenfService.isEnrollmentTokenValid(
                         enrollmentBean.getToken(), enrollmentBean.getStudyId(), userId)) {
                       respBean =
                           enrollmentTokenfService.enrollParticipant(
