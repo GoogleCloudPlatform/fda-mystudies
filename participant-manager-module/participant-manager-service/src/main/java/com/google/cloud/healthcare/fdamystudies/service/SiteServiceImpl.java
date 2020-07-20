@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
@@ -56,16 +56,16 @@ public class SiteServiceImpl implements SiteService {
   @Transactional
   public SiteResponse addSite(SiteRequest siteRequest) {
     logger.entry("begin addSite()");
-    boolean allowed = isEditPermissionAllowed(siteRequest);
+    boolean canEdit = isEditPermissionAllowed(siteRequest);
 
-    if (!allowed) {
+    if (!canEdit) {
       logger.exit(
           String.format(
               "Add site for locationId=%s and studyId=%s failed with error code=%s",
               siteRequest.getLocationId(),
               siteRequest.getStudyId(),
-              ErrorCode.SITE_PERMISSION_ACEESS_DENIED));
-      return new SiteResponse(ErrorCode.SITE_PERMISSION_ACEESS_DENIED);
+              ErrorCode.SITE_PERMISSION_ACCESS_DENIED));
+      return new SiteResponse(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
     Optional<SiteEntity> optSiteEntity =
@@ -103,8 +103,9 @@ public class SiteServiceImpl implements SiteService {
           appPermissionRepository.findByUserIdAndAppId(siteRequest.getUserId(), appInfoId);
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
-        logger.exit(String.format("editValue=%d", EDIT_VALUE));
-        return studyPermission.getEdit() == EDIT_VALUE || appPermission.getEdit() == EDIT_VALUE;
+        logger.exit(String.format("editValue=%d", Permission.READ_EDIT));
+        return studyPermission.getEdit() == Permission.READ_EDIT.value()
+            || appPermission.getEdit() == Permission.READ_EDIT.value();
       }
     }
     logger.exit("default permission is edit, return true");
@@ -144,7 +145,7 @@ public class SiteServiceImpl implements SiteService {
     for (StudyPermissionEntity studyPermission : userStudypermissionList) {
       Integer editPermission =
           studyPermission.getUrAdminUser().getId().equals(userId)
-              ? EDIT_VALUE
+              ? Permission.READ_EDIT.value()
               : studyPermission.getEdit();
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
