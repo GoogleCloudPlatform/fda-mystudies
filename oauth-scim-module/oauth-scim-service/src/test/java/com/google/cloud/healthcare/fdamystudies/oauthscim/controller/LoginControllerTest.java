@@ -58,6 +58,9 @@ public class LoginControllerTest extends BaseMockIT {
 
   private static final String LOGIN_CHALLENGE_VALUE = "d9d3ff8a-0c93-466a-bc4f-bf8b0d3d5453";
 
+  private static final String LOGIN_CHALLENGE_VALUE_FOR_ANDROID =
+      "0fac4201-6c0a-4776-b745-ab07d428248c";
+
   private static final String AUTO_SIGNIN_LOGIN_CHALLENGE_VALUE =
       "117eb076-23cf-4653-a76d-14ec1ead4317";
 
@@ -82,6 +85,26 @@ public class LoginControllerTest extends BaseMockIT {
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(DevicePlatform.UNKNOWN.getValue());
     String signupRedirectUrl = redirectConfig.getSignupUrl(DevicePlatform.UNKNOWN.getValue());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .queryParams(queryParams))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(model().attribute(FORGOT_PASSWORD_LINK, forgotPasswordRedirectUrl))
+        .andExpect(model().attribute(SIGNUP_LINK, signupRedirectUrl))
+        .andExpect(content().string(containsString("<title>Login</title>")))
+        .andReturn();
+  }
+
+  @Test
+  public void shouldReturnLoginPageForAndroid() throws Exception {
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+    queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE_FOR_ANDROID);
+    String forgotPasswordRedirectUrl =
+        redirectConfig.getForgotPasswordUrl(DevicePlatform.ANDROID.getValue());
+    String signupRedirectUrl = redirectConfig.getSignupUrl(DevicePlatform.ANDROID.getValue());
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -160,6 +183,41 @@ public class LoginControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldAuthenticateTheUserAndRedirectToActivationPage() throws Exception {
+    // Step-1 create a user account with PENDING_CONFIRMATION status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    // Step-2 call API with login credentials
+    String activationUrl =
+        redirectConfig.getAccountActivationUrl(DevicePlatform.UNKNOWN.getValue());
+    String expectedViedName =
+        String.format(
+            "redirect:%s?userId=%s&accountStatus=%s",
+            activationUrl, userEntity.getUserId(), userEntity.getStatus());
+
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+
+    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
+        .andDo(print())
+        .andExpect(status().is3xxRedirection())
+        .andExpect(view().name(expectedViedName));
+
+    // Step-3 delete user account
+    userRepository.delete(userEntity);
+  }
+
+  @Test
   public void shouldAuthenticateTheUserAndRedirectToConsentPage() throws Exception {
     // Step-1 create a user account with ACTIVE status
     UserResponse userResponse = userService.createUser(newUserRequest());
@@ -172,12 +230,13 @@ public class LoginControllerTest extends BaseMockIT {
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, loginChallenge))
+                .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()));
@@ -199,12 +258,13 @@ public class LoginControllerTest extends BaseMockIT {
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, loginChallenge))
+                .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
         .andDo(print())
         .andExpect(
             content().string(containsString(ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription())));
@@ -226,6 +286,7 @@ public class LoginControllerTest extends BaseMockIT {
     requestParams.set(PASSWORD, "invalid_password");
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
 
     ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
     for (int loginAttempts = 1; loginAttempts <= MAX_LOGIN_ATTEMPTS; loginAttempts++) {
@@ -237,7 +298,7 @@ public class LoginControllerTest extends BaseMockIT {
               post(ApiEndpoint.LOGIN_PAGE.getPath())
                   .contextPath(getContextPath())
                   .params(requestParams)
-                  .cookie(appIdCookie, loginChallenge))
+                  .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
           .andDo(print())
           .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
     }

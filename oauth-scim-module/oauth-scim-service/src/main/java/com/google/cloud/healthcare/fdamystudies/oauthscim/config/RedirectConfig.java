@@ -59,6 +59,15 @@ public class RedirectConfig implements Serializable {
   @Value("${participant.manager.error-url}")
   private String participantManagerErrorUrl;
 
+  @Value("${mystudies.ios.app.account-activation-url}")
+  private String myStudiesIosAppAccountActivationUrl;
+
+  @Value("${mystudies.android.app.account-activation-url}")
+  private String myStudiesAndroidAppAccountActivationUrl;
+
+  @Value("${participant.manager.account-activation-url}")
+  private String participantManagerAccountActivationUrl;
+
   public String getCallbackUrl(String devicePlatform) {
     if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
       return myStudiesAndroidAppCallbackUrl;
@@ -93,6 +102,15 @@ public class RedirectConfig implements Serializable {
       return myStudiesIosAppErrorUrl;
     }
     return participantManagerErrorUrl;
+  }
+
+  public String getAccountActivationUrl(String devicePlatform) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+      return myStudiesAndroidAppAccountActivationUrl;
+    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+      return myStudiesIosAppAccountActivationUrl;
+    }
+    return participantManagerAccountActivationUrl;
   }
 
   public String getDefaultErrorUrl() {

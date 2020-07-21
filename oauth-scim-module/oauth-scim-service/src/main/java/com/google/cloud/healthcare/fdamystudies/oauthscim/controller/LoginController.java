@@ -139,6 +139,7 @@ public class LoginController {
       @CookieValue(name = TEMP_REG_ID, required = false) String tempRegId,
       @CookieValue(name = APP_ID) String appId,
       @CookieValue(name = LOGIN_CHALLENGE) String loginChallenge,
+      @CookieValue(name = DEVICE_PLATFORM) String devicePlatform,
       HttpServletRequest request,
       HttpServletResponse response,
       Model model)
@@ -163,6 +164,20 @@ public class LoginController {
     user.setAppId(appId);
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user);
+
+    if (ErrorCode.PENDING_CONFIRMATION
+        .getDescription()
+        .equalsIgnoreCase(authenticationResponse.getErrorDescription())) {
+      String redirectUrl = redirectConfig.getAccountActivationUrl(devicePlatform);
+      String url =
+          String.format(
+              "%s?userId=%s&accountStatus=%s",
+              redirectUrl,
+              authenticationResponse.getUserId(),
+              authenticationResponse.getAccountStatus());
+      return redirect(response, url);
+    }
+
     if (authenticationResponse.is2xxSuccessful()) {
       logger.exit("authentication success, redirect to consent page");
       addCookie(response, USER_ID, authenticationResponse.getUserId());

@@ -295,7 +295,7 @@ public class UserServiceImpl implements UserService {
     // check the account status and password expiry condition
     ErrorCode errorCode = validatePasswordExpiryAndAccountStatus(userEntity, userInfo);
     if (errorCode != null) {
-      return new AuthenticationResponse(errorCode);
+      return new AuthenticationResponse(errorCode, userEntity.getUserId(), userEntity.getStatus());
     }
 
     String passwordHash = hash(encrypt(user.getPassword(), salt));
