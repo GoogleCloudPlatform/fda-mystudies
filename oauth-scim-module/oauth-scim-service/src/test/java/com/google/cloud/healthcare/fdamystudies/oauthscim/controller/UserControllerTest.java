@@ -23,7 +23,9 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
@@ -43,6 +46,7 @@ import com.google.cloud.healthcare.fdamystudies.common.AuditLogEventStatus;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AuditEventEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
@@ -80,6 +84,8 @@ public class UserControllerTest extends BaseMockIT {
   @Autowired private UserRepository repository;
 
   @Autowired private AuditEventRepository auditEventRepository;
+
+  @Autowired private TextEncryptor encryptor;
 
   private static String userId;
 
@@ -539,6 +545,41 @@ public class UserControllerTest extends BaseMockIT {
 
   @Test
   @Order(13)
+  public void shouldLogout() throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 set the refresh token for the user
+    UserEntity userEntity = repository.findByUserId(userId).get();
+    ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+    userInfo.put(REFRESH_TOKEN, encryptor.encrypt(VALID_TOKEN));
+    userEntity.setUserInfo(userInfo.toString());
+    userEntity = repository.saveAndFlush(userEntity);
+
+    // Step-2 call logout api
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+
+    // Step-2 call logout api
+    UpdateUserRequest userRequest = new UpdateUserRequest();
+    userRequest.setAction(FORGOT_PASSWORD);
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGOUT.getPath(), userId)
+                .contextPath(getContextPath())
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    // Step-3 check the refresh token removed from database
+    userEntity = repository.findByUserId(userId).get();
+    userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+    assertFalse(userInfo.hasNonNull(REFRESH_TOKEN));
+  }
+
+  @Test
+  @Order(14)
   public void shouldDeleteTheUser() {
     // cleanup - delete the user from database
     repository.deleteByUserId(userId);

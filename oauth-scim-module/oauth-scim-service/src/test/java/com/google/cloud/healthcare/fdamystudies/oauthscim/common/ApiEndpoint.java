@@ -28,7 +28,9 @@ public enum ApiEndpoint {
 
   CONSENT_PAGE("http://localhost:8002/oauth-scim-service/consent"),
 
-  TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/oauth2/introspect");
+  TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/oauth2/introspect"),
+
+  LOGOUT("http://localhost:8002/oauth-scim-service/users/{userId}/logout");
 
   private String url;
 

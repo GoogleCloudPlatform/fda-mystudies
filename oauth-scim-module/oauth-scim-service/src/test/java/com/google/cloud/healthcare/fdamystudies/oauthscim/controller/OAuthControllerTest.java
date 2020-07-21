@@ -11,7 +11,10 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_CREDENTIALS;
@@ -25,14 +28,22 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SCOPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.jayway.jsonpath.JsonPath;
 import java.util.Collections;
 import java.util.UUID;
@@ -42,6 +53,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -54,6 +66,8 @@ public class OAuthControllerTest extends BaseMockIT {
 
   protected static final String VALID_CORRELATION_ID = "8a56d20c-d755-4487-b80d-22d5fa383046";
 
+  private static final String TEMP_REG_ID_VALUE = "ec2045a1-0cd3-4998-b515-7f9703dff5bf";
+
   @Value("${security.oauth2.hydra.client.client-id}")
   private String clientId;
 
@@ -62,6 +76,10 @@ public class OAuthControllerTest extends BaseMockIT {
 
   @Value("${security.oauth2.hydra.client.redirect-uri}")
   private String redirectUri;
+
+  @Autowired private UserRepository userRepository;
+
+  @Autowired private TextEncryptor encryptor;
 
   private static String accessToken;
 
@@ -165,30 +183,52 @@ public class OAuthControllerTest extends BaseMockIT {
   @Test
   @Order(5)
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
+    UserEntity user = newUserEntity();
+    user = userRepository.saveAndFlush(user);
+
+    // Step-2 call the API and expect access and refresh tokens in response
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
     requestParams.add(SCOPE, "openid");
     requestParams.add(REDIRECT_URI, redirectUri);
     requestParams.add(CODE, UUID.randomUUID().toString());
-    requestParams.add(USER_ID, UUID.randomUUID().toString());
+    requestParams.add(USER_ID, user.getUserId());
     requestParams.add(CODE_VERIFIER, UUID.randomUUID().toString());
 
     HttpHeaders headers = getCommonHeaders();
-    mockMvc
-        .perform(
-            post(ApiEndpoint.TOKEN.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.access_token").isNotEmpty())
-        .andExpect(jsonPath("$.refresh_token").isNotEmpty());
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.TOKEN.getPath())
+                    .contextPath(getContextPath())
+                    .params(requestParams)
+                    .headers(headers))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.access_token").isNotEmpty())
+            .andExpect(jsonPath("$.refresh_token").isNotEmpty())
+            .andReturn();
+
+    String refreshToken =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.refresh_token");
+
+    // Step-3 check refresh token saved in database
+    user = userRepository.findByUserId(user.getUserId()).get();
+    ObjectNode userInfo = (ObjectNode) toJsonNode(user.getUserInfo());
+    assertEquals(refreshToken, encryptor.decrypt(getTextValue(userInfo, REFRESH_TOKEN)));
+
+    // Step-4 delete the user
+    userRepository.deleteByUserId(user.getUserId());
   }
 
   @Test
   @Order(6)
   public void shouldReturnNewTokensForRefreshTokenGrant() throws Exception {
+    // Step-1 user registration
+    UserEntity user = newUserEntity();
+    user = userRepository.saveAndFlush(user);
+
+    // Step 2: call token endpoint
     HttpHeaders headers = getCommonHeaders();
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -196,6 +236,7 @@ public class OAuthControllerTest extends BaseMockIT {
     requestParams.add(REDIRECT_URI, redirectUri);
     requestParams.add(REFRESH_TOKEN, UUID.randomUUID().toString());
     requestParams.add(CLIENT_ID, clientId);
+    requestParams.add(USER_ID, user.getUserId());
 
     MvcResult result =
         mockMvc
@@ -211,6 +252,22 @@ public class OAuthControllerTest extends BaseMockIT {
             .andReturn();
 
     accessToken = JsonPath.read(result.getResponse().getContentAsString(), "$.access_token");
+
+    // Step-3 delete the user
+    userRepository.deleteByUserId(user.getUserId());
+  }
+
+  private UserEntity newUserEntity() {
+    UserEntity user = new UserEntity();
+    user.setUserId(IdGenerator.id());
+    user.setEmail("mockit_email@grr.la");
+    user.setAppId("MyStudies");
+    user.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    user.setTempRegId(TEMP_REG_ID_VALUE);
+    // UserInfo JSON contains password hash & salt, password history etc
+    ObjectNode userInfo = getObjectNode().put("password", PasswordGenerator.generate(12));
+    user.setUserInfo(userInfo.toString());
+    return user;
   }
 
   @Test

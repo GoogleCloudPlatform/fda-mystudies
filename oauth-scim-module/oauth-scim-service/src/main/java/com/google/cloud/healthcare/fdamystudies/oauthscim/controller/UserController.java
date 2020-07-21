@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -115,5 +116,19 @@ public class UserController {
 
     logger.exit(String.format(STATUS_LOG, status));
     return ResponseEntity.status(status).body(userResponse);
+  }
+
+  @PostMapping(value = "/users/{userId}/logout", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> logout(
+      @PathVariable String userId,
+      @RequestHeader(name = "Authorization") String token,
+      HttpServletRequest request)
+      throws JsonProcessingException {
+    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+
+    UserResponse userResponse = userService.logout(userId);
+
+    logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 }
