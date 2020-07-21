@@ -108,7 +108,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andReturn();
 
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
@@ -133,7 +133,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andReturn();
 
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
@@ -158,7 +158,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andReturn();
 
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
@@ -183,7 +183,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andReturn();
 
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
