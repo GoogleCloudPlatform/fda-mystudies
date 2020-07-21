@@ -285,7 +285,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/rectangle_black_white"
                 android:gravity="center"
-                android:text="@string/submit"
+                android:text="@string/registerButton"
                 android:textColor="@color/colorPrimary" />
         </RelativeLayout>
     </ScrollView>

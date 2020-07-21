@@ -28,11 +28,11 @@ let kLeftMenuCellTitleHome = "Home"
 let kLeftMenuCellTitleResources = "Resources"
 let kLeftMenuCellTitleProfile = "My Account"
 let kLeftMenuCellTitleSignIn = "Sign In"
-let kLeftMenuCellTitleNewUser = "New User?"
-let kLeftMenuCellSubTitleValue = "Sign up"
+let kLeftMenuCellTitleNewUser = "Register"
+let kLeftMenuCellSubTitleValue = ""
 let kAlertMessageReachoutText = "This feature will be available in the next sprint."
 
-let kAlertMessageForSignOut = "Are you sure you want to sign out?"
+let kAlertMessageForSignOut = "Are you sure you want to Sign Out?"
 let kAlertMessageSignOutSync =
   """
   Are you sure you want to sign out? \
@@ -288,7 +288,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       if shouldAllowToGiveFeedback {
         menus.append(
           [
-            "menuTitle": "Reach Out",
+            "menuTitle": "Contact Us",
             "iconName": "reachout_menu1",
             "menuType": LeftMenu.reachOutSignIn,
           ])
@@ -299,7 +299,7 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
       if shouldAllowToGiveFeedback {
         menus.append(
           [
-            "menuTitle": "Reach Out",
+            "menuTitle": "Contact Us",
             "iconName": "reachout_menu1",
             "menuType": LeftMenu.profileReachOut,
           ])
@@ -314,9 +314,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
       menus.append(
         [
-          "menuTitle": "New User?",
+          "menuTitle": "Register Now",
           "iconName": "newuser_menu1",
-          "subTitle": "Sign up",
+          "subTitle": "New user?  Sign up.",
           "menuType": LeftMenu.signup,
         ])
       self.buttonSignOut?.isHidden = true
@@ -363,9 +363,9 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
       menus.append(
         [
-          "menuTitle": "New User?",
+          "menuTitle": "Register",
           "iconName": "newuser_menu1",
-          "subTitle": "Sign up",
+          "subTitle": "",
         ])
       self.tableView.tableFooterView?.isHidden = true
     }

@@ -98,6 +98,8 @@
         android:background="@drawable/rectangle_blue_white"
         android:gravity="center"
         android:text="@string/get_started"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:visibility="invisible"
+        />
 
 </RelativeLayout>
