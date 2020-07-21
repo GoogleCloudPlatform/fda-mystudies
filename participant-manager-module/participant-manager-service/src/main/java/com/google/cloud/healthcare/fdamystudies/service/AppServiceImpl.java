@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +42,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
-import com.google.cloud.healthcare.fdamystudies.util.Constants;
 
 @Service
 public class AppServiceImpl implements AppService {
@@ -121,9 +126,7 @@ public class AppServiceImpl implements AppService {
       if (appPermissionsByAppInfoId.get(entry.getKey().getId()) != null) {
         Integer appEditPermission = appPermissionsByAppInfoId.get(entry.getKey().getId()).getEdit();
         appDetails.setAppPermission(
-            appEditPermission == Constants.VIEW_VALUE
-                ? Constants.READ_PERMISSION
-                : Constants.READ_AND_EDIT_PERMISSION);
+            appEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
       }
 
       calculateEnrollmentPercentage(
@@ -156,11 +159,11 @@ public class AppServiceImpl implements AppService {
       for (SitePermissionEntity sitePermission : studyEntry.getValue()) {
         String siteId = sitePermission.getSite().getId();
         if (siteWithInvitedParticipantCountMap.get(siteId) != null
-            && Constants.CLOSE_STUDY.equals(studyType)) {
+            && CLOSE_STUDY.equals(studyType)) {
           appInvitedCount = appInvitedCount + siteWithInvitedParticipantCountMap.get(siteId);
         }
 
-        if (Constants.OPEN_STUDY.equals(studyType)) {
+        if (OPEN_STUDY.equals(studyType)) {
           appInvitedCount = appInvitedCount + sitePermission.getSite().getTargetEnrollment();
         }
 

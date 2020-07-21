@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.helper;
 
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
