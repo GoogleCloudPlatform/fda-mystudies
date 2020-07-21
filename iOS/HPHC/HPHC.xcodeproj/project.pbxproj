@@ -1817,7 +1817,7 @@
 					};
 					7878B3192216C6E10052FC23 = {
 						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = T5N3W5L4HF;
+						DevelopmentTeam = FV8LM93U7M;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 6E7D2D551E433E8700763D4C;
 					};
@@ -2477,10 +2477,9 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 104;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = FV8LM93U7M;
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2507,10 +2506,9 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 104;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FV8LM93U7M;
-				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2535,8 +2533,10 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T5N3W5L4HF;
+				DEVELOPMENT_TEAM = FV8LM93U7M;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HPHCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -2561,8 +2561,10 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T5N3W5L4HF;
+				DEVELOPMENT_TEAM = FV8LM93U7M;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HPHCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;

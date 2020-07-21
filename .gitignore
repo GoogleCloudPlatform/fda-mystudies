@@ -8,4 +8,5 @@
 **/.classpath
 **/.factorypath
 **/*.log
-user-registration-server-ws/consent-mgmt/ConsentMgmtServicesWs.iml
+
+**/*.iml

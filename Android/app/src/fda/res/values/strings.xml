@@ -8,7 +8,7 @@
     <string name="poweredby">© 2020 ValidCare LLC</string>
     <string name="website">https://validcare.com</string>
     <string name="websitetxt">ValidCare</string>
-    <string name="gateway_des">Health research powered by you!</string>
+    <string name="gateway_des">Health and wellness research powered by you!</string>
     <string name="gateway_des1">Thanks for your interest in joining us in leading-edge research about how food, supplements, and drugs may affect you and your health and well-being.  Your contributions provide you insight into how what you use or consume affects you, but you also contribute to determining optimal use for people like you.</string>
     <string name="delete_account_content">You have chosen to delete your ValidCare Study account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
     <string name="delete_message">Are you sure you wish to permanently delete your ValidCare Study account?  You will need to register again if you wish to join a study.</string>

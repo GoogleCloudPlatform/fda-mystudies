@@ -75,7 +75,7 @@ android {
         fda {
             dimension 'version'
             applicationId "com.validcare.research"
-            versionCode 103
+            versionCode 104
             versionName "2.10"
         }
     }
