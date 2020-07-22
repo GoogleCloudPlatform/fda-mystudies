@@ -14,6 +14,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonSt
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
+
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CHANGE_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRES_AT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
@@ -23,6 +24,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
@@ -35,8 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -58,6 +61,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
@@ -182,16 +186,15 @@ public class UserControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    // Step-1 assert validation errors from validation annotations
-    UpdateUserRequest userRequest = new UpdateUserRequest();
+
+    ChangePasswordRequest userRequest = new ChangePasswordRequest();
     userRequest.setNewPassword("new_password");
     userRequest.setCurrentPassword("example_current_password");
-    userRequest.setAction("password_reset");
 
     MvcResult result =
         mockMvc
             .perform(
-                put(ApiEndpoint.USER.getPath(), IdGenerator.id())
+                put(ApiEndpoint.CHANGE_PASSWORD.getPath(), IdGenerator.id())
                     .contextPath(getContextPath())
                     .content(asJsonString(userRequest))
                     .headers(headers))
@@ -204,43 +207,21 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse =
         readJsonFile("/response/change_password_bad_request_response_from_annotations.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
-
-    // Step-2 assert validation errors from UserRequestValidator
-    userRequest = new UpdateUserRequest();
-    userRequest.setAction(CHANGE_PASSWORD);
-
-    result =
-        mockMvc
-            .perform(
-                put(ApiEndpoint.USER.getPath(), IdGenerator.id())
-                    .contextPath(getContextPath())
-                    .content(asJsonString(userRequest))
-                    .headers(headers))
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.violations").isArray())
-            .andReturn();
-
-    actualResponse = result.getResponse().getContentAsString();
-    expectedResponse = readJsonFile("/response/change_password_bad_request_from_validator.json");
-    JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
   @Order(3)
-  public void shouldReturnCurrentPasswordInvalidErrroCodeForChangePasswordAction()
+  public void shouldReturnCurrentPasswordInvalidErrorCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
-
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword("CurrentM0ck!tPassword");
     request.setNewPassword("NewM0ck!tPassword");
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -252,19 +233,18 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnUserNotFoundErrroCodeForChangePasswordAction()
+  public void shouldReturnUserNotFoundErrorCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(CURRENT_PASSWORD_VALUE);
     request.setNewPassword(NEW_PASSWORD_VALUE);
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), IdGenerator.id())
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), IdGenerator.id())
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -282,14 +262,13 @@ public class UserControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(CURRENT_PASSWORD_VALUE);
     request.setNewPassword(NEW_PASSWORD_VALUE);
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -311,7 +290,6 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(expectedPasswordHash, actualPasswordHash);
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
-
     // required to assert the salt after reset password
     saltAfterChangePassword = salt;
   }
@@ -323,14 +301,13 @@ public class UserControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    UpdateUserRequest request = new UpdateUserRequest();
-    request.setAction(CHANGE_PASSWORD);
+    ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(NEW_PASSWORD_VALUE);
     request.setNewPassword(CURRENT_PASSWORD_VALUE);
 
     mockMvc
         .perform(
-            put(ApiEndpoint.USER.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -342,6 +319,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
+  @Order(5)
   public void shouldReturnBadRequestForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
