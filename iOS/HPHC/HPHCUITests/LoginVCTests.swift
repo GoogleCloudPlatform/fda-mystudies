@@ -36,7 +36,7 @@ class LoginVCTests: UITestBase {
     app.navigationBars["PRIVACY POLICY"].buttons["Cancel"].tap()
     app.navigationBars["SIGN IN"].buttons["info"].tap()
     app.alerts["Why Register?"].buttons["OK"].tap()
-    app.buttons["New User? Sign Up"].tap()
+    app.buttons["New User? Register"].tap()
     app.navigationBars["SIGN UP"].buttons["backIcon"].tap()
     let butttonSignin = app.buttons["Sign In"]
     XCTAssertTrue(butttonSignin.exists)

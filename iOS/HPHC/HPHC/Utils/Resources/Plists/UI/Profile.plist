@@ -4,33 +4,33 @@
 <array>
 	<dict>
 		<key>helpText</key>
-		<string>Username</string>
+		<string>Email</string>
 		<key>placeHolder</key>
-		<string>enter email</string>
+		<string>Email</string>
 	</dict>
 	<dict>
 		<key>helpText</key>
 		<string>Password</string>
 		<key>placeHolder</key>
-		<string>add password</string>
+		<string>Password</string>
 	</dict>
 	<dict>
 		<key>helpText</key>
 		<string>Passcode</string>
 		<key>placeHolder</key>
-		<string>add passcode</string>
+		<string>Passcode</string>
 	</dict>
 	<dict>
 		<key>LabelName</key>
-		<string>Use Passcode to access app</string>
+		<string>Use Passcode for app access</string>
 	</dict>
 	<dict>
 		<key>LabelName</key>
-		<string>Receive Push Notifications?</string>
+		<string>Receive push notifications</string>
 	</dict>
 	<dict>
 		<key>LabelName</key>
-		<string>Receive Study Activity Reminders?</string>
+		<string>Receive Study Activity reminders</string>
 	</dict>
 </array>
 </plist>

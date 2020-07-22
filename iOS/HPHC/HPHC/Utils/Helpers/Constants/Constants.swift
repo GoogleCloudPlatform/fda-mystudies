@@ -97,7 +97,7 @@ let kResetAfterVerificationMessage = "Your account has been verified, please try
 let kOnLogoutMessage = "You have been signed out of the app."
 
 // MARK: - SignUp Constants
-let kSignUpTitleText = "Sign Up"
+let kSignUpTitleText = "Register"
 let kAgreeToTermsAndConditionsText = "I Agree to the Terms and Privacy Policy"
 let kTermsText = "Terms"
 let kPrivacyPolicyText = "Privacy Policy"

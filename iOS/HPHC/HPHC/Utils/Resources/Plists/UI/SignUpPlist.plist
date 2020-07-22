@@ -6,19 +6,19 @@
 		<key>helpText</key>
 		<string>Email</string>
 		<key>placeHolder</key>
-		<string>enter email</string>
+		<string>email</string>
 	</dict>
 	<dict>
 		<key>helpText</key>
 		<string>Password</string>
 		<key>placeHolder</key>
-		<string>add password</string>
+		<string>password</string>
 	</dict>
 	<dict>
 		<key>helpText</key>
 		<string>Confirm Password</string>
 		<key>placeHolder</key>
-		<string>confirm password</string>
+		<string>password</string>
 	</dict>
 </array>
 </plist>
