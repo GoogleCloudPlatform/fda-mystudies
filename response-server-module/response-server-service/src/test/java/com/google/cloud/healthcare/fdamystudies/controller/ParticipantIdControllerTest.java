@@ -8,6 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.APPLICATION_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.APPLICATION_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_ID;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -25,21 +36,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.APPLICATION_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.APPLICATION_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_ID;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+// TODO (Dhanya) @TestMethodOrder required when tests annotated with @Order
 @TestMethodOrder(OrderAnnotation.class)
 public class ParticipantIdControllerTest extends BaseMockIT {
   @Autowired private ParticipantBoRepository repository;
 
+  // TODO (Dhanya) Rename to shouldAddParticipant
   @Test
   void shouldAddParticipantId() throws Exception {
     // Step-1 call API to details to add participant id
@@ -57,6 +59,9 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
+
+    // TODO(Dhanya) use .andExpect to assert the participantIdAddedVal instead of assertNotNull
+    // TODO(Dhanya) rename to participantId
     String participantIdAddedVal = result.getResponse().getContentAsString();
     assertNotNull(participantIdAddedVal);
     // Step-2 Find ParticipantBo by participantId and compare with input ParticipantBo object
@@ -79,6 +84,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
   void shouldReturnBadRequestForMissingApplicationId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
 
+    // TODO (Dhanya) mockMvc preferred and expected error message required
     performPost(
         ApiEndpoint.PARTICIPANTID.getPath(),
         asJsonString(createEnrollmentTokenIdentifierBean()),
@@ -94,6 +100,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
     headers.add(APPLICATION_ID_HEADER, APPLICATION_ID_VALUE);
     EnrollmentTokenIdentifierBean enrollTokenIdentifierBeanInvalidStudyId =
         new EnrollmentTokenIdentifierBean();
+    // TODOD (Dhanya) assigning null not needed
     enrollTokenIdentifierBeanInvalidStudyId.setCustomStudyId(null);
     enrollTokenIdentifierBeanInvalidStudyId.setTokenIdentifier(UUID.randomUUID().toString());
     MvcResult result =
@@ -107,11 +114,13 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andExpect(status().isBadRequest())
             .andReturn();
 
+    // TODO (Dhanya) use .andExpect to assert the appErrorCode and error message
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
+  // TODO (Dhanya) duplicate test scenario, combine tests with shouldReturnBadRequestForBlankStudyId
   @Test
   void shouldReturnBadRequestForEmptyStudyId() throws Exception {
 
@@ -132,8 +141,9 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andExpect(status().isBadRequest())
             .andReturn();
 
+    // TODO (Dhanya) use .andExpect to assert the appErrorCode and error message
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
@@ -145,6 +155,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
     EnrollmentTokenIdentifierBean enrollTokenIdentifierBeanInvalidStudyId =
         new EnrollmentTokenIdentifierBean();
     enrollTokenIdentifierBeanInvalidStudyId.setCustomStudyId(STUDY_ID);
+    // TODOD (Dhanya) assigning null not needed
     enrollTokenIdentifierBeanInvalidStudyId.setTokenIdentifier(null);
     MvcResult result =
         mockMvc
@@ -156,12 +167,14 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andReturn();
-
+    // TODO (Dhanya) use .andExpect to assert the appErrorCode and error message
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
+  // TODO (Dhanya) duplicate test scenario, combine into
+  // shouldReturnBadRequestForBlankEnrollmentToken
   @Test
   void shouldReturnBadRequestForEmptyEnrollmentToken() throws Exception {
 
@@ -182,8 +195,9 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andExpect(status().isBadRequest())
             .andReturn();
 
+    // TODO (Dhanya) use .andExpect to assert the appErrorCode and error message
     String actualResponse = result.getResponse().getContentAsString();
-    String expectedResponse = readJsonFile("/add_part_id_expected_bad_request_response.json");
+    String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
