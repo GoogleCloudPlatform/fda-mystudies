@@ -93,42 +93,10 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     String deviceToken=null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
-      if (user != null && userDetailsBO != null) {
+      if (userDetailsBO != null) {
         if (user.getSettings() != null) {
           if (user.getSettings().getRemoteNotifications() != null) {
             userDetailsBO.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
-            try {
-              authInfo = userProfileManagementDao.getAuthInfo(userDetailsBO.getUserDetailsId());
-              if (authInfo != null) {
-                authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
-
-                if ((user.getInfo().getOs() != null)
-                    && !StringUtils.isEmpty(user.getInfo().getOs())) {
-                  authInfo.setDeviceType(user.getInfo().getOs());
-                }
-                if ((user.getInfo().getOs() != null)
-                    && !StringUtils.isEmpty(user.getInfo().getOs())
-                    && (user.getInfo().getOs().equalsIgnoreCase("IOS")
-                        || user.getInfo().getOs().equalsIgnoreCase("I"))) {
-                  authInfo.setIosAppVersion(user.getInfo().getAppVersion());
-                } else {
-                  authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
-                }
-                if ((user.getInfo().getDeviceToken() != null)
-                    && !StringUtils.isEmpty(user.getInfo().getDeviceToken())) {
-                  authInfo.setDeviceToken(user.getInfo().getDeviceToken());
-                }
-                //To maintain single session and update old device token
-                //when user changed the device from android to IOS or vice versa
-                else if(!StringUtils.isBlank(authInfo.getDeviceToken())){
-                    authInfo.setDeviceToken(null);
-                }
-
-                authInfo.setModifiedOn(new Date());
-              }
-            } catch (Exception e) {
-              logger.error("UserManagementProfileServiceImpl - updateUserProfile() - Error", e);
-            }
           }
           if (user.getSettings().getLocalNotifications() != null) {
             userDetailsBO.setLocalNotificationFlag(user.getSettings().getLocalNotifications());
@@ -139,18 +107,16 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
           if (user.getSettings().getTouchId() != null) {
             userDetailsBO.setTouchId(user.getSettings().getTouchId());
           }
-          if ((user.getSettings().getReminderLeadTime() != null)
-              && !StringUtils.isEmpty(user.getSettings().getReminderLeadTime())) {
+          if (!StringUtils.isBlank(user.getSettings().getReminderLeadTime())) {
             userDetailsBO.setReminderLeadTime(user.getSettings().getReminderLeadTime());
           }
-          if ((user.getSettings().getLocale() != null)
-              && !StringUtils.isEmpty(user.getSettings().getLocale())) {
+          if (!StringUtils.isBlank(user.getSettings().getLocale())) {
             userDetailsBO.setLocale(user.getSettings().getLocale());
           }
         }
+        authInfo = authInfoDetails(userDetailsBO.getUserDetailsId(), user);
         errorBean = userProfileManagementDao.updateUserProfile(userId, userDetailsBO, authInfo);
       }
-
     } catch (Exception e) {
       logger.error("UserManagementProfileServiceImpl - updateUserProfile() - Error", e);
       errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
@@ -331,5 +297,36 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     }
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
     return isEmailSent;
+  }
+  
+  private AuthInfoBO authInfoDetails(Integer userDetailsId, UserRequestBean user) {
+    AuthInfoBO authInfo = null;
+    authInfo = userProfileManagementDao.getAuthInfo(userDetailsId);
+    if (authInfo != null) {
+      if (user.getSettings() != null && user.getSettings().getRemoteNotifications() != null) {
+        authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
+      }
+      if (user.getInfo() != null) {
+        if (!StringUtils.isBlank(user.getInfo().getOs())) {
+          authInfo.setDeviceType(user.getInfo().getOs());
+        }
+        if (!StringUtils.isBlank(user.getInfo().getOs())
+            && (user.getInfo().getOs().equalsIgnoreCase("IOS")
+                || user.getInfo().getOs().equalsIgnoreCase("I"))) {
+          authInfo.setIosAppVersion(user.getInfo().getAppVersion());
+        } else {
+          authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
+        }
+        if (!StringUtils.isBlank(user.getInfo().getDeviceToken())) {
+          authInfo.setDeviceToken(user.getInfo().getDeviceToken());
+        } // To maintain single session and update old device token
+        // when user changed the device from android to IOS or vice versa
+        else if (!StringUtils.isBlank(authInfo.getDeviceToken())) {
+          authInfo.setDeviceToken(null);
+        }
+      }
+      authInfo.setModifiedOn(new Date());
+    }
+    return authInfo;
   }
 }
