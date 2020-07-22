@@ -51,14 +51,14 @@ public class AppEntity implements Serializable {
   private String id;
 
   @ToString.Exclude
-  @Column(name = "custom_app_id")
+  @Column(name = "custom_app_id", length = 100)
   private String appId;
 
   @ToString.Exclude
-  @Column(name = "app_name")
+  @Column(name = "app_name", length = 100)
   private String appName;
 
-  @Column(name = "app_description")
+  @Column(name = "app_description", length = 100)
   private String appDescription;
 
   @ToString.Exclude
@@ -67,66 +67,66 @@ public class AppEntity implements Serializable {
   private OrgInfoEntity orgInfo;
 
   @ToString.Exclude
-  @Column(name = "ios_bundle_id")
+  @Column(name = "ios_bundle_id", length = 100)
   private String iosBundleId;
 
   @ToString.Exclude
-  @Column(name = "android_bundle_id")
+  @Column(name = "android_bundle_id", length = 100)
   private String androidBundleId;
 
   @ToString.Exclude
-  @Column(name = "ios_certificate")
+  @Column(name = "ios_certificate", length = 100)
   private String iosCertificate;
 
   @ToString.Exclude
-  @Column(name = "ios_certificate_password")
+  @Column(name = "ios_certificate_password", length = 100)
   private String iosCertificatePassword;
 
   @ToString.Exclude
-  @Column(name = "android_server_key")
+  @Column(name = "android_server_key", length = 100)
   private String androidServerKey;
 
   @ToString.Exclude
-  @Column(name = "from_email_id")
+  @Column(name = "from_email_id", length = 100)
   private String formEmailId;
 
   @ToString.Exclude
-  @Column(name = "from_email_password")
+  @Column(name = "from_email_password", length = 100)
   private String fromEmailPassword;
 
   @ToString.Exclude
-  @Column(name = "reg_email_sub")
+  @Column(name = "reg_email_sub", length = 100)
   private String regEmailSub;
 
   @ToString.Exclude
-  @Column(name = "reg_email_body")
+  @Column(name = "reg_email_body", length = 100)
   private String regEmailBody;
 
   @ToString.Exclude
-  @Column(name = "forgot_email_sub")
+  @Column(name = "forgot_email_sub", length = 100)
   private String forgotEmailSub;
 
-  @Column(name = "forgot_email_body")
+  @Column(name = "forgot_email_body", length = 100)
   private String forgotEmailBody;
 
-  @Column(name = "method_handler")
+  @Column(name = "method_handler", length = 100)
   private Integer methodHandler;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
-  @Column(name = "modified_by")
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
   @Column(
-      name = "modified_date",
+      name = "modified",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
   @Column(
-      name = "created_on",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

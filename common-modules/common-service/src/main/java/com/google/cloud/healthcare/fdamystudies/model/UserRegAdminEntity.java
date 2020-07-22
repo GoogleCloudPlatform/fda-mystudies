@@ -71,8 +71,8 @@ public class UserRegAdminEntity implements Serializable {
   @Column(name = "phone_number", length = 20)
   private String phoneNumber;
 
-  @Column(name = "email_changed", length = 1)
-  private boolean emailChanged;
+  @Column(name = "email_changed")
+  private Boolean emailChanged;
 
   @Column(name = "status", length = 1)
   private Integer status;

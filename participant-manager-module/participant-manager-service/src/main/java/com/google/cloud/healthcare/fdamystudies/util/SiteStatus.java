@@ -8,15 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
-public final class Constants {
+public enum SiteStatus {
+  UNKNOWNs(null),
+  DEACTIVE(0),
+  ACTIVE(1);
 
-  private Constants() {}
+  private Integer value;
 
-  public static final int VIEW_VALUE = 0;
+  private SiteStatus(Integer value) {
+    this.value = value;
+  }
 
-  public static final int EDIT_VALUE = 1;
-
-  public static final String USER_ID_HEADER = "UserId";
-
-  public static final int ACTIVE = 1;
+  public Integer value() {
+    return value;
+  }
 }
