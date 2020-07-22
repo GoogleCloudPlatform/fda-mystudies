@@ -30,9 +30,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:paddingRight="15dp"
-                android:paddingTop="10dp">
+                android:paddingBottom="10dp">
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/imageView"
@@ -70,19 +70,27 @@
                     android:id="@+id/editBtnLabel"
                     style="@style/TextType3"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="5dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@string/edit"
                     android:textColor="@color/colorSecondary" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/rightendview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true" />
 
             <RelativeLayout
                 android:id="@+id/mNotificationBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true">
+                android:layout_marginLeft="20dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/rightendview"
+                android:visibility="gone">
 
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/mNotificationIcon"
@@ -124,7 +132,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@id/mNotificationBtn"
                 android:visibility="visible">
 
@@ -160,16 +167,16 @@
             android:id="@+id/mSearchToolBarLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:visibility="gone">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/mCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
                 android:text="Cancel"
@@ -222,10 +229,10 @@
                         android:layout_marginLeft="5dp"
                         android:layout_toLeftOf="@id/mClearLayout"
                         android:layout_toRightOf="@id/mSearchIcon"
-                        android:maxLength="500"
                         android:hint="@string/search"
                         android:imeOptions="actionSearch"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:maxLength="500" />
 
                 </RelativeLayout>
             </RelativeLayout>
