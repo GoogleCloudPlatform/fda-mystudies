@@ -35,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
@@ -47,6 +48,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserReposit
 import com.jayway.jsonpath.JsonPath;
 import java.util.Collections;
 import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -82,6 +84,11 @@ public class OAuthControllerTest extends BaseMockIT {
   @Autowired private TextEncryptor encryptor;
 
   private static String accessToken;
+
+  @BeforeEach
+  public void init() {
+    WireMock.resetAllRequests();
+  }
 
   @Test
   @Order(1)
