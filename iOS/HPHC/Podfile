@@ -5,7 +5,7 @@ platform :ios, '11.0'
 
 # Pods for FDA
 def main_pods
-  
+
   pod 'IQKeyboardManagerSwift'
   pod 'SlideMenuControllerSwift', :git => 'https://github.com/AtomicSLLC/SlideMenuControllerSwift.git', :branch => 'swift5'
   pod 'SDWebImage'
@@ -14,13 +14,14 @@ def main_pods
   pod 'ActionSheetPicker-3.0'
   pod 'Toast-Swift'
   pod 'ReachabilitySwift'
+  pod 'Firebase/Analytics'
 end
 
 target 'HPHC' do
   # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
   use_frameworks!
   main_pods
-  
+
 end
 
 target 'HPHCUITests' do
@@ -31,6 +32,6 @@ end
 
 target 'HPHCTests' do
   # inherit! :search_paths
-  
+
   pod 'Mockingjay', '3.0.0-alpha.1'
 end

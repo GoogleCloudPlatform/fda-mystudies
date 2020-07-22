@@ -22,6 +22,7 @@ import IQKeyboardManagerSwift
 import RealmSwift
 import UIKit
 import UserNotifications
+import Firebase
 
 @UIApplicationMain
 
@@ -190,6 +191,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     let ud1 = UserDefaults.standard
 
+    // Firebase setup
+    FirebaseApp.configure()
+    
     // Check if App is launched because of Notification Received
     if launchOptions != nil && launchOptions?[.sourceApplication] == nil {
 

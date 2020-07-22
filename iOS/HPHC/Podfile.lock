@@ -4,6 +4,63 @@ PODS:
   - Embassy (4.1.1)
   - EnvoyAmbassador (4.0.5):
     - Embassy (~> 4.0)
+  - Firebase/Analytics (6.28.1):
+    - Firebase/Core
+  - Firebase/Core (6.28.1):
+    - Firebase/CoreOnly
+    - FirebaseAnalytics (= 6.6.2)
+  - Firebase/CoreOnly (6.28.1):
+    - FirebaseCore (= 6.9.1)
+  - FirebaseAnalytics (6.6.2):
+    - FirebaseCore (~> 6.8)
+    - FirebaseInstallations (~> 1.4)
+    - GoogleAppMeasurement (= 6.6.2)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 1.30905.0)
+  - FirebaseCore (6.9.1):
+    - FirebaseCoreDiagnostics (~> 1.3)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/Logger (~> 6.7)
+  - FirebaseCoreDiagnostics (1.5.0):
+    - GoogleDataTransport (~> 7.0)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/Logger (~> 6.7)
+    - nanopb (~> 1.30905.0)
+  - FirebaseInstallations (1.5.0):
+    - FirebaseCore (~> 6.8)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+    - PromisesObjC (~> 1.2)
+  - GoogleAppMeasurement (6.6.2):
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
+    - GoogleUtilities/MethodSwizzler (~> 6.0)
+    - GoogleUtilities/Network (~> 6.0)
+    - "GoogleUtilities/NSData+zlib (~> 6.0)"
+    - nanopb (~> 1.30905.0)
+  - GoogleDataTransport (7.0.0):
+    - nanopb (~> 1.30905.0)
+  - GoogleUtilities/AppDelegateSwizzler (6.7.1):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (6.7.1):
+    - PromisesObjC (~> 1.2)
+  - GoogleUtilities/Logger (6.7.1):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/MethodSwizzler (6.7.1):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/Network (6.7.1):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (6.7.1)"
+  - GoogleUtilities/Reachability (6.7.1):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (6.7.1):
+    - GoogleUtilities/Logger
   - IQKeyboardManagerSwift (6.5.5)
   - Mockingjay (3.0.0-alpha.1):
     - Mockingjay/Core (= 3.0.0-alpha.1)
@@ -12,6 +69,12 @@ PODS:
     - URITemplate (~> 3.0)
   - Mockingjay/XCTest (3.0.0-alpha.1):
     - Mockingjay/Core
+  - nanopb (1.30905.0):
+    - nanopb/decode (= 1.30905.0)
+    - nanopb/encode (= 1.30905.0)
+  - nanopb/decode (1.30905.0)
+  - nanopb/encode (1.30905.0)
+  - PromisesObjC (1.2.9)
   - ReachabilitySwift (5.0.0)
   - Realm (5.2.0):
     - Realm/Headers (= 5.2.0)
@@ -30,6 +93,7 @@ DEPENDENCIES:
   - CryptoSwift
   - Embassy
   - EnvoyAmbassador
+  - Firebase/Analytics
   - IQKeyboardManagerSwift
   - Mockingjay (= 3.0.0-alpha.1)
   - ReachabilitySwift
@@ -44,8 +108,18 @@ SPEC REPOS:
     - CryptoSwift
     - Embassy
     - EnvoyAmbassador
+    - Firebase
+    - FirebaseAnalytics
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseInstallations
+    - GoogleAppMeasurement
+    - GoogleDataTransport
+    - GoogleUtilities
     - IQKeyboardManagerSwift
     - Mockingjay
+    - nanopb
+    - PromisesObjC
     - ReachabilitySwift
     - Realm
     - RealmSwift
@@ -68,8 +142,18 @@ SPEC CHECKSUMS:
   CryptoSwift: f12f037f6d0fcd6d48c96db0071b653de64e6c4d
   Embassy: eb36dc783ea20b792426461bbaff8c3f256e0331
   EnvoyAmbassador: 21cef10e70d003801c68ba5281948684a4e25486
+  Firebase: ed042590caa0029392257529a8003c25ee82bc18
+  FirebaseAnalytics: 5fa308e1b13f838d0f6dc74719ac2a72e8c5afc4
+  FirebaseCore: 687b8e6a0a4337b898a6326d68254c2f80c143af
+  FirebaseCoreDiagnostics: 7535fe695737f8c5b350584292a70b7f8ff0357b
+  FirebaseInstallations: 3c520c951305cbf9ca54eb891ff9e6d1fd384881
+  GoogleAppMeasurement: 8cd1f289d60e629cf16ab03363b9e89c776b9651
+  GoogleDataTransport: 8a40cb194ad242b6f6dfe72c14fe40fc67c4dcd7
+  GoogleUtilities: e121a3867449ce16b0e35ddf1797ea7a389ffdf2
   IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
   Mockingjay: 0f7c5aa49c7f1b95621cee3c79b557141f5a225c
+  nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
+  PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   Realm: f749c723e272f08fdf1939af5e61d2bd09b203e8
   RealmSwift: bf0ab78b52c5bafba8b3ad73be8dfb4c1ea5cf01
@@ -78,6 +162,6 @@ SPEC CHECKSUMS:
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   URITemplate: 58e0d47f967006c5d59888af5356c4a8ed3b197d
 
-PODFILE CHECKSUM: de88d5576d14d4a994b9b4a144c60d074f7c63a3
+PODFILE CHECKSUM: 4c2f7ed677180da6b81539900e0c3dea8853237c
 
 COCOAPODS: 1.9.3
