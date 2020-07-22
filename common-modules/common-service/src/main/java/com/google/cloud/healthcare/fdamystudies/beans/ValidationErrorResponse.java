@@ -17,6 +17,10 @@ import lombok.Data;
 public class ValidationErrorResponse {
   List<Violation> violations = new ArrayList<>();
 
+  public boolean hasErrors() {
+    return !violations.isEmpty();
+  }
+
   @Data
   @AllArgsConstructor
   public static class Violation {

@@ -24,9 +24,28 @@ import lombok.ToString;
 @JsonSerialize(using = ErrorCode.ErrorCodeSerializer.class)
 public enum ErrorCode {
   BAD_REQUEST(
-      400, "EC-400", "Bad Request", "Malformed request syntax or invalid request message framing."),
+      400,
+      "EC-400",
+      Constants.BAD_REQUEST,
+      "Malformed request syntax or invalid request message framing."),
 
   UNAUTHORIZED(401, "EC-401", "Unauthorized", "Invalid token"),
+
+  USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found"),
+
+  CURRENT_PASSWORD_INVALID(400, "EC-119", Constants.BAD_REQUEST, "Current password is invalid"),
+
+  ENFORCE_PASSWORD_HISTORY(
+      400,
+      "EC-105",
+      Constants.BAD_REQUEST,
+      "Your new password cannot repeat any of your previous 10 passwords;"),
+
+  EMAIL_EXISTS(
+      409,
+      "EC-101",
+      Constants.BAD_REQUEST,
+      "This email has already been used. Please try with a different email address."),
 
   APPLICATION_ERROR(
       500,
@@ -38,6 +57,11 @@ public enum ErrorCode {
   private final String code;
   private final String errorType;
   private final String description;
+
+  private static class Constants {
+
+    private static final String BAD_REQUEST = "Bad Request";
+  }
 
   static class ErrorCodeSerializer extends StdSerializer<ErrorCode> {
 
