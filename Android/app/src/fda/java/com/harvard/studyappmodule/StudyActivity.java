@@ -695,6 +695,7 @@ public class StudyActivity extends AppCompatActivity
       signUpLabel.setVisibility(View.VISIBLE);
       notificationIcon.setImageResource(R.drawable.notification_white_active);
       notificatioStatus.setVisibility(View.GONE);
+      notificationBtn.setVisibility(View.GONE);
     } else {
       // Sign out
       signinImg.setBackground(getResources().getDrawable(R.drawable.profile_menu1));
@@ -716,7 +717,13 @@ public class StudyActivity extends AppCompatActivity
         titleFdaListens.setText(getResources().getString(R.string.app_name));
         title.setText("");
         editBtnLayout.setVisibility(View.GONE);
-        notificationBtn.setVisibility(View.VISIBLE);
+        if (AppController.getHelperSharedPreference()
+                .readPreference(StudyActivity.this, getString(R.string.userid), "")
+                .equalsIgnoreCase("")) {
+          notificationBtn.setVisibility(View.GONE);
+        }else{
+          notificationBtn.setVisibility(View.VISIBLE);
+        }
         filter.setVisibility(View.VISIBLE);
         searchBtn.setVisibility(View.VISIBLE);
         infoIcon.setVisibility(View.GONE);
@@ -1040,7 +1047,13 @@ public class StudyActivity extends AppCompatActivity
     titleFdaListens.setText(getResources().getString(R.string.app_name));
     title.setText("");
     editBtnLayout.setVisibility(View.GONE);
-    notificationBtn.setVisibility(View.VISIBLE);
+    if (AppController.getHelperSharedPreference()
+        .readPreference(StudyActivity.this, getString(R.string.userid), "")
+        .equalsIgnoreCase("")) {
+      notificationBtn.setVisibility(View.GONE);
+    } else {
+      notificationBtn.setVisibility(View.VISIBLE);
+    }
     filter.setVisibility(View.VISIBLE);
     searchBtn.setVisibility(View.VISIBLE);
     infoIcon.setVisibility(View.GONE);
