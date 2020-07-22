@@ -15,32 +15,27 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createAr
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
-
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CHANGE_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRES_AT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
-
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
@@ -50,7 +45,6 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserReposit
 import com.google.cloud.healthcare.fdamystudies.service.EmailService;
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -205,8 +199,7 @@ public class UserServiceImpl implements UserService {
     userEntity.setUserInfo(userInfo.toString());
     repository.saveAndFlush(userEntity);
     logger.exit("Your password has been changed successfully!");
-    return new ChangePasswordResponse(
-        HttpStatus.OK, "Your password has been changed successfully!");
+    return new ChangePasswordResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
   }
 
   private ErrorCode validateChangePasswordRequest(
