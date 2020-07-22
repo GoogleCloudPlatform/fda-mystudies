@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_ID;
@@ -23,10 +22,8 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -55,8 +52,6 @@ public class OAuthController {
   private XLogger logger = XLoggerFactory.getXLogger(OAuthController.class.getName());
 
   @Autowired private OAuthService oauthService;
-
-  @Autowired private UserService userService;
 
   @PostMapping(
       value = "/oauth2/token",
@@ -88,19 +83,9 @@ public class OAuthController {
     }
 
     // get token from hydra
-    ResponseEntity<JsonNode> response = oauthService.getToken(paramMap, headers);
-
-    if ((REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType))
-        && response.getBody().hasNonNull(REFRESH_TOKEN)) {
-      String refreshToken = getTextValue(response.getBody(), REFRESH_TOKEN);
-      UserResponse userResponse =
-          userService.revokeAndReplaceRefreshToken(paramMap.getFirst(USER_ID), refreshToken);
-      if (!HttpStatus.valueOf(userResponse.getHttpStatusCode()).is2xxSuccessful()) {
-        return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
-      }
-    }
-
+    ResponseEntity<?> response = oauthService.getToken(paramMap, headers);
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
+
     return response;
   }
 

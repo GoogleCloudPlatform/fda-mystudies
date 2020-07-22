@@ -10,15 +10,20 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 import java.util.Base64;
@@ -26,10 +31,12 @@ import java.util.Collections;
 import javax.annotation.PostConstruct;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -44,6 +51,8 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
       "application/x-www-form-urlencoded;charset=UTF-8";
 
   private static final String CONTENT_TYPE = "Content-Type";
+
+  @Autowired private UserService userService;
 
   @Value("${security.oauth2.hydra.remember:false}")
   private boolean remember;
@@ -86,8 +95,8 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     encodedAuthorization = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
   }
 
-  public ResponseEntity<JsonNode> getToken(
-      MultiValueMap<String, String> paramMap, HttpHeaders headers) {
+  public ResponseEntity<?> getToken(MultiValueMap<String, String> paramMap, HttpHeaders headers)
+      throws JsonProcessingException {
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
 
     if (REFRESH_TOKEN.equals(paramMap.getFirst(GRANT_TYPE))) {
@@ -95,7 +104,21 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     }
 
     HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
-    return getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);
+    ResponseEntity<JsonNode> response =
+        getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);
+
+    String grantType = paramMap.getFirst(GRANT_TYPE);
+    if ((REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType))
+        && response.getBody().hasNonNull(REFRESH_TOKEN)) {
+      String refreshToken = getTextValue(response.getBody(), REFRESH_TOKEN);
+      UserResponse userResponse =
+          userService.revokeAndReplaceRefreshToken(paramMap.getFirst(USER_ID), refreshToken);
+      if (!HttpStatus.valueOf(userResponse.getHttpStatusCode()).is2xxSuccessful()) {
+        return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+      }
+    }
+
+    return response;
   }
 
   @Override

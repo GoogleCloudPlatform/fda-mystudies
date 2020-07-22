@@ -119,7 +119,7 @@ public class UserController {
   }
 
   @PostMapping(value = "/users/{userId}/logout", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> logout(
+  public ResponseEntity<UserResponse> logout(
       @PathVariable String userId,
       @RequestHeader(name = "Authorization") String token,
       HttpServletRequest request)
