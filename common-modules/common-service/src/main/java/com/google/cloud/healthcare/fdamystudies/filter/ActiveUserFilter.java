@@ -8,14 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.filter;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -25,11 +25,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -38,13 +38,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 
 @Component
 @Order(3)
+@ConditionalOnProperty(
+    value = "commonservice.activeuser.filter.enabled",
+    havingValue = "true",
+    matchIfMissing = false)
 public class ActiveUserFilter implements Filter {
 
   private XLogger logger = XLoggerFactory.getXLogger(ActiveUserFilter.class.getName());
@@ -64,6 +66,9 @@ public class ActiveUserFilter implements Filter {
     uriTemplateAndMethods.put(
         String.format("%s/locations", context.getContextPath()),
         new String[] {HttpMethod.POST.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/locations/{locationId}", context.getContextPath()),
+        new String[] {HttpMethod.PUT.name()});
   }
 
   protected Map<String, String[]> getUriTemplateAndHttpMethodsMap() {
