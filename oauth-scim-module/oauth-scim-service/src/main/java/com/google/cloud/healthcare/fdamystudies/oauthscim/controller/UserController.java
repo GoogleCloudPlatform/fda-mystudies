@@ -15,6 +15,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.controller.BaseController;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -34,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1")
-public class UserController {
+public class UserController extends BaseController {
 
   private static final String VALIDATION_ERROS_LOG = "validation erros=%s";
 
