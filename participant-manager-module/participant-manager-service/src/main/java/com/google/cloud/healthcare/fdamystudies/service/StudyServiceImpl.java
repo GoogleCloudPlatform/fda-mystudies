@@ -7,6 +7,12 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,9 +150,7 @@ public class StudyServiceImpl implements StudyService {
         Integer studyEditPermission =
             studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit();
         studyDetail.setStudyPermission(
-            studyEditPermission == Constants.VIEW_VALUE
-                ? Constants.READ_PERMISSION
-                : Constants.READ_AND_EDIT_PERMISSION);
+            studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
         studyDetail.setStudyPermission(studyEditPermission);
       }
 
@@ -198,12 +202,11 @@ public class StudyServiceImpl implements StudyService {
       SitePermissionEntity sitePermission) {
     String siteId = sitePermission.getSite().getId();
     String studyType = entry.getKey().getType();
-    if (siteWithInvitedParticipantCountMap.get(siteId) != null
-        && studyType.equals(Constants.CLOSE_STUDY)) {
+    if (siteWithInvitedParticipantCountMap.get(siteId) != null && studyType.equals(CLOSE_STUDY)) {
       studyInvitedCount = studyInvitedCount + siteWithInvitedParticipantCountMap.get(siteId);
     }
 
-    if (studyType.equals(Constants.OPEN_STUDY)) {
+    if (studyType.equals(OPEN_STUDY)) {
       studyInvitedCount = studyInvitedCount + sitePermission.getSite().getTargetEnrollment();
     }
     return studyInvitedCount;

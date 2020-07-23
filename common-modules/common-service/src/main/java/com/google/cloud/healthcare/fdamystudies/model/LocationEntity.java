@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -84,6 +86,6 @@ public class LocationEntity implements Serializable {
 
   @Transient
   public boolean isDefault() {
-    return "Y".equalsIgnoreCase(isDefault);
+    return YES.equalsIgnoreCase(isDefault);
   }
 }
