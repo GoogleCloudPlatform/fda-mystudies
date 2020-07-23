@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -49,6 +50,7 @@ import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
   "classpath:application-mockit.properties",
   "classpath:application-mockit-common.properties"
 })
+@ComponentScan(basePackages = {"com.google.cloud.healthcare.fdamystudies"})
 public class BaseMockIT {
   private XLogger logger = XLoggerFactory.getXLogger(BaseMockIT.class.getName());
 
