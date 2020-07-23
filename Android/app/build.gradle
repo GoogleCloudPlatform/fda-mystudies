@@ -74,8 +74,8 @@ android {
     productFlavors {
         fda {
             dimension 'version'
-            applicationId "com.google.fdaMyStudies"
-            versionCode 3
+            applicationId "com.harvard.fda"
+            versionCode 4
             versionName "1.0.0"
         }
     }

@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.multidex.MultiDex;
 import com.crashlytics.android.Crashlytics;
-import com.facebook.stetho.Stetho;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
 import com.harvard.studyappmodule.StudyModuleSubscriber;
 import com.harvard.usermodule.UserModuleSubscriber;
@@ -31,7 +30,6 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.AppVisibilityDetector;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import com.harvard.webservicemodule.WebserviceSubscriber;
-import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 
@@ -86,17 +84,6 @@ public class FdaApplication extends Application {
     RealmEncryptionHelper realmEncryptionHelper =
         RealmEncryptionHelper.initHelper(this, getString(R.string.app_name));
     byte[] key = realmEncryptionHelper.getEncryptKey();
-
-    // Remove for release builds
-    Stetho.initialize(
-        Stetho.newInitializerBuilder(this)
-            .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-            .enableWebKitInspector(
-                RealmInspectorModulesProvider.builder(this)
-                    .withLimit(10000)
-                    .withDefaultEncryptionKey(key)
-                    .build())
-            .build());
   }
 
   private void startEventProcessing() {

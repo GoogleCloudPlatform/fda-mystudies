@@ -545,7 +545,7 @@
     <string name="app_name">&app_name;</string>
     <string name="poweredby">Powered by Google Cloud</string>
     <string name="website">https://cloud.google.com/solutions/healthcare-life-sciences/drug-development</string>
-    <string name="websitetxt">healthcare-life-sciences/drug-development</string>
+    <string name="websitetxt">cloud.google.com</string>
     <string name="gateway_des">&app_name;</string>
     <string name="gateway_des1">This demo app has been put together to demonstrate FDA MyStudies application in action.</string>
     <string name="delete_account_content">You have chosen to delete your &app_name; Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
@@ -559,5 +559,5 @@
     <string name="clientToken">clientToken</string>
     
     <!--must change strings-->
-    <string name="FileProvider_authorities">com.myfileprovider</string>
+    <string name="FileProvider_authorities">net.joonix.hcls.mystudies</string>
 </resources>
