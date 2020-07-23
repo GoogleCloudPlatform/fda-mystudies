@@ -8,11 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
@@ -21,6 +25,8 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBOReposito
 public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Autowired private UserDetailsBORepository repository;
+  
+  @PersistenceContext private EntityManager entityManager;
 
   private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsDaoImpl.class);
 
@@ -74,5 +80,17 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
       logger.error("FdaEaUserDetailsDaoImpl.loadEmailCodeByUserId(): ", e);
       throw new SystemException();
     }
+  }
+  
+  @Override
+  @Transactional
+  public boolean updateStatus(UserDetailsBO participantDetails) {
+
+    logger.info("FdaEaUserDetailsDaoImpl updateStatus() - starts");
+    if (participantDetails == null) {
+      throw new IllegalArgumentException();
+    }
+    entityManager.merge(participantDetails);
+    return true;
   }
 }

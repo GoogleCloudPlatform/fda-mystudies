@@ -22,6 +22,7 @@ public interface FdaEaUserDetailsService {
 
   UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException;
 
-  VerifyCodeResponse verifyCode(String code, String userId)
-      throws SystemException, InvalidEmailCodeException, InvalidUserIdException;
+  boolean verifyCode(String code, UserDetailsBO participantDetails);
+  
+  boolean updateStatus(UserDetailsBO participantDetails);
 }

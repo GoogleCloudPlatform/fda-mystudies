@@ -18,4 +18,6 @@ public interface FdaEaUserDetailsDao {
   UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException;
 
   UserDetailsBO loadEmailCodeByUserId(String userId) throws SystemException;
+  
+  boolean updateStatus(UserDetailsBO participantDetails);
 }
