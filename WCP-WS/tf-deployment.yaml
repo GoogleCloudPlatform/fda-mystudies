@@ -62,7 +62,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /StudyMetaData/ping
+              path: /StudyMetaData/healthCheck
               port: 8080
             initialDelaySeconds: 60
             periodSeconds: 30

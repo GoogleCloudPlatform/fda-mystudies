@@ -136,7 +136,6 @@ class UserServices: NSObject {
   ///   - verificationCode: Code which is to be verified
   ///   - delegate: Class object to receive response
   func verifyEmail(emailId: String,
-                   userId: String,
                    verificationCode: String,
                    delegate: NMWebServiceDelegate) {
 

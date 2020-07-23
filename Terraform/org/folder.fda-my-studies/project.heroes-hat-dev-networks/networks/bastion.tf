@@ -33,7 +33,6 @@ module "bastion" {
   name         = "bastion-vm"
   host_project = var.project_id
   project      = var.project_id
-  region       = var.region
   zone         = var.zone
   network      = module.private.network_self_link
   subnet       = module.private.subnets["${var.region}/${local.bastion_subnet_name}"].self_link

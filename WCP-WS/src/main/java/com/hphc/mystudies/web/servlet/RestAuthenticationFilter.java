@@ -65,7 +65,7 @@ public class RestAuthenticationFilter implements Filter {
                 "StatusMessage", StudyMetaDataConstants.INVALID_AUTHORIZATION);
           }
         }
-      } else if (StudyMetaDataConstants.INTERCEPTOR_URL_PING.equalsIgnoreCase(
+      } else if (StudyMetaDataConstants.INTERCEPTOR_URL_HEALTH.equalsIgnoreCase(
               httpServletRequest.getPathInfo())
           || StudyMetaDataConstants.INTERCEPTOR_URL_MAIL.equalsIgnoreCase(
               httpServletRequest.getPathInfo())

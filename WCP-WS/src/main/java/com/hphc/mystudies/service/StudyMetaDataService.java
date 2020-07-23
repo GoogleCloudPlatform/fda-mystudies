@@ -886,12 +886,9 @@ public class StudyMetaDataService {
   }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-  @Consumes(MediaType.APPLICATION_XML)
-  @Path("ping")
-  public String ping() {
-    String response = "It Works!";
-    return response;
+  @Path("healthCheck")
+  public String healthCheck() {
+    return "200 OK!";
   }
 
   @GET

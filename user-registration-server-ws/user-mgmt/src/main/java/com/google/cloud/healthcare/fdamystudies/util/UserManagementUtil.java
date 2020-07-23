@@ -15,8 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,81 +124,28 @@ public class UserManagementUtil {
   }
 
   public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-      UpdateAccountInfo accountInfo, String userId, String accessToken, String clientToken) {
-    logger.info("UserManagementUtil.updateUserInfoInAuthServer() - starts");
-
-    UpdateAccountInfoResponseBean authResponse = null;
+      UpdateAccountInfo accountInfo, String userId) {
+    logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-
-    headers.set(AppConstants.CLIENT_TOKEN, clientToken);
     headers.set(AppConstants.USER_ID, userId);
-    headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
     HttpEntity<UpdateAccountInfo> request = new HttpEntity<>(accountInfo, headers);
+    ResponseEntity<?> responseEntity = null;
 
-    ObjectMapper objectMapper = null;
     try {
-
-      ResponseEntity<?> responseEntity = restTemplate.exchange(appConfig.getAuthServerUpdateStatusUrl(),
-          HttpMethod.POST, request, String.class);
-
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-
-        String body = (String) responseEntity.getBody();
-        objectMapper = new ObjectMapper();
-
-        try {
-          authResponse = objectMapper.readValue(body, UpdateAccountInfoResponseBean.class);
-          return authResponse;
-        } catch (JsonParseException e) {
-          return authResponse;
-        } catch (JsonMappingException e) {
-          return authResponse;
-        } catch (IOException e) {
-          return authResponse;
-        }
-      } else {
-        return authResponse;
-      }
+      responseEntity =
+          restTemplate.exchange(
+              appConfig.getAuthServerUpdateStatusUrl(), HttpMethod.POST, request, String.class);
+      return new UpdateAccountInfoResponseBean(
+          responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase());
 
     } catch (RestClientResponseException e) {
-      logger.error("UserManagementUtil.updateUserInfoInAuthServer() - error ", e);
-      if (e.getRawStatusCode() == 401) {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authResponse = new UpdateAccountInfoResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authResponse.setCode(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authResponse.setHttpStatusCode(401 + "");
-
-      } else if (e.getRawStatusCode() == 500) {
-        authResponse = new UpdateAccountInfoResponseBean();
-        authResponse.setHttpStatusCode(500 + "");
-
-      } else {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authResponse = new UpdateAccountInfoResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authResponse.setCode(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authResponse.setHttpStatusCode(400 + "");
-      }
-      logger.error("update user information authResponse: " + authResponse);
-      return authResponse;
+      logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
+      return new UpdateAccountInfoResponseBean(
+          HttpStatus.INTERNAL_SERVER_ERROR.value(),
+          HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
     }
   }
 
@@ -216,24 +165,24 @@ public class UserManagementUtil {
     ObjectMapper objectMapper = null;
 
     try {
-      ResponseEntity<?> responseEntity = restTemplate.exchange(appConfig.getAuthServerDeleteStatusUrl(),
-          HttpMethod.DELETE, request, String.class);
+      ResponseEntity<?> responseEntity =
+          restTemplate.exchange(
+              appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, request, String.class);
 
-      if (responseEntity.getStatusCode() != HttpStatus.OK) {
-        return authResponse;
-      }
-
-      String body = (String) responseEntity.getBody();
-      objectMapper = new ObjectMapper();
-
-      try {
-        authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
-        return authResponse;
-      } catch (JsonParseException e) {
-        return authResponse;
-      } catch (JsonMappingException e) {
-        return authResponse;
-      } catch (IOException e) {
+      if (responseEntity.getStatusCode() == HttpStatus.OK) {
+        String body = (String) responseEntity.getBody();
+        objectMapper = new ObjectMapper();
+        try {
+          authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
+          return authResponse;
+        } catch (JsonParseException e) {
+          return authResponse;
+        } catch (JsonMappingException e) {
+          return authResponse;
+        } catch (IOException e) {
+          return authResponse;
+        }
+      } else {
         return authResponse;
       }
       
@@ -270,7 +219,6 @@ public class UserManagementUtil {
         authResponse.setHttpStatusCode(400 + "");
       }
 
-      logger.error("authResponse: " + authResponse);
       return authResponse;
     }
   }
@@ -308,7 +256,6 @@ public class UserManagementUtil {
         objectMapper = new ObjectMapper();
         try {
           authServerResponse = objectMapper.readValue(body, AuthRegistrationResponseBean.class);
-          logger.info("authResponse: " + authServerResponse);
           return authServerResponse;
         } catch (JsonParseException e) {
           return authServerResponse;
@@ -362,7 +309,6 @@ public class UserManagementUtil {
         }
         authServerResponse.setHttpStatusCode(400 + "");
       }
-      logger.error("authServerResponse: " + authServerResponse);
       return authServerResponse;
     }
   }
@@ -404,7 +350,7 @@ public class UserManagementUtil {
     try {
       date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
     } catch (Exception e) {
-      logger.error("URWebAppWSUtil - getCurrentUtilDateTime() - error ", e);
+      logger.info("UserManagementUtil - getCurrentUtilDateTime() :: ERROR ", e);
     }
     return date;
   }
@@ -427,7 +373,7 @@ public class UserManagementUtil {
 
   public String withdrawParticipantFromStudy(String participantId, String studyId, String delete)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
+    logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
 
@@ -463,7 +409,20 @@ public class UserManagementUtil {
         throw new SystemException();
       }
     }
-    logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
+    logger.info("UserManagementUtil withDrawParticipantFromStudy() - Ends ");
     return message;
+  }
+
+  public static String genarateEmailContent(String emailContentName, Map<String, String> keyValue) {
+    logger.info("UserManagementUtil - genarateEmailContent() :: Starts");
+    if (StringUtils.isNotEmpty(emailContentName)) {
+      for (Map.Entry<String, String> entry : keyValue.entrySet()) {
+        emailContentName =
+            emailContentName.replace(
+                entry.getKey(), StringUtils.isBlank(entry.getValue()) ? "" : entry.getValue());
+      }
+    }
+    logger.info("UserManagementUtil - genarateEmailContent() :: Ends");
+    return emailContentName;
   }
 }

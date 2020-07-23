@@ -1,5 +1,5 @@
 #!/bin/bash
-# Script to copy AppId and OrgId from gcloud secret to CloudSQL.
+# Script to copy Push Notification info from gcloud secret to CloudSQL.
 set -e
 
 # TODO: Change these to env variables.
@@ -12,7 +12,6 @@ TMPFILE=$(mktemp)
 # Write user registration server db name to TMPFILE.
 echo "USE \`mystudies_userregistration\`;" >> ${TMPFILE}
 
-# Read AppId and OrgId from secrets..
 # bundleID used for the Android App
 ANDROID_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=android-bundle-id`
 # found under settings > cloud messaging in the android app defined in your firebase project.

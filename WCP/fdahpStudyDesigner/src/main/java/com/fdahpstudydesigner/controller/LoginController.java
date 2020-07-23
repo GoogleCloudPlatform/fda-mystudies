@@ -111,9 +111,9 @@ public class LoginController {
     return mv;
   }
 
-  @RequestMapping("/appDetails.do")
-  public ModelAndView appDetails() {
-    return new ModelAndView("appDetails");
+  @RequestMapping("/healthCheck.do")
+  public String healthCheck() {
+    return "200 OK!";
   }
 
   @RequestMapping(value = "/profile/changeExpiredPassword.do")

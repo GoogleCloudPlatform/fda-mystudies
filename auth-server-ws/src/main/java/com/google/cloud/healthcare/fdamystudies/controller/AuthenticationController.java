@@ -664,6 +664,7 @@ public class AuthenticationController {
       logger.error("AuthenticationController login() - error with INTERNAL_SERVER_ERROR: ", e);
       return new ResponseEntity<>(loginResp, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     return new ResponseEntity<>(loginResp, HttpStatus.OK);
   }
 

@@ -34,7 +34,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "user_details")
-public class UserDetailsBO implements Serializable {
+public class UserDetailsBO implements Serializable, Cloneable {
 
   private static final long serialVersionUID = 3298208288501854383L;
 
