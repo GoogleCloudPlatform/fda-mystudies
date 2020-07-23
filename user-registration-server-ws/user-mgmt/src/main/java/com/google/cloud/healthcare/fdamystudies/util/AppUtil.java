@@ -12,11 +12,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 
 public class AppUtil {
@@ -37,10 +39,10 @@ public class AppUtil {
     logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: starts");
     ErrorBean errorBean = null;
     try {
-      errorBean =
-          new ErrorBean()
-              .setCode(ErrorCode.EC_500.code())
-              .setMessage(ErrorCode.EC_500.errorMessage());
+      errorBean = new ErrorBean();
+      errorBean.setCode(ErrorCode.EC_500.code());
+      errorBean.setMessage(ErrorCode.EC_500.errorMessage());
+
     } catch (Exception e) {
       logger.error("ERROR: AppUtil - httpResponseForInternalServerError()", e);
     }
