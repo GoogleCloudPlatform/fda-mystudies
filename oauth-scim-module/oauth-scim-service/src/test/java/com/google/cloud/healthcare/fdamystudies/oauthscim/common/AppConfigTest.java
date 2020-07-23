@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.common;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.google.cloud.healthcare.fdamystudies.config.BaseAppConfig;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +21,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 @Profile("mockit")
 @Configuration
-public class AppConfigTest extends BaseAppConfig {
+public class AppConfigTest {
 
   @Bean
   @Primary
