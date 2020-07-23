@@ -100,8 +100,8 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This Location is being used as an active Site in one or more studies and cannot be decomissioned"),
 
-  CANNOT_REACTIVE(
-      400, "EC_887", Constants.BAD_REQUEST, "Can't reactive an already active location"),
+  CANNOT_REACTIVATE(
+      400, "EC_887", Constants.BAD_REQUEST, "Can't reactivate an already active location"),
 
   LOCATION_UPDATE_DENIED(
       403, "EC-882", "Forbidden", "You do not have permission to update the location");
