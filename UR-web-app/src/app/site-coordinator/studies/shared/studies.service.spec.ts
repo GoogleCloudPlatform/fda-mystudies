@@ -4,7 +4,7 @@ import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {EntityService} from '../../../service/entity.service';
-import {ApiResponse} from 'src/app/entity/error.model';
+import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
 import {Study} from './study.model';
 import {StudiesService} from './studies.service';
@@ -103,12 +103,8 @@ describe('StudiesService', () => {
     );
     studiesService = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
-      error: {
-        userMessage: 'Bad Request',
-        type: 'error',
-        detailMessage:
-          'Missing request header userId for method parameter of type Integer',
-      },
+      message: 'Bad Request',
+      code: 'ER_005',
     };
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
@@ -116,7 +112,7 @@ describe('StudiesService', () => {
     studiesService.getStudies().subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
-        expect(error.error.userMessage).toBe('Bad Request');
+        expect(error.message).toBe('Bad Request');
       },
     );
   }));
