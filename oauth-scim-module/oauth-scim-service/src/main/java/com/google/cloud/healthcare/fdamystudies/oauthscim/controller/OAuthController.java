@@ -21,7 +21,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
-import com.google.cloud.healthcare.fdamystudies.controller.BaseController;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RestController
 @RequestMapping("/v1")
-public class OAuthController extends BaseController {
+public class OAuthController {
 
   private XLogger logger = XLoggerFactory.getXLogger(OAuthController.class.getName());
 

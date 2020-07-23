@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.auditlog.controller;
 import com.google.cloud.healthcare.fdamystudies.auditlog.service.AuditLogEventService;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
-import com.google.cloud.healthcare.fdamystudies.controller.BaseController;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.ext.XLogger;
@@ -27,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/v1")
-public class AuditLogEventController extends BaseController {
+public class AuditLogEventController {
 
   private XLogger logger = XLoggerFactory.getXLogger(AuditLogEventController.class.getName());
 

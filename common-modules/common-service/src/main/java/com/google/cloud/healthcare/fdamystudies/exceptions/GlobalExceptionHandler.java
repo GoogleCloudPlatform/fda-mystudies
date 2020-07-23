@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.controller;
+package com.google.cloud.healthcare.fdamystudies.exceptions;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse.Violation;
@@ -14,6 +14,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -25,10 +26,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
+@ComponentScan(basePackages = {"com.google.cloud.healthcare.fdamystudies"})
 @ControllerAdvice
-public class BaseController {
+public class GlobalExceptionHandler {
 
-  private XLogger logger = XLoggerFactory.getXLogger(BaseController.class.getName());
+  private XLogger logger = XLoggerFactory.getXLogger(GlobalExceptionHandler.class.getName());
 
   @ExceptionHandler(BadRequest.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
