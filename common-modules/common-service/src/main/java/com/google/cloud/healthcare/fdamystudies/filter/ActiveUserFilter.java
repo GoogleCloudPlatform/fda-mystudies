@@ -44,7 +44,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjec
 @Component
 @Order(3)
 @ConditionalOnProperty(
-    value = "participant.manager.repository.enabled",
+    value = "commonservice.activeuser.filter.enabled",
     havingValue = "true",
     matchIfMissing = false)
 public class ActiveUserFilter implements Filter {
