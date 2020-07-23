@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -19,6 +20,7 @@ import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -26,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
@@ -344,7 +347,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
             criteriaBuilder.createCriteriaUpdate(ParticipantStudiesBO.class);
         participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudiesBO.class);
         criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
-        criteriaParticipantStudiesUpdate.set("participantId", "NULL");
+        criteriaParticipantStudiesUpdate.set("participantId", null);
         UserDetailsBO userDetails = session.get(UserDetailsBO.class, userDetailsId);
         studyIdPredicates.add(
             criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));

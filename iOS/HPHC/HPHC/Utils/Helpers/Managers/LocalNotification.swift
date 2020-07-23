@@ -390,6 +390,12 @@ class LocalNotification: NSObject {
     }
   }
 
+  /// Removes all of the app’s delivered notifications from Notification Center.
+  static func removeAllDeliveredNotifications() {
+    let center = UNUserNotificationCenter.current()
+    center.removeAllDeliveredNotifications()
+  }
+
   /// Retrives the pending notificaitons
   class func scheduledNotificaiton() {
     let center = UNUserNotificationCenter.current()
@@ -418,4 +424,10 @@ class NotificationHandler: NSObject {
   var activityId: String! = ""
   var appOpenFromNotification = false
   static var instance = NotificationHandler()
+
+  func reset() {
+    self.studyId = ""
+    self.activityId = ""
+    self.appOpenFromNotification = false
+  }
 }
