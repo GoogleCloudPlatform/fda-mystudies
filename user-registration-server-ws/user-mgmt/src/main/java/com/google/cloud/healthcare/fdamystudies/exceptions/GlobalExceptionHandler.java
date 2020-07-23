@@ -8,18 +8,73 @@
 
 package com.google.cloud.healthcare.fdamystudies.exceptions;
 
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse.Violation;
+
 
 @ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler {
 
   @ExceptionHandler(BadRequest.class)
-  public void badRequest(HttpServletResponse response) throws IOException {
-    response.sendError(HttpStatus.BAD_REQUEST.value());
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handleBadRequest() {
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  public ValidationErrorResponse handleConstraintValidationException(
+      ConstraintViolationException e) {
+    ValidationErrorResponse error = new ValidationErrorResponse();
+    for (ConstraintViolation violation : e.getConstraintViolations()) {
+      error.getViolations().add(
+          new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
+    }
+    return error;
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  public ValidationErrorResponse handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException e) {
+    ValidationErrorResponse error = new ValidationErrorResponse();
+    for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
+      error.getViolations().add(
+          new Violation(fieldError.getField(), fieldError.getDefaultMessage()));
+    }
+    return error;
+  }
+
+  @ExceptionHandler(MissingRequestHeaderException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  public ValidationErrorResponse handleMissingRequestHeaderException(
+      MissingRequestHeaderException e) {
+    ValidationErrorResponse error = new ValidationErrorResponse();
+    error.getViolations().add(new Violation(e.getHeaderName(), "header is required"));
+    return error;
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseBody
+  public ValidationErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+    ValidationErrorResponse error = new ValidationErrorResponse();
+    error.getViolations().add(new Violation("", "request body is required"));
+    return error;
   }
 }
