@@ -20,9 +20,12 @@ enum LocalizableString: String {
 
   // MARK: - Activities 
   case missedActivity =
-  """
-  It appears you’ve missed a few study activities in the period you were away.
-  This is a gentle reminder to visit the app regularly to complete pending study activities, if any.
-  """
+    """
+    It appears you’ve missed a few study activities in the period you were away.
+    This is a gentle reminder to visit the app regularly to complete pending study activities, if any.
+    """
+
+  // MARK: - Consent
+  case learnMore = "Learn more"
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }

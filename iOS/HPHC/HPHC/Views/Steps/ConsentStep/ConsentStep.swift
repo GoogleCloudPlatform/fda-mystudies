@@ -142,7 +142,7 @@ class ConsentSectionStep {
     }
     consentSection.title = self.title!
     consentSection.summary = self.text!
-
+    consentSection.customLearnMoreButtonTitle = LocalizableString.learnMore.localizedString
     if self.description?.isEmpty == false {
       consentSection.content = self.description!
     } else if self.html!.isEmpty == false {

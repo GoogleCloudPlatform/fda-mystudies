@@ -675,9 +675,11 @@ class LineChartCell: GraphChartTableViewCell {
 
   func handleRunsForDate(startDate: Date, endDate: Date, runs: [[String: Any]]) {
 
-    var dataList: [DBStatisticsData] = currentChart.statList.filter({
-      $0.startDate! >= startDate && $0.startDate! <= endDate
-    })
+    let updatedStartTime = startDate.addingTimeInterval(-1)
+    let updatedEndTime = endDate.addingTimeInterval(1)
+
+    var dataList: [DBStatisticsData] = currentChart.statList
+      .filter { $0.startDate! >= updatedStartTime && $0.startDate! <= updatedEndTime }
 
     if !currentChart.scrollable, dataList.count > frequencyPageSize {
       // If the chart is not scrollable, only show the latest responses based on the page size.

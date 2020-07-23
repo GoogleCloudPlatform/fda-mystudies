@@ -124,34 +124,33 @@ class StudyListViewController: UIViewController {
 
   /// To update the navigation bar items , by adding Notification Button, Notification Indicator & Filter Button.
   func addRightNavigationItem() {
-    guard navigationItem.rightBarButtonItems == nil
-    else { return }  // No need to add again.
-    let view = UIView(frame: CGRect(x: 0, y: 4, width: 110, height: 40))
-
-    // Notification Button
-    let button = addNotificationButton()
-    view.addSubview(button)
-    button.isExclusiveTouch = true
-
-    // Notification Indicator
-    let label = addNotificationIndication()
-    view.addSubview(label)
-
-    let isShowNotification = UserDefaults.standard.bool(forKey: kShowNotification)
-    label.isHidden = isShowNotification ? false : true
-
     //  Filter Button
     let filterButton = addFilterButton()
-    view.addSubview(filterButton)
     filterButton.isExclusiveTouch = true
-
     //  Search Button
     let searchButton = addSearchButton()
-    view.addSubview(searchButton)
     searchButton.isExclusiveTouch = true
 
-    let barButton = UIBarButtonItem(customView: view)
-    navigationItem.rightBarButtonItems = [barButton]
+    let filterBarButton = UIBarButtonItem(customView: filterButton)
+    let searchBarButton = UIBarButtonItem(customView: searchButton)
+
+    if User.currentUser.userType == .loggedInUser {
+      let view = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+      // Notification Button
+      let button = addNotificationButton()
+      view.addSubview(button)
+      button.isExclusiveTouch = true
+      // Notification Indicator
+      let label = addNotificationIndication()
+      view.addSubview(label)
+      let isShowNotification = UserDefaults.standard.bool(forKey: kShowNotification)
+      label.isHidden = isShowNotification ? false : true
+      let notificationBarButton = UIBarButtonItem(customView: view)
+      navigationItem.rightBarButtonItems = [notificationBarButton, filterBarButton, searchBarButton]
+    } else {
+      navigationItem.rightBarButtonItems = [filterBarButton, searchBarButton]
+    }
+
   }
 
   func addSearchButton() -> UIButton {
@@ -184,12 +183,12 @@ class StudyListViewController: UIViewController {
       for: UIControl.State.normal
     )
     button.addTarget(self, action: #selector(buttonActionNotification(_:)), for: .touchUpInside)
-    button.frame = CGRect(x: 80, y: 4, width: 30, height: 30)
+    button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
     return button
   }
 
   func addNotificationIndication() -> UILabel {
-    let label = UILabel(frame: CGRect(x: 100, y: 4, width: 10, height: 10))
+    let label = UILabel(frame: CGRect(x: 20, y: 0, width: 10, height: 10))
     label.font = UIFont.systemFont(ofSize: 10)
     label.textColor = UIColor.white
 
