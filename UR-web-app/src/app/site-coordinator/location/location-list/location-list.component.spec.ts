@@ -54,6 +54,8 @@ describe('LocationsListComponent', () => {
             description: 'location-descp-updatedj',
             status: '1',
             studiesCount: 0,
+            message: '',
+            code: '',
           },
           {
             id: 3,
@@ -62,6 +64,8 @@ describe('LocationsListComponent', () => {
             description: 'location-descp-updated',
             status: '0',
             studiesCount: 0,
+            message: '',
+            code: '',
           },
         ]);
         locationServiceSpy.getLocations.and.returnValue(expectedList);
@@ -73,16 +77,20 @@ describe('LocationsListComponent', () => {
   });
 
   it('should NOT have locations before ngOnInit', () => {
-    expect(component.locations.length).toBe(
-      0,
-      'should not have locations before ngOnInit',
-    );
+    component.location$.pipe().subscribe((location: Location[]) => {
+      expect(location.length).toBe(
+        0,
+        'should not have locations before ngOnInit',
+      );
+    });
   });
   it('should NOT have locations immediately after ngOnInit', () => {
-    expect(component.locations.length).toBe(
-      0,
-      'should not have locations until service promise resolves',
-    );
+    component.location$.pipe().subscribe((location: Location[]) => {
+      expect(location.length).toBe(
+        0,
+        'should not have locations until service promise resolves',
+      );
+    });
   });
   describe('after get locations', () => {
     beforeEach(async(() => {
@@ -102,7 +110,6 @@ describe('LocationsListComponent', () => {
 
     it('should get the Location List via refresh function', fakeAsync(() => {
       component.location$.subscribe((locations) => {
-        console.log(locations);
         expect(locations.length).toEqual(2);
       });
     }));
