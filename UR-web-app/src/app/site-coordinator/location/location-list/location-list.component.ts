@@ -15,7 +15,6 @@ import {of} from 'rxjs';
 export class LocationListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   location$: Observable<Location[]> = of([]);
-  locations: Location[] = [];
   constructor(
     private readonly locationService: LocationService,
     private readonly router: Router,
@@ -32,7 +31,6 @@ export class LocationListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([locations, query]) => {
-        this.locations = locations;
         return locations.filter(
           (location: Location) =>
             (location.name &&

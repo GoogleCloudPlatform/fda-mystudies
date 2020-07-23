@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {ApiResponse} from 'src/app/entity/error.model';
-import {throwError, BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Study} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
@@ -31,10 +30,6 @@ export class StudyListComponent implements OnInit {
       this.studiesService.getStudies(),
       this.query$,
     ).pipe(
-      catchError((error: ApiResponse) => {
-        this.toastr.error(error.error.userMessage);
-        return throwError(error);
-      }),
       map(([studies, query]) => {
         this.studies = studies;
         return this.studies.filter(
