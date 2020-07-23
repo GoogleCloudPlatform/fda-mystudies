@@ -14,14 +14,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Collections;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -77,19 +74,23 @@ public class AppControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAppsRegisteredByUser() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
+        .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.studyPermissionCount").value(1));
   }
 
   @Test
   public void shouldReturnBadRequestForGetApps() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
@@ -101,21 +102,14 @@ public class AppControllerTest extends BaseMockIT {
 
   @Test
   public void shouldNotReturnApp() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
-    headers.add(TestConstants.USER_ID_HEADER, IdGenerator.id());
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(TestConstants.USER_ID_HEADER, IdGenerator.id());
 
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description").value(ErrorCode.APP_NOT_FOUND.getDescription()));
-  }
-
-  public HttpHeaders newCommonHeaders() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    return headers;
   }
 
   @AfterEach
