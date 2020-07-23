@@ -237,11 +237,11 @@ public class StudiesServicesImpl implements StudiesServices {
           && notificationBean.getDeviceToken().length() > 0
           && appPropertiesDetails != null) {
         File root = null;
+        FileOutputStream fop=null;
         certificatePassword = appPropertiesDetails.getIosCertificatePassword();
         try {
-          byte[] decodedBytes;
-          FileOutputStream fop;
-          decodedBytes =
+          if(appPropertiesDetails.getIosCertificate()!=null) {
+            byte[] decodedBytes =
               java.util.Base64.getDecoder()
                   .decode(appPropertiesDetails.getIosCertificate().replaceAll("\n", ""));
           file = File.createTempFile("pushCert_" + appPropertiesDetails.getAppId(), ".p12");
@@ -250,11 +250,16 @@ public class StudiesServicesImpl implements StudiesServices {
           fop.flush();
           fop.close();
           file.deleteOnExit();
+          }
         } catch (Exception e) {
           logger.error("FdahpUserRegWSController pushNotificationCertCreation:", e);
+        }finally {
+          if(fop!=null) {
+            fop.close();
+          }
         }
         ApnsService service = null;
-        if (file != null) {
+        if (file != null && certificatePassword!= null) {
           if (iosNotificationType.equals("production")) {
             service =
                 APNS.newService()
