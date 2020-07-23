@@ -214,21 +214,25 @@ class ActivitiesViewController: UIViewController {
 
     } else {
       /// check if user navigated from notification
-      if NotificationHandler.instance.activityId.count > 0 {
-
-        let activityId = NotificationHandler.instance.activityId
-
-        let rowDetail = tableViewSections[0]
-        let activities = (rowDetail["activities"] as? [Activity])!
-        let index = activities.firstIndex(where: { $0.actvityId == activityId })
-        let ip = IndexPath.init(row: index!, section: 0)
-        self.selectedIndexPath = ip
-        self.tableView?.selectRow(at: ip, animated: true, scrollPosition: .middle)
-        self.tableView?.delegate?.tableView!(self.tableView!, didSelectRowAt: ip)
-
-        NotificationHandler.instance.activityId = ""
+      if !NotificationHandler.instance.activityId.isEmpty {
+        userDidNavigateFromNotification()
       }
     }
+  }
+
+  func userDidNavigateFromNotification() {
+    let activityId = NotificationHandler.instance.activityId
+    let rowDetail = tableViewSections[0]
+    let activities = rowDetail["activities"] as? [Activity] ?? []
+    if let index = activities.firstIndex(where: { $0.actvityId == activityId }),
+      let tableView = self.tableView
+    {
+      let indexPath = IndexPath(row: index, section: 0)
+      self.selectedIndexPath = indexPath
+      tableView.selectRow(at: indexPath, animated: true, scrollPosition: .middle)
+      tableView.delegate?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    NotificationHandler.instance.reset()
   }
 
   /// Sets the notification for the available resource.
@@ -740,6 +744,7 @@ class ActivitiesViewController: UIViewController {
       activityId: activityID,
       response: self.lastActivityResponse ?? [:]
     )
+    lastActivityResponse = [:]
     if lifeTimeUpdated {
       self.loadActivitiesFromDatabase()
     } else {
@@ -1120,7 +1125,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.sendRequestToGetResourcesInfo()
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
-      self.lastActivityResponse = nil
       self.removeProgressIndicator()
       self.updateRunStatusToComplete()
       self.checkForActivitiesUpdates()
@@ -1145,6 +1149,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
 
       self.checkForActivitiesUpdates()
+    } else if requestName as String == AuthServerMethods.getRefreshedToken.method.methodName {
+      self.removeProgressIndicator()
     }
   }
 
@@ -1187,8 +1193,9 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
         self.updateRunStatusToComplete()
+      } else {
+        self.lastActivityResponse = nil
       }
-      self.lastActivityResponse = nil
 
     default: break
     }

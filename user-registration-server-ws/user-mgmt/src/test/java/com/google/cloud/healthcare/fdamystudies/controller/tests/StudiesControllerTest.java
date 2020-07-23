@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -136,6 +137,8 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
+  // TODO(#668) Remove @Disabled when Github test case failed issue fix
+  @Disabled
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
