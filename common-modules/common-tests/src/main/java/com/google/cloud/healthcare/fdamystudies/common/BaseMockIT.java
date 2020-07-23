@@ -49,6 +49,7 @@ import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
   "classpath:application-mockit.properties",
   "classpath:application-mockit-common.properties"
 })
+@ComponentScan(basePackages = {"com.google.cloud.healthcare.fdamystudies"})
 public class BaseMockIT {
   private XLogger logger = XLoggerFactory.getXLogger(BaseMockIT.class.getName());
 

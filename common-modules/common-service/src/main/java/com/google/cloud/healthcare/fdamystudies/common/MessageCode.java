@@ -30,9 +30,9 @@ public enum MessageCode {
 
   ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
 
-  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get apps successfull"),
-
-  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfull");
+  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get Apps successfully"),
+  
+  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfully");
 
   private final HttpStatus httpStatus;
   private final String code;
