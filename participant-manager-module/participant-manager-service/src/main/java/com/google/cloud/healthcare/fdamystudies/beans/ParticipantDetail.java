@@ -28,7 +28,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class ParticipantRequest {
+public class ParticipantDetail {
   private String id;
 
   @ToString.Exclude

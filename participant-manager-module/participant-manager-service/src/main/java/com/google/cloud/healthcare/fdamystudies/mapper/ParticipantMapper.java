@@ -13,7 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
@@ -23,8 +23,8 @@ public final class ParticipantMapper {
 
   private ParticipantMapper() {}
 
-  public static ParticipantRequest fromParticipantStudy(ParticipantStudyEntity participantStudy) {
-    ParticipantRequest participantDetail = new ParticipantRequest();
+  public static ParticipantDetail fromParticipantStudy(ParticipantStudyEntity participantStudy) {
+    ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setId(participantStudy.getParticipantId());
     participantDetail.setEnrollmentStatus(participantStudy.getStatus());
     participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());

@@ -93,6 +93,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].type").value(studyEntity.getType()))
         .andExpect(jsonPath("$.sitePermissionCount").value(1));
   }
 
@@ -125,7 +126,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnStudyNotFoundForstudyParticipants() throws Exception {
+  public void shouldReturnStudyNotFoundForStudyParticipants() throws Exception {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
@@ -140,7 +141,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnAppNotFoundForstudyParticipants() throws Exception {
+  public void shouldReturnAppNotFoundForStudyParticipants() throws Exception {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -158,7 +159,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnAccessDeniedtForstudyParticipants() throws Exception {
+  public void shouldReturnAccessDeniedForStudyParticipants() throws Exception {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -192,7 +193,13 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray());
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].siteId")
+                .value(siteEntity.getId()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
+                .value(locationEntity.getName()));
   }
 
   @Test

@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -258,21 +258,21 @@ public class StudyServiceImpl implements StudyService {
     Optional<AppEntity> optApp =
         appRepository.findById(optStudyPermission.get().getAppInfo().getId());
 
-    return preapreRegistryPartcipantResponse(optStudy.get(), optApp.get());
+    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get());
   }
 
-  private ParticipantRegistryResponse preapreRegistryPartcipantResponse(
+  private ParticipantRegistryResponse prepareRegistryParticipantResponse(
       StudyEntity study, AppEntity app) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
 
     List<ParticipantStudyEntity> participantStudiesList =
         participantStudyRepository.findParticipantsByStudy(study.getId());
-    List<ParticipantRequest> registryParticipants = new ArrayList<>();
+    List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     if (CollectionUtils.isNotEmpty(participantStudiesList)) {
       for (ParticipantStudyEntity participantStudy : participantStudiesList) {
-        ParticipantRequest participantDetail =
+        ParticipantDetail participantDetail =
             ParticipantMapper.fromParticipantStudy(participantStudy);
 
         String onboardingStatusCode =
