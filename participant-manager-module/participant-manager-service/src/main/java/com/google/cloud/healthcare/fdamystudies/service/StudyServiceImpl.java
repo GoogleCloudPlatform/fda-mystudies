@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
@@ -270,11 +270,11 @@ public class StudyServiceImpl implements StudyService {
 
     List<ParticipantStudyEntity> participantStudiesList =
         participantStudyRepository.findParticipantsByStudy(study.getId());
-    List<ParticipantDetailRequest> registryParticipants = new ArrayList<>();
+    List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     if (CollectionUtils.isNotEmpty(participantStudiesList)) {
       for (ParticipantStudyEntity participantStudy : participantStudiesList) {
-        ParticipantDetailRequest participantDetail =
+        ParticipantDetail participantDetail =
             ParticipantMapper.fromParticipantStudy(participantStudy);
 
         String onboardingStatusCode =

@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -25,23 +29,19 @@ import lombok.ToString;
 @Getter
 @Setter
 public class ParticipantDetailRequest {
-  private String id;
 
+  @ToString.Exclude
+  @Size(max = 320)
+  @Email
   private String email;
 
+  @Size(max = 255)
+  @NotBlank
   private String onboardingStatus;
-
-  private String enrollmentStatus;
-
-  private String enrollmentDate;
 
   private String invitedDate;
 
+  @Size(max = 255)
+  @NotBlank
   private String siteId;
-
-  private String customLocationId;
-
-  private String locationName;
-
-  private Boolean newlyCreatedUser = Boolean.FALSE;
 }

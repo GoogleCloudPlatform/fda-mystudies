@@ -26,7 +26,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ParticipantDetails {
+public class ParticipantDetail {
 
   private String id;
 
@@ -45,6 +45,4 @@ public class ParticipantDetails {
   private String customLocationId;
 
   private String locationName;
-
-  private Boolean newlyCreatedUser = Boolean.FALSE;
 }

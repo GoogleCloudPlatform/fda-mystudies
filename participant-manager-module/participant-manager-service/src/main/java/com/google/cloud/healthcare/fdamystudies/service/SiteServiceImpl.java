@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
@@ -330,11 +330,11 @@ public class SiteServiceImpl implements SiteService {
                 participantStudyRepository.findByParticipantRegistrySiteId(registryIds));
 
     for (ParticipantRegistrySiteEntity participantRegistrySite : registryParticipants) {
-      ParticipantDetails participant = new ParticipantDetails();
+      ParticipantDetail participant = new ParticipantDetail();
       participant =
           ParticipantMapper.toParticipantDetails(
               participantStudies, participantRegistrySite, participant);
-      participantRegistry.getParticipants().add(participant);
+      participantRegistry.getRegistryParticipants().add(participant);
     }
   }
 }
