@@ -19,10 +19,4 @@ public final class Constants {
   public static final String USER_ID_HEADER = "UserId";
 
   public static final int ACTIVE = 1;
-
-  public static final String OPEN_STUDY = "OPEN";
-  public static final String CLOSE_STUDY = "CLOSE";
-
-  public static final Integer READ_PERMISSION = 1;
-  public static final Integer READ_AND_EDIT_PERMISSION = 2;
 }

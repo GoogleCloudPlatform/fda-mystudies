@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -60,8 +59,12 @@ public class UserDetailsEntity implements Serializable {
   @Column(name = "last_name")
   private String lastName;
 
-  @Column(name = "_ts")
-  private Date ts;
+  @Column(
+      name = "timestamp",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp timestamp;
 
   @ToString.Exclude
   @Column(name = "email")
