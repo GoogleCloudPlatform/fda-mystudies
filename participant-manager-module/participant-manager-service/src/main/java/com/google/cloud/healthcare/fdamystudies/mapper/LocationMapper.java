@@ -35,7 +35,6 @@ public final class LocationMapper {
     locationEntity.setName(locationRequest.getName());
     locationEntity.setDescription(locationRequest.getDescription());
     locationEntity.setCustomId(locationRequest.getCustomId());
-    locationEntity.setU
     locationEntity.setStatus(ACTIVE_STATUS);
     locationEntity.setIsDefault(NO);
     return locationEntity;
