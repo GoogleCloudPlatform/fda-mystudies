@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,6 +34,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
@@ -102,5 +104,22 @@ public class SiteController {
         siteService.getParticipants(userId, siteId, onboardingStatus);
     logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
+  }
+
+  @PutMapping(
+      value = "/sites/{siteId}/decommission",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<SiteStatusResponse> decomissionSite(
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @PathVariable String siteId,
+      HttpServletRequest request) {
+    logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+
+    SiteStatusResponse decomissionSiteResponse = siteService.toggleSiteStatus(userId, siteId);
+
+    logger.exit(String.format(STATUS_LOG, decomissionSiteResponse.getHttpStatusCode()));
+    return ResponseEntity.status(decomissionSiteResponse.getHttpStatusCode())
+        .body(decomissionSiteResponse);
   }
 }

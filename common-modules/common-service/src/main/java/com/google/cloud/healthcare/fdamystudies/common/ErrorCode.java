@@ -125,7 +125,17 @@ public enum ErrorCode {
   INVALID_ONBOARDING_STATUS(
       400, "EC-816", HttpStatus.BAD_REQUEST.toString(), "allowed values: N, D, I and E"),
 
-  USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin");
+  USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin"),
+
+  CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY(
+      400, "EC-95", Constants.BAD_REQUEST, " Cannot decomission site as study type is open"),
+
+  CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS(
+      400,
+      "EC_885",
+      Constants.BAD_REQUEST,
+      "This Site is associated with active and enrolled participants"
+          + " and cannot be decomissioned");
 
   private final int status;
   private final String code;

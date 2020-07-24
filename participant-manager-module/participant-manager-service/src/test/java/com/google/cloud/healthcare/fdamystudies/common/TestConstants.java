@@ -14,4 +14,6 @@ public final class TestConstants {
   public static final String UPDATE_LOCATION_DESCRIPTION_VALUE = "Marlborough, Massachusetts";
 
   public static final String UPDATE_LOCATION_NAME_VALUE = "Cedar Hill, Marlborough ";
+
+  public static final String DECOMMISSION_SITE_NAME = "siteName";
 }

@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
@@ -18,12 +19,14 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,6 +56,7 @@ import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -74,6 +78,8 @@ import com.jayway.jsonpath.JsonPath;
 public class SitesControllerTest extends BaseMockIT {
 
   private static String siteId;
+
+  protected MvcResult result;
 
   @Autowired private SiteController controller;
   @Autowired private SiteService siteService;
@@ -420,6 +426,155 @@ public class SitesControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
+  }
+
+  @Test
+  public void shouldReturnNotFoundForDecomissionSite() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Call API and expect SITE_NOT_FOUND error
+    mockMvc
+        .perform(
+            put(ApiEndpoint.DECOMISSION_SITE.getPath(), IdGenerator.id())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.SITE_NOT_FOUND.getDescription())));
+  }
+
+  @Test
+  public void shouldRecomissionSite() throws Exception {
+    // Step 1: Set the status to DEACTIVE
+    siteEntity.setStatus(SiteStatus.DEACTIVE.value());
+    siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: call API and expect RECOMMISSION_SITE_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.siteId", notNullValue()))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.RECOMMISSION_SITE_SUCCESS.getMessage())))
+            .andExpect(jsonPath("$.status", is(SiteStatus.ACTIVE.value())))
+            .andReturn();
+
+    String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
+
+    // Step 3: verify updated values
+    Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
+    SiteEntity siteEntity = optSiteEntity.get();
+    assertNotNull(siteEntity);
+    assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+  }
+
+  @Test
+  public void shouldDecomissionSite() throws Exception {
+    // Step 1: set status to ACTIVE
+    siteEntity.setStatus(SiteStatus.ACTIVE.value());
+    siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API and expect DECOMMISSION_SITE_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.siteId", notNullValue()))
+            .andExpect(jsonPath("$.status", is(SiteStatus.DEACTIVE.value())))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.DECOMMISSION_SITE_SUCCESS.getMessage())))
+            .andReturn();
+
+    String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
+
+    // Step 3: verify updated values
+    Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
+    SiteEntity siteEntity = optSiteEntity.get();
+    assertNotNull(siteEntity);
+    assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+  }
+
+  @Test
+  public void shouldReturnCannotDecommissionSiteForOpenStudyError() throws Exception {
+    // Step 1: set studyType to open
+    studyEntity.setType(OPEN);
+    studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+
+    // Step 2: call API and expect CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnCannotDecomissionSiteForEnrolledAndActiveStatus() throws Exception {
+    // Step 1: Set status to enrolled
+    participantStudyEntity.setStatus(ENROLLED_STATUS);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    // Step 2: call API and expect CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(
+                    ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS
+                        .getDescription())));
+  }
+
+  @Test
+  public void shouldReturnSitePermissionAccessDeniedForDecommissionSite() throws Exception {
+    // Step 1: Set permission to read only
+    StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
+    studyPermissionEntity.setEdit(Permission.READ_VIEW.value());
+    studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+
+    AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
+    appPermissionEntity.setEdit(Permission.READ_VIEW.value());
+    appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
+
+    // Step 2: call API and expect SITE_PERMISSION_ACEESS_DENIED error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.SITE_PERMISSION_ACEESS_DENIED.getDescription())));
   }
 
   @AfterEach
