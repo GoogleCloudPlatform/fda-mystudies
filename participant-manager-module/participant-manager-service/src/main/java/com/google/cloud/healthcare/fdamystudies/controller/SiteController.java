@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
@@ -68,7 +68,7 @@ public class SiteController {
   public ResponseEntity<ParticipantResponse> addNewParticipant(
       @PathVariable String siteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
-      @RequestBody ParticipantDetail participant,
+      @RequestBody ParticipantDetailRequest participant,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     participant.setSiteId(siteId);
