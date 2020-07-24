@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +21,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
@@ -51,19 +52,19 @@ public class ParticipantStudyEntity implements Serializable {
   private String participantId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_info_id", insertable = true, updatable = false)
+  @JoinColumn(name = "study_info_id")
   private StudyEntity study;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "participant_registry_site_id", insertable = true, updatable = true)
+  @JoinColumn(name = "participant_registry_site_id")
   private ParticipantRegistrySiteEntity participantRegistrySite;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "site_id", insertable = true, updatable = true)
+  @JoinColumn(name = "site_id")
   private SiteEntity site;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "user_details_id", insertable = true, updatable = false)
+  @JoinColumn(name = "user_details_id")
   private UserDetailsEntity userDetails;
 
   @Column(name = "consent_status")
@@ -94,6 +95,15 @@ public class ParticipantStudyEntity implements Serializable {
   @Column(name = "adherence")
   private Integer adherence;
 
-  @Column(name = "withdrawal_date")
-  private LocalDateTime withdrawalDate;
+  @Column(
+      name = "withdrawal_date",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp withdrawalDate;
+
+  @Transient
+  public String getUserDetailsId() {
+    return userDetails != null ? userDetails.getId() : StringUtils.EMPTY;
+  }
 }

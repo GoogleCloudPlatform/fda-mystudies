@@ -83,15 +83,15 @@ public class UserDetailsEntity implements Serializable {
   @Column(name = "remote_notification_flag")
   private Boolean remoteNotificationFlag;
 
-  @Column(name = "status")
+  @Column(name = "status", nullable = false)
   private Integer status;
 
   @ToString.Exclude
   @Column(name = "password")
   private String password;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "app_info_id", insertable = false, updatable = false)
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+  @JoinColumn(name = "app_info_id")
   private AppEntity appInfo;
 
   @ToString.Exclude

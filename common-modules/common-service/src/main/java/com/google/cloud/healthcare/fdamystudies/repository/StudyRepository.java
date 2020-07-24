@@ -45,4 +45,7 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
               + "where s.study_id=si.id AND s.location_id = :locationId",
       nativeQuery = true)
   public String getStudyNamesByLocationId(String locationId);
+
+  @Query("SELECT study FROM StudyEntity study where study.appInfo.id = :appInfoId")
+  public List<StudyEntity> findByAppId(String appInfoId);
 }

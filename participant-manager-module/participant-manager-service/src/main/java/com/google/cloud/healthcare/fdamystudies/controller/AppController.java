@@ -20,11 +20,13 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AppParticipantsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 import com.google.cloud.healthcare.fdamystudies.service.AppService;
 
@@ -61,5 +63,19 @@ public class AppController {
 
     logger.exit(String.format(STATUS_LOG, appResponse.getHttpStatusCode()));
     return ResponseEntity.status(appResponse.getHttpStatusCode()).body(appResponse);
+  }
+
+  @GetMapping("/{appId}/participants")
+  public ResponseEntity<AppParticipantsResponse> getAppParticipants(
+      @PathVariable String appId,
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    AppParticipantsResponse appParticipantsResponse = appService.getAppParticipants(appId, userId);
+
+    logger.exit(String.format(STATUS_LOG, appParticipantsResponse.getHttpStatusCode()));
+    return ResponseEntity.status(appParticipantsResponse.getHttpStatusCode())
+        .body(appParticipantsResponse);
   }
 }

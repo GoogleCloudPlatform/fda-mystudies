@@ -19,16 +19,19 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public final class ParticipantMapper {
 
@@ -138,6 +141,16 @@ public final class ParticipantMapper {
     }
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    return participant;
+  }
+
+  public static ParticipantDetails toParticipantDetails(UserDetailsEntity userDetailsEntity) {
+    ParticipantDetails participant = new ParticipantDetails();
+    participant.setUserDetailsId(userDetailsEntity.getId());
+    participant.setEmail(userDetailsEntity.getEmail());
+    UserStatus userStatus = UserStatus.fromValue(userDetailsEntity.getStatus());
+    participant.setRegistrationStatus(userStatus.getDescription());
+    participant.setRegistrationDate(DateTimeUtils.format(userDetailsEntity.getVerificationDate()));
     return participant;
   }
 }

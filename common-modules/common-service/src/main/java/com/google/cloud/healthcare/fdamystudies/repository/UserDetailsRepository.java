@@ -29,4 +29,7 @@ public interface UserDetailsRepository extends JpaRepository<UserDetailsEntity, 
       "SELECT ud.appInfo.id AS appId,COUNT(ud.appInfo.id) AS count FROM UserDetailsEntity ud "
           + "WHERE ud.appInfo.id in (:appIds) GROUP BY ud.appInfo.id")
   public List<AppCount> findAppUsersCount(@Param("appIds") List<String> usersAppsIds);
+
+  @Query("SELECT ud FROM UserDetailsEntity ud WHERE ud.appInfo.id = :appInfoId")
+  public List<UserDetailsEntity> findByAppId(String appInfoId);
 }
