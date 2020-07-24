@@ -86,6 +86,7 @@ public class AppControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(1)))
         .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.studyPermissionCount").value(1));
@@ -156,7 +157,7 @@ public class AppControllerTest extends BaseMockIT {
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     String[] fields = {"studies", "sites"};
 
-    // Step 2: Call API and expect success message
+    // Step 2: Call API and expect USER_ADMIN_ACCESS_DENIED
     mockMvc
         .perform(
             get(ApiEndpoint.GET_APPS.getPath())
