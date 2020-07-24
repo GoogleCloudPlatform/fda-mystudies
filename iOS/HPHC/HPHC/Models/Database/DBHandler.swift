@@ -861,8 +861,8 @@ class DBHandler: NSObject {
       let updatedStartDate = DateHelper.updateTime(of: anchorStartDate, with: startTime)
     {
       anchorStartDate = updatedStartDate
-    } else {
-      anchorStartDate = dbActivity.startDate ?? Date()
+    } else if let activityStartDate = dbActivity.startDate {
+      anchorStartDate = activityStartDate
     }
 
     // Update End date and time.
@@ -870,8 +870,8 @@ class DBHandler: NSObject {
       let updatedEndDate = DateHelper.updateTime(of: anchorEndDate, with: endTime)
     {
       anchorEndDate = updatedEndDate
-    } else if dbActivity.endDays == 0 {  // LifeTime Anchor activity.
-      anchorEndDate = nil
+    } else if dbActivity.endDays == 0 {  // if nil == LifeTime Anchor activity.
+      anchorEndDate = dbActivity.endDate
     }
 
     // calcuate runs for activity
