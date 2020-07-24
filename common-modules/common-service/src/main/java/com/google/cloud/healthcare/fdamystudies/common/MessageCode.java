@@ -49,7 +49,11 @@ public enum MessageCode {
 
   DECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0014", "Site Decommissioned successfully"),
 
-  RECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0015", "Site Recommissioned successfully");
+  RECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0015", "Site Recommissioned successfully"),
+
+  GET_LOCATION_SUCCESS(HttpStatus.OK, "MSG-0008", "Get locations successfull"),
+
+  GET_LOCATION_FOR_SITE_SUCCESS(HttpStatus.OK, "MSG-0009", "Get locations for site successfull");
 
   private final HttpStatus httpStatus;
   private final String code;
