@@ -29,9 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -50,7 +50,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
-import com.google.cloud.healthcare.fdamystudies.util.Constants;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -214,8 +213,7 @@ public class StudyServiceImpl implements StudyService {
 
   private Map<String, Long> getSiteWithEnrolledParticipantCountMap(List<String> usersSiteIds) {
     List<ParticipantStudyEntity> participantsEnrollments =
-        participantStudyRepository.findParticipantsEnrollmentsOfSites(usersSiteIds);
-        participantStudiesRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
+        participantStudyRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
 
     return participantsEnrollments
         .stream()
