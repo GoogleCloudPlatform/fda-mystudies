@@ -17,10 +17,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VI
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +31,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
+import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
+import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 
 @Service
 public class AppServiceImpl implements AppService {
@@ -56,6 +68,14 @@ public class AppServiceImpl implements AppService {
   @Autowired private ParticipantStudyRepository participantStudiesRepository;
 
   @Autowired private SitePermissionRepository sitePermissionRepository;
+
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
+
+  @Autowired private AppRepository appRepository;
+
+  @Autowired private StudyRepository studyRepository;
+
+  @Autowired private SiteRepository siteRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -74,7 +94,10 @@ public class AppServiceImpl implements AppService {
     Map<String, AppPermissionEntity> appPermissionsByAppInfoId =
         getAppPermissionsMap(userId, appIds);
 
-    Map<String, Long> appIdbyUsersCount = userDetailsRepository.findAppUsersCount(appIds);
+    List<AppCount> appUserCount = userDetailsRepository.findAppUsersCount(appIds);
+
+    Map<String, Long> appIdbyUsersCount =
+        appUserCount.stream().collect(Collectors.toMap(AppCount::getAppId, AppCount::getCount));
 
     Map<AppEntity, Map<StudyEntity, List<SitePermissionEntity>>>
         sitePermissionByAppInfoAndStudyInfo = getPermissionByAppInfoAndStudyInfo(sitePermissions);
@@ -122,7 +145,6 @@ public class AppServiceImpl implements AppService {
       appDetails.setStudiesCount((long) entry.getValue().size());
       appDetails.setName(app.getAppName());
       appDetails.setAppUsersCount(appIdbyUsersCount.get(app.getId()));
-      appDetails.setAppUsersCount(0L);
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
         Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit();
@@ -235,5 +257,58 @@ public class AppServiceImpl implements AppService {
         .map(appInfoDetailsbo -> appInfoDetailsbo.getAppInfo().getId())
         .distinct()
         .collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public AppResponse getAppsWithOptionalFields(String userId, String[] fields) {
+    logger.entry("getAppsWithOptionalFields(userId,fields)");
+
+    Optional<UserRegAdminEntity> optUserRegAdminEntity =
+        userRegAdminRepository.findByUserRegAdminId(userId);
+
+    if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
+      logger.exit(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+      return new AppResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+    }
+
+    List<AppEntity> apps =
+        (List<AppEntity>) CollectionUtils.emptyIfNull(appRepository.findAllApps());
+    List<String> appIds = apps.stream().map(AppEntity::getId).collect(Collectors.toList());
+
+    List<StudyEntity> studies =
+        (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findByAppIds(appIds));
+    List<String> studyIds = studies.stream().map(StudyEntity::getId).collect(Collectors.toList());
+
+    List<SiteEntity> sites = siteRepository.findBySites(studyIds);
+
+    AppResponse appResponse = prepareAppResponse(apps, studies, sites, fields);
+
+    logger.exit(String.format("total apps=%d", appResponse.getApps().size()));
+    return appResponse;
+  }
+
+  private AppResponse prepareAppResponse(
+      List<AppEntity> apps, List<StudyEntity> studies, List<SiteEntity> sites, String[] fields) {
+    Map<String, List<StudyEntity>> groupByAppIdStudyMap =
+        studies.stream().collect(Collectors.groupingBy(StudyEntity::getAppId));
+
+    Map<String, List<SiteEntity>> groupByStudyIdSiteMap =
+        sites.stream().collect(Collectors.groupingBy(SiteEntity::getStudyId));
+
+    List<AppDetails> appsList = new ArrayList<>();
+    for (AppEntity app : apps) {
+      AppDetails appDetails = AppMapper.toAppDetails(app);
+      if (ArrayUtils.contains(fields, "studies")) {
+        List<AppStudyResponse> appStudyResponses =
+            StudyMapper.toAppDetailsResponseList(
+                groupByAppIdStudyMap.get(app.getId()), groupByStudyIdSiteMap, fields);
+
+        appDetails.getStudies().addAll(appStudyResponses);
+      }
+      appsList.add(appDetails);
+    }
+
+    return new AppResponse(MessageCode.GET_APPS_DETAILS_SUCCESS, appsList);
   }
 }

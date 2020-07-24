@@ -7,8 +7,11 @@
  */
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import java.util.List;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -18,4 +21,8 @@ import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
     value = "participant.manager.repository.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public interface AppRepository extends JpaRepository<AppEntity, String> {}
+public interface AppRepository extends JpaRepository<AppEntity, String> {
+
+  @Query("SELECT ar FROM AppEntity ar")
+  List<AppEntity> findAllApps();
+}

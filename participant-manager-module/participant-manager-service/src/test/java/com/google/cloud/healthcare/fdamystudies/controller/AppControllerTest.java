@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,9 +27,9 @@ import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
-import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -50,6 +53,7 @@ public class AppControllerTest extends BaseMockIT {
   private StudyEntity studyEntity;
   private SiteEntity siteEntity;
   private UserDetailsEntity userDetailsEntity;
+  private LocationEntity locationEntity;
 
   @BeforeEach
   public void setUp() {
@@ -75,7 +79,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAppsRegisteredByUser() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
@@ -103,7 +107,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldNotReturnApp() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(TestConstants.USER_ID_HEADER, IdGenerator.id());
+    headers.set(USER_ID_HEADER, IdGenerator.id());
 
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
@@ -112,14 +116,69 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.error_description").value(ErrorCode.APP_NOT_FOUND.getDescription()));
   }
 
+  @Test
+  public void shouldReturnAppsWithOptionalStudiesAndSites() throws Exception {
+    // Step 1: set app,study and location
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().save(siteEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    String[] fields = {"studies", "sites"};
+
+    // Step 2: Call API and expect success message
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .queryParam("fields", fields))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(1)))
+        .andExpect(jsonPath("$.apps[0].studies").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].sites").isArray())
+        .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
+        .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()));
+  }
+
+  @Test
+  public void shouldReturnForbiddenForGetAppDetailsAccessDenied() throws Exception {
+    // Step 1 : set SuperAdmin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    String[] fields = {"studies", "sites"};
+
+    // Step 2: Call API and expect success message
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .queryParam("fields", fields))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.USER_ADMIN_ACCESS_DENIED.getDescription())));
+  }
+
   @AfterEach
   public void cleanUp() {
-    testDataHelper.getParticipantStudyRepository().delete(participantStudyEntity);
-    testDataHelper.getParticipantRegistrySiteRepository().delete(participantRegistrySiteEntity);
-    testDataHelper.getUserDetailsRepository().delete(userDetailsEntity);
-    testDataHelper.getSiteRepository().delete(siteEntity);
-    testDataHelper.getStudyRepository().delete(studyEntity);
-    testDataHelper.getAppRepository().delete(appEntity);
-    testDataHelper.getUserRegAdminRepository().delete(userRegAdminEntity);
+    testDataHelper.getParticipantStudyRepository().deleteAll();
+    testDataHelper.getParticipantRegistrySiteRepository().deleteAll();
+    testDataHelper.getUserDetailsRepository().deleteAll();
+    testDataHelper.getSiteRepository().deleteAll();
+    testDataHelper.getLocationRepository().deleteAll();
+    testDataHelper.getStudyRepository().deleteAll();
+    testDataHelper.getAppRepository().deleteAll();
+    testDataHelper.getUserRegAdminRepository().deleteAll();
   }
 }
