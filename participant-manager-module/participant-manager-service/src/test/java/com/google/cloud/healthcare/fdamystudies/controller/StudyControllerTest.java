@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -88,6 +89,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies.length()", hasSize(1)))
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.sitePermissionCount").value(1));
   }
@@ -107,7 +109,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldNotReturnStudies() throws Exception {
+  public void shouldReturnStudyNotFound() throws Exception {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, IdGenerator.id());
 
