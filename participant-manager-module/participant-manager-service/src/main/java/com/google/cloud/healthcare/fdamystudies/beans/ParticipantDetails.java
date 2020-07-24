@@ -24,7 +24,7 @@ import lombok.ToString;
 @ToString
 @Getter
 @Setter
-public class ParticipantDetail {
+public class ParticipantDetails {
   private String id;
 
   private String email;

@@ -28,7 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
@@ -185,7 +186,8 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   @Transactional
-  public ParticipantResponse addNewParticipant(ParticipantDetail participant, String userId) {
+  public ParticipantResponse addNewParticipant(
+      ParticipantDetailRequest participant, String userId) {
     logger.entry("begin addNewParticipant()");
 
     Optional<SiteEntity> optSite = siteRepository.findById(participant.getSiteId());
@@ -216,7 +218,7 @@ public class SiteServiceImpl implements SiteService {
   }
 
   private ErrorCode validationForAddNewParticipant(
-      ParticipantDetail participant, String userId, SiteEntity site) {
+      ParticipantDetailRequest participant, String userId, SiteEntity site) {
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
 
@@ -328,11 +330,11 @@ public class SiteServiceImpl implements SiteService {
                 participantStudyRepository.findByParticipantRegistrySiteId(registryIds));
 
     for (ParticipantRegistrySiteEntity participantRegistrySite : registryParticipants) {
-      ParticipantDetail participant = new ParticipantDetail();
+      ParticipantDetails participant = new ParticipantDetails();
       participant =
           ParticipantMapper.toParticipantDetails(
               participantStudies, participantRegistrySite, participant);
-      participantRegistry.getRegistryParticipants().add(participant);
+      participantRegistry.getParticipants().add(participant);
     }
   }
 }

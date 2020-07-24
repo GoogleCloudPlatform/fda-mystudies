@@ -17,7 +17,7 @@ import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
@@ -33,8 +33,8 @@ public final class ParticipantMapper {
 
   private ParticipantMapper() {}
 
-  public static ParticipantDetail fromParticipantStudy(ParticipantStudyEntity participantStudy) {
-    ParticipantDetail participantDetail = new ParticipantDetail();
+  public static ParticipantDetailRequest fromParticipantStudy(ParticipantStudyEntity participantStudy) {
+    ParticipantDetailRequest participantDetail = new ParticipantDetailRequest();
     participantDetail.setId(participantStudy.getParticipantId());
     participantDetail.setEnrollmentStatus(participantStudy.getStatus());
     participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());
@@ -64,7 +64,7 @@ public final class ParticipantMapper {
   }
 
   public static ParticipantRegistrySiteEntity fromParticipantRequest(
-      ParticipantDetail participantRequest, SiteEntity site) {
+      ParticipantDetailRequest participantRequest, SiteEntity site) {
     ParticipantRegistrySiteEntity participantRegistrySite = new ParticipantRegistrySiteEntity();
     participantRegistrySite.setEmail(participantRequest.getEmail());
     participantRegistrySite.setSite(site);
