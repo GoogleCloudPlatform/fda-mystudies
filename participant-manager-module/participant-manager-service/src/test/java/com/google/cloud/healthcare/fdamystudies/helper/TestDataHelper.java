@@ -13,9 +13,13 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
+
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -75,6 +79,13 @@ public class TestDataHelper {
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
+
+  public HttpHeaders newCommonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    return headers;
+  }
 
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();

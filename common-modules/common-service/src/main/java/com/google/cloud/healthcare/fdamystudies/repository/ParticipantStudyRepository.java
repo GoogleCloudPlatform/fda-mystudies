@@ -25,7 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 public interface ParticipantStudyRepository extends JpaRepository<ParticipantStudyEntity, String> {
 
   @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.site.id in (:siteIds)")
-  public List<ParticipantStudyEntity> findParticipantsEnrollmentsOfSites(
+  public List<ParticipantStudyEntity> findParticipantEnrollmentsBySiteIds(
       @Param("siteIds") List<String> usersSiteIds);
 
   @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id in (:studyIds)")
