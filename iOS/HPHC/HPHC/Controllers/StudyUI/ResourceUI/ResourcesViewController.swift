@@ -158,6 +158,7 @@ class ResourcesViewController: UIViewController {
       if status {
         self.loadResourceFromDatabase()
       }
+      ResourcesViewController.scheduleNotificationForResources()
     }
   }
 
@@ -173,7 +174,7 @@ class ResourcesViewController: UIViewController {
   }
 
   func loadResourceFromDatabase() {
-    guard let studyID = Study.currentStudy?.studyId else {return}
+    guard let studyID = Study.currentStudy?.studyId else { return }
     DBHandler.loadResourcesForStudy(studyId: studyID) { (resources) in
       Study.currentStudy?.resources = resources
       self.handleResourcesReponse()
@@ -798,6 +799,69 @@ extension String {
     } catch {
       Logger.sharedInstance.error("Error: \(error)")
       return ""
+    }
+  }
+}
+
+extension ResourcesViewController {
+
+  /// Schedules notifications for all the resources from DB associated with Study.
+  class func refreshNotifications() {
+    guard let studyID = Study.currentStudy?.studyId else { return }
+    DBHandler.loadResourcesForStudy(studyId: studyID) { (resources) in
+      Study.currentStudy?.resources = resources
+      ResourcesViewController.scheduleNotificationForResources()
+    }
+  }
+
+  final private class func scheduleNotificationForResources() {
+
+    guard let study = Study.currentStudy,
+      let resources = study.resources,
+      let studyID = study.studyId
+    else { return }
+
+    for resource in resources {
+
+      if resource.povAvailable,
+        let startDate = resource.startDate,
+        let endDate = resource.endDate,
+        let updatedStartDate = DateHelper.updateTime(of: startDate, with: "09:00:00"),
+        let resourceID = resource.resourcesId
+      {
+        let notificationID = resourceID + study.studyId
+        DBHandler.isNotificationSetFor(
+          notification: notificationID,
+          completionHandler: { (found) in
+            if !found {
+              // Set start time of notification as 9 AM.
+              let notification = AppLocalNotification(
+                with: resource,
+                id: notificationID,
+                startDate: updatedStartDate,
+                endDate: endDate,
+                studyID: studyID
+              )
+              // Save Notification to Database
+              DBHandler.saveLocalNotification(
+                notification: notification
+              )
+              let message = resource.notificationMessage
+              let userInfo =
+                [
+                  "studyId": studyID,
+                  "type": "resource",
+                ] as JSONDictionary
+              LocalNotification.scheduleNotificationOn(
+                date: updatedStartDate,
+                message: message ?? "",
+                userInfo: userInfo,
+                id: notification.id
+              )
+            }
+          }
+        )
+      }
     }
   }
 }
