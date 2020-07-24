@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
 
@@ -20,19 +23,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
@@ -51,6 +63,12 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private StudyPermissionRepository studyPermissionRepository;
 
   @Autowired private AppPermissionRepository appPermissionRepository;
+
+  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
+
+  @Autowired private SitePermissionRepository sitePermissionRepository;
+
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Override
   @Transactional
@@ -154,5 +172,71 @@ public class SiteServiceImpl implements SiteService {
       sitePermission.setCreatedBy(userId);
       site.addSitePermissionEntity(sitePermission);
     }
+  }
+
+  @Override
+  @Transactional
+  public ParticipantResponse addNewParticipant(ParticipantDetail participant, String userId) {
+    logger.entry("begin addNewParticipant()");
+
+    Optional<SiteEntity> optSite = siteRepository.findById(participant.getSiteId());
+
+    if (!optSite.isPresent() || !optSite.get().getStatus().equals(ACTIVE_STATUS)) {
+      logger.exit(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+      return new ParticipantResponse(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+    }
+
+    SiteEntity site = optSite.get();
+    ErrorCode errorCode = validationForAddNewParticipant(participant, userId, site);
+    if (errorCode != null) {
+      logger.exit(errorCode);
+      return new ParticipantResponse(errorCode);
+    }
+
+    ParticipantRegistrySiteEntity participantRegistrySite =
+        ParticipantMapper.fromParticipantRequest(participant, site);
+    participantRegistrySite.setCreatedBy(userId);
+    participantRegistrySite =
+        participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+    ParticipantResponse response =
+        new ParticipantResponse(
+            MessageCode.ADD_PARTICIPANT_SUCCESS, participantRegistrySite.getId());
+
+    logger.exit(String.format("participantRegistrySiteId=%s", participantRegistrySite.getId()));
+    return response;
+  }
+
+  private ErrorCode validationForAddNewParticipant(
+      ParticipantDetail participant, String userId, SiteEntity site) {
+    Optional<SitePermissionEntity> optSitePermission =
+        sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
+
+    if (!optSitePermission.isPresent()
+        || !optSitePermission.get().getCanEdit().equals(Permission.READ_EDIT.value())) {
+      return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+    }
+
+    if (site.getStudy() != null && OPEN_STUDY.equals(site.getStudy().getType())) {
+      return ErrorCode.OPEN_STUDY;
+    }
+
+    Optional<ParticipantRegistrySiteEntity> registry =
+        participantRegistrySiteRepository.findByStudyIdAndEmail(
+            site.getStudy().getId(), participant.getEmail());
+
+    if (registry.isPresent()) {
+      ParticipantRegistrySiteEntity participantRegistrySite = registry.get();
+      Optional<ParticipantStudyEntity> participantStudy =
+          participantStudyRepository.findByParticipantRegistrySiteId(
+              participantRegistrySite.getId());
+
+      if (participantStudy.isPresent()
+          && ENROLLED_STATUS.equals(participantStudy.get().getStatus())) {
+        return ErrorCode.ENROLLED_PARTICIPANT;
+      } else {
+        return ErrorCode.EMAIL_EXISTS;
+      }
+    }
+    return null;
   }
 }

@@ -222,7 +222,7 @@ public class StudyServiceImpl implements StudyService {
 
   private Map<String, Long> getSiteWithInvitedParticipantCountMap(List<String> usersSiteIds) {
     List<ParticipantRegistrySiteEntity> participantRegistry =
-        participantRegistrySiteRepository.findParticipantRegistryBySiteIds(usersSiteIds);
+        participantRegistrySiteRepository.findBySiteIds(usersSiteIds);
 
     return participantRegistry
         .stream()

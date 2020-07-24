@@ -25,7 +25,10 @@ public enum ApiEndpoint {
   UPDATE_LOCATION("http://localhost:8080/participant-manager-service/locations/{locationId}"),
 
   GET_STUDY_PARTICIPANT(
-      "http://localhost:8080/participant-manager-service/studies/{studyId}/participants");
+      "http://localhost:8080/participant-manager-service/studies/{studyId}/participants"),
+
+  ADD_NEW_PARTICIPANT(
+      "http://localhost:8080/participant-manager-service/sites/{siteId}/participants");
 
   private String url;
 

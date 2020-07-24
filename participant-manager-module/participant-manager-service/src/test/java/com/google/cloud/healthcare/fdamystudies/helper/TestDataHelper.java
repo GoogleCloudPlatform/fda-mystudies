@@ -9,11 +9,11 @@
 package com.google.cloud.healthcare.fdamystudies.helper;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 
 import java.util.Collections;
 
@@ -167,6 +167,7 @@ public class TestDataHelper {
   public SiteEntity newSiteEntity() {
     SiteEntity siteEntity = new SiteEntity();
     siteEntity.setName("siteName");
+    siteEntity.setStatus(ACTIVE_STATUS);
     return siteEntity;
   }
 
@@ -174,6 +175,8 @@ public class TestDataHelper {
       StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
     SiteEntity siteEntity = newSiteEntity();
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
+    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
     sitePermissionEntity.setAppInfo(appEntity);

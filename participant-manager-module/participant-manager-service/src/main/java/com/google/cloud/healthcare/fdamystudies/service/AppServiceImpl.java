@@ -82,7 +82,7 @@ public class AppServiceImpl implements AppService {
     List<String> usersSiteIds = getUserSiteIds(sitePermissions);
 
     List<ParticipantRegistrySiteEntity> participantRegistry =
-        participantRegistrySiteRepository.findParticipantRegistryBySiteIds(usersSiteIds);
+        participantRegistrySiteRepository.findBySiteIds(usersSiteIds);
 
     Map<String, Long> siteWithInvitedParticipantCountMap =
         getSiteWithInvitedParticipantCountMap(participantRegistry);

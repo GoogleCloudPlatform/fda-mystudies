@@ -107,7 +107,19 @@ public enum ErrorCode {
       403, "EC-882", "Forbidden", "You do not have permission to update the location"),
 
   STUDY_PERMISSION_ACCESS_DENIED(
-      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have study permission");
+      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have study permission"),
+
+  MANAGE_SITE_PERMISSION_ACCESS_DENIED(
+      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "You do not have permission to manage site"),
+
+  OPEN_STUDY(
+      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Can not add participant to open study"),
+
+  ENROLLED_PARTICIPANT(400, "EC-862", Constants.BAD_REQUEST, "Participant already enrolled"),
+
+  SITE_NOT_EXIST_OR_INACTIVE(
+      400, "EC-869", Constants.BAD_REQUEST, "Site doesn't exists or is inactive"),
+  ;
 
   private final int status;
   private final String code;
