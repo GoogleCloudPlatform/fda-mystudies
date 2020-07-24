@@ -14,9 +14,14 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +29,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -238,5 +247,92 @@ public class SiteServiceImpl implements SiteService {
       }
     }
     return null;
+  }
+
+  @Override
+  public ParticipantRegistryResponse getParticipants(
+      String userId, String siteId, String onboardingStatus) {
+    logger.info("getParticipants()");
+    Optional<SiteEntity> optSite = siteRepository.findById(siteId);
+
+    if (!optSite.isPresent()) {
+      logger.exit(ErrorCode.SITE_NOT_FOUND);
+      return new ParticipantRegistryResponse(ErrorCode.SITE_NOT_FOUND);
+    }
+
+    Optional<SitePermissionEntity> optSitePermission =
+        sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
+
+    if (!optSitePermission.isPresent()
+        || Permission.NO_PERMISSION == Permission.fromValue(optSitePermission.get().getCanEdit())) {
+      logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      return new ParticipantRegistryResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    }
+
+    ParticipantRegistryDetail participantRegistry =
+        ParticipantMapper.fromSite(optSite.get(), optSitePermission.get(), siteId);
+    Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
+    participantRegistry.setCountByStatus(statusWithCountMap);
+
+    List<ParticipantRegistrySiteEntity> registryParticipants = null;
+    if (StringUtils.isEmpty(onboardingStatus)) {
+      registryParticipants = participantRegistrySiteRepository.findBySiteId(siteId);
+    } else {
+      registryParticipants =
+          participantRegistrySiteRepository.findBySiteIdAndStatus(siteId, onboardingStatus);
+    }
+
+    addRegistryParticipants(participantRegistry, registryParticipants);
+
+    ParticipantRegistryResponse participantRegistryResponse =
+        new ParticipantRegistryResponse(
+            MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistry);
+
+    logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
+    return participantRegistryResponse;
+  }
+
+  private Map<String, Long> getOnboardingStatusWithCount(String siteId) {
+    List<ParticipantRegistrySiteCount> statusCount =
+        (List<ParticipantRegistrySiteCount>)
+            CollectionUtils.emptyIfNull(
+                participantRegistrySiteRepository.findStatusCountBySiteId(siteId));
+
+    Map<String, Long> statusWithCountMap = new HashMap<>();
+    for (OnboardingStatus onboardingStatus : OnboardingStatus.values()) {
+      statusWithCountMap.put(onboardingStatus.getCode(), (long) 0);
+    }
+
+    long total = 0;
+    for (ParticipantRegistrySiteCount count : statusCount) {
+      total += count.getCount();
+      statusWithCountMap.put(count.getOnboardingStatus(), count.getCount());
+    }
+
+    statusWithCountMap.put("A", total);
+    return statusWithCountMap;
+  }
+
+  private void addRegistryParticipants(
+      ParticipantRegistryDetail participantRegistry,
+      List<ParticipantRegistrySiteEntity> registryParticipants) {
+    List<String> registryIds =
+        CollectionUtils.emptyIfNull(registryParticipants)
+            .stream()
+            .map(ParticipantRegistrySiteEntity::getId)
+            .collect(Collectors.toList());
+
+    List<ParticipantStudyEntity> participantStudies =
+        (List<ParticipantStudyEntity>)
+            CollectionUtils.emptyIfNull(
+                participantStudyRepository.findByParticipantRegistrySiteId(registryIds));
+
+    for (ParticipantRegistrySiteEntity participantRegistrySite : registryParticipants) {
+      ParticipantDetail participant = new ParticipantDetail();
+      participant =
+          ParticipantMapper.toParticipantDetails(
+              participantStudies, participantRegistrySite, participant);
+      participantRegistry.getRegistryParticipants().add(participant);
+    }
   }
 }

@@ -8,10 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -31,10 +27,6 @@ import lombok.ToString;
 public class ParticipantDetail {
   private String id;
 
-  @ToString.Exclude
-  @NotBlank
-  @Size(max = 320)
-  @Email
   private String email;
 
   private String onboardingStatus;

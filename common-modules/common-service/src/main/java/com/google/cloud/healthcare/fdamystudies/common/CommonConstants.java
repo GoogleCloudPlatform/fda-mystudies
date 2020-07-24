@@ -36,4 +36,6 @@ public final class CommonConstants {
   public static final int EDIT_VALUE = 1;
 
   public static final String ENROLLED_STATUS = "Enrolled";
+
+  public static final String YET_TO_ENROLL = "Yet to Enroll";
 }

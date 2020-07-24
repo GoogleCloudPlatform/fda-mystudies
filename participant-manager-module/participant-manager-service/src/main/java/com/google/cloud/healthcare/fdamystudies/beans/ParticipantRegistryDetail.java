@@ -57,7 +57,7 @@ public class ParticipantRegistryDetail extends BaseResponse {
 
   private String locationName;
 
-  private String locationStatus;
+  private Integer locationStatus;
 
   private Integer sitePermission;
 
@@ -65,7 +65,7 @@ public class ParticipantRegistryDetail extends BaseResponse {
 
   private List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
-  private Map<String, Integer> countByStatus;
+  private Map<String, Long> countByStatus;
 
   public ParticipantRegistryDetail(ErrorCode errorCode) {
     super(errorCode);

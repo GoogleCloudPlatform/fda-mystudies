@@ -27,6 +27,9 @@ public enum ApiEndpoint {
   GET_STUDY_PARTICIPANT(
       "http://localhost:8080/participant-manager-service/studies/{studyId}/participants"),
 
+  GET_SITE_PARTICIPANTS(
+      "http://localhost:8080/participant-manager-service/sites/{siteId}/participants"),
+
   ADD_NEW_PARTICIPANT(
       "http://localhost:8080/participant-manager-service/sites/{siteId}/participants");
 

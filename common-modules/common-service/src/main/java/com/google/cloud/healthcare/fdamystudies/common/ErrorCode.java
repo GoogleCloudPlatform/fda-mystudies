@@ -120,6 +120,11 @@ public enum ErrorCode {
   SITE_NOT_EXIST_OR_INACTIVE(
       400, "EC-869", Constants.BAD_REQUEST, "Site doesn't exists or is inactive"),
 
+  SITE_NOT_FOUND(404, "EC-94", Constants.BAD_REQUEST, "Site not found"),
+
+  INVALID_ONBOARDING_STATUS(
+      400, "EC-816", HttpStatus.BAD_REQUEST.toString(), "allowed values: N, D, I and E"),
+
   USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin");
 
   private final int status;
