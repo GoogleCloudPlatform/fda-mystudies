@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.US
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class LocationController {
             request.getRequestURI(), status, excludeStudyId));
 
     LocationResponse locationResponse;
-    if (status != null) {
+    if (status != null && StringUtils.isNotEmpty(excludeStudyId)) {
       locationResponse = locationService.getLocationsForSite(userId, status, excludeStudyId);
     } else {
       locationResponse = locationService.getLocations(userId);
