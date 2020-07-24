@@ -39,7 +39,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -298,7 +298,7 @@ public class SitesControllerTest extends BaseMockIT {
     // Step 1: Set studyEntity
     siteEntity.setStudy(studyEntity);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
-    ParticipantDetailRequest participantRequest = newParticipantRequest();
+    ParticipantDetail participantRequest = newParticipantRequest();
 
     // Step 2: Call API to get ADD_PARTICIPANT_SUCCESS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -358,8 +358,8 @@ public class SitesControllerTest extends BaseMockIT {
     return siteRequest;
   }
 
-  private ParticipantDetailRequest newParticipantRequest() {
-    ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
+  private ParticipantDetail newParticipantRequest() {
+    ParticipantDetail participantRequest = new ParticipantDetail();
     participantRequest.setEmail(TestDataHelper.EMAIL_VALUE);
     return participantRequest;
   }

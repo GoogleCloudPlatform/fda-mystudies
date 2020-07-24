@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
@@ -176,7 +176,7 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   @Transactional
-  public ParticipantResponse addNewParticipant(ParticipantDetailRequest participant, String userId) {
+  public ParticipantResponse addNewParticipant(ParticipantDetail participant, String userId) {
     logger.entry("begin addNewParticipant()");
 
     Optional<SiteEntity> optSite = siteRepository.findById(participant.getSiteId());
@@ -207,7 +207,7 @@ public class SiteServiceImpl implements SiteService {
   }
 
   private ErrorCode validationForAddNewParticipant(
-      ParticipantDetailRequest participant, String userId, SiteEntity site) {
+      ParticipantDetail participant, String userId, SiteEntity site) {
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
 
