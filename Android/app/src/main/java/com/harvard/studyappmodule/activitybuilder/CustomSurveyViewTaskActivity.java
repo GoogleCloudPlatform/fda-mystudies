@@ -109,19 +109,19 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   public static String RESOURCES = "resources";
 
   public static Intent newIntent(
-      Context context,
-      String surveyId,
-      String studyId,
-      int currentRunId,
-      String activityStatus,
-      int missedRun,
-      int completedRun,
-      int totalRun,
-      String activityVersion,
-      Date currentRunStartDate,
-      Date currentRunEndDate,
-      String activityId,
-      boolean branching) {
+          Context context,
+          String surveyId,
+          String studyId,
+          int currentRunId,
+          String activityStatus,
+          int missedRun,
+          int completedRun,
+          int totalRun,
+          String activityVersion,
+          Date currentRunStartDate,
+          Date currentRunEndDate,
+          String activityId,
+          boolean branching) {
     Intent intent = new Intent(context, CustomSurveyViewTaskActivity.class);
     intent.putExtra(EXTRA_STUDYID, surveyId);
     intent.putExtra(STUDYID, studyId);
@@ -157,22 +157,22 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
     root = (StepSwitcherCustom) findViewById(R.id.container);
 
     activityObject =
-        dbServiceSubscriber.getActivityBySurveyId(
-            (String) getIntent().getSerializableExtra(STUDYID), activityId, realm);
+            dbServiceSubscriber.getActivityBySurveyId(
+                    (String) getIntent().getSerializableExtra(STUDYID), activityId, realm);
     StepsBuilder stepsBuilder =
-        new StepsBuilder(
-            CustomSurveyViewTaskActivity.this,
-            activityObject,
-            getIntent().getBooleanExtra(BRANCHING, false),
-            realm);
+            new StepsBuilder(
+                    CustomSurveyViewTaskActivity.this,
+                    activityObject,
+                    getIntent().getBooleanExtra(BRANCHING, false),
+                    realm);
     task =
-        ActivityBuilder.create(
-            this,
-            ((String) getIntent().getSerializableExtra(EXTRA_STUDYID)),
-            stepsBuilder.getsteps(),
-            activityObject,
-            getIntent().getBooleanExtra(BRANCHING, false),
-            dbServiceSubscriber);
+            ActivityBuilder.create(
+                    this,
+                    ((String) getIntent().getSerializableExtra(EXTRA_STUDYID)),
+                    stepsBuilder.getsteps(),
+                    activityObject,
+                    getIntent().getBooleanExtra(BRANCHING, false),
+                    dbServiceSubscriber);
 
     studyId = (String) getIntent().getSerializableExtra(EXTRA_STUDYID);
     StepRecordCustom savedsteps = dbServiceSubscriber.getSavedSteps(task, realm);
@@ -180,7 +180,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
       currentStep = task.getStepWithIdentifier(savedsteps.getStepId());
       if (currentStep != null) {
         RealmResults<StepRecordCustom> stepRecordCustoms =
-            dbServiceSubscriber.getStepRecordCustom(task, realm);
+                dbServiceSubscriber.getStepRecordCustom(task, realm);
         for (int i = 0; i < stepRecordCustoms.size(); i++) {
           if (currentStep.getIdentifier().equalsIgnoreCase(stepRecordCustoms.get(i).getStepId())) {
             TaskRecord taskRecord = new TaskRecord();
@@ -242,13 +242,13 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
 
     for (StepResult stepResult : taskResult.getResults().values()) {
       if (stepResult != null
-          && stepResult.getIdentifier().equalsIgnoreCase(currentStep.getIdentifier())) {
+              && stepResult.getIdentifier().equalsIgnoreCase(currentStep.getIdentifier())) {
         StepRecordCustom stepRecord = new StepRecordCustom();
 
         int nextId;
         StepRecordCustom stepRecordCustom =
-            dbServiceSubscriber.getStepRecordCustomById(
-                taskResult.getIdentifier(), stepResult.getIdentifier(), realm);
+                dbServiceSubscriber.getStepRecordCustomById(
+                        taskResult.getIdentifier(), stepResult.getIdentifier(), realm);
         if (stepRecordCustom == null) {
           Number currentIdNum = dbServiceSubscriber.getStepRecordCustomId(realm);
           if (currentIdNum == null) {
@@ -266,7 +266,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
         stepRecord.stepId = stepResult.getIdentifier();
         // includes studyId
         stepRecord.activityID =
-            taskResult.getIdentifier().substring(0, taskResult.getIdentifier().lastIndexOf("_"));
+                taskResult.getIdentifier().substring(0, taskResult.getIdentifier().lastIndexOf("_"));
         stepRecord.started = stepResult.getStartDate();
         stepRecord.completed = stepResult.getEndDate();
         stepRecord.runStartDate = currentRunStartDate;
@@ -308,23 +308,23 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
         dbServiceSubscriber.updateStepRecord(this, stepRecord);
 
         if (dbServiceSubscriber.getStudyResource(getIntent().getStringExtra(STUDYID), realm)
-            == null) {
+                == null) {
         } else if (dbServiceSubscriber
                 .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
                 .getResources()
-            == null) {
+                == null) {
         } else {
           StudyHome studyHome = null;
           try {
             studyHome =
-                dbServiceSubscriber.getWithdrawalType(getIntent().getStringExtra(STUDYID), realm);
+                    dbServiceSubscriber.getWithdrawalType(getIntent().getStringExtra(STUDYID), realm);
           } catch (Exception e) {
             Logger.log(e);
           }
           RealmList<Resource> resourceArrayList =
-              dbServiceSubscriber
-                  .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
-                  .getResources();
+                  dbServiceSubscriber
+                          .getStudyResource(getIntent().getStringExtra(STUDYID), realm)
+                          .getResources();
 
           if (studyHome != null && resourceArrayList != null) {
             getResourceNotification(resourceArrayList, studyHome);
@@ -337,13 +337,15 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   private void getResourceNotification(RealmList<Resource> resourceArrayList, StudyHome studyHome) {
     for (int i = 0; i < resourceArrayList.size(); i++) {
       if (resourceArrayList.get(i).getAudience() != null
-          && resourceArrayList.get(i).getAudience().equalsIgnoreCase("Limited")) {
+              && resourceArrayList.get(i).getAudience().equalsIgnoreCase("Limited")) {
         if (resourceArrayList.get(i).getAvailability().getAvailableDate().equalsIgnoreCase("")) {
           StepRecordCustom stepRecordCustom =
-              dbServiceSubscriber.getSurveyResponseFromDB(
-                  getIntent().getStringExtra(STUDYID) + "_STUDYID_" + activityId,
-                  studyHome.getAnchorDate().getQuestionInfo().getKey(),
-                  realm);
+                  dbServiceSubscriber.getSurveyResponseFromDB(
+                          getIntent().getStringExtra(STUDYID)
+                                  + "_STUDYID_"
+                                  + resourceArrayList.get(i).getAvailability().getSourceActivityId(),
+                          resourceArrayList.get(i).getAvailability().getSourceKey(),
+                          realm);
           if (stepRecordCustom != null) {
             Calendar startCalender = Calendar.getInstance();
 
@@ -353,23 +355,23 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
             try {
               jsonObject = new JSONObject(stepRecordCustom.getResult());
               startCalender.setTime(
-                  AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
+                      AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
               startCalender.add(
-                  Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
-              startCalender.set(Calendar.HOUR, 0);
+                      Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
+              startCalender.set(Calendar.HOUR, 9);
               startCalender.set(Calendar.MINUTE, 0);
               startCalender.set(Calendar.SECOND, 0);
               startCalender.set(Calendar.AM_PM, Calendar.AM);
               NotificationDbResources notificationsDb = null;
               RealmResults<NotificationDbResources> notificationsDbs =
-                  dbServiceSubscriber.getNotificationDbResources(
-                      activityId, getIntent().getStringExtra(STUDYID), RESOURCES, realm);
+                      dbServiceSubscriber.getNotificationDbResources(
+                              activityId, getIntent().getStringExtra(STUDYID), RESOURCES, realm);
               if (notificationsDbs != null && notificationsDbs.size() > 0) {
                 for (int j = 0; j < notificationsDbs.size(); j++) {
                   if (notificationsDbs
-                      .get(j)
-                      .getResourceId()
-                      .equalsIgnoreCase(resourceArrayList.get(i).getResourcesId())) {
+                          .get(j)
+                          .getResourceId()
+                          .equalsIgnoreCase(resourceArrayList.get(i).getResourcesId())) {
                     notificationsDb = notificationsDbs.get(j);
                     break;
                   }
@@ -377,17 +379,17 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
               }
               if (notificationsDb == null) {
                 setRemainder(
-                    startCalender,
-                    activityId,
-                    getIntent().getStringExtra(STUDYID),
-                    resourceArrayList.get(i).getNotificationText(),
-                    resourceArrayList.get(i).getResourcesId());
+                        startCalender,
+                        activityId,
+                        getIntent().getStringExtra(STUDYID),
+                        resourceArrayList.get(i).getNotificationText(),
+                        resourceArrayList.get(i).getResourcesId());
               }
 
               endCalender.setTime(
-                  AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
+                      AppController.getDateFormatForApi().parse("" + jsonObject.get("answer")));
               endCalender.add(
-                  Calendar.DATE, resourceArrayList.get(i).getAvailability().getEndDays());
+                      Calendar.DATE, resourceArrayList.get(i).getAvailability().getEndDays());
               endCalender.set(Calendar.HOUR, 11);
               endCalender.set(Calendar.MINUTE, 59);
               endCalender.set(Calendar.SECOND, 59);
@@ -409,20 +411,20 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   }
 
   private void setRemainder(
-      Calendar startCalender,
-      String activityId,
-      String studyId,
-      String notificationText,
-      String resourceId) {
+          Calendar startCalender,
+          String activityId,
+          String studyId,
+          String notificationText,
+          String resourceId) {
     NotificationModuleSubscriber notificationModuleSubscriber =
-        new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
     notificationModuleSubscriber.generateAnchorDateLocalNotification(
-        startCalender.getTime(),
-        activityId,
-        studyId,
-        CustomSurveyViewTaskActivity.this,
-        notificationText,
-        resourceId);
+            startCalender.getTime(),
+            activityId,
+            studyId,
+            CustomSurveyViewTaskActivity.this,
+            notificationText,
+            resourceId);
   }
 
   protected void showPreviousStep() {
@@ -442,13 +444,13 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
 
     StepLayout stepLayout = getLayoutForStep(step);
     stepLayout
-        .getLayout()
-        .setTag(org.researchstack.backbone.R.id.rsb_step_layout_id, step.getIdentifier());
+            .getLayout()
+            .setTag(org.researchstack.backbone.R.id.rsb_step_layout_id, step.getIdentifier());
     root.show(
-        stepLayout,
-        newStepPosition >= currentStepPosition
-            ? StepSwitcherCustom.SHIFT_LEFT
-            : StepSwitcherCustom.SHIFT_RIGHT);
+            stepLayout,
+            newStepPosition >= currentStepPosition
+                    ? StepSwitcherCustom.SHIFT_LEFT
+                    : StepSwitcherCustom.SHIFT_RIGHT);
     currentStep = step;
     AppController.getHelperHideKeyboard(this);
   }
@@ -538,7 +540,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
 
   private void notifyStepOfBackPress() {
     StepLayout currentStepLayout =
-        (StepLayout) findViewById(org.researchstack.backbone.R.id.rsb_current_step);
+            (StepLayout) findViewById(org.researchstack.backbone.R.id.rsb_current_step);
     currentStepLayout.isBackEventConsumed();
 
     if (isMyServiceRunning(ActiveTaskService.class)) {
@@ -577,7 +579,7 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   private boolean isMyServiceRunning(Class<?> serviceClass) {
     ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
     for (ActivityManager.RunningServiceInfo service :
-        manager.getRunningServices(Integer.MAX_VALUE)) {
+            manager.getRunningServices(Integer.MAX_VALUE)) {
       if (serviceClass.getName().equals(service.service.getClassName())) {
         return true;
       }
@@ -607,10 +609,10 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
       // Used when onSaveInstanceState is called of a view. No action is taken.
     } else {
       throw new IllegalArgumentException(
-          "Action with value "
-              + action
-              + " is invalid. "
-              + "See StepCallbacks for allowable arguments");
+              "Action with value "
+                      + action
+                      + " is invalid. "
+                      + "See StepCallbacks for allowable arguments");
     }
   }
 
@@ -623,19 +625,19 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
 
   private void showConfirmExitDialog() {
     AlertDialog alertDialog =
-        new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
-            .setTitle(R.string.app_name)
-            .setMessage(R.string.exit_activity)
-            .setPositiveButton(
-                R.string.endtask,
-                new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialogInterface, int i) {
-                    finish();
-                  }
-                })
-            .setNegativeButton(R.string.cancel, null)
-            .create();
+            new AlertDialog.Builder(this, R.style.MyAlertDialogStyle)
+                    .setTitle(R.string.app_name)
+                    .setMessage(R.string.exit_activity)
+                    .setPositiveButton(
+                            R.string.endtask,
+                            new DialogInterface.OnClickListener() {
+                              @Override
+                              public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                              }
+                            })
+                    .setNegativeButton(R.string.cancel, null)
+                    .create();
     alertDialog.show();
   }
 
@@ -655,10 +657,10 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
   public void addformquestion(QuestionStep questionStep, String identifier, String stepIdentifier) {
     String[] survayId = studyId.split("_STUDYID_");
     ActivityObj surveyObject =
-        dbServiceSubscriber.getActivityBySurveyId(
-            getIntent().getStringExtra(STUDYID),
-            survayId[1].substring(0, survayId[1].lastIndexOf("_")),
-            realm);
+            dbServiceSubscriber.getActivityBySurveyId(
+                    getIntent().getStringExtra(STUDYID),
+                    survayId[1].substring(0, survayId[1].lastIndexOf("_")),
+                    realm);
     Steps step = dbServiceSubscriber.getSteps(identifier, realm);
 
     if (surveyObject != null && step != null) {
@@ -667,14 +669,14 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
       realm.beginTransaction();
       for (int i = 0; i < formstep.size(); i++) {
         if (formstep.get(i).getType().equalsIgnoreCase("form")
-            && formstep.get(i).getKey().equalsIgnoreCase(stepIdentifier)) {
+                && formstep.get(i).getKey().equalsIgnoreCase(stepIdentifier)) {
           formstep.get(i).getSteps().add(steps);
         }
       }
       realm.commitTransaction();
     } else {
       Toast.makeText(this, getResources().getString(R.string.step_couldnt_add), Toast.LENGTH_SHORT)
-          .show();
+              .show();
     }
   }
 }
