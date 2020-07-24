@@ -340,8 +340,12 @@ public class LocationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnLocations() throws Exception {
-    // Step 1: Set 2 locations
-    locationEntity = testDataHelper.createLocation();
+    // Step 1: Set studies for location
+    SiteEntity siteEntity = testDataHelper.newSiteEntity();
+    siteEntity.setStudy(testDataHelper.newStudyEntity());
+    siteEntity.getStudy().setName("LIMITJP001");
+    locationEntity.addSiteEntity(siteEntity);
+    testDataHelper.getLocationRepository().save(locationEntity);
 
     // Step 2: Call API and expect GET_LOCATION_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -353,10 +357,10 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
-        .andExpect(jsonPath("$.locations", hasSize(2)))
+        .andExpect(jsonPath("$.locations", hasSize(1)))
         .andExpect(jsonPath("$.locations[0].customId", is("OpenStudy02")))
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
-        .andExpect(jsonPath("$.locations[0].studyNames[0]", is("Covid19")))
+        .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
   }
 
@@ -384,9 +388,15 @@ public class LocationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnLocationsForSite() throws Exception {
+    // Step 1: Set studies for location
+    siteEntity.setStudy(testDataHelper.newStudyEntity());
+    siteEntity.getStudy().setName("LIMITJP001");
+    locationEntity.addSiteEntity(siteEntity);
+    testDataHelper.getLocationRepository().save(locationEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-
+    // Step 2: Call API and expect message GET_LOCATION_FOR_SITE_SUCCESS
     mockMvc
         .perform(
             get(ApiEndpoint.GET_LOCATIONS.getPath())
@@ -440,7 +450,7 @@ public class LocationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnLocationById() throws Exception {
-    // Step 1: Set 2 studies for location
+    // Step 1: Set studies for location
     SiteEntity siteEntity = testDataHelper.newSiteEntity();
     siteEntity.setStudy(testDataHelper.newStudyEntity());
     siteEntity.getStudy().setName("LIMITJP001");
@@ -459,9 +469,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locationId", is(locationEntity.getId())))
         .andExpect(jsonPath("$.studies").isArray())
-        .andExpect(jsonPath("$.studies", hasSize(2)))
-        .andExpect(jsonPath("$.studies[0]", is("Covid19")))
-        .andExpect(jsonPath("$.studies[1]", is("LIMITJP001")))
+        .andExpect(jsonPath("$.studies", hasSize(1)))
+        .andExpect(jsonPath("$.studies[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
   }
 
