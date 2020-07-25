@@ -338,15 +338,6 @@ public class UserControllerTest extends BaseMockIT {
     assertNotNull(appPermissions);
   }
 
-  /*private void assertAdminDetails(String userId, boolean isSuperAdmin) {
-    Optional<UserRegAdminEntity> optAdminUserEntity = userRegAdminRepository.findById(userId);
-    UserRegAdminEntity adminUserEntity = optAdminUserEntity.get();
-    assertNotNull(adminUserEntity);
-    assertEquals(TestConstants.UPDATED_FIRST_NAME, adminUserEntity.getFirstName());
-    assertEquals(TestConstants.UPDATED_LAST_NAME, adminUserEntity.getLastName());
-    assertEquals(isSuperAdmin, adminUserEntity.isSuperAdmin());
-  }*/
-
   private void assertAdminUser(String userId, boolean isSuperAdmin) {
     Optional<UserRegAdminEntity> optAdminUserEntity = userRegAdminRepository.findById(userId);
     UserRegAdminEntity adminUserEntity = optAdminUserEntity.get();
