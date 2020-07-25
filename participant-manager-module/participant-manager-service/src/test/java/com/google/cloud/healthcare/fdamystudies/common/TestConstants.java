@@ -16,4 +16,14 @@ public final class TestConstants {
   public static final String UPDATE_LOCATION_NAME_VALUE = "Cedar Hill, Marlborough ";
 
   public static final String DECOMMISSION_SITE_NAME = "siteName";
+
+  public static final String ADMIN_USER_REQUEST_JSON_FILE = "/admin_user_request.json";
+
+  public static final String FIRST_NAME = "mockit_user_firstname";
+
+  public static final String LAST_NAME = "mockit_user_lastname";
+
+  public static final String EMAIL_ID = "super_admin_test@gmail.com";
+
+  public static final String USER_EMAIL_VALUE = "super_admin_test@gmail.com";
 }

@@ -20,6 +20,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -53,6 +54,8 @@ public class TestDataHelper {
       "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
 
   public static final String EMAIL_VALUE = "mockit_email@grr.la";
+
+  public static final String NON_SUPER_ADMIN_EMAIL_ID = "mockit_non_super_admin_email@grr.la";
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
@@ -97,6 +100,22 @@ public class TestDataHelper {
 
   public UserRegAdminEntity createUserRegAdmin() {
     UserRegAdminEntity userRegAdminEntity = newUserRegAdminEntity();
+    return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+  }
+
+  public UserRegAdminEntity newNonSuperAdmin() {
+    UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
+    userRegAdminEntity.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
+    userRegAdminEntity.setFirstName("mockito");
+    userRegAdminEntity.setLastName("mockito_last_name");
+    userRegAdminEntity.setEditPermission(ManageLocation.DENY.getValue());
+    userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
+    userRegAdminEntity.setSuperAdmin(false);
+    return userRegAdminEntity;
+  }
+
+  public UserRegAdminEntity createNonSuperAdmin() {
+    UserRegAdminEntity userRegAdminEntity = newNonSuperAdmin();
     return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
   }
 
@@ -151,6 +170,8 @@ public class TestDataHelper {
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
     StudyEntity studyEntity = new StudyEntity();
     studyEntity.setType("CLOSE");
+    studyEntity.setName("COVID Study");
+    studyEntity.setAppInfo(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEdit(EDIT_VALUE);
@@ -169,6 +190,7 @@ public class TestDataHelper {
   public SiteEntity createSiteEntity(
       StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
     SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setStudy(studyEntity);
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
     sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
     sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
