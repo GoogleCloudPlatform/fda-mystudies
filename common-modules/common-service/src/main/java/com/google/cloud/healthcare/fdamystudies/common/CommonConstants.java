@@ -44,4 +44,16 @@ public final class CommonConstants {
   public static final String OPEN = "Open";
 
   public static final String STATUS_ACTIVE = "Active";
+  
+  public static final int INVITED_STATUS = 2;
+
+  public static final boolean SELECTED = true;
+
+  public static final boolean UNSELECTED = false;
+
+  public static final String STATUS_LOG = "status=%d";
+
+  public static final String ERROR_CODE_LOG = "error code=%s";
+
+  public static final String MESSAGE_CODE_LOG = "message code=%s";
 }

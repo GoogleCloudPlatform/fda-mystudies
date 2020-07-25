@@ -10,14 +10,12 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -25,7 +23,6 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
@@ -159,7 +156,7 @@ public class LocationServiceImpl implements LocationService {
 
     if (ACTIVE_STATUS.equals(locationRequest.getStatus())
         && ACTIVE_STATUS.equals(locationEntity.getStatus())) {
-      return ErrorCode.CANNOT_REACTIVATE;
+      return ErrorCode.CANNOT_REACTIVE;
     }
 
     return null;

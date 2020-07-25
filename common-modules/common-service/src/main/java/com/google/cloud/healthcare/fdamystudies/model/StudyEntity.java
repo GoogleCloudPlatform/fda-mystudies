@@ -13,7 +13,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,12 +23,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -50,7 +47,7 @@ public class StudyEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(name = "study_id", updatable = false, nullable = false)
   private String id;
 
   @Column(name = "custom_id")
@@ -108,7 +105,11 @@ public class StudyEntity implements Serializable {
   @Column(name = "enrolling")
   private String enrolling;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "study",
+      orphanRemoval = true)
   private List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
 
   public void addStudyPermissionEntity(StudyPermissionEntity studyPermission) {
@@ -116,7 +117,11 @@ public class StudyEntity implements Serializable {
     studyPermission.setStudy(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "study",
+      orphanRemoval = true)
   private List<SiteEntity> sites = new ArrayList<>();
 
   public void addSiteEntity(SiteEntity site) {
@@ -124,7 +129,11 @@ public class StudyEntity implements Serializable {
     site.setStudy(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "study",
+      orphanRemoval = true)
   private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
 
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
