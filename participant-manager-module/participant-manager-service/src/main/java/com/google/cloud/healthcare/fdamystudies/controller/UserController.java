@@ -15,7 +15,9 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,6 +47,20 @@ public class UserController {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     user.setSuperAdminUserId(superAdminUserId);
     AdminUserResponse userResponse = manageUserService.createUser(user);
+    logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+  }
+
+  @PutMapping(
+      value = "/users/{superAdminUserId}/",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AdminUserResponse> updateUserSiteCoordinator(
+      @Valid @RequestBody UserRequest user,
+      @PathVariable String superAdminUserId,
+      HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AdminUserResponse userResponse = manageUserService.updateUser(user, superAdminUserId);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }

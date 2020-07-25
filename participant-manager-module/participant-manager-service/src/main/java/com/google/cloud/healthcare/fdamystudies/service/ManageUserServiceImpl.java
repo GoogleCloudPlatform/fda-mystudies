@@ -320,4 +320,125 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.exit(String.format("total app permissions=%d", appPermissions.size()));
     return appPermissions;
   }
+
+  @Override
+  @Transactional
+  public AdminUserResponse updateUser(UserRequest user, String superAdminUserId) {
+    logger.entry(String.format("updateUser() with isSuperAdmin=%b", user.isSuperAdmin()));
+    ErrorCode errorCode = validateUpdateUserRequest(user, superAdminUserId);
+    if (errorCode != null) {
+      logger.exit(String.format(CommonConstants.ERROR_CODE_LOG, errorCode));
+      return new AdminUserResponse(errorCode);
+    }
+
+    AdminUserResponse userResponse =
+        user.isSuperAdmin()
+            ? updateSuperAdminDetails(user, superAdminUserId)
+            : updateAdminDetails(user, superAdminUserId);
+
+    logger.exit(String.format(CommonConstants.STATUS_LOG, userResponse.getHttpStatusCode()));
+    return userResponse;
+  }
+
+  private ErrorCode validateUpdateUserRequest(UserRequest user, String superAdminUserId) {
+    logger.entry("validateUpdateUserRequest()");
+    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
+    if (!optAdminDetails.isPresent() || user.getUserId() == null) {
+      return ErrorCode.USER_NOT_FOUND;
+    }
+
+    UserRegAdminEntity loggedInUserDeatils = optAdminDetails.get();
+    if (!loggedInUserDeatils.isSuperAdmin()) {
+      return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
+    }
+
+    if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
+      return ErrorCode.PERMISSION_MISSING;
+    }
+    logger.exit("Successfully validated user request");
+    return null;
+  }
+
+  private AdminUserResponse updateSuperAdminDetails(UserRequest user, String superAdminUserId) {
+    logger.entry("updateSuperAdminDetails()");
+    Optional<UserRegAdminEntity> optAdminDeatils = userAdminRepository.findById(user.getUserId());
+
+    if (!optAdminDeatils.isPresent()) {
+      return new AdminUserResponse(ErrorCode.USER_NOT_FOUND);
+    }
+
+    UserRegAdminEntity adminDetails = optAdminDeatils.get();
+    adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
+
+    deleteAllPermissions(user.getUserId());
+
+    user.setSuperAdminUserId(superAdminUserId);
+
+    List<AppPermissionEntity> appPermissions = getAppPermissisonsForSuperAdmin(user, adminDetails);
+    adminDetails.getAppPermissions().addAll(appPermissions);
+
+    List<StudyPermissionEntity> studyPermissions =
+        getStudyPermissisonsForSuperAdmin(user, adminDetails);
+    adminDetails.getStudyPermissions().addAll(studyPermissions);
+
+    List<SitePermissionEntity> sitePermissions =
+        getSitePermissisonsForSuperAdmin(user, adminDetails);
+    adminDetails.getSitePermissions().addAll(sitePermissions);
+
+    userAdminRepository.save(adminDetails);
+
+    logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.UPDATE_USER_SUCCESS));
+    return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
+  }
+
+  private AdminUserResponse updateAdminDetails(UserRequest user, String superAdminUserId) {
+    logger.entry("updateAdminDetails()");
+
+    Optional<UserRegAdminEntity> optAdminDeatils = userAdminRepository.findById(user.getUserId());
+
+    if (!optAdminDeatils.isPresent()) {
+      return new AdminUserResponse(ErrorCode.USER_NOT_FOUND);
+    }
+
+    UserRegAdminEntity adminDetails = optAdminDeatils.get();
+    adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
+    userAdminRepository.save(adminDetails);
+
+    deleteAllPermissions(user.getUserId());
+
+    user.setSuperAdminUserId(superAdminUserId);
+
+    Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
+        user.getApps()
+            .stream()
+            .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
+
+    // save permissions for selected apps
+    for (UserAppPermissionRequest app :
+        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
+      saveAppStudySitePermissions(user, adminDetails, app);
+    }
+
+    // save permissions for unselected apps
+    for (UserAppPermissionRequest app :
+        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
+      for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
+        if (study.isSelected()) {
+          saveStudySitePermissions(user, adminDetails, study);
+        } else if (CollectionUtils.isNotEmpty(study.getSites())) {
+          saveSitePermissions(user, adminDetails, study);
+        }
+      }
+    }
+    logger.exit("Successfully updated admin details.");
+    return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
+  }
+
+  private void deleteAllPermissions(String userId) {
+    logger.entry("deleteAllPermissions()");
+    sitePermissionRepository.deleteByAdminUserId(userId);
+    studyPermissionRepository.deleteByAdminUserId(userId);
+    appPermissionRepository.deleteByAdminUserId(userId);
+    logger.exit("Successfully deleted all the assigned permissions.");
+  }
 }

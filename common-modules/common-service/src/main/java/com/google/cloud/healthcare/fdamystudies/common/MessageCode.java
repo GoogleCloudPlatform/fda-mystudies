@@ -54,7 +54,9 @@ public enum MessageCode {
 
   GET_APP_PARTICIPANTS_SUCCESS(HttpStatus.OK, "MSG-0005", "get App Participants successfully"),
 
-  ADD_NEW_USER_SUCCESS(HttpStatus.CREATED, "MSG-0020", "New user added successfully");
+  ADD_NEW_USER_SUCCESS(HttpStatus.CREATED, "MSG-0020", "New user added successfully"),
+
+  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully");
 
   private final HttpStatus httpStatus;
   private final String code;
