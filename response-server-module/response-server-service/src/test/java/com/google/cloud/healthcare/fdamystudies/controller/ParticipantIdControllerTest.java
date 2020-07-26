@@ -16,9 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoReposito
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
 import java.util.UUID;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class ParticipantIdControllerTest extends BaseMockIT {
   @Autowired private ParticipantBoRepository repository;
 
