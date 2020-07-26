@@ -12,10 +12,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  HEALTH("http://localhost:8004/mystudies-response-server/healthCheck"),
-  ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add"),
-  UPDATE_ACTIVITY_STATE("http://localhost:8004/mystudies-response-server/participant/update-activity-state"),
-  GET_ACTIVITY_STATE("http://localhost:8004/mystudies-response-server/participant/get-activity-state");
+  HEALTH("http://localhost:8004/mystudies-response-server/v1/healthCheck"),
+  ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add");
   private String url;
 
   private ApiEndpoint(String url) {
