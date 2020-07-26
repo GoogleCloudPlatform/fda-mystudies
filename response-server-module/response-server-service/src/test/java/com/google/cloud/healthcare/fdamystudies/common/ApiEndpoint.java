@@ -13,10 +13,9 @@ import java.net.URL;
 
 public enum ApiEndpoint {
   HEALTH("http://localhost:8004/mystudies-response-server/healthCheck"),
-
-  // TODO (Dhanya) Rename to ADD_PARTICIPANT - Done
   ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add");
-
+  UPDATE_ACTIVITY_STATE("http://localhost:8004/mystudies-response-server/participant/update-activity-state"),
+  GET_ACTIVITY_STATE("http://localhost:8004/mystudies-response-server/participant/get-activity-state");
   private String url;
 
   private ApiEndpoint(String url) {

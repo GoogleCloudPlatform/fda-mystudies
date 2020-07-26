@@ -39,4 +39,6 @@ public final class Constants {
 
   public static final String STUDY_ID = "study id value";
 
+  public static final String VALID_USER_ID = "kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg";
+
 }
