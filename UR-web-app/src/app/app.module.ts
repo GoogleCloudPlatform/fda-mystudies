@@ -14,7 +14,7 @@ import {FormsModule} from '@angular/forms';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ModalModule} from 'ngx-bootstrap/modal';
+import {ModalModule, BsModalRef} from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [
@@ -40,6 +40,7 @@ import {ModalModule} from 'ngx-bootstrap/modal';
   ],
   providers: [
     EntityService,
+    BsModalRef,
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
   ],

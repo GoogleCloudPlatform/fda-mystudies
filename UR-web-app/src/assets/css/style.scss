@@ -507,7 +507,6 @@ header {
 
 .subheader {
   background: var(--white);
-  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
   border-bottom: none !important;
   padding: 23px 0px !important;
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
@@ -720,7 +719,7 @@ button {
   padding: 2px 13px !important;
 }
 
-.background__dfe4ec {
+.background__mystic-gray {
   background: var(--mystic-gray);
 }
 
@@ -870,7 +869,7 @@ button {
   border-radius: 10px !important;
 }
 
-.border__bottom__c4d1e6 {
+.border__bottom__periwinkle-gray {
   border-bottom: 1px solid var(--periwinkle-gray);
   border-radius: 9px 9px 0 0;
 }
@@ -966,7 +965,6 @@ button {
   border: solid var(--white);
   border-width: 0px 1px 1px 0;
   transform: rotate(45deg);
-  transform: rotate(45deg);
 }
 
 .custom__labels input[type="checkbox"]:checked + label::before {
@@ -1019,18 +1017,15 @@ button {
   left: 3px;
   border-radius: 50%;
   transition: all 0.2s ease;
-  transition: all 0.2s ease;
 }
 
 [type="radio"]:not(:checked) + label:after {
   opacity: 0;
   transform: scale(0);
-  transform: scale(0);
 }
 
 [type="radio"]:checked + label:after {
   opacity: 1;
-  transform: scale(1);
   transform: scale(1);
 }
 
@@ -1745,7 +1740,6 @@ div.show + div {
 
 .tool::after {
   background: var(--white);
-  border-radius: 0.25em;
   top: 100%;
   content: attr(data-tip);
   margin-left: -14.75em;
@@ -1815,7 +1809,6 @@ pre {
 
 .tool::after {
   background: var(--white);
-  border-radius: 0.25em;
   top: 100%;
   content: attr(data-tip);
   margin-left: -14.75em;
@@ -1895,6 +1888,6 @@ ul.subheader__menu li a.active {
 }
 
 .table thead tr th .fa:before {
-  color: var(--periwinkle-gray) !important;
+  color: var(--periwinkle-gray);
   margin-left: 5px;
 }

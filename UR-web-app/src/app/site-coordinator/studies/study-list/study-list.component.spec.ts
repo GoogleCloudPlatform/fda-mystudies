@@ -9,18 +9,15 @@ import {
   NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
 import {StudyListComponent} from './study-list.component';
-
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
-import {of, Observable} from 'rxjs';
 import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
-
 import {StudiesModule} from '../studies.module';
 import {StudiesService} from '../shared/studies.service';
-import {Study} from '../shared/study.model';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
+import {expectedStudyList} from 'src/app/entity/mockData';
 
 describe('StudyListComponent', () => {
   let component: StudyListComponent;
@@ -58,53 +55,7 @@ describe('StudyListComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(StudyListComponent);
         component = fixture.componentInstance;
-        const expectedStudyList: Observable<Study[]> = of([
-          {
-            appId: '',
-            appInfoId: 0,
-            customId: 'NewStudyTest',
-            enrolledCount: 41,
-            enrollmentPercentage: 38,
-            id: 1,
-            invitedCount: 0,
-            name: 'New Study Test',
-            sites: [],
-            studyPermission: 0,
-            totalSitesCount: 16,
-            type: 'OPEN',
-            logo: '/path_to_img/',
-          },
-          {
-            appId: '',
-            appInfoId: 0,
-            customId: 'OpenStudy',
-            enrolledCount: 5,
-            enrollmentPercentage: 0,
-            id: 12,
-            invitedCount: 9,
-            name: 'Open Study 02',
-            sites: [],
-            studyPermission: 1,
-            totalSitesCount: 5,
-            type: 'OPEN',
-            logo: '/path_to_img/',
-          },
-          {
-            appId: '',
-            appInfoId: 0,
-            customId: 'ClosedStudy',
-            enrolledCount: 54,
-            enrollmentPercentage: 17,
-            id: 14,
-            invitedCount: 0,
-            name: 'Closed Study',
-            sites: [],
-            studyPermission: 2,
-            totalSitesCount: 6,
-            type: 'CLOSE',
-            logo: '/path_to_img/',
-          },
-        ]);
+
         studyServiceSpy.getStudies.and.returnValue(expectedStudyList);
       });
   }));
