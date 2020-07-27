@@ -14,6 +14,8 @@
     "importHelpers": true,
     "target": "es6",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2018", "dom"]
+    "lib": ["es2018", "dom"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   }
 }

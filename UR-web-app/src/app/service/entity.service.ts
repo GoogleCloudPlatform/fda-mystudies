@@ -7,6 +7,7 @@ import {environment} from 'src/environments/environment';
 @Injectable()
 export class EntityService<T> {
   baseUrl = environment.baseUrl;
+  authServerUrl = environment.authServerUrl;
 
   constructor(private readonly http: HttpClient) {}
 
@@ -29,5 +30,9 @@ export class EntityService<T> {
   put(bodydata: string, urlpath: string): Observable<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.put<T>(serviceUrl, bodydata);
+  }
+  authServerPost(bodydata: string, urlpath: string): Observable<T> {
+    const serviceUrl = Location.joinWithSlash(this.authServerUrl, urlpath);
+    return this.http.post<T>(serviceUrl, bodydata);
   }
 }

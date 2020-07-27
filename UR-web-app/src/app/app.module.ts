@@ -14,6 +14,8 @@ import {FormsModule} from '@angular/forms';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {CallbackComponent} from './auth/callback/callback.component';
+import {CookieService} from 'ngx-cookie-service';
 import {ModalModule} from 'ngx-bootstrap/modal';
 
 @NgModule({
@@ -23,6 +25,7 @@ import {ModalModule} from 'ngx-bootstrap/modal';
     ForgotPasswordComponent,
     AppComponent,
     PageNotFoundComponent,
+    CallbackComponent,
   ],
   imports: [
     ModalModule.forRoot(),
@@ -39,6 +42,7 @@ import {ModalModule} from 'ngx-bootstrap/modal';
     }),
   ],
   providers: [
+    CookieService,
     EntityService,
     httpInterceptorProviders,
     {provide: LocationStrategy, useClass: HashLocationStrategy},
