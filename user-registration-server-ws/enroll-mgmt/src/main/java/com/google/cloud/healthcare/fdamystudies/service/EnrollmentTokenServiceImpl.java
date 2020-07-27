@@ -103,12 +103,12 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     String participantId = "";
     try {
       isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
-      hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue);
+      hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue.toUpperCase());
       participantId = enrollUtil.getParticipantId("", hashedTokenValue, shortName);
       participantBean =
           enrollmentTokenDao.enrollParticipant(
               shortName,
-              tokenValue,
+              tokenValue.toUpperCase(),
               commonService.getUserInfoDetails(userId),
               isTokenRequired,
               participantId,
