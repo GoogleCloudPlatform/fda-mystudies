@@ -218,7 +218,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                     studyStateDao.getEnrollTokenForParticipant(
                         participantStudiesBO.getParticipantRegistrySite().getId());
                 studyStateBean.setHashedToken(
-                    EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
+                    EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
                 studyStateBean.setBrandId(
                     participantStudiesBO.getParticipantRegistrySite().getBrandId());
               }
