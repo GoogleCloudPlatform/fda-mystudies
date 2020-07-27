@@ -134,15 +134,6 @@ public class ManageUserServiceImpl implements ManageUserService {
     return false;
   }
 
-  private AdminUserResponse saveAdminDetails(UserRequest user) {
-    logger.entry("saveAdminDetails()");
-    UserRegAdminEntity adminDetails =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
-    adminDetails = userAdminRepository.saveAndFlush(adminDetails);
-    logger.exit("Successfully saved admin details.");
-    return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
-  }
-
   private AdminUserResponse saveSuperAdminDetails(UserRequest user) {
     logger.entry("saveSuperAdminDetails()");
     UserRegAdminEntity superAdminDeatils =
@@ -211,5 +202,14 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     logger.exit(String.format("total app permissions=%d", appPermissions.size()));
     return appPermissions;
+  }
+
+  private AdminUserResponse saveAdminDetails(UserRequest user) {
+    logger.entry("saveAdminDetails()");
+    UserRegAdminEntity adminDetails =
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+    adminDetails = userAdminRepository.saveAndFlush(adminDetails);
+    logger.exit("Successfully saved admin details.");
+    return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
   }
 }
