@@ -144,76 +144,6 @@ public class ManageUserServiceImpl implements ManageUserService {
     return false;
   }
 
-  private AdminUserResponse saveSuperAdminDetails(UserRequest user) {
-    logger.entry("saveSuperAdminDetails()");
-    UserRegAdminEntity superAdminDeatils =
-        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
-
-    List<AppPermissionEntity> appPermissions =
-        getAppPermissisonsForSuperAdmin(user, superAdminDeatils);
-    superAdminDeatils.getAppPermissions().addAll(appPermissions);
-
-    List<StudyPermissionEntity> studyPermissions =
-        getStudyPermissisonsForSuperAdmin(user, superAdminDeatils);
-    superAdminDeatils.getStudyPermissions().addAll(studyPermissions);
-
-    List<SitePermissionEntity> sitePermissions =
-        getSitePermissisonsForSuperAdmin(user, superAdminDeatils);
-    superAdminDeatils.getSitePermissions().addAll(sitePermissions);
-
-    userAdminRepository.saveAndFlush(superAdminDeatils);
-
-    logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.ADD_NEW_USER_SUCCESS));
-    return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, superAdminDeatils.getId());
-  }
-
-  private List<SitePermissionEntity> getSitePermissisonsForSuperAdmin(
-      UserRequest user, UserRegAdminEntity superAdminDeatils) {
-    logger.entry("getSitePermissisonsForSuperAdmin()");
-    List<SiteEntity> sites =
-        (List<SiteEntity>) CollectionUtils.emptyIfNull(siteRepository.findAll());
-    List<SitePermissionEntity> sitePermissions = new ArrayList<>();
-    for (SiteEntity siteInfo : sites) {
-      SitePermissionEntity sitePermission =
-          UserMapper.newSitePermissionEntity(user, null, superAdminDeatils, siteInfo);
-      sitePermissions.add(sitePermission);
-    }
-
-    logger.exit(String.format("total site permissions=%d", sitePermissions.size()));
-    return sitePermissions;
-  }
-
-  private List<StudyPermissionEntity> getStudyPermissisonsForSuperAdmin(
-      UserRequest user, UserRegAdminEntity superAdminDeatils) {
-    logger.entry("getStudyPermissisonsForSuperAdmin()");
-    List<StudyEntity> studies =
-        (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findAll());
-    List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
-    for (StudyEntity studyInfo : studies) {
-      StudyPermissionEntity studyPermission =
-          UserMapper.newStudyPermissionEntity(user, superAdminDeatils, null, studyInfo);
-      studyPermissions.add(studyPermission);
-    }
-
-    logger.exit(String.format("total study permissions=%d", studyPermissions.size()));
-    return studyPermissions;
-  }
-
-  private List<AppPermissionEntity> getAppPermissisonsForSuperAdmin(
-      UserRequest user, UserRegAdminEntity superAdminDeatils) {
-    logger.entry("getAppPermissisonsForSuperAdmin()");
-    List<AppEntity> apps = (List<AppEntity>) CollectionUtils.emptyIfNull(appRepository.findAll());
-    List<AppPermissionEntity> appPermissions = new ArrayList<>();
-    for (AppEntity app : apps) {
-      AppPermissionEntity appPermission =
-          UserMapper.newAppPermissionEntity(user, superAdminDeatils, app);
-      appPermissions.add(appPermission);
-    }
-
-    logger.exit(String.format("total app permissions=%d", appPermissions.size()));
-    return appPermissions;
-  }
-
   private AdminUserResponse saveAdminDetails(UserRequest user) {
     logger.entry("saveAdminDetails()");
     UserRegAdminEntity adminDetails =
@@ -319,5 +249,75 @@ public class ManageUserServiceImpl implements ManageUserService {
       }
     }
     logger.exit("Successfully saved site permissions.");
+  }
+
+  private AdminUserResponse saveSuperAdminDetails(UserRequest user) {
+    logger.entry("saveSuperAdminDetails()");
+    UserRegAdminEntity superAdminDeatils =
+        UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
+
+    List<AppPermissionEntity> appPermissions =
+        getAppPermissisonsForSuperAdmin(user, superAdminDeatils);
+    superAdminDeatils.getAppPermissions().addAll(appPermissions);
+
+    List<StudyPermissionEntity> studyPermissions =
+        getStudyPermissisonsForSuperAdmin(user, superAdminDeatils);
+    superAdminDeatils.getStudyPermissions().addAll(studyPermissions);
+
+    List<SitePermissionEntity> sitePermissions =
+        getSitePermissisonsForSuperAdmin(user, superAdminDeatils);
+    superAdminDeatils.getSitePermissions().addAll(sitePermissions);
+
+    userAdminRepository.saveAndFlush(superAdminDeatils);
+
+    logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.ADD_NEW_USER_SUCCESS));
+    return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, superAdminDeatils.getId());
+  }
+
+  private List<SitePermissionEntity> getSitePermissisonsForSuperAdmin(
+      UserRequest user, UserRegAdminEntity superAdminDeatils) {
+    logger.entry("getSitePermissisonsForSuperAdmin()");
+    List<SiteEntity> sites =
+        (List<SiteEntity>) CollectionUtils.emptyIfNull(siteRepository.findAll());
+    List<SitePermissionEntity> sitePermissions = new ArrayList<>();
+    for (SiteEntity siteInfo : sites) {
+      SitePermissionEntity sitePermission =
+          UserMapper.newSitePermissionEntity(user, null, superAdminDeatils, siteInfo);
+      sitePermissions.add(sitePermission);
+    }
+
+    logger.exit(String.format("total site permissions=%d", sitePermissions.size()));
+    return sitePermissions;
+  }
+
+  private List<StudyPermissionEntity> getStudyPermissisonsForSuperAdmin(
+      UserRequest user, UserRegAdminEntity superAdminDeatils) {
+    logger.entry("getStudyPermissisonsForSuperAdmin()");
+    List<StudyEntity> studies =
+        (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findAll());
+    List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
+    for (StudyEntity studyInfo : studies) {
+      StudyPermissionEntity studyPermission =
+          UserMapper.newStudyPermissionEntity(user, superAdminDeatils, null, studyInfo);
+      studyPermissions.add(studyPermission);
+    }
+
+    logger.exit(String.format("total study permissions=%d", studyPermissions.size()));
+    return studyPermissions;
+  }
+
+  private List<AppPermissionEntity> getAppPermissisonsForSuperAdmin(
+      UserRequest user, UserRegAdminEntity superAdminDeatils) {
+    logger.entry("getAppPermissisonsForSuperAdmin()");
+    List<AppEntity> apps = (List<AppEntity>) CollectionUtils.emptyIfNull(appRepository.findAll());
+    List<AppPermissionEntity> appPermissions = new ArrayList<>();
+    for (AppEntity app : apps) {
+      AppPermissionEntity appPermission =
+          UserMapper.newAppPermissionEntity(user, superAdminDeatils, app);
+      appPermissions.add(appPermission);
+    }
+
+    logger.exit(String.format("total app permissions=%d", appPermissions.size()));
+    return appPermissions;
   }
 }
