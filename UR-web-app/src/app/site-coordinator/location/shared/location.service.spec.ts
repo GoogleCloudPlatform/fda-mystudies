@@ -90,6 +90,24 @@ describe('LocationService', () => {
 
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   });
+  it('should return Locations list for the site creation', () => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      ['getCollection'],
+    );
+    locationService = new LocationService(entityServicespy);
+
+    entityServicespy.getCollection.and.returnValue(of(expectedLocations));
+    locationService
+      .getLocationsForSiteCreation('1')
+      .subscribe(
+        (Locations) =>
+          expect(Locations).toEqual(expectedLocations, 'expected Locations'),
+        fail,
+      );
+
+    expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
+  });
 
   it('should post the  expected new Locations data', () => {
     const entityServicespyobj = jasmine.createSpyObj<EntityService<Location>>(

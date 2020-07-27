@@ -11,6 +11,11 @@ export class LocationService {
   getLocations(): Observable<Location[]> {
     return this.entityService.getCollection('locations');
   }
+  getLocationsForSiteCreation(studyId: string): Observable<Location[]> {
+    return this.entityService.getCollection(
+      'locations-for-site-creation?studyId=' + studyId,
+    );
+  }
   addLocation(location: Location): Observable<Location> {
     return this.entityService.post(JSON.stringify(location), 'locations');
   }

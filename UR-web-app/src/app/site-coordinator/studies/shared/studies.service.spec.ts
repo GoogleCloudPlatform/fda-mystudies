@@ -8,56 +8,11 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
 import {Study} from './study.model';
 import {StudiesService} from './studies.service';
+import {expectedStudyList} from 'src/app/entity/mockData';
 
 describe('StudiesService', () => {
   let studiesService: StudiesService;
-  const expectedStudies = [
-    {
-      appId: '',
-      appInfoId: 0,
-      customId: 'NewStudyTest',
-      enrolledCount: 41,
-      enrollmentPercentage: 38,
-      id: 1,
-      invitedCount: 0,
-      name: 'New Study Test',
-      sites: [],
-      studyPermission: 0,
-      totalSitesCount: 16,
-      type: 'OPEN',
-      logo: '/path_to_img/',
-    },
-    {
-      appId: '',
-      appInfoId: 0,
-      customId: 'OpenStudy',
-      enrolledCount: 5,
-      enrollmentPercentage: 0,
-      id: 12,
-      invitedCount: 9,
-      name: 'Open Study 02',
-      sites: [],
-      studyPermission: 1,
-      totalSitesCount: 5,
-      type: 'OPEN',
-      logo: '/path_to_img/',
-    },
-    {
-      appId: '',
-      appInfoId: 0,
-      customId: 'ClosedStudy',
-      enrolledCount: 54,
-      enrollmentPercentage: 17,
-      id: 14,
-      invitedCount: 0,
-      name: 'Closed Study',
-      sites: [],
-      studyPermission: 2,
-      totalSitesCount: 6,
-      type: 'CLOSE',
-      logo: '/path_to_img/',
-    },
-  ];
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -84,18 +39,36 @@ describe('StudiesService', () => {
     );
     studiesService = new StudiesService(entityServicespy);
 
-    entityServicespy.getCollection.and.returnValue(of(expectedStudies));
+    entityServicespy.getCollection.and.returnValue(of(expectedStudyList));
     studiesService
       .getStudies()
       .subscribe(
         (Studies) =>
-          expect(Studies).toEqual(expectedStudies, 'expected StudiesList'),
+          expect(Studies).toEqual(expectedStudyList, 'expected StudiesList'),
         fail,
       );
 
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   }));
 
+  it('should return expected Sites List', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
+      'EntityService',
+      ['getCollection'],
+    );
+    studiesService = new StudiesService(entityServicespy);
+
+    entityServicespy.getCollection.and.returnValue(of(expectedStudyList));
+    studiesService
+      .getStudiesWithSites()
+      .subscribe(
+        (Studies) =>
+          expect(Studies).toEqual(expectedStudyList, 'expected StudiesList'),
+        fail,
+      );
+
+    expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
+  }));
   it('should return an error when the server returns a 400', fakeAsync(() => {
     const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
       'EntityService',
