@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -31,12 +32,12 @@ import java.util.ArrayList;
 
 public class GatewayResourcesListAdapter
     extends RecyclerView.Adapter<GatewayResourcesListAdapter.Holder> {
-  private final Context mContext;
-  private final ArrayList<Resource> mItems = new ArrayList<>();
+  private final Context context;
+  private final ArrayList<Resource> items = new ArrayList<>();
 
   GatewayResourcesListAdapter(Context context, RealmList<Resource> items) {
-    this.mContext = context;
-    this.mItems.addAll(items);
+    this.context = context;
+    this.items.addAll(items);
   }
 
   @Override
@@ -49,25 +50,27 @@ public class GatewayResourcesListAdapter
 
   @Override
   public int getItemCount() {
-    if (mItems == null) return 0;
-    return mItems.size();
+    if (items == null) {
+      return 0;
+    }
+    return items.size();
   }
 
   class Holder extends RecyclerView.ViewHolder {
 
-    final RelativeLayout mContainer;
-    final AppCompatTextView mResourcesTitle;
+    final RelativeLayout container;
+    final AppCompatTextView resourcesTitle;
 
     Holder(View itemView) {
       super(itemView);
-      mContainer = (RelativeLayout) itemView.findViewById(R.id.container);
-      mResourcesTitle = (AppCompatTextView) itemView.findViewById(R.id.resourcesTitle);
+      container = (RelativeLayout) itemView.findViewById(R.id.container);
+      resourcesTitle = (AppCompatTextView) itemView.findViewById(R.id.resourcesTitle);
       setFont();
     }
 
     private void setFont() {
       try {
-        mResourcesTitle.setTypeface(AppController.getTypeface(mContext, "regular"));
+        resourcesTitle.setTypeface(AppController.getTypeface(context, "regular"));
       } catch (Exception e) {
         Logger.log(e);
       }
@@ -78,18 +81,18 @@ public class GatewayResourcesListAdapter
   public void onBindViewHolder(final Holder holder, final int position) {
     final int i = holder.getAdapterPosition();
     try {
-      holder.mResourcesTitle.setText(mItems.get(i).getTitle());
+      holder.resourcesTitle.setText(items.get(i).getTitle());
 
-      holder.mContainer.setOnClickListener(
+      holder.container.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              if (mItems.get(i).getType() != null) {
-                Intent intent = new Intent(mContext, GatewayResourcesWebViewActivity.class);
-                intent.putExtra("title", "" + mItems.get(i).getTitle().toString());
-                intent.putExtra("type", "" + mItems.get(i).getType().toString());
-                intent.putExtra("content", "" + mItems.get(i).getContent().toString());
-                mContext.startActivity(intent);
+              if (items.get(i).getType() != null) {
+                Intent intent = new Intent(context, GatewayResourcesWebViewActivity.class);
+                intent.putExtra("title", "" + items.get(i).getTitle().toString());
+                intent.putExtra("type", "" + items.get(i).getType().toString());
+                intent.putExtra("content", "" + items.get(i).getContent().toString());
+                context.startActivity(intent);
               }
             }
           });

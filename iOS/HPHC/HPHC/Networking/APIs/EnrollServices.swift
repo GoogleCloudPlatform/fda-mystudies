@@ -139,7 +139,11 @@ class EnrollServices: NSObject {
       kStudyId: studyId,
     ]
 
-    self.sendRequestWith(method: method, params: params, headers: nil)
+    let headers = [
+      kUserId: User.currentUser.userId ?? "",
+    ]
+
+    self.sendRequestWith(method: method, params: params, headers: headers)
   }
 
   // MARK: Parsers

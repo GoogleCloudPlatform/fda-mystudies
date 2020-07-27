@@ -1,6 +1,7 @@
 // License Agreement for FDA MyStudies
-// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors. Permission is
-// hereby granted, free of charge, to any person obtaining a copy of this software and associated
+// Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+// Copyright 2020 Google LLC
+// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 // documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without
 // limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
 // Software, and to permit persons to whom the Software is furnished to do so, subject to the following
@@ -74,55 +75,32 @@ extension UIViewController {
     self.present(alert, animated: true, completion: nil)
   }
 
-  func addProgressIndicator() {
+  func addProgressIndicator(with message: String = "") {
 
+    guard !self.view.subviews.contains(where: { $0.isKind(of: NewProgressView.self) }),
+      let progressView = NewProgressView.instanceFromNib(frame: view.bounds)
+    else { return }
+    progressView.showLoader(with: message)
     self.navigationItem.leftBarButtonItem?.isEnabled = false
     self.navigationItem.rightBarButtonItem?.isEnabled = true
     self.navigationItem.backBarButtonItem?.isEnabled = false
     slideMenuController()?.removeLeftGestures()
     slideMenuController()?.view.isUserInteractionEnabled = false
-
     self.navigationController?.navigationBar.isUserInteractionEnabled = false
 
-    var progressView = self.view.viewWithTag(5000)
-    if progressView == nil {
+    self.view.addSubview(progressView)
+    progressView.alpha = 0
+    progressView.translatesAutoresizingMaskIntoConstraints = false
 
-      progressView =
-        UINib(nibName: kNewProgressViewNIB, bundle: nil).instantiate(
-          withOwner: nil,
-          options: nil
-        )[0] as? UIView
+    NSLayoutConstraint.activate([
+      progressView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+      progressView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+      progressView.topAnchor.constraint(equalTo: self.view.topAnchor),
+      progressView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+    ])
 
-      let fdaGif = UIImage.gifImageWithName(kResourceName)
-      let imageView = progressView?.subviews.first as? UIImageView
-      imageView?.image = fdaGif
-
-      UI:do {
-        progressView!.alpha = 0
-        progressView!.tag = 5000
-      }
-
-      layout:do {
-        self.view.addSubview(progressView!)
-
-        progressView!.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate(
-          [
-            progressView!.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            progressView!.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            progressView!.widthAnchor.constraint(
-              equalToConstant: UIScreen.main.bounds.size.width
-            ),
-            progressView!.heightAnchor.constraint(
-              equalToConstant: UIScreen.main.bounds.size.height
-            ),
-          ])
-      }
-
-      UIView.animate(withDuration: 0.3) {
-        progressView!.alpha = 1
-      }
+    UIView.animate(withDuration: 0.3) {
+      progressView.alpha = 1
     }
   }
 
@@ -131,23 +109,24 @@ extension UIViewController {
     self.navigationItem.leftBarButtonItem?.isEnabled = true
     self.navigationItem.rightBarButtonItem?.isEnabled = true
     self.navigationItem.backBarButtonItem?.isEnabled = true
-
     self.navigationController?.navigationBar.isUserInteractionEnabled = true
-
-    let view = self.view.viewWithTag(5000)  //as UIView
-
     slideMenuController()?.view.isUserInteractionEnabled = true
     slideMenuController()?.addLeftGestures()
 
-    UIView.animate(
-      withDuration: 0.2,
-      animations: {
-        view?.alpha = 0
+    if let progressView = self.view.subviews
+      .first(where: { $0.isKind(of: NewProgressView.self) })
+    {
+      UIView.animate(
+        withDuration: 0.2,
+        animations: {
+          progressView.alpha = 0
+        }
+      ) { (_) in
+        progressView.removeFromSuperview()
       }
-    ) { (_) in
-      view?.removeFromSuperview()
     }
   }
+
 }
 
 extension UIViewController {

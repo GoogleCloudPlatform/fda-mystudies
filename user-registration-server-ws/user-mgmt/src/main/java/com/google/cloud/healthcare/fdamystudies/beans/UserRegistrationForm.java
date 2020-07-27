@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +20,7 @@ public class UserRegistrationForm {
   private String userId;
   private String firstName;
   private String lastName;
+  @NotNull
   private String emailId;
   private String password;
   private boolean usePassCode;
@@ -30,4 +32,11 @@ public class UserRegistrationForm {
   private int status;
   private boolean tempPassword;
   private LocalDateTime tempPasswordDate;
+
+  public UserRegistrationForm(String userId, String emailId, String password) {
+    super();
+    this.userId = userId;
+    this.emailId = emailId;
+    this.password = password;
+  }
 }

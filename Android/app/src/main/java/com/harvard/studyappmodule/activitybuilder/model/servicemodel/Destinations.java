@@ -15,8 +15,8 @@
 
 package com.harvard.studyappmodule.activitybuilder.model.servicemodel;
 
-import java.io.Serializable;
 import io.realm.RealmObject;
+import java.io.Serializable;
 
 public class Destinations extends RealmObject implements Serializable {
   private String condition;

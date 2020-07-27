@@ -1,0 +1,10 @@
+{
+	"active": true,
+	"scope": "openid",
+	"client_id": "test",
+	"sub": "test",
+	"exp": 1588935566,
+	"iat": 1588931966,
+	"iss": "https://hydra-server:9000/",
+	"token_type": "access_token"
+}

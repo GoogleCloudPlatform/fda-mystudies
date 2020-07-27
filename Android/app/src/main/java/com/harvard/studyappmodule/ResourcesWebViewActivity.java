@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -52,19 +53,19 @@ import java.net.URLConnection;
 import javax.crypto.CipherInputStream;
 
 public class ResourcesWebViewActivity extends AppCompatActivity {
-  private AppCompatTextView mTitle;
-  private RelativeLayout mBackBtn;
-  private WebView mWebView;
-  private RelativeLayout mShareBtn;
-  private PDFView mPdfView;
-  private String mDownloadedFilePath;
-  private String mFileName;
-  private String downloadingFileURL = "";
+  private AppCompatTextView titleTv;
+  private RelativeLayout backBtn;
+  private WebView webView;
+  private RelativeLayout shareBtn;
+  private PDFView pdfView;
+  private String downloadedFilePath;
+  private String fileName;
+  private String downloadingFileUrl = "";
   private static final int PERMISSION_REQUEST_CODE = 1000;
-  private String mIntentTitle;
-  private String mIntentType;
-  private String mIntentContent;
-  private File mFinalMSharingFile;
+  private String intentTitle;
+  private String intentType;
+  private String intentContent;
+  private File finalMSharingFile;
   private ConnectionDetector connectionDetector =
       new ConnectionDetector(ResourcesWebViewActivity.this);
 
@@ -73,27 +74,27 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_resources_web_view);
 
-    mDownloadedFilePath = "/data/data/" + getPackageName() + "/files/";
-    initializeXMLId();
-    downloadingFileURL = getIntent().getStringExtra("content");
-    mIntentTitle = getIntent().getStringExtra("title");
-    mIntentType = getIntent().getStringExtra("type");
-    mIntentContent = getIntent().getStringExtra("content");
+    downloadedFilePath = "/data/data/" + getPackageName() + "/files/";
+    initializeXmlId();
+    downloadingFileUrl = getIntent().getStringExtra("content");
+    intentTitle = getIntent().getStringExtra("title");
+    intentType = getIntent().getStringExtra("type");
+    intentContent = getIntent().getStringExtra("content");
     String studyId = getIntent().getStringExtra("studyId");
 
     String title;
     // removing space b/w the string : name of the pdf
     try {
-      title = mIntentTitle.replaceAll("\\s+", "");
+      title = intentTitle.replaceAll("\\s+", "");
     } catch (Exception e) {
-      title = mIntentTitle;
+      title = intentTitle;
       Logger.log(e);
     }
-    mFileName = title + studyId;
+    fileName = title + studyId;
 
-    if (mIntentType.equalsIgnoreCase("pdf")) {
-      mWebView.setVisibility(View.GONE);
-      mTitle.setText(mIntentTitle);
+    if (intentType.equalsIgnoreCase("pdf")) {
+      webView.setVisibility(View.GONE);
+      titleTv.setText(intentTitle);
       // checking the permissions
       if ((ActivityCompat.checkSelfPermission(
                   ResourcesWebViewActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -111,7 +112,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         } else {
           if (connectionDetector.isConnectingToInternet()) {
             // starting new Async Task for downlaoding pdf file
-            new DownloadFileFromURL(downloadingFileURL, mDownloadedFilePath, mFileName).execute();
+            new DownloadFileFromUrl(downloadingFileUrl, downloadedFilePath, fileName).execute();
           } else {
             // offline functionality
             offLineFunctionality();
@@ -120,7 +121,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       } else {
         if (connectionDetector.isConnectingToInternet()) {
           // starting new Async Task for downlaoding pdf file
-          new DownloadFileFromURL(downloadingFileURL, mDownloadedFilePath, mFileName).execute();
+          new DownloadFileFromUrl(downloadingFileUrl, downloadedFilePath, fileName).execute();
         } else {
           // offline functionality
           offLineFunctionality();
@@ -132,14 +133,14 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
 
     setFont();
 
-    mBackBtn.setOnClickListener(
+    backBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
             finish();
           }
         });
-    mShareBtn.setOnClickListener(
+    shareBtn.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -149,21 +150,21 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
               shareIntent.setData(Uri.parse("mailto:"));
               shareIntent.setType("application/pdf");
               shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-              shareIntent.putExtra(Intent.EXTRA_SUBJECT, mIntentTitle);
+              shareIntent.putExtra(Intent.EXTRA_SUBJECT, intentTitle);
               // if pdf then attach and send else content send
-              if (mIntentType.equalsIgnoreCase("pdf")) {
-                File file = new File(mDownloadedFilePath + mFileName + ".pdf");
+              if (intentType.equalsIgnoreCase("pdf")) {
+                File file = new File(downloadedFilePath + fileName + ".pdf");
                 if (file.exists()) {
-                  mFinalMSharingFile = copy(file);
+                  finalMSharingFile = copy(file);
                   Uri fileUri =
                       FileProvider.getUriForFile(
                           ResourcesWebViewActivity.this,
                           getString(R.string.FileProvider_authorities),
-                          mFinalMSharingFile);
+                          finalMSharingFile);
                   shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                 }
               } else {
-                shareIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(mIntentContent));
+                shareIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(intentContent));
               }
 
               startActivity(shareIntent);
@@ -187,7 +188,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         finish();
       } else {
         if (connectionDetector.isConnectingToInternet()) {
-          new DownloadFileFromURL(downloadingFileURL, mDownloadedFilePath, mFileName).execute();
+          new DownloadFileFromUrl(downloadingFileUrl, downloadedFilePath, fileName).execute();
         } else {
           Toast.makeText(
                   ResourcesWebViewActivity.this,
@@ -199,28 +200,27 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     }
   }
 
-  private void initializeXMLId() {
-    mBackBtn = (RelativeLayout) findViewById(R.id.backBtn);
-    mTitle = (AppCompatTextView) findViewById(R.id.title);
-    mWebView = (WebView) findViewById(R.id.webView);
-    mShareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
-    mPdfView = (PDFView) findViewById(R.id.pdfView);
+  private void initializeXmlId() {
+    backBtn = (RelativeLayout) findViewById(R.id.backBtn);
+    titleTv = (AppCompatTextView) findViewById(R.id.title);
+    webView = (WebView) findViewById(R.id.webView);
+    shareBtn = (RelativeLayout) findViewById(R.id.shareBtn);
+    pdfView = (PDFView) findViewById(R.id.pdfView);
   }
 
   private void setTextForView() {
-    String title = mIntentTitle;
-    mTitle.setText(title);
-    String webData = mIntentContent;
-    mWebView.getSettings().setLoadsImagesAutomatically(true);
-    mWebView.getSettings().setJavaScriptEnabled(true);
-    mWebView.getSettings().setDefaultTextEncodingName("utf-8");
-    mWebView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-
-    mWebView.loadData(webData, "text/html; charset=utf-8", "UTF-8");
+    String title = intentTitle;
+    titleTv.setText(title);
+    webView.getSettings().setLoadsImagesAutomatically(true);
+    webView.getSettings().setJavaScriptEnabled(true);
+    webView.getSettings().setDefaultTextEncodingName("utf-8");
+    webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+    String webData = intentContent;
+    webView.loadData(webData, "text/html; charset=utf-8", "UTF-8");
   }
 
   private void setFont() {
-    mTitle.setTypeface(AppController.getTypeface(this, "bold"));
+    titleTv.setTypeface(AppController.getTypeface(this, "bold"));
   }
 
   public boolean hasPermissions(String[] permissions) {
@@ -237,9 +237,11 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
 
   public File copy(File src) throws IOException {
     String primaryStoragePath =
-        Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + mIntentTitle + ".pdf";
+        Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + intentTitle + ".pdf";
     File file = new File(primaryStoragePath);
-    if (!file.exists()) file.createNewFile();
+    if (!file.exists()) {
+      file.createNewFile();
+    }
 
     InputStream in = new FileInputStream(src);
     OutputStream out = new FileOutputStream(file);
@@ -259,7 +261,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   protected void onDestroy() {
     super.onDestroy();
     try {
-      File file = new File(mDownloadedFilePath + mFileName + ".pdf");
+      File file = new File(downloadedFilePath + fileName + ".pdf");
       if (file.exists()) {
         file.delete();
       }
@@ -267,8 +269,8 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       Logger.log(e);
     }
     try {
-      if (mFinalMSharingFile.exists()) {
-        mFinalMSharingFile.delete();
+      if (finalMSharingFile.exists()) {
+        finalMSharingFile.delete();
       }
 
     } catch (Exception e) {
@@ -276,15 +278,15 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     }
   }
 
-  class DownloadFileFromURL extends AsyncTask<String, String, String> {
+  class DownloadFileFromUrl extends AsyncTask<String, String, String> {
 
-    /** Before starting background thread Show Progress Bar Dialog */
+    /** Before starting background thread Show Progress Bar Dialog. */
     String downloadUrl = "";
 
     String filePath = "";
     String fileName = "";
 
-    DownloadFileFromURL(String downloadUrl, String filePath, String fileName) {
+    DownloadFileFromUrl(String downloadUrl, String filePath, String fileName) {
       this.downloadUrl = downloadUrl;
       this.filePath = filePath;
       this.fileName = fileName;
@@ -297,9 +299,9 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
           .showProgress(ResourcesWebViewActivity.this, "", "", false);
     }
 
-    /** Downloading file in background thread */
+    /** Downloading file in background thread. */
     @Override
-    protected String doInBackground(String... f_url) {
+    protected String doInBackground(String... url1) {
       int count;
       try {
         URL url = new URL(downloadUrl);
@@ -314,7 +316,7 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
         // Output stream to write file
         OutputStream output = new FileOutputStream(filePath + fileName + ".pdf");
 
-        byte data[] = new byte[1024];
+        byte[] data = new byte[1024];
 
         long total = 0;
 
@@ -346,15 +348,15 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
       return null;
     }
 
-    /** After completing background task Dismiss the progress dialog */
+    /** After completing background task Dismiss the progress dialog. */
     @Override
-    protected void onPostExecute(String file_url) {
+    protected void onPostExecute(String url) {
       try {
         // downlaod success mean file exist else check offline file
         File file = new File(filePath + fileName + ".pdf");
         if (file.exists()) {
-          AppController.genarateEncryptedConsentPDF(filePath, fileName);
-          DisplayPDFView(filePath + fileName + ".pdf");
+          AppController.generateEncryptedConsentPdf(filePath, fileName);
+          displayPdfView(filePath + fileName + ".pdf");
         } else {
           // offline functionality
           offLineFunctionality();
@@ -370,11 +372,11 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
   private void offLineFunctionality() {
     try {
       // checking encrypted file is there or not?
-      File file = new File(mDownloadedFilePath + mFileName + ".txt");
+      File file = new File(downloadedFilePath + fileName + ".txt");
       if (file.exists()) {
         // decrypt the file
-        File decryptFile = getEncryptedFilePath(mDownloadedFilePath + mFileName + ".txt");
-        DisplayPDFView(decryptFile.getAbsolutePath());
+        File decryptFile = getEncryptedFilePath(downloadedFilePath + fileName + ".txt");
+        displayPdfView(decryptFile.getAbsolutePath());
       } else {
         Toast.makeText(
                 ResourcesWebViewActivity.this,
@@ -394,9 +396,9 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
 
   private File getEncryptedFilePath(String filePath) {
     try {
-      CipherInputStream cis = AppController.genarateDecryptedConsentPDF(filePath);
+      CipherInputStream cis = AppController.generateDecryptedConsentPdf(filePath);
       byte[] byteArray = AppController.cipherInputStreamConvertToByte(cis);
-      File file = new File(mDownloadedFilePath + mFileName + ".pdf");
+      File file = new File(downloadedFilePath + fileName + ".pdf");
       if (!file.exists() && file == null) {
         file.createNewFile();
       }
@@ -410,10 +412,10 @@ public class ResourcesWebViewActivity extends AppCompatActivity {
     return null;
   }
 
-  private void DisplayPDFView(String filePath) {
-    mPdfView.setVisibility(View.VISIBLE);
+  private void displayPdfView(String filePath) {
+    pdfView.setVisibility(View.VISIBLE);
     try {
-      mPdfView
+      pdfView
           .fromFile(new File(filePath))
           .defaultPage(0)
           .enableAnnotationRendering(true)

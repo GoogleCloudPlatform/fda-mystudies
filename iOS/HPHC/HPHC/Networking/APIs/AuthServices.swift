@@ -143,6 +143,8 @@ class AuthServices: NSObject {
     // Cancel all local notification
     LocalNotification.cancelAllLocalNotification()
 
+    LocalNotification.removeAllDeliveredNotifications()
+
     // Reset Filters
     StudyFilterHandler.instance.previousAppliedFilters = []
     StudyFilterHandler.instance.searchText = ""
@@ -255,20 +257,31 @@ extension AuthServices: NMWebServiceDelegate {
       self.failedRequestServices.requestParams = self.requestParams
       self.failedRequestServices.method = self.method
 
-      if User.currentUser.refreshToken == ""
+      if (User.currentUser.refreshToken.isEmpty
         && requestName as String
           != AuthServerMethods
           .login
+          .description)
+        || requestName as String
+          == AuthServerMethods
+          .logout
           .description
       {
         // Unauthorized Access
         let errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
-        let localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
+        let localError = NSError(domain: error.domain, code: 403, userInfo: errorInfo)
         delegate?.failedRequest(manager, requestName: requestName, error: localError)
 
-      } else {
+      } else if requestName as String
+        == AuthServerMethods
+        .changePassword
+        .description
+      {
         // Update Refresh Token
         AuthServices().updateToken(delegate: self.delegate)
+      } else {
+        // Return server error
+        delegate?.failedRequest(manager, requestName: requestName, error: error)
       }
     } else {
 

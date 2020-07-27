@@ -100,6 +100,7 @@ done
 # Deployment Phase 2 - Uncomment after Phase 1 is deployed
 # cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
 # cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
+# cp -r ${SRC_PROJ_BASE}-resp-firebase/iam ${DST_PROJ_BASE}-resp-firebase/
 
 # Deployment Phase 3 - Uncomment after Phase 1, 2 are deployed
 # cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
@@ -111,7 +112,7 @@ done
 cd ${OUTPUT_TF_BASE}
 
 # Globally unique resources or resources that cannot reuse the same name right after destroying.
-files=$(find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md -o -name copy_client_info_to_sql.sh -o -name copy_mobile_app_info_to_sql.sh)
+files=$(find . -type f -name *.tfvars -o -name *.tf -o -name *.hcl -o -name README.md -o -name copy_client_info_to_sql.sh -o -name copy_mobile_app_info_to_sql.sh -o -name copy_push_notification_info_to_sql.sh)
 for f in $files
 do 
   sed -i "s|${OLD_STATE}|${NEW_STATE}|" $f

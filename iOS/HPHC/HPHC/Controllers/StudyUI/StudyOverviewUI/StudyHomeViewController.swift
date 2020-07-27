@@ -171,16 +171,7 @@ class StudyHomeViewController: UIViewController {
       }
     }
 
-    // Standalone App Settings
-    if Utilities.isStandaloneApp() {
-      buttonStar.isHidden = true
-      if loadViewFrom == .home {
-        buttonBack.isHidden = true
-        buttonBack.setImage(UIImage(named: "menu_icn"), for: .normal)
-        buttonBack.tag = 200
-        slideMenuController()?.leftPanGesture?.isEnabled = false
-      }
-    }
+    configureStandaloneUI()
   }
 
   // MARK: - UI Utils
@@ -197,6 +188,7 @@ class StudyHomeViewController: UIViewController {
     for subview in view.subviews {
       subview.isHidden = false
     }
+    updateViewsStatus()
   }
 
   // MARK: - Notifications
@@ -213,6 +205,42 @@ class StudyHomeViewController: UIViewController {
       name: Notification.Name(rawValue: "NotificationStudyEnrollmentFailed"),
       object: error
     )
+  }
+
+  /// Configure UI for standalone App.
+  fileprivate func configureStandaloneUI() {
+    // Standalone App Settings
+    if Utilities.isStandaloneApp() {
+      buttonStar.isHidden = true
+      buttonBack.isHidden = true
+      if loadViewFrom == .home,
+        let currentUser = User.currentUser.userType,
+        currentUser == .loggedInUser
+      {
+        buttonBack.isHidden = false
+        buttonBack.setImage(UIImage(named: "menu_icn"), for: .normal)
+        buttonBack.tag = 200
+        slideMenuController()?.leftPanGesture?.isEnabled = false
+      } else if loadViewFrom == .resource {
+        buttonBack.isHidden = false
+      }
+    }
+  }
+
+  fileprivate func updateViewsStatus() {
+    if let totalSections = Study.currentStudy?.overview.sections.count,
+      totalSections <= 1
+    {
+      self.pageControlView?.isHidden = true
+    }
+    if Utilities.isStandaloneApp() {
+      self.buttonStar.isHidden = true
+      if let currentUser = User.currentUser.userType,
+        currentUser == .anonymousUser
+      {
+        buttonBack.isHidden = true
+      }
+    }
   }
 
   // MARK: - Utils
@@ -605,10 +633,6 @@ class StudyHomeViewController: UIViewController {
       switch currentStudy.status {
       case .active:
 
-        if Utilities.isStandaloneApp() {
-          logout()
-        }
-
         if participatedStatus == .yetToJoin || participatedStatus == .notEligible {
           // check if enrolling is allowed
           if currentStudy.studySettings.enrollingAllowed {
@@ -736,7 +760,9 @@ class StudyHomeViewController: UIViewController {
           // go to study dashboard
           removeProgressIndicator()
           pushToStudyDashboard()
-        } else if studyStatus.status == .yetToJoin {
+        } else if studyStatus.status == .yetToJoin
+          || studyStatus.status == .notEligible
+        {
           // check if enrolling is allowed
           if study.studySettings.enrollingAllowed {
             WCPServices().getEligibilityConsentMetadata(
@@ -1418,11 +1444,11 @@ extension StudyHomeViewController: ORKTaskViewControllerDelegate {
             switch evaluationType! {
             case .any:
               if answeredSet.isSubset(of: correctAnswerSet) {
-                userScore = userScore + 1
+                userScore += 1
               }
             case .all:
               if answeredSet == correctAnswerSet {
-                userScore = userScore + 1
+                userScore += 1
               }
             }
 

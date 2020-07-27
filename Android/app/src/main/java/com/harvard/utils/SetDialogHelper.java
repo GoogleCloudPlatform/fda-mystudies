@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -23,7 +24,7 @@ import com.harvard.R;
 public class SetDialogHelper {
 
   /**
-   * To show alert
+   * To show alert.
    *
    * @param context Activity context
    * @param message Msg to display
@@ -56,7 +57,7 @@ public class SetDialogHelper {
   }
 
   /**
-   * To show alert which will finish the activity with RESULT_OK
+   * To show alert which will finish the activity with RESULT_OK.
    *
    * @param context Activity context
    * @param message Msg to display
@@ -84,7 +85,7 @@ public class SetDialogHelper {
   }
 
   /**
-   * To show alert which will have both pos button --> RESULT_OK and neg button --> RESULT_NOT_OK
+   * To show alert which will have both pos button --> RESULT_OK and neg button --> RESULT_NOT_OK.
    *
    * @param context Activity context
    * @param message Msg to display

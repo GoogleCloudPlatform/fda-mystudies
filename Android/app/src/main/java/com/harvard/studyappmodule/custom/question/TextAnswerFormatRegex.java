@@ -1,5 +1,6 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
+ * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -21,44 +22,44 @@ import java.util.regex.Pattern;
 
 public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
 
-  private String mRegex;
+  private String regex;
   private static final int UNLIMITED_LENGTH = 0;
 
   private boolean isMultipleLines = false;
-  private int mMaximumLength;
-  private String mInValidMsg;
+  private int maximumLength;
+  private String inValidMsg;
 
-  public TextAnswerFormatRegex(int maximumLength, String Regex, String InValidMsg) {
-    this.mRegex = Regex;
-    this.mMaximumLength = maximumLength;
-    this.mInValidMsg = InValidMsg;
+  public TextAnswerFormatRegex(int maximumLength, String regex, String inValidMsg) {
+    this.regex = regex;
+    this.maximumLength = maximumLength;
+    this.inValidMsg = inValidMsg;
   }
 
   String getInValidMsg() {
-    return mInValidMsg;
+    return inValidMsg;
   }
 
-  /** Creates a TextAnswerFormat with no maximum length */
+  /** Creates a TextAnswerFormat with no maximum length. */
   public TextAnswerFormatRegex() {
     this(UNLIMITED_LENGTH);
   }
 
   /**
-   * Creates a TextAnswerFormat with a specified maximum length
+   * Creates a TextAnswerFormat with a specified maximum length.
    *
    * @param maximumLength the maximum text length allowed
    */
   private TextAnswerFormatRegex(int maximumLength) {
-    this.mMaximumLength = maximumLength;
+    this.maximumLength = maximumLength;
   }
 
   /**
-   * Returns the maximum length for the answer, <code>UNLIMITED_LENGTH</code> (0) if no maximum
+   * Returns the maximum length for the answer, <code>UNLIMITED_LENGTH</code> (0) if no maximum.
    *
    * @return the maximum length, <code>UNLIMITED_LENGTH</code> (0) if no maximum
    */
   int getMaximumLength() {
-    return mMaximumLength;
+    return maximumLength;
   }
 
   /**
@@ -82,7 +83,7 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
   boolean isAnswerValid(String text) {
     if (text != null
         && text.length() > 0
-        && (mMaximumLength == UNLIMITED_LENGTH || text.length() <= mMaximumLength)
+        && (maximumLength == UNLIMITED_LENGTH || text.length() <= maximumLength)
         && validate(text)) {
       return true;
     }
@@ -90,9 +91,9 @@ public class TextAnswerFormatRegex extends ChoiceAnswerFormatCustom {
   }
 
   private boolean validate(final String hex) {
-    if (mRegex != null && !mRegex.equalsIgnoreCase("")) {
+    if (regex != null && !regex.equalsIgnoreCase("")) {
       try {
-        Pattern pattern = Pattern.compile(mRegex);
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(hex);
         return matcher.matches();
       } catch (Exception e) {

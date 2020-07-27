@@ -10,13 +10,12 @@ package com.google.cloud.healthcare.fdamystudies.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Configuration
-@PropertySource("classpath:appConfigurations.properties")
 @Setter
 @Getter
 @ToString
@@ -50,11 +49,11 @@ public class ApplicationPropertyConfiguration {
   @Value("${from.email.domain}")
   private String fromDomain;
 
-  @Value("${resend.confirmation.mail.subject}")
-  private String resendConfirmationMailSubject;
+  @Value("${confirmation.mail.subject}")
+  private String confirmationMailSubject;
 
-  @Value("${resend.confirmation.mail.content}")
-  private String resendConfirmationMail;
+  @Value("${confirmation.mail.content}")
+  private String confirmationMail;
 
   @Value("${authServerAccessTokenValidationUrl}")
   private String authServerAccessTokenValidationUrl;
@@ -124,4 +123,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${cloud.institution.bucket}")
   private String institutionBucketName;
+
+  @Value("${auth.server.deactivateurl}")
+  private String authServerDeactivateUrl;
 }

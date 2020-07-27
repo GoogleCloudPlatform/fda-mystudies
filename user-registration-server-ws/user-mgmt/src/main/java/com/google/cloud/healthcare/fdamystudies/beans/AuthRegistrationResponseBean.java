@@ -25,8 +25,4 @@ public class AuthRegistrationResponseBean {
   private String accessToken;
   private String clientToken;
   private String refreshToken;
-
-  public String toString() {
-    return this.message;
-  }
 }

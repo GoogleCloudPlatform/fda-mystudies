@@ -55,7 +55,7 @@ import com.harvard.usermodule.webservicemodel.UpdateUserProfileData;
 import com.harvard.usermodule.webservicemodel.UserProfileData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
-import com.harvard.utils.URLs;
+import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
@@ -67,27 +67,27 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
   private static final int UPDATE_USER_PROFILE = 100;
   private static final int USER_PROFILE_REQUEST = 101;
   private static final int PASSCODE_RESPONSE = 102;
-  private AppCompatEditText mEmail;
-  private AppCompatEditText mPassword;
-  private AppCompatTextView mEmailLabel;
-  private AppCompatTextView mPasswordLabel;
-  private AppCompatTextView mSignInLabel;
-  private AppCompatTextView mForgotPasswordLabel;
-  private AppCompatTextView mNewUsrSignUp;
-  private int LOGIN_REQUEST = 1;
-  private Context mContext;
-  private boolean mClicked;
-  private String mUserID;
-  private String mUserAuth;
+  private AppCompatEditText email;
+  private AppCompatEditText password;
+  private AppCompatTextView emailLabel;
+  private AppCompatTextView passwordLabel;
+  private AppCompatTextView signInLabel;
+  private AppCompatTextView forgotPasswordLabel;
+  private AppCompatTextView newUsrSignUp;
+  private static final int LOGIN_REQUEST = 1;
+  private Context context;
+  private boolean clicked;
+  private String userId;
+  private String userAuth;
   private LoginData loginData;
-  private AppCompatTextView mAgreeLabel;
-  private int GET_TERMS_AND_CONDITION = 3;
-  private TermsAndConditionData mTermsAndConditionData;
+  private AppCompatTextView agreeLabel;
+  private static final int GET_TERMS_AND_CONDITION = 3;
+  private TermsAndConditionData termsAndConditionData;
 
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
-    this.mContext = context;
+    this.context = context;
   }
 
   @Override
@@ -95,41 +95,41 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     // Inflate the layout for this fragment
     View view = inflater.inflate(R.layout.content_sign_in, container, false);
-    mClicked = false;
-    initializeXMLId(view);
-    customTextViewAgree(mAgreeLabel);
+    clicked = false;
+    initializeXmlId(view);
+    customTextViewAgree(agreeLabel);
     setFont();
     customTextView();
     bindEvents();
-    mTermsAndConditionData = new TermsAndConditionData();
-    mTermsAndConditionData.setPrivacy(getString(R.string.privacyurl));
-    mTermsAndConditionData.setTerms(getString(R.string.termsurl));
+    termsAndConditionData = new TermsAndConditionData();
+    termsAndConditionData.setPrivacy(getString(R.string.privacyurl));
+    termsAndConditionData.setTerms(getString(R.string.termsurl));
     return view;
   }
 
-  private void initializeXMLId(View view) {
-    mEmailLabel = (AppCompatTextView) view.findViewById(R.id.email_label);
-    mEmail = (AppCompatEditText) view.findViewById(R.id.edittxt_email);
-    mPasswordLabel = (AppCompatTextView) view.findViewById(R.id.password_label);
-    mPassword = (AppCompatEditText) view.findViewById(R.id.edittxt_password);
-    mSignInLabel = (AppCompatTextView) view.findViewById(R.id.signInButton);
-    mForgotPasswordLabel = (AppCompatTextView) view.findViewById(R.id.forgot_password);
-    mNewUsrSignUp = (AppCompatTextView) view.findViewById(R.id.newUsrSignUp);
-    mAgreeLabel = (AppCompatTextView) view.findViewById(R.id.agree_terms);
+  private void initializeXmlId(View view) {
+    emailLabel = (AppCompatTextView) view.findViewById(R.id.email_label);
+    email = (AppCompatEditText) view.findViewById(R.id.edittxt_email);
+    passwordLabel = (AppCompatTextView) view.findViewById(R.id.password_label);
+    password = (AppCompatEditText) view.findViewById(R.id.edittxt_password);
+    signInLabel = (AppCompatTextView) view.findViewById(R.id.signInButton);
+    forgotPasswordLabel = (AppCompatTextView) view.findViewById(R.id.forgot_password);
+    newUsrSignUp = (AppCompatTextView) view.findViewById(R.id.newUsrSignUp);
+    agreeLabel = (AppCompatTextView) view.findViewById(R.id.agree_terms);
   }
 
   @SuppressWarnings("deprecation")
   private void customTextView() {
-    mEmail.requestFocus();
+    email.requestFocus();
     String html =
-        mContext.getResources().getString(R.string.new_user)
+        context.getResources().getString(R.string.new_user)
             + " <font color=\"#007cba\">"
-            + mContext.getResources().getString(R.string.sign_up)
+            + context.getResources().getString(R.string.sign_up)
             + "</font>";
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-      mNewUsrSignUp.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
+      newUsrSignUp.setText(Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY));
     } else {
-      mNewUsrSignUp.setText(Html.fromHtml(html));
+      newUsrSignUp.setText(Html.fromHtml(html));
     }
   }
 
@@ -137,61 +137,59 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
   private void customTextViewAgree(AppCompatTextView view) {
     SpannableStringBuilder spanTxt =
         new SpannableStringBuilder(
-            mContext.getResources().getString(R.string.you_agree_this_app) + "\n");
+            context.getResources().getString(R.string.you_agree_this_app) + "\n");
     spanTxt.setSpan(
-        new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.colorPrimaryBlack)),
+        new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorPrimaryBlack)),
         0,
         spanTxt.length(),
         0);
-    spanTxt.append(mContext.getResources().getString(R.string.terms2));
+    spanTxt.append(context.getResources().getString(R.string.terms2));
     spanTxt.setSpan(
         new ClickableSpan() {
           @Override
           public void updateDrawState(TextPaint ds) {
-            ds.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+            ds.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
             ds.setUnderlineText(false);
           }
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getTerms().isEmpty()) {
-              Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
+            if (termsAndConditionData != null && !termsAndConditionData.getTerms().isEmpty()) {
+              Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.terms));
-              termsIntent.putExtra("url", mTermsAndConditionData.getTerms());
+              termsIntent.putExtra("url", termsAndConditionData.getTerms());
               startActivity(termsIntent);
             }
           }
         },
-        spanTxt.length() - mContext.getResources().getString(R.string.terms2).length(),
+        spanTxt.length() - context.getResources().getString(R.string.terms2).length(),
         spanTxt.length(),
         0);
 
-    spanTxt.append(" " + mContext.getResources().getString(R.string.and));
+    spanTxt.append(" " + context.getResources().getString(R.string.and));
     spanTxt.setSpan(
-        new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.colorPrimaryBlack)),
+        new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorPrimaryBlack)),
         spanTxt.length() - " and".length(),
         spanTxt.length(),
         0);
 
-    spanTxt.append(" " + mContext.getResources().getString(R.string.privacy_policy2));
-    String temp = " " + mContext.getResources().getString(R.string.privacy_policy2);
+    spanTxt.append(" " + context.getResources().getString(R.string.privacy_policy2));
+    String temp = " " + context.getResources().getString(R.string.privacy_policy2);
     spanTxt.setSpan(
         new ClickableSpan() {
 
           @Override
           public void updateDrawState(TextPaint ds) {
-            ds.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+            ds.setColor(ContextCompat.getColor(context, R.color.colorPrimary));
             ds.setUnderlineText(false);
           }
 
           @Override
           public void onClick(View widget) {
-            if (mTermsAndConditionData != null
-                && !mTermsAndConditionData.getPrivacy().isEmpty()) {
-              Intent termsIntent = new Intent(mContext, TermsPrivacyPolicyActivity.class);
+            if (termsAndConditionData != null && !termsAndConditionData.getPrivacy().isEmpty()) {
+              Intent termsIntent = new Intent(context, TermsPrivacyPolicyActivity.class);
               termsIntent.putExtra("title", getResources().getString(R.string.privacy_policy));
-              termsIntent.putExtra("url", mTermsAndConditionData.getPrivacy());
+              termsIntent.putExtra("url", termsAndConditionData.getPrivacy());
               startActivity(termsIntent);
             }
           }
@@ -202,38 +200,38 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
     view.setMovementMethod(LinkMovementMethod.getInstance());
     view.setText(spanTxt, TextView.BufferType.SPANNABLE);
-    mEmail.requestFocus();
+    email.requestFocus();
   }
 
   private void setFont() {
     try {
 
-      mEmailLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mEmail.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mPasswordLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mPassword.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mSignInLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mForgotPasswordLabel.setTypeface(AppController.getTypeface(mContext, "regular"));
-      mNewUsrSignUp.setTypeface(AppController.getTypeface(mContext, "regular"));
+      emailLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      email.setTypeface(AppController.getTypeface(context, "regular"));
+      passwordLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      password.setTypeface(AppController.getTypeface(context, "regular"));
+      signInLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      forgotPasswordLabel.setTypeface(AppController.getTypeface(context, "regular"));
+      newUsrSignUp.setTypeface(AppController.getTypeface(context, "regular"));
     } catch (Exception e) {
       Logger.log(e);
     }
   }
 
   private void bindEvents() {
-    mSignInLabel.setOnClickListener(
+    signInLabel.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (mClicked == false) {
-              mClicked = true;
+            if (clicked == false) {
+              clicked = true;
               callLoginWebService();
               new Handler()
                   .postDelayed(
                       new Runnable() {
                         @Override
                         public void run() {
-                          mClicked = false;
+                          clicked = false;
                         }
                       },
                       2000);
@@ -241,18 +239,18 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           }
         });
 
-    mForgotPasswordLabel.setOnClickListener(
+    forgotPasswordLabel.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            mEmail.setText("");
-            mPassword.setText("");
-            mEmail.requestFocus();
-            Intent intent = new Intent(mContext, ForgotPasswordActivity.class);
+            email.setText("");
+            password.setText("");
+            email.requestFocus();
+            Intent intent = new Intent(context, ForgotPasswordActivity.class);
             startActivity(intent);
           }
         });
-    mNewUsrSignUp.setOnClickListener(
+    newUsrSignUp.setOnClickListener(
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
@@ -262,49 +260,46 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
   }
 
   private void callLoginWebService() {
-    if (mEmail.getText().toString().isEmpty()
-        && mPassword.getText().toString().isEmpty()) {
+    if (email.getText().toString().isEmpty() && password.getText().toString().isEmpty()) {
       Toast.makeText(
-              mContext,
-              getResources().getString(R.string.enter_all_field_empty),
-              Toast.LENGTH_SHORT)
+              context, getResources().getString(R.string.enter_all_field_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (mEmail.getText().toString().isEmpty()) {
-      Toast.makeText(mContext, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
+    } else if (email.getText().toString().isEmpty()) {
+      Toast.makeText(context, getResources().getString(R.string.email_empty), Toast.LENGTH_SHORT)
           .show();
-    } else if (!AppController.getHelperIsValidEmail(mEmail.getText().toString())) {
+    } else if (!AppController.getHelperIsValidEmail(email.getText().toString())) {
       Toast.makeText(
-              mContext, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
+              context, getResources().getString(R.string.email_validation), Toast.LENGTH_SHORT)
           .show();
-    } else if (mPassword.getText().toString().isEmpty()) {
-      Toast.makeText(
-              mContext, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
+    } else if (password.getText().toString().isEmpty()) {
+      Toast.makeText(context, getResources().getString(R.string.password_empty), Toast.LENGTH_SHORT)
           .show();
     } else {
       try {
-        AppController.getHelperHideKeyboard((Activity) mContext);
+        AppController.getHelperHideKeyboard((Activity) context);
       } catch (Exception e) {
         Logger.log(e);
       }
-      AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
-      LoginEvent loginEvent = new LoginEvent();
+      AppController.getHelperProgressDialog().showProgress(context, "", "", false);
+
       HashMap<String, String> params = new HashMap<>();
-      params.put("emailId", mEmail.getText().toString());
-      params.put("password", mPassword.getText().toString());
+      params.put("emailId", email.getText().toString());
+      params.put("password", password.getText().toString());
       params.put("appId", BuildConfig.APPLICATION_ID);
 
       AuthServerConfigEvent authServerConfigEvent =
           new AuthServerConfigEvent(
               "post",
-              URLs.LOGIN,
+              Urls.LOGIN,
               LOGIN_REQUEST,
-              mContext,
+              context,
               LoginData.class,
               params,
               null,
               null,
               false,
               this);
+      LoginEvent loginEvent = new LoginEvent();
       loginEvent.setAuthServerConfigEvent(authServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performLogin(loginEvent);
@@ -317,22 +312,22 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     if (responseCode == LOGIN_REQUEST) {
       // FilterActivity Screen json object clearing
       AppController.getHelperSharedPreference()
-          .writePreference(mContext, getString(R.string.json_object_filter), "");
+          .writePreference(context, getString(R.string.json_object_filter), "");
       loginData = (LoginData) response;
       if (loginData != null) {
-        mUserID = loginData.getUserId();
-        mUserAuth = loginData.getAuth();
+        userId = loginData.getUserId();
+        userAuth = loginData.getAuth();
         AppController.getHelperSharedPreference()
             .writePreference(
-                mContext, getString(R.string.refreshToken), loginData.getRefreshToken());
+                context, getString(R.string.refreshToken), loginData.getRefreshToken());
         AppController.getHelperSharedPreference()
             .writePreference(
-                mContext, mContext.getString(R.string.clientToken), loginData.getClientToken());
-        new GetFCMRefreshToken().execute();
+                context, context.getString(R.string.clientToken), loginData.getClientToken());
+        new GetFcmRefreshToken().execute();
       } else {
         Toast.makeText(
-                mContext,
-                mContext.getResources().getString(R.string.not_able_to_login),
+                context,
+                context.getResources().getString(R.string.not_able_to_login),
                 Toast.LENGTH_SHORT)
             .show();
       }
@@ -343,15 +338,15 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           callUserProfileWebService();
         } else {
           Toast.makeText(
-                  mContext,
-                  mContext.getResources().getString(R.string.not_able_to_login),
+                  context,
+                  context.getResources().getString(R.string.not_able_to_login),
                   Toast.LENGTH_SHORT)
               .show();
         }
       } else {
         Toast.makeText(
-                mContext,
-                mContext.getResources().getString(R.string.not_able_to_login),
+                context,
+                context.getResources().getString(R.string.not_able_to_login),
                 Toast.LENGTH_SHORT)
             .show();
       }
@@ -359,17 +354,17 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       UserProfileData userProfileData = (UserProfileData) response;
       if (userProfileData != null) {
         if (loginData.getResetPassword()) {
-          Intent intent = new Intent(mContext, ChangePasswordActivity.class);
+          Intent intent = new Intent(context, ChangePasswordActivity.class);
           intent.putExtra("userid", loginData.getUserId());
-          intent.putExtra("password", mPassword.getText().toString());
+          intent.putExtra("password", password.getText().toString());
           intent.putExtra("auth", loginData.getAuth());
           intent.putExtra("verified", loginData.isVerified());
-          intent.putExtra("email", mEmail.getText().toString());
+          intent.putExtra("email", email.getText().toString());
           startActivity(intent);
         } else {
           if (userProfileData.getSettings().isPasscode()) {
             AppController.getHelperSharedPreference()
-                .writePreference(mContext, getString(R.string.initialpasscodeset), "no");
+                .writePreference(context, getString(R.string.initialpasscodeset), "no");
             if (loginData.isVerified()) {
               AppController.getHelperSharedPreference()
                   .writePreference(
@@ -382,22 +377,22 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
                       getContext(), getString(R.string.verified), "" + loginData.isVerified());
               AppController.getHelperSharedPreference()
                   .writePreference(
-                      getContext(), getString(R.string.email), "" + mEmail.getText().toString());
+                      getContext(), getString(R.string.email), "" + email.getText().toString());
               AppController.getHelperSharedPreference()
                   .writePreference(
-                      mContext, getString(R.string.refreshToken), loginData.getRefreshToken());
-              Intent intent = new Intent(mContext, NewPasscodeSetupActivity.class);
+                      context, getString(R.string.refreshToken), loginData.getRefreshToken());
+              Intent intent = new Intent(context, NewPasscodeSetupActivity.class);
               intent.putExtra("from", "signin");
               startActivityForResult(intent, PASSCODE_RESPONSE);
             } else {
-              Intent intent = new Intent(mContext, VerificationStepActivity.class);
+              Intent intent = new Intent(context, VerificationStepActivity.class);
               intent.putExtra("from", "SignInFragment");
               intent.putExtra("type", "Signin");
               intent.putExtra("userid", loginData.getUserId());
               intent.putExtra("auth", loginData.getAuth());
               intent.putExtra("verified", loginData.isVerified());
-              intent.putExtra("email", mEmail.getText().toString());
-              intent.putExtra("password", mPassword.getText().toString());
+              intent.putExtra("email", email.getText().toString());
+              intent.putExtra("password", password.getText().toString());
               startActivity(intent);
             }
           } else {
@@ -406,34 +401,34 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
         }
       } else {
         Toast.makeText(
-                mContext,
-                mContext.getResources().getString(R.string.not_able_to_login),
+                context,
+                context.getResources().getString(R.string.not_able_to_login),
                 Toast.LENGTH_SHORT)
             .show();
       }
     } else if (GET_TERMS_AND_CONDITION == responseCode) {
-      mTermsAndConditionData = (TermsAndConditionData) response;
+      termsAndConditionData = (TermsAndConditionData) response;
     }
   }
 
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
-    header.put("accessToken", mUserAuth);
-    header.put("userId", mUserID);
+    header.put("accessToken", userAuth);
+    header.put("userId", userId);
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "get",
-            URLs.GET_USER_PROFILE,
+            Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
-            mContext,
+            context,
             UserProfileData.class,
             null,
             header,
             null,
             false,
             this);
-    getUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }
@@ -448,26 +443,26 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
           .writePreference(getContext(), getString(R.string.verified), "" + loginData.isVerified());
       AppController.getHelperSharedPreference()
           .writePreference(
-              getContext(), getString(R.string.email), "" + mEmail.getText().toString());
+              getContext(), getString(R.string.email), "" + email.getText().toString());
 
       if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-        ((StudyActivity) mContext).loadstudylist();
+        ((StudyActivity) context).loadstudylist();
       } else {
-        Intent intent = new Intent(mContext, StandaloneActivity.class);
+        Intent intent = new Intent(context, StandaloneActivity.class);
         ComponentName cn = intent.getComponent();
         Intent mainIntent = Intent.makeRestartActivityTask(cn);
         startActivity(mainIntent);
-        ((Activity) mContext).finish();
+        ((Activity) context).finish();
       }
     } else {
-      Intent intent = new Intent(mContext, VerificationStepActivity.class);
+      Intent intent = new Intent(context, VerificationStepActivity.class);
       intent.putExtra("from", "SignInFragment");
       intent.putExtra("type", "Signin");
       intent.putExtra("userid", loginData.getUserId());
       intent.putExtra("auth", loginData.getAuth());
       intent.putExtra("verified", loginData.isVerified());
-      intent.putExtra("email", mEmail.getText().toString());
-      intent.putExtra("password", mPassword.getText().toString());
+      intent.putExtra("email", email.getText().toString());
+      intent.putExtra("password", password.getText().toString());
       startActivity(intent);
     }
   }
@@ -477,22 +472,22 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     AppController.getHelperProgressDialog().dismissDialog();
     if (responseCode == UPDATE_USER_PROFILE) {
       if (statusCode.equalsIgnoreCase("401")) {
-        Toast.makeText(mContext, errormsg, Toast.LENGTH_SHORT).show();
-        AppController.getHelperSessionExpired(mContext, errormsg);
+        Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
+        AppController.getHelperSessionExpired(context, errormsg);
       } else {
-        Toast.makeText(mContext, errormsg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
       }
     } else {
-      Toast.makeText(mContext, errormsg, Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, errormsg, Toast.LENGTH_SHORT).show();
     }
   }
 
   private void callUpdateProfileWebService(String deviceToken) {
-    AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
-    UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
+    AppController.getHelperProgressDialog().showProgress(context, "", "", false);
+
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", mUserAuth);
-    params.put("userId", mUserID);
+    params.put("accessToken", userAuth);
+    params.put("userId", userId);
 
     JSONObject jsonObjBody = new JSONObject();
     JSONObject infoJson = new JSONObject();
@@ -509,21 +504,22 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     RegistrationServerConfigEvent registrationServerConfigEvent =
         new RegistrationServerConfigEvent(
             "post_object",
-            URLs.UPDATE_USER_PROFILE,
+            Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
-            mContext,
+            context,
             UpdateUserProfileData.class,
             null,
             params,
             jsonObjBody,
             false,
             this);
-    updateUserProfileEvent.setmRegistrationServerConfigEvent(registrationServerConfigEvent);
+    UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
+    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }
 
-  private class GetFCMRefreshToken extends AsyncTask<String, String, String> {
+  private class GetFcmRefreshToken extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
@@ -534,14 +530,16 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
         boolean regIdStatus = false;
         while (!regIdStatus) {
           token =
-              AppController.getHelperSharedPreference().readPreference(mContext, "deviceToken", "");
-          if (!token.isEmpty()) regIdStatus = true;
+              AppController.getHelperSharedPreference().readPreference(context, "deviceToken", "");
+          if (!token.isEmpty()) {
+            regIdStatus = true;
+          }
         }
       } else {
         AppController.getHelperSharedPreference()
-            .writePreference(mContext, "deviceToken", FirebaseInstanceId.getInstance().getToken());
+            .writePreference(context, "deviceToken", FirebaseInstanceId.getInstance().getToken());
         token =
-            AppController.getHelperSharedPreference().readPreference(mContext, "deviceToken", "");
+            AppController.getHelperSharedPreference().readPreference(context, "deviceToken", "");
       }
       return token;
     }
@@ -553,7 +551,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
     @Override
     protected void onPreExecute() {
-      AppController.getHelperProgressDialog().showProgress(mContext, "", "", false);
+      AppController.getHelperProgressDialog().showProgress(context, "", "", false);
     }
   }
 
