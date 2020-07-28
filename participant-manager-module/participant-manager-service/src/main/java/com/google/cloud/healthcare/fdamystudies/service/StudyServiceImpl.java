@@ -124,16 +124,17 @@ public class StudyServiceImpl implements StudyService {
     List<StudyDetails> studies = new ArrayList<>();
     for (Map.Entry<StudyEntity, List<SitePermissionEntity>> entry : studyPermissionMap.entrySet()) {
       StudyDetails studyDetail = new StudyDetails();
-      String studyId = entry.getKey().getId();
+      StudyEntity study = entry.getKey();
+      String studyId = study.getId();
       studyDetail.setId(studyId);
-      studyDetail.setCustomId(entry.getKey().getCustomId());
-      studyDetail.setName(entry.getKey().getName());
-      studyDetail.setType(entry.getKey().getType());
-      studyDetail.setTotalSitesCount((long) entry.getValue().size());
+      studyDetail.setCustomId(study.getCustomId());
+      studyDetail.setName(study.getName());
+      studyDetail.setType(study.getType());
+      List<SitePermissionEntity> permissions = entry.getValue();
+      studyDetail.setSitesCount((long) permissions.size());
 
       if (studyPermissionsByStudyInfoId.get(studyId) != null) {
-        Integer studyEditPermission =
-            studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit();
+        Integer studyEditPermission = studyPermissionsByStudyInfoId.get(study.getId()).getEdit();
         studyDetail.setStudyPermission(
             studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
         studyDetail.setStudyPermission(studyEditPermission);
@@ -165,9 +166,8 @@ public class StudyServiceImpl implements StudyService {
           getStudyInvitedCount(
               siteWithInvitedParticipantCountMap, entry, studyInvitedCount, sitePermission);
 
-      studyEnrolledCount =
-          studyEnrolledCount
-              + siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
+      studyEnrolledCount +=
+          siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
     }
 
     studyDetail.setEnrolled(studyEnrolledCount);
@@ -188,11 +188,11 @@ public class StudyServiceImpl implements StudyService {
     String siteId = sitePermission.getSite().getId();
     String studyType = entry.getKey().getType();
     if (siteWithInvitedParticipantCountMap.get(siteId) != null && studyType.equals(CLOSE_STUDY)) {
-      studyInvitedCount = studyInvitedCount + siteWithInvitedParticipantCountMap.get(siteId);
+      studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
     }
 
     if (studyType.equals(OPEN_STUDY)) {
-      studyInvitedCount = studyInvitedCount + sitePermission.getSite().getTargetEnrollment();
+      studyInvitedCount += sitePermission.getSite().getTargetEnrollment();
     }
     return studyInvitedCount;
   }
