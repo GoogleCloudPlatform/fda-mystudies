@@ -113,7 +113,7 @@ public enum ErrorCode {
       403, "EC-105", HttpStatus.FORBIDDEN.toString(), "You do not have permission to manage site"),
 
   OPEN_STUDY(
-      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Can not add participant to open study"),
+      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add participant to open study"),
 
   ENROLLED_PARTICIPANT(400, "EC-862", Constants.BAD_REQUEST, "Participant already enrolled"),
 

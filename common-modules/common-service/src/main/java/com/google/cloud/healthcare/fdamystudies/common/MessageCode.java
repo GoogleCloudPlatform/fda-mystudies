@@ -41,7 +41,7 @@ public enum MessageCode {
   LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully"),
 
   GET_PARTICIPANT_REGISTRY_SUCCESS(
-      HttpStatus.OK, "MSG-0008", "Get participant registry successfull"),
+      HttpStatus.OK, "MSG-0008", "Get participant registry successfully"),
 
   ADD_PARTICIPANT_SUCCESS(HttpStatus.CREATED, "MSG-0016", "Participant added successfully");
 

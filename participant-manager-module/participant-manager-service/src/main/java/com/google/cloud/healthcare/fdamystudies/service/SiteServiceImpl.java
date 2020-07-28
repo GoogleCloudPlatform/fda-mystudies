@@ -187,7 +187,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     SiteEntity site = optSite.get();
-    ErrorCode errorCode = validationForAddNewParticipant(participant, userId, site);
+    ErrorCode errorCode = validateNewParticipant(participant, userId, site);
     if (errorCode != null) {
       logger.exit(errorCode);
       return new ParticipantResponse(errorCode);
@@ -206,7 +206,7 @@ public class SiteServiceImpl implements SiteService {
     return response;
   }
 
-  private ErrorCode validationForAddNewParticipant(
+  private ErrorCode validateNewParticipant(
       ParticipantDetail participant, String userId, SiteEntity site) {
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
