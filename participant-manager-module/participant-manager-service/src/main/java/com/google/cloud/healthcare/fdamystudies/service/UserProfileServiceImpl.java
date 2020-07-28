@@ -60,7 +60,7 @@ public class UserProfileServiceImpl implements UserProfileService {
   @Override
   @Transactional(readOnly = true)
   public UserProfileResponse findUserProfileBySecurityCode(String securityCode) {
-    logger.entry("begin getUserProfileWithSecurityCode()");
+    logger.entry("begin getUserProfileBySecurityCode()");
 
     Optional<UserRegAdminEntity> optUserRegAdminUser =
         userRegAdminRepository.findBySecurityCode(securityCode);
