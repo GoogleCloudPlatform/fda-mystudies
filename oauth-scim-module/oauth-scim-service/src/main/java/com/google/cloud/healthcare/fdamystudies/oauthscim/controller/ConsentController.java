@@ -16,13 +16,11 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,28 +45,24 @@ public class ConsentController {
 
   @Autowired private RedirectConfig redirectConfig;
 
-  @Autowired private AppPropertyConfig appConfig;
+  @Autowired private CookieHelper cookieHelper;
 
   @GetMapping(value = "/consent")
   public String authorize(
-      @RequestParam(required = false, name = CONSENT_CHALLENGE) String consentChallenge,
+      @RequestParam(name = CONSENT_CHALLENGE) String consentChallenge,
       HttpServletRequest request,
       HttpServletResponse response,
       Model model) {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
-    if (StringUtils.isNotBlank(consentChallenge)) {
-      addCookie(response, CONSENT_CHALLENGE, consentChallenge);
-      // show or skip consent page
-      MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
-      paramMap.add(CONSENT_CHALLENGE, consentChallenge);
-      ResponseEntity<JsonNode> consentResponse = oauthService.requestConsent(paramMap);
-      if (consentResponse.getStatusCode().is2xxSuccessful()) {
-        JsonNode responseBody = consentResponse.getBody();
-        return skipConsent(responseBody)
-            ? redirectToCallbackUrl(request, true, response)
-            : "consent";
-      }
+    cookieHelper.addCookie(response, CONSENT_CHALLENGE, consentChallenge);
+    // show or skip consent page
+    MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
+    paramMap.add(CONSENT_CHALLENGE, consentChallenge);
+    ResponseEntity<JsonNode> consentResponse = oauthService.requestConsent(paramMap);
+    if (consentResponse.getStatusCode().is2xxSuccessful()) {
+      JsonNode responseBody = consentResponse.getBody();
+      return skipConsent(responseBody) ? redirectToCallbackUrl(request, true, response) : "consent";
     }
 
     return redirectToError(request, response);
@@ -124,14 +118,5 @@ public class ConsentController {
     response.setHeader("Location", redirectUrl);
     response.setStatus(HttpStatus.FOUND.value());
     return "redirect:" + redirectUrl;
-  }
-
-  public void addCookie(HttpServletResponse response, String cookieName, String cookieValue) {
-    Cookie cookie = new Cookie(cookieName, cookieValue);
-    cookie.setMaxAge(600);
-    cookie.setSecure(appConfig.isSecureCookie());
-    cookie.setHttpOnly(true);
-    cookie.setPath("/");
-    response.addCookie(cookie);
   }
 }

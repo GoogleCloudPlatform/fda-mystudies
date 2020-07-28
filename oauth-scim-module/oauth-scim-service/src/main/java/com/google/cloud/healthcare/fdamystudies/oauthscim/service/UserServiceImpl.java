@@ -410,7 +410,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void resetTempRegId(String userId) {
-    repository.resetTempRegId(userId);
+    repository.removeTempRegIDForUser(userId);
   }
 
   @Override
@@ -420,6 +420,6 @@ public class UserServiceImpl implements UserService {
         Instant.now()
             .minus(appConfig.getTempRegIdExpiryMinutes(), ChronoUnit.MINUTES)
             .toEpochMilli();
-    repository.updateTempRegId(new Timestamp(timeInMillis));
+    repository.removeTempRegIdBeforeTime(new Timestamp(timeInMillis));
   }
 }

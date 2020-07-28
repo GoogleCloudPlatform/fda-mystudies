@@ -32,13 +32,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.util.Optional;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -71,7 +70,7 @@ public class LoginController {
 
   @Autowired private RedirectConfig redirectConfig;
 
-  @Autowired private AppPropertyConfig appConfig;
+  @Autowired private CookieHelper cookieHelper;
 
   /**
    * @param loginChallenge is optional. ORY Hydra sends this field as query param when login/consent
@@ -180,7 +179,7 @@ public class LoginController {
 
     if (authenticationResponse.is2xxSuccessful()) {
       logger.exit("authentication success, redirect to consent page");
-      addCookie(response, USER_ID, authenticationResponse.getUserId());
+      cookieHelper.addCookie(response, USER_ID, authenticationResponse.getUserId());
     } else {
       logger.error(
           String.format(
@@ -201,12 +200,12 @@ public class LoginController {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
     if (!optUser.isPresent()) {
       logger.exit("tempRegId is invalid, return to login page");
-      deleteCookie(response, TEMP_REG_ID);
+      cookieHelper.deleteCookie(response, TEMP_REG_ID);
       return LOGIN;
     } else {
       UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
-      addCookie(response, USER_ID, user.getUserId());
+      cookieHelper.addCookie(response, USER_ID, user.getUserId());
       userService.resetTempRegId(user.getUserId());
       return redirectToConsentPage(loginChallenge, user.getEmail(), request, response);
     }
@@ -236,8 +235,8 @@ public class LoginController {
     MultiValueMap<String, String> qsParams =
         UriComponentsBuilder.fromUriString(requestUrl).build().getQueryParams();
 
-    addCookie(response, LOGIN_CHALLENGE, loginChallenge);
-    addCookies(
+    cookieHelper.addCookie(response, LOGIN_CHALLENGE, loginChallenge);
+    cookieHelper.addCookies(
         response,
         qsParams,
         APP_ID,
@@ -259,12 +258,12 @@ public class LoginController {
       if (optUser.isPresent()) {
         UserEntity user = optUser.get();
         logger.exit("tempRegId is valid, return to auto signin page");
-        addCookie(response, USER_ID, user.getUserId());
+        cookieHelper.addCookie(response, USER_ID, user.getUserId());
         return "signin";
       }
 
       logger.exit("tempRegId is invalid, return to login page");
-      deleteCookie(response, TEMP_REG_ID);
+      cookieHelper.deleteCookie(response, TEMP_REG_ID);
       return LOGIN;
     }
     return LOGIN;
@@ -294,30 +293,5 @@ public class LoginController {
     response.setHeader("Location", redirectUrl);
     response.setStatus(HttpStatus.FOUND.value());
     return "redirect:" + redirectUrl;
-  }
-
-  public void addCookies(
-      HttpServletResponse response, MultiValueMap<String, String> params, String... cookieNames) {
-    for (String cookieName : cookieNames) {
-      addCookie(response, cookieName, params.getFirst(cookieName));
-    }
-  }
-
-  public void addCookie(HttpServletResponse response, String cookieName, String cookieValue) {
-    Cookie cookie = new Cookie(cookieName, cookieValue);
-    cookie.setMaxAge(600);
-    cookie.setSecure(appConfig.isSecureCookie());
-    cookie.setHttpOnly(true);
-    cookie.setPath("/");
-    response.addCookie(cookie);
-  }
-
-  public void deleteCookie(HttpServletResponse response, String cookieName) {
-    Cookie cookie = new Cookie(cookieName, null);
-    cookie.setMaxAge(0);
-    cookie.setSecure(appConfig.isSecureCookie());
-    cookie.setHttpOnly(true);
-    cookie.setPath("/");
-    response.addCookie(cookie);
   }
 }
