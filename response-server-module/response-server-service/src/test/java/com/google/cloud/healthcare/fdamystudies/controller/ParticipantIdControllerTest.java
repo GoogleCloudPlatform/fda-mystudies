@@ -8,21 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
-import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
-import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
-import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
-import java.util.List;
-import java.util.UUID;
-import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MvcResult;
-
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.APPLICATION_ID_HEADER;
@@ -34,6 +19,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MvcResult;
+
+import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
+import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
+import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 
 public class ParticipantIdControllerTest extends BaseMockIT {
   @Autowired private ParticipantBoRepository repository;
@@ -57,9 +59,6 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$").isNotEmpty())
             .andReturn();
 
-    // TODO(Dhanya) use .andExpect to assert the participantIdAddedVal instead of assertNotNull -
-    // DONE - See above
-    // TODO(Dhanya) rename to participantId - DONE
     String participantId = result.getResponse().getContentAsString();
     assertNotNull(participantId);
     // Step-2 Find ParticipantBo by participantId and compare with input ParticipantBo object
@@ -80,10 +79,6 @@ public class ParticipantIdControllerTest extends BaseMockIT {
   @Test
   void shouldReturnBadRequestForMissingApplicationId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
-
-    // TODO (Dhanya) mockMvc preferred and expected error message required
-    // DONE - Not checking for error message as the GlobalExceptionHandler causes test to fail
-    // when running with Maven (different error messages with Maven and JUnit running locally)
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_PARTICIPANT.getPath())
@@ -95,12 +90,6 @@ public class ParticipantIdControllerTest extends BaseMockIT {
         .andReturn();
   }
 
-  // TODO (Dhanya) assigning null not needed
-  // Removed method shouldReturnBadRequestForNullStudyId()
-  // Removed method shouldReturnBadRequestForNullEnrollmentTokenIdentifier
-
-  // TODO (Dhanya) duplicate test scenario, combine tests with shouldReturnBadRequestForBlankStudyId
-  // Done - Renamed test to BlankStudyId
   @Test
   void shouldReturnBadRequestForBlankStudyId() throws Exception {
 
@@ -123,16 +112,11 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userMessage").isNotEmpty())
             .andReturn();
 
-    // TODO (Dhanya) use .andExpect to assert the appErrorCode and error message
-    // DONE - See above. Followed AuditLog method to check for code type and message not empty.
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
-  // TODO (Dhanya) duplicate test scenario, combine into
-  // shouldReturnBadRequestForBlankEnrollmentToken
-  // DONE
   @Test
   void shouldReturnBadRequestForBlankEnrollmentToken() throws Exception {
 
@@ -155,8 +139,6 @@ public class ParticipantIdControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userMessage").isNotEmpty())
             .andReturn();
 
-    // TODO (Dhanya) use .andExpect to assert the appErrorCode and error message
-    // DONE
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
