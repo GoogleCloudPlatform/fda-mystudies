@@ -1,14 +1,9 @@
-@import url("assets/css/root.scss");
-@import url("assets/css/forms.scss");
-@import url("assets/css/lists.scss");
-@import url("assets/css/modals.scss");
-@import url("assets/css/typography.scss");
-@import url("assets/css/utilities.scss");
+@import url("assets/css/style.scss");
 @import url("assets/css/theme-layout.scss");
 @import url("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 @import "~@ng-select/ng-select/themes/default.theme.css";
 @import "~ngx-toastr/toastr";
 @font-face {
-  font-family: "Muli", sans-serif;
+  font-family: "Muli", sans-serif !important;
   src: url("https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap");
 }
