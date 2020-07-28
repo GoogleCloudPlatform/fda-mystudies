@@ -1079,6 +1079,10 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.checkForActivitiesUpdates()
     } else if requestName as String == AuthServerMethods.getRefreshedToken.method.methodName {
       self.removeProgressIndicator()
+    } else if requestName as String == WCPMethods.resources.method.methodName {
+      DispatchQueue.main.async {
+        ResourcesViewController.refreshNotifications()
+      }
     }
   }
 
