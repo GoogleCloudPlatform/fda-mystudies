@@ -180,10 +180,7 @@ class ActivitiesViewController: UIViewController {
       )
 
     } else {
-
-      if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
-        self.refreshControl?.endRefreshing()
-      }
+      self.refreshControl?.endRefreshing()
       self.fetchActivityAnchorDateResponse()
     }
   }
@@ -235,100 +232,6 @@ class ActivitiesViewController: UIViewController {
     NotificationHandler.instance.reset()
   }
 
-  /// Sets the notification for the available resource.
-  func registerNotificationForAnchorDate() {
-
-    DBHandler.getResourcesWithAnchorDateAvailable(studyId: (Study.currentStudy?.studyId)!) {
-      (resourcesList) in
-      if resourcesList.count > 0 {
-        let todayDate = Date()
-        for resource in resourcesList {
-
-          if resource.startDate == nil && resource.endDate == nil {
-
-            let anchorDateObject = Study.currentStudy?.anchorDate
-            // Fetch AnchorData based availablity
-            if anchorDateObject != nil && (anchorDateObject?.isAnchorDateAvailable())! {
-
-              let anchorDate = Study.currentStudy?.anchorDate?.date?.startOfDay
-
-              if anchorDate != nil {
-
-                // also anchor date condition
-                let startDateInterval = TimeInterval(
-                  60 * 60 * 24 * (resource.anchorDateStartDays)
-                )
-
-                let endDateInterval = TimeInterval(
-                  60 * 60 * 24 * (resource.anchorDateEndDays)
-                )
-
-                let startAnchorDate = anchorDate?.addingTimeInterval(
-                  startDateInterval
-                )
-                var endAnchorDate = anchorDate?.addingTimeInterval(endDateInterval)
-
-                endAnchorDate = endAnchorDate?.endOfDay
-                let startDateResult =
-                  (startAnchorDate?.compare(todayDate))!
-                  as ComparisonResult
-                self.isAnchorDateSet = false
-
-                if startDateResult == .orderedDescending {
-                  // upcoming
-                  let notfiId = resource.resourceId! + (Study.currentStudy?.studyId)!
-                  DBHandler.isNotificationSetFor(
-                    notification: notfiId,
-                    completionHandler: { (found) in
-                      if !found {
-
-                        // Create AppLocalNotification
-                        let notification = AppLocalNotification()
-                        notification.id = resource.resourceId! + (Study.currentStudy?.studyId)!
-                        notification.message = resource.notificationMessage
-                        notification.title = "New Resource Available"
-                        notification.startDate = startAnchorDate
-                        notification.endDate = endAnchorDate
-                        notification.type =
-                          AppNotification.NotificationType
-                          .study
-                        notification.subType =
-                          AppNotification
-                          .NotificationSubType.resource
-                        notification.audience = Audience.limited
-                        notification.studyId = (Study.currentStudy?.studyId)!
-                        // Save Notification to Database
-                        DBHandler.saveLocalNotification(
-                          notification: notification
-                        )
-
-                        // register notification
-                        var notificationDate = startAnchorDate?.startOfDay
-                        notificationDate = notificationDate?
-                          .addingTimeInterval(43200)
-                        let message = resource.notificationMessage
-                        let userInfo = [
-                          "studyId": (Study.currentStudy?.studyId)!,
-                          "type": "resource",
-                        ]
-                        LocalNotification.scheduleNotificationOn(
-                          date: notificationDate!,
-                          message: message!,
-                          userInfo: userInfo,
-                          id: notification.id
-                        )
-                      }
-                    }
-                  )
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   func checkForDashBoardInfo() {
 
     DBHandler.loadStatisticsForStudy(studyId: (Study.currentStudy?.studyId)!) {
@@ -348,19 +251,19 @@ class ActivitiesViewController: UIViewController {
 
   func fetchActivityAnchorDateResponse() {
     guard let currentStudy = Study.currentStudy else { return }
-    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { (_) in
-      self.loadActivitiesFromDatabase()
+    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { [weak self] (status) in
+      self?.loadActivitiesFromDatabase()
     }
   }
 
   /// To load the Activities data from database.
   func loadActivitiesFromDatabase() {
-
-    if DBHandler.isActivitiesEmpty((Study.currentStudy?.studyId)!) {
+    guard let studyID = Study.currentStudy?.studyId else { return }
+    if DBHandler.isActivitiesEmpty(studyID) {
       self.sendRequestToGetActivityStates()
     } else {
 
-      DBHandler.loadActivityListFromDatabase(studyId: (Study.currentStudy?.studyId)!) {
+      DBHandler.loadActivityListFromDatabase(studyId: studyID) {
         (activities) in
         if activities.count > 0 {
           Study.currentStudy?.activities = activities
@@ -725,6 +628,28 @@ class ActivitiesViewController: UIViewController {
     self.updateActivityRun(status: .completed)
   }
 
+  /// Schedules AD resources with activity response.
+  /// - Parameters:
+  ///   - studyID: studyID for the resource
+  ///   - activityID: resource source activity ID.
+  ///   - activityResponse: Anchor date response of the source activity.
+  fileprivate func scheduleAnchorDateResources(
+    _ studyID: String,
+    _ activityID: String,
+    _ activityResponse: JSONDictionary
+  ) {
+    DispatchQueue.main.async {
+      if DBHandler.updateTargetResourceAnchorDateDetail(
+        studyId: studyID,
+        activityId: activityID,
+        response: activityResponse
+      ) {
+        // Schedule notifications for resources.
+        ResourcesViewController.refreshNotifications()
+      }
+    }
+  }
+
   /// Save completed staus in database.
   func updateRunStatusToComplete() {
     guard let currentActivity = Study.currentActivity,
@@ -739,13 +664,16 @@ class ActivitiesViewController: UIViewController {
       studyId: studyID
     )
     self.updateActivityStatusToComplete()
-    let lifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
+    let activityResponse = self.lastActivityResponse ?? [:]
+    lastActivityResponse = [:]
+    let isActivitylifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
       studyId: studyID,
       activityId: activityID,
-      response: self.lastActivityResponse ?? [:]
+      response: activityResponse
     )
-    lastActivityResponse = [:]
-    if lifeTimeUpdated {
+    scheduleAnchorDateResources(studyID, activityID, activityResponse)
+    if isActivitylifeTimeUpdated {
+      Study.currentStudy?.activitiesLocalNotificationUpdated = false
       self.loadActivitiesFromDatabase()
     } else {
       self.tableView?.reloadData()
