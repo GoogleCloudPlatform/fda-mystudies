@@ -10,11 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.common;
 
 import java.io.IOException;
 import java.time.Instant;
+
 import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -147,7 +150,11 @@ public enum ErrorCode {
       400, "EC_978", Constants.BAD_REQUEST, "Admin should have atleast one permission"),
 
   CANNOT_REACTIVE(
-      400, "EC_887", Constants.BAD_REQUEST, "Can't reactive an already active location");
+      400, "EC_887", Constants.BAD_REQUEST, "Can't reactive an already active location"),
+
+  INVALID_SECURITY_CODE(404, "EC_869", "Not Found", "Invalid Security code"),
+
+  SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired");
 
   private final int status;
   private final String code;

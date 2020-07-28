@@ -9,11 +9,14 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
 import java.io.IOException;
+
 import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -56,7 +59,12 @@ public enum MessageCode {
 
   ADD_NEW_USER_SUCCESS(HttpStatus.CREATED, "MSG-0020", "New user added successfully"),
 
-  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully");
+  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully"),
+
+  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfull"),
+
+  GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
+      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfull");
 
   private final HttpStatus httpStatus;
   private final String code;

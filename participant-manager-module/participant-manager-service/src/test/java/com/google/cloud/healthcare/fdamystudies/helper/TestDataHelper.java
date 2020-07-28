@@ -14,11 +14,17 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -44,13 +50,18 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionReposi
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+
 import lombok.Getter;
 
 @Getter
 @Component
 public class TestDataHelper {
 
-  private static final String ADMIN_AUTH_ID_VALUE =
+  public static final String LAST_NAME = "mockito_last_name";
+
+  public static final String FIRST_NAME = "mockito";
+
+  public static final String ADMIN_AUTH_ID_VALUE =
       "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
 
   public static final String EMAIL_VALUE = "mockit_email@grr.la";
@@ -91,12 +102,15 @@ public class TestDataHelper {
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(EMAIL_VALUE);
-    userRegAdminEntity.setFirstName("mockito");
-    userRegAdminEntity.setLastName("mockito_last_name");
+    userRegAdminEntity.setFirstName(FIRST_NAME);
+    userRegAdminEntity.setLastName(LAST_NAME);
     userRegAdminEntity.setEditPermission(Permission.READ_EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
+    userRegAdminEntity.setSecurityCode("xnsxU1Ax1V2Xtpk-qNLeiZ-417JiqyjytC-706-km6gCq9HAXNYWd8");
+    userRegAdminEntity.setSecurityCodeExpireDate(
+        new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
     return userRegAdminEntity;
   }
 
@@ -108,8 +122,8 @@ public class TestDataHelper {
   public UserRegAdminEntity newNonSuperAdmin() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
-    userRegAdminEntity.setFirstName("mockito");
-    userRegAdminEntity.setLastName("mockito_last_name");
+    userRegAdminEntity.setFirstName(FIRST_NAME);
+    userRegAdminEntity.setLastName(LAST_NAME);
     userRegAdminEntity.setEditPermission(ManageLocation.DENY.getValue());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setSuperAdmin(false);
@@ -245,8 +259,8 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
     userDetailsEntity.setEmail(EMAIL_VALUE);
     userDetailsEntity.setStatus(1);
-    userDetailsEntity.setFirstName("mockito");
-    userDetailsEntity.setLastName("mockito_last_name");
+    userDetailsEntity.setFirstName(FIRST_NAME);
+    userDetailsEntity.setLastName(LAST_NAME);
     userDetailsEntity.setLocalNotificationFlag(false);
     userDetailsEntity.setRemoteNotificationFlag(false);
     userDetailsEntity.setTouchId(false);

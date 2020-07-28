@@ -44,7 +44,11 @@ public enum ApiEndpoint {
 
   ADD_NEW_USER("http://localhost:8003/participant-manager-service/users"),
 
-  UPDATE_USER("http://localhost:8003/participant-manager-service/users/{superAdminUserId}/");
+  UPDATE_USER("http://localhost:8003/participant-manager-service/users/{superAdminUserId}/"),
+
+  GET_USER_PROFILE("http://localhost:8080/participant-manager-service/users/{userId}"),
+
+  GET_USER_DETAILS("http://localhost:8080/participant-manager-service/users");
 
   private String url;
 
