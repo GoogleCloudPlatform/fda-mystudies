@@ -75,7 +75,7 @@ public class SiteController {
   public ResponseEntity<ParticipantResponse> addNewParticipant(
       @PathVariable String siteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
-      @RequestBody ParticipantDetailRequest participant,
+      @Valid @RequestBody ParticipantDetailRequest participant,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     participant.setSiteId(siteId);
