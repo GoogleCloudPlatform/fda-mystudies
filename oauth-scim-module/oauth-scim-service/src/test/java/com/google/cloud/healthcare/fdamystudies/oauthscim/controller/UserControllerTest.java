@@ -39,22 +39,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
-import com.google.cloud.healthcare.fdamystudies.common.AuditLogEventStatus;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
-import com.google.cloud.healthcare.fdamystudies.model.AuditEventEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuditEventRepository;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -488,62 +483,6 @@ public class UserControllerTest extends BaseMockIT {
 
   @Test
   @Order(12)
-  public void shouldSaveTheAuditEventInDatabase()
-      throws MalformedURLException, JsonProcessingException, Exception {
-    // Step-1 call API to create an user account in oauth scim database
-    HttpHeaders headers = getCommonHeaders();
-    headers.add("Authorization", VALID_BEARER_TOKEN);
-    headers.add("correlationId", "CorrelationIdValue_For_5XX_ERROR");
-
-    // Step-2 reset the password
-    UpdateUserRequest userRequest = new UpdateUserRequest();
-    userRequest.setAction(FORGOT_PASSWORD);
-    userRequest.setEmail(EMAIL_VALUE);
-    userRequest.setOrgId(ORG_ID_VALUE);
-    userRequest.setAppId(APP_ID_VALUE);
-
-    mockMvc
-        .perform(
-            put(ApiEndpoint.RESET_PASSWORD.getPath())
-                .contextPath(getContextPath())
-                .content(asJsonString(userRequest))
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Password reset successful"));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/audit-log-service/v1/events"))
-            .withRequestBody(new ContainsPattern("CorrelationIdValue_For_5XX_ERROR")));
-
-    verify(
-        12,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
-
-    // Step-3 verify PASSWORD_RESET_SUCCESS event saved in database
-    List<AuditEventEntity> events =
-        auditEventRepository.findByStatus(
-            AuditLogEventStatus.NOT_RECORDED_AT_CENTRAL_AUDIT_LOG.getStatus());
-
-    AuditEventEntity eventEntity =
-        events
-            .stream()
-            .filter(
-                event ->
-                    StringUtils.contains(event.getEventRequest(), userId)
-                        && StringUtils.contains(
-                            event.getEventRequest(),
-                            AuthScimEvent.PASSWORD_RESET_SUCCESS.getEventName()))
-            .findAny()
-            .orElse(null);
-
-    assertNotNull(eventEntity);
-  }
-
-  @Test
-  @Order(13)
   public void shouldDeleteTheUser() {
     // cleanup - delete the user from database
     repository.deleteByUserId(userId);
