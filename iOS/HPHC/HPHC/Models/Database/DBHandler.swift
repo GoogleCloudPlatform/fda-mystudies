@@ -334,11 +334,9 @@ class DBHandler: NSObject {
     let studies = realm.objects(DBStudy.self).filter("studyId == %@", studyId)
     let dbStudy = studies.last
 
-    //save overview
     let dbStudies = List<DBOverviewSection>()
-    for sectionIndex in 0...(overview.sections.count - 1) {
-
-      let section = overview.sections[sectionIndex]
+    // Save overview
+    for (sectionIndex, section) in overview.sections.enumerated() {
       let dbOverviewSection = DBOverviewSection()
       dbOverviewSection.title = section.title
       dbOverviewSection.link = section.link
@@ -346,15 +344,14 @@ class DBHandler: NSObject {
       dbOverviewSection.text = section.text
       dbOverviewSection.type = section.type
       dbOverviewSection.studyId = studyId
+      dbOverviewSection.sortOrder = sectionIndex
       dbOverviewSection.sectionId = studyId + "screen\(sectionIndex)"
       dbStudies.append(dbOverviewSection)
     }
 
     try? realm.write {
-
       realm.add(dbStudies, update: .all)
       dbStudy?.websiteLink = overview.websiteLink
-
     }
 
   }
@@ -424,6 +421,7 @@ class DBHandler: NSObject {
 
     let realm = DBHandler.getRealmObject()!
     let studies = realm.objects(DBOverviewSection.self).filter("studyId == %@", studyId)
+      .sorted(byKeyPath: "sortOrder", ascending: true)
     let study = realm.objects(DBStudy.self).filter("studyId == %@", studyId).last
 
     if studies.count > 0 {
