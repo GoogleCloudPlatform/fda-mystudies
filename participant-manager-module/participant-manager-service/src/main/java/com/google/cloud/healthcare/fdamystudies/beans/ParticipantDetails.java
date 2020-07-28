@@ -54,4 +54,8 @@ public class ParticipantDetails {
   private String registrationDate;
 
   private List<AppStudyDetails> enrolledStudies = new ArrayList<>();
+
+  private List<Enrollment> enrollments = new ArrayList<>();
+
+  private List<ConsentHistory> consentHistory = new ArrayList<>();
 }

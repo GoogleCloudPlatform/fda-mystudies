@@ -8,28 +8,21 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.List;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
-public class UserAppPermissionRequest {
+@AllArgsConstructor
+@NoArgsConstructor
+public class Enrollment {
+  private String participantId;
 
-  private String id;
+  private String withdrawalDate;
 
-  private String customId;
+  private String enrollmentStatus;
 
-  private String name;
-
-  private boolean selected;
-
-  private boolean disabled;
-
-  private Integer permission;
-
-  private List<UserStudyPermissionRequest> studies;
+  private String enrollmentDate;
 }

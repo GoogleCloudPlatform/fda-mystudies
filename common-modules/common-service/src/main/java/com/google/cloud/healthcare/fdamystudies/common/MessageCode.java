@@ -64,7 +64,10 @@ public enum MessageCode {
   GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfull"),
 
   GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
-      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfull");
+      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfull"),
+
+  GET_PARTICIPANT_DETAILS_SUCCESS(
+      HttpStatus.OK, "MSG-0019", "Get participant details successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

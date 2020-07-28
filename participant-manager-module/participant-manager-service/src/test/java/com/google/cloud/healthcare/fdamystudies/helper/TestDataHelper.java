@@ -35,6 +35,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEnt
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
@@ -46,6 +47,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
@@ -91,6 +93,8 @@ public class TestDataHelper {
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
+
+  @Autowired private StudyConsentRepository studyConsentRepository;
 
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -272,5 +276,15 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = newUserDetails();
     userDetailsEntity.setAppInfo(appEntity);
     return userDetailsRepository.saveAndFlush(userDetailsEntity);
+  }
+
+  public StudyConsentEntity createStudyConsentEntity(ParticipantStudyEntity participantStudy) {
+    StudyConsentEntity studyConsent = new StudyConsentEntity();
+    studyConsent.setPdfPath(
+        "cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9/CovidStudy/cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9_CovidStudy_1.3_06302020071346.pdf");
+    studyConsent.setPdfStorage(1);
+    studyConsent.setVersion("1.0");
+    studyConsent.setParticipantStudy(participantStudy);
+    return studyConsentRepository.saveAndFlush(studyConsent);
   }
 }

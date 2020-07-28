@@ -8,28 +8,19 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
-public class UserAppPermissionRequest {
-
+public class ConsentHistory {
   private String id;
 
-  private String customId;
+  private String consentVersion;
 
-  private String name;
+  private String consentedDate;
 
-  private boolean selected;
+  private String consentDocumentPath;
 
-  private boolean disabled;
-
-  private Integer permission;
-
-  private List<UserStudyPermissionRequest> studies;
+  private String dataSharingPermissions;
 }

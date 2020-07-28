@@ -48,7 +48,10 @@ public enum ApiEndpoint {
 
   GET_USER_PROFILE("http://localhost:8080/participant-manager-service/users/{userId}"),
 
-  GET_USER_DETAILS("http://localhost:8080/participant-manager-service/users");
+  GET_USER_DETAILS("http://localhost:8080/participant-manager-service/users"),
+
+  GET_PARTICIPANT_DETAILS(
+      "http://localhost:8080/participant-manager-service/sites/{participantRegistrySite}/participant");
 
   private String url;
 

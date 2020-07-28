@@ -32,4 +32,6 @@ public final class TestConstants {
   public static final String UPDATED_LAST_NAME = "mockit_user_lastname_updated";
 
   public static final String USER_EMAIL_VALUE = "super_admin_test@gmail.com";
+
+  public static final String CONSENT_VERSION = "1.0";
 }

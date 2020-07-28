@@ -12,20 +12,22 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class AdminUserResponse extends BaseResponse {
+@Setter
+@NoArgsConstructor
+public class ParticipantDetailResponse extends BaseResponse {
 
-  private String userId;
+  private ParticipantDetails participantDetails;
 
-  public AdminUserResponse(ErrorCode errorCode) {
+  public ParticipantDetailResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public AdminUserResponse(MessageCode messageCode, String userId) {
+  public ParticipantDetailResponse(MessageCode messageCode, ParticipantDetails participantDetails) {
     super(messageCode);
-    this.userId = userId;
+    this.participantDetails = participantDetails;
   }
 }

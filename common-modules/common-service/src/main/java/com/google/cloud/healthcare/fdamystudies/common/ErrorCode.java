@@ -154,7 +154,10 @@ public enum ErrorCode {
 
   INVALID_SECURITY_CODE(404, "EC_869", "Not Found", "Invalid Security code"),
 
-  SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired");
+  SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired"),
+
+  PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
+      400, "EC-105", Constants.BAD_REQUEST, "Error getting participants.");
 
   private final int status;
   private final String code;
