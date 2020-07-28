@@ -1,0 +1,279 @@
+@import url("./colors.scss");
+#body-container.m-none {
+    margin: 0;
+}
+
+#body-container.mt-xs {
+    margin-top: 5px;
+}
+
+#body-container.mt-sm {
+    margin-top: 10px;
+}
+
+#body-container.mt-md {
+    margin-top: 15px;
+}
+
+#body-container.mt-lg {
+    margin-top: 20px;
+}
+
+#body-container.mt-xlg {
+    margin-top: 30px;
+}
+
+#body-container.mb-none {
+    margin-bottom: 0;
+}
+
+#body-container.mb-xs {
+    margin-bottom: 5px;
+}
+
+#body-container.mb-sm {
+    margin-bottom: 10px;
+}
+
+#body-container.mb-md {
+    margin-bottom: 15px;
+}
+
+#body-container.mb-lg {
+    margin-bottom: 20px;
+}
+
+#body-container.mb-xlg {
+    margin-bottom: 30px;
+}
+
+#body-container.ml-none {
+    margin-left: 0;
+}
+
+#body-container.ml-xs {
+    margin-left: 5px;
+}
+
+#body-container.ml-sm {
+    margin-left: 10px;
+}
+
+#body-container.mr-none {
+    margin-right: 0;
+}
+
+#body-container.mr-xs {
+    margin-right: 5px;
+}
+
+#body-container.mr-sm {
+    margin-right: 10px;
+}
+
+#body-container.p-none {
+    padding: 0;
+}
+
+#body-container.p-md {
+    padding: 15px;
+}
+
+#body-container.p-xlg {
+    padding: 30px;
+}
+
+#body-container.pt-none {
+    padding-top: 0;
+}
+
+#body-container.pt-xs {
+    padding-top: 5px;
+}
+
+#body-container.pb-none {
+    padding-bottom: 0;
+}
+
+#body-container.pb-sm {
+    padding-bottom: 10px;
+}
+
+#body-container.pb-lg {
+    padding-bottom: 20px;
+}
+
+#body-container.pl-none {
+    padding-left: 0;
+}
+
+#body-container.pl-lg {
+    padding-left: 20px;
+}
+
+#body-container.pl-xl {
+    padding-left: 25px;
+}
+
+#body-container.pl-xlg {
+    padding-left: 30px;
+}
+
+#body-container.pr-none {
+    padding-right: 0;
+}
+
+#body-container.pr-xlg {
+    padding-right: 30px;
+}
+
+#body-container a:hover,
+#body-container a:active,
+#body-container a:focus {
+    text-decoration: none;
+}
+
+.inline__block {
+    display: inline-block;
+}
+
+.display__none {
+    display: none;
+}
+
+.vis__hidden {
+    visibility: hidden;
+}
+
+.cursor__pointer {
+    cursor: pointer;
+}
+
+.cursor__none {
+    cursor: default;
+}
+
+.float__right {
+    float: right;
+}
+
+.float__left {
+    float: left;
+}
+
+.position__relative {
+    position: relative;
+}
+
+.display-inline-block {
+    display: inline-block;
+}
+
+.display-flex-center {
+    display: flex;
+    align-items: center;
+}
+
+.error__msg {
+    color: var(--orange-red);
+    font-size: 75%;
+    text-align: right;
+    visibility: visible;
+}
+
+.overflow__auto {
+    overflow: auto;
+}
+
+.display-inline-flex {
+    display: inline-flex;
+}
+
+#body-container .width__auto {
+    width: auto;
+}
+
+.width__100 {
+    width: 100%;
+}
+
+.width__0 {
+    width: 0;
+}
+
+.background__trans {
+    background: transparent;
+}
+
+#body-container .flex__container {
+    display: flex;
+    justify-content: center;
+}
+
+#body-container .flex__ {
+    display: flex;
+}
+
+#body-container .flex__unset {
+    display: unset;
+}
+
+#body-container .flex__wrap {
+    flex-wrap: wrap;
+}
+
+#body-container .flex__wrap__reverse {
+    flex-wrap: wrap-reverse;
+}
+
+#body-container .flex__wrap__unset {
+    flex-wrap: inherit;
+}
+
+#body-container .flex__row {
+    display: flex;
+    flex-flow: row;
+}
+
+#body-container .flex__row__reverse {
+    display: flex;
+    flex-flow: row-reverse;
+}
+
+#body-container .flex__justify__space-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#body-container .flex__justify__center {
+    justify-content: center;
+}
+
+#body-container .align__items__baseline {
+    align-items: baseline;
+}
+
+#body-container .align__items__center {
+    align-items: center;
+}
+
+#body-container .show {
+    display: block;
+}
+
+#body-container .bg__white {
+    background: var(--white);
+}
+
+#body-container .bg__green {
+    background-color: var(--light-green);
+}
+
+.visibility__hidden {
+    visibility: hidden;
+}
+
+.visibility__visibile {
+    visibility: visible;
+}
