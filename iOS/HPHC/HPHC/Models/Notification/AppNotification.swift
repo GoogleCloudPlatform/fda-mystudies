@@ -38,7 +38,7 @@ class AppLocalNotification: AppNotification {
     self.init()
     self.id = id
     message = resource.notificationMessage
-    title = "New Resource Available"
+    title = LocalizableString.newResourceMessage.localizedString
     self.startDate = startDate
     self.endDate = endDate
     type =
