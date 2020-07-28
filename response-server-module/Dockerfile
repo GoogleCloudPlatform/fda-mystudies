@@ -1,5 +1,5 @@
 FROM mohankgonthina/commonmodule:latest AS maven_builder
-COPY response-server-service /app/response-server-module/response-server-service/
+COPY response-server-service /app/response-server-module/response-server-service
 COPY pom.xml /app/response-server-module/
 WORKDIR /app/response-server-module/
 RUN mvn clean package
