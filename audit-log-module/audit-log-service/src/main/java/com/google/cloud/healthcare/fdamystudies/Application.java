@@ -13,7 +13,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
-@SpringBootApplication(scanBasePackages = {"com.google.cloud.healthcare.fdamystudies"})
+@SpringBootApplication()
 @Import(CommonModuleConfiguration.class)
 public class Application {
 
