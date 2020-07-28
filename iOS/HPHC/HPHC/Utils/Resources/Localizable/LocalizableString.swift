@@ -18,5 +18,8 @@ enum LocalizableString: String {
   case aboutStudy = "About the Study"
   case leaveSubtitle = "This will also delete your app account."
 
+  // MARK: - Consent
+  case learnMore = "Learn more"
+  
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }
