@@ -22,6 +22,10 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,10 +35,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
@@ -51,10 +57,18 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class UserControllerTest extends BaseMockIT {
+
+  private static final String APP_ID_VALUE = "MyStudies";
+
+  private static final String ORG_ID_VALUE = "FDA";
+
+  private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
 
   private static final String CURRENT_PASSWORD_VALUE = "M0ck!tPassword";
 
@@ -63,6 +77,10 @@ public class UserControllerTest extends BaseMockIT {
   @Autowired private UserRepository repository;
 
   private static String userId;
+
+  private static String saltAfterChangePassword;
+
+  @Autowired private JavaMailSender emailSender;
 
   @Test
   public void shouldReturnUnauthorized() throws Exception {
@@ -191,7 +209,6 @@ public class UserControllerTest extends BaseMockIT {
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
-
     ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword("CurrentM0ck!tPassword");
     request.setNewPassword("NewM0ck!tPassword");
@@ -267,6 +284,8 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(expectedPasswordHash, actualPasswordHash);
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
+    // required to assert the salt after reset password
+    saltAfterChangePassword = salt;
   }
 
   @Test
@@ -294,7 +313,77 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
+  @Order(5)
+  public void shouldReturnBadRequestForForgotPasswordAction()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.RESET_PASSWORD.getPath())
+                    .contextPath(getContextPath())
+                    .content(asJsonString(userRequest))
+                    .headers(headers))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.violations").isArray())
+            .andReturn();
+
+    String actualResponse = result.getResponse().getContentAsString();
+    String expectedResponse = readJsonFile("/response/forgot_password_bad_request.json");
+    JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+  }
+
+  @Test
   @Order(6)
+  public void shouldSendPasswordResetEmailAndUpdateThePassword()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setOrgId(ORG_ID_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
+
+    verify(emailSender, times(1)).send(isA(SimpleMailMessage.class));
+
+    // Step-2 Find UserEntity by userId and then compare the password hash values
+    UserEntity userEntity = repository.findByUserId(userId).get();
+    assertNotNull(userEntity);
+    assertEquals(EMAIL_VALUE, userEntity.getEmail());
+    assertEquals(ORG_ID_VALUE, userEntity.getOrgId());
+    assertEquals(APP_ID_VALUE, userEntity.getAppId());
+
+    // Step 2A- assert password hash value and password_history size
+    JsonNode userInfoNode = toJsonNode(userEntity.getUserInfo());
+    JsonNode passwordNode = userInfoNode.get(PASSWORD);
+    String salt = getTextValue(passwordNode, SALT);
+    String actualPasswordHash = getTextValue(passwordNode, HASH);
+    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+
+    assertNotEquals(saltAfterChangePassword, salt);
+    assertNotEquals(expectedPasswordHash, actualPasswordHash);
+    assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
+    assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 3);
+  }
+
+  @Test
+  @Order(7)
   public void shouldDeleteTheUser() {
     // cleanup - delete the user from database
     repository.deleteByUserId(userId);
@@ -309,9 +398,9 @@ public class UserControllerTest extends BaseMockIT {
 
   private UserRequest createUserRequest() {
     UserRequest userRequest = new UserRequest();
-    userRequest.setAppId("MyStudies");
-    userRequest.setOrgId("FDA");
-    userRequest.setEmail("mockit_oauth_scim_user@grr.la");
+    userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setOrgId(ORG_ID_VALUE);
+    userRequest.setEmail(EMAIL_VALUE);
     userRequest.setPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     return userRequest;
