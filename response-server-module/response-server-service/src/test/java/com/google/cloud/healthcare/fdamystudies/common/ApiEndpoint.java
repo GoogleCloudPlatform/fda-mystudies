@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  HEALTH("http://localhost:8004/mystudies-response-server/v1/healthCheck"),
+  HEALTH("http://localhost:8004/mystudies-response-server/healthCheck"),
   ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add");
   private String url;
 
