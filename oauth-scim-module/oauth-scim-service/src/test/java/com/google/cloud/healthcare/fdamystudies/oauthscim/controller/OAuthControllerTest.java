@@ -49,10 +49,7 @@ import com.jayway.jsonpath.JsonPath;
 import java.util.Collections;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +60,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class OAuthControllerTest extends BaseMockIT {
 
   protected static final String VALID_CORRELATION_ID = "8a56d20c-d755-4487-b80d-22d5fa383046";
@@ -83,15 +79,12 @@ public class OAuthControllerTest extends BaseMockIT {
 
   @Autowired private TextEncryptor encryptor;
 
-  private static String accessToken;
-
   @BeforeEach
   public void init() {
     WireMock.resetAllRequests();
   }
 
   @Test
-  @Order(1)
   public void shouldReturnBadRequestForInvalidClientCredentialsGrantRequest() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
@@ -116,7 +109,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(2)
   public void shouldReturnBadRequestForInvalidAuthorizationCodeGrantRequest() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
@@ -141,7 +133,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(3)
   public void shouldReturnBadRequestForInvalidRefreshTokenGrantRequest() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
@@ -166,7 +157,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(4)
   public void shouldReturnAccessTokenForClientCredentialsGrant() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
@@ -188,7 +178,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(5)
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
     UserEntity user = newUserEntity();
     user = userRepository.saveAndFlush(user);
@@ -229,7 +218,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(6)
   public void shouldReturnNewTokensForRefreshTokenGrant() throws Exception {
     // Step-1 user registration
     UserEntity user = newUserEntity();
@@ -245,20 +233,16 @@ public class OAuthControllerTest extends BaseMockIT {
     requestParams.add(CLIENT_ID, clientId);
     requestParams.add(USER_ID, user.getUserId());
 
-    MvcResult result =
-        mockMvc
-            .perform(
-                post(ApiEndpoint.TOKEN.getPath())
-                    .contextPath(getContextPath())
-                    .params(requestParams)
-                    .headers(headers))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.access_token").isNotEmpty())
-            .andExpect(jsonPath("$.refresh_token").isNotEmpty())
-            .andReturn();
-
-    accessToken = JsonPath.read(result.getResponse().getContentAsString(), "$.access_token");
+    mockMvc
+        .perform(
+            post(ApiEndpoint.TOKEN.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.access_token").isNotEmpty())
+        .andExpect(jsonPath("$.refresh_token").isNotEmpty());
 
     // Step-3 delete the user
     userRepository.deleteByUserId(user.getUserId());
@@ -278,13 +262,12 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(7)
   public void shouldReturnTokenIsActive() throws Exception {
     HttpHeaders headers = getCommonHeaders();
-    headers.set("Authorization", "Bearer " + accessToken);
+    headers.set("Authorization", VALID_BEARER_TOKEN);
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.add(TOKEN, accessToken);
+    requestParams.add(TOKEN, VALID_TOKEN);
 
     mockMvc
         .perform(
@@ -299,11 +282,10 @@ public class OAuthControllerTest extends BaseMockIT {
     verify(
         1,
         postRequestedFor(urlEqualTo("/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(accessToken)));
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
-  @Order(8)
   public void shouldRevokeTheToken() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
@@ -326,7 +308,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(9)
   public void shouldReturnBadRequestForRevokeToken() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
@@ -345,7 +326,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Order(10)
   public void shouldReturnBadRequestForIntrospectToken() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
