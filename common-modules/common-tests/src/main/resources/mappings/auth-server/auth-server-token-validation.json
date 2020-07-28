@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/AuthServer/tokenAuthentication"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "auth-server/auth-server-token-validation-response.json"
+	}
+}
