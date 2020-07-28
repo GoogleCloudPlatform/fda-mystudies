@@ -10,10 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-public class BaseAppConfig implements WebMvcConfigurer {
+@Configuration
+@ComponentScan(basePackages = "com.google.cloud.healthcare.fdamystudies")
+public class CommonModuleConfiguration implements WebMvcConfigurer {
 
   @Bean
   public ObjectMapper objectMapper() {
