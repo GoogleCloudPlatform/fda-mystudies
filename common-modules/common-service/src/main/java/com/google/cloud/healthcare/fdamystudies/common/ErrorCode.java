@@ -120,7 +120,9 @@ public enum ErrorCode {
   SITE_NOT_EXIST_OR_INACTIVE(
       400, "EC-869", Constants.BAD_REQUEST, "Site doesn't exists or is inactive"),
 
-  USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin");
+  USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin"),
+  
+  INVALID_APPS_FIELDS_VALUES(400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
 
   private final int status;
   private final String code;
