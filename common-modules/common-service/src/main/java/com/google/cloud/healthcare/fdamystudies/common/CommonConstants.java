@@ -39,7 +39,7 @@ public final class CommonConstants {
 
   public static final String YET_TO_ENROLL = "Yet to Enroll";
 
-  public static final String YET_TO_JOIN = "yetToJoin";
+  public static final String YET_TO_JOIN = "Yet to Join";
 
   public static final String OPEN = "Open";
 
