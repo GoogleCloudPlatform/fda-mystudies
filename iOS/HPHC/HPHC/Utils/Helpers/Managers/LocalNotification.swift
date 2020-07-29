@@ -90,6 +90,37 @@ class LocalNotification: NSObject {
     }
   }
 
+  fileprivate static func scheduleNotificationForOneTime(_ run: ActivityRun, _ activity: Activity) {
+    if run.endDate != nil {
+      let date = run.endDate.addingTimeInterval(-24 * 3600)  // 24 hours before
+      let message =
+        "The activity " + (activity.name ?? "")
+        + " will expire in 24 hours. Your participation is important. Please visit the study to complete it now."
+      LocalNotification.composeRunNotification(
+        startDate: date,
+        endDate: run.endDate,
+        message: message,
+        run: run,
+        isExpiry: true
+      )
+    }
+
+    if let startDate = run.startDate,
+      let endDate = run.endDate
+    {
+      // start notification
+      let startMessage =
+        "A new run of the one time activity " + (activity.name ?? "")
+        + ", is now available. Your participation is important. Please visit the study to complete it now."
+      LocalNotification.composeRunNotification(
+        startDate: startDate,
+        endDate: endDate,
+        message: startMessage,
+        run: run
+      )
+    }
+  }
+
   /// Registesr local notification for activities based on the frequency type
   /// - Parameter activities: array of Activity
   /// - Parameter completionHandler: return status which is bool value and array of AppLocalNotifications
@@ -102,7 +133,7 @@ class LocalNotification: NSObject {
 
     let date = Date()
     for activity in activities {
-
+      guard activity.state == ActivityState.active.rawValue else { continue }
       var runsBeforeToday: [ActivityRun] = []
       if activity.frequencyType == Frequency.oneTime && activity.endDate == nil {
         runsBeforeToday = activity.activityRuns
@@ -115,18 +146,7 @@ class LocalNotification: NSObject {
         switch activity.frequencyType {
 
         case .oneTime:
-          if run.endDate != nil {
-            let date = run.endDate.addingTimeInterval(-24 * 3600)  // 24 hours before
-            let message =
-              "The activity " + activity.name!
-              + " will expire in 24 hours. Your participation is important. Please visit the study to complete it now."
-            LocalNotification.composeRunNotification(
-              startDate: date,
-              endDate: run.endDate,
-              message: message,
-              run: run
-            )
-          }
+          scheduleNotificationForOneTime(run, activity)
 
         case .daily:
           if activity.frequencyRuns?.count == 1 {
@@ -169,7 +189,8 @@ class LocalNotification: NSObject {
             startDate: date,
             endDate: run.endDate,
             message: message,
-            run: run
+            run: run,
+            isExpiry: true
           )
           // start notification
           let startMessage =
@@ -191,7 +212,8 @@ class LocalNotification: NSObject {
             startDate: date,
             endDate: run.endDate,
             message: message,
-            run: run
+            run: run,
+            isExpiry: true
           )
           // start notification
           let startMessage =
@@ -233,7 +255,8 @@ class LocalNotification: NSObject {
     startDate: Date,
     endDate: Date,
     message: String,
-    run: ActivityRun
+    run: ActivityRun,
+    isExpiry: Bool = false
   ) {
 
     _ =
@@ -243,8 +266,12 @@ class LocalNotification: NSObject {
       ] as [String: String]
 
     // create App local notification object
+    var id = String(run.runId) + run.activityId + run.studyId
+    if isExpiry {
+      id += "Expiry"
+    }
     let notification = AppLocalNotification()
-    notification.id = String(run.runId) + run.activityId + run.studyId
+    notification.id = id
     notification.message = message
     notification.activityId = run.activityId
     notification.title = ""
