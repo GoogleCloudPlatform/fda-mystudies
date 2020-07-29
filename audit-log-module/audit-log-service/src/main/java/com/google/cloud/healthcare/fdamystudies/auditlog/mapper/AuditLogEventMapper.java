@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEnti
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 public final class AuditLogEventMapper {
 
@@ -19,33 +20,33 @@ public final class AuditLogEventMapper {
 
   public static AuditLogEventEntity fromAuditLogEventRequest(AuditLogEventRequest auditRequest) {
     AuditLogEventEntity entity = new AuditLogEventEntity();
-    entity.setAccessLevel(auditRequest.getAccessLevel());
-    entity.setAlert(auditRequest.getAlert());
+    entity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
     entity.setAppId(auditRequest.getAppId());
-    entity.setApplicationComponentName(auditRequest.getApplicationComponentName());
-    entity.setApplicationVersion(auditRequest.getApplicationVersion());
-    entity.setClientId(auditRequest.getClientId());
-    entity.setCorrelationId(auditRequest.getCorrelationId());
-    entity.setClientAccessLevel(auditRequest.getClientAccessLevel());
-    entity.setClientAppVersion(auditRequest.getClientAppVersion());
-    entity.setDescription(auditRequest.getDescription());
-    entity.setDevicePlatform(auditRequest.getDevicePlatform());
-    entity.setDeviceType(auditRequest.getDeviceType());
-    entity.setEventDetail(auditRequest.getEventDetail());
-    entity.setEventName(auditRequest.getEventName());
-    entity.setOccurred(new Timestamp(auditRequest.getOccured()));
-    entity.setOrgId(auditRequest.getOrgId());
-    entity.setRequestUri(auditRequest.getRequestUri());
+    entity.setDestination(auditRequest.getDestination());
+    entity.setAppVersion(auditRequest.getAppVersion());
+    entity.setSource(auditRequest.getSource());
     entity.setResourceServer(auditRequest.getResourceServer());
-    entity.setSystemId(auditRequest.getSystemId());
-    entity.setSystemIp(auditRequest.getSystemIp());
+    entity.setCorrelationId(auditRequest.getCorrelationId());
+    entity.setUserAccessLevel(auditRequest.getUserAccessLevel());
+    entity.setSourceApplicationVersion(auditRequest.getSourceApplicationVersion());
+    entity.setDestinationApplicationVersion(auditRequest.getDestinationApplicationVersion());
+    entity.setDescription(auditRequest.getDescription());
+    entity.setMobilePlatform(auditRequest.getMobilePlatform());
+    entity.setEventName(auditRequest.getEventName());
+    entity.setEventCode(auditRequest.getEventCode());
+    entity.setOccurred(auditRequest.getOccured());
+    entity.setUserIp(auditRequest.getUserIp());
     entity.setUserId(auditRequest.getUserId());
+    entity.setPlatformVersion(auditRequest.getPlatformVersion());
+    entity.setParticipantId(auditRequest.getParticipantId());
+    entity.setStudyId(auditRequest.getStudyId());
+    entity.setStudyVersion(auditRequest.getStudyVersion());
     return entity;
   }
 
   public static AuditLogEventResponse toAuditLogEventResponse(AuditLogEventEntity eventEntity) {
     AuditLogEventResponse response = new AuditLogEventResponse();
-    response.setEventId(eventEntity.getId());
+    response.setEventId(eventEntity.getLogId());
     return response;
   }
 }

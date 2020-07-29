@@ -1,8 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,34 +13,27 @@ public final class AuditEventMapper {
 
   private static final String APP_ID = "appId";
 
-  private static final String CLIENT_ID = "clientId";
+  private static final String SOURCE = "source";
 
-  private static final String DEVICE_TYPE = "deviceType";
+  private static final String MOBILE_PLATFORM = "mobilePlatform";
 
-  private static final String DEVICE_PLATFORM = "devicePlatform";
-
-  private static final String CLIENT_APP_VERSION = "clientAppVersion";
+  private static final String SOURCE_APP_VERSION = "sourceApplicationVersion";
 
   private static final String CORRELATION_ID = "correlationId";
 
   private static final String USER_ID = "userId";
 
-  private static final String ORG_ID = "orgId";
-
-  public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request)
-      throws UnknownHostException {
+  public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request) {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setOrgId(getValue(request, ORG_ID));
     auditRequest.setAppId(getValue(request, APP_ID));
-    auditRequest.setClientAppVersion(getValue(request, CLIENT_APP_VERSION));
+    auditRequest.setSourceApplicationVersion(getValue(request, SOURCE_APP_VERSION));
     auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
-    auditRequest.setDeviceType(getValue(request, DEVICE_TYPE));
-    auditRequest.setDevicePlatform(getValue(request, DEVICE_PLATFORM));
-    auditRequest.setClientId(getValue(request, CLIENT_ID));
+    auditRequest.setSource(getValue(request, SOURCE));
     auditRequest.setUserId(getValue(request, USER_ID));
-    auditRequest.setClientIp(getClientIP(request));
-    auditRequest.setRequestUri(request.getRequestURI());
-    auditRequest.setSystemIp(InetAddress.getLocalHost().getHostAddress());
+    auditRequest.setUserIp(getUserIP(request));
+
+    MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
+    auditRequest.setMobilePlatform(mobilePlatform.getValue());
     return auditRequest;
   }
 
@@ -53,7 +45,7 @@ public final class AuditEventMapper {
     return value;
   }
 
-  private static String getClientIP(HttpServletRequest request) {
+  private static String getUserIP(HttpServletRequest request) {
     return StringUtils.defaultIfEmpty(
         request.getHeader("X-FORWARDED-FOR"), request.getRemoteAddr());
   }

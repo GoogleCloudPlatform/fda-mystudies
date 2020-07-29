@@ -15,7 +15,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
-import com.google.cloud.healthcare.fdamystudies.repository.AuditEventRepository;
+import com.google.cloud.healthcare.fdamystudies.common.CommonApplicationPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import java.sql.Timestamp;
 import java.time.Instant;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -41,13 +43,7 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
   @Value("${auditlog.events_endpoint:}")
   private String eventsEndpoint;
 
-  @Value("${auditlog.app.component.name:}")
-  private String appComponentName;
-
-  @Value("${auditlog.application.version:}")
-  private String applicationVersion;
-
-  @Autowired AuditEventRepository auditEventRepository;
+  @Autowired private CommonApplicationPropertyConfig commonPropConfig;
 
   @Autowired private OAuthService oauthService;
 
@@ -57,17 +53,21 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
     logger.entry(String.format("begin postAuditLogEvent() for %s event", eventEnum.getEventName()));
 
     // prepare the request for POST method
+    auditRequest.setEventCode(eventEnum.getEventCode());
     auditRequest.setEventName(eventEnum.getEventName());
-    auditRequest.setAlert(eventEnum.isAlert());
-    auditRequest.setSystemId(eventEnum.getSystemId());
-    auditRequest.setAccessLevel(eventEnum.getAccessLevel());
-    auditRequest.setClientId(eventEnum.getClientId());
-    auditRequest.setClientAccessLevel(eventEnum.getClientAccessLevel());
-    auditRequest.setResourceServer(eventEnum.getResourceServer());
-    auditRequest.setEventDetail(eventEnum.getEventDetail());
-    auditRequest.setOccured(Instant.now().toEpochMilli());
+    auditRequest.setSource(eventEnum.getSource().getValue());
+    auditRequest.setDestination(eventEnum.getDestination().getValue());
+    auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().getValue());
+    auditRequest.setResourceServer(eventEnum.getResourceServer().getValue());
+    auditRequest.setSourceApplicationVersion(getApplicationVersion(eventEnum.getSource()));
+    auditRequest.setDestinationApplicationVersion(
+        getApplicationVersion(eventEnum.getDestination()));
+    auditRequest.setPlatformVersion(commonPropConfig.getPlatformVersion());
+    auditRequest.setOccured(new Timestamp(Instant.now().toEpochMilli()));
 
     JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
+
+    // TODO (#703) integration with GCP stackdriver
 
     AuditLogEventResponse aleResponse = callEventsApi(requestBody);
 
@@ -110,5 +110,32 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
         HttpStatus.valueOf(httpStatusCode),
         String.format(
             "%s event not received/processed by the central audit log system.", eventName));
+  }
+
+  private String getApplicationVersion(PlatformComponent source) {
+    switch (source) {
+      case MOBILE_APP:
+        return commonPropConfig.getMobileApplicationVersion();
+      case RESPONSE_DATASTORE:
+        return commonPropConfig.getResponseDatastoreApplicationVersion();
+      case PARTICIPANT_DATASTORE:
+        return commonPropConfig.getParticipantDatastoreApplicationVersion();
+      case STUDY_BUILDER:
+        return commonPropConfig.getStudyBuilderApplicationVersion();
+      case STUDY_BUILDER_APP:
+        return commonPropConfig.getStudyBuilderAppApplicationVersion();
+      case CLOUD_STORAGE:
+        return commonPropConfig.getCloudStorageApplicationVersion();
+      case SCIM_AUTH_SERVER:
+        return commonPropConfig.getScimAuthServerApplicationVersion();
+      case AUTH_SERVER:
+        return commonPropConfig.getAuthServerApplicationVersion();
+      case PARTICIPANT_MANAGER:
+        return commonPropConfig.getParticipantManagerApplicationVersion();
+      case PARTICIPANT_MANAGER_APP:
+        return commonPropConfig.getParticipantManagerAppApplicationVersion();
+      default:
+        return "Unknown";
+    }
   }
 }
