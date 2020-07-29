@@ -28,8 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
@@ -259,6 +259,7 @@ public class SiteServiceImpl implements SiteService {
 
     if (!optSite.isPresent()) {
       logger.exit(ErrorCode.SITE_NOT_FOUND);
+      // TODO (#702) throw ErrorCodeException
       return new ParticipantRegistryResponse(ErrorCode.SITE_NOT_FOUND);
     }
 
@@ -271,24 +272,24 @@ public class SiteServiceImpl implements SiteService {
       return new ParticipantRegistryResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
 
-    ParticipantRegistryDetail participantRegistry =
+    ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromSite(optSite.get(), optSitePermission.get(), siteId);
     Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
-    participantRegistry.setCountByStatus(statusWithCountMap);
+    participantRegistryDetail.setCountByStatus(statusWithCountMap);
 
-    List<ParticipantRegistrySiteEntity> registryParticipants = null;
+    List<ParticipantRegistrySiteEntity> participantRegistrySites = null;
     if (StringUtils.isEmpty(onboardingStatus)) {
-      registryParticipants = participantRegistrySiteRepository.findBySiteId(siteId);
+      participantRegistrySites = participantRegistrySiteRepository.findBySiteId(siteId);
     } else {
-      registryParticipants =
+      participantRegistrySites =
           participantRegistrySiteRepository.findBySiteIdAndStatus(siteId, onboardingStatus);
     }
 
-    addRegistryParticipants(participantRegistry, registryParticipants);
+    addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
-            MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistry);
+            MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
     return participantRegistryResponse;
@@ -311,15 +312,15 @@ public class SiteServiceImpl implements SiteService {
       statusWithCountMap.put(count.getOnboardingStatus(), count.getCount());
     }
 
-    statusWithCountMap.put("A", total);
+    statusWithCountMap.put(OnboardingStatus.ALL.getCode(), total);
     return statusWithCountMap;
   }
 
   private void addRegistryParticipants(
-      ParticipantRegistryDetail participantRegistry,
-      List<ParticipantRegistrySiteEntity> registryParticipants) {
+      ParticipantRegistryDetail participantRegistryDetail,
+      List<ParticipantRegistrySiteEntity> participantRegistrySites) {
     List<String> registryIds =
-        CollectionUtils.emptyIfNull(registryParticipants)
+        CollectionUtils.emptyIfNull(participantRegistrySites)
             .stream()
             .map(ParticipantRegistrySiteEntity::getId)
             .collect(Collectors.toList());
@@ -329,12 +330,12 @@ public class SiteServiceImpl implements SiteService {
             CollectionUtils.emptyIfNull(
                 participantStudyRepository.findByParticipantRegistrySiteId(registryIds));
 
-    for (ParticipantRegistrySiteEntity participantRegistrySite : registryParticipants) {
+    for (ParticipantRegistrySiteEntity participantRegistrySite : participantRegistrySites) {
       ParticipantDetail participant = new ParticipantDetail();
       participant =
           ParticipantMapper.toParticipantDetails(
               participantStudies, participantRegistrySite, participant);
-      participantRegistry.getRegistryParticipants().add(participant);
+      participantRegistryDetail.getRegistryParticipants().add(participant);
     }
   }
 }

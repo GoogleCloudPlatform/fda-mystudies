@@ -120,7 +120,7 @@ public enum ErrorCode {
   SITE_NOT_EXIST_OR_INACTIVE(
       400, "EC-869", Constants.BAD_REQUEST, "Site doesn't exists or is inactive"),
 
-  SITE_NOT_FOUND(404, "EC-94", Constants.BAD_REQUEST, "Site not found"),
+  SITE_NOT_FOUND(404, "EC-94", HttpStatus.NOT_FOUND.toString(), "Site not found"),
 
   INVALID_ONBOARDING_STATUS(
       400, "EC-816", HttpStatus.BAD_REQUEST.toString(), "allowed values: N, D, I and E"),
