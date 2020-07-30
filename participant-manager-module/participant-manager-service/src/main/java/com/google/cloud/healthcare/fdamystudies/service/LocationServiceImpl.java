@@ -195,7 +195,7 @@ public class LocationServiceImpl implements LocationService {
     return locationResponse;
   }
 
-  public Map<String, List<String>> getStudiesAndGroupByLocationId(List<String> locationIds) {
+  private Map<String, List<String>> getStudiesAndGroupByLocationId(List<String> locationIds) {
     List<LocationIdStudyNamesPair> studyNames =
         (List<LocationIdStudyNamesPair>)
             CollectionUtils.emptyIfNull(studyRepository.getStudyNameLocationIdPairs(locationIds));
