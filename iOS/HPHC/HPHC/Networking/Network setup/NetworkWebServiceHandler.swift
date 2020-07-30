@@ -499,7 +499,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
             )
             as? [String: Any]
           if let errorBody = responseDict {
-            error1 = self.configuration.parseError(errorResponse: errorBody)
+            error1 = self.configuration.parseError(errorResponse: errorBody )
           } else {
             error1 = error ?? NSError(domain: "", code: -101, userInfo: [:])
           }
@@ -547,6 +547,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         )
       }
       completionHandler(challengeDisposition, credential)
+    } else {
+      completionHandler(.performDefaultHandling, nil)
     }
   }
 }
