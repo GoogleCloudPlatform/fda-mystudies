@@ -94,8 +94,6 @@ public class UserControllerTest extends BaseMockIT {
 
   @Autowired private UserRepository userRepository;
 
-  private static String saltAfterChangePassword;
-
   @BeforeEach
   public void setUp() {
     WireMock.resetAllRequests();
@@ -192,9 +190,6 @@ public class UserControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
-
-    // Step 3: delete the user
-    userRepository.deleteByUserId(userId);
   }
 
   @Test

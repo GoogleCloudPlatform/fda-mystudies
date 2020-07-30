@@ -48,6 +48,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserReposit
 import com.jayway.jsonpath.JsonPath;
 import java.util.Collections;
 import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -79,9 +80,14 @@ public class OAuthControllerTest extends BaseMockIT {
 
   @Autowired private TextEncryptor encryptor;
 
+  private UserEntity userEntity;
+
   @BeforeEach
   public void init() {
     WireMock.resetAllRequests();
+
+    userEntity = newUserEntity();
+    userEntity = userRepository.saveAndFlush(userEntity);
   }
 
   @Test
@@ -179,16 +185,13 @@ public class OAuthControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
-    UserEntity user = newUserEntity();
-    user = userRepository.saveAndFlush(user);
-
-    // Step-2 call the API and expect access and refresh tokens in response
+    // Step-1 call the API and expect access and refresh tokens in response
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
     requestParams.add(SCOPE, "openid");
     requestParams.add(REDIRECT_URI, redirectUri);
     requestParams.add(CODE, UUID.randomUUID().toString());
-    requestParams.add(USER_ID, user.getUserId());
+    requestParams.add(USER_ID, userEntity.getUserId());
     requestParams.add(CODE_VERIFIER, UUID.randomUUID().toString());
 
     HttpHeaders headers = getCommonHeaders();
@@ -208,22 +211,14 @@ public class OAuthControllerTest extends BaseMockIT {
     String refreshToken =
         JsonPath.read(result.getResponse().getContentAsString(), "$.refresh_token");
 
-    // Step-3 check refresh token saved in database
-    user = userRepository.findByUserId(user.getUserId()).get();
-    ObjectNode userInfo = (ObjectNode) toJsonNode(user.getUserInfo());
+    // Step-2 check refresh token saved in database
+    userEntity = userRepository.findByUserId(userEntity.getUserId()).get();
+    ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
     assertEquals(refreshToken, encryptor.decrypt(getTextValue(userInfo, REFRESH_TOKEN)));
-
-    // Step-4 delete the user
-    userRepository.deleteByUserId(user.getUserId());
   }
 
   @Test
   public void shouldReturnNewTokensForRefreshTokenGrant() throws Exception {
-    // Step-1 user registration
-    UserEntity user = newUserEntity();
-    user = userRepository.saveAndFlush(user);
-
-    // Step 2: call token endpoint
     HttpHeaders headers = getCommonHeaders();
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -231,7 +226,7 @@ public class OAuthControllerTest extends BaseMockIT {
     requestParams.add(REDIRECT_URI, redirectUri);
     requestParams.add(REFRESH_TOKEN, UUID.randomUUID().toString());
     requestParams.add(CLIENT_ID, clientId);
-    requestParams.add(USER_ID, user.getUserId());
+    requestParams.add(USER_ID, userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -243,9 +238,6 @@ public class OAuthControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.access_token").isNotEmpty())
         .andExpect(jsonPath("$.refresh_token").isNotEmpty());
-
-    // Step-3 delete the user
-    userRepository.deleteByUserId(user.getUserId());
   }
 
   private UserEntity newUserEntity() {
@@ -341,6 +333,11 @@ public class OAuthControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.violations[0].path").value("token"))
         .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
+  }
+
+  @AfterEach
+  public void cleanUp() {
+    userRepository.deleteAll();
   }
 
   private HttpHeaders getCommonHeaders() {
