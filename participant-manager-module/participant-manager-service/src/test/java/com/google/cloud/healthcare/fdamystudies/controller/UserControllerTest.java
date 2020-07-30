@@ -57,11 +57,7 @@ public class UserControllerTest extends BaseMockIT {
 
   private static String adminUserRequestJson;
 
-  private static String updateAdminUserRequestJson;
-
   private UserRegAdminEntity userRegAdminEntity;
-
-  private UserRegAdminEntity adminforUpdate;
 
   @Autowired private TestDataHelper testDataHelper;
 
@@ -329,12 +325,12 @@ public class UserControllerTest extends BaseMockIT {
 
   private void assertStudyPermissionDetails(String userId) {
     List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findByAdminUser(userId);
+        studyPermissionRepository.findByAdminUserId(userId);
     assertNotNull(studyPermissions);
   }
 
   private void assertAppPermissionDetails(String userId) {
-    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUser(userId);
+    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
     assertNotNull(appPermissions);
   }
 
