@@ -389,7 +389,7 @@ public class LocationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnLocationsForSite() throws Exception {
     // Step 1: Set studies for location
-    siteEntity.setStudy(testDataHelper.newStudyEntity());
+    siteEntity.setStudy(studyEntity);
     siteEntity.getStudy().setName("LIMITJP001");
     locationEntity.addSiteEntity(siteEntity);
     testDataHelper.getLocationRepository().save(locationEntity);
@@ -410,9 +410,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.locations").isArray())
-        .andExpect(jsonPath("$.locations", hasSize(1)))
-        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
-        .andExpect(jsonPath("$.locations[0].customId", is("OpenStudy02")));
+        .andExpect(jsonPath("$.locations", hasSize(0)));
   }
 
   @Test
