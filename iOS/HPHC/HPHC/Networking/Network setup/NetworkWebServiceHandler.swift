@@ -547,6 +547,8 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         )
       }
       completionHandler(challengeDisposition, credential)
+    } else {
+      completionHandler(.performDefaultHandling, nil)
     }
   }
 }
