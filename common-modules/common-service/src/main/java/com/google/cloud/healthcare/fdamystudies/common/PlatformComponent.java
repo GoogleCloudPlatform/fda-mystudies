@@ -34,7 +34,9 @@ public enum PlatformComponent {
       "This is back-end component that manages user accounts and issues access and refresh tokens"),
   PARTICIPANT_MANAGER(
       "PARTICIPANT MANAGER",
-      "The UI that administrators use to invite participants to studies and track enrollment progress");
+      "The UI that administrators use to invite participants to studies and track enrollment progress"),
+  CLOUD_STORAGE(
+      "Cloud Storage", "for storing and accessing data on Google Cloud Platform infrastructure");
 
   private String value;
 

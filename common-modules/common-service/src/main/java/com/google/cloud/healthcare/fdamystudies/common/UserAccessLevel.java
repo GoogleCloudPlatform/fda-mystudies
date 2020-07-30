@@ -15,7 +15,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum UserAccessLevel {
   SUPER_ADMIN("Superadmin"),
-  SB_ADMIN("SB Admin"),
+  STUDY_BUILDER_ADMIN("Study Builder Admin"),
   APP_STUDY_ADMIN("App/Study Admin"),
   SITE_ADMIN("Site Admin");
 
