@@ -20,6 +20,8 @@ export class LoginCallbackComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params.code && params.userId) {
         this.authService.grantAuthorization(params.code, params.userId);
+      } else {
+        void this.router.parseUrl('/login');
       }
     });
   }
