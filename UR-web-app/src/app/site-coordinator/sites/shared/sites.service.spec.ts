@@ -11,7 +11,10 @@ import {Study} from '../../studies/shared/study.model';
 import {SitesService} from './sites.service';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {AddSite} from './add.sites.model';
-import {expectedSiteResponse, expectedNewSite} from 'src/app/entity/mockData';
+import {
+  expectedSiteResponse,
+  expectedNewSite,
+} from 'src/app/entity/mockStudiesData';
 
 describe('SitesService', () => {
   let sitesService: SitesService;
@@ -42,8 +45,7 @@ describe('SitesService', () => {
     studiesServices = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
-      code: 'ER_005',
-    };
+    } as ApiResponse;
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
     tick(40);
@@ -65,7 +67,7 @@ describe('SitesService', () => {
     entityServicespyobj.post.and.returnValue(of(expectedSiteResponse));
 
     sitesService
-      .addSite(expectedNewSite)
+      .add(expectedNewSite)
       .subscribe(
         (succesResponse: AddSite) =>
           expect(succesResponse).toEqual(

@@ -64,10 +64,7 @@ export class AuthInterceptor implements HttpInterceptor {
             this.toasterService.error(err.error.message);
           } else {
             const customError = err.error as ApiResponse;
-            if (
-              customError.code &&
-              getMessage(customError.code as keyof typeof ErrorCodesEnum)
-            ) {
+            if (getMessage(customError.code as keyof typeof ErrorCodesEnum)) {
               this.toasterService.error(
                 getMessage(customError.code as keyof typeof ErrorCodesEnum),
               );

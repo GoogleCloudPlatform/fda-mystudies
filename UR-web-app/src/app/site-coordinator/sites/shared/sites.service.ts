@@ -9,7 +9,7 @@ import {AddSite} from './add.sites.model';
 export class SitesService {
   constructor(private readonly entityService: EntityService<AddSite>) {}
 
-  addSite(addSite: AddSite): Observable<AddSite> {
+  add(addSite: AddSite): Observable<AddSite> {
     return this.entityService.post(JSON.stringify(addSite), 'sites');
   }
 }

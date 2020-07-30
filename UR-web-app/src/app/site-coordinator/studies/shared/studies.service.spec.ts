@@ -8,7 +8,7 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
 import {Study} from './study.model';
 import {StudiesService} from './studies.service';
-import {expectedStudyList} from 'src/app/entity/mockData';
+import {expectedStudyList} from 'src/app/entity/mockStudiesData';
 
 describe('StudiesService', () => {
   let studiesService: StudiesService;
@@ -43,8 +43,8 @@ describe('StudiesService', () => {
     studiesService
       .getStudies()
       .subscribe(
-        (Studies) =>
-          expect(Studies).toEqual(expectedStudyList, 'expected StudiesList'),
+        (studies) =>
+          expect(studies).toEqual(expectedStudyList, 'expected StudiesList'),
         fail,
       );
 
@@ -62,13 +62,14 @@ describe('StudiesService', () => {
     studiesService
       .getStudiesWithSites()
       .subscribe(
-        (Studies) =>
-          expect(Studies).toEqual(expectedStudyList, 'expected StudiesList'),
+        (studies) =>
+          expect(studies).toEqual(expectedStudyList, 'expected StudiesList'),
         fail,
       );
 
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   }));
+
   it('should return an error when the server returns a 400', fakeAsync(() => {
     const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
       'EntityService',
@@ -77,8 +78,7 @@ describe('StudiesService', () => {
     studiesService = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
-      code: 'ER_005',
-    };
+    } as ApiResponse;
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
     tick(40);

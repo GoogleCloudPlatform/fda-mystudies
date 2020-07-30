@@ -20,7 +20,7 @@ import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
 import {StudiesModule} from '../studies.module';
 import {StudiesService} from '../shared/studies.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
-import {expectedStudyList} from 'src/app/entity/mockData';
+import {expectedStudyList} from 'src/app/entity/mockStudiesData';
 
 describe('StudyListComponent', () => {
   let component: StudyListComponent;

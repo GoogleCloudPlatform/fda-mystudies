@@ -11,9 +11,10 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {LocationModule} from '../../location/location.module';
 import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
-import {of, Observable} from 'rxjs';
+import {of} from 'rxjs';
 import {LocationService} from '../shared/location.service';
 import {Location} from '../shared/location.model';
+import {expectedLocationList} from 'src/app/entity/mockLocationData';
 
 describe('LocationsListComponent', () => {
   let component: LocationListComponent;
@@ -46,29 +47,10 @@ describe('LocationsListComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(LocationListComponent);
         component = fixture.componentInstance;
-        const expectedList: Observable<Location[]> = of([
-          {
-            id: 2,
-            customId: 'customid3',
-            name: 'name -1-updated0',
-            description: 'location-descp-updatedj',
-            status: '1',
-            studiesCount: 0,
-            message: '',
-            code: '',
-          },
-          {
-            id: 3,
-            customId: 'customid32',
-            name: 'name -1 - updated000',
-            description: 'location-descp-updated',
-            status: '0',
-            studiesCount: 0,
-            message: '',
-            code: '',
-          },
-        ]);
-        locationServiceSpy.getLocations.and.returnValue(expectedList);
+
+        locationServiceSpy.getLocations.and.returnValue(
+          of(expectedLocationList),
+        );
       });
   }));
 

@@ -9,50 +9,16 @@ import {EntityService} from '../../../service/entity.service';
 import {throwError, of} from 'rxjs';
 import {Location} from '../shared/location.model';
 import {ApiResponse} from 'src/app/entity/api.response.model';
+import {
+  expectedLocation,
+  expectedLocations,
+  expectedResponse,
+  expectedLocatiodId,
+  expectedLocationList,
+} from 'src/app/entity/mockLocationData';
 describe('LocationService', () => {
   let locationService: LocationService;
-  const expectedLocations = [
-    {
-      id: 2,
-      customId: 'customid3',
-      name: 'name -1-updated0',
-      description: 'location-descp-updatedj',
-      status: '1',
-      studiesCount: 0,
-      message: '',
-      code: '',
-    },
-    {
-      id: 3,
-      customId: 'customid32',
-      name: 'name -1 - updated000',
-      description: 'location-descp-updated',
-      status: '0',
-      studiesCount: 0,
-      message: '',
-      code: '',
-    },
-  ];
-  const expectedLocation: Location = {
-    id: 0,
-    status: '0',
-    customId: 'customIDlocation',
-    name: 'Location Name',
-    description: 'location Decription',
-    studiesCount: 0,
-    message: '',
-    code: '',
-  };
-  const expectedResponse = {
-    id: 0,
-    status: '0',
-    customId: '',
-    name: '',
-    description: '',
-    studiesCount: 0,
-    message: '',
-    code: '',
-  };
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -79,17 +45,18 @@ describe('LocationService', () => {
     );
     locationService = new LocationService(entityServicespy);
 
-    entityServicespy.getCollection.and.returnValue(of(expectedLocations));
+    entityServicespy.getCollection.and.returnValue(of(expectedLocationList));
     locationService
       .getLocations()
       .subscribe(
-        (Locations) =>
-          expect(Locations).toEqual(expectedLocations, 'expected Locations'),
+        (locations) =>
+          expect(locations).toEqual(expectedLocationList, 'expected Locations'),
         fail,
       );
 
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   });
+
   it('should return Locations list for the site creation', () => {
     const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
       'EntityService',
@@ -97,19 +64,19 @@ describe('LocationService', () => {
     );
     locationService = new LocationService(entityServicespy);
 
-    entityServicespy.getCollection.and.returnValue(of(expectedLocations));
+    entityServicespy.getCollection.and.returnValue(of(expectedLocation));
     locationService
-      .getLocationsForSiteCreation('1')
+      .getLocationsForSiteCreation(expectedLocatiodId.id.toString())
       .subscribe(
         (Locations) =>
-          expect(Locations).toEqual(expectedLocations, 'expected Locations'),
+          expect(Locations).toEqual(expectedLocation, 'expected Locations'),
         fail,
       );
 
     expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   });
 
-  it('should post the  expected new Locations data', () => {
+  it('should post the expected new Locations data', () => {
     const entityServicespyobj = jasmine.createSpyObj<EntityService<Location>>(
       'EntityService',
       ['post'],
@@ -119,7 +86,7 @@ describe('LocationService', () => {
     entityServicespyobj.post.and.returnValue(of(expectedResponse));
 
     locationService
-      .addLocation(expectedLocation)
+      .addLocation(expectedLocations)
       .subscribe(
         (succesResponse: Location) =>
           expect(succesResponse).toEqual(
@@ -140,8 +107,7 @@ describe('LocationService', () => {
     locationService = new LocationService(entityServicespy);
     const errorResponse: ApiResponse = {
       message: 'User does not exist',
-      code: 'MSG_013',
-    };
+    } as ApiResponse;
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponse));
 

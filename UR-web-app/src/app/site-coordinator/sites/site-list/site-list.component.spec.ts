@@ -12,19 +12,13 @@ import {
 } from '@angular/platform-browser/animations';
 import {SiteListComponent} from './site-list.component';
 import {SitesModule} from '../sites.module';
-import {SitesService} from '../shared/sites.service';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
-import {
-  expectedStudyList,
-  expectedStudyId,
-  expectedLocations,
-  expectedSiteResponse,
-} from '../../../entity/mockData';
+import {expectedStudyList} from '../../../entity/mockStudiesData';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {LocationService} from '../../location/shared/location.service';
@@ -38,13 +32,6 @@ describe('SiteListComponent', () => {
       'studiesService',
       ['getStudiesWithSites'],
     );
-    const locationServiceSpy = jasmine.createSpyObj<LocationService>(
-      'LocationService',
-      ['getLocationsForSiteCreation'],
-    );
-    const sitesServiceSpy = jasmine.createSpyObj<SitesService>('SitesService', [
-      'addSite',
-    ]);
     await TestBed.configureTestingModule({
       declarations: [SiteListComponent],
       imports: [
@@ -77,10 +64,6 @@ describe('SiteListComponent', () => {
         studyServiceSpy.getStudiesWithSites.and.returnValue(
           of(expectedStudyList),
         );
-        locationServiceSpy.getLocationsForSiteCreation.and.returnValue(
-          of(expectedLocations),
-        );
-        sitesServiceSpy.addSite.and.returnValue(of(expectedSiteResponse));
         fixture.detectChanges();
       });
   }));
@@ -124,22 +107,16 @@ describe('SiteListComponent', () => {
     expect(sitesListPCT[0].innerHTML).toEqual('7 / 14');
   });
 
-  it('should display the modal when Add site is clicked', fakeAsync(() => {
+  it('should display the modal when Add site is clicked', fakeAsync(async () => {
     const clickAddButton = fixture.debugElement.query(
       By.css('button[name="add"]'),
     );
     const clickSpyobj = spyOn(component, 'openAddSiteModal');
     clickAddButton.triggerEventHandler('click', null);
     tick();
+    await fixture.whenStable();
     fixture.detectChanges();
     expect(clickSpyobj).toBeTruthy();
     flush();
-  }));
-
-  it('should call get location list ', fakeAsync(() => {
-    const spyobjs = spyOn(component, 'getLocation');
-    component.getLocation(expectedStudyId);
-    fixture.detectChanges();
-    expect(spyobjs.calls.count()).toBe(1);
   }));
 });
