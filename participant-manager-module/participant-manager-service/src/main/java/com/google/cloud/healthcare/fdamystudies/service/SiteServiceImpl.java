@@ -535,10 +535,7 @@ public class SiteServiceImpl implements SiteService {
           studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
 
       List<ConsentHistory> consentHistories =
-          studyConsents
-              .stream()
-              .map(studyConsent -> ConsentMapper.toConsentHistory(studyConsent))
-              .collect(Collectors.toList());
+          studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
       participantDetails.getConsentHistory().addAll(consentHistories);
     }
 
