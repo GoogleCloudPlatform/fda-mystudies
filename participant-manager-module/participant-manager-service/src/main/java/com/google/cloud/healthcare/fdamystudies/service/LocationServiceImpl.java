@@ -156,7 +156,7 @@ public class LocationServiceImpl implements LocationService {
 
     if (ACTIVE_STATUS.equals(locationRequest.getStatus())
         && ACTIVE_STATUS.equals(locationEntity.getStatus())) {
-      return ErrorCode.CANNOT_REACTIVE;
+      return ErrorCode.CANNOT_REACTIVATE;
     }
 
     return null;
