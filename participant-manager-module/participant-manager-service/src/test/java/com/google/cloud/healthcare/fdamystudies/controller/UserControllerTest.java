@@ -59,7 +59,11 @@ public class UserControllerTest extends BaseMockIT {
 
   private static String adminUserRequestJson;
 
+  private static String updateAdminUserRequestJson;
+
   private UserRegAdminEntity userRegAdminEntity;
+
+  private UserRegAdminEntity adminforUpdate;
 
   @Autowired private TestDataHelper testDataHelper;
 

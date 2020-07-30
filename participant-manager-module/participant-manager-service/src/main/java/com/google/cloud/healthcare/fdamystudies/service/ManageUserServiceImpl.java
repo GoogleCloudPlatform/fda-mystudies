@@ -187,7 +187,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     AppEntity appDetails = optApp.get();
     AppPermissionEntity appPermission =
         UserMapper.newAppPermissionEntity(user, adminDetails, app, appDetails);
-    appPermissionRepository.save(appPermission);
+    appPermissionRepository.saveAndFlush(appPermission);
 
     List<StudyEntity> studies =
         (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findByAppId(app.getId()));
@@ -219,14 +219,14 @@ public class ManageUserServiceImpl implements ManageUserService {
     StudyEntity studyDetails = optStudyInfo.get();
     StudyPermissionEntity studyPermission =
         UserMapper.newStudyPermissionEntity(userId, superAdminDetails, study, studyDetails);
-    studyPermissionRepository.save(studyPermission);
+    studyPermissionRepository.saveAndFlush(studyPermission);
     if (CollectionUtils.isNotEmpty(sites)) {
       for (SiteEntity site : sites) {
         if (site.getStudy().getId().equals(study.getStudyId())) {
           SitePermissionEntity sitePermission =
               UserMapper.newSitePermissionEntity(
                   userId, superAdminDetails, study, studyDetails, site);
-          sitePermissionRepository.save(sitePermission);
+          sitePermissionRepository.saveAndFlush(sitePermission);
         }
       }
     }
@@ -245,7 +245,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         SiteEntity siteDetails = optSite.get();
         SitePermissionEntity sitePermission =
             UserMapper.newSitePermissionEntity(user, site, superAdminDetails, siteDetails);
-        sitePermissionRepository.save(sitePermission);
+        sitePermissionRepository.saveAndFlush(sitePermission);
       }
     }
     logger.exit("Successfully saved site permissions.");
@@ -347,8 +347,8 @@ public class ManageUserServiceImpl implements ManageUserService {
       return ErrorCode.USER_NOT_FOUND;
     }
 
-    UserRegAdminEntity loggedInUserDeatils = optAdminDetails.get();
-    if (!loggedInUserDeatils.isSuperAdmin()) {
+    UserRegAdminEntity loggedInUserDetails = optAdminDetails.get();
+    if (!loggedInUserDetails.isSuperAdmin()) {
       return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
     }
 
@@ -361,13 +361,13 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private AdminUserResponse updateSuperAdminDetails(UserRequest user, String superAdminUserId) {
     logger.entry("updateSuperAdminDetails()");
-    Optional<UserRegAdminEntity> optAdminDeatils = userAdminRepository.findById(user.getUserId());
+    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getUserId());
 
-    if (!optAdminDeatils.isPresent()) {
+    if (!optAdminDetails.isPresent()) {
       return new AdminUserResponse(ErrorCode.USER_NOT_FOUND);
     }
 
-    UserRegAdminEntity adminDetails = optAdminDeatils.get();
+    UserRegAdminEntity adminDetails = optAdminDetails.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
 
     deleteAllPermissions(user.getUserId());
@@ -385,7 +385,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         getSitePermissisonsForSuperAdmin(user, adminDetails);
     adminDetails.getSitePermissions().addAll(sitePermissions);
 
-    userAdminRepository.save(adminDetails);
+    userAdminRepository.saveAndFlush(adminDetails);
 
     logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.UPDATE_USER_SUCCESS));
     return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
@@ -402,7 +402,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     UserRegAdminEntity adminDetails = optAdminDeatils.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
-    userAdminRepository.save(adminDetails);
+    userAdminRepository.saveAndFlush(adminDetails);
 
     deleteAllPermissions(user.getUserId());
 
