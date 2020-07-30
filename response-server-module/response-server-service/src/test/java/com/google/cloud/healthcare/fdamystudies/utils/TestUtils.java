@@ -8,13 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.utils;
 
-import javax.ws.rs.core.MediaType;
-import org.springframework.http.HttpHeaders;
-
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_SECRET_KEY_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_SECRET_KEY_VALUE;
+
+import javax.ws.rs.core.MediaType;
+
+import org.springframework.http.HttpHeaders;
 
 public class TestUtils {
 
