@@ -86,4 +86,7 @@ public class ApplicationPropertyConfiguration implements Serializable {
 
   @Value("${locked.account.mail.content}")
   private String lockAccountMailContent;
+  
+  @Value("${user.registration.server.remove.device.token.url}")
+  private String userRegistrationServerRemoveDeviceTokenUrl;
 }

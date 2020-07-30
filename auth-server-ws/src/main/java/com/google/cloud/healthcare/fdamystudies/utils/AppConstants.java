@@ -39,6 +39,7 @@ public class AppConstants {
   public static final String URS = "URS";
   public static final String RS = "RS";
   public static final String WCP = "WCP";
+  public static final String USER_ID = "userId";
 
   public static final String AUDIT_EVENT_SIGN_IN_NAME = "SIGN IN";
   public static final String AUDIT_EVENT_SIGN_IN_DESC = "User %s signed in";
