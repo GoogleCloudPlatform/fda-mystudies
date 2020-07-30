@@ -177,7 +177,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   }
 
   private void saveAppStudySitePermissions(
-      UserRequest user, UserRegAdminEntity adminDeatils, UserAppPermissionRequest app) {
+      UserRequest user, UserRegAdminEntity adminDetails, UserAppPermissionRequest app) {
     logger.entry("saveAppStudySitePermissions()");
     Optional<AppEntity> optApp = appRepository.findById(app.getId());
     if (!optApp.isPresent()) {
@@ -186,14 +186,14 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     AppEntity appDetails = optApp.get();
     AppPermissionEntity appPermission =
-        UserMapper.newAppPermissionEntity(user, adminDeatils, app, appDetails);
+        UserMapper.newAppPermissionEntity(user, adminDetails, app, appDetails);
     appPermissionRepository.save(appPermission);
 
     List<StudyEntity> studies =
         (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findByAppId(app.getId()));
 
     List<StudyPermissionEntity> studyPermissions =
-        UserMapper.newStudyPermissionList(user, adminDeatils, app, appDetails, studies);
+        UserMapper.newStudyPermissionList(user, adminDetails, app, appDetails, studies);
     studyPermissionRepository.saveAll(studyPermissions);
 
     List<String> studyIds = studies.stream().map(StudyEntity::getId).collect(Collectors.toList());
@@ -202,14 +202,14 @@ public class ManageUserServiceImpl implements ManageUserService {
         (List<SiteEntity>) CollectionUtils.emptyIfNull(siteRepository.findByStudyIds(studyIds));
 
     List<SitePermissionEntity> sitePermissions =
-        UserMapper.newSitePermissionList(user, adminDeatils, app, appDetails, sites);
+        UserMapper.newSitePermissionList(user, adminDetails, app, appDetails, sites);
     sitePermissionRepository.saveAll(sitePermissions);
 
     logger.exit("Successfully saved app study and site permissions.");
   }
 
   private void saveStudySitePermissions(
-      UserRequest userId, UserRegAdminEntity superAdminDeatils, UserStudyPermissionRequest study) {
+      UserRequest userId, UserRegAdminEntity superAdminDetails, UserStudyPermissionRequest study) {
     logger.entry("saveStudySitePermissions()");
     Optional<StudyEntity> optStudyInfo = studyRepository.findById(study.getStudyId());
     if (!optStudyInfo.isPresent()) {
@@ -218,14 +218,14 @@ public class ManageUserServiceImpl implements ManageUserService {
     List<SiteEntity> sites = siteRepository.findAll();
     StudyEntity studyDetails = optStudyInfo.get();
     StudyPermissionEntity studyPermission =
-        UserMapper.newStudyPermissionEntity(userId, superAdminDeatils, study, studyDetails);
+        UserMapper.newStudyPermissionEntity(userId, superAdminDetails, study, studyDetails);
     studyPermissionRepository.save(studyPermission);
     if (CollectionUtils.isNotEmpty(sites)) {
       for (SiteEntity site : sites) {
         if (site.getStudy().getId().equals(study.getStudyId())) {
           SitePermissionEntity sitePermission =
               UserMapper.newSitePermissionEntity(
-                  userId, superAdminDeatils, study, studyDetails, site);
+                  userId, superAdminDetails, study, studyDetails, site);
           sitePermissionRepository.save(sitePermission);
         }
       }
@@ -234,7 +234,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   }
 
   private void saveSitePermissions(
-      UserRequest user, UserRegAdminEntity superAdminDeatils, UserStudyPermissionRequest study) {
+      UserRequest user, UserRegAdminEntity superAdminDetails, UserStudyPermissionRequest study) {
     for (UserSitePermissionRequest site : study.getSites()) {
       logger.entry("saveSitePermission()");
       if (site.isSelected()) {
@@ -244,7 +244,7 @@ public class ManageUserServiceImpl implements ManageUserService {
         }
         SiteEntity siteDetails = optSite.get();
         SitePermissionEntity sitePermission =
-            UserMapper.newSitePermissionEntity(user, site, superAdminDeatils, siteDetails);
+            UserMapper.newSitePermissionEntity(user, site, superAdminDetails, siteDetails);
         sitePermissionRepository.save(sitePermission);
       }
     }
