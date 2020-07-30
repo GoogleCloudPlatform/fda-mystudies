@@ -38,4 +38,6 @@ public interface UserManagementProfileService {
 
   public int resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId);
+
+  public ErrorBean removeDeviceToken(String userId);
 }

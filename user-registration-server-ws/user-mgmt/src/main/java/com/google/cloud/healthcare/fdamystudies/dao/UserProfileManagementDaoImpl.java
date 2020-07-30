@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
@@ -415,5 +416,38 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       logger.error("UserProfileManagementDaoImpl - resetLoginAttempts() - error ", e);
     }
     return appPropertiesDetails;
+  }
+
+  @Override
+  public ErrorBean removeDeviceToken(int userId) {
+    Transaction transaction = null;
+    Query query = null;
+    ErrorBean errorBean = null;
+    logger.info("UserProfileManagementDaoImpl - removeDeviceToken() - starts");
+    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+      transaction = session.beginTransaction();
+      query =
+          session.createQuery(
+              "UPDATE AuthInfoBO ABO SET ABO.deviceToken=NULL WHERE ABO.userId=:userId");
+      query.setParameter("userId", userId);
+      int result = query.executeUpdate();
+      errorBean =
+          result > 0
+              ? new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage())
+              : new ErrorBean(ErrorCode.EC_61.code(), ErrorCode.EC_61.errorMessage());
+      transaction.commit();
+    } catch (Exception e) {
+      logger.error("UserProfileManagementDaoImpl - removeDeviceToken() - error ", e);
+      if (transaction != null) {
+        try {
+          transaction.rollback();
+        } catch (Exception e1) {
+          logger.error("UserProfileManagementDaoImpl - removeDeviceToken() - error rollback", e1);
+        }
+      }
+      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+    }
+    logger.info("UserProfileManagementDaoImpl - removeDeviceToken() - end");
+    return errorBean;
   }
 }

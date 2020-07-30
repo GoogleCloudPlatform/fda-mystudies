@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -245,5 +246,26 @@ public class UserProfileController {
     }
     logger.info("UserProfileController resendConfirmation() - Ends ");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
+  }
+
+  @PutMapping(
+      value = "/removeDeviceToken",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> removeDeviceToken(@RequestHeader("userId") String userId) {
+    logger.info("UserProfileController removeDeviceToken() - Starts ");
+    ErrorBean errorBean = null;
+    try {
+      errorBean = userManagementProfService.removeDeviceToken(userId);
+      if (errorBean.getCode() == ErrorCode.EC_500.code()) {
+        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } catch (Exception e) {
+      logger.error("UserProfileController removeDeviceToken() - error ", e);
+      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    logger.info("UserProfileController removeDeviceToken() - Ends ");
+    return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 }
