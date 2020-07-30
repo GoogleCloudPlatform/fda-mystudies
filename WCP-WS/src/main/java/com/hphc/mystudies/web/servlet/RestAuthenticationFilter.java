@@ -75,7 +75,8 @@ public class RestAuthenticationFilter implements Filter {
               httpServletRequest.getPathInfo())) {
         filter.doFilter(request, response);
       } else {
-        logger.warn("RestAuthenticationFilter - doFilter() - failed. authCredentials required");
+        logger.warn("RestAuthenticationFilter - doFilter() - failed for " +
+          httpServletRequest.getPathInfo() + ". authCredentials required");
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         httpServletResponse.setHeader("status", ErrorCodes.STATUS_102);
