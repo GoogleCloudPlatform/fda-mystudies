@@ -14,7 +14,6 @@ import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,7 +30,4 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
   @Query(
       "SELECT site from SiteEntity site where site.location.id = :locationId and site.status= :status")
   public List<SiteEntity> findByLocationIdAndStatus(String locationId, Integer status);
-
-  @Query("SELECT site from SiteEntity site where site.study.id in (:studyIds)")
-  public List<SiteEntity> findByStudyIds(@Param("studyIds") List<String> studyIds);
 }
