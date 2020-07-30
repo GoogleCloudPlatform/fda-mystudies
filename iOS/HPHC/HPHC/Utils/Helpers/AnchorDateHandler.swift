@@ -259,6 +259,14 @@ class AnchorDateHandler {
     let listItems = emptyAnchorDateMetaDataList.filter {
       $0.anchorDate != nil
     }
+    if !listItems.isEmpty {
+      // To reshedule the notifications for anchor date activities.
+      DBHandler.updateLocalNotificationScheduleStatus(
+        studyId: study.studyId,
+        status: false
+      )
+      Study.currentStudy?.activitiesLocalNotificationUpdated = false
+    }
     for item in listItems {
       if item.fetchAnchorDateFor == .activity {
         DBHandler.updateActivityLifeTimeFor(item.activity, anchorDate: item.anchorDate!)
