@@ -183,7 +183,8 @@ public class LocationServiceImpl implements LocationService {
         locations.stream().map(LocationEntity::getId).distinct().collect(Collectors.toList());
     Map<String, List<String>> locationStudies = getStudiesAndGroupByLocationId(locationIds);
 
-    List<LocationDetails> locationDetailsList = LocationMapper.toLocations(locations);
+    List<LocationDetails> locationDetailsList =
+        locations.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
     for (LocationDetails locationDetails : locationDetailsList) {
       List<String> studies = locationStudies.get(locationDetails.getLocationId());
       locationDetails.getStudyNames().addAll(studies);
@@ -195,7 +196,7 @@ public class LocationServiceImpl implements LocationService {
     return locationResponse;
   }
 
-  public Map<String, List<String>> getStudiesAndGroupByLocationId(List<String> locationIds) {
+  private Map<String, List<String>> getStudiesAndGroupByLocationId(List<String> locationIds) {
     List<LocationIdStudyNamesPair> studyNames =
         (List<LocationIdStudyNamesPair>)
             CollectionUtils.emptyIfNull(studyRepository.getStudyNameLocationIdPairs(locationIds));
@@ -258,9 +259,9 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> listOfLocation =
         (List<LocationEntity>)
             CollectionUtils.emptyIfNull(
-                locationRepository.findByStatusAndStudyId(status, excludeStudyId));
-    List<LocationDetails> locationDetails = LocationMapper.toLocations(listOfLocation);
-
+                locationRepository.findByStatusAndExcludeStudyId(status, excludeStudyId));
+    List<LocationDetails> locationDetails =
+        listOfLocation.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
     logger.exit(String.format("locations size=%d", locationDetails.size()));
     return new LocationResponse(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS, locationDetails);
   }
