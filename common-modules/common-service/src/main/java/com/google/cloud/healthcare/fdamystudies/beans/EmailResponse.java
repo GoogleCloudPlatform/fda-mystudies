@@ -11,15 +11,15 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 
-public class ChangePasswordResponse extends BaseResponse {
+public class EmailResponse extends BaseResponse {
 
-  public ChangePasswordResponse() {}
+  public EmailResponse() {}
 
-  public ChangePasswordResponse(ErrorCode errorCode) {
+  public EmailResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public ChangePasswordResponse(MessageCode messageCode) {
+  public EmailResponse(MessageCode messageCode) {
     super(messageCode);
   }
 }
