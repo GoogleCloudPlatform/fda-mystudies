@@ -17,7 +17,7 @@ export class LoginComponent {
     if (!this.authService.hasCredentials()) {
       this.authService.redirectToLoginPage();
     } else {
-     void this.router.navigate(['/coordiantor/']);
+      void this.router.navigate(['/coordiantor/']);
     }
   }
 }
