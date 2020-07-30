@@ -39,7 +39,6 @@ public class HibernateUtil {
   }
 
   public static SessionFactory getSessionFactory() {
-    logger.info("INFO: HibernateUtil - getSessionFactory() :: Starts");
     try {
       if (sessionFactory == null) {
         sessionFactory =
@@ -51,7 +50,6 @@ public class HibernateUtil {
     } catch (Exception e) {
       logger.error("HibernateUtil - getSessionFactory() :: ERROR ", e);
     }
-    logger.info("INFO: HibernateUtil - getSessionFactory() :: Ends");
     return sessionFactory;
   }
 
