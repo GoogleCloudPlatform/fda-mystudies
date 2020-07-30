@@ -125,7 +125,9 @@ public enum ErrorCode {
   INVALID_ONBOARDING_STATUS(
       400, "EC-816", HttpStatus.BAD_REQUEST.toString(), "allowed values: N, D, I and E"),
 
-  USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin");
+  USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin"),
+  
+  INVALID_APPS_FIELDS_VALUES(400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
 
   private final int status;
   private final String code;
