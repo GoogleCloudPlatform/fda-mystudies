@@ -22,6 +22,8 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCESS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,7 +40,6 @@ import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private EmailService emailService;
 
-  @Autowired private AuthScimAuditLogHelper aleHelper;
+  @Autowired private AuthScimAuditLogHelper auditHelper;
 
   @Override
   public UserResponse createUser(UserRequest userRequest) {
@@ -151,7 +152,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserInfo(userInfo.toString());
         repository.saveAndFlush(userEntity);
 
-        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_SUCCESS, auditRequest);
+        auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
 
         logger.exit("Password reset successful.");
         return new UpdateUserResponse(HttpStatus.OK, "Password reset successful");
@@ -160,7 +161,7 @@ public class UserServiceImpl implements UserService {
             String.format(
                 "Password reset failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
 
-        aleHelper.logEvent(AuthScimEvent.PASSWORD_RESET_FAILED, auditRequest);
+        auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
         return new UpdateUserResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
       }
     }
