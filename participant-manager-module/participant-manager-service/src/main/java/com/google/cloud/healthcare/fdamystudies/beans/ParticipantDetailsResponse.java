@@ -18,15 +18,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ParticipantDetailResponse extends BaseResponse {
+public class ParticipantDetailsResponse extends BaseResponse {
 
   private ParticipantDetails participantDetails;
 
-  public ParticipantDetailResponse(ErrorCode errorCode) {
+  public ParticipantDetailsResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public ParticipantDetailResponse(MessageCode messageCode, ParticipantDetails participantDetails) {
+  public ParticipantDetailsResponse(MessageCode messageCode, ParticipantDetails participantDetails) {
     super(messageCode);
     this.participantDetails = participantDetails;
   }

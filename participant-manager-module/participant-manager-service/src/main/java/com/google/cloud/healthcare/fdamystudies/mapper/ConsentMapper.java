@@ -8,37 +8,27 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
+import org.apache.commons.lang3.StringUtils;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
 public final class ConsentMapper {
 
   private ConsentMapper() {}
 
-  public static List<ConsentHistory> toStudyConsents(List<StudyConsentEntity> studyConsents) {
-    List<ConsentHistory> consentHistories = new ArrayList<>();
-    for (StudyConsentEntity studyCosent : CollectionUtils.emptyIfNull(studyConsents)) {
-      ConsentHistory consentHistory = new ConsentHistory();
-      consentHistory.setId(studyCosent.getId());
-      consentHistory.setConsentDocumentPath(studyCosent.getPdfPath());
-      consentHistory.setConsentVersion(studyCosent.getVersion());
+  public static ConsentHistory toConsentHistory(StudyConsentEntity studyConsent) {
+    ConsentHistory consentHistory = new ConsentHistory();
+    consentHistory.setId(studyConsent.getId());
+    consentHistory.setConsentDocumentPath(studyConsent.getPdfPath());
+    consentHistory.setConsentVersion(studyConsent.getVersion());
 
-      String consentDate =
-          DateTimeUtils.format(studyCosent.getParticipantStudy().getEnrolledDate());
-      consentHistory.setConsentedDate(StringUtils.defaultIfEmpty(consentDate, NOT_APPLICABLE));
+    String consentDate = DateTimeUtils.format(studyConsent.getParticipantStudy().getEnrolledDate());
+    consentHistory.setConsentedDate(StringUtils.defaultIfEmpty(consentDate, NOT_APPLICABLE));
 
-      consentHistory.setDataSharingPermissions(studyCosent.getParticipantStudy().getSharing());
-      consentHistories.add(consentHistory);
-    }
-    return consentHistories;
+    consentHistory.setDataSharingPermissions(studyConsent.getParticipantStudy().getSharing());
+    return consentHistory;
   }
 }
