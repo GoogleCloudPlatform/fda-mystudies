@@ -144,10 +144,7 @@ public enum ErrorCode {
       "You are not authorized to access this information"),
 
   PERMISSION_MISSING(
-      400, "EC_978", Constants.BAD_REQUEST, "Admin should have atleast one permission"),
-
-  CANNOT_REACTIVE(
-      400, "EC_887", Constants.BAD_REQUEST, "Can't reactive an already active location");
+      400, "EC_978", Constants.BAD_REQUEST, "Admin should have atleast one permission");
 
   private final int status;
   private final String code;

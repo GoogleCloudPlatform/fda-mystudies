@@ -44,7 +44,7 @@ public final class CommonConstants {
   public static final String OPEN = "Open";
 
   public static final String STATUS_ACTIVE = "Active";
-  
+
   public static final int INVITED_STATUS = 2;
 
   public static final boolean SELECTED = true;
