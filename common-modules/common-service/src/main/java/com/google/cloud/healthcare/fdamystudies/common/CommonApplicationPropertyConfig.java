@@ -18,36 +18,6 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource("classpath:common-application.properties")
 public class CommonApplicationPropertyConfig {
 
-  @Value("${application.version.mobile.app}")
-  private String mobileApplicationVersion;
-
-  @Value("${application.version.response.datastore}")
-  private String responseDatastoreApplicationVersion;
-
-  @Value("${application.version.participant.datastore}")
-  private String participantDatastoreApplicationVersion;
-
-  @Value("${application.version.study.builder}")
-  private String studyBuilderApplicationVersion;
-
-  @Value("${application.version.study.builder.app}")
-  private String studyBuilderAppApplicationVersion;
-
-  @Value("${application.version.cloud.storage}")
-  private String cloudStorageApplicationVersion;
-
-  @Value("${application.version.scim.auth.server}")
-  private String scimAuthServerApplicationVersion;
-
-  @Value("${application.version.auth.server}")
-  private String authServerApplicationVersion;
-
-  @Value("${application.version.participant.manager}")
-  private String participantManagerApplicationVersion;
-
-  @Value("${application.version.participant.manager.app}")
-  private String participantManagerAppApplicationVersion;
-
-  @Value("${application.version.platform}")
-  private String platformVersion;
+  @Value("${application.version}")
+  private String applicationVersion;
 }

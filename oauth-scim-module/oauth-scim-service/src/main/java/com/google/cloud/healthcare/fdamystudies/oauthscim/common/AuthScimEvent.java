@@ -24,7 +24,6 @@ public enum AuthScimEvent implements AuditLogEvent {
       PARTICIPANT_DATASTORE,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
-      "Password reset success",
       "Password reset for User ID ${user_id} was successful.",
       UserAccessLevel.APP_STUDY_ADMIN,
       "PASSWORD_RESET_SUCCESS"),
@@ -33,7 +32,6 @@ public enum AuthScimEvent implements AuditLogEvent {
       PARTICIPANT_DATASTORE,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
-      "Password reset failure",
       "Password reset for User ID ${user_id} failed.",
       UserAccessLevel.APP_STUDY_ADMIN,
       "PASSWORD_RESET_FAILED");
@@ -41,7 +39,6 @@ public enum AuthScimEvent implements AuditLogEvent {
   private final PlatformComponent source;
   private final PlatformComponent destination;
   private final PlatformComponent resourceServer;
-  private final String eventName;
   private final String description;
   private final UserAccessLevel userAccessLevel;
   private final String eventCode;

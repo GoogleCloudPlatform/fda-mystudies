@@ -31,10 +31,6 @@ public class AuditLogEventRequest {
 
   @NotBlank
   @Size(max = 255)
-  private String eventName;
-
-  @NotBlank
-  @Size(max = 255)
   @ToString.Exclude
   private String description;
 

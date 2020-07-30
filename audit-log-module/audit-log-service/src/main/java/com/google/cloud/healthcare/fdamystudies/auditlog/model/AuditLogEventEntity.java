@@ -62,9 +62,6 @@ public class AuditLogEventEntity {
   @Column(name = "description", nullable = false, length = 255)
   private String description;
 
-  @Column(name = "event_name", nullable = false, length = 255)
-  private String eventName;
-
   @Column(name = "app_version", nullable = true, length = 20)
   private String appVersion;
 

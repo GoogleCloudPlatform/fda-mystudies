@@ -79,7 +79,6 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     String eventId = JsonPath.read(result.getResponse().getContentAsString(), "$.eventId");
     AuditLogEventEntity aleEntity = repository.findById(eventId).get();
     assertNotNull(aleEntity);
-    assertEquals(request.getEventName(), aleEntity.getEventName());
     assertEquals(request.getCorrelationId(), aleEntity.getCorrelationId());
 
     verify(
@@ -182,7 +181,6 @@ public class AuditLogEventControllerTest extends BaseMockIT {
         String.format(
             "Password reset for User ID ${user_id} was successful.", auditRequest.getUserId()));
     auditRequest.setMobilePlatform(MobilePlatform.ANDROID.getValue());
-    auditRequest.setEventName("Password reset success");
     auditRequest.setEventCode("REGISTRATION_SUCCESS");
     auditRequest.setOccured(new Timestamp(Instant.now().toEpochMilli()));
     auditRequest.setDestination(PlatformComponent.AUTH_SERVER.getValue());

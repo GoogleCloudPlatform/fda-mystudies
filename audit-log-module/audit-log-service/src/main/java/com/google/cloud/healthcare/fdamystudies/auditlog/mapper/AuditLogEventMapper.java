@@ -32,7 +32,6 @@ public final class AuditLogEventMapper {
     entity.setDestinationApplicationVersion(auditRequest.getDestinationApplicationVersion());
     entity.setDescription(auditRequest.getDescription());
     entity.setMobilePlatform(auditRequest.getMobilePlatform());
-    entity.setEventName(auditRequest.getEventName());
     entity.setEventCode(auditRequest.getEventCode());
     entity.setOccurred(auditRequest.getOccured());
     entity.setUserIp(auditRequest.getUserIp());

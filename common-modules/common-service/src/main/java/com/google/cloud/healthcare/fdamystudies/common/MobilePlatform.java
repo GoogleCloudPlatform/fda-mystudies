@@ -14,9 +14,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MobilePlatform {
-  ANDROID("ANDROID", "Represents an android platform"),
-  IOS("IOS", "Represents an apple platform"),
-  UNKNOWN("UNKNOWN", "Represents unknown platform");
+  ANDROID("ANDROID", "Represents an Android platform"),
+  IOS("IOS", "Represents an Apple platform"),
+  UNKNOWN("UNKNOWN", "Any other value. Should not happen");
 
   private String value;
   private String description;

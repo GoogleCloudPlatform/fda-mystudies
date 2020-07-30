@@ -9,11 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
-import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 
 public interface AuditEventService {
 
-  public AuditLogEventResponse postAuditLogEvent(
-      AuditLogEvent eventEnum, AuditLogEventRequest auditRequest);
+  public void postAuditLogEvent(AuditLogEventRequest auditRequest);
 }
