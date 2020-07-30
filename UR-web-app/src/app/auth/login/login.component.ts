@@ -14,6 +14,10 @@ export class LoginComponent {
   ) {}
 
   ngOnInit(): void {
-    this.authService.redirectToLoginPage();
+    if (!this.authService.hasCredentials()) {
+      this.authService.redirectToLoginPage();
+    } else {
+     void this.router.navigate(['/coordiantor/']);
+    }
   }
 }

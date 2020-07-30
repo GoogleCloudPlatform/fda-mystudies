@@ -15,7 +15,7 @@ import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {AuthService} from '../service/auth.service';
 import accessToken from 'src/app/auth/access-token.json';
-import {AccessToken} from '../entity/AccessToken';
+import {AccessToken} from '../entity/access-token';
 import account from 'src/app/auth/account.json';
 import {ErrorCodesEnum, getMessage} from '../shared/error.codes.enum';
 import {ApiResponse} from '../entity/api.response.model';
@@ -50,9 +50,8 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     }
     void this.spinner.show();
-    const user = this.authService.getLoggedInUserDetails();
 
-    if (user === null || !this.authService.checkCredentials()) {
+    if (!this.authService.hasCredentials()) {
       return next.handle(req).pipe(
         this.handleError(),
         finalize(() => {
@@ -60,10 +59,12 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     }
+    const user: User = this.authService.getUser();
+
     const headers = req.headers
       .set('Content-Type', 'application/json')
       .set('userId', user.id.toString())
-      .set('authToken', this.authService.getLoggedInUserAccessToken())
+      .set('authToken', this.authService.getUserAccessToken())
       .set('authUserId', user.urAdminAuthId);
     const authReq = req.clone({headers});
     return next.handle(authReq).pipe(

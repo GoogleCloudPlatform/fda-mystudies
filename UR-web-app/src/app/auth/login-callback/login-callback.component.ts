@@ -5,11 +5,10 @@ import {CookieService} from 'ngx-cookie-service';
 import {AuthService} from 'src/app/service/auth.service';
 
 @Component({
-  selector: 'app-callback',
-  templateUrl: './callback.component.html',
-  styleUrls: ['./callback.component.scss'],
+  selector: 'login-callback',
+  template: '',
 })
-export class CallbackComponent implements OnInit {
+export class LoginCallbackComponent implements OnInit {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
     private readonly http: HttpClient,
@@ -20,7 +19,7 @@ export class CallbackComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params.code && params.userId) {
-        this.authService.getToken(params.code, params.userId);
+        this.authService.grantAuthorization(params.code, params.userId);
       }
     });
   }

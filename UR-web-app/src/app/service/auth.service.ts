@@ -4,35 +4,30 @@ import {CookieService} from 'ngx-cookie-service';
 import {User} from '../entity/user';
 import {EntityService} from './entity.service';
 import {Router} from '@angular/router';
-import {AccessToken} from '../entity/AccessToken';
+import {AccessToken} from '../entity/access-token';
 import {environment} from 'src/environments/environment';
-import {ProfileService} from './profile.service';
-import {UnsubscribeOnDestroyAdapter} from '../unsubscribe-on-destroy-adapter';
+import {UserService} from './user.service';
 
 @Injectable({providedIn: 'root'})
-export class AuthService extends UnsubscribeOnDestroyAdapter {
+export class AuthService {
   constructor(
     private readonly http: HttpClient,
     public cookieService: CookieService,
     public entityService: EntityService<AccessToken>,
     public router: Router,
-    private readonly profilService: ProfileService,
-  ) {
-    super();
-  }
-  checkCredentials(): boolean {
+    private readonly userService: UserService,
+  ) {}
+  hasCredentials(): boolean {
     return (
       this.cookieService.check('accessToken') &&
-      this.cookieService.check('user')
+      this.cookieService.check('user') &&
+      JSON.parse(this.cookieService.get('user')) !== null
     );
   }
-  getLoggedInUserDetails(): User | null {
-    if (this.cookieService.check('user')) {
-      return JSON.parse(this.cookieService.get('user')) as User;
-    }
-    return null;
+  getUser(): User {
+    return JSON.parse(this.cookieService.get('user')) as User;
   }
-  getLoggedInUserAccessToken(): string {
+  getUserAccessToken(): string {
     return this.cookieService.get('accessToken');
   }
 
@@ -45,7 +40,7 @@ export class AuthService extends UnsubscribeOnDestroyAdapter {
       },
     });
   }
-  getToken(code: string, userId: string): void {
+  grantAuthorization(code: string, userId: string): void {
     const payload = {
       grant_type: 'authorization_code',
       scope: 'openid',
@@ -53,22 +48,21 @@ export class AuthService extends UnsubscribeOnDestroyAdapter {
       code: code,
       userId: userId,
     };
-    this.subs.add(
-      this.entityService
-        .authServerPost(JSON.stringify(payload), 'oauth2/token')
-        .subscribe((response) => {
-          this.cookieService.set('accessToken', response.accessToken);
-          this.cookieService.set('refreshToken', response.refreshToken);
-          this.getProfile();
-        }),
-    );
+    this.http
+      .post<AccessToken>(
+        `${environment.authServerUrl}/oauth2/token`,
+        JSON.stringify(payload),
+      )
+      .subscribe((response) => {
+        this.cookieService.set('accessToken', response.accessToken);
+        this.cookieService.set('refreshToken', response.refreshToken);
+        this.getUserDetails();
+      });
   }
-  getProfile(): void {
-    this.subs.add(
-      this.profilService.getProfile().subscribe((user: User) => {
-        this.cookieService.set('user', JSON.stringify(user));
-        void this.router.navigate(['/coordinator/']);
-      }),
-    );
+  getUserDetails(): void {
+    this.userService.getUserDetails().subscribe((user: User) => {
+      this.cookieService.set('user', JSON.stringify(user));
+      void this.router.navigate(['/coordinator/']);
+    });
   }
 }

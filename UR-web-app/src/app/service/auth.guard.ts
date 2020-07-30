@@ -12,8 +12,6 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean | UrlTree {
-    return (
-      this.authService.checkCredentials() || this.router.parseUrl('/login')
-    );
+    return this.authService.hasCredentials() || this.router.parseUrl('/login');
   }
 }
