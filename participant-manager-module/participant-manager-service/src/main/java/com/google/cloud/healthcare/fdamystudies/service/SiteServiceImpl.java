@@ -12,8 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetails;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailsResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
@@ -502,7 +501,7 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   @Transactional(readOnly = true)
-  public ParticipantDetailsResponse getParticipantDetails(
+  public ParticipantDetailResponse getParticipantDetails(
       String participantRegistrySiteId, String userId) {
     logger.entry("begin getParticipantDetails()");
 
@@ -512,19 +511,19 @@ public class SiteServiceImpl implements SiteService {
     ErrorCode errorCode = validateParticipantDetailsRequest(optParticipantRegistry, userId);
     if (errorCode != null) {
       logger.exit(errorCode);
-      return new ParticipantDetailsResponse(errorCode);
+      return new ParticipantDetailResponse(errorCode);
     }
 
-    ParticipantDetails participantDetails =
+    ParticipantDetail participantDetail =
         ParticipantMapper.toParticipantDetailsResponse(optParticipantRegistry.get());
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantsEnrollment(participantRegistrySiteId);
 
     if (CollectionUtils.isEmpty(participantsEnrollments)) {
       Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
-      participantDetails.getEnrollments().add(enrollment);
+      participantDetail.getEnrollments().add(enrollment);
     } else {
-      ParticipantMapper.addEnrollments(participantDetails, participantsEnrollments);
+      ParticipantMapper.addEnrollments(participantDetail, participantsEnrollments);
       List<String> participantStudyIds =
           participantsEnrollments
               .stream()
@@ -536,17 +535,17 @@ public class SiteServiceImpl implements SiteService {
 
       List<ConsentHistory> consentHistories =
           studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
-      participantDetails.getConsentHistory().addAll(consentHistories);
+      participantDetail.getConsentHistory().addAll(consentHistories);
     }
 
     logger.exit(
         String.format(
             "total enrollments=%d, and consentHistories=%d",
-            participantDetails.getEnrollments().size(),
-            participantDetails.getConsentHistory().size()));
+            participantDetail.getEnrollments().size(),
+            participantDetail.getConsentHistory().size()));
 
-    return new ParticipantDetailsResponse(
-        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS, participantDetails);
+    return new ParticipantDetailResponse(
+        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS, participantDetail);
   }
 
   private ErrorCode validateParticipantDetailsRequest(

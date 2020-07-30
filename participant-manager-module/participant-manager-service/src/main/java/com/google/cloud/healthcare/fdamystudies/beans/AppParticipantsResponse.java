@@ -8,18 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @Setter
 @Getter
@@ -34,7 +31,7 @@ public class AppParticipantsResponse extends BaseResponse {
 
   private String name;
 
-  private List<ParticipantDetails> participants = new ArrayList<>();
+  private List<ParticipantDetail> participants = new ArrayList<>();
 
   public AppParticipantsResponse(ErrorCode errorCode) {
     super(errorCode);

@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
@@ -143,8 +142,8 @@ public final class ParticipantMapper {
     return participant;
   }
 
-  public static ParticipantDetails toParticipantDetails(UserDetailsEntity userDetailsEntity) {
-    ParticipantDetails participant = new ParticipantDetails();
+  public static ParticipantDetail toParticipantDetails(UserDetailsEntity userDetailsEntity) {
+    ParticipantDetail participant = new ParticipantDetail();
     participant.setUserDetailsId(userDetailsEntity.getId());
     participant.setEmail(userDetailsEntity.getEmail());
     UserStatus userStatus = UserStatus.fromValue(userDetailsEntity.getStatus());
@@ -154,7 +153,7 @@ public final class ParticipantMapper {
   }
 
   public static void addEnrollments(
-      ParticipantDetails participantDetails, List<ParticipantStudyEntity> participantsEnrollments) {
+      ParticipantDetail participantDetail, List<ParticipantStudyEntity> participantsEnrollments) {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
       enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
@@ -165,25 +164,25 @@ public final class ParticipantMapper {
 
       String withdrawalDate = DateTimeUtils.format(participantsEnrollment.getWithdrawalDate());
       enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
-      participantDetails.getEnrollments().add(enrollment);
+      participantDetail.getEnrollments().add(enrollment);
     }
   }
 
-  public static ParticipantDetails toParticipantDetailsResponse(
+  public static ParticipantDetail toParticipantDetailsResponse(
       ParticipantRegistrySiteEntity participantRegistry) {
-    ParticipantDetails participantDetails = new ParticipantDetails();
-    participantDetails.setParticipantRegistrySiteid(participantRegistry.getId());
-    participantDetails.setAppName(participantRegistry.getStudy().getAppInfo().getAppName());
-    participantDetails.setCustomAppId(participantRegistry.getStudy().getAppInfo().getAppId());
-    participantDetails.setStudyName(participantRegistry.getStudy().getName());
-    participantDetails.setCustomStudyId(participantRegistry.getStudy().getCustomId());
-    participantDetails.setLocationName(participantRegistry.getSite().getLocation().getName());
-    participantDetails.setCustomLocationId(
+    ParticipantDetail participantDetail = new ParticipantDetail();
+    participantDetail.setParticipantRegistrySiteid(participantRegistry.getId());
+    participantDetail.setAppName(participantRegistry.getStudy().getAppInfo().getAppName());
+    participantDetail.setCustomAppId(participantRegistry.getStudy().getAppInfo().getAppId());
+    participantDetail.setStudyName(participantRegistry.getStudy().getName());
+    participantDetail.setCustomStudyId(participantRegistry.getStudy().getCustomId());
+    participantDetail.setLocationName(participantRegistry.getSite().getLocation().getName());
+    participantDetail.setCustomLocationId(
         participantRegistry.getSite().getLocation().getCustomId());
-    participantDetails.setEmail(participantRegistry.getEmail());
+    participantDetail.setEmail(participantRegistry.getEmail());
 
     String invitedDate = DateTimeUtils.format(participantRegistry.getInvitationDate());
-    participantDetails.setInvitationDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    participantDetail.setInvitationDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
 
     OnboardingStatus onboardingStatus =
         OnboardingStatus.fromCode(participantRegistry.getOnboardingStatus());
@@ -192,7 +191,7 @@ public final class ParticipantMapper {
         (OnboardingStatus.INVITED == onboardingStatus || OnboardingStatus.NEW == onboardingStatus)
             ? onboardingStatus.getStatus()
             : OnboardingStatus.DISABLED.getStatus();
-    participantDetails.setOnboardringStatus(status);
-    return participantDetails;
+    participantDetail.setOnboardringStatus(status);
+    return participantDetail;
   }
 }
