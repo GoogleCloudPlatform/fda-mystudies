@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -102,8 +101,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Order(2)
   @Test
-  // TODO(#668) Remove @Disabled when Github test case failed issue fix
-  @Disabled
   public void shouldReturnUnauthorized() throws Exception {
 
     HttpHeaders headers =
@@ -157,7 +154,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     assertEquals(Constants.EMAIL, daoResp.getEmail());
 
     verify(
-        1,
+        2,
         postRequestedFor(urlEqualTo("/AuthServer/register"))
             .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
   }
