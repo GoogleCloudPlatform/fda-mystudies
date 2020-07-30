@@ -1,5 +1,8 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
+import {RouterTestingModule} from '@angular/router/testing';
+import {AuthService} from 'src/app/service/auth.service';
+import {HttpClientModule} from '@angular/common/http';
+import {EntityService} from 'src/app/service/entity.service';
 import {LoginCallbackComponent} from './login-callback.component';
 
 describe('LoginCallbackComponent', () => {
@@ -9,6 +12,8 @@ describe('LoginCallbackComponent', () => {
   beforeEach(async(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginCallbackComponent],
+      imports: [RouterTestingModule, HttpClientModule],
+      providers: [AuthService, EntityService],
     }).compileComponents();
   }));
 
