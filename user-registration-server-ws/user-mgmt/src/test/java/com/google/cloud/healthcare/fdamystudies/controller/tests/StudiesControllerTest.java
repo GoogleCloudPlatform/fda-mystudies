@@ -137,8 +137,8 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
-  // TODO(#668) Remove @Disabled when Github test case failed issue fix
   @Disabled
+  // TODO(#668) Remove @Disabled when Github test case failed issue fix
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
