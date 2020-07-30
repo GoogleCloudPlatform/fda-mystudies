@@ -14,10 +14,10 @@ export class LocationService {
   addLocation(location: Location): Observable<Location> {
     return this.entityService.post(JSON.stringify(location), 'locations');
   }
-  getLocationDetails(locationId: string): Observable<Location[]> {
-    return this.entityService.getCollection('locations/' + locationId);
+  get(locationId: string): Observable<Location> {
+    return this.entityService.get('locations/' + locationId);
   }
-  updateLocation(location: Location, locationId: string): Observable<Location> {
+  update(location: Location, locationId: string): Observable<Location> {
     return this.entityService.put(
       JSON.stringify(location),
       'locations/' + locationId,

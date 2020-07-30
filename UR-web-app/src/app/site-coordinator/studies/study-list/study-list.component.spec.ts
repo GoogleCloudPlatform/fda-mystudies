@@ -17,7 +17,8 @@ import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
 import {StudiesModule} from '../studies.module';
 import {StudiesService} from '../shared/studies.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
-import {expectedStudyList} from 'src/app/entity/mockData';
+import {expectedStudyList} from 'src/app/entity/mockStudiesData';
+import {of} from 'rxjs';
 
 describe('StudyListComponent', () => {
   let component: StudyListComponent;
@@ -56,7 +57,7 @@ describe('StudyListComponent', () => {
         fixture = TestBed.createComponent(StudyListComponent);
         component = fixture.componentInstance;
 
-        studyServiceSpy.getStudies.and.returnValue(expectedStudyList);
+        studyServiceSpy.getStudies.and.returnValue(of(expectedStudyList));
       });
   }));
 

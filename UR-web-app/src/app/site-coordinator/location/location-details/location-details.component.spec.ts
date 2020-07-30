@@ -3,8 +3,6 @@ import {
   TestBed,
   ComponentFixture,
   fakeAsync,
-  tick,
-  flush,
 } from '@angular/core/testing';
 
 import {LocationDetailsComponent} from './location-details.component';
@@ -18,7 +16,10 @@ import {of} from 'rxjs';
 import {LocationService} from '../shared/location.service';
 import {ModalModule, BsModalRef} from 'ngx-bootstrap/modal';
 import {By} from '@angular/platform-browser';
-import {expectedList, expectedResponse} from 'src/app/entity/mockData';
+import {
+  expectedLocation,
+  expectedResponse,
+} from 'src/app/entity/mockLocationData';
 
 describe('LocationDetailsComponent', () => {
   let component: LocationDetailsComponent;
@@ -26,7 +27,7 @@ describe('LocationDetailsComponent', () => {
   beforeEach(async(async () => {
     const locationServiceSpy = jasmine.createSpyObj<LocationService>(
       'LocationService',
-      ['getLocationDetails', 'updateLocation'],
+      ['get', 'update'],
     );
 
     await TestBed.configureTestingModule({
@@ -58,8 +59,8 @@ describe('LocationDetailsComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(LocationDetailsComponent);
         component = fixture.componentInstance;
-        locationServiceSpy.getLocationDetails.and.returnValue(of(expectedList));
-        locationServiceSpy.updateLocation.and.returnValue(of(expectedResponse));
+        locationServiceSpy.get.and.returnValue(of(expectedLocation));
+        locationServiceSpy.update.and.returnValue(of(expectedResponse));
         fixture.detectChanges();
         fixture.destroy();
       });
@@ -69,17 +70,12 @@ describe('LocationDetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('it should call get Location Details in ngOninit', fakeAsync(() => {
+  it('should call get Location Details in ngOninit', fakeAsync(() => {
     const spyobjs = spyOn(component, 'getLocationDetails');
     component.getLocationDetails();
     fixture.detectChanges();
     expect(spyobjs).toHaveBeenCalledTimes(1);
   }));
-
-  it('should get details based on specific location id', () => {
-    fixture.detectChanges();
-    expect(component.location.id).toEqual(2);
-  });
 
   it('should check input value is filled after data', () => {
     fixture.detectChanges();
@@ -95,32 +91,4 @@ describe('LocationDetailsComponent', () => {
     );
     expect(elem).toBeFalsy();
   });
-
-  it('should display the modal when edit location is clicked', fakeAsync(() => {
-    const clickEditButton = fixture.debugElement.query(By.css('button'));
-    const spyObjs = spyOn(component, 'openModal').and.callThrough();
-    clickEditButton.triggerEventHandler('click', null);
-    tick();
-    fixture.detectChanges();
-    expect(spyObjs).toBeTruthy();
-    flush();
-  }));
-
-  it('should close the modal when clicked', fakeAsync(() => {
-    const mouseClick = fixture.debugElement.query(By.css('button'));
-    const spyObjs = spyOn(component, 'closeModal').and.callThrough();
-    mouseClick.triggerEventHandler('click', null);
-    fixture.detectChanges();
-    expect(spyObjs).toBeTruthy();
-    flush();
-  }));
-
-  it('should call the update the location details', fakeAsync(() => {
-    const spyObjs = spyOn(component, 'updateLocation');
-    component.updateLocation('update');
-    fixture.detectChanges();
-    expect(spyObjs).toHaveBeenCalled();
-    expect(expectedResponse.code).toEqual('200');
-    expect(expectedResponse.message).toEqual('Location updated successfully');
-  }));
 });

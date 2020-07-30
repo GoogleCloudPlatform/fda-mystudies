@@ -92,6 +92,10 @@ html {
   padding: 15px !important;
 }
 
+.p-lg {
+  padding: 20px !important;
+}
+
 .p-xlg {
   padding: 30px !important;
 }
@@ -1116,7 +1120,7 @@ button {
   border-bottom: 1px solid var(--periwinkle-gray) !important;
   color: var(--space-gray);
   font-size: 87.5%;
-  padding: 75% 30px !important;
+  padding: 15px !important;
   background: var(--white);
 }
 
@@ -1855,8 +1859,6 @@ ul.subheader__menu li a.active {
 }
 
 .subheader {
-  height: 67px;
-  line-height: 59px;
   padding: 0;
 }
 

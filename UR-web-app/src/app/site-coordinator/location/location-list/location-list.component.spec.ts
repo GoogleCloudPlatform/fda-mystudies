@@ -14,7 +14,7 @@ import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {LocationService} from '../shared/location.service';
 import {Location} from '../shared/location.model';
-import {expectedLocations} from 'src/app/entity/mockData';
+import {expectedLocationList} from 'src/app/entity/mockLocationData';
 
 describe('LocationsListComponent', () => {
   let component: LocationListComponent;
@@ -48,7 +48,9 @@ describe('LocationsListComponent', () => {
         fixture = TestBed.createComponent(LocationListComponent);
         component = fixture.componentInstance;
 
-        locationServiceSpy.getLocations.and.returnValue(of(expectedLocations));
+        locationServiceSpy.getLocations.and.returnValue(
+          of(expectedLocationList),
+        );
       });
   }));
 

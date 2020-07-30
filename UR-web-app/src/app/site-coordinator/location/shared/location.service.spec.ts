@@ -10,12 +10,12 @@ import {throwError, of} from 'rxjs';
 import {Location} from '../shared/location.model';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {
-  expectedLocations,
   expectedLocation,
-  expectedLocationDetails,
+  expectedLocations,
   expectedResponse,
   expectedLocatiodId,
-} from 'src/app/entity/mockData';
+  expectedLocationList,
+} from 'src/app/entity/mockLocationData';
 describe('LocationService', () => {
   let locationService: LocationService;
 
@@ -45,12 +45,12 @@ describe('LocationService', () => {
     );
     locationService = new LocationService(entityServicespy);
 
-    entityServicespy.getCollection.and.returnValue(of(expectedLocations));
+    entityServicespy.getCollection.and.returnValue(of(expectedLocationList));
     locationService
       .getLocations()
       .subscribe(
-        (Locations) =>
-          expect(Locations).toEqual(expectedLocations, 'expected Locations'),
+        (locations) =>
+          expect(locations).toEqual(expectedLocationList, 'expected Locations'),
         fail,
       );
 
@@ -60,22 +60,22 @@ describe('LocationService', () => {
   it('should return expected Locations details of specific id', () => {
     const entityServiceSpy = jasmine.createSpyObj<EntityService<Location>>(
       'EntityService',
-      ['getCollection'],
+      ['get'],
     );
     locationService = new LocationService(entityServiceSpy);
-    entityServiceSpy.getCollection.and.returnValue(of(expectedLocationDetails));
+    entityServiceSpy.get.and.returnValue(of(expectedLocation));
     locationService
-      .getLocationDetails(expectedLocatiodId)
+      .get(expectedLocatiodId.id.toString())
       .subscribe(
-        (Locations) =>
-          expect(Locations).toEqual(
-            expectedLocationDetails,
+        (locations) =>
+          expect(locations).toEqual(
+            expectedLocation,
             'expected Locations details based on id',
           ),
         fail,
       );
 
-    expect(entityServiceSpy.getCollection).toHaveBeenCalledTimes(1);
+    expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
   });
 
   it('should post the expected new Locations data', () => {
@@ -88,7 +88,7 @@ describe('LocationService', () => {
     entityServicespyobj.post.and.returnValue(of(expectedResponse));
 
     locationService
-      .addLocation(expectedLocation)
+      .addLocation(expectedLocations)
       .subscribe(
         (succesResponse: Location) =>
           expect(succesResponse).toEqual(
@@ -112,12 +112,12 @@ describe('LocationService', () => {
     entityServicespyobj.put.and.returnValue(of(expectedResponse));
 
     locationService
-      .updateLocation(expectedLocation, expectedLocatiodId)
+      .update(expectedLocations, expectedLocatiodId.id.toString())
       .subscribe(
         (succesResponse: Location) =>
           expect(succesResponse).toEqual(
             expectedResponse,
-            '{code:200,message:Location updated successfully}',
+            '{code:MSG_013,message:Location updated successfully}',
           ),
         fail,
       );
@@ -133,8 +133,7 @@ describe('LocationService', () => {
     locationService = new LocationService(entityServicespy);
     const errorResponse: ApiResponse = {
       message: 'User does not exist',
-      code: 'MSG_013',
-    };
+    } as ApiResponse;
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponse));
 

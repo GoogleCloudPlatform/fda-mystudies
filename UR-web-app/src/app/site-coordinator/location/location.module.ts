@@ -6,12 +6,14 @@ import {LocationListComponent} from './location-list/location-list.component';
 import {NgxDataTableModule} from 'angular-9-datatable';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
+import {EditLocationComponent} from './edit-location/edit-location.component';
 
 @NgModule({
   declarations: [
     AddLocationComponent,
     LocationDetailsComponent,
     LocationListComponent,
+    EditLocationComponent,
   ],
   imports: [
     FormsModule,
