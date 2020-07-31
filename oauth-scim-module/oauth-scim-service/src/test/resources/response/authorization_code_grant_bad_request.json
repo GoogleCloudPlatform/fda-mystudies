@@ -13,7 +13,7 @@
 			"message": "must not be blank"
 		},
 		{
-			"path": "user_id",
+			"path": "userId",
 			"message": "must not be blank"
 		},
 		{

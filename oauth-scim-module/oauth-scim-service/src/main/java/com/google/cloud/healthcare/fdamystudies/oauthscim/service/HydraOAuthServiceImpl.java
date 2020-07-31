@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,12 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @Value("${security.oauth2.hydra.token_endpoint}")
   private String tokenEndpoint;
+
+  @Value("${security.oauth2.hydra.token_revoke_endpoint}")
+  private String revokeTokenEndpoint;
+
+  @Value("${security.oauth2.hydra.introspection_endpoint}")
+  private String introspectEndpoint;
 
   @Value("${security.oauth2.hydra.client.client-id}")
   private String clientId;
@@ -51,6 +58,25 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
       headers.set(AUTHORIZATION, encodedAuthorization);
     }
 
-    return getRestTemplate().postForEntity(tokenEndpoint, paramMap, JsonNode.class);
+    HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
+    return getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);
+  }
+
+  @Override
+  public ResponseEntity<JsonNode> revokeToken(
+      MultiValueMap<String, String> paramMap, HttpHeaders headers) {
+    headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
+    headers.add(AUTHORIZATION, encodedAuthorization);
+    HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
+    return getRestTemplate().postForEntity(revokeTokenEndpoint, requestEntity, JsonNode.class);
+  }
+
+  @Override
+  public ResponseEntity<JsonNode> introspectToken(
+      MultiValueMap<String, String> paramMap, HttpHeaders headers) {
+    headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
+    headers.add(AUTHORIZATION, encodedAuthorization);
+    HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
+    return getRestTemplate().postForEntity(introspectEndpoint, requestEntity, JsonNode.class);
   }
 }

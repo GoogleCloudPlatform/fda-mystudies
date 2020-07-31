@@ -22,6 +22,10 @@ public enum ApiEndpoint {
 
   RESET_PASSWORD("http://localhost:8002/oauth-scim-service/v1/user/reset_password"),
 
+  REVOKE_TOKEN("http://localhost:8002/oauth-scim-service/v1/oauth2/revoke"),
+
+  TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/v1/oauth2/introspect"),
+
   CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/v1/users/{userId}/change_password");
 
   private String url;

@@ -50,6 +50,7 @@ import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AuditEventRepository;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
@@ -81,6 +82,8 @@ public class UserControllerTest extends BaseMockIT {
   private static final String NEW_PASSWORD_VALUE = "M0ck!tPassword2";
 
   @Autowired private UserRepository repository;
+
+  @Autowired private AuditEventRepository auditEventRepository;
 
   private static String userId;
 
