@@ -20,7 +20,6 @@ describe('LoginCallbackComponent', () => {
             component: LoginComponent,
           },
         ]),
-        ,
         HttpClientModule,
       ],
       providers: [AuthService, EntityService],
