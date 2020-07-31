@@ -23,13 +23,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class ApplicationTest extends BaseMockIT {
 
-  @Autowired AuditLogEventController aleController;
+  @Autowired AuditLogEventController auditController;
 
   @Autowired HealthController healthController;
 
   @Test
   void contextLoads() {
-    assertNotNull(aleController);
+    assertNotNull(auditController);
     assertNotNull(healthController);
   }
 
