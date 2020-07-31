@@ -49,10 +49,7 @@ export class AuthService {
       userId: userId,
     };
     this.http
-      .post<AccessToken>(
-        `${environment.authServerUrl}/oauth2/token`,
-        JSON.stringify(payload),
-      )
+      .post<AccessToken>(`${environment.authServerUrl}/oauth2/token`, payload)
       .subscribe((response) => {
         this.cookieService.set('accessToken', response.accessToken);
         this.cookieService.set('refreshToken', response.refreshToken);

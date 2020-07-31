@@ -1,6 +1,9 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@environment": ["./src/environments/environment.ts"]
+    },
     "baseUrl": "./",
     "downlevelIteration": true,
     "outDir": "./dist/out-tsc",

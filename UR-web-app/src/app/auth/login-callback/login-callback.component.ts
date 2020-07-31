@@ -21,7 +21,7 @@ export class LoginCallbackComponent implements OnInit {
       if (params.code && params.userId) {
         this.authService.grantAuthorization(params.code, params.userId);
       } else {
-        void this.router.parseUrl('/login');
+        void this.router.navigate(['/login']);
       }
     });
   }
