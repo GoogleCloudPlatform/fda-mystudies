@@ -30,6 +30,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
+import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
@@ -52,6 +53,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Autowired CommonDao commonDao;
 
   @Autowired private UserManagementUtil userManagementUtil;
+
+  @Autowired private FdaEaUserDetailsDao userDetailsDao;
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
@@ -90,7 +93,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     ErrorBean errorBean = null;
     UserDetailsBO userDetailsBO = null;
     AuthInfoBO authInfo = null;
-    String deviceToken=null;
+    String deviceToken = null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
       if (userDetailsBO != null) {
@@ -298,7 +301,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
     return isEmailSent;
   }
-  
+
   private AuthInfoBO authInfoDetails(Integer userDetailsId, UserRequestBean user) {
     AuthInfoBO authInfo = null;
     authInfo = userProfileManagementDao.getAuthInfo(userDetailsId);
@@ -328,5 +331,25 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       authInfo.setModifiedOn(new Date());
     }
     return authInfo;
+  }
+
+  @Override
+  public ErrorBean removeDeviceToken(String userId) {
+    logger.info("UserManagementProfileServiceImpl - removeDeviceToken() - Starts");
+    ErrorBean errorBean = null;
+    UserDetailsBO userDetails = null;
+    try {
+      if (userId != null) {
+        userDetails = userDetailsDao.loadUserDetailsByUserId(userId);
+      }
+      if (userDetails != null) {
+        errorBean = userProfileManagementDao.removeDeviceToken(userDetails.getUserDetailsId());
+      }
+    } catch (Exception e) {
+      logger.error("UserManagementProfileServiceImpl - removeDeviceToken() - error() ", e);
+      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+    }
+    logger.info("UserManagementProfileServiceImpl - removeDeviceToken() - Ends");
+    return errorBean;
   }
 }

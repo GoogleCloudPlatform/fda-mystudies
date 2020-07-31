@@ -37,4 +37,6 @@ public interface UserProfileManagementDao {
   public UserDetailsBO getParticipantDetails(String id);
 
   public boolean deActivateAcct(String userId, List<String> deleteData, Integer userDetailsId);
+  
+  public ErrorBean removeDeviceToken(int userId);
 }
