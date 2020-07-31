@@ -9,12 +9,14 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -70,8 +72,9 @@ public class UserController {
       @Valid @RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
-
-    ResetPasswordResponse resetPasswordResponse = userService.resetPassword(resetPasswordRequest);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    ResetPasswordResponse resetPasswordResponse =
+        userService.resetPassword(resetPasswordRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, resetPasswordResponse.getHttpStatusCode()));
     return ResponseEntity.status(resetPasswordResponse.getHttpStatusCode())

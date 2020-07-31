@@ -6,12 +6,11 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.auditlog.service;
+package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 
-public interface AuditLogEventService {
+public interface AuditEventService {
 
-  public AuditLogEventResponse saveAuditLogEvent(AuditLogEventRequest auditRequest);
+  public void postAuditLogEvent(AuditLogEventRequest auditRequest);
 }

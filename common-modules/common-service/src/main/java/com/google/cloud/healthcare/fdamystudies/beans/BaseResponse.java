@@ -14,7 +14,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 @JsonInclude(Include.NON_NULL)
 public class BaseResponse {

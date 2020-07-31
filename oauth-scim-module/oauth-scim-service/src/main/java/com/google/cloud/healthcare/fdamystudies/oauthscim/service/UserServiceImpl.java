@@ -21,11 +21,14 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCESS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
@@ -38,6 +41,7 @@ import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
@@ -63,6 +67,8 @@ public class UserServiceImpl implements UserService {
   @Autowired private AppPropertyConfig appConfig;
 
   @Autowired private EmailService emailService;
+
+  @Autowired private AuthScimAuditLogHelper auditHelper;
 
   @Override
   public UserResponse createUser(UserRequest userRequest) {
@@ -118,7 +124,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public ResetPasswordResponse resetPassword(ResetPasswordRequest resetPasswordRequest)
+  public ResetPasswordResponse resetPassword(
+      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
@@ -142,13 +149,15 @@ public class UserServiceImpl implements UserService {
       userEntity.setUserInfo(userInfo.toString());
       repository.saveAndFlush(userEntity);
       logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
+      auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
       return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
     } else {
-      logger.exit(
-          String.format(
-              "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
-      return new ResetPasswordResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
+      auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
     }
+    logger.exit(
+        String.format(
+            "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
+    return new ResetPasswordResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
   }
 
   private EmailResponse sendPasswordResetEmail(

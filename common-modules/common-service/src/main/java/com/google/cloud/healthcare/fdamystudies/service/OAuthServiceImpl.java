@@ -8,13 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.addTextFields;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -24,6 +28,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 @Service
+@ConditionalOnProperty(
+    value = "commonservice.oauth.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private XLogger logger = XLoggerFactory.getXLogger(OAuthServiceImpl.class.getName());
@@ -38,11 +46,28 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private static final String CONTENT_TYPE = "Content-Type";
 
-  @Value("${security.oauth2.health_endpoint}")
-  private String healthEndpoint;
+  private static final String GRANT_TYPE = "grant_type";
 
-  @Value("${security.oauth2.introspection_endpoint}")
+  private static final String REDIRECT_URI = "redirect_uri";
+
+  private static final String ACCESS_TOKEN = "access_token";
+
+  private String accessToken;
+
+  @Value("${security.oauth2.client.client-id:}")
+  private String clientId;
+
+  @Value("${security.oauth2.client.client-secret:}")
+  private String clientSecret;
+
+  @Value("${security.oauth2.client.redirect-uri:}")
+  private String clientRedirectUri;
+
+  @Value("${security.oauth2.introspection_endpoint:}")
   private String introspectEndpoint;
+
+  @Value("${security.oauth2.token_endpoint:}")
+  private String tokenEndpoint;
 
   @Override
   public ResponseEntity<JsonNode> introspectToken(JsonNode params) {
@@ -61,5 +86,57 @@ public class OAuthServiceImpl extends BaseServiceImpl implements OAuthService {
             "status=%d, active=%b",
             response.getStatusCodeValue(), response.getBody().get(ACTIVE).booleanValue()));
     return response;
+  }
+
+  @Override
+  public String getAccessToken() {
+    if (StringUtils.isEmpty(accessToken)) {
+      this.accessToken = getNewAccessToken();
+    }
+    return this.accessToken;
+  }
+
+  @Override
+  public String getNewAccessToken() {
+    logger.entry("begin getNewAccessToken()");
+    ResponseEntity<JsonNode> response = getToken();
+    if (isSuccessful(response)) {
+      this.accessToken = response.getBody().get(ACCESS_TOKEN).textValue();
+      logger.exit(String.format("status=%d", response.getStatusCodeValue()));
+    } else {
+      logger.error(
+          String.format(
+              "Get new access token from oauth scim service failed with status=%d and response=%s",
+              response.getStatusCodeValue(), response.getBody()));
+    }
+    return this.accessToken;
+  }
+
+  private ResponseEntity<JsonNode> getToken() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
+    headers.add(AUTHORIZATION, getEncodedAuthorization(clientId, clientSecret));
+
+    MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
+    requestBody.add(GRANT_TYPE, "client_credentials");
+    requestBody.add(SCOPE, "openid");
+    requestBody.add(REDIRECT_URI, clientRedirectUri);
+
+    ResponseEntity<JsonNode> response =
+        exchangeForJson(tokenEndpoint, headers, requestBody, HttpMethod.POST);
+
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      logger.error(
+          String.format(
+              "get token failed with status %d and response %s",
+              response.getStatusCodeValue(), response.getBody().toString()));
+    }
+
+    return response;
+  }
+
+  protected String getEncodedAuthorization(String clientId, String clientSecret) {
+    String credentials = clientId + ":" + clientSecret;
+    return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
   }
 }

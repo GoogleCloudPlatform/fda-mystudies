@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_CREDENTIALS;
@@ -53,7 +54,7 @@ public class OAuthControllerTest extends BaseMockIT {
   public void shouldReturnBadRequestForInvalidClientCredentialsGrantRequest() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
     headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -79,7 +80,7 @@ public class OAuthControllerTest extends BaseMockIT {
   public void shouldReturnBadRequestForInvalidAuthorizationCodeGrantRequest() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
@@ -105,7 +106,7 @@ public class OAuthControllerTest extends BaseMockIT {
   public void shouldReturnBadRequestForInvalidRefreshTokenGrantRequest() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, REFRESH_TOKEN);
@@ -131,7 +132,7 @@ public class OAuthControllerTest extends BaseMockIT {
   public void shouldReturnAccessTokenForClientCredentialsGrant() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
     headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -154,7 +155,7 @@ public class OAuthControllerTest extends BaseMockIT {
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
@@ -180,7 +181,7 @@ public class OAuthControllerTest extends BaseMockIT {
   public void shouldReturnNewTokensForRefreshTokenGrant() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, REFRESH_TOKEN);
