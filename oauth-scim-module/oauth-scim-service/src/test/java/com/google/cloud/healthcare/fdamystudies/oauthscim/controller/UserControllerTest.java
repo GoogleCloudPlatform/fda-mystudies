@@ -34,6 +34,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
@@ -51,20 +67,6 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AuditEventRepository;
 import com.jayway.jsonpath.JsonPath;
-import java.net.MalformedURLException;
-import java.util.Collections;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class UserControllerTest extends BaseMockIT {
@@ -288,7 +290,7 @@ public class UserControllerTest extends BaseMockIT {
                 .value(ErrorCode.CURRENT_PASSWORD_INVALID.getDescription()));
 
     verify(
-        6,
+        5,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
@@ -317,7 +319,7 @@ public class UserControllerTest extends BaseMockIT {
             jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
 
     verify(
-        7,
+        6,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
@@ -364,7 +366,7 @@ public class UserControllerTest extends BaseMockIT {
     saltAfterChangePassword = salt;
 
     verify(
-        8,
+        7,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
@@ -394,7 +396,7 @@ public class UserControllerTest extends BaseMockIT {
                 .value(ErrorCode.ENFORCE_PASSWORD_HISTORY.getDescription()));
 
     verify(
-        9,
+        8,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
@@ -427,7 +429,7 @@ public class UserControllerTest extends BaseMockIT {
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
 
     verify(
-        10,
+        7,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
@@ -476,7 +478,7 @@ public class UserControllerTest extends BaseMockIT {
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 3);
 
     verify(
-        11,
+        10,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
@@ -518,7 +520,7 @@ public class UserControllerTest extends BaseMockIT {
             .withRequestBody(new ContainsPattern("CorrelationIdValue_For_5XX_ERROR")));
 
     verify(
-        12,
+        11,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
