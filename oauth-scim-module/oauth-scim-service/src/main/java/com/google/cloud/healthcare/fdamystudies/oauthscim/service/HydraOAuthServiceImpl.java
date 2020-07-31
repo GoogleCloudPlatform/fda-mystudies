@@ -8,13 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
-import java.util.Base64;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -25,9 +25,6 @@ import org.springframework.util.MultiValueMap;
 
 @Service
 class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
-
-  private static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
-      "application/x-www-form-urlencoded;charset=UTF-8";
 
   private static final String CONTENT_TYPE = "Content-Type";
 
@@ -50,8 +47,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @PostConstruct
   public void init() {
-    String credentials = clientId + ":" + clientSecret;
-    encodedAuthorization = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+    encodedAuthorization = getEncodedAuthorization(clientId, clientSecret);
   }
 
   public ResponseEntity<JsonNode> getToken(

@@ -24,8 +24,6 @@ public final class AuthScimConstants {
 
   public static final String REFRESH_TOKEN = "refresh_token";
 
-  public static final String CONTENT_TYPE = "Content-Type";
-
   public static final String AUTHORIZATION = "Authorization";
 
   public static final String CLIENT_CREDENTIALS = "client_credentials";

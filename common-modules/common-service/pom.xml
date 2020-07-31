@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>com.google.cloud.healthcare.fdamystudies</groupId>
 	<artifactId>common-service</artifactId>
-	<version>0.0.1-RELEASE</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>common-service</name>
 	<description>Common service module for FDA MyStudies</description>
