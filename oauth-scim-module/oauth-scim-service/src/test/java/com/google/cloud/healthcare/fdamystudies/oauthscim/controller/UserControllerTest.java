@@ -429,7 +429,7 @@ public class UserControllerTest extends BaseMockIT {
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
 
     verify(
-        7,
+        9,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
