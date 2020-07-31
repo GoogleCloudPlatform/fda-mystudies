@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
@@ -136,5 +138,23 @@ public class SiteController {
 
     logger.exit(String.format(STATUS_LOG, participantDetails.getHttpStatusCode()));
     return ResponseEntity.status(participantDetails.getHttpStatusCode()).body(participantDetails);
+  }
+
+  @PostMapping("/sites/{siteId}/participants/invite")
+  public ResponseEntity<InviteParticipantResponse> inviteParticipants(
+      @Valid @RequestBody InviteParticipantRequest inviteParticipantRequest,
+      @PathVariable String siteId,
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      HttpServletRequest request) {
+    logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+
+    inviteParticipantRequest.setSiteId(siteId);
+    inviteParticipantRequest.setUserId(userId);
+    InviteParticipantResponse inviteParticipantResponse =
+        siteService.inviteParticipants(inviteParticipantRequest);
+
+    logger.exit(String.format(STATUS_LOG, inviteParticipantResponse.getHttpStatusCode()));
+    return ResponseEntity.status(inviteParticipantResponse.getHttpStatusCode())
+        .body(inviteParticipantResponse);
   }
 }

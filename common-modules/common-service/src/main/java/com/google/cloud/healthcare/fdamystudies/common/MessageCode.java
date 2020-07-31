@@ -8,15 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.io.IOException;
+
+import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import java.io.IOException;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @ToString
@@ -64,7 +67,12 @@ public enum MessageCode {
       HttpStatus.OK, "MSG-0023", "Get user profile with security code successfully"),
 
   GET_PARTICIPANT_DETAILS_SUCCESS(
-      HttpStatus.OK, "MSG-0019", "Get participant details successfully");
+      HttpStatus.OK, "MSG-0019", "Get participant details successfully"),
+
+  PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "participants are invited"),
+
+  EMAIL_ACCEPTED_BY_MAIL_SERVER(
+      HttpStatus.ACCEPTED, "MSG-0022", "The email is accepted by the receiving mail server.");
 
   private final HttpStatus httpStatus;
   private final String code;
