@@ -4,68 +4,100 @@
 
 export PWD=$(pwd)
 
+# Where you copy terraform files from and where it gets copied to. 
+# It can be a separate git repo, or a different folder within within the same repo.
 export INPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies/Terraform
 export OUTPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies-test/Terraform
 
+# Name of the GCS bucket that stores terraform state.
+# This name should be globally unique. 
+# The numerical suffix used here is sha256("heroes-hat-dev")
 export OLD_STATE="heroes-hat-dev-terraform-state-08679"
 export NEW_STATE=
 
+# Main name for your application. 
+# It also gets used for naming some assets, 
+# such as your dns_name in cloud DNS, folder name, ...
+export OLD_APP_NAME="heroes-hat"
+export NEW_APP_NAME=
+
+# Prefix for your deployment. We recomment ${app_name}-${env}
+# This prefix is used in numerous places to generate unique resource names.
 export OLD_PREFIX="heroes-hat-dev"
 export NEW_PREFIX=
 
-export OLD_GKE_PREFIX="heroes-hat"
-export NEW_GKE_PREFIX=
-
+# Prefix for firestore bigquery dataset ID.
+# final name will be ${NEW_BIGQUERY_PREFIX}_my_studies_firestore_data.
 export OLD_BIGQUERY_PREFIX="heroes_hat_dev"
 export NEW_BIGQUERY_PREFIX=
 
+# Name of the folder that contains organization level project,
+# this includes, data, apps, firebase and networks project.
 export OLD_FOLDER="fda-my-studies"
 export NEW_FOLDER=
 
+# For org level deployment, please set your GCP organization ID here.
+# leave blank for Folder level deployment.
 export OLD_ORG_ID="707577601068"
 export NEW_ORG_ID=
 
+# GCP folder ID where the entire deployment should be created in.
+# This folder should be created manually prior to the deployment.
+# Folder is used to scope your deployment within a folder.
+# leave blank if you have Org level access and would like to set org policy.
 export OLD_FOLDER_ID="440087619763"
 export NEW_FOLDER_ID=""
 
+# GCP billing account.
 export OLD_BILLING_ACCOUNT="01EA90-3519E1-89CB1F"
 export NEW_BILLING_ACCOUNT=
 
-export OLD_ADMIN_GROUP="rocketturtle-gcp-admin@rocketturtle.net"
-export NEW_ADMIN_GROUP=
-
+# Name of the github organization that would hold the deployment fork.
 export OLD_GITHUB_ORG="GoogleCloudPlatform"
 export NEW_GITHUB_ORG=
 
+# Name of the deployment forked repo.
 export OLD_GITHUB_REPO="fda-mystudies"
 export NEW_GITHUB_REPO=
 
+# GIT Branch of the code used for this deployment.
 export OLD_GITHUB_BRANCH="early-access"
 export NEW_GITHUB_BRANCH=
 
+# Source and destination of the org level terraform config files.
+# feel free to leave as is.
 export SRC_PROJ_BASE=${INPUT_TF_BASE}/org/folder.${OLD_FOLDER}/project.${OLD_PREFIX}
 export DST_PROJ_BASE=${OUTPUT_TF_BASE}/org/folder.${NEW_FOLDER}/project.${NEW_PREFIX}
 
+# Name of the alias to use as GCP admin group for this deployment.
+# `group:` prefix follows GCP format and can be replaced with user or account.
 export OLD_ADMIN_EMAIL="group:rocketturtle-gcp-admin@rocketturtle.net"
 export NEW_ADMIN_EMAIL=
 
+# Domain name used for this deployment.
+# This deployment would create a DNS record for #{env}.${appname}.${domain}, 
+# and map that to the external IP of your cluster.
+# e.g. "dev.heroes-hat.rocketturtle.net"
 export OLD_DOMAIN="rocketturtle.net"
 export NEW_DOMAIN=
 
+# GCS COLDLINE Bucket name for storing raw audit for long term storage.
+# This name should be globally unique. 
+# The numerical suffix used here is sha256("heroes-hat-dev")
 export OLD_AUDIT_BUCKET="7yr-org-audit-logs-08679"
 export NEW_AUDIT_BUCKET=
 
+# Cloud Storage log sink name.
 export OLD_AUDIT_ST_SINK="storage-org-sink"
 export NEW_AUDIT_ST_SINK=
 
+# BigQuery log sink name.
 export OLD_AUDIT_BQ_SINK="bigquery-org-sink"
 export NEW_AUDIT_BQ_SINK=
 
+# GCK Cluster name.
 export OLD_CLUSTER="heroes_hat_cluster"
 export NEW_CLUSTER=
-
-export OLD_APP_ORG="Test Org"
-export NEW_APP_ORG=
 
 # Cleanup output directory.
 rm -rf ${OUTPUT_TF_BASE}/*
@@ -117,7 +149,7 @@ for f in $files
 do 
   sed -i "s|${OLD_STATE}|${NEW_STATE}|" $f
   sed -i "s|${OLD_PREFIX}|${NEW_PREFIX}|" $f
-  sed -i "s|${OLD_GKE_PREFIX}|${NEW_GKE_PREFIX}|" $f
+  sed -i "s|${OLD_APP_NAME}|${NEW_APP_NAME}|" $f
   sed -i "s|${OLD_BIGQUERY_PREFIX}|${NEW_BIGQUERY_PREFIX}|" $f
 
   # Org info
@@ -126,9 +158,6 @@ do
   sed -i "s|${OLD_FOLDER_ID}|${NEW_FOLDER_ID}|" $f
   sed -i "s|${OLD_ADMIN_EMAIL}|${NEW_ADMIN_EMAIL}|" $f
   sed -i "s|${OLD_DOMAIN}|${NEW_DOMAIN}|" $f
-
-  # Org group
-  sed -i "s|${OLD_ADMIN_GROUP}|${NEW_ADMIN_GROUP}|" $f
 
   # Folder
   sed -i "s|${OLD_FOLDER}|${NEW_FOLDER}|" $f
@@ -145,7 +174,6 @@ do
 
   # Apps
   sed -i "s|${OLD_CLUSTER}|${NEW_CLUSTER}|" $f
-  sed -i "s|${OLD_APP_ORG}|${NEW_APP_ORG}|" $f
 done
 
 # Cleanup
