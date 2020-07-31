@@ -41,10 +41,6 @@
       "message": "must not be blank"
     },
     {
-      "path": "eventName",
-      "message": "must not be blank"
-    },
-    {
       "path": "destination",
       "message": "must not be blank"
     }
