@@ -8,16 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @JsonInclude(Include.NON_NULL)
 @Component
@@ -45,4 +45,14 @@ public class ParticipantDetail {
   private String customLocationId;
 
   private String locationName;
+
+  private String userDetailsId;
+
+  private String registrationStatus;
+
+  private String studiesEnrolled;
+
+  private String registrationDate;
+
+  private List<AppStudyDetails> enrolledStudies = new ArrayList<>();
 }
