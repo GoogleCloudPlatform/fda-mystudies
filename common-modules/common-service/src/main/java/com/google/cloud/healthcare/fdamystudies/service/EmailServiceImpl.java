@@ -41,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
 
   @Override
   public EmailResponse sendMimeMail(EmailRequest emailRequest) {
-    logger.entry("Begin sendSimpleMail()");
+    logger.entry("Begin sendMimeMail()");
     try {
       MimeMessage message = emailSender.createMimeMessage();
       MimeMessageHelper helper = new MimeMessageHelper(message, true);

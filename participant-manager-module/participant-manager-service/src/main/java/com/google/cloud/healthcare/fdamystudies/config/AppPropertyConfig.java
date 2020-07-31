@@ -40,4 +40,13 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${fromEmailPasswod}")
   private String fromEmailPasswod;
+
+  @Value("${sslFactoryValue}")
+  private String sslFactoryValue;
+
+  @Value("${smtpPortValue}")
+  private String smtpPortValue;
+
+  @Value("${smtpHostName}")
+  private String smtpHostName;
 }
