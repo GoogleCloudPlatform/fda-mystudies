@@ -53,6 +53,8 @@ spec:
               value: "false"
             - name: FROM_EMAIL_DOMAIN
               value: ""
+            - name: REGISTRATION_SERVER_URL
+              value: "user-registration-server-np:50000"
           ports:
           - containerPort: 8080
           readinessProbe:

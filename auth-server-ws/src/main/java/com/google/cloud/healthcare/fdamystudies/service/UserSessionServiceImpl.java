@@ -17,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.exception.UserNotFoundException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.repository.SessionRepository;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.utils.UserSessionUtil;
 
 @Service
 public class UserSessionServiceImpl implements UserSessionService {
@@ -24,6 +25,8 @@ public class UserSessionServiceImpl implements UserSessionService {
   private static final Logger logger = LoggerFactory.getLogger(UserSessionServiceImpl.class);
 
   @Autowired private SessionRepository session;
+  
+  @Autowired private UserSessionUtil userSessionUtil;
 
   @Override
   public String deleteTokenExpireDateByUserId(String userId)
@@ -33,6 +36,7 @@ public class UserSessionServiceImpl implements UserSessionService {
     try {
       long result = session.deleteByUserId(userId);
       if (result > 0 && result == 1) {
+        userSessionUtil.removeDeviceToken(userId);
         logger.info("UserSessionService deleteTokenExpireDateByUserId() - ends");
         return AppConstants.SUCCESS;
       } else {
