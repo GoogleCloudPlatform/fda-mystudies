@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,8 +23,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -44,18 +50,27 @@ public class AppEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "app_info_id", updatable = false, nullable = false)
+  @Column(
+      name = "app_info_id",
+      updatable = false,
+      nullable = false,
+      length = ColumnConstraints.ID_LENGTH)
   private String id;
 
   @ToString.Exclude
-  @Column(name = "custom_app_id")
+  @Column(
+      name = "custom_app_id",
+      nullable = false,
+      unique = true,
+      length = ColumnConstraints.XS_LENGTH)
   private String appId;
 
   @ToString.Exclude
-  @Column(name = "app_name")
+  @Column(name = "app_name", length = ColumnConstraints.SMALL_LENGTH)
   private String appName;
 
   @Column(name = "app_description")
+  @Type(type = "text")
   private String appDescription;
 
   @ToString.Exclude
@@ -64,61 +79,64 @@ public class AppEntity implements Serializable {
   private OrgInfoEntity orgInfo;
 
   @ToString.Exclude
-  @Column(name = "ios_bundle_id")
+  @Column(name = "ios_bundle_id", length = ColumnConstraints.SMALL_LENGTH)
   private String iosBundleId;
 
   @ToString.Exclude
-  @Column(name = "android_bundle_id")
+  @Column(name = "android_bundle_id", length = ColumnConstraints.SMALL_LENGTH)
   private String androidBundleId;
 
   @ToString.Exclude
   @Column(name = "ios_certificate")
+  @Type(type = "text")
   private String iosCertificate;
 
   @ToString.Exclude
-  @Column(name = "ios_certificate_password")
+  @Column(name = "ios_certificate_password", length = ColumnConstraints.SMALL_LENGTH)
   private String iosCertificatePassword;
 
   @ToString.Exclude
-  @Column(name = "android_server_key")
+  @Column(name = "android_server_key", length = ColumnConstraints.LARGE_LENGTH)
   private String androidServerKey;
 
   @ToString.Exclude
-  @Column(name = "from_email_id")
+  @Column(name = "from_email_id", length = ColumnConstraints.LARGE_LENGTH)
   private String formEmailId;
 
   @ToString.Exclude
-  @Column(name = "from_email_password")
+  @Column(name = "from_email_password", length = ColumnConstraints.LARGE_LENGTH)
   private String fromEmailPassword;
 
   @ToString.Exclude
-  @Column(name = "reg_email_sub")
+  @Column(name = "reg_email_sub", length = ColumnConstraints.LARGE_LENGTH)
   private String regEmailSub;
 
   @ToString.Exclude
   @Column(name = "reg_email_body")
+  @Type(type = "text")
   private String regEmailBody;
 
   @ToString.Exclude
-  @Column(name = "forgot_email_sub")
+  @Column(name = "forgot_email_sub", length = ColumnConstraints.LARGE_LENGTH)
   private String forgotEmailSub;
 
   @Column(name = "forgot_email_body")
+  @Type(type = "text")
   private String forgotEmailBody;
 
-  @Column(name = "method_handler")
+  @Column(name = "method_handler", length = ColumnConstraints.TINY_LENGTH)
   private Integer methodHandler;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", length = ColumnConstraints.LARGE_LENGTH)
   private String createdBy;
 
-  @Column(name = "modified_by")
+  @Column(name = "modified_by", length = ColumnConstraints.LARGE_LENGTH)
   private String modifiedBy;
 
   @Column(
       name = "modified_date",
       insertable = false,
-      updatable = false,
+      updatable = true,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
@@ -179,5 +197,21 @@ public class AppEntity implements Serializable {
   public void addStudyEntity(StudyEntity study) {
     studies.add(study);
     study.setAppInfo(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  private List<AuthInfoEntity> apps = new ArrayList<>();
+
+  public void addAuthInfoEntity(AuthInfoEntity authInfoEntity) {
+    apps.add(authInfoEntity);
+    authInfoEntity.setAppInfo(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  private List<UserAppDetailsEntity> userAppDetails = new ArrayList<>();
+
+  public void addUserAppDeatailsEntity(UserAppDetailsEntity userAppDetailsEntity) {
+    userAppDetails.add(userAppDetailsEntity);
+    userAppDetailsEntity.setAppInfo(this);
   }
 }

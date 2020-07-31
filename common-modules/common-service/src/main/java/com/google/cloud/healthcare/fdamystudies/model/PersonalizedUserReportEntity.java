@@ -5,46 +5,47 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "sites_permissions")
+@Table(name = "personalized_user_report")
 @ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
+    value = "participant.datastore.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SitePermissionEntity implements Serializable {
+public class PersonalizedUserReportEntity implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = -3019529323339411129L;
 
   @ToString.Exclude
   @Id
@@ -53,32 +54,25 @@ public class SitePermissionEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-  @JoinColumn(name = "ur_admin_user_id", insertable = true, updatable = true)
-  private UserRegAdminEntity urAdminUser;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private UserDetailsEntity userDetails;
 
-  @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
+  @ManyToOne
+  @JoinColumn(name = "study_info_id")
+  private StudyEntity studyInfo;
 
-  @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-  @JoinColumn(name = "site_id")
-  private SiteEntity site;
+  @Column(name = "report_title", length = ColumnConstraints.MEDIUM_LENGTH)
+  private String reportTitle;
 
-  @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-  @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
+  // Length is an arbitrary multiple of 100 > 2^15 and < 2^16 to guarantee we
+  // get the `TEXT` data type. Marking `columnDefinition = Text` is not
+  // portable and doesn't work in tests.
+  @Column(name = "report_content")
+  @Type(type = "text")
+  private String reportContent;
 
-  @Column(name = "edit")
-  private Integer canEdit;
-
-  @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp created;
-
-  @Column(name = "created_by", length = ColumnConstraints.LARGE_LENGTH)
-  private String createdBy;
+  @Column(name = "activity_date_time")
+  @CreationTimestamp
+  private Timestamp creationTime;
 }

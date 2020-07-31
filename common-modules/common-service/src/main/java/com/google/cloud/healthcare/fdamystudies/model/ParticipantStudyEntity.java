@@ -20,10 +20,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +40,13 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "participant_study_info")
+@Table(
+    name = "participant_study_info",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"participant_id", "site_id"},
+          name = "uk_participant_study_info_participant_site")
+    })
 public class ParticipantStudyEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -45,10 +55,10 @@ public class ParticipantStudyEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
   private String id;
 
-  @Column(name = "participant_id", unique = true)
+  @Column(name = "participant_id", length = ColumnConstraints.XS_LENGTH)
   private String participantId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -68,9 +78,9 @@ public class ParticipantStudyEntity implements Serializable {
   private UserDetailsEntity userDetails;
 
   @Column(name = "consent_status")
-  private Boolean consentStatus;
+  private Boolean consentStatus = false;
 
-  @Column(name = "status")
+  @Column(name = "status", length = ColumnConstraints.SMALL_LENGTH)
   private String status;
 
   @Column(name = "bookmark")
@@ -87,6 +97,7 @@ public class ParticipantStudyEntity implements Serializable {
   private Timestamp enrolledDate;
 
   @Column(name = "sharing")
+  @Type(type = "text")
   private String sharing;
 
   @Column(name = "completion")

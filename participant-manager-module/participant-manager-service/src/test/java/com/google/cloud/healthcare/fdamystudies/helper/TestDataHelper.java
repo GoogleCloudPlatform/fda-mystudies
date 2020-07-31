@@ -211,6 +211,7 @@ public class TestDataHelper {
     StudyEntity studyEntity = new StudyEntity();
     studyEntity.setType("CLOSE");
     studyEntity.setName("COVID Study");
+    studyEntity.setCustomId("CovidStudy");
     studyEntity.setAppInfo(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
@@ -295,6 +296,7 @@ public class TestDataHelper {
   public OrgInfoEntity createOrgInfo() {
     OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
     orgInfoEntity.setName("OrgName");
+    orgInfoEntity.setOrgId("OrgName");
     return orgInfoRepository.saveAndFlush(orgInfoEntity);
   }
 }

@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,9 +24,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -46,7 +51,11 @@ public class SiteEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "site_id", updatable = false, nullable = false)
+  @Column(
+      name = "site_id",
+      updatable = false,
+      nullable = false,
+      length = ColumnConstraints.ID_LENGTH)
   private String id;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -63,27 +72,27 @@ public class SiteEntity implements Serializable {
   @Column(name = "target_enrollment")
   private Integer targetEnrollment;
 
-  @Column(name = "name")
+  @Column(name = "name", length = ColumnConstraints.SMALL_LENGTH)
   private String name;
 
   @Column(
-      name = "created",
+      name = "created_on",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", length = ColumnConstraints.LARGE_LENGTH)
   private String createdBy;
 
   @Column(
-      name = "modified",
+      name = "modified_date",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Timestamp modified;
 
-  @Column(name = "modified_by")
+  @Column(name = "modified_by", length = ColumnConstraints.LARGE_LENGTH)
   private String modifiedBy;
 
   @OneToMany(

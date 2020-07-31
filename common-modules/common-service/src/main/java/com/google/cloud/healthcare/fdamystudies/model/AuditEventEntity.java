@@ -9,15 +9,20 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.sql.Timestamp;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,7 +39,7 @@ public class AuditEventEntity {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
   private String id;
 
   /** Refer AuditLogEventStatus enum for values. */
@@ -48,14 +53,14 @@ public class AuditEventEntity {
   private long retryCount;
 
   @Column(
-      name = "created",
+      name = "created_on",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
   @Column(
-      name = "modified",
+      name = "modified_date",
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Timestamp modified;
 

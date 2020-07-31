@@ -33,54 +33,45 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "study_consent")
+@Table(name = "auth_info")
 @ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
+    value = "participant.datastore.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class StudyConsentEntity implements Serializable {
+public class AuthInfoEntity implements Serializable {
 
-  private static final long serialVersionUID = 6218229749598633153L;
+  private static final long serialVersionUID = 4985607753888575491L;
 
   @ToString.Exclude
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(
-      name = "study_consent_id",
-      updatable = false,
-      nullable = false,
-      length = ColumnConstraints.ID_LENGTH)
-  private String id;
+  @Column(name = "auth_id", nullable = false, length = ColumnConstraints.ID_LENGTH)
+  private Integer authId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_info_id")
-  private StudyEntity study;
+  @JoinColumn(name = "app_info_id", nullable = false)
+  private AppEntity appInfo;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "user_details_id")
+  @JoinColumn(name = "user_details_id", nullable = false)
   private UserDetailsEntity userDetails;
 
-  @Column(name = "status", length = ColumnConstraints.SMALL_LENGTH)
-  private String status;
+  @Column(name = "auth_key", length = ColumnConstraints.SMALL_LENGTH)
+  private String authKey;
 
-  @Column(name = "version", length = ColumnConstraints.SMALL_LENGTH)
-  private String version;
-
-  @Column(name = "pdf")
+  @Column(name = "device_token")
   @Type(type = "text")
-  private String pdf;
+  private String deviceToken;
 
-  @Column(name = "pdfpath", length = ColumnConstraints.LARGE_LENGTH)
-  private String pdfPath;
+  @Column(name = "device_type", length = ColumnConstraints.SMALL_LENGTH)
+  private String deviceType;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "participant_study_id", nullable = false, updatable = false)
-  private ParticipantStudyEntity participantStudy;
+  @Column(name = "android_app_version", length = ColumnConstraints.SMALL_LENGTH)
+  private String androidAppVersion;
 
-  // represents whether pdf content is stored in db=0 or gcp=1
-  @Column(name = "pdfStorage", nullable = false)
-  private int pdfStorage;
+  @Column(name = "ios_app_version", length = ColumnConstraints.SMALL_LENGTH)
+  private String iosAppVersion;
 
   @Column(
       name = "created_on",
@@ -88,4 +79,21 @@ public class StudyConsentEntity implements Serializable {
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
+
+  @Column(
+      name = "modified_date",
+      insertable = false,
+      updatable = true,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp modified;
+
+  @Column(name = "remote_notification_flag", length = ColumnConstraints.TINY_LENGTH)
+  private Boolean remoteNotificationFlag = false;
+
+  @Column(
+      name = "timestamp",
+      insertable = false,
+      updatable = false,
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  private Timestamp timestamp;
 }
