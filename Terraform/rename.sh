@@ -6,8 +6,8 @@ export PWD=$(pwd)
 
 # Where you copy terraform files from and where it gets copied to. 
 # It can be a separate git repo, or a different folder within within the same repo.
-export INPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies/Terraform
-export OUTPUT_TF_BASE=/usr/local/google/home/xingao/gitrepos/fda-mystudies-test/Terraform
+export INPUT_TF_BASE=/path/to/local/fda-mystudies/Terraform
+export OUTPUT_TF_BASE=/path/to/local/fda-mystudies-deployment/Terraform
 
 # Name of the GCS bucket that stores terraform state.
 # This name should be globally unique. 
