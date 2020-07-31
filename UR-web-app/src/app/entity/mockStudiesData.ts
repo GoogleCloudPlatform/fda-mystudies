@@ -1,6 +1,6 @@
 import {Study} from '../site-coordinator/studies/shared/study.model';
 
-export const expectedStudyList: Study[] = [
+export const expectedStudyList = [
   {
     appId: '',
     appInfoId: 0,

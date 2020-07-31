@@ -3,6 +3,7 @@ import {
   ComponentFixture,
   TestBed,
   fakeAsync,
+  tick,
 } from '@angular/core/testing';
 
 import {EditLocationComponent} from './edit-location.component';
@@ -16,6 +17,7 @@ import {EntityService} from 'src/app/service/entity.service';
 import {LocationService} from '../shared/location.service';
 import {DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
+import {updatedLocation} from 'src/app/entity/mockLocationData';
 
 describe('EditLocationComponent', () => {
   let component: EditLocationComponent;
@@ -67,6 +69,7 @@ describe('EditLocationComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
   it('should not show a validation error if the input field are auto filled', () => {
     const nameInputs = nameInput.nativeElement as HTMLInputElement;
     const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
@@ -81,19 +84,37 @@ describe('EditLocationComponent', () => {
     expect(errorMsg).toBeFalsy();
   });
 
-  it('should click on update button and check service is called', fakeAsync(() => {
+  it('should update the location when update button is clicked', fakeAsync(async () => {
+    component.location = updatedLocation;
+    const updateButton = updateLocation.nativeElement as HTMLInputElement;
+    const nameInputs = nameInput.nativeElement as HTMLInputElement;
+    const descriptionInputs = descriptionInput.nativeElement as HTMLInputElement;
+    nameInputs.value = updatedLocation.name;
+    descriptionInputs.value = updatedLocation.description;
+    dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    tick();
+    updateButton.click();
+    fixture.detectChanges();
+    spyOn(component, 'updateLocation').and.callThrough();
+    await fixture.whenStable();
+    expect(component.location.name).toEqual(updatedLocation.name);
+    expect(component.location.description).toEqual(updatedLocation.description);
+  }));
+
+  it('should update the location when the update button is clicked', fakeAsync(() => {
     const updateSpy = spyOn(component, 'update');
     const updateButton = updateLocation.nativeElement as HTMLInputElement;
     updateButton.click();
     expect(updateSpy).toHaveBeenCalledTimes(1);
   }));
-  it('should click on cancel button and check service is called', fakeAsync(() => {
+  it('should cancel the update location when cancel button is clicked', fakeAsync(() => {
     const cancelSpy = spyOn(component, 'closeModal');
     const cancelButton = cancelUpdate.nativeElement as HTMLInputElement;
     cancelButton.click();
     expect(cancelSpy).toHaveBeenCalledTimes(1);
   }));
-  it('should click on Site Active status button and check service is called', fakeAsync(() => {
+  it('should activate/deactivate site when decommission/reactivate is clicked', fakeAsync(() => {
     const statusChangeSpy = spyOn(component, 'changeStatus');
     const deactivateButton = statusUpdate.nativeElement as HTMLInputElement;
     deactivateButton.click();

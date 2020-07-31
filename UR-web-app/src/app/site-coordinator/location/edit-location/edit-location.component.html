@@ -11,7 +11,7 @@
                 <div class="form-group">
                     <label>Location Name</label>
                     <input type="text" class="form-control" placeholder="Enter Location Name"
-                        [(ngModel)]="location.name" required name="name" maxlength="200" #name="ngModel" />
+                        [(ngModel)]="fieldUpdate.name" required name="name" maxlength="200" #name="ngModel" />
                     <div class="validation-error" *ngIf="name.invalid && (name.dirty || name.touched)">
                         <span class="help-block with-errors error__msg" *ngIf="name.errors.required">
                             Location Name is required.
@@ -32,7 +32,7 @@
                 <div class="form-group">
                     <label for="description">Description</label>
                     <input type="text" class="form-control" placeholder="Enter Description"
-                        [(ngModel)]="location.description" required name="description" maxlength="500"
+                        [(ngModel)]="fieldUpdate.description" required name="description" maxlength="500"
                         #description="ngModel" />
                     <div class="validation-error" *ngIf="
                 description.invalid &&
@@ -66,12 +66,12 @@
             </div>
             <div>
                 <button type="submit" name="status" [ngClass]="
-              locationBackup.status == '1'
+              statusUpdate.status == '1'
                 ? 'banner__default__btn'
                 : 'banner__primary__btn'
             " class="btn flex__row__reverse" (click)="changeStatus()">
                     {{
-              locationBackup.status == "1"
+            statusUpdate.status == "1"
                 ? "Decommission Location"
                 : "Reactivate Location"
             }}

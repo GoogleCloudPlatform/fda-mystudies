@@ -1,5 +1,6 @@
 import {Location} from 'src/app/site-coordinator/location/shared/location.model';
-export const expectedLocation: Location = {
+
+export const expectedLocation = {
   id: 2,
   customId: 'customid3',
   name: 'name -1-updated0',
@@ -7,7 +8,8 @@ export const expectedLocation: Location = {
   status: '1',
   studiesCount: 0,
 } as Location;
-export const expectedLocations: Location = {
+
+export const expectedLocations = {
   id: 2,
   status: '0',
   customId: 'customIDlocation',
@@ -15,13 +17,23 @@ export const expectedLocations: Location = {
   description: 'location Decription',
   studiesCount: 0,
 } as Location;
-export const updateList: Location = {
+
+export const updateList = {
   customId: 'customid123',
   name: 'name -123-updated0',
   description: 'location-desc-updated-now',
 } as Location;
 
-export const expectedLocationList: Location[] = [
+export const updatedLocation = {
+  id: 2,
+  status: '0',
+  customId: 'customid123',
+  name: 'Updated Location',
+  description: 'Updated description',
+  studiesCount: 0,
+} as Location;
+
+export const expectedLocationList = [
   {
     id: 2,
     customId: 'customid3',
@@ -39,12 +51,12 @@ export const expectedLocationList: Location[] = [
     studiesCount: 0,
   },
 ] as Location[];
-export const expectedResponse: Location = {
+export const expectedResponse = {
   message: 'Location updated successfully',
 } as Location;
-export const updateLocation: Location = {
+export const updateLocation = {
   name: 'name -123-updated0',
   description: 'location-desc-updated-now',
   status: '1',
 } as Location;
-export const expectedLocatiodId: Location = {id: 1} as Location;
+export const expectedLocatiodId = {id: 1} as Location;

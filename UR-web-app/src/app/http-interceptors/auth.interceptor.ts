@@ -12,7 +12,7 @@ import {User} from '../entity/user';
 import {Observable, OperatorFunction, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
-import {ErrorCodesEnum, getMessage} from '../shared/error.codes.enum';
+import {getMessage, ErrorCode} from '../shared/error.codes.enum';
 import {ApiResponse} from '../entity/api.response.model';
 
 @Injectable()
@@ -64,9 +64,9 @@ export class AuthInterceptor implements HttpInterceptor {
             this.toasterService.error(err.error.message);
           } else {
             const customError = err.error as ApiResponse;
-            if (getMessage(customError.code as keyof typeof ErrorCodesEnum)) {
+            if (getMessage(customError.code as ErrorCode)) {
               this.toasterService.error(
-                getMessage(customError.code as keyof typeof ErrorCodesEnum),
+                getMessage(customError.code as ErrorCode),
               );
             } else {
               this.toasterService.error(

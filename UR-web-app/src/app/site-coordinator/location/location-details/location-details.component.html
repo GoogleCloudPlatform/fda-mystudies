@@ -9,7 +9,7 @@
             </div>
             <div>
                 <button class="btn font12__light-grey p-none" name="edit_location" (click)="openModal(template)">
-                    <img class="mr-xs" src="assets/images/edit-icon.gif" alt="editLocation" />
+                    <img class="mr-xs" src="assets/images/edit-icon.gif" alt="edit" />
                     <span class="text__deco font12__light-grey">
                         Edit Location Details</span>
                 </button>
@@ -23,13 +23,13 @@
         <div class="border__bottom__periwinkle-gray flex__justify__space-between">
             <div>
                 <div class="mb-lg">
-                    <label for="Id">Location ID</label>
+                    <div class="label">Location ID</div>
                     <div class="font16__grey">{{ locationBackup.customId }}</div>
                 </div>
             </div>
             <div>
                 <div class="mb-lg">
-                    <label for="name">Location Name</label>
+                    <div class="label">Location Name</div>
                     <div class="font16__grey">{{ locationBackup.name }}</div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
         <div class="">
             <div class="">
                 <div class="mb-lg">
-                    <label>Description</label>
+                    <div>Description</div>
                     <div class="font16__grey">
                         {{ locationBackup.description }}
                     </div>
@@ -63,92 +63,6 @@
     </div>
 </div>
 <ng-template #template>
-
-    <edit-location [location]="location" [locationBackup]="locationBackup" [locationId]="locationId"
-        (closeModalEvent)="closeModal($event)">
+    <edit-location [location]="location" [locationId]="locationId" (closeModalEvent)="closeModal($event)">
     </edit-location>
 </ng-template>
-<!-- <ng-template #template>
-    <div class="modal-body modal__body">
-        <form #updateLocationForm="ngForm" autocomplete="off">
-            <div class="row border__bottom__periwinkle-gray">
-                <div class="col-xs-12 col-md-12 p-none">
-                    <div class="form-group background__mystic-gray border-radius__77">
-                        <label>Location ID</label>
-                        <input type="text" class="form-control" readonly [value]="location.customId" />
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-12 p-none">
-                    <div class="form-group">
-                        <label>Location Name</label>
-                        <input type="text" class="form-control" placeholder="Enter Location Name"
-                            [(ngModel)]="location.name" required name="name" maxlength="200" #name="ngModel" />
-                        <div class="validation-error" *ngIf="name.invalid && (name.dirty || name.touched)">
-                            <span class="help-block with-errors error__msg" *ngIf="name.errors.required">
-                                Location Name is required.
-                            </span>
-                            <span class="help-block with-errors error__msg" *ngIf="name.errors.maxlength">
-                                Location Name exceeds max length (200 characters).
-                            </span>
-                            <span class="help-block with-errors error__msg"
-                                *ngIf="!name.errors.required && !name.errors.maxlength">
-                                Location Name is invalid.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row border__bottom__periwinkle-gray">
-                <div class="col-xs-12 col-md-12 p-none">
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <input type="text" class="form-control" placeholder="Enter Description"
-                            [(ngModel)]="location.description" required name="description" maxlength="500"
-                            #description="ngModel" />
-                        <div class="validation-error" *ngIf="
-                description.invalid &&
-                (description.dirty || description.touched)
-              ">
-                            <span class="help-block with-errors error__msg" *ngIf="description.errors.required">
-                                Location Description is required.
-                            </span>
-                            <span class="help-block with-errors error__msg" *ngIf="description.errors.maxlength">
-                                Location Description exceeds max length (500 characters).
-                            </span>
-                            <span class="help-block with-errors error__msg" *ngIf="
-                  !description.errors.required && !description.errors.maxlength
-                ">
-                                Location Description is invalid.
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="p-xlg flex__justify__space-between">
-                <div>
-                    <button type="submit" class="btn bt__add mr-sm" [disabled]="!updateLocationForm.form.valid"
-                        (click)="update(); modalRef.hide()">
-                        Save
-                    </button>
-                    <button type="button" class="btn bt__cancel" (click)="modalRef.hide()">
-                        Cancel
-                    </button>
-                </div>
-                <div>
-                    <button type="submit" [ngClass]="
-              locationBackup.status == '1'
-                ? 'banner__default__btn'
-                : 'banner__primary__btn'
-            " class="btn flex__row__reverse" (click)="changeStatus(); modalRef.hide()">
-                        {{
-              locationBackup.status == "1"
-                ? "Decommission Location"
-                : "Reactivate Location"
-            }}
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-</ng-template> -->

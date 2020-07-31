@@ -1,6 +1,9 @@
 import {Component, Input, EventEmitter, Output} from '@angular/core';
-import {Location} from '../shared/location.model';
-import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {
+  Location,
+  FieldUpdateRequest,
+  StatusUpdateRequest,
+} from '../shared/location.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {LocationService} from '../shared/location.service';
 import {ToastrService} from 'ngx-toastr';
@@ -9,51 +12,55 @@ import {ToastrService} from 'ngx-toastr';
   templateUrl: './edit-location.component.html',
   styleUrls: ['./edit-location.component.scss'],
 })
-export class EditLocationComponent extends UnsubscribeOnDestroyAdapter {
+export class EditLocationComponent {
   @Input() location = {} as Location;
-  @Input() locationBackup = {} as Location;
   @Input() locationId = '';
   @Output() closeModalEvent = new EventEmitter<Location>();
-
+  statusUpdate: StatusUpdateRequest = {status: '0'};
+  fieldUpdate: FieldUpdateRequest = {
+    name: '',
+    description: '',
+  };
   constructor(
     private readonly locationService: LocationService,
     private readonly toastr: ToastrService,
-  ) {
-    super();
+  ) {}
+  ngOnChanges(): void {
+    this.statusUpdate.status = this.location.status;
+    this.fieldUpdate = {
+      description: this.location.description,
+      name: this.location.name,
+    };
   }
   closeModal(): void {
     this.closeModalEvent.next(this.location);
   }
   update(): void {
-    const locationToUpdate = {} as Location;
-    locationToUpdate.name = this.location.name;
-    locationToUpdate.description = this.location.description;
-    this.updateLocation(locationToUpdate);
+    this.updateLocation(this.fieldUpdate);
   }
   changeStatus(): void {
-    const locationToUpdate = {} as Location;
-    locationToUpdate.status = this.location.status === '1' ? '0' : '1';
-    this.updateLocation(locationToUpdate);
+    this.statusUpdate.status = this.statusUpdate.status === '1' ? '0' : '1';
+    this.updateLocation(this.statusUpdate);
   }
 
-  updateLocation(locationToUpdate: Location): void {
-    this.subs.add(
-      this.locationService.update(locationToUpdate, this.locationId).subscribe(
-        (location: Location) => {
-          if (getMessage(location.code)) {
-            this.toastr.success(getMessage(location.code));
-          } else {
-            this.toastr.success('Success');
-          }
-          this.location.name = location.name;
-          this.location.description = location.description;
-          this.location.status = location.status;
-          this.closeModal();
-        },
-        () => {
-          this.closeModal();
-        },
-      ),
+  updateLocation(
+    locationToUpdate: FieldUpdateRequest | StatusUpdateRequest,
+  ): void {
+    this.locationService.update(locationToUpdate, this.locationId).subscribe(
+      (updatedlocation: Location) => {
+        if (getMessage(updatedlocation.code)) {
+          this.toastr.success(getMessage(updatedlocation.code));
+        } else {
+          this.toastr.success('Success');
+        }
+        this.location.name = updatedlocation.name;
+        this.location.description = updatedlocation.description;
+        this.location.status = updatedlocation.status;
+        this.closeModal();
+      },
+      () => {
+        this.closeModal();
+      },
     );
   }
 }

@@ -1,7 +1,11 @@
 import {Injectable} from '@angular/core';
 import {EntityService} from '../../../service/entity.service';
 import {Observable} from 'rxjs';
-import {Location} from '../shared/location.model';
+import {
+  Location,
+  StatusUpdateRequest,
+  FieldUpdateRequest,
+} from '../shared/location.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +21,12 @@ export class LocationService {
   get(locationId: string): Observable<Location> {
     return this.entityService.get('locations/' + locationId);
   }
-  update(location: Location, locationId: string): Observable<Location> {
+  update(
+    locationToBeUpdated: StatusUpdateRequest | FieldUpdateRequest,
+    locationId: string,
+  ): Observable<Location> {
     return this.entityService.put(
-      JSON.stringify(location),
+      JSON.stringify(locationToBeUpdated),
       'locations/' + locationId,
     );
   }
