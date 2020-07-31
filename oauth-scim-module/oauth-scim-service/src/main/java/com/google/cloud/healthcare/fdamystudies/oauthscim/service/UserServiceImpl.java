@@ -15,7 +15,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createAr
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CHANGE_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRES_AT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
@@ -30,14 +29,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
@@ -122,63 +124,53 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UpdateUserResponse updateUser(UpdateUserRequest userRequest)
-      throws JsonProcessingException {
-    logger.entry(String.format("begin updateUser() for %s action", userRequest.getAction()));
-    if (CHANGE_PASSWORD.equalsIgnoreCase(userRequest.getAction())) {
-      return changePassword(userRequest);
-    }
-
-    return new UpdateUserResponse(ErrorCode.APPLICATION_ERROR);
-  }
-
-  public UpdateUserResponse resetPassword(
-      UpdateUserRequest userRequest, AuditLogEventRequest auditRequest)
+  public ResetPasswordResponse resetPassword(
+      ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
         repository.findByAppIdAndOrgIdAndEmail(
-            userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
-    if (entity.isPresent()) {
-      UserEntity userEntity = entity.get();
-      auditRequest.setUserId(userEntity.getUserId());
-      String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
-      EmailResponse emailResponse = sendPasswordResetEmail(userRequest, tempPassword);
+            resetPasswordRequest.getAppId(),
+            resetPasswordRequest.getOrgId(),
+            resetPasswordRequest.getEmail());
 
-      if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-
-        ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
-        setPasswordAndPasswordHistoryFields(tempPassword, userInfo);
-        userEntity.setUserInfo(userInfo.toString());
-        repository.saveAndFlush(userEntity);
-
-        auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
-
-        logger.exit("Password reset successful.");
-        return new UpdateUserResponse(HttpStatus.OK, "Password reset successful");
-      } else {
-        logger.exit(
-            String.format(
-                "Password reset failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
-
-        auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
-        return new UpdateUserResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
-      }
+    if (!entity.isPresent()) {
+      logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
+      return new ResetPasswordResponse(ErrorCode.USER_NOT_FOUND);
     }
-    logger.exit(String.format("Password reset failed, error code=%s", ErrorCode.USER_NOT_FOUND));
-    return new UpdateUserResponse(ErrorCode.USER_NOT_FOUND);
+
+    String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
+    EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
+
+    if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
+      UserEntity userEntity = entity.get();
+      ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+      setPasswordAndPasswordHistoryFields(tempPassword, userInfo);
+      userEntity.setUserInfo(userInfo.toString());
+      repository.saveAndFlush(userEntity);
+      logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
+      auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
+      return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
+    } else {
+      auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
+    }
+    logger.exit(
+        String.format(
+            "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
+    return new ResetPasswordResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
   }
 
-  private EmailResponse sendPasswordResetEmail(UpdateUserRequest userRequest, String tempPassword) {
+  private EmailResponse sendPasswordResetEmail(
+      ResetPasswordRequest resetPasswordRequest, String tempPassword) {
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("orgId", userRequest.getOrgId());
-    templateArgs.put("appId", userRequest.getAppId());
+    templateArgs.put("orgId", resetPasswordRequest.getOrgId());
+    templateArgs.put("appId", resetPasswordRequest.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),
-            new String[] {userRequest.getEmail()},
+            new String[] {resetPasswordRequest.getEmail()},
             null,
             null,
             appConfig.getMailResetPasswordSubject(),
@@ -187,36 +179,40 @@ public class UserServiceImpl implements UserService {
     return emailService.sendSimpleMail(emailRequest);
   }
 
-  private UpdateUserResponse changePassword(UpdateUserRequest userRequest)
+  public ChangePasswordResponse changePassword(ChangePasswordRequest userRequest)
       throws JsonProcessingException {
+    logger.entry("begin changePassword()");
     Optional<UserEntity> optionalEntity = repository.findByUserId(userRequest.getUserId());
-    if (optionalEntity.isPresent()) {
-      UserEntity userEntity = optionalEntity.get();
-      ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
-      ArrayNode passwordHistory =
-          userInfo.hasNonNull(PASSWORD_HISTORY)
-              ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
-              : createArrayNode();
-      JsonNode currentPwdNode = userInfo.get(PASSWORD);
 
-      ErrorCode errorCode = validatePasswords(userRequest, currentPwdNode, passwordHistory);
-      if (errorCode != null) {
-        logger.exit(String.format("change password failed with error code=%s", errorCode));
-        return new UpdateUserResponse(errorCode);
-      }
-
-      setPasswordAndPasswordHistoryFields(userRequest.getNewPassword(), userInfo);
-      userEntity.setUserInfo(userInfo.toString());
-      repository.saveAndFlush(userEntity);
-      return new UpdateUserResponse(HttpStatus.OK, "Your password has been changed successfully!");
-    } else {
-      return new UpdateUserResponse(ErrorCode.USER_NOT_FOUND);
+    if (!optionalEntity.isPresent()) {
+      logger.exit(ErrorCode.USER_NOT_FOUND);
+      return new ChangePasswordResponse(ErrorCode.USER_NOT_FOUND);
     }
+
+    UserEntity userEntity = optionalEntity.get();
+    ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+    ArrayNode passwordHistory =
+        userInfo.hasNonNull(PASSWORD_HISTORY)
+            ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
+            : createArrayNode();
+    JsonNode currentPwdNode = userInfo.get(PASSWORD);
+
+    ErrorCode errorCode =
+        validateChangePasswordRequest(userRequest, currentPwdNode, passwordHistory);
+    if (errorCode != null) {
+      logger.exit(String.format("change password failed with error code=%s", errorCode));
+      return new ChangePasswordResponse(errorCode);
+    }
+
+    setPasswordAndPasswordHistoryFields(userRequest.getNewPassword(), userInfo);
+    userEntity.setUserInfo(userInfo.toString());
+    repository.saveAndFlush(userEntity);
+    logger.exit("Your password has been changed successfully!");
+    return new ChangePasswordResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
   }
 
-  private ErrorCode validatePasswords(
-      UpdateUserRequest userRequest, JsonNode passwordNode, ArrayNode passwordHistory) {
-
+  private ErrorCode validateChangePasswordRequest(
+      ChangePasswordRequest userRequest, JsonNode passwordNode, ArrayNode passwordHistory) {
     // determine whether the current password matches the password stored in database
     String hash = getTextValue(passwordNode, HASH);
     String rawSalt = getTextValue(passwordNode, SALT);

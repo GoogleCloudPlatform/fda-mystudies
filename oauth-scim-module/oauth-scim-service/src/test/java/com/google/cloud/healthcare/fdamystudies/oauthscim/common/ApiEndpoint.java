@@ -12,7 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  HEALTH("http://localhost:8002/oauth-scim-service/v1/healthCheck"),
+  HEALTH("http://localhost:8002/oauth-scim-service/healthCheck"),
 
   TOKEN("http://localhost:8002/oauth-scim-service/v1/oauth2/token"),
 
@@ -20,7 +20,9 @@ public enum ApiEndpoint {
 
   USER("http://localhost:8002/oauth-scim-service/v1/users/{userId}"),
 
-  RESET_PASSWORD("http://localhost:8002/oauth-scim-service/v1/user/reset_password");
+  RESET_PASSWORD("http://localhost:8002/oauth-scim-service/v1/user/reset_password"),
+
+  CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/v1/users/{userId}/change_password");
 
   private String url;
 

@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_CREDENTIALS;
@@ -38,8 +39,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
-
 public class OAuthControllerTest extends BaseMockIT {
 
   @Value("${security.oauth2.hydra.client.client-id}")
@@ -56,7 +55,7 @@ public class OAuthControllerTest extends BaseMockIT {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
-    headers.set("Authorization", "Basic " + getEncodedAuthorization(clientId, clientSecret));
+    headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
 
@@ -134,7 +133,7 @@ public class OAuthControllerTest extends BaseMockIT {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.set("Content-Type", APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
-    headers.set("Authorization", "Basic " + getEncodedAuthorization(clientId, clientSecret));
+    headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, CLIENT_CREDENTIALS);

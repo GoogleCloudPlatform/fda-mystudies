@@ -15,11 +15,17 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        # Check out pull request's HEAD commit instead of the merge commit to
+        # work-around an issue where wrong a commit is being checked out.
+        # For more details, see:
+        # https://github.com/actions/checkout/issues/299.
+        ref: ${{ github.event.pull_request.head.sha }}
     - name: Run check style
       uses: nikitasavinov/checkstyle-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: 'github-pr-check'
-        level: error
+        level: warning
         workdir: ./user-registration-server-ws/consent-mgmt/src
         tool_name: consent-mgmt Checks
