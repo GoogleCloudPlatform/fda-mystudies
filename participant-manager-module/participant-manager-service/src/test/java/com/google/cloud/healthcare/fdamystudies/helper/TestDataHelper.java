@@ -149,7 +149,7 @@ public class TestDataHelper {
   }
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
-    StudyEntity studyEntity = new StudyEntity();
+    StudyEntity studyEntity = newStudyEntity();
     studyEntity.setType("CLOSE");
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
