@@ -27,7 +27,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
   @Query(
       value =
           "SELECT * FROM locations WHERE status = :status AND "
-              + "id NOT IN (SELECT DISTINCT location_id FROM sites WHERE study_id = :studyId)",
+              + "id NOT IN (SELECT DISTINCT location_id FROM sites WHERE study_id = :excludeStudyId)",
       nativeQuery = true)
-  public List<LocationEntity> findByStatusAndStudyId(Integer status, String studyId);
+  public List<LocationEntity> findByStatusAndExcludeStudyId(Integer status, String excludeStudyId);
 }

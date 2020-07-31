@@ -38,19 +38,19 @@ public enum MessageCode {
   LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully"),
 
   GET_PARTICIPANT_REGISTRY_SUCCESS(
-      HttpStatus.OK, "MSG-0008", "Get participant registry successfull"),
+      HttpStatus.OK, "MSG-0008", "Get participant registry successfully"),
 
   ADD_PARTICIPANT_SUCCESS(HttpStatus.CREATED, "MSG-0016", "Participant added successfully"),
 
-  GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0018", "Get App Details successfull"),
+  GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0018", "Get App Details successfully"),
 
   DECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0014", "Site Decommissioned successfully"),
 
   RECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0015", "Site Recommissioned successfully"),
 
-  GET_LOCATION_SUCCESS(HttpStatus.OK, "MSG-0008", "Get locations successfull"),
+  GET_LOCATION_SUCCESS(HttpStatus.OK, "MSG-0008", "Get locations successfully"),
 
-  GET_LOCATION_FOR_SITE_SUCCESS(HttpStatus.OK, "MSG-0009", "Get locations for site successfull"),
+  GET_LOCATION_FOR_SITE_SUCCESS(HttpStatus.OK, "MSG-0009", "Get locations for site successfully"),
 
   GET_APP_PARTICIPANTS_SUCCESS(HttpStatus.OK, "MSG-0005", "get App Participants successfully"),
 
