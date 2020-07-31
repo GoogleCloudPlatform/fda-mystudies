@@ -1,7 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
-import {CookieService} from 'ngx-cookie-service';
 import {AuthService} from 'src/app/service/auth.service';
 
 @Component({
@@ -11,8 +9,6 @@ import {AuthService} from 'src/app/service/auth.service';
 export class LoginCallbackComponent implements OnInit {
   constructor(
     private readonly activatedRoute: ActivatedRoute,
-    private readonly http: HttpClient,
-    public cookieService: CookieService,
     public authService: AuthService,
     private readonly router: Router,
   ) {}
