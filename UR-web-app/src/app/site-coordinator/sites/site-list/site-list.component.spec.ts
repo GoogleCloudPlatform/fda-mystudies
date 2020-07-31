@@ -85,7 +85,7 @@ describe('SiteListComponent', () => {
     });
   });
 
-  it('should check the input value', () => {
+  it('should expect same location details', () => {
     component.study$.subscribe((studies) => {
       expect(studies[0].sites[0].name).toEqual('Location 1');
       expect(studies[1].sites[0].name).toEqual('Location 2');
@@ -93,7 +93,7 @@ describe('SiteListComponent', () => {
     });
   });
 
-  it('should display sites with progress', async () => {
+  it('should display sites with progress bar', async () => {
     const compiled = fixture.nativeElement as HTMLElement;
     fixture.detectChanges();
     await fixture.whenStable();
@@ -107,7 +107,7 @@ describe('SiteListComponent', () => {
     expect(sitesListPCT[0].innerHTML).toEqual('7 / 14');
   });
 
-  it('should display the modal when Add site is clicked', fakeAsync(async () => {
+  it('should display the modal when Add site button is clicked', fakeAsync(async () => {
     const clickAddButton = fixture.debugElement.query(
       By.css('button[name="add"]'),
     );

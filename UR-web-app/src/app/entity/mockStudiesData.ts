@@ -1,7 +1,7 @@
 import {Study} from '../site-coordinator/studies/shared/study.model';
 import {AddSite} from '../site-coordinator/sites/shared/add.sites.model';
 
-export const expectedStudyList: Study[] = [
+export const expectedStudyList = [
   {
     appId: '',
     appInfoId: 0,
@@ -78,15 +78,15 @@ export const expectedStudyList: Study[] = [
   },
 ] as Study[];
 
-export const expectedSiteResponse: AddSite = {
+export const expectedSiteResponse = {
   studyId: '1',
   locationId: '1',
   message: 'New site added successfully',
 } as AddSite;
 
-export const expectedNewSite: AddSite = {
+export const expectedNewSite = {
   studyId: '1',
   locationId: '1',
 } as AddSite;
 
-export const expectedStudyId: Study = {id: 1} as Study;
+export const expectedStudyId = {id: 1} as Study;
