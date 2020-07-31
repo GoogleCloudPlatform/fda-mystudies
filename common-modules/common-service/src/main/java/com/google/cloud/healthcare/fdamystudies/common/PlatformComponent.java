@@ -44,7 +44,7 @@ public enum PlatformComponent {
       "The UI that administrators use to invite participants to studies and track enrollment progress"),
 
   CLOUD_STORAGE(
-      "Cloud Storage", "for storing and accessing data on Google Cloud Platform infrastructure");
+      "CLOUD STORAGE", "for storing and accessing data on Google Cloud Platform infrastructure");
 
   private String value;
 
