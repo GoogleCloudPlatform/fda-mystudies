@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 
-import com.google.cloud.healthcare.fdamystudies.config.BaseAppConfig;
+import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -28,7 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @Profile({"dev", "local", "e2e-test", "test", "qa", "mockit"})
-public class AppConfigDevProfile extends BaseAppConfig {
+public class AppConfigDevProfile extends CommonModuleConfiguration {
 
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder builder)
