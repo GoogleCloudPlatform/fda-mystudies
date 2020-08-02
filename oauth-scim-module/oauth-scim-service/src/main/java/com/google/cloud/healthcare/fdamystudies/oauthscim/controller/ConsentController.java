@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
@@ -81,7 +81,7 @@ public class ConsentController {
   private String redirectToCallbackUrl(
       HttpServletRequest request, boolean skipConsent, HttpServletResponse response) {
     String userId = WebUtils.getCookie(request, USER_ID).getValue();
-    String devicePlatform = WebUtils.getCookie(request, DEVICE_PLATFORM).getValue();
+    String devicePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM).getValue();
     String callbackUrl = redirectConfig.getCallbackUrl(devicePlatform);
 
     String redirectUrl =
@@ -119,7 +119,7 @@ public class ConsentController {
   }
 
   private String redirectToError(HttpServletRequest request, HttpServletResponse response) {
-    String devicePlatform = WebUtils.getCookie(request, DEVICE_PLATFORM).getValue();
+    String devicePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM).getValue();
     String redirectUrl = redirectConfig.getErrorUrl(devicePlatform);
     response.setHeader("Location", redirectUrl);
     response.setStatus(HttpStatus.FOUND.value());

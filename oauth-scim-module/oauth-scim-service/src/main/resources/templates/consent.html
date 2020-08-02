@@ -1,11 +1,38 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang=""
-  xmlns:th="https://www.thymeleaf.org"
-  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="https://www.thymeleaf.org">
 <head>
-<title>Please wait</title>
+<title>Please wait...</title>
+
+<link rel="stylesheet"
+  href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script
+  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" th:href="@{/css/utilities.css}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript">
+	window.onload = function() {
+		window.setTimeout(function() {
+			document.consentForm.submit();
+		}, 5000);
+	};
+</script>
 </head>
-<body>
-  <p>Please wait while you are being redirected</p>
+<body class="bg__aqua-gray">
+  <form th:action="@{/consent}" method="post" id="consentForm"
+    name="consentForm">
+    <div class="loader">
+      <img th:src="@{/images/loader.gif}"/>
+      <div>
+        <div>Please wait as we set the app for you...</div>
+        <div>This might take a few seconds.</div>
+      </div>
+      <div>
+        <input type="submit" id="acceptConsent" value="Allow"
+          style="display: none" />
+      </div>
+    </div>
+  </form>
 </body>
 </html>

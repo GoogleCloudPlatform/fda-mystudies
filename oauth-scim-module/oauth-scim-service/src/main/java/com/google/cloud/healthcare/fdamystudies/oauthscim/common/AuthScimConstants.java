@@ -53,7 +53,7 @@ public final class AuthScimConstants {
 
   public static final String TOKEN = "token";
 
-  public static final String CORRELATION_ID = "correlation_id";
+  public static final String CORRELATION_ID = "correlationId";
 
   public static final String LOGIN_CHALLENGE = "login_challenge";
 
@@ -61,13 +61,11 @@ public final class AuthScimConstants {
 
   public static final String APP_ID = "appId";
 
-  public static final String DEVICE_TYPE = "deviceType";
+  public static final String MOBILE_PLATFORM = "mobilePlatform";
 
-  public static final String DEVICE_PLATFORM = "devicePlatform";
+  public static final String APP_VERSION = "appVersion";
 
-  public static final String CLIENT_APP_VERSION = "clientAppVersion";
-
-  public static final String TEMP_REG_ID = "temp_reg_id";
+  public static final String TEMP_REG_ID = "tempRegId";
 
   public static final String EMAIL = "email";
 

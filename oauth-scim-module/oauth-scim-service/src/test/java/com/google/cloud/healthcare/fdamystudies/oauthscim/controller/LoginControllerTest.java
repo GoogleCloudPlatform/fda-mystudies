@@ -10,10 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
@@ -148,7 +148,7 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add("code", AUTH_CODE_VALUE);
 
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
     Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
 
     String callbackUrl = redirectConfig.getCallbackUrl(DevicePlatform.UNKNOWN.getValue());
@@ -191,7 +191,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .queryParams(queryParams))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(content().string(containsString("<title>Please wait</title>")))
+        .andExpect(content().string(containsString("<title>Please wait...</title>")))
         .andReturn();
   }
 
@@ -215,7 +215,7 @@ public class LoginControllerTest extends BaseMockIT {
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -243,7 +243,7 @@ public class LoginControllerTest extends BaseMockIT {
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -271,7 +271,7 @@ public class LoginControllerTest extends BaseMockIT {
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -299,7 +299,7 @@ public class LoginControllerTest extends BaseMockIT {
     requestParams.set(PASSWORD, "invalid_password");
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
 
     ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
     for (int loginAttempts = 1; loginAttempts <= MAX_LOGIN_ATTEMPTS; loginAttempts++) {

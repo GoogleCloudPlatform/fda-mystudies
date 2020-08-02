@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint.CONSENT_PAGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,13 +43,13 @@ public class ConsentControllerTest extends BaseMockIT {
                 .queryParams(getConsentQSParams()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(content().string(containsString("<title>Please wait</title>")))
+        .andExpect(content().string(containsString("<title>Please wait...</title>")))
         .andReturn();
   }
 
   @Test
   public void shouldReturnLoginPage() throws Exception {
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
     Cookie consentChallengeCookie = new Cookie(CONSENT_CHALLENGE, CONSENT_CHALLENGE_VALUE);
     Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
     mockMvc

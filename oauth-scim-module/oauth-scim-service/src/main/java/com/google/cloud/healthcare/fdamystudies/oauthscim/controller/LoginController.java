@@ -11,14 +11,13 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_APP_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
@@ -142,7 +141,7 @@ public class LoginController {
       @CookieValue(name = TEMP_REG_ID, required = false) String tempRegId,
       @CookieValue(name = APP_ID) String appId,
       @CookieValue(name = LOGIN_CHALLENGE) String loginChallenge,
-      @CookieValue(name = DEVICE_PLATFORM) String devicePlatform,
+      @CookieValue(name = MOBILE_PLATFORM) String devicePlatform,
       HttpServletRequest request,
       HttpServletResponse response,
       Model model)
@@ -202,16 +201,16 @@ public class LoginController {
       HttpServletRequest request,
       HttpServletResponse response) {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
-    if (!optUser.isPresent()) {
-      logger.exit("tempRegId is invalid, return to login page");
-      deleteCookie(response, TEMP_REG_ID);
-      return LOGIN;
-    } else {
+    if (optUser.isPresent()) {
       UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
       addCookie(response, USER_ID, user.getUserId());
       userService.resetTempRegId(user.getUserId());
       return redirectToConsentPage(loginChallenge, user.getEmail(), request, response);
+    } else {
+      logger.exit("tempRegId is invalid, return to login page");
+      deleteCookie(request, response, TEMP_REG_ID);
+      return LOGIN;
     }
   }
 
@@ -240,24 +239,17 @@ public class LoginController {
         UriComponentsBuilder.fromUriString(requestUrl).build().getQueryParams();
 
     addCookie(response, LOGIN_CHALLENGE, loginChallenge);
-    addCookies(
-        response,
-        qsParams,
-        APP_ID,
-        CORRELATION_ID,
-        CLIENT_APP_VERSION,
-        DEVICE_TYPE,
-        DEVICE_PLATFORM,
-        TEMP_REG_ID);
+    addCookies(response, qsParams, APP_ID, CORRELATION_ID, APP_VERSION, MOBILE_PLATFORM);
 
     String tempRegId = qsParams.getFirst(TEMP_REG_ID);
-    String devicePlatform = qsParams.getFirst(DEVICE_PLATFORM);
+    String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
-    model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(devicePlatform));
-    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(devicePlatform));
-    model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(devicePlatform));
-    model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(devicePlatform));
-    model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(devicePlatform));
+    model.addAttribute(MOBILE_PLATFORM, mobilePlatform);
+    model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform));
+    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
+    model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform));
+    model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+    model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
 
     // tempRegId for auto signin after signup
     if (StringUtils.isNotEmpty(tempRegId)) {
@@ -266,12 +258,10 @@ public class LoginController {
         UserEntity user = optUser.get();
         logger.exit("tempRegId is valid, return to auto signin page");
         addCookie(response, USER_ID, user.getUserId());
+        addCookie(response, TEMP_REG_ID, tempRegId);
         return "signin";
       }
-
       logger.exit("tempRegId is invalid, return to login page");
-      deleteCookie(response, TEMP_REG_ID);
-      return LOGIN;
     }
     return LOGIN;
   }
@@ -279,7 +269,7 @@ public class LoginController {
   private String redirectToCallbackUrl(
       HttpServletRequest request, String code, HttpServletResponse response) {
     String userId = WebUtils.getCookie(request, USER_ID).getValue();
-    String devicePlatform = WebUtils.getCookie(request, DEVICE_PLATFORM).getValue();
+    String devicePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM).getValue();
     String callbackUrl = redirectConfig.getCallbackUrl(devicePlatform);
 
     String redirectUrl = String.format("%s?code=%s&userId=%s", callbackUrl, code, userId);
@@ -295,7 +285,7 @@ public class LoginController {
   }
 
   private String redirectToError(HttpServletRequest request, HttpServletResponse response) {
-    String devicePlatform = WebUtils.getCookie(request, DEVICE_PLATFORM).getValue();
+    String devicePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM).getValue();
     String redirectUrl = redirectConfig.getErrorUrl(devicePlatform);
     response.setHeader("Location", redirectUrl);
     response.setStatus(HttpStatus.FOUND.value());
@@ -318,7 +308,8 @@ public class LoginController {
     response.addCookie(cookie);
   }
 
-  public void deleteCookie(HttpServletResponse response, String cookieName) {
+  public void deleteCookie(
+      HttpServletRequest request, HttpServletResponse response, String cookieName) {
     Cookie cookie = new Cookie(cookieName, null);
     cookie.setMaxAge(0);
     cookie.setSecure(appConfig.isSecureCookie());
