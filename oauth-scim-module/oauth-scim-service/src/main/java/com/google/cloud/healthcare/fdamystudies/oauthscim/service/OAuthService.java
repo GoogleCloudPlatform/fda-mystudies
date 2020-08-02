@@ -23,4 +23,6 @@ public interface OAuthService {
 
   public ResponseEntity<JsonNode> introspectToken(
       MultiValueMap<String, String> paramMap, HttpHeaders headers);
+
+  public ResponseEntity<JsonNode> requestLogin(MultiValueMap<String, String> paramMap);
 }
