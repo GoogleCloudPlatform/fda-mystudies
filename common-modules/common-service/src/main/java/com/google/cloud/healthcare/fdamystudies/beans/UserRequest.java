@@ -22,7 +22,7 @@ import lombok.ToString;
 public class UserRequest {
 
   private static final String PASSWORD_REGEX =
-      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\\\\\"#$%&'()*+,-.:;<=>?@\\\\\\\\[\\\\\\\\]^_`{|}~]).{8,64}$";
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
 
   @NotBlank
   @Size(max = 100)

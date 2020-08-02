@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 
-import com.google.cloud.healthcare.fdamystudies.config.BaseAppConfig;
+import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -31,7 +31,7 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
 @Configuration
 @Profile({"dev", "local", "qa", "mockit"})
-public class AppConfigDevProfile extends BaseAppConfig {
+public class AppConfigDevProfile extends CommonModuleConfiguration {
 
   @Autowired ServletContext context;
 
