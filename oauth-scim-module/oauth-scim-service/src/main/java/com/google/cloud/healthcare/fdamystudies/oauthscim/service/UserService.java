@@ -14,6 +14,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
@@ -31,4 +33,7 @@ public interface UserService {
       throws JsonProcessingException;
 
   public Optional<UserEntity> findUserByTempRegId(String tempRegId);
+
+  public UpdateEmailStatusResponse updateEmailStatus(UpdateEmailStatusRequest userRequest)
+      throws JsonProcessingException;
 }

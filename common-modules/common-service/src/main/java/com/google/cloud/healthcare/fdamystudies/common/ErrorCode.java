@@ -41,6 +41,8 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "Your new password cannot repeat any of your previous 10 passwords;"),
 
+  INVALID_PATCH_USER_REQUEST(400, "EC-120", Constants.BAD_REQUEST, "Email or Status is required."),
+
   EMAIL_EXISTS(
       409,
       "EC-101",

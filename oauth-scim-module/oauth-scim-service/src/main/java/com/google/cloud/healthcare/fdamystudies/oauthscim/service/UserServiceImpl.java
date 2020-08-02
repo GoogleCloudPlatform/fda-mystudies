@@ -35,6 +35,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
@@ -56,6 +58,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -239,5 +242,27 @@ public class UserServiceImpl implements UserService {
   public Optional<UserEntity> findUserByTempRegId(String tempRegId) {
     logger.entry("begin findUserByTempRegId()");
     return repository.findByTempRegId(tempRegId);
+  }
+
+  @Override
+  @Transactional
+  public UpdateEmailStatusResponse updateEmailStatus(UpdateEmailStatusRequest userRequest)
+      throws JsonProcessingException {
+    logger.entry("begin updateUser()");
+    Optional<UserEntity> optUser = repository.findByUserId(userRequest.getUserId());
+    if (!optUser.isPresent()) {
+      logger.exit(ErrorCode.USER_NOT_FOUND);
+      return new UpdateEmailStatusResponse(ErrorCode.USER_NOT_FOUND);
+    }
+
+    UserEntity userEntity = optUser.get();
+    Integer status =
+        userRequest.getStatus() == null ? userEntity.getStatus() : userRequest.getStatus();
+    String email = StringUtils.defaultIfEmpty(userRequest.getEmail(), userEntity.getEmail());
+
+    repository.updateEmailAndStatus(email, status, userEntity.getUserId());
+
+    logger.exit(MessageCode.UPDATE_USER_DETAILS);
+    return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS);
   }
 }

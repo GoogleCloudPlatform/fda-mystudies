@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -37,20 +38,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.AuditEventRepository;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
@@ -82,8 +85,6 @@ public class UserControllerTest extends BaseMockIT {
   private static final String NEW_PASSWORD_VALUE = "M0ck!tPassword2";
 
   @Autowired private UserRepository repository;
-
-  @Autowired private AuditEventRepository auditEventRepository;
 
   private static String userId;
 
@@ -449,6 +450,94 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnInvalidPatchUserRequestError()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 create user
+    UserEntity userEntity = newUserEntity();
+
+    userEntity = repository.saveAndFlush(userEntity);
+
+    // Step-2 call the API and expect INVALID_PATCH_USER_REQUEST error
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    UpdateEmailStatusRequest userRequest = new UpdateEmailStatusRequest();
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.INVALID_PATCH_USER_REQUEST.getDescription()));
+  }
+
+  @Test
+  public void shouldUpdateEmail() throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 create user
+    UserEntity userEntity = newUserEntity();
+    userEntity = repository.saveAndFlush(userEntity);
+
+    // Step-2 call the API and expect email is updated
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    final String EMAIL_2 = "mockit_oauth_scim_user_2@grr.la";
+    UpdateEmailStatusRequest userRequest = new UpdateEmailStatusRequest();
+    userRequest.setEmail(EMAIL_2);
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS.getMessage()));
+
+    // Step-3 verify updated email
+    userEntity = repository.findByUserId(userEntity.getUserId()).get();
+    assertEquals(userEntity.getEmail(), EMAIL_2);
+
+    repository.deleteByUserId(userEntity.getUserId());
+  }
+
+  @Test
+  public void shouldActivateUserAccount()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 create user
+    UserEntity userEntity = newUserEntity();
+    userEntity = repository.saveAndFlush(userEntity);
+
+    // Step-2 call the API and expect account status is ACTIVE
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    UpdateEmailStatusRequest userRequest = new UpdateEmailStatusRequest();
+    userRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS.getMessage()));
+
+    // Step-3 verify updated email
+    userEntity = repository.findByUserId(userEntity.getUserId()).get();
+    assertEquals(userEntity.getStatus(), UserAccountStatus.ACTIVE.getStatus());
+
+    repository.deleteByUserId(userEntity.getUserId());
+  }
+
+  @Test
   @Order(7)
   public void shouldDeleteTheUser() {
     // cleanup - delete the user from database
@@ -470,5 +559,18 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     return userRequest;
+  }
+
+  private UserEntity newUserEntity() {
+    UserEntity userEntity = new UserEntity();
+    userEntity.setAppId(APP_ID_VALUE);
+    userEntity.setEmail(EMAIL_VALUE);
+    userEntity.setOrgId(ORG_ID_VALUE);
+    userEntity.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userEntity.setUserId(IdGenerator.id());
+
+    ObjectNode userInfoNode = JsonUtils.getObjectNode();
+    userEntity.setUserInfo(userInfoNode.toString());
+    return userEntity;
   }
 }

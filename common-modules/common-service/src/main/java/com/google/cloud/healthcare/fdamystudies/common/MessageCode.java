@@ -29,7 +29,9 @@ public enum MessageCode {
       HttpStatus.OK, "MSG-0002", "Your password has been changed successfully!"),
 
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
-      HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server.");
+      HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server."),
+
+  UPDATE_USER_DETAILS(HttpStatus.OK, "MSG-0004", "User details successfully updated.");
 
   private final HttpStatus httpStatus;
   private final String code;
