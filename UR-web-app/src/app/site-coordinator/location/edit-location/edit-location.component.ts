@@ -3,6 +3,7 @@ import {
   Location,
   FieldUpdateRequest,
   StatusUpdateRequest,
+  UpdateLocationResponse,
 } from '../shared/location.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {LocationService} from '../shared/location.service';
@@ -47,15 +48,14 @@ export class EditLocationComponent {
     locationToUpdate: FieldUpdateRequest | StatusUpdateRequest,
   ): void {
     this.locationService.update(locationToUpdate, this.locationId).subscribe(
-      (updatedlocation: Location) => {
+      (updatedlocation: UpdateLocationResponse) => {
         if (getMessage(updatedlocation.code)) {
           this.toastr.success(getMessage(updatedlocation.code));
         } else {
           this.toastr.success('Success');
         }
-        this.location.name = updatedlocation.name;
-        this.location.description = updatedlocation.description;
-        this.location.status = updatedlocation.status;
+        this.location = {...this.location, ...updatedlocation};
+
         this.closeModal();
       },
       () => {
