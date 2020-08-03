@@ -269,7 +269,7 @@ public class AppServiceImpl implements AppService {
       return new AppResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
     }
 
-    List<AppEntity> apps = (List<AppEntity>) CollectionUtils.emptyIfNull(appRepository.findAll());
+    List<AppEntity> apps = appRepository.findAll();
 
     List<StudyEntity> studies = new ArrayList<>();
     apps.stream().map(AppEntity::getStudies).forEach(studies::addAll);

@@ -36,25 +36,21 @@ public class AppController {
 
   @Autowired private AppService appService;
 
-  private static final String DEFAULT = "_default_";
-
   private static final String STATUS_LOG = "status=%d";
-
-  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @GetMapping
   public ResponseEntity<AppResponse> getApps(
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @RequestParam(name = "fields", required = false) String[] fields,
       HttpServletRequest request) {
-    fields = Optional.ofNullable(fields).orElse(new String[] {DEFAULT});
+    fields = Optional.ofNullable(fields).orElse(new String[] {});
     logger.entry(
         String.format(
             "%s request with fields=%s", request.getRequestURI(), String.join(",", fields)));
 
     String[] allowedFields = {"studies", "sites"};
     AppResponse appResponse;
-    if (ArrayUtils.contains(fields, DEFAULT)) {
+    if (ArrayUtils.isEmpty(fields)) {
       appResponse = appService.getApps(userId);
     } else if (Arrays.asList(allowedFields).containsAll(Arrays.asList(fields))) {
       appResponse = appService.getAppsWithOptionalFields(userId, fields);
