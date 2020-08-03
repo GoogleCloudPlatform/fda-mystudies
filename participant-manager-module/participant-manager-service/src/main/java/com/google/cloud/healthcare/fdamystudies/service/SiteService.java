@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.google.cloud.healthcare.fdamystudies.beans.ImportParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
@@ -34,4 +37,7 @@ public interface SiteService {
 
   public InviteParticipantResponse inviteParticipants(
       InviteParticipantRequest inviteparticipantBean);
+
+  public ImportParticipantResponse importParticipants(
+      String userId, String siteId, MultipartFile multipartFile);
 }

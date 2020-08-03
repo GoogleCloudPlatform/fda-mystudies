@@ -157,7 +157,16 @@ public enum ErrorCode {
   SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired"),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
-      400, "EC-105", Constants.BAD_REQUEST, "Error getting participants.");
+      400, "EC-105", Constants.BAD_REQUEST, "Error getting participants."),
+
+  DOCUMENT_NOT_IN_PRESCRIBED_FORMAT(
+      400, "EC_866", Constants.BAD_REQUEST, "Import Document not in prescribed format"),
+
+  FAILED_TO_IMPORT_PARTICIPANTS(
+      500,
+      "EC_914",
+      HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+      "Unable to import the participants");
 
   private final int status;
   private final String code;

@@ -72,7 +72,9 @@ public enum MessageCode {
   PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "Participants are invited"),
 
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
-      HttpStatus.ACCEPTED, "MSG-0022", "The email is accepted by the receiving mail server.");
+      HttpStatus.ACCEPTED, "MSG-0022", "The email is accepted by the receiving mail server."),
+
+  IMPORT_PARTICIPANT_SUCCESS(HttpStatus.OK, "MSG-0026", "Participants imported successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

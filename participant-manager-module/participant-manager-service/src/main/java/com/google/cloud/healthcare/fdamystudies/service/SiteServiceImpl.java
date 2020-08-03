@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
@@ -18,30 +19,44 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YE
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
+import com.google.cloud.healthcare.fdamystudies.beans.ImportParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
@@ -84,6 +99,8 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 
 @Service
 public class SiteServiceImpl implements SiteService {
+
+  private static final int EMAIL_ADDRESS_COLUMN = 1;
 
   private XLogger logger = XLoggerFactory.getXLogger(SiteServiceImpl.class.getName());
 
@@ -688,5 +705,116 @@ public class SiteServiceImpl implements SiteService {
             appPropertyConfig.getParticipantInviteBody(),
             templateArgs);
     return emailService.sendMimeMail(emailRequest);
+  }
+
+  @Override
+  @Transactional
+  public ImportParticipantResponse importParticipants(
+      String userId, String siteId, MultipartFile multipartFile) {
+    logger.entry("begin importParticipants()");
+
+    // Validate site type, status and access permission
+    Optional<SiteEntity> optSite = siteRepository.findById(siteId);
+
+    if (!optSite.isPresent() || !optSite.get().getStatus().equals(ACTIVE_STATUS)) {
+      logger.exit(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+      return new ImportParticipantResponse(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+    }
+
+    SiteEntity siteEntity = optSite.get();
+    if (siteEntity.getStudy() != null && OPEN_STUDY.equals(siteEntity.getStudy().getType())) {
+      logger.exit(ErrorCode.OPEN_STUDY);
+      return new ImportParticipantResponse(ErrorCode.OPEN_STUDY);
+    }
+
+    Optional<SitePermissionEntity> optSitePermission =
+        sitePermissionRepository.findSitePermissionByUserIdAndSiteId(userId, siteId);
+
+    if (!optSitePermission.isPresent()
+        || !optSitePermission.get().getCanEdit().equals(Permission.READ_EDIT.value())) {
+      logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      return new ImportParticipantResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    }
+
+    // iterate and save valid email id's
+    try (Workbook workbook =
+        WorkbookFactory.create(new BufferedInputStream(multipartFile.getInputStream()))) {
+
+      Sheet sheet = workbook.getSheetAt(0);
+      Row row = sheet.getRow(0);
+      String columnName = row.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
+      if (!"Email Address".equalsIgnoreCase(columnName)) {
+        return new ImportParticipantResponse(ErrorCode.DOCUMENT_NOT_IN_PRESCRIBED_FORMAT);
+      }
+
+      Iterator<Row> rows = sheet.rowIterator();
+      Set<String> invalidEmails = new HashSet<>();
+      Set<String> emails = new HashSet<>();
+
+      // Skip headers row
+      rows.next();
+      while (rows.hasNext()) {
+        Row r = rows.next();
+
+        String email = r.getCell(EMAIL_ADDRESS_COLUMN).getStringCellValue();
+        if (StringUtils.isBlank(email) || !Pattern.matches(EMAIL_REGEX, email)) {
+          invalidEmails.add(email);
+          continue;
+        }
+        emails.add(email);
+      }
+
+      ImportParticipantResponse importParticipantResponse =
+          saveImportParticipant(emails, userId, siteEntity);
+      importParticipantResponse.getInvalidEmails().addAll(invalidEmails);
+
+      return importParticipantResponse;
+    } catch (EncryptedDocumentException | IOException | InvalidFormatException e) {
+      logger.error("importParticipants() failed with an exception.", e);
+      return new ImportParticipantResponse(ErrorCode.FAILED_TO_IMPORT_PARTICIPANTS);
+    }
+  }
+
+  private ImportParticipantResponse saveImportParticipant(
+      Set<String> emails, String userId, SiteEntity siteEntity) {
+
+    List<ParticipantRegistrySiteEntity> participantRegistrySiteEntities =
+        (List<ParticipantRegistrySiteEntity>)
+            CollectionUtils.emptyIfNull(
+                participantRegistrySiteRepository.findByStudyIdAndEmails(
+                    siteEntity.getStudy().getId(), emails));
+
+    List<String> participantRegistryEmails =
+        (List<String>)
+            CollectionUtils.emptyIfNull(
+                participantRegistrySiteEntities
+                    .stream()
+                    .distinct()
+                    .map(ParticipantRegistrySiteEntity::getEmail)
+                    .collect(Collectors.toList()));
+
+    List<String> newEmails =
+        (List<String>)
+            CollectionUtils.removeAll(new ArrayList<String>(emails), participantRegistryEmails);
+
+    List<ParticipantDetailRequest> savedParticipants = new ArrayList<>();
+    for (String email : newEmails) {
+      ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
+      participantRequest.setEmail(email);
+      ParticipantRegistrySiteEntity participantRegistrySite =
+          ParticipantMapper.fromParticipantRequest(participantRequest, siteEntity);
+      participantRegistrySite.setCreatedBy(userId);
+      participantRegistrySite =
+          participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+      participantRequest.setParticipantId(participantRegistrySite.getId());
+      savedParticipants.add(participantRequest);
+    }
+
+    logger.exit(
+        String.format(
+            "%d duplicates email found and %d new emails saved",
+            participantRegistryEmails.size(), newEmails.size()));
+    return new ImportParticipantResponse(
+        MessageCode.IMPORT_PARTICIPANT_SUCCESS, savedParticipants, participantRegistryEmails);
   }
 }

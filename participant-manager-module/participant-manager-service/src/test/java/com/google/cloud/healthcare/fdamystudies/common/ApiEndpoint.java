@@ -54,7 +54,10 @@ public enum ApiEndpoint {
       "http://localhost:8080/participant-manager-service/sites/{participantRegistrySite}/participant"),
 
   INVITE_PARTICIPANTS(
-      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/invite");
+      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/invite"),
+
+  IMPORT_PARTICIPANT(
+      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/import");
 
   private String url;
 
