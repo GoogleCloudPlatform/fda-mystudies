@@ -57,9 +57,9 @@ import lombok.Getter;
 @Component
 public class TestDataHelper {
 
-  public static final String LAST_NAME = "mockito_last_name";
+  public static final String ADMIN_LAST_NAME = "mockito_last_name";
 
-  public static final String FIRST_NAME = "mockito";
+  public static final String ADMIN_FIRST_NAME = "mockito";
 
   public static final String ADMIN_AUTH_ID_VALUE =
       "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
@@ -102,8 +102,8 @@ public class TestDataHelper {
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(EMAIL_VALUE);
-    userRegAdminEntity.setFirstName(FIRST_NAME);
-    userRegAdminEntity.setLastName(LAST_NAME);
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
     userRegAdminEntity.setEditPermission(Permission.READ_EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
@@ -122,8 +122,8 @@ public class TestDataHelper {
   public UserRegAdminEntity newNonSuperAdmin() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
-    userRegAdminEntity.setFirstName(FIRST_NAME);
-    userRegAdminEntity.setLastName(LAST_NAME);
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
     userRegAdminEntity.setEditPermission(ManageLocation.DENY.getValue());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setSuperAdmin(false);
@@ -259,8 +259,8 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
     userDetailsEntity.setEmail(EMAIL_VALUE);
     userDetailsEntity.setStatus(1);
-    userDetailsEntity.setFirstName(FIRST_NAME);
-    userDetailsEntity.setLastName(LAST_NAME);
+    userDetailsEntity.setFirstName(ADMIN_FIRST_NAME);
+    userDetailsEntity.setLastName(ADMIN_LAST_NAME);
     userDetailsEntity.setLocalNotificationFlag(false);
     userDetailsEntity.setRemoteNotificationFlag(false);
     userDetailsEntity.setTouchId(false);

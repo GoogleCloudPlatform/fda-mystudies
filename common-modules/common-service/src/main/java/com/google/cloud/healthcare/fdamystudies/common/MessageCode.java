@@ -61,10 +61,10 @@ public enum MessageCode {
 
   UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully"),
 
-  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfull"),
+  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfully"),
 
   GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
-      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfull");
+      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

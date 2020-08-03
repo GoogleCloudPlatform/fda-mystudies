@@ -63,8 +63,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.userId", notNullValue()))
-        .andExpect(jsonPath("$.firstName", is(TestDataHelper.FIRST_NAME)))
-        .andExpect(jsonPath("$.lastName", is(TestDataHelper.LAST_NAME)))
+        .andExpect(jsonPath("$.firstName", is(TestDataHelper.ADMIN_FIRST_NAME)))
+        .andExpect(jsonPath("$.lastName", is(TestDataHelper.ADMIN_LAST_NAME)))
         .andExpect(jsonPath("$.email", is(TestDataHelper.EMAIL_VALUE)))
         .andExpect(jsonPath("$.superAdmin", is(true)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_USER_PROFILE_SUCCESS.getMessage())));
@@ -110,8 +110,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.userId", notNullValue()))
-        .andExpect(jsonPath("$.firstName", is(TestDataHelper.FIRST_NAME)))
-        .andExpect(jsonPath("$.lastName", is(TestDataHelper.LAST_NAME)))
+        .andExpect(jsonPath("$.firstName", is(TestDataHelper.ADMIN_FIRST_NAME)))
+        .andExpect(jsonPath("$.lastName", is(TestDataHelper.ADMIN_LAST_NAME)))
         .andExpect(jsonPath("$.email", is(TestDataHelper.EMAIL_VALUE)))
         .andExpect(
             jsonPath(
