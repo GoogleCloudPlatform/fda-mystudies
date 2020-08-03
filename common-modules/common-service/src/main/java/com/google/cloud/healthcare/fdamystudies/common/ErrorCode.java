@@ -47,6 +47,12 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This email has already been used. Please try with a different email address."),
 
+  EMAIL_SEND_FAILED_EXCEPTION(
+      500,
+      "EC-500",
+      "Email Server Error",
+      "Your email was unable to send because the connection to mail server was interrupted. Please check your inbox for mail delivery failure notice."),
+
   APPLICATION_ERROR(
       500,
       "EC-500",

@@ -14,11 +14,21 @@ import java.net.URL;
 public enum ApiEndpoint {
   HEALTH("http://localhost:8002/oauth-scim-service/healthCheck"),
 
-  TOKEN("http://localhost:8002/oauth-scim-service/oauth2/token"),
+  TOKEN("http://localhost:8002/oauth-scim-service/v1/oauth2/token"),
 
-  USERS("http://localhost:8002/oauth-scim-service/users"),
+  USERS("http://localhost:8002/oauth-scim-service/v1/users"),
 
-  CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/users/{userId}/change_password");
+  USER("http://localhost:8002/oauth-scim-service/v1/users/{userId}"),
+
+  RESET_PASSWORD("http://localhost:8002/oauth-scim-service/v1/user/reset_password"),
+
+  REVOKE_TOKEN("http://localhost:8002/oauth-scim-service/v1/oauth2/revoke"),
+
+  LOGIN_PAGE("http://localhost:8002/oauth-scim-service/login"),
+
+  TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/v1/oauth2/introspect"),
+
+  CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/v1/users/{userId}/change_password");
 
   private String url;
 

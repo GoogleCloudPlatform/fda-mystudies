@@ -26,4 +26,19 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${oauth.scim.service.password.history.max.size:10}")
   private int passwordHistoryMaxSize;
+
+  @Value("${mail.contact-email}")
+  private String contactEmail;
+
+  @Value("${mail.from-email}")
+  private String fromEmail;
+
+  @Value("${mail.subject.reset-password}")
+  private String mailResetPasswordSubject;
+
+  @Value("${mail.body.reset-password}")
+  private String mailResetPasswordBody;
+
+  @Value("${cookie.secure:true}")
+  private boolean secureCookie;
 }

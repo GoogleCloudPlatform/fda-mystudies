@@ -33,7 +33,7 @@ public final class AuthScimConstants {
   public static final String AUTHORIZATION_CODE = "authorization_code";
 
   /** to revoke previous session tokens. */
-  public static final String USER_ID = "user_id";
+  public static final String USER_ID = "userId";
 
   public static final String PASSWORD_HISTORY = "password_history";
 
@@ -44,4 +44,30 @@ public final class AuthScimConstants {
   public static final String SALT = "salt";
 
   public static final String HASH = "hash";
+
+  public static final String CHANGE_PASSWORD = "change_password";
+
+  public static final String FORGOT_PASSWORD = "forgot_password";
+
+  public static final int TEMP_PASSWORD_LENGTH = 12;
+
+  public static final String TOKEN = "token";
+
+  public static final String CORRELATION_ID = "correlation_id";
+
+  public static final String LOGIN_CHALLENGE = "login_challenge";
+
+  public static final String SKIP = "skip";
+
+  public static final String APP_ID = "appId";
+
+  public static final String DEVICE_TYPE = "deviceType";
+
+  public static final String DEVICE_PLATFORM = "devicePlatform";
+
+  public static final String CLIENT_APP_VERSION = "clientAppVersion";
+
+  public static final String ORG_ID = "orgId";
+
+  public static final String TEMP_REG_ID = "temp_reg_id";
 }

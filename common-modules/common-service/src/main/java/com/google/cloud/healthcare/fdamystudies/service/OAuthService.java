@@ -14,4 +14,8 @@ import org.springframework.http.ResponseEntity;
 public interface OAuthService {
 
   public ResponseEntity<JsonNode> introspectToken(JsonNode params);
+
+  public String getAccessToken();
+
+  public String getNewAccessToken();
 }

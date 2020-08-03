@@ -54,6 +54,10 @@ public abstract class BaseServiceImpl {
     return restTemplate;
   }
 
+  protected boolean isSuccessful(ResponseEntity<?> response) {
+    return response.getStatusCode().is2xxSuccessful();
+  }
+
   protected String getEncodedAuthorization(String clientId, String clientSecret) {
     String credentials = clientId + ":" + clientSecret;
     return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
