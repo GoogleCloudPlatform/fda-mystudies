@@ -1,17 +1,17 @@
-@import url("./colors.scss");
-#body-container .text-weight-light {
+@import "./colors.scss";
+.text-weight-light {
   font-weight: 200;
 }
 
-#body-container .text-weight-normal {
+.text-weight-normal {
   font-weight: 400;
 }
 
-#body-container .text-weight-semibold {
+.text-weight-semibold {
   font-weight: 600;
 }
 
-#body-container .text-weight-bold {
+.text-weight-bold {
   font-weight: 700;
 }
 
