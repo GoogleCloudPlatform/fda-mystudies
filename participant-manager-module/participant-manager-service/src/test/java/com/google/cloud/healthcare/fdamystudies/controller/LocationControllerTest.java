@@ -13,7 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ALREADY_DECOMMISSIONED;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.CANNOT_REACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.CANNOT_REACTIVATE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.DEFAULT_SITE_MODIFY_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.LOCATION_ACCESS_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.LOCATION_NOT_FOUND;
@@ -212,7 +212,7 @@ public class LocationControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.error_description", is(CANNOT_REACTIVE.getDescription())));
+        .andExpect(jsonPath("$.error_description", is(CANNOT_REACTIVATE.getDescription())));
   }
 
   @Test
@@ -381,7 +381,7 @@ public class LocationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnLocationsForSite() throws Exception {
     // Step 1: Set studies for location
-    siteEntity.setStudy(testDataHelper.newStudyEntity());
+    siteEntity.setStudy(studyEntity);
     siteEntity.getStudy().setName("LIMITJP001");
     locationEntity.addSiteEntity(siteEntity);
     testDataHelper.getLocationRepository().save(locationEntity);
@@ -402,9 +402,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.locations").isArray())
-        .andExpect(jsonPath("$.locations", hasSize(1)))
-        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
-        .andExpect(jsonPath("$.locations[0].customId", is("OpenStudy02")));
+        .andExpect(jsonPath("$.locations", hasSize(0)));
   }
 
   @Test

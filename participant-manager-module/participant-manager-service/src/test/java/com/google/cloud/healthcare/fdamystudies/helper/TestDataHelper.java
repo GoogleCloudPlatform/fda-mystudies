@@ -200,7 +200,7 @@ public class TestDataHelper {
   }
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
-    StudyEntity studyEntity = new StudyEntity();
+    StudyEntity studyEntity = newStudyEntity();
     studyEntity.setType("CLOSE");
     studyEntity.setName("COVID Study");
     studyEntity.setAppInfo(appEntity);

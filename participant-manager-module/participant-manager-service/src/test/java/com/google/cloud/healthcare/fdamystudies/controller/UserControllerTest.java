@@ -533,12 +533,12 @@ public class UserControllerTest extends BaseMockIT {
 
   private void assertStudyPermissionDetails(String userId) {
     List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findByAdminUser(userId);
+        studyPermissionRepository.findByAdminUserId(userId);
     assertNotNull(studyPermissions);
   }
 
   private void assertAppPermissionDetails(String userId) {
-    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUser(userId);
+    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
     assertNotNull(appPermissions);
   }
 

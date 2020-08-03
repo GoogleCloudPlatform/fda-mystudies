@@ -149,9 +149,6 @@ public enum ErrorCode {
   PERMISSION_MISSING(
       400, "EC_978", Constants.BAD_REQUEST, "Admin should have atleast one permission"),
 
-  CANNOT_REACTIVE(
-      400, "EC_887", Constants.BAD_REQUEST, "Can't reactive an already active location"),
-
   INVALID_SECURITY_CODE(404, "EC_869", "Not Found", "Invalid Security code"),
 
   SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired");
