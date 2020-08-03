@@ -34,6 +34,6 @@ public interface UserService {
 
   public Optional<UserEntity> findUserByTempRegId(String tempRegId);
 
-  public UpdateEmailStatusResponse updateEmailStatus(UpdateEmailStatusRequest userRequest)
-      throws JsonProcessingException;
+  public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
+      UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 }

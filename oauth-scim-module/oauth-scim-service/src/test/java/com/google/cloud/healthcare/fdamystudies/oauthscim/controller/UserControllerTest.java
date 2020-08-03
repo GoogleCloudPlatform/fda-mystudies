@@ -22,6 +22,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -163,7 +164,7 @@ public class UserControllerTest extends BaseMockIT {
                     .headers(headers))
             .andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.tempRegId").isNotEmpty())
+            .andExpect(jsonPath("$.tempRegId").doesNotExist())
             .andExpect(jsonPath("$.userId").isNotEmpty())
             .andReturn();
 
@@ -498,11 +499,13 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
+        .andExpect(jsonPath("$.tempRegId").doesNotExist())
         .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS.getMessage()));
 
     // Step-3 verify updated email
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
-    assertEquals(userEntity.getEmail(), EMAIL_2);
+    assertEquals(EMAIL_2, userEntity.getEmail());
+    assertEquals(UserAccountStatus.PENDING_CONFIRMATION.getStatus(), userEntity.getStatus());
 
     repository.deleteByUserId(userEntity.getUserId());
   }
@@ -528,11 +531,14 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS.getMessage()));
+        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS.getMessage()))
+        .andExpect(jsonPath("$.tempRegId").isNotEmpty());
 
     // Step-3 verify updated email
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
-    assertEquals(userEntity.getStatus(), UserAccountStatus.ACTIVE.getStatus());
+    assertEquals(UserAccountStatus.ACTIVE.getStatus(), userEntity.getStatus());
+    assertFalse(userEntity.getTempRegId().isEmpty());
+    assertEquals(EMAIL_VALUE, userEntity.getEmail());
 
     repository.deleteByUserId(userEntity.getUserId());
   }

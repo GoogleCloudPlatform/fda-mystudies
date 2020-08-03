@@ -41,8 +41,10 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
@@ -246,8 +248,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public UpdateEmailStatusResponse updateEmailStatus(UpdateEmailStatusRequest userRequest)
-      throws JsonProcessingException {
+  public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
+      UpdateEmailStatusRequest userRequest) throws JsonProcessingException {
     logger.entry("begin updateUser()");
     Optional<UserEntity> optUser = repository.findByUserId(userRequest.getUserId());
     if (!optUser.isPresent()) {
@@ -260,9 +262,13 @@ public class UserServiceImpl implements UserService {
         userRequest.getStatus() == null ? userEntity.getStatus() : userRequest.getStatus();
     String email = StringUtils.defaultIfEmpty(userRequest.getEmail(), userEntity.getEmail());
 
-    repository.updateEmailAndStatus(email, status, userEntity.getUserId());
-
+    String tempRegId = null;
+    if (userRequest.getStatus() != null
+        && UserAccountStatus.ACTIVE.getStatus() == userRequest.getStatus()) {
+      tempRegId = IdGenerator.id();
+    }
+    repository.updateEmailStatusAndTempRegId(email, status, tempRegId, userEntity.getUserId());
     logger.exit(MessageCode.UPDATE_USER_DETAILS);
-    return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS);
+    return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS, tempRegId);
   }
 }

@@ -120,7 +120,7 @@ public class UserController {
           .body(new UpdateEmailStatusResponse(ErrorCode.INVALID_PATCH_USER_REQUEST));
     }
 
-    UpdateEmailStatusResponse userResponse = userService.updateEmailStatus(userRequest);
+    UpdateEmailStatusResponse userResponse = userService.updateEmailStatusAndTempRegId(userRequest);
 
     logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
