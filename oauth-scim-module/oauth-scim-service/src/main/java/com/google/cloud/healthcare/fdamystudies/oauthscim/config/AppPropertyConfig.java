@@ -38,4 +38,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${mail.body.reset-password}")
   private String mailResetPasswordBody;
+
+  @Value("${cookie.secure:true}")
+  private boolean secureCookie;
 }
