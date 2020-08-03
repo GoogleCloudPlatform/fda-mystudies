@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.APP_STUDY_ID_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -24,11 +29,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -53,8 +58,7 @@ public class AppEntity implements Serializable {
   @Column(
       name = "app_info_id",
       updatable = false,
-      nullable = false,
-      length = ColumnConstraints.ID_LENGTH)
+      nullable = false)
   private String id;
 
   @ToString.Exclude
@@ -62,11 +66,11 @@ public class AppEntity implements Serializable {
       name = "custom_app_id",
       nullable = false,
       unique = true,
-      length = ColumnConstraints.XS_LENGTH)
+      length = APP_STUDY_ID_LENGTH)
   private String appId;
 
   @ToString.Exclude
-  @Column(name = "app_name", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "app_name", length = SMALL_LENGTH)
   private String appName;
 
   @Column(name = "app_description")
@@ -79,11 +83,11 @@ public class AppEntity implements Serializable {
   private OrgInfoEntity orgInfo;
 
   @ToString.Exclude
-  @Column(name = "ios_bundle_id", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "ios_bundle_id", length = SMALL_LENGTH)
   private String iosBundleId;
 
   @ToString.Exclude
-  @Column(name = "android_bundle_id", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "android_bundle_id", length = SMALL_LENGTH)
   private String androidBundleId;
 
   @ToString.Exclude
@@ -92,23 +96,23 @@ public class AppEntity implements Serializable {
   private String iosCertificate;
 
   @ToString.Exclude
-  @Column(name = "ios_certificate_password", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "ios_certificate_password", length = SMALL_LENGTH)
   private String iosCertificatePassword;
 
   @ToString.Exclude
-  @Column(name = "android_server_key", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "android_server_key", length = LARGE_LENGTH)
   private String androidServerKey;
 
   @ToString.Exclude
-  @Column(name = "from_email_id", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "from_email_id", length = LARGE_LENGTH)
   private String formEmailId;
 
   @ToString.Exclude
-  @Column(name = "from_email_password", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "from_email_password", length = LARGE_LENGTH)
   private String fromEmailPassword;
 
   @ToString.Exclude
-  @Column(name = "reg_email_sub", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "reg_email_sub", length = LARGE_LENGTH)
   private String regEmailSub;
 
   @ToString.Exclude
@@ -117,34 +121,30 @@ public class AppEntity implements Serializable {
   private String regEmailBody;
 
   @ToString.Exclude
-  @Column(name = "forgot_email_sub", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "forgot_email_sub", length = LARGE_LENGTH)
   private String forgotEmailSub;
 
   @Column(name = "forgot_email_body")
   @Type(type = "text")
   private String forgotEmailBody;
 
-  @Column(name = "method_handler", length = ColumnConstraints.TINY_LENGTH)
+  @Column(name = "method_handler", length = TINY_LENGTH)
   private Integer methodHandler;
 
-  @Column(name = "created_by", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 
-  @Column(name = "modified_by", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "modified_by", length = LARGE_LENGTH)
   private String modifiedBy;
 
   @Column(
-      name = "modified_date",
-      insertable = false,
-      updatable = true,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+      name = "updated_time")
+  @UpdateTimestamp
   private Timestamp modified;
 
   @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+      name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
   @OneToMany(
