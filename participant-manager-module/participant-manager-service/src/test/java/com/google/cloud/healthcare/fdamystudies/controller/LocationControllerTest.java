@@ -387,7 +387,7 @@ public class LocationControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnLocationsForSite() throws Exception {
+  public void shouldReturnNoLocationsForSiteExcludedByStudyId() throws Exception {
     // Step 1: Set studies for location
     siteEntity.setStudy(studyEntity);
     siteEntity.getStudy().setName("LIMITJP001");
@@ -411,6 +411,35 @@ public class LocationControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations", hasSize(0)));
+  }
+
+  @Test
+  public void shouldReturnLocationsForSite() throws Exception {
+    // Step 1: Set studies for location
+    siteEntity.setStudy(testDataHelper.newStudyEntity());
+    siteEntity.getStudy().setName("LIMITJP001");
+    locationEntity.addSiteEntity(siteEntity);
+    testDataHelper.getLocationRepository().save(locationEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    // Step 2: Call API and expect message GET_LOCATION_FOR_SITE_SUCCESS
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .queryParam("excludeStudyId", studyEntity.getId())
+                .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
+                .content(asJsonString(getLocationRequest()))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.locations").isArray())
+        .andExpect(jsonPath("$.locations", hasSize(1)))
+        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
+        .andExpect(jsonPath("$.locations[0].customId", is("OpenStudy02")));
   }
 
   @Test
