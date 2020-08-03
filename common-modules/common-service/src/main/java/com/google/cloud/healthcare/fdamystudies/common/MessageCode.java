@@ -69,7 +69,7 @@ public enum MessageCode {
   GET_PARTICIPANT_DETAILS_SUCCESS(
       HttpStatus.OK, "MSG-0019", "Get participant details successfully"),
 
-  PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "participants are invited"),
+  PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "Participants are invited"),
 
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
       HttpStatus.ACCEPTED, "MSG-0022", "The email is accepted by the receiving mail server.");

@@ -26,8 +26,8 @@ public class AppPropertyConfig implements Serializable {
   @Value("${securityCodeExpireDate}")
   private String securityCodeExpireDate;
 
-  @Value("${enrollmentTokenExpiryinHours}")
-  private Integer enrollmentTokenExpiryinHours;
+  @Value("${enrollmentTokenExpiryInHours}")
+  private Integer enrollmentTokenExpiryInHours;
 
   @Value("${participant.invite.subject}")
   private String participantInviteSubject;
