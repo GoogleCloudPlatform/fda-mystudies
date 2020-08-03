@@ -60,7 +60,9 @@ public enum ApiEndpoint {
       "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/import"),
 
   UPDATE_ONBOARDING_STATUS(
-      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/status");
+      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/status"),
+
+  GET_SITES("http://localhost:8080/participant-manager-service/sites");
 
   private String url;
 

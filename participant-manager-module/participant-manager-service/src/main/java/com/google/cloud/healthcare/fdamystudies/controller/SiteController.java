@@ -17,6 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
@@ -191,5 +192,16 @@ public class SiteController {
 
     logger.exit(String.format(STATUS_LOG, response.getHttpStatusCode()));
     return ResponseEntity.status(response.getHttpStatusCode()).body(response);
+  }
+
+  @GetMapping("/sites")
+  public ResponseEntity<SiteDetailsResponse> getSites(
+      @RequestHeader(name = USER_ID_HEADER) String userId, HttpServletRequest request) {
+    logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+
+    SiteDetailsResponse siteDetails = siteService.getSites(userId);
+
+    logger.exit(String.format(STATUS_LOG, siteDetails.getHttpStatusCode()));
+    return ResponseEntity.status(siteDetails.getHttpStatusCode()).body(siteDetails);
   }
 }

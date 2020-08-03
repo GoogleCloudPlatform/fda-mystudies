@@ -73,7 +73,9 @@ public enum MessageCode {
 
   IMPORT_PARTICIPANT_SUCCESS(HttpStatus.OK, "MSG-0026", "Participants imported successfully"),
 
-  UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG-0028", "Status updated successfully");
+  UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG-0028", "Status updated successfully"),
+
+  GET_SITES_SUCCESS(HttpStatus.OK, "MSG-0018", "Get sites successfully");
 
   private final HttpStatus httpStatus;
   private final String code;
