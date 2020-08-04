@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.springframework.util.MultiValueMap;
 
 public final class JsonUtils {
@@ -30,6 +31,10 @@ public final class JsonUtils {
   }
 
   public static JsonNode toJsonNode(String jsonTree) throws JsonProcessingException {
+    if (StringUtils.startsWith(jsonTree, "\"") && StringUtils.endsWith(jsonTree, "\"")) {
+      jsonTree = jsonTree.substring(1, jsonTree.length() - 1);
+    }
+    jsonTree = StringEscapeUtils.unescapeJava(jsonTree);
     return getObjectMapper().readTree(jsonTree);
   }
 
