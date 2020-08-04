@@ -671,7 +671,7 @@ public class SitesControllerTest extends BaseMockIT {
     inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
     mockMvc
         .perform(
-            post(ApiEndpoint.INVITE_PARTICIPANT.getPath(), IdGenerator.id())
+            post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), IdGenerator.id())
                 .content(asJsonString(inviteParticipantRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -680,6 +680,62 @@ public class SitesControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
+    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    // Step 1: New participant invite
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Disabled participant invite
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity1 =
+        testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity1);
+    participantRegistrySiteEntity1.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity1);
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(
+        Arrays.asList(
+            participantRegistrySiteEntity.getId(), participantRegistrySiteEntity1.getId()));
+    // Step 3: call the API and assert the error description
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                    .content(asJsonString(inviteParticipantRequest))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.invitedParticipantIds").isArray())
+            .andExpect(jsonPath("$.invitedParticipantIds", hasSize(1)))
+            .andExpect(jsonPath("$.failedParticipantIds").isArray())
+            .andExpect(jsonPath("$.failedParticipantIds", hasSize(1)))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
+            .andReturn();
+
+    // Step 4: verify updated values
+    String id =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(id);
+
+    assertNotNull(optParticipantRegistrySite);
+    assertEquals(
+        OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
   }
 
   @Test
@@ -704,7 +760,7 @@ public class SitesControllerTest extends BaseMockIT {
     MvcResult result =
         mockMvc
             .perform(
-                post(ApiEndpoint.INVITE_PARTICIPANT.getPath(), siteEntity.getId())
+                post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), siteEntity.getId())
                     .content(asJsonString(inviteParticipantRequest))
                     .headers(headers)
                     .contextPath(getContextPath()))

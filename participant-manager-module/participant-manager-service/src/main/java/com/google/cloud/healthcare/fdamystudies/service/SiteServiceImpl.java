@@ -605,17 +605,17 @@ public class SiteServiceImpl implements SiteService {
       return new InviteParticipantResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
 
-    List<ParticipantRegistrySiteEntity> listOfparticipants =
+    List<ParticipantRegistrySiteEntity> participantsList =
         participantRegistrySiteRepository.findByIds(inviteParticipantRequest.getIds());
     SiteEntity siteEntity = optSiteEntity.get();
     List<ParticipantRegistrySiteEntity> invitedParticipants =
-        findEligibleParticipantsAndSendInviteEmail(listOfparticipants, siteEntity);
+        findEligibleParticipantsAndSendInviteEmail(participantsList, siteEntity);
 
     participantRegistrySiteRepository.saveAll(invitedParticipants);
 
-    listOfparticipants.removeAll(invitedParticipants);
+    participantsList.removeAll(invitedParticipants);
     List<String> failedParticipantIds =
-        listOfparticipants
+        participantsList
             .stream()
             .map(ParticipantRegistrySiteEntity::getId)
             .collect(Collectors.toList());
@@ -658,7 +658,7 @@ public class SiteServiceImpl implements SiteService {
       participantRegistrySiteEntity.setEnrollmentTokenExpiry(
           new Timestamp(
               Instant.now()
-                  .plus(appPropertyConfig.getEnrollmentTokenExpiryinHours(), ChronoUnit.HOURS)
+                  .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
                   .toEpochMilli()));
       EmailResponse emailResponse = sendInvitationEmail(participantRegistrySiteEntity, siteEntity);
       if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
