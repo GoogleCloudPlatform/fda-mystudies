@@ -972,8 +972,6 @@ public class SiteServiceImpl implements SiteService {
       site.setId(siteEntity.getId());
       site.setName(siteEntity.getLocation().getName());
       site.setEnrolled(enrolledCount);
-      // TODO (Kantharaju) why we need this permission
-      // site.setEdit(sitePermission.getCanEdit());
 
       Double percentage;
       String studyType = study.getType();
