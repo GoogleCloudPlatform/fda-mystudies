@@ -64,11 +64,11 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   private String id;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "site_id", insertable = true, updatable = false)
+  @JoinColumn(name = "site_id", updatable = false)
   private SiteEntity site;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_info_id", insertable = true, updatable = true)
+  @JoinColumn(name = "study_info_id")
   private StudyEntity study;
 
   @ToString.Exclude

@@ -1,16 +1,18 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -34,9 +36,10 @@ import lombok.Setter;
     matchIfMissing = false)
 public class UserInstitutionEntity {
   @Id
-  @Column(name = "user_institution_id", unique = true)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long userInstitutionId;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String userInstitutionId;
 
   @NotNull
   @OneToOne(fetch = FetchType.EAGER)
@@ -44,6 +47,6 @@ public class UserInstitutionEntity {
   @OnDelete(action = OnDeleteAction.CASCADE)
   private UserDetailsEntity userDetails;
 
-  @Column(name = "institution_id")
+  @Column(name = "institution_id", length = MEDIUM_LENGTH)
   private String institutionId;
 }

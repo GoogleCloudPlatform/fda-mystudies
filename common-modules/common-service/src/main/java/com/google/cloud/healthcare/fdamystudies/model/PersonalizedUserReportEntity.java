@@ -51,7 +51,7 @@ public class PersonalizedUserReportEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
   @ManyToOne

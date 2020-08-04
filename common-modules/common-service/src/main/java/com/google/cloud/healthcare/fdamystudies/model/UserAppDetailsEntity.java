@@ -20,10 +20,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,25 +44,18 @@ public class UserAppDetailsEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(
-      name = "user_app_details_id",
-      updatable = false,
-      nullable = false,
-      length = ColumnConstraints.ID_LENGTH)
-  private Integer userAppDetailsId;
+  @Column(name = "id", updatable = false, nullable = false)
+  private String userAppDetailsId;
 
   @ManyToOne
-  @JoinColumn(name = "app_info_id", insertable = true, updatable = false)
+  @JoinColumn(name = "app_info_id", updatable = false)
   private AppEntity app;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_details_id")
   private UserDetailsEntity userDetails;
 
-  @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 }

@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -21,10 +23,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,15 +51,15 @@ public class SitePermissionEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-  @JoinColumn(name = "ur_admin_user_id", insertable = true, updatable = true)
+  @JoinColumn(name = "ur_admin_user_id")
   private UserRegAdminEntity urAdminUser;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
+  @JoinColumn(name = "study_id")
   private StudyEntity study;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
@@ -72,13 +73,10 @@ public class SitePermissionEntity implements Serializable {
   @Column(name = "edit")
   private Integer canEdit;
 
-  @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
-  @Column(name = "created_by", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 }

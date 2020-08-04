@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,10 +31,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,7 +53,7 @@ import lombok.ToString;
     uniqueConstraints = {
       @UniqueConstraint(
           columnNames = {"user_id", "app_info_id"},
-          name = "uk_user_details_email_user_app_info")
+          name = "user_details_user_id_app_info_id_uidx")
     })
 public class UserDetailsEntity implements Serializable {
 
@@ -59,26 +63,19 @@ public class UserDetailsEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
   @ToString.Exclude
-  @Column(name = "first_name", length = ColumnConstraints.MEDIUM_LENGTH)
+  @Column(name = "first_name", length = MEDIUM_LENGTH)
   private String firstName;
 
   @ToString.Exclude
-  @Column(name = "last_name", length = ColumnConstraints.MEDIUM_LENGTH)
+  @Column(name = "last_name", length = MEDIUM_LENGTH)
   private String lastName;
 
-  @Column(
-      name = "timestamp",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp timestamp;
-
   @ToString.Exclude
-  @Column(name = "email", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "email", length = LARGE_LENGTH)
   private String email;
 
   @ToString.Exclude
@@ -94,43 +91,37 @@ public class UserDetailsEntity implements Serializable {
   @Column(name = "remote_notification_flag")
   private Boolean remoteNotificationFlag;
 
-  @Column(name = "status", nullable = false)
+  @Column(nullable = false)
   private Integer status;
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
   @JoinColumn(name = "app_info_id")
   private AppEntity app;
 
-  @Column(name = "locale", length = ColumnConstraints.MEDIUM_LENGTH)
+  @Column(length = MEDIUM_LENGTH)
   private String locale;
 
-  @Column(
-      name = "verification_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "verification_time")
+  @CreationTimestamp
   private Timestamp verificationDate;
 
-  @Column(
-      name = "code_expire_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "code_expire_time")
+  @CreationTimestamp
   private Timestamp codeExpireDate;
 
-  @Column(name = "reminder_lead_time", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "reminder_lead_time", length = SMALL_LENGTH)
   private String reminderLeadTime;
 
   @ToString.Exclude
-  @Column(name = "security_token", length = ColumnConstraints.MEDIUM_LENGTH)
+  @Column(name = "security_token", length = MEDIUM_LENGTH)
   private String securityToken;
 
   @ToString.Exclude
-  @Column(name = "email_code", length = ColumnConstraints.XS_LENGTH)
+  @Column(name = "email_code", length = XS_LENGTH)
   private String emailCode;
 
   @ToString.Exclude
-  @Column(name = "user_id", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "user_id", length = SMALL_LENGTH)
   private String userId;
 
   // Use UserInstitution class to access institution.

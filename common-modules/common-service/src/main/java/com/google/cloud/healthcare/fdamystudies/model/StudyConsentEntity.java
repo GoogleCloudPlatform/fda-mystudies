@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -20,11 +23,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,11 +48,7 @@ public class StudyConsentEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(
-      name = "study_consent_id",
-      updatable = false,
-      nullable = false,
-      length = ColumnConstraints.ID_LENGTH)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -61,17 +59,16 @@ public class StudyConsentEntity implements Serializable {
   @JoinColumn(name = "user_details_id")
   private UserDetailsEntity userDetails;
 
-  @Column(name = "status", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(length = SMALL_LENGTH)
   private String status;
 
-  @Column(name = "version", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(length = SMALL_LENGTH)
   private String version;
 
-  @Column(name = "pdf")
   @Type(type = "text")
   private String pdf;
 
-  @Column(name = "pdfpath", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(length = LARGE_LENGTH)
   private String pdfPath;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -79,13 +76,10 @@ public class StudyConsentEntity implements Serializable {
   private ParticipantStudyEntity participantStudy;
 
   // represents whether pdf content is stored in db=0 or gcp=1
-  @Column(name = "pdfStorage", nullable = false)
+  @Column(nullable = false)
   private int pdfStorage;
 
-  @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 }
