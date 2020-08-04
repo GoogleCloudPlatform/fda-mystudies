@@ -147,7 +147,7 @@ public class StudyControllerTest extends BaseMockIT {
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
     StudyPermissionEntity studyPermission = studyEntity.getStudyPermissions().get(0);
-    studyPermission.setAppInfo(null);
+    studyPermission.setApp(null);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
     mockMvc
         .perform(

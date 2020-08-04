@@ -252,13 +252,12 @@ public class StudyServiceImpl implements StudyService {
 
     StudyPermissionEntity studyPermission = optStudyPermission.get();
 
-    if (studyPermission.getAppInfo() == null) {
+    if (studyPermission.getApp() == null) {
       logger.exit(ErrorCode.APP_NOT_FOUND);
       return new ParticipantRegistryResponse(ErrorCode.APP_NOT_FOUND);
     }
 
-    Optional<AppEntity> optApp =
-        appRepository.findById(optStudyPermission.get().getAppInfo().getId());
+    Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
     return prepareRegistryParticipantResponse(optStudy.get(), optApp.get());
   }

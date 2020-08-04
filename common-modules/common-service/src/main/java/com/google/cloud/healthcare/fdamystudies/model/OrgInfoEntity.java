@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,10 +26,10 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -47,37 +51,27 @@ public class OrgInfoEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(
-      name = "org_info_id",
-      updatable = false,
-      nullable = false,
-      length = ColumnConstraints.ID_LENGTH)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "name", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "name", length = SMALL_LENGTH)
   private String name;
 
-  @Column(name = "org_id", nullable = false, unique = true, length = ColumnConstraints.XS_LENGTH)
+  @Column(name = "org_id", nullable = false, unique = true, length = XS_LENGTH)
   private String orgId;
 
-  @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
-  @Column(name = "created_by", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 
-  @Column(name = "modified_by", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "modified_by", length = LARGE_LENGTH)
   private String modifiedBy;
 
-  @Column(
-      name = "modified_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "updated_time")
+  @UpdateTimestamp
   private Timestamp modified;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "orgInfo")

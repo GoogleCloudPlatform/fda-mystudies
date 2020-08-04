@@ -71,7 +71,7 @@ public class StudyEntity implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "app_info_id", insertable = true, updatable = true)
-  private AppEntity appInfo;
+  private AppEntity app;
 
   @Column(name = "name", length = ColumnConstraints.SMALL_LENGTH)
   private String name;
@@ -176,6 +176,6 @@ public class StudyEntity implements Serializable {
 
   @Transient
   public String getAppId() {
-    return appInfo != null ? appInfo.getId() : StringUtils.EMPTY;
+    return app != null ? app.getId() : StringUtils.EMPTY;
   }
 }

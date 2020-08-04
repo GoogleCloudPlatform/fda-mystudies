@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -25,10 +30,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,7 +51,7 @@ import lombok.ToString;
     uniqueConstraints = {
       @UniqueConstraint(
           columnNames = {"email", "study_info_id"},
-          name = "uk_participant_registry_site_email_study")
+          name = "participant_registry_site_email_study_info_id_uidx")
     })
 public class ParticipantRegistrySiteEntity implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -55,7 +60,7 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -67,62 +72,47 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   private StudyEntity study;
 
   @ToString.Exclude
-  @Column(name = "email", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(length = LARGE_LENGTH)
   private String email;
 
   @ToString.Exclude
-  @Column(name = "name", length = ColumnConstraints.MEDIUM_LENGTH)
+  @Column(length = MEDIUM_LENGTH)
   private String name;
 
-  @Column(
-      name = "invitation_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "invitation_time")
+  @CreationTimestamp
   private Timestamp invitationDate;
 
   @Column(name = "invitation_count", columnDefinition = "BIGINT DEFAULT 0")
   private Long invitationCount;
 
-  @Column(
-      name = "disabled_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "disabled_time")
+  @CreationTimestamp
   private Timestamp disabledDate;
 
-  @Column(
-      name = "enrollment_token_expiry",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "enrollment_token_expiry")
+  @CreationTimestamp
   private Timestamp enrollmentTokenExpiry;
 
   @ToString.Exclude
-  @Column(name = "onboarding_status", length = ColumnConstraints.TINY_LENGTH)
+  @Column(name = "onboarding_status", length = TINY_LENGTH)
   private String onboardingStatus;
 
-  @Column(name = "enrollment_token", unique = true, length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "enrollment_token", unique = true, length = XS_LENGTH)
   private String enrollmentToken;
 
-  @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
-  @Column(name = "created_by", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 
-  @Column(name = "modified_by", length = ColumnConstraints.LARGE_LENGTH)
+  @Column(name = "modified_by", length = LARGE_LENGTH)
   private String modifiedBy;
 
-  @Column(
-      name = "modified_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "updated_time")
+  @UpdateTimestamp
   private Timestamp modified;
 
   @OneToMany(

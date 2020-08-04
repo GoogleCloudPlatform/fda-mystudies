@@ -155,7 +155,7 @@ public class SiteServiceImpl implements SiteService {
 
     if (optStudyPermissionEntity.isPresent()) {
       StudyPermissionEntity studyPermission = optStudyPermissionEntity.get();
-      String appInfoId = studyPermission.getAppInfo().getId();
+      String appInfoId = studyPermission.getApp().getId();
       Optional<AppPermissionEntity> optAppPermissionEntity =
           appPermissionRepository.findByUserIdAndAppId(siteRequest.getUserId(), appInfoId);
       if (optAppPermissionEntity.isPresent()) {
@@ -206,7 +206,7 @@ public class SiteServiceImpl implements SiteService {
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
       sitePermission.setStudy(studyPermission.getStudy());
-      sitePermission.setAppInfo(studyPermission.getAppInfo());
+      sitePermission.setApp(studyPermission.getApp());
       sitePermission.setCanEdit(editPermission);
       sitePermission.setCreatedBy(userId);
       site.addSitePermissionEntity(sitePermission);
@@ -374,7 +374,7 @@ public class SiteServiceImpl implements SiteService {
 
     if (optStudyPermissionEntity.isPresent()) {
       StudyPermissionEntity studyPermission = optStudyPermissionEntity.get();
-      String appInfoId = studyPermission.getAppInfo().getId();
+      String appInfoId = studyPermission.getApp().getId();
       Optional<AppPermissionEntity> optAppPermissionEntity =
           appPermissionRepository.findByUserIdAndAppId(userId, appInfoId);
       if (optAppPermissionEntity.isPresent()) {
@@ -675,7 +675,7 @@ public class SiteServiceImpl implements SiteService {
       ParticipantRegistrySiteEntity participantRegistrySiteEntity, SiteEntity siteEntity) {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("study name", siteEntity.getStudy().getName());
-    templateArgs.put("org name", siteEntity.getStudy().getAppInfo().getOrgInfo().getName());
+    templateArgs.put("org name", siteEntity.getStudy().getApp().getOrgInfo().getName());
     templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
     templateArgs.put("contact email address", appPropertyConfig.getFromEmailAddress());
     EmailRequest emailRequest =

@@ -586,7 +586,7 @@ public class SitesControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnParticipantDetails() throws Exception {
     // Step 1: Set data needed to get Participant details
-    participantRegistrySiteEntity.getStudy().setAppInfo(appEntity);
+    participantRegistrySiteEntity.getStudy().setApp(appEntity);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
     testDataHelper
         .getParticipantRegistrySiteRepository()
@@ -685,7 +685,7 @@ public class SitesControllerTest extends BaseMockIT {
   @Test
   public void shouldInviteParticipant() throws Exception {
     appEntity.setOrgInfo(testDataHelper.createOrgInfo());
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
     testDataHelper.getSiteRepository().save(siteEntity);

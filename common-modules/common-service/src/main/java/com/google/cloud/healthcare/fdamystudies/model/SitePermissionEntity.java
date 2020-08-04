@@ -67,7 +67,7 @@ public class SitePermissionEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
+  private AppEntity app;
 
   @Column(name = "edit")
   private Integer canEdit;

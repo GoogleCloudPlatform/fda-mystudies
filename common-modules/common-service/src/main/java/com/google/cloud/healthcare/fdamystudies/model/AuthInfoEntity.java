@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -20,11 +23,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,54 +49,41 @@ public class AuthInfoEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "auth_id", nullable = false, length = ColumnConstraints.ID_LENGTH)
-  private Integer authId;
+  @Column(name = "id", nullable = false)
+  private String authId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "app_info_id", nullable = false)
-  private AppEntity appInfo;
+  private AppEntity app;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_details_id", nullable = false)
   private UserDetailsEntity userDetails;
 
-  @Column(name = "auth_key", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "auth_key", length = SMALL_LENGTH)
   private String authKey;
 
   @Column(name = "device_token")
   @Type(type = "text")
   private String deviceToken;
 
-  @Column(name = "device_type", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "device_type", length = SMALL_LENGTH)
   private String deviceType;
 
-  @Column(name = "android_app_version", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "android_app_version", length = SMALL_LENGTH)
   private String androidAppVersion;
 
-  @Column(name = "ios_app_version", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(name = "ios_app_version", length = SMALL_LENGTH)
   private String iosAppVersion;
 
-  @Column(
-      name = "created_on",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
-  @Column(
-      name = "modified_date",
-      insertable = false,
-      updatable = true,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "updated_time")
+  @UpdateTimestamp
   private Timestamp modified;
 
-  @Column(name = "remote_notification_flag", length = ColumnConstraints.TINY_LENGTH)
+  @Column(name = "remote_notification_flag", length = TINY_LENGTH)
   private Boolean remoteNotificationFlag = false;
-
-  @Column(
-      name = "timestamp",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp timestamp;
 }

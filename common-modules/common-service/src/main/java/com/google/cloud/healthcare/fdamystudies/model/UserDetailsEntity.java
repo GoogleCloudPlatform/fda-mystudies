@@ -99,7 +99,7 @@ public class UserDetailsEntity implements Serializable {
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
   @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
+  private AppEntity app;
 
   @Column(name = "locale", length = ColumnConstraints.MEDIUM_LENGTH)
   private String locale;

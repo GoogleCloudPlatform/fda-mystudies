@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.beans.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -23,11 +26,10 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -45,7 +47,7 @@ import lombok.ToString;
     uniqueConstraints = {
       @UniqueConstraint(
           columnNames = {"participant_id", "site_id"},
-          name = "uk_participant_study_info_participant_site")
+          name = "participant_study_info_participant_id_site_id__uidx")
     })
 public class ParticipantStudyEntity implements Serializable {
 
@@ -55,10 +57,10 @@ public class ParticipantStudyEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false, length = ColumnConstraints.ID_LENGTH)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "participant_id", length = ColumnConstraints.XS_LENGTH)
+  @Column(name = "participant_id", length = XS_LENGTH)
   private String participantId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -80,37 +82,26 @@ public class ParticipantStudyEntity implements Serializable {
   @Column(name = "consent_status")
   private Boolean consentStatus = false;
 
-  @Column(name = "status", length = ColumnConstraints.SMALL_LENGTH)
+  @Column(length = SMALL_LENGTH)
   private String status;
 
-  @Column(name = "bookmark")
   private Boolean bookmark;
 
-  @Column(name = "eligibility")
   private Boolean eligibility;
 
-  @Column(
-      name = "enrolled_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "enrolled_time")
+  @CreationTimestamp
   private Timestamp enrolledDate;
 
-  @Column(name = "sharing")
   @Type(type = "text")
   private String sharing;
 
-  @Column(name = "completion")
   private Integer completion;
 
-  @Column(name = "adherence")
   private Integer adherence;
 
-  @Column(
-      name = "withdrawal_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "withdrawal_time")
+  @CreationTimestamp
   private Timestamp withdrawalDate;
 
   @Transient

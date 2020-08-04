@@ -8,6 +8,27 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppParticipantsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
@@ -38,25 +59,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
 @Service
 public class AppServiceImpl implements AppService {
@@ -234,7 +236,7 @@ public class AppServiceImpl implements AppService {
         .stream()
         .collect(
             Collectors.groupingBy(
-                SitePermissionEntity::getAppInfo,
+                SitePermissionEntity::getApp,
                 Collectors.groupingBy(SitePermissionEntity::getStudy)));
   }
 
@@ -249,7 +251,7 @@ public class AppServiceImpl implements AppService {
       appPermissionsByAppInfoId =
           appPermissions
               .stream()
-              .collect(Collectors.toMap(e -> e.getAppInfo().getId(), Function.identity()));
+              .collect(Collectors.toMap(e -> e.getApp().getId(), Function.identity()));
     }
     return appPermissionsByAppInfoId;
   }
@@ -257,7 +259,7 @@ public class AppServiceImpl implements AppService {
   private List<String> getAppIds(List<SitePermissionEntity> sitePermissions) {
     return sitePermissions
         .stream()
-        .map(appInfoDetailsbo -> appInfoDetailsbo.getAppInfo().getId())
+        .map(appInfoDetailsbo -> appInfoDetailsbo.getApp().getId())
         .distinct()
         .collect(Collectors.toList());
   }
@@ -329,7 +331,7 @@ public class AppServiceImpl implements AppService {
 
     AppPermissionEntity appPermission = optAppPermissionEntity.get();
 
-    AppEntity app = appPermission.getAppInfo();
+    AppEntity app = appPermission.getApp();
 
     List<UserDetailsEntity> userDetails = userDetailsRepository.findByAppId(app.getId());
     List<StudyEntity> studyEntity = studyRepository.findByAppId(app.getId());

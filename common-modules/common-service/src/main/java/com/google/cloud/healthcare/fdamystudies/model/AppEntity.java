@@ -28,6 +28,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -56,7 +57,7 @@ public class AppEntity implements Serializable {
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
   @Column(
-      name = "app_info_id",
+      name = "id",
       updatable = false,
       nullable = false)
   private String id;
@@ -70,6 +71,7 @@ public class AppEntity implements Serializable {
   private String appId;
 
   @ToString.Exclude
+  @NotNull
   @Column(name = "app_name", length = SMALL_LENGTH)
   private String appName;
 
@@ -150,68 +152,68 @@ public class AppEntity implements Serializable {
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,
-      mappedBy = "appInfo",
+      mappedBy = "app",
       orphanRemoval = true)
   private List<AppPermissionEntity> appPermissions = new ArrayList<>();
 
   public void addAppPermissionEntity(AppPermissionEntity appPermission) {
     appPermissions.add(appPermission);
-    appPermission.setAppInfo(this);
+    appPermission.setApp(this);
   }
 
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,
-      mappedBy = "appInfo",
+      mappedBy = "app",
       orphanRemoval = true)
   private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
 
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
     sitePermissions.add(sitePermission);
-    sitePermission.setAppInfo(this);
+    sitePermission.setApp(this);
   }
 
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,
-      mappedBy = "appInfo",
+      mappedBy = "app",
       orphanRemoval = true)
   private List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
 
   public void addStudyPermissionEntity(StudyPermissionEntity studyPermission) {
     studyPermissions.add(studyPermission);
-    studyPermission.setAppInfo(this);
+    studyPermission.setApp(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "app")
   private List<UserDetailsEntity> userDetails = new ArrayList<>();
 
   public void addUserDetailsEntity(UserDetailsEntity userDetail) {
     userDetails.add(userDetail);
-    userDetail.setAppInfo(this);
+    userDetail.setApp(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "app")
   private List<StudyEntity> studies = new ArrayList<>();
 
   public void addStudyEntity(StudyEntity study) {
     studies.add(study);
-    study.setAppInfo(this);
+    study.setApp(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "app")
   private List<AuthInfoEntity> apps = new ArrayList<>();
 
   public void addAuthInfoEntity(AuthInfoEntity authInfoEntity) {
     apps.add(authInfoEntity);
-    authInfoEntity.setAppInfo(this);
+    authInfoEntity.setApp(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "app")
   private List<UserAppDetailsEntity> userAppDetails = new ArrayList<>();
 
   public void addUserAppDeatailsEntity(UserAppDetailsEntity userAppDetailsEntity) {
     userAppDetails.add(userAppDetailsEntity);
-    userAppDetailsEntity.setAppInfo(this);
+    userAppDetailsEntity.setApp(this);
   }
 }

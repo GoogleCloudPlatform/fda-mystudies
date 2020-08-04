@@ -120,7 +120,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAppsWithOptionalStudiesAndSites() throws Exception {
     // Step 1: set app,study and location
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
@@ -174,7 +174,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnGetAppParticipants() throws Exception {
     // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);

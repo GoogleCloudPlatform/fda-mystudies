@@ -54,7 +54,7 @@ public class UserAppDetailsEntity implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "app_info_id", insertable = true, updatable = false)
-  private AppEntity appInfo;
+  private AppEntity app;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_details_id")

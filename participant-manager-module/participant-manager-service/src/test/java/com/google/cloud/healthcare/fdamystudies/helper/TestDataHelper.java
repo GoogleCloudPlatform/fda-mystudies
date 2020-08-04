@@ -212,11 +212,11 @@ public class TestDataHelper {
     studyEntity.setType("CLOSE");
     studyEntity.setName("COVID Study");
     studyEntity.setCustomId("CovidStudy");
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEdit(EDIT_VALUE);
-    studyPermissionEntity.setAppInfo(appEntity);
+    studyPermissionEntity.setApp(appEntity);
     studyEntity.addStudyPermissionEntity(studyPermissionEntity);
     return studyRepository.saveAndFlush(studyEntity);
   }
@@ -237,7 +237,7 @@ public class TestDataHelper {
     sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
-    sitePermissionEntity.setAppInfo(appEntity);
+    sitePermissionEntity.setApp(appEntity);
     siteEntity.addSitePermissionEntity(sitePermissionEntity);
     return siteRepository.saveAndFlush(siteEntity);
   }
@@ -279,7 +279,7 @@ public class TestDataHelper {
 
   public UserDetailsEntity createUserDetails(AppEntity appEntity) {
     UserDetailsEntity userDetailsEntity = newUserDetails();
-    userDetailsEntity.setAppInfo(appEntity);
+    userDetailsEntity.setApp(appEntity);
     return userDetailsRepository.saveAndFlush(userDetailsEntity);
   }
 

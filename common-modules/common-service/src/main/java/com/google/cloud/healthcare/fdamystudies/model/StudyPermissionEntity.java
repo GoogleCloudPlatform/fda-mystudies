@@ -51,7 +51,7 @@ public class StudyPermissionEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
+  private AppEntity app;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "study_id")
