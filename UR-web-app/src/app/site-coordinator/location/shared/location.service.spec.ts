@@ -83,8 +83,8 @@ describe('LocationService', () => {
     locationService
       .getLocations()
       .subscribe(
-        (Locations) =>
-          expect(Locations).toEqual(expectedLocations, 'expected Locations'),
+        (locations) =>
+          expect(locations).toEqual(expectedLocations, 'expected Locations'),
         fail,
       );
 

@@ -88,8 +88,8 @@ describe('StudiesService', () => {
     studiesService
       .getStudies()
       .subscribe(
-        (Studies) =>
-          expect(Studies).toEqual(expectedStudies, 'expected StudiesList'),
+        (studies) =>
+          expect(studies).toEqual(expectedStudies, 'expected StudiesList'),
         fail,
       );
 
