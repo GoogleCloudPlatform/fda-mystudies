@@ -685,7 +685,7 @@ public class SitesControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
     appEntity.setOrgInfo(testDataHelper.createOrgInfo());
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
     testDataHelper.getSiteRepository().save(siteEntity);
