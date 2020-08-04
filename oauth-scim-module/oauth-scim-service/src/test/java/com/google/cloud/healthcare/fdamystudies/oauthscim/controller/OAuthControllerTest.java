@@ -165,8 +165,6 @@ public class OAuthControllerTest extends BaseMockIT {
   @Test
   @Order(5)
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
     requestParams.add(SCOPE, "openid");
@@ -175,6 +173,7 @@ public class OAuthControllerTest extends BaseMockIT {
     requestParams.add(USER_ID, UUID.randomUUID().toString());
     requestParams.add(CODE_VERIFIER, UUID.randomUUID().toString());
 
+    HttpHeaders headers = getCommonHeaders();
     mockMvc
         .perform(
             post(ApiEndpoint.TOKEN.getPath())

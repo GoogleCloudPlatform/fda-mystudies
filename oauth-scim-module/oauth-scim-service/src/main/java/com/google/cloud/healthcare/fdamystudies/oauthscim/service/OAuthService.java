@@ -25,4 +25,6 @@ public interface OAuthService {
       MultiValueMap<String, String> paramMap, HttpHeaders headers);
 
   public ResponseEntity<JsonNode> requestLogin(MultiValueMap<String, String> paramMap);
+
+  public ResponseEntity<JsonNode> loginAccept(String email, String loginChallenge);
 }
