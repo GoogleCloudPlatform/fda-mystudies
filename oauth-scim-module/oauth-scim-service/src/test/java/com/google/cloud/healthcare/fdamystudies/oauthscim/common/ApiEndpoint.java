@@ -26,6 +26,8 @@ public enum ApiEndpoint {
 
   LOGIN_PAGE("http://localhost:8002/oauth-scim-service/login"),
 
+  CONSENT_PAGE("http://localhost:8002/oauth-scim-service/consent"),
+
   TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/v1/oauth2/introspect"),
 
   CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/v1/users/{userId}/change_password"),

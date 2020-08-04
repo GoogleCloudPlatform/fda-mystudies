@@ -70,4 +70,20 @@ public final class AuthScimConstants {
   public static final String ORG_ID = "orgId";
 
   public static final String TEMP_REG_ID = "temp_reg_id";
+
+  public static final String EMAIL = "email";
+
+  public static final String ERROR_DESCRIPTION = "error_description";
+
+  public static final String REDIRECT_TO = "redirect_to";
+
+  public static final String EXPIRE_TIMESTAMP = "expire_timestamp";
+
+  public static final String LOGIN_ATTEMPTS = "login_attempts";
+
+  public static final String LOGIN_TIMESTAMP = "login_timestamp";
+
+  public static final String OTP_USED = "otp_used";
+
+  public static final String ACCOUNT_LOCK_EMAIL_TIMESTAMP = "account_lock_email_timestamp";
 }
