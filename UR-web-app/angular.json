@@ -61,6 +61,14 @@
                   "maximumWarning": "6kb"
                 }
               ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
             }
           }
         },
@@ -72,6 +80,9 @@
           "configurations": {
             "production": {
               "browserTarget": "userRegistrationWeb:build:production"
+            },
+            "dev": {
+              "browserTarget": "userRegistrationWeb:build:dev"
             }
           }
         },

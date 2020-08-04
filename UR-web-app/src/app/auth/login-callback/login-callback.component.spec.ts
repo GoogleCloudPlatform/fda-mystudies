@@ -1,33 +1,33 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 import {AuthService} from 'src/app/service/auth.service';
 import {HttpClientModule} from '@angular/common/http';
 import {EntityService} from 'src/app/service/entity.service';
-import {RouterTestingModule} from '@angular/router/testing';
-import {LoginComponent} from './login.component';
-import {LoginCallbackComponent} from '../login-callback/login-callback.component';
+import {LoginCallbackComponent} from './login-callback.component';
+import {LoginComponent} from '../login/login.component';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('LoginCallbackComponent', () => {
+  let component: LoginCallbackComponent;
+  let fixture: ComponentFixture<LoginCallbackComponent>;
 
   beforeEach(async(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoginComponent],
-      providers: [AuthService, EntityService],
+      declarations: [LoginCallbackComponent],
       imports: [
-        HttpClientModule,
         RouterTestingModule.withRoutes([
           {
-            path: 'callback',
-            component: LoginCallbackComponent,
+            path: 'login',
+            component: LoginComponent,
           },
         ]),
+        HttpClientModule,
       ],
+      providers: [AuthService, EntityService],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(LoginCallbackComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
