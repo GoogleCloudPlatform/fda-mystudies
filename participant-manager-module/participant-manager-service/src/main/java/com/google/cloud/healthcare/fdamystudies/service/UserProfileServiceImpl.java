@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
@@ -83,5 +84,31 @@ public class UserProfileServiceImpl implements UserProfileService {
             user, MessageCode.GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS);
     logger.exit(String.format("message=%s", userProfileResponse.getMessage()));
     return userProfileResponse;
+  }
+
+  @Override
+  @Transactional
+  public UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest) {
+    logger.entry("begin updateUserProfile()");
+
+    Optional<UserRegAdminEntity> optUserRegAdminUser =
+        userRegAdminRepository.findById(userProfileRequest.getUserId());
+
+    if (!optUserRegAdminUser.isPresent()) {
+      logger.exit(ErrorCode.USER_NOT_EXISTS);
+      return new UserProfileResponse(ErrorCode.USER_NOT_EXISTS);
+    }
+
+    UserRegAdminEntity adminUser = optUserRegAdminUser.get();
+    if (!adminUser.isActive()) {
+      logger.exit(ErrorCode.USER_NOT_ACTIVE);
+      return new UserProfileResponse(ErrorCode.USER_NOT_ACTIVE);
+    }
+
+    adminUser = UserProfileMapper.fromUserProfileRequest(userProfileRequest);
+    userRegAdminRepository.saveAndFlush(adminUser);
+
+    logger.exit(MessageCode.PROFILE_UPDATE_SUCCESS);
+    return new UserProfileResponse(MessageCode.PROFILE_UPDATE_SUCCESS);
   }
 }
