@@ -250,7 +250,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException {
-    logger.entry("begin updateUser()");
+    logger.entry("begin updateEmailStatusAndTempRegId()");
     Optional<UserEntity> optUser = repository.findByUserId(userRequest.getUserId());
     if (!optUser.isPresent()) {
       logger.exit(ErrorCode.USER_NOT_FOUND);
@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
       tempRegId = IdGenerator.id();
     }
     repository.updateEmailStatusAndTempRegId(email, status, tempRegId, userEntity.getUserId());
-    logger.exit(MessageCode.UPDATE_USER_DETAILS);
-    return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS, tempRegId);
+    logger.exit(MessageCode.UPDATE_USER_DETAILS_SUCCESS);
+    return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS_SUCCESS, tempRegId);
   }
 }

@@ -500,7 +500,7 @@ public class UserControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.tempRegId").doesNotExist())
-        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS.getMessage()));
+        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
 
     // Step-3 verify updated email
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
@@ -531,7 +531,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS.getMessage()))
+        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()))
         .andExpect(jsonPath("$.tempRegId").isNotEmpty());
 
     // Step-3 verify updated email

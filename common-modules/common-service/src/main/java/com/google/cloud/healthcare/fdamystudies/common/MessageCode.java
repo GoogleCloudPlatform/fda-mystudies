@@ -31,7 +31,7 @@ public enum MessageCode {
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
       HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server."),
 
-  UPDATE_USER_DETAILS(HttpStatus.OK, "MSG-0004", "User details successfully updated.");
+  UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated.");
 
   private final HttpStatus httpStatus;
   private final String code;
