@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -451,7 +450,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnInvalidPatchUserRequestError()
+  public void shouldReturnInvalidUpdateUserRequestError()
       throws MalformedURLException, JsonProcessingException, Exception {
     // Step-1 create user
     UserEntity userEntity = newUserEntity();
@@ -466,7 +465,7 @@ public class UserControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            patch(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+            put(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
                 .contextPath(getContextPath())
                 .content(asJsonString(userRequest))
                 .headers(headers))
@@ -474,7 +473,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description")
-                .value(ErrorCode.INVALID_PATCH_USER_REQUEST.getDescription()));
+                .value(ErrorCode.INVALID_UPDATE_USER_REQUEST.getDescription()));
   }
 
   @Test
@@ -493,14 +492,15 @@ public class UserControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            patch(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+            put(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
                 .contextPath(getContextPath())
                 .content(asJsonString(userRequest))
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.tempRegId").doesNotExist())
-        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
+        .andExpect(
+            jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
 
     // Step-3 verify updated email
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
@@ -525,13 +525,14 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
     mockMvc
         .perform(
-            patch(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+            put(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
                 .contextPath(getContextPath())
                 .content(asJsonString(userRequest))
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()))
+        .andExpect(
+            jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()))
         .andExpect(jsonPath("$.tempRegId").isNotEmpty());
 
     // Step-3 verify updated email

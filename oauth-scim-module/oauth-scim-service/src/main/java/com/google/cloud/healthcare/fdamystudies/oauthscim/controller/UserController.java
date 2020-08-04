@@ -30,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -103,7 +102,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
-  @PatchMapping(
+  @PutMapping(
       value = "/users/{userId}",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -117,7 +116,7 @@ public class UserController {
 
     if (!userRequest.hasAtleastOneRequiredValue()) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new UpdateEmailStatusResponse(ErrorCode.INVALID_PATCH_USER_REQUEST));
+          .body(new UpdateEmailStatusResponse(ErrorCode.INVALID_UPDATE_USER_REQUEST));
     }
 
     UpdateEmailStatusResponse userResponse = userService.updateEmailStatusAndTempRegId(userRequest);
