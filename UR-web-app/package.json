@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:dev": "ng serve -c=dev --port=4201",
     "build": "ng build",
     "test": "ng test",
     "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadless",
@@ -37,6 +38,7 @@
     "jquery": "^3.4.1",
     "ng-connection-service": "^1.0.4",
     "ngx-bootstrap": "^5.6.1",
+    "ngx-cookie-service": "^3.1.1",
     "ngx-spinner": "^9.0.2",
     "ngx-toastr": "^12.0.1",
     "node-sass": "^4.13.0",

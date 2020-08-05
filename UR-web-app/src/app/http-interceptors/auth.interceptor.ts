@@ -6,36 +6,52 @@ import {
   HttpRequest,
   HttpEvent,
   HttpErrorResponse,
+  HttpResponse,
 } from '@angular/common/http';
 import {finalize} from 'rxjs/operators';
 import {User} from '../entity/user';
-import {Observable, OperatorFunction, throwError} from 'rxjs';
+import {Observable, OperatorFunction, throwError, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
+import {AuthService} from '../service/auth.service';
+import accessToken from 'src/app/auth/access-token.json';
+import {AccessToken} from '../entity/access-token';
+import account from 'src/app/auth/account.json';
 import {ErrorCodesEnum, getMessage} from '../shared/error.codes.enum';
 import {ApiResponse} from '../entity/api.response.model';
+import {environment} from 'src/environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
+    private readonly authService: AuthService,
   ) {}
 
-  getUserDetails(): User | null {
-    const currentUser = localStorage.getItem('currentUser');
-    if (currentUser === null) {
-      return null;
-    }
-    return JSON.parse(currentUser) as User;
-  }
   intercept(
     req: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
+    if (req.url === `${environment.authServerUrl}/oauth2/token`) {
+      return of(
+        new HttpResponse({
+          status: 200,
+          body: accessToken as AccessToken,
+        }),
+      );
+    }
+    if (req.url === `${environment.baseUrl}/users`) {
+      return of(
+        new HttpResponse({
+          status: 200,
+          body: account as User,
+        }),
+      );
+    }
     void this.spinner.show();
-    const user = this.getUserDetails();
-    if (user === null) {
+
+    if (!this.authService.hasCredentials()) {
       return next.handle(req).pipe(
         this.handleError(),
         finalize(() => {
@@ -43,10 +59,12 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     }
+    const user: User = this.authService.getUser();
+
     const headers = req.headers
       .set('Content-Type', 'application/json')
       .set('userId', user.id.toString())
-      .set('authToken', user.authToken)
+      .set('authToken', this.authService.getUserAccessToken())
       .set('authUserId', user.urAdminAuthId);
     const authReq = req.clone({headers});
     return next.handle(authReq).pipe(

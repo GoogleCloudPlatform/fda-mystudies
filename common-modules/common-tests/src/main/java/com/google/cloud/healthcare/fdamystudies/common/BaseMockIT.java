@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import java.util.Base64;
 import javax.servlet.ServletContext;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -45,8 +48,14 @@ public class BaseMockIT {
 
   protected static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
 
+  protected static final String VALID_TOKEN = "7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
+
   protected static final String INVALID_BEARER_TOKEN =
       "Bearer cd57710c-1d19-4058-8bfe-a6aac3a39e35";
+
+  protected static final String INVALID_TOKEN = "cd57710c-1d19-4058-8bfe-a6aac3a39e35";
+
+  protected static final String AUTH_CODE_VALUE = "28889b79-d7c6-4fe3-990c-bd239c6ce199";
 
   protected static final ResultMatcher OK = status().isOk();
 
@@ -126,4 +135,8 @@ public class BaseMockIT {
         .andExpect(content().string(containsString(expectedTextInResponseBody)))
         .andReturn();
   }
+
+  @TestConfiguration
+  @Import(CommonModuleConfiguration.class)
+  static class BaseMockITConfiguration {}
 }

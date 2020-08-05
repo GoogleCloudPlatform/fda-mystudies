@@ -26,4 +26,34 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${oauth.scim.service.password.history.max.size:10}")
   private int passwordHistoryMaxSize;
+
+  @Value("${mail.contact-email}")
+  private String contactEmail;
+
+  @Value("${mail.from-email}")
+  private String fromEmail;
+
+  @Value("${mail.subject.reset-password}")
+  private String mailResetPasswordSubject;
+
+  @Value("${mail.body.reset-password}")
+  private String mailResetPasswordBody;
+
+  @Value("${oauth.scim.service.max.invalid.login.attempts:5}")
+  private int maxInvalidLoginAttempts;
+
+  @Value("${oauth.scim.service.account.lockout.period.minutes:15}")
+  private int accountLockPeriodInMinutes;
+
+  @Value("${oauth.scim.service.reset.password.expiry.hours:48}")
+  private int resetPasswordExpiryInHours;
+
+  @Value("${oauth.scim.service.email.account.locked.subject}")
+  private String mailAccountLockedSubject;
+
+  @Value("${oauth.scim.service.email.account.locked.content}")
+  private String mailAccountLockedBody;
+
+  @Value("${cookie.secure:true}")
+  private boolean secureCookie;
 }
