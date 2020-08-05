@@ -93,6 +93,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].type").value(studyEntity.getType()))
         .andExpect(jsonPath("$.sitePermissionCount").value(1));
@@ -113,7 +114,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldNotReturnStudies() throws Exception {
+  public void shouldReturnStudyNotFound() throws Exception {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, IdGenerator.id());
 
