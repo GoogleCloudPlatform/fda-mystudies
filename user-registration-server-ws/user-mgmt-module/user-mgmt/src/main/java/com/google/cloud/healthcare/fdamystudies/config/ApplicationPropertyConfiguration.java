@@ -8,15 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@PropertySource("classpath:appConfigurations.properties")
 @Setter
 @Getter
 @ToString
@@ -86,12 +84,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${authServerClientValidationUrl}")
   private String authServerClientValidationUrl;
 
-  @Value("${clientId}")
-  private String clientId;
-
-  @Value("${secretKey}")
-  private String secretKey;
-
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
 
@@ -124,4 +116,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${cloud.institution.bucket}")
   private String institutionBucketName;
+
+  @Value("${auth.server.deactivateurl}")
+  private String authServerDeactivateUrl;
 }

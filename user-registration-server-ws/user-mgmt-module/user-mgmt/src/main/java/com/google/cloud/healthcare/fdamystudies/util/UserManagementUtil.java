@@ -8,6 +8,26 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthUserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
+import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -22,6 +42,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,23 +52,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
-import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
-import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
-import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
-import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
 
 @Component
 public class UserManagementUtil {
@@ -57,6 +61,11 @@ public class UserManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private OAuthService oauthService;
+
+  @Value("${register.url}")
+  private String authRegisterUrl;
 
   public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
     logger.info("UserManagementUtil validateAccessToken() - starts ");
@@ -130,43 +139,42 @@ public class UserManagementUtil {
     return respMessage;
   }
 
-  public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-      UpdateAccountInfo accountInfo, String userId) {
+  public UpdateEmailStatusResponse updateUserInfoInAuthServer(
+      UpdateEmailStatusRequest updateEmailStatusRequest, String userId) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.USER_ID, userId);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
-    HttpEntity<UpdateAccountInfo> request = new HttpEntity<>(accountInfo, headers);
-    ResponseEntity<?> responseEntity = null;
+    HttpEntity<UpdateEmailStatusRequest> request =
+        new HttpEntity<>(updateEmailStatusRequest, headers);
+    ResponseEntity<UpdateEmailStatusResponse> responseEntity =
+        restTemplate.exchange(
+            appConfig.getAuthServerUpdateStatusUrl(),
+            HttpMethod.PUT,
+            request,
+            UpdateEmailStatusResponse.class,
+            userId);
+    UpdateEmailStatusResponse updateEmailResponse = responseEntity.getBody();
 
-    try {
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerUpdateStatusUrl(), HttpMethod.POST, request, String.class);
-      return new UpdateAccountInfoResponseBean(
-          responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase());
-
-    } catch (RestClientResponseException e) {
-      logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
-      return new UpdateAccountInfoResponseBean(
-          HttpStatus.INTERNAL_SERVER_ERROR.value(),
-          HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-    }
+    logger.debug(
+        String.format(
+            "status =%d, message=%s, error=%s",
+            updateEmailResponse.getHttpStatusCode(),
+            updateEmailResponse.getMessage(),
+            updateEmailResponse.getErrorDescription()));
+    return updateEmailResponse;
   }
 
-  public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
-      String userId, String clientToken, String accessToken) {
+  public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(String userId) {
     logger.info("(Util)....UserRegistrationController.deleteUserInfoInAuthServer()......STARTED");
 
     DeleteAccountInfoResponseBean authResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.CLIENT_TOKEN, clientToken);
     headers.set(AppConstants.USER_ID, userId);
-    headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
     HttpEntity<?> request = new HttpEntity<>(null, headers);
     ObjectMapper objectMapper = null;
@@ -229,93 +237,77 @@ public class UserManagementUtil {
     }
   }
 
-  public AuthRegistrationResponseBean registerUserInAuthServer(
-      UserRegistrationForm userForm,
-      String appId,
-      String orgId,
-      String clientId,
-      String secretKey) {
+  public AuthRegistrationResponse registerUserInAuthServer(
+      UserRegistrationForm userForm, String appId) {
     logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
-    AuthRegistrationResponseBean authServerResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.APP_ID, appId);
-    headers.set(AppConstants.ORGANIZATION_ID, orgId);
-    headers.set(AppConstants.CLIENT_ID, clientId);
-    headers.set(AppConstants.SECRET_KEY, secretKey);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
-    AuthServerRegistrationBody providerBody = new AuthServerRegistrationBody();
-    providerBody.setEmailId(userForm.getEmailId());
-    providerBody.setPassword(userForm.getPassword());
+    AuthUserRequest userRequest = new AuthUserRequest();
+    userRequest.setEmail(userForm.getEmailId());
+    userRequest.setPassword(userForm.getPassword());
+    userRequest.setAppId(appId);
+    userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
 
-    HttpEntity<AuthServerRegistrationBody> request = new HttpEntity<>(providerBody, headers);
-    ObjectMapper objectMapper = null;
+    HttpEntity<AuthUserRequest> requestEntity = new HttpEntity<>(userRequest, headers);
+
+    AuthRegistrationResponse authRegistrationResponse = new AuthRegistrationResponse();
+
     try {
-      RestTemplate template = new RestTemplate();
-
-      ResponseEntity<?> responseEntity =
-          template.exchange(
-              appConfig.getAuthServerRegisterStatusUrl(), HttpMethod.POST, request, String.class);
-
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        String body = (String) responseEntity.getBody();
-        objectMapper = new ObjectMapper();
-        try {
-          authServerResponse = objectMapper.readValue(body, AuthRegistrationResponseBean.class);
-          return authServerResponse;
-        } catch (JsonParseException e) {
-          return authServerResponse;
-        } catch (JsonMappingException e) {
-          return authServerResponse;
-        } catch (IOException e) {
-          return authServerResponse;
-        }
+      ResponseEntity<UserResponse> response =
+          restTemplate.postForEntity(authRegisterUrl, requestEntity, UserResponse.class);
+      UserResponse userResponse = response.getBody();
+      if (response.getStatusCode() == HttpStatus.CREATED) {
+        authRegistrationResponse.setUserId(userResponse.getUserId());
+        authRegistrationResponse.setHttpStatusCode(HttpStatus.CREATED.value());
       } else {
-        return authServerResponse;
+        authRegistrationResponse.setErrorCode(String.valueOf(response.getStatusCodeValue()));
+        authRegistrationResponse.setMessage(userResponse.getErrorDescription());
       }
+      return authRegistrationResponse;
     } catch (RestClientResponseException e) {
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authServerResponse = new AuthRegistrationResponseBean();
+        authRegistrationResponse = new AuthRegistrationResponse();
         for (Entry<String, List<String>> entry : headerSet) {
 
           if (AppConstants.STATUS.equals(entry.getKey())) {
-            authServerResponse.setCode(entry.getValue().get(0));
+            authRegistrationResponse.setErrorCode(entry.getValue().get(0));
           }
 
           if (AppConstants.TITLE.equals(entry.getKey())) {
-            authServerResponse.setTitle(entry.getValue().get(0));
+            authRegistrationResponse.setTitle(entry.getValue().get(0));
           }
           if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authServerResponse.setMessage(entry.getValue().get(0));
+            authRegistrationResponse.setMessage(entry.getValue().get(0));
           }
         }
-        authServerResponse.setHttpStatusCode(401 + "");
+        authRegistrationResponse.setHttpStatusCode(401);
 
       } else if (e.getRawStatusCode() == 500) {
-        authServerResponse = new AuthRegistrationResponseBean();
-        authServerResponse.setHttpStatusCode(500 + "");
+        authRegistrationResponse = new AuthRegistrationResponse();
+        authRegistrationResponse.setHttpStatusCode(500);
 
       } else {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authServerResponse = new AuthRegistrationResponseBean();
+        authRegistrationResponse = new AuthRegistrationResponse();
         for (Entry<String, List<String>> entry : headerSet) {
 
           if (AppConstants.STATUS.equals(entry.getKey())) {
-            authServerResponse.setCode(entry.getValue().get(0));
+            authRegistrationResponse.setErrorCode(entry.getValue().get(0));
           }
 
           if (AppConstants.TITLE.equals(entry.getKey())) {
-            authServerResponse.setTitle(entry.getValue().get(0));
+            authRegistrationResponse.setTitle(entry.getValue().get(0));
           }
           if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authServerResponse.setMessage(entry.getValue().get(0));
+            authRegistrationResponse.setMessage(entry.getValue().get(0));
           }
         }
-        authServerResponse.setHttpStatusCode(400 + "");
+        authRegistrationResponse.setHttpStatusCode(400);
       }
-      return authServerResponse;
+      return authRegistrationResponse;
     }
   }
 
@@ -337,10 +329,7 @@ public class UserManagementUtil {
       requestBody = new HttpEntity<>(null, headers);
       responseEntity =
           restTemplate.exchange(
-              appConfig.getAuthServerUrl() + "/deactivate",
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
+              appConfig.getAuthServerDeactivateUrl(), HttpMethod.POST, requestBody, Integer.class);
       value = (Integer) responseEntity.getBody();
       if (value == 1) {
         respMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
@@ -392,8 +381,6 @@ public class UserManagementUtil {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set(AppConstants.APPLICATION_ID, null);
-      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
 
       request = new HttpEntity<>(null, headers);
 

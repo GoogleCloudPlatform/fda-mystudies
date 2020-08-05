@@ -33,8 +33,7 @@ public interface UserManagementProfileService {
 
   public UserDetailsBO saveParticipant(UserDetailsBO participant);
 
-  public String deActivateAcct(
-      String userId, DeactivateAcctBean deactivateBean, String accessToken, String clientToken);
+  public String deActivateAcct(String userId, DeactivateAcctBean deactivateBean);
 
   public int resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId);

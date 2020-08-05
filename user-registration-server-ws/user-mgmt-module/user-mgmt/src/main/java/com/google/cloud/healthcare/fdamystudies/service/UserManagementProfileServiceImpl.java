@@ -8,24 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
@@ -37,6 +30,17 @@ import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserManagementProfileServiceImpl implements UserManagementProfileService {
@@ -59,10 +63,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       String userId, Integer appInfoId, Integer orgInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
     UserDetailsBO userDetailsBO = null;
-    UserProfileRespBean userProfileRespBean = new UserProfileRespBean();
+    UserProfileRespBean userProfileRespBean = null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
       if (userDetailsBO != null) {
+        userProfileRespBean = new UserProfileRespBean();
         userProfileRespBean.getProfile().setEmailId(userDetailsBO.getEmail());
         userProfileRespBean
             .getSettings()
@@ -223,11 +228,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public String deActivateAcct(
-      String userId,
-      DeactivateAcctBean deactivateAcctBean,
-      String accessToken,
-      String clientToken) {
+  public String deActivateAcct(String userId, DeactivateAcctBean deactivateAcctBean) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     Integer userDetailsId = 0;
@@ -239,8 +240,12 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     List<String> deleteData = new ArrayList<String>();
     try {
       userDetailsId = commonDao.getUserInfoDetails(userId);
-      message = userManagementUtil.deactivateAcct(userId, accessToken, clientToken);
-      if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+      UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
+      updateEmailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
+      UpdateEmailStatusResponse updateStatusResponse =
+          userManagementUtil.updateUserInfoInAuthServer(updateEmailStatusRequest, userId);
+
+      if (HttpStatus.OK.value() == updateStatusResponse.getHttpStatusCode()) {
         if (deactivateAcctBean != null
             && deactivateAcctBean.getDeleteData() != null
             && !deactivateAcctBean.getDeleteData().isEmpty()) {

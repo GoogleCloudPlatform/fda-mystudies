@@ -8,6 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import javax.transaction.Transactional;
@@ -17,15 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
-import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
 @Service
 public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
@@ -106,12 +107,12 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
     boolean status = userDetailsDao.updateStatus(userDetailsBO);
 
     if (status) {
-      UpdateAccountInfo accountStatus = new UpdateAccountInfo();
-      accountStatus.setEmailVerified(true);
-      UpdateAccountInfoResponseBean value =
+      UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
+      updateEmailStatusRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
+      UpdateEmailStatusResponse updateStatusResponse =
           userManagementUtil.updateUserInfoInAuthServer(
-              accountStatus, participantDetails.getUserId());
-      if (value.getHttpStatusCode() != HttpStatus.OK.value()) {
+              updateEmailStatusRequest, participantDetails.getUserId());
+      if (updateStatusResponse.getHttpStatusCode() != HttpStatus.OK.value()) {
         status = false; // rolling back in registration server and returning false.
         boolean rollbackStatus = userDetailsDao.updateStatus(participantDetails);
         if (!rollbackStatus) {

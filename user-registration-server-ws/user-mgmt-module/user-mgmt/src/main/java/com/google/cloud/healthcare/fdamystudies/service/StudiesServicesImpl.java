@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,17 +21,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
+import com.google.cloud.healthcare.fdamystudies.beans.PushNotificationResponse;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
@@ -88,9 +96,11 @@ public class StudiesServicesImpl implements StudiesServices {
       }
 
       if (appSet == null && appSet.isEmpty()) {
+        logger.debug("appset is empty return bad request");
         return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
       } else {
         List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoSet(appSet);
+        logger.debug(String.format("hasAppInfos=%b", (appInfos != null && !appInfos.isEmpty())));
         if (appInfos != null && !appInfos.isEmpty()) {
           allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfos);
           appInfobyAppCustomId =
@@ -98,7 +108,7 @@ public class StudiesServicesImpl implements StudiesServices {
                   .stream()
                   .collect(Collectors.toMap(AppInfoDetailsBO::getAppId, Function.identity()));
         }
-
+        logger.debug(String.format("hasStudiesSet=%b", (studySet != null && !studySet.isEmpty())));
         if (studySet != null && !studySet.isEmpty()) {
           List<StudyInfoBO> studyInfos = commonDao.getStudyInfoSet(studySet);
           if (studyInfos != null && !studyInfos.isEmpty()) {
@@ -109,25 +119,56 @@ public class StudiesServicesImpl implements StudiesServices {
                     .collect(Collectors.toMap(StudyInfoBO::getCustomId, Function.identity()));
           }
         }
+        PushNotificationResponse fcmNotificationResponse = null;
         if ((allDeviceTokens != null && !allDeviceTokens.isEmpty())
             || (studiesMap != null && !studiesMap.isEmpty())) {
           for (NotificationBean notificationBean : notificationForm.getNotifications()) {
             if (notificationBean.getNotificationType().equalsIgnoreCase(AppConstants.GATEWAY_LEVEL)
                 && appInfobyAppCustomId != null) {
 
-              sendGatewaylevelNotification(allDeviceTokens, appInfobyAppCustomId, notificationBean);
+              fcmNotificationResponse =
+                  sendGatewaylevelNotification(
+                      allDeviceTokens, appInfobyAppCustomId, notificationBean);
+
+              logger.debug(
+                  String.format(
+                      "status=%d and fcmNotificationResponse=%s",
+                      fcmNotificationResponse.getStatus(),
+                      fcmNotificationResponse.getFcmResponse()));
+              return new ErrorBean(
+                  ErrorCode.EC_200.code(),
+                  ErrorCode.EC_200.errorMessage(),
+                  fcmNotificationResponse.getFcmResponse());
+
             } else if (notificationBean
                     .getNotificationType()
                     .equalsIgnoreCase(AppConstants.STUDY_LEVEL)
                 && studyInfobyStudyCustomId != null
                 && studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()) != null
                 && studiesMap != null) {
+              logger.info(
+                  "StudiesServicesImpl.SendNotificationAction() " + AppConstants.STUDY_LEVEL);
+              fcmNotificationResponse =
+                  sendStudyLevelNotification(
+                      studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);
 
-              sendStudyLevelNotification(
-                  studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);
+              logger.debug(
+                  String.format(
+                      "status=%d and fcmNotificationResponse=%s",
+                      fcmNotificationResponse.getStatus(),
+                      fcmNotificationResponse.getFcmResponse()));
+              return new ErrorBean(
+                  ErrorCode.EC_200.code(),
+                  ErrorCode.EC_200.errorMessage(),
+                  fcmNotificationResponse.getFcmResponse());
             }
           }
         } else {
+          logger.debug(
+              String.format(
+                  "hasDeviceTokens=%b and hasElementsInStudiesMap=%b",
+                  (allDeviceTokens != null && !allDeviceTokens.isEmpty()),
+                  (studiesMap != null && !studiesMap.isEmpty())));
           return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
         }
       }
@@ -139,19 +180,18 @@ public class StudiesServicesImpl implements StudiesServices {
     return new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
   }
 
-  private void sendStudyLevelNotification(
+  private PushNotificationResponse sendStudyLevelNotification(
       Map<Integer, Map<String, JSONArray>> studiesMap,
       Map<Object, StudyInfoBO> studyInfobyStudyCustomId,
       Map<Object, AppInfoDetailsBO> appInfobyAppCustomId,
       NotificationBean notificationBean) {
     Map<String, JSONArray> deviceTokensMap =
         studiesMap.get(studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
-
     notificationBean.setNotificationType(AppConstants.STUDY);
     if (deviceTokensMap != null) {
       if (deviceTokensMap.get(AppConstants.DEVICE_ANDROID) != null) {
         notificationBean.setDeviceToken(deviceTokensMap.get(AppConstants.DEVICE_ANDROID));
-        pushFCMNotification(
+        return pushFCMNotification(
             notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
       }
       if (deviceTokensMap.get(AppConstants.DEVICE_IOS) != null) {
@@ -159,9 +199,10 @@ public class StudiesServicesImpl implements StudiesServices {
         pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
       }
     }
+    return new PushNotificationResponse(null, HttpStatus.OK.value(), "success");
   }
 
-  private void sendGatewaylevelNotification(
+  private PushNotificationResponse sendGatewaylevelNotification(
       Map<String, JSONArray> allDeviceTokens,
       Map<Object, AppInfoDetailsBO> appInfobyAppCustomId,
       NotificationBean notificationBean) {
@@ -169,15 +210,17 @@ public class StudiesServicesImpl implements StudiesServices {
     if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
         && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
       notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_ANDROID));
-      pushFCMNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
+      return pushFCMNotification(
+          notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
     }
     if (allDeviceTokens.get(AppConstants.DEVICE_IOS) != null) {
       notificationBean.setDeviceToken(allDeviceTokens.get(AppConstants.DEVICE_IOS));
       pushNotification(notificationBean, appInfobyAppCustomId.get(notificationBean.getAppId()));
     }
+    return new PushNotificationResponse(null, HttpStatus.OK.value(), "success");
   }
 
-  public void pushFCMNotification(
+  public PushNotificationResponse pushFCMNotification(
       NotificationBean notification, AppInfoDetailsBO appPropertiesDetails) {
     String authKey = "";
     logger.info("StudiesServicesImpl - pushFCMNotification() : starts");
@@ -217,12 +260,23 @@ public class StudiesServicesImpl implements StudiesServices {
         OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
         wr.write(json.toString());
         wr.flush();
-        conn.getInputStream();
+        String response = IOUtils.toString(conn.getInputStream(), StandardCharsets.UTF_8);
+        JsonNode responseJson = new ObjectMapper().readTree(response);
+        PushNotificationResponse fcmNotificationResponse =
+            new PushNotificationResponse(
+                responseJson, conn.getResponseCode(), conn.getResponseMessage());
+        logger.trace(
+            String.format(
+                "FCM Notification Response status=%d, response=%s",
+                conn.getResponseCode(), response));
+        return fcmNotificationResponse;
       }
     } catch (Exception e) {
       logger.error("StudiesServicesImpl - pushFCMNotification() : error", e);
+      return new PushNotificationResponse(
+          null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Push FCM Notification failed");
     }
-    logger.info("StudiesServicesImpl - pushFCMNotification() : ends");
+    return new PushNotificationResponse(null, HttpStatus.OK.value(), "SUCCESS");
   }
 
   public void pushNotification(
