@@ -15,10 +15,12 @@ import {
   expectedSiteResponse,
   expectedNewSite,
 } from 'src/app/entity/mockStudiesData';
+import {HttpClient} from '@angular/common/http';
 
 describe('SitesService', () => {
   let sitesService: SitesService;
   let studiesServices: StudiesService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -58,13 +60,12 @@ describe('SitesService', () => {
   }));
 
   it('should post the  expected new site data', () => {
-    const entityServicespyobj = jasmine.createSpyObj<EntityService<AddSite>>(
-      'EntityService',
-      ['post'],
-    );
-    sitesService = new SitesService(entityServicespyobj);
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', [
+      'post',
+    ]);
+    sitesService = new SitesService(httpServicespyobj);
 
-    entityServicespyobj.post.and.returnValue(of(expectedSiteResponse));
+    httpServicespyobj.post.and.returnValue(of(expectedSiteResponse));
 
     sitesService
       .add(expectedNewSite)
@@ -77,6 +78,6 @@ describe('SitesService', () => {
         fail,
       );
 
-    expect(entityServicespyobj.post.calls.count()).toBe(1, 'one call');
+    expect(httpServicespyobj.post.calls.count()).toBe(1, 'one call');
   });
 });
