@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/oauth2/introspect",
+		"bodyPatterns": [
+			{
+				"equalTo": "token=Uap2pEAXWoNc7Zrp.021ZirM4bOKwh-DWBmrlIzxiWUSRAv44.3KsjxRCuno0KzkNXlB5LeOKTpNwIeC4QGuQ1eg"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "hydra/introspect_response.json"
+	}
+}

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Location} from '@angular/common';
-import {environment} from 'src/environments/environment';
+import {environment} from '@environment';
 
 @Injectable()
 export class EntityService<T> {

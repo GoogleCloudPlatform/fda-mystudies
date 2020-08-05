@@ -1,0 +1,272 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
+package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
+
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ORG_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.DevicePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
+import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import javax.servlet.http.Cookie;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+@TestMethodOrder(OrderAnnotation.class)
+public class LoginControllerTest extends BaseMockIT {
+
+  private static final int MAX_LOGIN_ATTEMPTS = 5;
+
+  private static final String PASSWORD_VALUE = "0Auth_scim_service_mock!t";
+
+  private static final String LOGIN_CHALLENGE_VALUE = "d9d3ff8a-0c93-466a-bc4f-bf8b0d3d5453";
+
+  private static final String AUTO_SIGNIN_LOGIN_CHALLENGE_VALUE =
+      "117eb076-23cf-4653-a76d-14ec1ead4317";
+
+  private static final String USER_ID_VALUE = "4e626d41-7f42-43a6-b749-ee4b6635ac66";
+
+  private static final String TEMP_REG_ID_VALUE = "ec2045a1-0cd3-4998-b515-7f9703dff5bf";
+
+  private static final String APP_ID_VALUE = "MyStudies";
+
+  private static final String ORG_ID_VALUE = "FDA";
+
+  private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
+
+  @Autowired private RedirectConfig redirectConfig;
+
+  @Autowired private UserRepository userRepository;
+
+  @Autowired private UserService userService;
+
+  @Test
+  public void shouldReturnLoginPage() throws Exception {
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+    queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .queryParams(queryParams))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString("<title>Login</title>")))
+        .andReturn();
+  }
+
+  @Test
+  public void shouldReturnErrorPage() throws Exception {
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .queryParams(queryParams))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString("<title>Error</title>")))
+        .andReturn();
+  }
+
+  @Test
+  public void shouldRedirectToCallbackUrl() throws Exception {
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+    queryParams.add("code", AUTH_CODE_VALUE);
+
+    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
+
+    String callbackUrl = redirectConfig.getCallbackUrl(DevicePlatform.UNKNOWN.getValue());
+    String expectedRedirectUrl =
+        String.format("%s?code=%s&userId=%s", callbackUrl, AUTH_CODE_VALUE, USER_ID_VALUE);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .queryParams(queryParams)
+                .cookie(devicePlatformCookie, userIdCookie))
+        .andDo(print())
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(expectedRedirectUrl))
+        .andReturn();
+  }
+
+  @Test
+  public void shouldReturnAutoSigninPage() throws Exception {
+    // Step-1 user registration
+    UserEntity user = new UserEntity();
+    user.setEmail("mockit_email@grr.la");
+    user.setOrgId("FDA");
+    user.setAppId("MyStudies");
+    user.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    user.setTempRegId(TEMP_REG_ID_VALUE);
+    // UserInfo JSON contains password hash & salt, password history etc
+    ObjectNode userInfo = JsonUtils.getObjectNode().put("password", PasswordGenerator.generate(12));
+    user.setUserInfo(userInfo.toString());
+    userRepository.saveAndFlush(user);
+
+    // Step-2 redirect to auto signin page after signup
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+    queryParams.add(LOGIN_CHALLENGE, AUTO_SIGNIN_LOGIN_CHALLENGE_VALUE);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .queryParams(queryParams))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString("<title>Please wait</title>")))
+        .andReturn();
+  }
+
+  @Test
+  public void shouldAuthenticateTheUserAndRedirectToConsentPage() throws Exception {
+    // Step-1 create a user account with ACTIVE status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    userRepository.saveAndFlush(userEntity);
+
+    // Step-2 call API with login credentials
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+
+    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
+    Cookie orgIdCookie = new Cookie(ORG_ID, "FDA");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .cookie(appIdCookie, orgIdCookie, loginChallenge))
+        .andDo(print())
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()));
+
+    // Step-3 delete user account
+    userRepository.delete(userEntity);
+  }
+
+  @Test
+  public void shouldReturnInvalidLoginCredentials() throws Exception {
+    // Step-1 create a user account with ACTIVE status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    userRepository.saveAndFlush(userEntity);
+
+    // Step-2 call API with invalid login credentials
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+
+    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
+    Cookie orgIdCookie = new Cookie(ORG_ID, "FDA");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .cookie(appIdCookie, orgIdCookie, loginChallenge))
+        .andDo(print())
+        .andExpect(
+            content().string(containsString(ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription())));
+
+    // Step-3 delete user account
+    userRepository.delete(userEntity);
+  }
+
+  @Test
+  public void shouldSendAccountLockedEmail() throws Exception {
+    // Step-1 create a user account with ACTIVE status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    userRepository.saveAndFlush(userEntity);
+
+    // Step-2 call API for 5 times with invalid login credentials to lock the account
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+    requestParams.set(PASSWORD, "invalid_password");
+    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
+    Cookie orgIdCookie = new Cookie(ORG_ID, "FDA");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+
+    ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
+    for (int loginAttempts = 1; loginAttempts <= MAX_LOGIN_ATTEMPTS; loginAttempts++) {
+      if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
+        expectedErrorCode = ErrorCode.ACCOUNT_LOCKED;
+      }
+      mockMvc
+          .perform(
+              post(ApiEndpoint.LOGIN_PAGE.getPath())
+                  .contextPath(getContextPath())
+                  .params(requestParams)
+                  .cookie(appIdCookie, orgIdCookie, loginChallenge))
+          .andDo(print())
+          .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
+    }
+
+    // Step-3 expect account status changed to ACCOUNT_LOCKED
+    userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    assertTrue(
+        UserAccountStatus.ACCOUNT_LOCKED.equals(UserAccountStatus.valueOf(userEntity.getStatus())));
+
+    // Step-4 delete the user entity
+    userRepository.delete(userEntity);
+  }
+
+  private UserRequest newUserRequest() {
+    UserRequest userRequest = new UserRequest();
+    userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setOrgId(ORG_ID_VALUE);
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setPassword(PASSWORD_VALUE);
+    userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    return userRequest;
+  }
+
+  private MultiValueMap<String, String> getLoginRequestParamsMap() {
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add(EMAIL, EMAIL_VALUE);
+    requestParams.add(PASSWORD, PASSWORD_VALUE);
+    return requestParams;
+  }
+}

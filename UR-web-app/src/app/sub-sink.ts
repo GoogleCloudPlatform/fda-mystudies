@@ -4,6 +4,7 @@ export class SubSink {
   add(...subscriptions: SubscriptionLike[]): void {
     this._subs = this._subs.concat(subscriptions);
   }
+
   unsubscribe(): void {
     this._subs.forEach((sub) => sub.unsubscribe());
     this._subs = [];
