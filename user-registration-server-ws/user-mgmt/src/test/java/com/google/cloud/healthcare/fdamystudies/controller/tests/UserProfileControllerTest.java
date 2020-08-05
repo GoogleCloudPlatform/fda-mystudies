@@ -6,19 +6,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
@@ -28,14 +18,23 @@ import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.config.AppConfig;
 import com.google.cloud.healthcare.fdamystudies.controller.UserProfileController;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
 
@@ -55,7 +54,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired private FdaEaUserDetailsServiceImpl service;
 
-  @Autowired private AppConfig appconfig;
+  @Autowired private EmailNotification emailNotification;
 
   @Value("${auth.server.deactivateUrl}")
   private String deactivateUrl;
@@ -161,17 +160,28 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void resendConfirmationSuccess() throws Exception {
+
+    Mockito.when(
+            emailNotification.sendEmailNotification(
+                Mockito.anyString(),
+                Mockito.anyString(),
+                eq(Constants.VALID_EMAIL),
+                Mockito.any(),
+                Mockito.any()))
+        .thenReturn(true);
+
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
+
     performPost(RESEND_CONFIRMATION_PATH, requestJson, headers, Constants.SUCCESS, OK);
 
-    verify(appconfig.emailNotification(), times(1))
+    verify(emailNotification, times(1))
         .sendEmailNotification(
             Mockito.anyString(),
             Mockito.anyString(),
-            Mockito.anyString(),
+            eq(Constants.VALID_EMAIL),
             Mockito.any(),
             Mockito.any());
   }

@@ -20,11 +20,11 @@ INSERT INTO `sites` (`id`, `study_id`, `location_id`, `status`, `target_enrollme
 	(2, 2, 2, 0, 15, 'test-site', '2020-03-12 15:19:38', 0),
 	(3, 2, 2, 1, 45, 'test site', '2020-03-13 15:26:56', 0);
 
-INSERT INTO `user_details` (`user_details_id`, `user_id`, `app_info_id`, `email`, `status`, `first_name`, `last_name`, `local_notification_flag`, `remote_notification_flag`,`touch_id`, `use_pass_code`, `verification_date`, `_ts`, `email_code`) VALUES
-	(44, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg', 1, 'cdash93@gmail.com', 2, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','1'),
-	(45, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCj', 2, 'abc@xy', 2, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','1'),
-	(46, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCh', 1, 'abc@gmail.com', 1, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','1'),
-	(47, 'gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk', 1, 'abc1234@gmail.com', 2, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','1');
+INSERT INTO `user_details` (`user_details_id`, `user_id`, `app_info_id`, `email`, `status`, `first_name`, `last_name`, `local_notification_flag`, `remote_notification_flag`,`touch_id`, `use_pass_code`, `verification_date`, `_ts`, `email_code`, `code_expire_date`) VALUES
+	(44, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg', 1, 'cdash93@gmail.com', 2, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','1', '2030-07-22 13:02:10'),
+	(45, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCj', 2, 'abc@xy', 2, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','1', '2030-07-22 13:02:10'),
+	(46, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCh', 1, 'abc@gmail.com', 1, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','123code', '2030-07-22 13:02:10'),
+	(47, 'gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk', 1, 'abc1234@gmail.com', 2, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28', '2020-02-05 19:11:05','1', '2030-07-22 13:02:10');
 	
 INSERT INTO `participant_registry_site` (`id`, `site_id`, `study_info_id`, `email`, `invitation_date`, `onboarding_status`, `enrollment_token`, `enrollment_token_expiry`, `created`, `created_by`, `invitation_count`) VALUES
 	(33, 1, 1, 'abc@gmail.com', '2020-02-07 20:37:25', 'I', 'dsgdsfgag', '2020-02-09 18:42:32', '2020-02-09 18:42:32', 2, 0),
