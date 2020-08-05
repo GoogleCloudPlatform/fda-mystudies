@@ -26,7 +26,6 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
@@ -90,7 +89,7 @@ public class ParticipantStudyEntity implements Serializable {
   @CreationTimestamp
   private Timestamp enrolledDate;
 
-  @Type(type = "text")
+  @Column(length = XS_LENGTH)
   private String sharing;
 
   private Integer completion;
