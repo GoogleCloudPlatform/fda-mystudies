@@ -104,8 +104,7 @@ describe('StudiesService', () => {
     studiesService = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
-      code: 'ER_005',
-    };
+    } as ApiResponse;
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
     tick(40);
