@@ -74,6 +74,7 @@ describe('LocationsListComponent', () => {
       );
     });
   });
+
   describe('after get locations', () => {
     beforeEach(async(() => {
       fixture.detectChanges();

@@ -25,6 +25,7 @@ export const expectedStudyList = [
     studyPermission: 2,
     totalSitesCount: 16,
     type: 'CLOSE',
+
     logo: '/path_to_img/',
   },
   {
@@ -59,6 +60,7 @@ export const expectedStudyList = [
     studyPermission: 1,
     totalSitesCount: 5,
     type: 'CLOSE',
+
     logo: '/path_to_img/',
   },
   {

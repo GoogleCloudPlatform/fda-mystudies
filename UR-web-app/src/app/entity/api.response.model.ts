@@ -1,6 +1,6 @@
-import {SuccessCodesEnum} from '../shared/success.codes.enum';
+import {SuccessCode} from '../shared/success.codes.enum';
 
 export interface ApiResponse {
   message: string;
-  code: keyof typeof SuccessCodesEnum;
+  code: SuccessCode;
 }
