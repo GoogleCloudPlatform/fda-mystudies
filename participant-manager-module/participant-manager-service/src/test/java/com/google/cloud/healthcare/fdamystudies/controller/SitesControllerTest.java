@@ -110,7 +110,11 @@ public class SitesControllerTest extends BaseMockIT {
   private SitePermissionEntity sitePermissionEntity;
   private StudyConsentEntity studyConsentEntity;
 
-  private static final String IMPORT_EMAIL = "mockitoimport01@grr.la";
+  private static final String IMPORT_EMAIL_1 = "mockitoimport01@grr.la";
+
+  private static final String IMPORT_EMAIL_2 = "mockitoimport@grr.la";
+
+  private static final String INVALID_TEST_EMAIL = "mockito";
 
   @BeforeEach
   public void setUp() {
@@ -903,20 +907,20 @@ public class SitesControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.IMPORT_PARTICIPANT_SUCCESS.getMessage())))
             .andExpect(jsonPath("$.participants").isArray())
             .andExpect(jsonPath("$.participants", hasSize(1)))
-            .andExpect(jsonPath("$.participants[0].email", is("mockitoimport@grr.la")))
+            .andExpect(jsonPath("$.participants[0].email", is(IMPORT_EMAIL_2)))
             .andExpect(jsonPath("$.invalidEmails", hasSize(1)))
-            .andExpect(jsonPath("$.invalidEmails[0]", is("mockito")))
+            .andExpect(jsonPath("$.invalidEmails[0]", is(INVALID_TEST_EMAIL)))
             .andReturn();
 
     String participantId =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].participantId");
+        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].id");
 
     // Step 2: verify saved values
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
         participantRegistrySiteRepository.findById(participantId);
     assertNotNull(optParticipantRegistrySite.get().getSite());
     assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
-    assertEquals("mockitoimport@grr.la", optParticipantRegistrySite.get().getEmail());
+    assertEquals(IMPORT_EMAIL_2, optParticipantRegistrySite.get().getEmail());
   }
 
   @Test
@@ -939,18 +943,19 @@ public class SitesControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.IMPORT_PARTICIPANT_SUCCESS.getMessage())))
             .andExpect(jsonPath("$.participants").isArray())
             .andExpect(jsonPath("$.participants", hasSize(2)))
-            .andExpect(jsonPath("$.participants[0].email", is(IMPORT_EMAIL)))
+            .andExpect(jsonPath("$.participants[0].email", is(IMPORT_EMAIL_1)))
+            .andExpect(jsonPath("$.participants[1].email", is(IMPORT_EMAIL_2)))
             .andReturn();
 
     String participantId =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].participantId");
+        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].id");
 
     // Step 2: verify saved values
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
         participantRegistrySiteRepository.findById(participantId);
     assertNotNull(optParticipantRegistrySite.get().getSite());
     assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
-    assertEquals(IMPORT_EMAIL, optParticipantRegistrySite.get().getEmail());
+    assertEquals(IMPORT_EMAIL_1, optParticipantRegistrySite.get().getEmail());
   }
 
   @AfterEach

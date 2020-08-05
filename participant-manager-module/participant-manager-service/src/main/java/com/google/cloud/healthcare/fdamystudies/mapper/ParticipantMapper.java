@@ -8,6 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
@@ -23,13 +32,6 @@ import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
 public final class ParticipantMapper {
 
@@ -193,5 +195,16 @@ public final class ParticipantMapper {
             : OnboardingStatus.DISABLED.getStatus();
     participantDetail.setOnboardringStatus(status);
     return participantDetail;
+  }
+
+  public static ParticipantRegistrySiteEntity fromParticipantDetail(
+      ParticipantDetail participant, SiteEntity site) {
+    ParticipantRegistrySiteEntity participantRegistrySite = new ParticipantRegistrySiteEntity();
+    participantRegistrySite.setEmail(participant.getEmail());
+    participantRegistrySite.setSite(site);
+    participantRegistrySite.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySite.setEnrollmentToken(RandomStringUtils.randomAlphanumeric(8));
+    participantRegistrySite.setStudy(site.getStudy());
+    return participantRegistrySite;
   }
 }
