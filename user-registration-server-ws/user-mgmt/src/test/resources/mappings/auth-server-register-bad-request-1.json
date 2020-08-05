@@ -14,7 +14,7 @@
 			"Content-Type": "application/json;charset=UTF-8",
 			"status": "400",
 			"title": "invalidPassword",
-			"StatusMessage":"Invalid Password"
+			"StatusMessage": "Invalid Password"
 		},
 		"bodyFileName": "auth-server-register-response-bad-request.json"
 	}

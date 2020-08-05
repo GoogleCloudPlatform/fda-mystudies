@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import javax.validation.constraints.NotBlank;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

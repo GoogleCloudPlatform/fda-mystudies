@@ -1,15 +1,15 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
-import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import com.google.cloud.healthcare.fdamystudies.bean.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil.ErrorCodes;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 public final class ResponseUtil {
 
