@@ -283,6 +283,11 @@ public class UserServiceImpl implements UserService {
 
     UserEntity userEntity = optUserEntity.get();
     ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+
+    // TODO (Dhanya) logger added to analyze the build issue, will be removed after fixing the build
+    // issue
+    logger.debug(String.format("UserInfo =%s", userInfo.toString()));
+
     JsonNode passwordNode = userInfo.get(PASSWORD);
     String hash = getTextValue(passwordNode, HASH);
     String salt = getTextValue(passwordNode, SALT);
