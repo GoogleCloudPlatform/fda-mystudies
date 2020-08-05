@@ -10,17 +10,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.web.servlet.MvcResult;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
@@ -37,6 +26,15 @@ import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
 

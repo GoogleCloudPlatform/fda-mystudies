@@ -9,16 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
@@ -31,6 +21,14 @@ import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 public class StudiesControllerTest extends BaseMockIT {
 

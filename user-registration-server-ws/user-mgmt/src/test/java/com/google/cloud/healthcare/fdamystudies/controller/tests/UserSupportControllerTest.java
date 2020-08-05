@@ -10,11 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
@@ -25,6 +20,10 @@ import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 
 public class UserSupportControllerTest extends BaseMockIT {
 
