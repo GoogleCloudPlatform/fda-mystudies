@@ -8,12 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,16 +18,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 
 @Setter
 @Getter
@@ -84,6 +80,6 @@ public class AuthInfoEntity implements Serializable {
   @UpdateTimestamp
   private Timestamp modified;
 
-  @Column(name = "remote_notification_flag", length = TINY_LENGTH)
+  @Column(name = "remote_notification_flag")
   private Boolean remoteNotificationFlag = false;
 }

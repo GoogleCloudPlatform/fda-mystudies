@@ -8,16 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.APP_STUDY_ID_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,16 +23,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.APP_STUDY_ID_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 
 @Setter
 @Getter
@@ -56,18 +52,11 @@ public class AppEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(
-      name = "id",
-      updatable = false,
-      nullable = false)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
   @ToString.Exclude
-  @Column(
-      name = "custom_app_id",
-      nullable = false,
-      unique = true,
-      length = APP_STUDY_ID_LENGTH)
+  @Column(name = "custom_app_id", nullable = false, unique = true, length = APP_STUDY_ID_LENGTH)
   private String appId;
 
   @ToString.Exclude
@@ -130,7 +119,7 @@ public class AppEntity implements Serializable {
   @Type(type = "text")
   private String forgotEmailBody;
 
-  @Column(name = "method_handler", length = TINY_LENGTH)
+  @Column(name = "method_handler")
   private Integer methodHandler;
 
   @Column(name = "created_by", length = LARGE_LENGTH)
@@ -139,13 +128,11 @@ public class AppEntity implements Serializable {
   @Column(name = "modified_by", length = LARGE_LENGTH)
   private String modifiedBy;
 
-  @Column(
-      name = "updated_time")
+  @Column(name = "updated_time")
   @UpdateTimestamp
   private Timestamp modified;
 
-  @Column(
-      name = "created_time")
+  @Column(name = "created_time")
   @CreationTimestamp
   private Timestamp created;
 

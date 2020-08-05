@@ -8,23 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.helper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -54,8 +37,22 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionReposi
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
-
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import lombok.Getter;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
 
 @Getter
 @Component
@@ -201,7 +198,7 @@ public class TestDataHelper {
   public AppEntity createAppEntity(UserRegAdminEntity userEntity) {
     AppEntity appEntity = newAppEntity();
     AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
-    appPermissionEntity.setEdit(EDIT_VALUE);
+    appPermissionEntity.setEdit(Permission.READ_EDIT);
     appPermissionEntity.setUrAdminUser(userEntity);
     appEntity.addAppPermissionEntity(appPermissionEntity);
     return appRepository.saveAndFlush(appEntity);
@@ -215,7 +212,7 @@ public class TestDataHelper {
     studyEntity.setApp(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
-    studyPermissionEntity.setEdit(EDIT_VALUE);
+    studyPermissionEntity.setEdit(Permission.READ_EDIT);
     studyPermissionEntity.setApp(appEntity);
     studyEntity.addStudyPermissionEntity(studyPermissionEntity);
     return studyRepository.saveAndFlush(studyEntity);
@@ -233,8 +230,8 @@ public class TestDataHelper {
     SiteEntity siteEntity = newSiteEntity();
     siteEntity.setStudy(studyEntity);
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
+    sitePermissionEntity.setCanEdit(Permission.READ_EDIT);
+    sitePermissionEntity.setCanEdit(Permission.READ_EDIT);
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
     sitePermissionEntity.setApp(appEntity);
@@ -246,7 +243,7 @@ public class TestDataHelper {
       SiteEntity siteEntity, StudyEntity studyEntity) {
     ParticipantRegistrySiteEntity participantRegistrySiteEntity =
         new ParticipantRegistrySiteEntity();
-    participantRegistrySiteEntity.setEnrollmentToken("BSEEMNH6");
+    participantRegistrySiteEntity.setEnrollmentToken(RandomStringUtils.randomAlphanumeric(8));
     participantRegistrySiteEntity.setInvitationCount(2L);
     participantRegistrySiteEntity.setSite(siteEntity);
     participantRegistrySiteEntity.setStudy(studyEntity);

@@ -8,36 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
-
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
@@ -81,6 +51,34 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
+import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -161,7 +159,8 @@ public class SiteServiceImpl implements SiteService {
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
         logger.exit(String.format("editValue=%d", EDIT_VALUE));
-        return studyPermission.getEdit() == EDIT_VALUE || appPermission.getEdit() == EDIT_VALUE;
+        return studyPermission.getEdit() == Permission.READ_EDIT
+            || appPermission.getEdit().value() == EDIT_VALUE;
       }
     }
     logger.exit("default permission is edit, return true");
@@ -199,9 +198,9 @@ public class SiteServiceImpl implements SiteService {
   private void addSitePermissions(
       String userId, List<StudyPermissionEntity> userStudypermissionList, SiteEntity site) {
     for (StudyPermissionEntity studyPermission : userStudypermissionList) {
-      Integer editPermission =
+      Permission editPermission =
           studyPermission.getUrAdminUser().getId().equals(userId)
-              ? EDIT_VALUE
+              ? Permission.READ_EDIT
               : studyPermission.getEdit();
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
@@ -295,7 +294,8 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
 
     if (!optSitePermission.isPresent()
-        || Permission.NO_PERMISSION == Permission.fromValue(optSitePermission.get().getCanEdit())) {
+        || Permission.NO_PERMISSION
+            == Permission.fromValue(optSitePermission.get().getCanEdit().value())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new ParticipantRegistryResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
@@ -380,8 +380,8 @@ public class SiteServiceImpl implements SiteService {
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
         logger.exit(String.format("editValue=%d", Permission.READ_EDIT.value()));
-        return studyPermission.getEdit() == Permission.READ_EDIT.value()
-            || appPermission.getEdit() == Permission.READ_EDIT.value();
+        return studyPermission.getEdit() == Permission.READ_EDIT
+            || appPermission.getEdit() == Permission.READ_EDIT;
       }
     }
     logger.exit("default permission is edit, return true");
@@ -483,7 +483,7 @@ public class SiteServiceImpl implements SiteService {
 
     for (SitePermissionEntity sitePermission : sitePermissions) {
       if (studyAdminIds.contains(sitePermission.getUrAdminUser().getId())) {
-        sitePermission.setCanEdit(Permission.READ_VIEW.value());
+        sitePermission.setCanEdit(Permission.READ_VIEW);
         sitePermissionRepository.saveAndFlush(sitePermission);
       } else {
         sitePermissionRepository.delete(sitePermission);
@@ -600,7 +600,7 @@ public class SiteServiceImpl implements SiteService {
             inviteParticipantRequest.getUserId(), inviteParticipantRequest.getSiteId());
     if (!optSitePermissionEntity.isPresent()
         || Permission.READ_EDIT
-            != Permission.fromValue(optSitePermissionEntity.get().getCanEdit())) {
+            != Permission.fromValue(optSitePermissionEntity.get().getCanEdit().value())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new InviteParticipantResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }

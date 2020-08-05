@@ -9,7 +9,6 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,20 +16,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 
 @AllArgsConstructor
 @Builder
@@ -62,7 +59,7 @@ public class PersonalizedUserReportEntity implements Serializable {
   @JoinColumn(name = "study_info_id")
   private StudyEntity studyInfo;
 
-  @Column(name = "report_title", length = ColumnConstraints.MEDIUM_LENGTH)
+  @Column(name = "report_title", length = MEDIUM_LENGTH)
   private String reportTitle;
 
   // Length is an arbitrary multiple of 100 > 2^15 and < 2^16 to guarantee we

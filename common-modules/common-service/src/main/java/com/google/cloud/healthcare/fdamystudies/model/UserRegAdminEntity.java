@@ -8,18 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,15 +21,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.annotation.Transient;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
 
 @ToString
 @Getter
@@ -81,13 +77,12 @@ public class UserRegAdminEntity implements Serializable {
   @Column(name = "email_changed")
   private Boolean emailChanged;
 
-  @Column(length = TINY_LENGTH)
   private Integer status;
 
-  @Column(name = "super_admin", length = TINY_LENGTH)
+  @Column(name = "super_admin")
   private boolean superAdmin;
 
-  @Column(name = "edit_permission", length = TINY_LENGTH)
+  @Column(name = "edit_permission")
   private Integer editPermission;
 
   @Column(name = "created_time")
