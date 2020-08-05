@@ -68,9 +68,6 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
-  @Value("${auth.server.deactivateUrl}")
-  private String deactivateUrl;
-
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;
 

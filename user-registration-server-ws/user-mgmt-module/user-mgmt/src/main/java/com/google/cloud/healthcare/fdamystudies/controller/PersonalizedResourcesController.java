@@ -33,10 +33,7 @@ public class PersonalizedResourcesController {
 
   @GetMapping(value = "/getPersonalizedResources")
   public UserResourcesBean getPersonalizedResources(
-      @RequestHeader("userId") String userId,
-      @RequestHeader("accessToken") String accessToken,
-      @RequestHeader("clientToken") String clientToken,
-      @RequestParam(name = "studyId") String studyId) {
+      @RequestHeader("userId") String userId, @RequestParam(name = "studyId") String studyId) {
     logger.info("UserResourcesController getPersonalizedResources() - starts");
     List<UserResourceBean> personalizedUserReports =
         personalizedUserReportService.getLatestPersonalizedUserReports(userId, studyId);

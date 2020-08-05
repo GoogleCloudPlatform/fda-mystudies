@@ -81,9 +81,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${serverApiUrls}")
   private String serverApiUrls;
 
-  @Value("${authServerClientValidationUrl}")
-  private String authServerClientValidationUrl;
-
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
 
@@ -116,7 +113,4 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${cloud.institution.bucket}")
   private String institutionBucketName;
-
-  @Value("${auth.server.deactivateurl}")
-  private String authServerDeactivateUrl;
 }
