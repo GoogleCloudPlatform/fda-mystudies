@@ -22,7 +22,7 @@ public final class CommonConstants {
   public static final Integer INACTIVE_STATUS = 0;
 
   public static final String NOT_APPLICABLE = "NA";
-  
+
   public static final String OPEN_STUDY = "OPEN";
 
   public static final String CLOSE_STUDY = "CLOSE";
@@ -34,4 +34,6 @@ public final class CommonConstants {
   public static final int VIEW_VALUE = 0;
 
   public static final int EDIT_VALUE = 1;
+
+  public static final String ENROLLED_STATUS = "Enrolled";
 }

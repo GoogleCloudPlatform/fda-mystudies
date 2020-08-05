@@ -7,28 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
@@ -41,6 +19,7 @@ import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
@@ -48,8 +27,29 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -66,6 +66,8 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private AppRepository appRepository;
 
   @Autowired private StudyRepository studyRepository;
+
+  @Autowired private SiteRepository siteRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -267,6 +269,14 @@ public class StudyServiceImpl implements StudyService {
       StudyEntity study, AppEntity app) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
+
+    if (OPEN_STUDY.equalsIgnoreCase(study.getType())) {
+      Optional<SiteEntity> optSiteEntity =
+          siteRepository.findByStudyIdAndType(study.getId(), study.getType());
+      if (optSiteEntity.isPresent()) {
+        participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
+      }
+    }
 
     List<ParticipantStudyEntity> participantStudiesList =
         participantStudyRepository.findParticipantsByStudy(study.getId());
