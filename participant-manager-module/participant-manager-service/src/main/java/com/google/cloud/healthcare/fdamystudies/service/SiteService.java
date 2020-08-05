@@ -21,6 +21,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface SiteService {
@@ -46,4 +48,7 @@ public interface SiteService {
   public ParticipantStatusResponse updateOnboardingStatus(ParticipantStatusRequest request);
 
   public SiteDetailsResponse getSites(String userId);
+
+  public UpdateTargetEnrollmentResponse updateTargetEnrollment(
+      UpdateTargetEnrollmentRequest enrollmentRequest);
 }

@@ -64,7 +64,10 @@ public enum ApiEndpoint {
 
   GET_SITES("http://localhost:8080/participant-manager-service/sites"),
 
-  UPDATE_USER_PROFILE("http://localhost:8080/participant-manager-service/users/{userId}/profile");
+  UPDATE_USER_PROFILE("http://localhost:8080/participant-manager-service/users/{userId}/profile"),
+
+  UPDATE_TARGET_ENROLLMENT(
+      "http://localhost:8080/participant-manager-service/studies/{studyId}/targetEnrollment");
 
   private String url;
 
