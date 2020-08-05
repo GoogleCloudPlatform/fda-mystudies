@@ -26,7 +26,7 @@ public final class Constants {
   public static final String USER_ID_HEADER = "userId";
   public static final String VALID_USER_ID = "kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg";
 
-  public static final String INVALID_USER_ID = "invalid userId";
+  public static final String INVALID_USER_ID = "ca9c24d0-a960-4c04-a161-e21c9f926e08";
   public static final String EMAIL_ID = "abc@gmail.com";
   public static final String PASSWORD = "pass@12";
   public static final String SUCCESS = "success";
