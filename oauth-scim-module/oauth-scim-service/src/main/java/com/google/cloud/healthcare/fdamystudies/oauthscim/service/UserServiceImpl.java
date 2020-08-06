@@ -60,7 +60,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,10 +103,6 @@ public class UserServiceImpl implements UserService {
 
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
-
-    // TODO (Dhanya) added this logger to analyze the build. It'll be removed once the issue is
-    // resolved.
-    logger.debug("createUser userEntity=" + ToStringBuilder.reflectionToString(userEntity));
 
     logger.exit(String.format("id=%s", userEntity.getId()));
     return UserMapper.toUserResponse(userEntity);
@@ -286,11 +281,6 @@ public class UserServiceImpl implements UserService {
     if (!optUserEntity.isPresent()) {
       return new AuthenticationResponse(ErrorCode.USER_NOT_FOUND);
     }
-
-    // TODO (Dhanya) added this logger to analyze the build. It'll be removed once the issue is
-    // resolved.
-    logger.debug(
-        "authenticate userEntity=" + ToStringBuilder.reflectionToString(optUserEntity.get()));
 
     UserEntity userEntity = optUserEntity.get();
     JsonNode userInfo = userEntity.getUserInfo();
