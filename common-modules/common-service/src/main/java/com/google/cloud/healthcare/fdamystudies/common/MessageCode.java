@@ -80,7 +80,7 @@ public enum MessageCode {
   PROFILE_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0011", "Profile updated successfully"),
 
   TARGET_ENROLLMENT_UPDATE_SUCCESS(
-      HttpStatus.OK, "MSG-0030", "Target enrolllment updated successfully");
+      HttpStatus.OK, "MSG-0030", "Target enrollment updated successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

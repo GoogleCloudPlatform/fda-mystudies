@@ -371,7 +371,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DEACTIVE_SITE.getDescription())));
+                is(ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE.getDescription())));
   }
 
   @AfterEach

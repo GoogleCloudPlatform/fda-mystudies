@@ -1021,7 +1021,7 @@ public class SiteServiceImpl implements SiteService {
     SiteEntity site = optSiteEntity.get();
     if (SiteStatus.DEACTIVE == SiteStatus.fromValue(site.getStatus())) {
       return new UpdateTargetEnrollmentResponse(
-          ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DEACTIVE_SITE);
+          ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE);
     }
 
     site.setTargetEnrollment(enrollmentRequest.getTargetEnrollment());

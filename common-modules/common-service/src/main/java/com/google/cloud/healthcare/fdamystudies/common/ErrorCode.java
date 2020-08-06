@@ -168,7 +168,7 @@ public enum ErrorCode {
   CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY(
       400, "EC-95", Constants.BAD_REQUEST, " Cannot update enrollment target for closed study"),
 
-  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DEACTIVE_SITE(
+  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE(
       400,
       "EC-95",
       Constants.BAD_REQUEST,
