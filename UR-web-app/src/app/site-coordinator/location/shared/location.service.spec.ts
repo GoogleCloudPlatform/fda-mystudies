@@ -153,7 +153,7 @@ describe('LocationService', () => {
   });
 
   it('should return an error when the server returns a error status code', fakeAsync(() => {
-    const errorResponse: ApiResponse = {
+    const errorResponse = {
       message: 'User does not exist',
     } as ApiResponse;
 
