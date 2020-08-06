@@ -14,7 +14,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.sa
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCK_EMAIL_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
@@ -102,14 +101,14 @@ public class UserServiceImpl implements UserService {
     setPasswordAndPasswordHistoryFields(
         userRequest.getPassword(), userInfo, UserAccountStatus.PENDING_CONFIRMATION.getStatus());
 
-    userEntity.setUserInfo(userInfo.toString());
+    userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
     logger.exit(String.format("id=%s", userEntity.getId()));
     return UserMapper.toUserResponse(userEntity);
   }
 
   private void setPasswordAndPasswordHistoryFields(
-      String password, ObjectNode userInfo, int accountStatus) {
+      String password, JsonNode userInfoJsonNode, int accountStatus) {
     // encrypt the password using random salt
     String rawSalt = salt();
     String encrypted = encrypt(password, rawSalt);
@@ -136,6 +135,7 @@ public class UserServiceImpl implements UserService {
             DateTimeUtils.getSystemDateTimestamp(appConfig.getPasswordExpiryDays(), 0, 0));
     }
 
+    ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     ArrayNode passwordHistory =
         userInfo.hasNonNull(PASSWORD_HISTORY)
             ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
@@ -173,9 +173,9 @@ public class UserServiceImpl implements UserService {
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
       UserEntity userEntity = entity.get();
-      ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+      ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
       setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
-      userEntity.setUserInfo(userInfo.toString());
+      userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
       logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
       auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optionalEntity.get();
-    ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     ArrayNode passwordHistory =
         userInfo.hasNonNull(PASSWORD_HISTORY)
             ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService {
 
     setPasswordAndPasswordHistoryFields(
         userRequest.getNewPassword(), userInfo, userEntity.getStatus());
-    userEntity.setUserInfo(userInfo.toString());
+    userEntity.setUserInfo(userInfo);
     repository.saveAndFlush(userEntity);
     logger.exit("Your password has been changed successfully!");
     return new ChangePasswordResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
@@ -282,11 +282,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optUserEntity.get();
-    ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
-
-    // TODO (Dhanya) logger added to analyze the build issue, will be removed after fixing the build
-    // issue
-    logger.debug(String.format("UserInfo =%s", userInfo.toString()));
+    JsonNode userInfo = userEntity.getUserInfo();
 
     JsonNode passwordNode = userInfo.get(PASSWORD);
     String hash = getTextValue(passwordNode, HASH);
@@ -330,8 +326,8 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateInvalidLoginAttempts(
-      UserEntity userEntity, ObjectNode userInfo) {
-
+      UserEntity userEntity, JsonNode userInfoJsonNode) {
+    ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     int loginAttempts =
         userInfo.hasNonNull(LOGIN_ATTEMPTS) ? userInfo.get(LOGIN_ATTEMPTS).intValue() : 0;
     userInfo.put(LOGIN_ATTEMPTS, ++loginAttempts);
@@ -345,7 +341,7 @@ public class UserServiceImpl implements UserService {
       userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, Instant.now().toEpochMilli());
     }
 
-    userEntity.setUserInfo(userInfo.toString());
+    userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
     ErrorCode ec =
@@ -357,8 +353,8 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
-      UserEntity userEntity, ObjectNode userInfo) {
-    ObjectNode passwordNode = (ObjectNode) userInfo.get(PASSWORD);
+      UserEntity userEntity, JsonNode userInfoJsonNode) {
+    ObjectNode passwordNode = (ObjectNode) userInfoJsonNode.get(PASSWORD);
     UserAccountStatus status = UserAccountStatus.valueOf(userEntity.getStatus());
     passwordNode.remove(EXPIRE_TIMESTAMP);
     if (UserAccountStatus.PASSWORD_RESET.equals(status)
@@ -369,12 +365,13 @@ public class UserServiceImpl implements UserService {
       passwordNode.remove(OTP_USED);
     }
 
+    ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
     userInfo.set(PASSWORD, passwordNode);
     userInfo.put(LOGIN_ATTEMPTS, 0);
     userInfo.put(LOGIN_TIMESTAMP, Instant.now().toEpochMilli());
 
-    userEntity.setUserInfo(userInfo.toString());
+    userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
     AuthenticationResponse authenticationResponse = new AuthenticationResponse();
@@ -385,7 +382,7 @@ public class UserServiceImpl implements UserService {
   }
 
   private ErrorCode validatePasswordExpiryAndAccountStatus(
-      UserEntity userEntity, ObjectNode userInfo) {
+      UserEntity userEntity, JsonNode userInfo) {
     JsonNode passwordNode = userInfo.get(PASSWORD);
     UserAccountStatus accountStatus = UserAccountStatus.valueOf(userEntity.getStatus());
     switch (accountStatus) {

@@ -16,7 +16,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.ha
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
@@ -176,7 +175,7 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(request.getEmail(), userEntity.getEmail());
 
     // Step 2A- assert password and password_history fields
-    JsonNode userInfo = toJsonNode(userEntity.getUserInfo());
+    JsonNode userInfo = userEntity.getUserInfo();
     assertTrue(userInfo.get(PASSWORD).get(EXPIRE_TIMESTAMP).isLong());
     assertTrue(userInfo.get(PASSWORD_HISTORY).isArray());
 
@@ -322,7 +321,7 @@ public class UserControllerTest extends BaseMockIT {
     assertNotNull(userEntity);
 
     // Step 2A- assert password hash value and password_history size
-    JsonNode userInfoNode = toJsonNode(userEntity.getUserInfo());
+    JsonNode userInfoNode = userEntity.getUserInfo();
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
@@ -434,7 +433,7 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(APP_ID_VALUE, userEntity.getAppId());
 
     // Step 2A- assert password hash value and password_history size
-    JsonNode userInfoNode = toJsonNode(userEntity.getUserInfo());
+    JsonNode userInfoNode = userEntity.getUserInfo();
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
@@ -579,7 +578,7 @@ public class UserControllerTest extends BaseMockIT {
     userEntity.setUserId(IdGenerator.id());
 
     ObjectNode userInfoNode = JsonUtils.getObjectNode();
-    userEntity.setUserInfo(userInfoNode.toString());
+    userEntity.setUserInfo(userInfoNode);
     return userEntity;
   }
 }

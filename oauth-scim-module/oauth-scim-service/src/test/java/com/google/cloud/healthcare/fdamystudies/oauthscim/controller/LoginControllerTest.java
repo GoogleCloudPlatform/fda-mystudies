@@ -137,7 +137,7 @@ public class LoginControllerTest extends BaseMockIT {
     user.setTempRegId(TEMP_REG_ID_VALUE);
     // UserInfo JSON contains password hash & salt, password history etc
     ObjectNode userInfo = JsonUtils.getObjectNode().put("password", PasswordGenerator.generate(12));
-    user.setUserInfo(userInfo.toString());
+    user.setUserInfo(userInfo);
     userRepository.saveAndFlush(user);
 
     // Step-2 redirect to auto signin page after signup
