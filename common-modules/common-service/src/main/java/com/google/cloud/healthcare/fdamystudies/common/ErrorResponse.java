@@ -26,6 +26,7 @@ import org.springframework.web.client.RestClientResponseException;
 @JsonSerialize(using = ErrorResponse.ErrorResponseSerializer.class)
 public class ErrorResponse {
 
+  @ToString.Exclude
   private XLogger logger = XLoggerFactory.getXLogger(ErrorResponse.class.getName());
 
   private String errorDescription;

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Location} from '@angular/common';
-import {environment} from 'src/environments/environment';
+import {environment} from '@environment';
 
 @Injectable()
 export class EntityService<T> {
@@ -10,7 +10,7 @@ export class EntityService<T> {
 
   constructor(private readonly http: HttpClient) {}
 
-  post(bodydata: string, urlpath: string): Observable<T> {
+  post(bodydata: unknown, urlpath: string): Observable<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.post<T>(serviceUrl, bodydata);
   }
@@ -26,7 +26,7 @@ export class EntityService<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.delete<T>(serviceUrl);
   }
-  put(bodydata: string, urlpath: string): Observable<T> {
+  put(bodydata: unknown, urlpath: string): Observable<T> {
     const serviceUrl = Location.joinWithSlash(this.baseUrl, urlpath);
     return this.http.put<T>(serviceUrl, bodydata);
   }
