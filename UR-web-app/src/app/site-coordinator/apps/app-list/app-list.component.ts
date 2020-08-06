@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
 import {App} from '../shared/app.model';
@@ -39,7 +39,6 @@ export class AppListComponent implements OnInit {
         );
       }),
     );
-    // takeUntil(this.ngUnsubscribe);
   }
   search(query: string): void {
     this.query$.next(query.trim());
