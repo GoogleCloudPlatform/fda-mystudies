@@ -4,7 +4,7 @@ import {Location} from '../shared/location.model';
 import {LocationService} from '../shared/location.service';
 import {ToastrService} from 'ngx-toastr';
 import {Subscription} from 'rxjs';
-import {SuccessCodesEnum, getMessage} from 'src/app/shared/success.codes.enum';
+import {getMessage} from 'src/app/shared/success.codes.enum';
 
 @Component({
   selector: 'location-add',
@@ -25,10 +25,8 @@ export class AddLocationComponent {
     this.sub = this.locationService
       .addLocation(this.location)
       .subscribe((successResponse: Location) => {
-        if (getMessage(successResponse.code as keyof typeof SuccessCodesEnum)) {
-          this.toastr.success(
-            getMessage(successResponse.code as keyof typeof SuccessCodesEnum),
-          );
+        if (getMessage(successResponse.code)) {
+          this.toastr.success(getMessage(successResponse.code));
         } else this.toastr.success('Success');
         void this.router.navigate(['/coordinator/locations']);
       });
