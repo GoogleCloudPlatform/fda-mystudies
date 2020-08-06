@@ -15,12 +15,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Site {
+public class SiteDetails {
   private String id;
+
   private String name;
+
   private Long invited;
+
   private Long enrolled;
+
   private Double enrollmentPercentage;
+
   private Integer edit;
+
   private Integer status;
 }

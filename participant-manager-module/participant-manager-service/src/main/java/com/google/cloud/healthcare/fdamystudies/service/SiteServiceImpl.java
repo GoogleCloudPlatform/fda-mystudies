@@ -23,7 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.Site;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
@@ -959,16 +959,10 @@ public class SiteServiceImpl implements SiteService {
       StudyEntity study,
       StudyDetails studyDetail) {
     for (SiteEntity siteEntity : study.getSites()) {
-      Long invitedCount =
-          invitedCountBySiteIdMap.get(siteEntity.getId()) == null
-              ? 0L
-              : invitedCountBySiteIdMap.get(siteEntity.getId());
-      Long enrolledCount =
-          enrolledCountBySiteIdMap.get(siteEntity.getId()) == null
-              ? 0L
-              : enrolledCountBySiteIdMap.get(siteEntity.getId());
+      Long invitedCount = invitedCountBySiteIdMap.get(siteEntity.getId());
+      Long enrolledCount = enrolledCountBySiteIdMap.get(siteEntity.getId());
 
-      Site site = new Site();
+      SiteDetails site = new SiteDetails();
       site.setId(siteEntity.getId());
       site.setName(siteEntity.getLocation().getName());
       site.setEnrolled(enrolledCount);

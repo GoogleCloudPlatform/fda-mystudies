@@ -24,7 +24,7 @@ public class StudyDetails {
 
   private Long sitesCount;
 
-  private List<Site> sites = new ArrayList<>();
+  private List<SiteDetails> sites = new ArrayList<>();
 
   private String type;
 

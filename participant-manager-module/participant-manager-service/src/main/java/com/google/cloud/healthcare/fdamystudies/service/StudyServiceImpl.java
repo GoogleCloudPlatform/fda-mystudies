@@ -115,7 +115,7 @@ public class StudyServiceImpl implements StudyService {
   private Map<String, StudyPermissionEntity> getStudyPermissionsByStudyInfoId(
       String userId, List<String> usersStudyIds) {
     List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findStudyPermissionsOfUserByStudyIds(usersStudyIds, userId);
+        studyPermissionRepository.findByStudyIds(usersStudyIds, userId);
 
     Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId = new HashMap<>();
     if (CollectionUtils.isNotEmpty(studyPermissions)) {
