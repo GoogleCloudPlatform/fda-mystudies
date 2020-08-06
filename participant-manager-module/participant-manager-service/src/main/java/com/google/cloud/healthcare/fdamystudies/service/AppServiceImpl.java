@@ -8,29 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
@@ -42,6 +24,23 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
 @Service
 public class AppServiceImpl implements AppService {
@@ -74,7 +73,10 @@ public class AppServiceImpl implements AppService {
     Map<String, AppPermissionEntity> appPermissionsByAppInfoId =
         getAppPermissionsMap(userId, appIds);
 
-    Map<String, Long> appIdbyUsersCount = userDetailsRepository.findAppUsersCount(appIds);
+    List<AppCount> appUserCount = userDetailsRepository.findAppUsersCount(appIds);
+
+    Map<String, Long> appIdbyUsersCount =
+        appUserCount.stream().collect(Collectors.toMap(AppCount::getAppId, AppCount::getCount));
 
     Map<AppEntity, Map<StudyEntity, List<SitePermissionEntity>>>
         sitePermissionByAppInfoAndStudyInfo = getPermissionByAppInfoAndStudyInfo(sitePermissions);
@@ -122,7 +124,6 @@ public class AppServiceImpl implements AppService {
       appDetails.setStudiesCount((long) entry.getValue().size());
       appDetails.setName(app.getAppName());
       appDetails.setAppUsersCount(appIdbyUsersCount.get(app.getId()));
-      appDetails.setAppUsersCount(0L);
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
         Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit();
@@ -164,7 +165,8 @@ public class AppServiceImpl implements AppService {
           appInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
         }
 
-        if (OPEN_STUDY.equals(studyType)) {
+        if (sitePermission.getSite().getTargetEnrollment() != null
+            && OPEN_STUDY.equals(studyType)) {
           appInvitedCount += sitePermission.getSite().getTargetEnrollment();
         }
 
