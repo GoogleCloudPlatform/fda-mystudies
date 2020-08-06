@@ -8,27 +8,32 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 
-import com.google.cloud.healthcare.fdamystudies.config.BaseAppConfig;
+import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.servlet.ServletContext;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 
 @Configuration
-@Profile({"dev", "local", "e2e-test", "test", "qa", "mockit"})
-public class AppConfigDevProfile extends BaseAppConfig {
+@Profile({"dev", "local", "qa", "mockit"})
+public class AppConfigDevProfile extends CommonModuleConfiguration {
+
+  @Autowired ServletContext context;
 
   @Bean
   public RestTemplate restTemplate(RestTemplateBuilder builder)
@@ -80,5 +85,18 @@ public class AppConfigDevProfile extends BaseAppConfig {
         new RestTemplate(new HttpComponentsClientHttpRequestFactory(httpClient));
     addInterceptors(restTemplate);
     return restTemplate;
+  }
+
+  @Override
+  public void addViewControllers(ViewControllerRegistry registry) {
+    registry
+        .addViewController(String.format("%s/login", context.getContextPath()))
+        .setViewName("login");
+    registry
+        .addViewController(String.format("%s/signin", context.getContextPath()))
+        .setViewName("signin");
+    registry
+        .addViewController(String.format("%s/error", context.getContextPath()))
+        .setViewName("error");
   }
 }
