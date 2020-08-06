@@ -8,6 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
+import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
+
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
@@ -91,17 +102,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
+
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -755,7 +756,7 @@ public class SiteServiceImpl implements SiteService {
 
       Iterator<Row> rows = sheet.rowIterator();
       Set<String> invalidEmails = new HashSet<>();
-      Set<String> emails = new HashSet<>();
+      Set<String> validEmails = new HashSet<>();
 
       // Skip headers row
       rows.next();
@@ -767,11 +768,11 @@ public class SiteServiceImpl implements SiteService {
           invalidEmails.add(email);
           continue;
         }
-        emails.add(email);
+        validEmails.add(email);
       }
 
       ImportParticipantResponse importParticipantResponse =
-          saveImportParticipant(emails, userId, siteEntity);
+          saveImportParticipant(validEmails, userId, siteEntity);
       importParticipantResponse.getInvalidEmails().addAll(invalidEmails);
 
       return importParticipantResponse;
@@ -803,17 +804,17 @@ public class SiteServiceImpl implements SiteService {
         (List<String>)
             CollectionUtils.removeAll(new ArrayList<String>(emails), participantRegistryEmails);
 
-    List<ParticipantDetailRequest> savedParticipants = new ArrayList<>();
+    List<ParticipantDetail> savedParticipants = new ArrayList<>();
     for (String email : newEmails) {
-      ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
-      participantRequest.setEmail(email);
+      ParticipantDetail participantDetail = new ParticipantDetail();
+      participantDetail.setEmail(email);
       ParticipantRegistrySiteEntity participantRegistrySite =
-          ParticipantMapper.fromParticipantRequest(participantRequest, siteEntity);
+          ParticipantMapper.fromParticipantDetail(participantDetail, siteEntity);
       participantRegistrySite.setCreatedBy(userId);
       participantRegistrySite =
           participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
-      participantRequest.setParticipantId(participantRegistrySite.getId());
-      savedParticipants.add(participantRequest);
+      participantDetail.setId(participantRegistrySite.getId());
+      savedParticipants.add(participantDetail);
     }
 
     logger.exit(
