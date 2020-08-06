@@ -33,8 +33,7 @@
                         : navigateToParticipantList('study', study.id)
                     ">
                                         <div class="col-xs-12 col-md-8 p-none cursor__pointer">
-                                            <span *ngIf="study.type != 'OPEN'" class="sites_row">
-                                                {{site.name}}</span>
+                                            <span *ngIf="study.type != 'OPEN'" class="sites_row">{{site.name}}</span>
                                             <span *ngIf="study.type == 'OPEN'">Enrollment Registry</span>
                                         </div>
                                         <div class="col-xs-12 col-md-4 p-none lh__6">

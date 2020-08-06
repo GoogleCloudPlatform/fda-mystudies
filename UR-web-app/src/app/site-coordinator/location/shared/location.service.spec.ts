@@ -61,6 +61,9 @@ describe('LocationService', () => {
       'EntityService',
       {getCollection: of(expectedResult.expectedLocations)},
     );
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedResult.expectedLocations),
+    });
     locationService = new LocationService(entityServicespy, httpServicespyobj);
 
     locationService
@@ -75,7 +78,7 @@ describe('LocationService', () => {
           ),
         fail,
       );
-    expect(entityServicespy.getCollection).toHaveBeenCalledTimes(1);
+    expect(httpServicespyobj.get).toHaveBeenCalledTimes(1);
   });
 
   it('should return expected Locations details of specific id', () => {

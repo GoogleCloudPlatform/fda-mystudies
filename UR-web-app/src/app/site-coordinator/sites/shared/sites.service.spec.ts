@@ -9,7 +9,6 @@ import {throwError, of} from 'rxjs';
 import {Study} from '../../studies/shared/study.model';
 import {SitesService} from './sites.service';
 import {StudiesService} from '../../studies/shared/studies.service';
-import {AddSiteRequest} from './add.sites.request';
 import * as expectedResult from 'src/app/entity/mockStudiesData';
 import {HttpClient} from '@angular/common/http';
 
@@ -64,7 +63,7 @@ describe('SitesService', () => {
     sitesService
       .add(expectedResult.expectedNewSite)
       .subscribe(
-        (succesResponse: AddSiteRequest) =>
+        (succesResponse: ApiResponse) =>
           expect(succesResponse).toEqual(
             expectedResult.expectedSiteResponse,
             '{code:200,message:New site added successfully}',

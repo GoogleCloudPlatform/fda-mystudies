@@ -1,5 +1,6 @@
 import {Study} from '../site-coordinator/studies/shared/study.model';
-import {AddSite} from '../site-coordinator/sites/shared/add.sites.model';
+import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
+import {ApiResponse} from './api.response.model';
 
 export const expectedStudyList = [
   {
@@ -81,14 +82,13 @@ export const expectedStudyList = [
 ] as Study[];
 
 export const expectedSiteResponse = {
-  studyId: '1',
-  locationId: '1',
   message: 'New site added successfully',
-} as AddSite;
+  code: 'MSG_001',
+} as ApiResponse;
 
 export const expectedNewSite = {
   studyId: '1',
   locationId: '1',
-} as AddSite;
+} as AddSiteRequest;
 
 export const expectedStudyId = {id: 1} as Study;
