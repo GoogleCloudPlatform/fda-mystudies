@@ -94,7 +94,7 @@ class SyncUpdate {
     }
 
     // Delete Synced object from DB
-    try! realm.write {
+    try? realm.write {
       realm.delete(toBeSyncedData)
     }
   }
