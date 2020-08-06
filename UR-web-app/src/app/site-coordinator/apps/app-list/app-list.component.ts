@@ -1,18 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
 import {App} from '../shared/app.model';
+import {PermisssionEnum} from 'src/app/shared/permission.enums';
 @Component({
   selector: 'app-app-list',
   templateUrl: './app-list.component.html',
-  styleUrls: ['./app-list.component.scss'],
 })
 export class AppListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   app$: Observable<App[]> = of([]);
-  apps: App[] = [];
   appUsersMessageMapping: {[k: string]: string} = {
     '=0': 'No App Users',
     '=1': 'One App User',
@@ -33,14 +32,14 @@ export class AppListComponent implements OnInit {
   getApps(): void {
     this.app$ = combineLatest(this.appService.getApps(), this.query$).pipe(
       map(([apps, query]) => {
-        this.apps = apps;
-        return this.apps.filter(
+        return apps.filter(
           (app: App) =>
             app.name.toLowerCase().includes(query.toLowerCase()) ||
             app.customId.toLowerCase().includes(query.toLowerCase()),
         );
       }),
     );
+    // takeUntil(this.ngUnsubscribe);
   }
   search(query: string): void {
     this.query$.next(query.trim());
@@ -53,5 +52,8 @@ export class AppListComponent implements OnInit {
     } else {
       return 'green__text__sm';
     }
+  }
+  checkeditPermission(permission: number): boolean {
+    return permission === PermisssionEnum.ViewAndEdit;
   }
 }
