@@ -30,7 +30,7 @@ describe('SiteListComponent', () => {
   beforeEach(async(async () => {
     const studyServiceSpy = jasmine.createSpyObj<StudiesService>(
       'studiesService',
-      ['getStudiesWithSites'],
+      {getStudiesWithSites: of(expectedStudyList)},
     );
     await TestBed.configureTestingModule({
       declarations: [SiteListComponent],
@@ -60,10 +60,6 @@ describe('SiteListComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(SiteListComponent);
         component = fixture.componentInstance;
-
-        studyServiceSpy.getStudiesWithSites.and.returnValue(
-          of(expectedStudyList),
-        );
         fixture.detectChanges();
       });
   }));

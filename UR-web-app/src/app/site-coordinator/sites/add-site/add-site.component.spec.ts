@@ -4,7 +4,6 @@ import {
   TestBed,
   fakeAsync,
 } from '@angular/core/testing';
-
 import {AddSiteComponent} from './add-site.component';
 import {ToastrModule} from 'ngx-toastr';
 import {BsModalService, ModalModule} from 'ngx-bootstrap/modal';
@@ -21,25 +20,20 @@ import {
 import {SitesModule} from '../sites.module';
 import {LocationService} from '../../location/shared/location.service';
 import {SitesService} from '../shared/sites.service';
-import {expectedLocationList} from 'src/app/entity/mockLocationData';
-import {
-  expectedSiteResponse,
-  expectedStudyId,
-} from 'src/app/entity/mockStudiesData';
+import * as expectedResults from 'src/app/entity/mockStudiesData';
 import {DebugElement} from '@angular/core';
+
 describe('AddSiteComponent', () => {
   let component: AddSiteComponent;
   let fixture: ComponentFixture<AddSiteComponent>;
   let addSite: DebugElement;
   let cancelSite: DebugElement;
+
   beforeEach(async(async () => {
-    const sitesServiceSpy = jasmine.createSpyObj<SitesService>('SitesService', [
-      'add',
-    ]);
-    const locationServiceSpy = jasmine.createSpyObj<LocationService>(
-      'LocationService',
-      ['getLocationsForSiteCreation'],
-    );
+    const sitesServiceSpy = jasmine.createSpyObj<SitesService>('SitesService', {
+      add: of(expectedResults.expectedSiteResponse),
+    });
+
     await TestBed.configureTestingModule({
       declarations: [AddSiteComponent],
       imports: [
@@ -65,30 +59,23 @@ describe('AddSiteComponent', () => {
     })
       .compileComponents()
       .then(() => {
-        locationServiceSpy.getLocationsForSiteCreation.and.returnValue(
-          of(expectedLocationList),
-        );
-        sitesServiceSpy.add.and.returnValue(of(expectedSiteResponse));
+        fixture = TestBed.createComponent(AddSiteComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+        addSite = fixture.debugElement.query(By.css('[name="add"]'));
+        cancelSite = fixture.debugElement.query(By.css('[name="cancel"]'));
       });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(AddSiteComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    addSite = fixture.debugElement.query(By.css('[name="add"]'));
-    cancelSite = fixture.debugElement.query(By.css('[name="cancel"]'));
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call get location list for dropdown ', fakeAsync(() => {
-    const spyobjs = spyOn(component, 'getLocation');
-    component.getLocation(expectedStudyId.id);
+  it('should call get location list for dropdown and check service is called ', fakeAsync(() => {
+    const spyobj = spyOn(component, 'getLocation');
+    component.getLocation(expectedResults.expectedStudyId.id);
     fixture.detectChanges();
-    expect(spyobjs.calls.count()).toBe(1);
+    expect(spyobj).toHaveBeenCalledTimes(1);
   }));
 
   it('should click on Add and check service is called', fakeAsync(() => {

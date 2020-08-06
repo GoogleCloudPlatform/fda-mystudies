@@ -7,14 +7,10 @@ import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
 import {Study} from '../../studies/shared/study.model';
-
 import {SitesService} from './sites.service';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {AddSiteRequest} from './add.sites.request';
-import {
-  expectedSiteResponse,
-  expectedNewSite,
-} from 'src/app/entity/mockStudiesData';
+import * as expectedResult from 'src/app/entity/mockStudiesData';
 import {HttpClient} from '@angular/common/http';
 
 describe('SitesService', () => {
@@ -40,16 +36,16 @@ describe('SitesService', () => {
   });
 
   it('should return an error when the server returns a 400', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
-      'EntityService',
-      ['getCollection'],
-    );
-    studiesServices = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
     } as ApiResponse;
 
-    entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
+    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
+      'EntityService',
+      {getCollection: throwError(errorResponses)},
+    );
+    studiesServices = new StudiesService(entityServicespy);
+
     tick(40);
     studiesServices.getStudiesWithSites().subscribe(
       () => fail('expected an error'),
@@ -60,24 +56,21 @@ describe('SitesService', () => {
   }));
 
   it('should post the  expected new site data', () => {
-    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', [
-      'post',
-    ]);
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      post: of(expectedResult.expectedSiteResponse),
+    });
     sitesService = new SitesService(httpServicespyobj);
 
-    httpServicespyobj.post.and.returnValue(of(expectedSiteResponse));
-
     sitesService
-      .add(expectedNewSite)
+      .add(expectedResult.expectedNewSite)
       .subscribe(
         (succesResponse: AddSiteRequest) =>
           expect(succesResponse).toEqual(
-            expectedSiteResponse,
+            expectedResult.expectedSiteResponse,
             '{code:200,message:New site added successfully}',
           ),
         fail,
       );
-
-    expect(httpServicespyobj.post.calls.count()).toBe(1, 'one call');
+    expect(httpServicespyobj.post).toHaveBeenCalledTimes(1);
   });
 });
