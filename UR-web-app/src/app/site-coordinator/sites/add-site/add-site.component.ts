@@ -4,9 +4,10 @@ import {SitesService} from '../shared/sites.service';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {ToastrService} from 'ngx-toastr';
 import {Study} from '../../studies/shared/study.model';
-import {AddSite} from '../shared/add.sites.model';
+import {AddSiteRequest} from '../shared/add.sites.request';
 import {LocationService} from '../../location/shared/location.service';
 import {Location} from '../../location/shared/location.model';
+import {ApiResponse} from 'src/app/entity/api.response.model';
 @Component({
   selector: 'add-site',
   templateUrl: './add-site.component.html',
@@ -17,7 +18,7 @@ export class AddSiteComponent extends UnsubscribeOnDestroyAdapter
   @Input() study = {} as Study;
   @Output() closeModalEvent = new EventEmitter();
   newSite = {} as Study;
-  site = {} as AddSite;
+  site = {} as AddSiteRequest;
   locations: Location[] = [];
   constructor(
     private readonly siteService: SitesService,
@@ -44,7 +45,7 @@ export class AddSiteComponent extends UnsubscribeOnDestroyAdapter
   add(): void {
     this.subs.add(
       this.siteService.add(this.site).subscribe(
-        (successResponse: AddSite) => {
+        (successResponse: ApiResponse) => {
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {

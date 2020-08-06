@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AddSite} from './add.sites.model';
+import {AddSiteRequest} from './add.sites.request';
 import {HttpClient} from '@angular/common/http';
 import {environment} from 'src/environments/environment.prod';
+import {ApiResponse} from 'src/app/entity/api.response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ import {environment} from 'src/environments/environment.prod';
 export class SitesService {
   constructor(private readonly http: HttpClient) {}
 
-  add(addSite: AddSite): Observable<AddSite> {
-    return this.http.post<AddSite>(`${environment.baseUrl}/sites`, addSite);
+  add(addSite: AddSiteRequest): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(`${environment.baseUrl}/sites`, addSite);
   }
 }

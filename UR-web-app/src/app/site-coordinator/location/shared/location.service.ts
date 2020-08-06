@@ -22,9 +22,9 @@ export class LocationService {
     return this.entityService.getCollection('locations');
   }
   getLocationsForSiteCreation(studyId: string): Observable<Location[]> {
-    return this.entityService.getCollection(
-      'locations-for-site-creation?studyId=' + studyId,
-    );
+    return this.http.get<Location[]>('locations-for-site-creation', {
+      params: {studyId},
+    });
   }
   addLocation(location: Location): Observable<Location> {
     return this.entityService.post(location, 'locations');

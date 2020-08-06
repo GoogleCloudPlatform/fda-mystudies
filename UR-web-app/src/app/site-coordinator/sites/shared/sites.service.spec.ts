@@ -10,7 +10,7 @@ import {Study} from '../../studies/shared/study.model';
 
 import {SitesService} from './sites.service';
 import {StudiesService} from '../../studies/shared/studies.service';
-import {AddSite} from './add.sites.model';
+import {AddSiteRequest} from './add.sites.request';
 import {
   expectedSiteResponse,
   expectedNewSite,
@@ -70,7 +70,7 @@ describe('SitesService', () => {
     sitesService
       .add(expectedNewSite)
       .subscribe(
-        (succesResponse: AddSite) =>
+        (succesResponse: AddSiteRequest) =>
           expect(succesResponse).toEqual(
             expectedSiteResponse,
             '{code:200,message:New site added successfully}',
