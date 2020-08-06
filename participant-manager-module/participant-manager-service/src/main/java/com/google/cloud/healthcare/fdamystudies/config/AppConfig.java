@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
-import com.google.cloud.healthcare.fdamystudies.config.BaseAppConfig;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

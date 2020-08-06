@@ -8,16 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -28,7 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ImportParticipantResponse extends BaseResponse {
 
-  private List<ParticipantDetailRequest> participants = new ArrayList<>();
+  private List<ParticipantDetail> participants = new ArrayList<>();
 
   private Set<String> invalidEmails = new HashSet<>();
 
@@ -39,9 +37,7 @@ public class ImportParticipantResponse extends BaseResponse {
   }
 
   public ImportParticipantResponse(
-      MessageCode messageCode,
-      List<ParticipantDetailRequest> participants,
-      List<String> duplicateEmails) {
+      MessageCode messageCode, List<ParticipantDetail> participants, List<String> duplicateEmails) {
     super(messageCode);
     this.participants.addAll(participants);
     this.duplicateEmails.addAll(duplicateEmails);
