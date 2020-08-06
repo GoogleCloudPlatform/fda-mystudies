@@ -28,9 +28,9 @@ describe('AppListComponent', () => {
   let fixture: ComponentFixture<AppListComponent>;
 
   beforeEach(async(async () => {
-    const appsServiceSpy = jasmine.createSpyObj<AppsService>('AppsService', [
-      'getApps',
-    ]);
+    const appsServiceSpy = jasmine.createSpyObj<AppsService>('AppsService', {
+      getApps: of(expectedAppList),
+    });
     await TestBed.configureTestingModule({
       declarations: [AppListComponent],
       imports: [
@@ -59,7 +59,7 @@ describe('AppListComponent', () => {
         fixture = TestBed.createComponent(AppListComponent);
         component = fixture.componentInstance;
 
-        appsServiceSpy.getApps.and.returnValue(of(expectedAppList));
+        // appsServiceSpy.getApps.and.returnValue(of(expectedAppList));
       });
   }));
   it('should create', () => {

@@ -32,33 +32,29 @@ describe('StudiesService', () => {
   it('should return expected Apps List', fakeAsync(() => {
     const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
       'EntityService',
-      ['getCollection'],
+      {getCollection: of(expectedAppList)},
     );
     appsService = new AppsService(entityServicespy);
 
-    entityServicespy.getCollection.and.returnValue(of(expectedAppList));
     appsService
       .getApps()
       .subscribe(
-        (App) => expect(App).toEqual(expectedAppList, 'expected AppsList'),
+        (app) => expect(app).toEqual(expectedAppList, 'expected AppsList'),
         fail,
       );
-
-    expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
+    expect(entityServicespy.getCollection).toHaveBeenCalledTimes(1);
   }));
 
   it('should return an error when the server returns a 400', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
-      'EntityService',
-      ['getCollection'],
-    );
-    appsService = new AppsService(entityServicespy);
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
-      code: 'ER_005',
-    };
+    } as ApiResponse;
+    const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
+      'EntityService',
+      {getCollection: throwError(errorResponses)},
+    );
+    appsService = new AppsService(entityServicespy);
 
-    entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
     tick(40);
     appsService.getApps().subscribe(
       () => fail('expected an error'),
