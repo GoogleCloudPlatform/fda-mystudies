@@ -1013,7 +1013,7 @@ public class SiteServiceImpl implements SiteService {
     }
 
     Optional<SiteEntity> optSiteEntity =
-        siteRepository.findSiteByStudyId(enrollmentRequest.getStudyId());
+        siteRepository.findByStudyId(enrollmentRequest.getStudyId());
     if (!optSiteEntity.isPresent()) {
       return new UpdateTargetEnrollmentResponse(ErrorCode.SITE_NOT_FOUND);
     }

@@ -32,12 +32,9 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
       "SELECT site from SiteEntity site where site.location.id = :locationId and site.status= :status")
   public List<SiteEntity> findByLocationIdAndStatus(String locationId, Integer status);
 
-  @Query("SELECT site from SiteEntity site where site.study.id in (:studyIds)")
-  public List<SiteEntity> findBySites(@Param("studyIds") List<String> studyIdList);
-
   @Query("SELECT site from SiteEntity site where site.study.id IN (:studyIds)")
   public List<SiteEntity> findByStudyIds(@Param("studyIds") List<String> studyIds);
 
   @Query("SELECT site from SiteEntity site where site.study.id= :studyId")
-  public Optional<SiteEntity> findSiteByStudyId(String studyId);
+  public Optional<SiteEntity> findByStudyId(String studyId);
 }

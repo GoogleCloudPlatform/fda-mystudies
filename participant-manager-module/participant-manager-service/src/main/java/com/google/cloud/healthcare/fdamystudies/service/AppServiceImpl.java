@@ -283,7 +283,7 @@ public class AppServiceImpl implements AppService {
         (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findByAppIds(appIds));
     List<String> studyIds = studies.stream().map(StudyEntity::getId).collect(Collectors.toList());
 
-    List<SiteEntity> sites = siteRepository.findBySites(studyIds);
+    List<SiteEntity> sites = siteRepository.findByStudyIds(studyIds);
 
     AppResponse appResponse = prepareAppResponse(apps, studies, sites, fields);
 
