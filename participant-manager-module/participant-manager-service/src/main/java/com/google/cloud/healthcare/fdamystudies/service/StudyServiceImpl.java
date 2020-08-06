@@ -191,7 +191,7 @@ public class StudyServiceImpl implements StudyService {
       studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
     }
 
-    if (studyType.equals(OPEN_STUDY)) {
+    if (sitePermission.getSite().getTargetEnrollment() != null && studyType.equals(OPEN_STUDY)) {
       studyInvitedCount += sitePermission.getSite().getTargetEnrollment();
     }
     return studyInvitedCount;
