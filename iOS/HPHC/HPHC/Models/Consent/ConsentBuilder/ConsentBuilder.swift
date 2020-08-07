@@ -350,7 +350,7 @@ class ConsentBuilder {
     // comprehension steps
     if comprehensionSteps != nil, (comprehensionSteps?.count)! > 0 {
       // adding Instruction Step for Comprehenion
-      let comprehensionTestInstructionStep = CustomInstructionStep(
+      let comprehensionTestInstructionStep = EligibilityInstructionStep(
         identifier: kComprehensionInstructionStepIdentifier
       )
       comprehensionTestInstructionStep.text = kConsentComprehensionTestText
@@ -364,7 +364,7 @@ class ConsentBuilder {
       }
 
       // adding Completion Step
-      let comprehensionCompletionStep = CustomInstructionStep(
+      let comprehensionCompletionStep = EligibilityInstructionStep(
         identifier: kComprehensionCompletionStepIdentifier
       )
       comprehensionCompletionStep.text = kComprehensionCompletionText
