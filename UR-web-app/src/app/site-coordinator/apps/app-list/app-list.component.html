@@ -13,7 +13,7 @@
                         <div class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none">
                             <div class="col-xs-6 col-md-12 p-none">
                                 {{ app.totalStudiesCount | i18nPlural: studiesMessageMapping }}
-                                <span *ngIf="checkeditPermission(app.appPermission)">,
+                                <span *ngIf="checkEditPermission(app.appPermission)">,
                                     {{ app.appUsersCount | i18nPlural: appUsersMessageMapping }}
                                 </span>
                             </div>

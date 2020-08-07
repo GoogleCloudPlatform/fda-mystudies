@@ -52,7 +52,7 @@ export class AppListComponent implements OnInit {
       return 'green__text__sm';
     }
   }
-  checkeditPermission(permission: number): boolean {
+  checkEditPermission(permission: number): boolean {
     return permission === PermisssionEnum.ViewAndEdit;
   }
 }

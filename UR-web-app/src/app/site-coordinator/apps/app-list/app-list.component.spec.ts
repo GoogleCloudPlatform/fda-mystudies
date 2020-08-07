@@ -58,8 +58,6 @@ describe('AppListComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(AppListComponent);
         component = fixture.componentInstance;
-
-        // appsServiceSpy.getApps.and.returnValue(of(expectedAppList));
       });
   }));
   it('should create', () => {
