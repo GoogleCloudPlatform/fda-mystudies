@@ -13,6 +13,8 @@ import java.net.URL;
 
 public enum ApiEndpoint {
   HEALTH("http://localhost:8080/participant-manager-service/v1/healthCheck");
+  HEALTH("http://localhost:8003/user-registration-service/healthCheck");
+
   private String url;
 
   private ApiEndpoint(String url) {

@@ -10,43 +10,31 @@ package com.google.cloud.healthcare.fdamystudies.common;
 
 public interface AuditLogEvent {
 
+  default PlatformComponent getSource() {
+    return null;
+  }
+
+  default PlatformComponent getDestination() {
+    return null;
+  }
+
+  default PlatformComponent getResourceServer() {
+    return null;
+  }
+
   default String getEventName() {
     return null;
   }
 
-  default boolean isAlert() {
-    return false;
-  }
-
-  default boolean isFallback() {
-    return false;
-  }
-
-  default String getSystemId() {
-    return null;
-  }
-
-  default String getAccessLevel() {
-    return null;
-  }
-
-  default String getClientId() {
-    return null;
-  }
-
-  default String getClientAccessLevel() {
-    return null;
-  }
-
-  default String getResourceServer() {
-    return null;
-  }
-
-  default String getEventDetail() {
-    return null;
-  }
-
   default String getDescription() {
+    return null;
+  }
+
+  default UserAccessLevel getUserAccessLevel() {
+    return null;
+  }
+
+  default String getEventCode() {
     return null;
   }
 }

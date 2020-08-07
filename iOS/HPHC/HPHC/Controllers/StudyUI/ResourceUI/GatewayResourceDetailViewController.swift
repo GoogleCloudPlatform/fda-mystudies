@@ -117,7 +117,7 @@ class GatewayResourceDetailViewController: UIViewController {
   func startDownloadingfile() {
 
     if !FileManager.default.fileExists(atPath: resourcesDownloadPath) {
-      try! FileManager.default.createDirectory(
+      try? FileManager.default.createDirectory(
         atPath: resourcesDownloadPath,
         withIntermediateDirectories: true,
         attributes: nil

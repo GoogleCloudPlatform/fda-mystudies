@@ -81,7 +81,7 @@ public class SiteEntity implements Serializable {
       name = "modified",
       insertable = false,
       updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
 
