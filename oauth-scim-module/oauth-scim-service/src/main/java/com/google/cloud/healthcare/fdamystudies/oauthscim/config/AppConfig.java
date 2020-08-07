@@ -25,7 +25,7 @@ public class AppConfig extends BaseAppConfig {
         .addViewController(String.format("%s/login", context.getContextPath()))
         .setViewName("login");
     registry
-        .addViewController(String.format("%s/signin", context.getContextPath()))
+        .addViewController(String.format("%s/autoLogin", context.getContextPath()))
         .setViewName("signin");
     registry
         .addViewController(String.format("%s/error", context.getContextPath()))

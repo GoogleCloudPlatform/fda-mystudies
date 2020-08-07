@@ -60,6 +60,8 @@ import org.springframework.web.util.WebUtils;
 @Controller
 public class LoginController {
 
+  private static final String AUTO_LOGIN = "autoLogin";
+
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
   private static final String LOGIN = "login";
@@ -259,7 +261,7 @@ public class LoginController {
         UserEntity user = optUser.get();
         logger.exit("tempRegId is valid, return to auto signin page");
         cookieHelper.addCookie(response, USER_ID, user.getUserId());
-        return "signin";
+        return AUTO_LOGIN;
       }
 
       logger.exit("tempRegId is invalid, return to login page");
