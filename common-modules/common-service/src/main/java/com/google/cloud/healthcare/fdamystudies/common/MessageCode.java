@@ -8,18 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.io.IOException;
-
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import java.io.IOException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +23,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @JsonSerialize(using = MessageCode.MessageCodeSerializer.class)
 public enum MessageCode {
-  ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully");
+  ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
