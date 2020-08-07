@@ -14,7 +14,7 @@ import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {LocationService} from '../shared/location.service';
 import {Location} from '../shared/location.model';
-import {expectedLocationList} from 'src/app/entity/mockLocationData';
+import {expectedLocationList} from 'src/app/entity/mock-location-data';
 
 describe('LocationsListComponent', () => {
   let component: LocationListComponent;
