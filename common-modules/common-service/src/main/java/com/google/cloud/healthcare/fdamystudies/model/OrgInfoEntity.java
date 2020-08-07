@@ -19,8 +19,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -34,12 +32,12 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "sites")
+@Table(name = "org_info")
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SiteEntity implements Serializable {
+public class OrgInfoEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
@@ -50,25 +48,14 @@ public class SiteEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "location_id", insertable = true, updatable = true)
-  private LocationEntity location;
-
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
-  @Column(name = "status", length = 100)
-
-  private Integer status;
-
-  @Column(name = "target_enrollment", length = 100)
-  private Integer targetEnrollment;
-
   @Column(name = "name", length = 100)
   private String name;
 
+  @Column(name = "org_id", length = 100)
+  private String orgId;
+
   @Column(
-      name = "created",
+      name = "created_on",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -77,22 +64,21 @@ public class SiteEntity implements Serializable {
   @Column(name = "created_by", length = 64)
   private String createdBy;
 
+  @Column(name = "modified_by", length = 64)
+  private String modifiedBy;
+
   @Column(
-      name = "modified",
+      name = "modified_date",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "orgInfo")
+  private List<AppEntity> apps = new ArrayList<>();
 
-  @Column(name = "modified_by", length = 64)
-  private String modifiedBy;
-
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
-  private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
-
-  public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
-    sitePermissions.add(sitePermission);
-    sitePermission.setSite(this);
+  public void addAppEntity(AppEntity appEntity) {
+    apps.add(appEntity);
+    appEntity.setOrgInfo(this);
   }
 }

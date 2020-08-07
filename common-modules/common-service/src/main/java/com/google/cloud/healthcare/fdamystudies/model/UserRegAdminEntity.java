@@ -103,6 +103,22 @@ public class UserRegAdminEntity implements Serializable {
   private String securityCode;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")
+  private List<AppPermissionEntity> appPermissions = new ArrayList<>();
+
+  public void addAppPermissionEntity(AppPermissionEntity appPermission) {
+    appPermissions.add(appPermission);
+    appPermission.setUrAdminUser(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")
+  private List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
+
+  public void addStudyPermissionEntity(StudyPermissionEntity studyPermission) {
+    studyPermissions.add(studyPermission);
+    studyPermission.setUrAdminUser(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")
   private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
 
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {

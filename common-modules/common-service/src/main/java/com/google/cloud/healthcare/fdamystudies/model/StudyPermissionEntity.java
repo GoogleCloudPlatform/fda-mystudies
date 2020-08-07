@@ -10,18 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -33,15 +29,16 @@ import lombok.ToString;
 
 @Setter
 @Getter
+@ToString
 @Entity
-@Table(name = "sites")
+@Table(name = "study_permissions")
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SiteEntity implements Serializable {
+public class StudyPermissionEntity implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = -9223143734827095684L;
 
   @ToString.Exclude
   @Id
@@ -50,22 +47,20 @@ public class SiteEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "location_id", insertable = true, updatable = true)
-  private LocationEntity location;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "app_info_id")
+  private AppEntity appInfo;
 
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "study_id")
   private StudyEntity study;
-  @Column(name = "status", length = 100)
 
-  private Integer status;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "ur_admin_user_id")
+  private UserRegAdminEntity urAdminUser;
 
-  @Column(name = "target_enrollment", length = 100)
-  private Integer targetEnrollment;
-
-  @Column(name = "name", length = 100)
-  private String name;
+  @Column(name = "edit_permission", nullable = true, length = 1)
+  private Integer editPermission;
 
   @Column(
       name = "created",
@@ -74,25 +69,6 @@ public class SiteEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by", length = 64)
+  @Column(name = "created_by", nullable = false, length = 64)
   private String createdBy;
-
-  @Column(
-      name = "modified",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp modified;
-
-
-  @Column(name = "modified_by", length = 64)
-  private String modifiedBy;
-
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
-  private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
-
-  public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
-    sitePermissions.add(sitePermission);
-    sitePermission.setSite(this);
-  }
 }

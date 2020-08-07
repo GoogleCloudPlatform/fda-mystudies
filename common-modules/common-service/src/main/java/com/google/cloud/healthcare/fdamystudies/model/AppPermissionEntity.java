@@ -23,25 +23,22 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@ToString
 @Setter
 @Getter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "sites_permissions")
+@Table(name = "app_permissions")
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class SitePermissionEntity implements Serializable {
+public class AppPermissionEntity implements Serializable {
 
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 8610289975376774137L;
 
   @ToString.Exclude
   @Id
@@ -51,23 +48,15 @@ public class SitePermissionEntity implements Serializable {
   private String id;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "ur_admin_user_id", insertable = true, updatable = true)
+  @JoinColumn(name = "ur_admin_user_id")
   private UserRegAdminEntity urAdminUser;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  private StudyEntity study;
-
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "site_id")
-  private SiteEntity site;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "app_info_id")
   private AppEntity appInfo;
 
-  @Column(name = "can_edit", length = 2)
-  private Boolean canEdit;
+  @Column(name = "edit_permission", nullable = true, length = 1)
+  private Integer editPermission;
 
   @Column(
       name = "created",
@@ -76,6 +65,6 @@ public class SitePermissionEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by", length = 64)
+  @Column(name = "created_by", nullable = false, length = 64)
   private String createdBy;
 }
