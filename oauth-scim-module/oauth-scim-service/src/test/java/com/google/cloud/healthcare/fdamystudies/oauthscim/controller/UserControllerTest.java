@@ -71,8 +71,6 @@ public class UserControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "MyStudies";
 
-  private static final String ORG_ID_VALUE = "FDA";
-
   private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
 
   private static final String CURRENT_PASSWORD_VALUE = "M0ck!tPassword";
