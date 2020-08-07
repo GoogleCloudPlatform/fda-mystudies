@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_APP_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
@@ -59,8 +60,6 @@ import org.springframework.web.util.WebUtils;
 
 @Controller
 public class LoginController {
-
-  private static final String AUTO_LOGIN = "autoLogin";
 
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
@@ -115,7 +114,7 @@ public class LoginController {
         logger.exit("skip login, return to callback URL");
         return redirectToCallbackUrl(request, code, response);
       }
-      return redirectToLoginOrSigninPage(response, responseBody, model, loginChallenge);
+      return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
     }
 
     return redirectToError(request, response);
@@ -148,7 +147,7 @@ public class LoginController {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
     if (StringUtils.isNotEmpty(tempRegId)) {
-      return autoSignInOrReturnLoginPage(tempRegId, loginChallenge, request, response);
+      return autoLoginOrReturnLoginPage(tempRegId, loginChallenge, request, response);
     }
 
     // validate user credentials
@@ -194,7 +193,7 @@ public class LoginController {
     return redirectToConsentPage(loginChallenge, email, request, response);
   }
 
-  private String autoSignInOrReturnLoginPage(
+  private String autoLoginOrReturnLoginPage(
       String tempRegId,
       String loginChallenge,
       HttpServletRequest request,
@@ -230,7 +229,7 @@ public class LoginController {
     return redirectToError(request, response);
   }
 
-  private String redirectToLoginOrSigninPage(
+  private String redirectToLoginOrAutoLoginPage(
       HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
 
     String requestUrl = responseBody.get("request_url").textValue();
@@ -254,12 +253,12 @@ public class LoginController {
     model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(devicePlatform));
     model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(devicePlatform));
 
-    // tempRegId for auto signin after signup
+    // tempRegId for auto login after signup
     if (StringUtils.isNotEmpty(tempRegId)) {
       Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
       if (optUser.isPresent()) {
         UserEntity user = optUser.get();
-        logger.exit("tempRegId is valid, return to auto signin page");
+        logger.exit("tempRegId is valid, return to auto login page");
         cookieHelper.addCookie(response, USER_ID, user.getUserId());
         return AUTO_LOGIN;
       }

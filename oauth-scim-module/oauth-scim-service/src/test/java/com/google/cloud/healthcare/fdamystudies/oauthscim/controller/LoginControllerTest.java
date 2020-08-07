@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
@@ -61,7 +62,7 @@ public class LoginControllerTest extends BaseMockIT {
   private static final String LOGIN_CHALLENGE_VALUE_FOR_ANDROID =
       "0fac4201-6c0a-4776-b745-ab07d428248c";
 
-  private static final String AUTO_SIGNIN_LOGIN_CHALLENGE_VALUE =
+  private static final String AUTO_LOGIN_LOGIN_CHALLENGE_VALUE =
       "117eb076-23cf-4653-a76d-14ec1ead4317";
 
   private static final String USER_ID_VALUE = "4e626d41-7f42-43a6-b749-ee4b6635ac66";
@@ -155,7 +156,7 @@ public class LoginControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnAutoSigninPage() throws Exception {
+  public void shouldReturnAutoLoginPage() throws Exception {
     // Step-1 user registration
     UserEntity user = new UserEntity();
     user.setEmail("mockit_email@grr.la");
@@ -167,9 +168,9 @@ public class LoginControllerTest extends BaseMockIT {
     user.setUserInfo(userInfo.toString());
     userRepository.saveAndFlush(user);
 
-    // Step-2 redirect to auto signin page after signup
+    // Step-2 redirect to auto login page after signup
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-    queryParams.add(LOGIN_CHALLENGE, AUTO_SIGNIN_LOGIN_CHALLENGE_VALUE);
+    queryParams.add(LOGIN_CHALLENGE, AUTO_LOGIN_LOGIN_CHALLENGE_VALUE);
 
     mockMvc
         .perform(
@@ -178,6 +179,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .queryParams(queryParams))
         .andDo(print())
         .andExpect(status().isOk())
+        .andExpect(view().name(AUTO_LOGIN))
         .andExpect(content().string(containsString("<title>Please wait</title>")))
         .andReturn();
   }
