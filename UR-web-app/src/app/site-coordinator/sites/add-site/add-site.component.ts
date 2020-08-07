@@ -8,6 +8,7 @@ import {AddSiteRequest} from '../shared/add.sites.request';
 import {LocationService} from '../../location/shared/location.service';
 import {Location} from '../../location/shared/location.model';
 import {ApiResponse} from 'src/app/entity/api.response.model';
+import {Observable, of} from 'rxjs';
 @Component({
   selector: 'add-site',
   templateUrl: './add-site.component.html',
@@ -19,7 +20,7 @@ export class AddSiteComponent extends UnsubscribeOnDestroyAdapter
   @Output() closeModalEvent = new EventEmitter();
   newSite = {} as Study;
   site = {} as AddSiteRequest;
-  locations: Location[] = [];
+  location$: Observable<Location[]> = of([]);
   constructor(
     private readonly siteService: SitesService,
     private readonly toastr: ToastrService,
@@ -35,11 +36,7 @@ export class AddSiteComponent extends UnsubscribeOnDestroyAdapter
   }
   getLocation(studyId: number): void {
     if (studyId) {
-      this.locationService
-        .getLocationsForSiteCreation(studyId.toString())
-        .subscribe((data) => {
-          this.locations = data;
-        });
+      this.location$ = this.locationService.getLocations();
     }
   }
   add(): void {

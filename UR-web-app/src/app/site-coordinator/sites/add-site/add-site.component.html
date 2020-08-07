@@ -23,7 +23,7 @@
                             <select class="form-item__element form-item__element--select" [(ngModel)]="site.locationId"
                                 required name="location" #location="ngModel">
                                 <option disabled selected>Select Location</option>
-                                <option class="cursor__pointer" *ngFor="let location of locations"
+                                <option class="cursor__pointer" *ngFor="let location of location$ | async"
                                     value="{{ location.id }}">
                                     {{ location.name }}</option>
                             </select>
