@@ -172,7 +172,10 @@ public enum ErrorCode {
       400,
       "EC-95",
       Constants.BAD_REQUEST,
-      " Cannot update enrollment target for decommissionned site");
+      " Cannot update enrollment target for decommissionned site"),
+  
+  CONSENT_DATA_NOT_AVAILABLE(400, "EC_885", Constants.BAD_REQUEST, "error getting consent data");
+
 
   private final int status;
   private final String code;

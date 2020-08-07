@@ -280,13 +280,12 @@ public class TestDataHelper {
   }
 
   public StudyConsentEntity createStudyConsentEntity(ParticipantStudyEntity participantStudy) {
-    StudyConsentEntity studyConsent = new StudyConsentEntity();
-    studyConsent.setPdfPath(
-        "cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9/CovidStudy/cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9_CovidStudy_1.3_06302020071346.pdf");
-    studyConsent.setPdfStorage(1);
-    studyConsent.setVersion("1.0");
-    studyConsent.setParticipantStudy(participantStudy);
-    return studyConsentRepository.saveAndFlush(studyConsent);
+	  StudyConsentEntity studyConsent = new StudyConsentEntity();
+	    studyConsent.setPdfPath("documents/test-document.pdf");
+	    studyConsent.setPdfStorage(1);
+	    studyConsent.setVersion("1.0");
+	    studyConsent.setParticipantStudy(participantStudy);
+	    return studyConsentRepository.saveAndFlush(studyConsent);
   }
 
   public OrgInfoEntity createOrgInfo() {
