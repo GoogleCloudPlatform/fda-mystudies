@@ -7,7 +7,7 @@ import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
 import {App} from './app.model';
-import {expectedAppList} from 'src/app/entity/mockAppsData';
+import {expectedAppList} from 'src/app/entity/mock-apps-data';
 import {AppsService} from './apps.service';
 
 describe('StudiesService', () => {

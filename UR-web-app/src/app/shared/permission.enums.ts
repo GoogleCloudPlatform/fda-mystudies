@@ -1,4 +1,4 @@
 export enum PermisssionEnum {
-  View = 0,
+  view = 0,
   ViewAndEdit = 1,
 }

@@ -19,7 +19,7 @@ import {By} from '@angular/platform-browser';
 import {
   expectedLocation,
   expectedResponse,
-} from 'src/app/entity/mockLocationData';
+} from 'src/app/entity/mock-location-data';
 
 describe('LocationDetailsComponent', () => {
   let component: LocationDetailsComponent;

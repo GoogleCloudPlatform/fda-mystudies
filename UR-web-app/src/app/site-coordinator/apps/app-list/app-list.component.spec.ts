@@ -19,7 +19,7 @@ import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
 import {AppsModule} from '../apps.module';
 import {AppsService} from '../shared/apps.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
-import {expectedAppList} from 'src/app/entity/mockAppsData';
+import {expectedAppList} from 'src/app/entity/mock-apps-data';
 
 import {AppListComponent} from './app-list.component';
 
