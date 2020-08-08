@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.validator;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CHANGE_PASSWORD;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD;
 
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
@@ -46,19 +45,6 @@ public final class UserValidator {
                 new Violation(
                     "newPassword",
                     "Your new password must be different from your previous password."));
-      }
-    }
-
-    // validate fields required for forgot password action
-    if (FORGOT_PASSWORD.equalsIgnoreCase(request.getAction())) {
-      if (StringUtils.isEmpty(request.getEmail())) {
-        error.getViolations().add(new Violation("email", MUST_NOT_BE_BLANK));
-      }
-      if (StringUtils.isEmpty(request.getAppId())) {
-        error.getViolations().add(new Violation("appId", MUST_NOT_BE_BLANK));
-      }
-      if (StringUtils.isEmpty(request.getOrgId())) {
-        error.getViolations().add(new Violation("orgId", MUST_NOT_BE_BLANK));
       }
     }
 
