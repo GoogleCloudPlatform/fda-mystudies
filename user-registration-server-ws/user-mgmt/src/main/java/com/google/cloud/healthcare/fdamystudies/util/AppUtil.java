@@ -8,18 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-
-import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 
 public class AppUtil {
 

@@ -27,8 +27,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(BadRequest.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public void handleBadRequest() {
-  }
+  public void handleBadRequest() {}
 
   @ExceptionHandler(ConstraintViolationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -37,8 +36,9 @@ public class GlobalExceptionHandler {
       ConstraintViolationException e) {
     ValidationErrorResponse error = new ValidationErrorResponse();
     for (ConstraintViolation violation : e.getConstraintViolations()) {
-      error.getViolations().add(
-          new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
+      error
+          .getViolations()
+          .add(new Violation(violation.getPropertyPath().toString(), violation.getMessage()));
     }
     return error;
   }
@@ -50,8 +50,9 @@ public class GlobalExceptionHandler {
       MethodArgumentNotValidException e) {
     ValidationErrorResponse error = new ValidationErrorResponse();
     for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
-      error.getViolations().add(
-          new Violation(fieldError.getField(), fieldError.getDefaultMessage()));
+      error
+          .getViolations()
+          .add(new Violation(fieldError.getField(), fieldError.getDefaultMessage()));
     }
     return error;
   }
@@ -69,7 +70,8 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(HttpMessageNotReadableException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
-  public ValidationErrorResponse handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+  public ValidationErrorResponse handleHttpMessageNotReadableException(
+      HttpMessageNotReadableException e) {
     ValidationErrorResponse error = new ValidationErrorResponse();
     error.getViolations().add(new Violation("", "request body is required"));
     return error;
