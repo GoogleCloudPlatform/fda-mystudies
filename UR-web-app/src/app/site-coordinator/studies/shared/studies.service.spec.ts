@@ -8,7 +8,7 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
 import {Study} from './study.model';
 import {StudiesService} from './studies.service';
-import {expectedStudyList} from 'src/app/entity/mockStudiesData';
+import {expectedStudyList} from 'src/app/entity/mock-studies-data';
 
 describe('StudiesService', () => {
   let studiesService: StudiesService;

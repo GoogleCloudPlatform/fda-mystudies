@@ -32,12 +32,10 @@ export class AddSiteComponent extends UnsubscribeOnDestroyAdapter
     this.newSite.customId = this.study.customId;
     this.newSite.appId = this.study.appId;
     this.site.studyId = String(this.study.id);
-    this.getLocation(this.study.id);
+    this.getLocation(this.site.studyId);
   }
-  getLocation(studyId: number): void {
-    if (studyId) {
-      this.location$ = this.locationService.getLocations();
-    }
+  getLocation(studyId: string): void {
+    this.location$ = this.locationService.getLocationsForSiteCreation(studyId);
   }
   add(): void {
     this.subs.add(

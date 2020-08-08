@@ -20,20 +20,24 @@ import {
 import {SitesModule} from '../sites.module';
 import {LocationService} from '../../location/shared/location.service';
 import {SitesService} from '../shared/sites.service';
-import * as expectedResults from 'src/app/entity/mockStudiesData';
+import * as expectedResults from 'src/app/entity/mock-studies-data';
 import {DebugElement} from '@angular/core';
+import {expectLocationDropdown} from 'src/app/entity/mock-location-data';
 
 describe('AddSiteComponent', () => {
   let component: AddSiteComponent;
   let fixture: ComponentFixture<AddSiteComponent>;
   let addSite: DebugElement;
   let cancelSite: DebugElement;
-
+  let locationService: LocationService;
   beforeEach(async(async () => {
     const sitesServiceSpy = jasmine.createSpyObj<SitesService>('SitesService', {
       add: of(expectedResults.expectedSiteResponse),
     });
-
+    const locationServiceSpy = jasmine.createSpyObj<LocationService>(
+      'LocationService',
+      {getLocationsForSiteCreation: of(expectLocationDropdown)},
+    );
     await TestBed.configureTestingModule({
       declarations: [AddSiteComponent],
       imports: [
@@ -52,9 +56,9 @@ describe('AddSiteComponent', () => {
       ],
       providers: [
         EntityService,
-        LocationService,
         BsModalService,
         {provide: SitesService, useValue: sitesServiceSpy},
+        {provide: LocationService, useValue: locationServiceSpy},
       ],
     })
       .compileComponents()
@@ -71,11 +75,10 @@ describe('AddSiteComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call get location list for dropdown and check service is called ', fakeAsync(() => {
-    const spyobj = spyOn(component, 'getLocation');
-    component.getLocation(expectedResults.expectedStudyId.id);
-    fixture.detectChanges();
-    expect(spyobj).toHaveBeenCalledTimes(1);
+  it('should get location list for the dropdown', fakeAsync(() => {
+    component.location$.subscribe((location) => {
+      expect(location.length).toBe(expectLocationDropdown.length);
+    });
   }));
 
   it('should click on Add and check service is called', fakeAsync(() => {
