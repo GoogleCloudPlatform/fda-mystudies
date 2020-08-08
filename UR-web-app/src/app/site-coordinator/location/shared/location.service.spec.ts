@@ -71,8 +71,8 @@ describe('LocationService', () => {
         expectedResult.expectedLocatiodId.id.toString(),
       )
       .subscribe(
-        (Locations) =>
-          expect(Locations).toEqual(
+        (locations) =>
+          expect(locations).toEqual(
             expectedResult.expectedLocations,
             'expected Locations',
           ),

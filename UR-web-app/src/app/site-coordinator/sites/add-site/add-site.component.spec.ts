@@ -29,7 +29,7 @@ describe('AddSiteComponent', () => {
   let fixture: ComponentFixture<AddSiteComponent>;
   let addSite: DebugElement;
   let cancelSite: DebugElement;
-  let locationService: LocationService;
+
   beforeEach(async(async () => {
     const sitesServiceSpy = jasmine.createSpyObj<SitesService>('SitesService', {
       add: of(expectedResults.expectedSiteResponse),
