@@ -53,6 +53,6 @@ export class AppListComponent implements OnInit {
     }
   }
   checkEditPermission(permission: number): boolean {
-    return permission === PermisssionEnum.ViewAndEdit;
+    return permission === PermisssionEnum.viewAndEdit;
   }
 }
