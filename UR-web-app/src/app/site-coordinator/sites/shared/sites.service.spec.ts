@@ -9,7 +9,7 @@ import {throwError, of} from 'rxjs';
 import {Study} from '../../studies/shared/study.model';
 import {SitesService} from './sites.service';
 import {StudiesService} from '../../studies/shared/studies.service';
-import * as expectedResult from 'src/app/entity/mock-location-data';
+import * as expectedResult from 'src/app/entity/mock-studies-data';
 import {HttpClient} from '@angular/common/http';
 
 describe('SitesService', () => {
