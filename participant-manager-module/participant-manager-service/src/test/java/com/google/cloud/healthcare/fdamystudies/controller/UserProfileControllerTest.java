@@ -8,16 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -28,6 +18,14 @@ import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 
 public class UserProfileControllerTest extends BaseMockIT {
 
@@ -103,9 +101,10 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserDetailsBySecurityCode() throws Exception {
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_USER_DETAILS.getPath())
+            get(
+                    ApiEndpoint.GET_USER_DETAILS_BY_SECURITY_CODE.getPath(),
+                    userRegAdminEntity.getSecurityCode())
                 .headers(new HttpHeaders())
-                .param("securityCode", userRegAdminEntity.getSecurityCode())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -123,9 +122,8 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnNotFoundForUserDetailsBySecurityCode() throws Exception {
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_USER_DETAILS.getPath())
+            get(ApiEndpoint.GET_USER_DETAILS_BY_SECURITY_CODE.getPath(), IdGenerator.id())
                 .headers(new HttpHeaders())
-                .param("securityCode", IdGenerator.id())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isNotFound())
@@ -143,9 +141,10 @@ public class UserProfileControllerTest extends BaseMockIT {
     // Step 2: Call API and expect error message SECURITY_CODE_EXPIRED
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_USER_DETAILS.getPath())
+            get(
+                    ApiEndpoint.GET_USER_DETAILS_BY_SECURITY_CODE.getPath(),
+                    userRegAdminEntity.getSecurityCode())
                 .headers(new HttpHeaders())
-                .param("securityCode", userRegAdminEntity.getSecurityCode())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isUnauthorized())
