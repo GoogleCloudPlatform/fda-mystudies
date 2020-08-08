@@ -22,7 +22,7 @@ public class HasLastName extends TypeSafeMatcher<UserDetailsBO> {
 
   @Override
   protected boolean matchesSafely(UserDetailsBO userDetails) {
-	  return userDetails.getLastName() == this.lastName;
+    return userDetails.getLastName() == this.lastName;
   }
 
   @Override
