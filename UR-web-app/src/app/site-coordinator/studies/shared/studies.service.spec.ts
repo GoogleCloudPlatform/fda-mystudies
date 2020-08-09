@@ -88,8 +88,8 @@ describe('StudiesService', () => {
     studiesService
       .getStudies()
       .subscribe(
-        (Studies) =>
-          expect(Studies).toEqual(expectedStudies, 'expected StudiesList'),
+        (studies) =>
+          expect(studies).toEqual(expectedStudies, 'expected StudiesList'),
         fail,
       );
 
@@ -104,8 +104,7 @@ describe('StudiesService', () => {
     studiesService = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
-      code: 'ER_005',
-    };
+    } as ApiResponse;
 
     entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
     tick(40);

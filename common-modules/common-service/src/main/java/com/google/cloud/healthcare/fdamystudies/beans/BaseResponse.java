@@ -26,6 +26,9 @@ public class BaseResponse {
   @JsonProperty("status")
   private Integer httpStatusCode;
 
+  @JsonProperty("error_code")
+  private String errorCode;
+
   @JsonProperty("code")
   private String code;
 
