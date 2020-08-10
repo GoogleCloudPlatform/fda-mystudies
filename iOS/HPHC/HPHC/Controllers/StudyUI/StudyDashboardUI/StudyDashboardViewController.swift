@@ -227,7 +227,11 @@ extension StudyDashboardViewController: UITableViewDataSource {
   }
 
   func numberOfSections(in tableView: UITableView) -> Int {
-    return tableViewRowDetails.count + 1
+    if DBHandler.isChartsAvailable(for: Study.currentStudy?.studyId ?? "") {
+      return tableViewRowDetails.count + 1
+    } else {
+      return tableViewRowDetails.count
+    }
   }
 
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

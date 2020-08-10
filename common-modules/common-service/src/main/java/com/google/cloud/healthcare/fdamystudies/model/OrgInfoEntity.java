@@ -48,10 +48,10 @@ public class OrgInfoEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "name")
+  @Column(name = "name", length = 100)
   private String name;
 
-  @Column(name = "org_id")
+  @Column(name = "org_id", length = 100)
   private String orgId;
 
   @Column(
@@ -61,10 +61,10 @@ public class OrgInfoEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
-  @Column(name = "modified_by")
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
   @Column(

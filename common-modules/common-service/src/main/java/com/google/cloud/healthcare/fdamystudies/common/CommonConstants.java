@@ -17,7 +17,16 @@ public final class CommonConstants {
 
   public static final String NO = "N";
 
-  public static final int ACTIVE_STATUS = 1;
+  public static final Integer ACTIVE_STATUS = 1;
 
-  public static final int INACTIVE_STATUS = 0;
+  public static final Integer INACTIVE_STATUS = 0;
+
+  public static final int ACTIVE = 1;
+
+  public static final int VIEW_VALUE = 0;
+
+  public static final int EDIT_VALUE = 1;
+
+  public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
+      "application/x-www-form-urlencoded;charset=UTF-8";
 }

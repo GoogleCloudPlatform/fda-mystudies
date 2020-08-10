@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<!-- // TODO(#662) -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang=""
+  xmlns:th="https://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<title>Login</title>
+</head>
+<body>
+  <p>Login</p>
+  <div th:if="${!#strings.isEmpty(error_description)}" style="color:red;"><p th:text="${error_description}" /> </div>
+</body>
+</html>

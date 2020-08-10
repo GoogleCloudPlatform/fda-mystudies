@@ -10,11 +10,15 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DeactivateAcctBean {
   private List<StudyReqBean> deleteData;
 }

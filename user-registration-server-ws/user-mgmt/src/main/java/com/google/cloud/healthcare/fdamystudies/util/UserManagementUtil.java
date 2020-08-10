@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -337,10 +339,7 @@ public class UserManagementUtil {
       requestBody = new HttpEntity<>(null, headers);
       responseEntity =
           restTemplate.exchange(
-              appConfig.getAuthServerUrl() + "/deactivate",
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
+              appConfig.getAuthServerDeactivateUrl(), HttpMethod.POST, requestBody, Integer.class);
       value = (Integer) responseEntity.getBody();
       if (value == 1) {
         respMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
