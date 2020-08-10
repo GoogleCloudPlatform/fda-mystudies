@@ -14,8 +14,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import javax.servlet.http.HttpServletRequest;
@@ -96,6 +99,29 @@ public class UserController {
     ChangePasswordResponse userResponse = userService.changePassword(userRequest);
 
     logger.exit(String.format("status=%d", userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+  }
+
+  @PutMapping(
+      value = "/users/{userId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UpdateEmailStatusResponse> updateEmailStatus(
+      @PathVariable String userId,
+      @Valid @RequestBody UpdateEmailStatusRequest userRequest,
+      HttpServletRequest request)
+      throws JsonProcessingException {
+    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+    userRequest.setUserId(userId);
+
+    if (!userRequest.hasAtleastOneRequiredValue()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(new UpdateEmailStatusResponse(ErrorCode.INVALID_UPDATE_USER_REQUEST));
+    }
+
+    UpdateEmailStatusResponse userResponse = userService.updateEmailStatusAndTempRegId(userRequest);
+
+    logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 }

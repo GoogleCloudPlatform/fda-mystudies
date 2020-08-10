@@ -16,12 +16,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.ha
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,14 +38,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
@@ -161,7 +164,7 @@ public class UserControllerTest extends BaseMockIT {
                     .headers(headers))
             .andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.tempRegId").isNotEmpty())
+            .andExpect(jsonPath("$.tempRegId").doesNotExist())
             .andExpect(jsonPath("$.userId").isNotEmpty())
             .andReturn();
 
@@ -172,7 +175,7 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(request.getEmail(), userEntity.getEmail());
 
     // Step 2A- assert password and password_history fields
-    JsonNode userInfo = toJsonNode(userEntity.getUserInfo());
+    JsonNode userInfo = userEntity.getUserInfo();
     assertTrue(userInfo.get(PASSWORD).get(EXPIRE_TIMESTAMP).isLong());
     assertTrue(userInfo.get(PASSWORD_HISTORY).isArray());
 
@@ -318,7 +321,7 @@ public class UserControllerTest extends BaseMockIT {
     assertNotNull(userEntity);
 
     // Step 2A- assert password hash value and password_history size
-    JsonNode userInfoNode = toJsonNode(userEntity.getUserInfo());
+    JsonNode userInfoNode = userEntity.getUserInfo();
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
@@ -430,7 +433,7 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(APP_ID_VALUE, userEntity.getAppId());
 
     // Step 2A- assert password hash value and password_history size
-    JsonNode userInfoNode = toJsonNode(userEntity.getUserInfo());
+    JsonNode userInfoNode = userEntity.getUserInfo();
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
@@ -445,6 +448,101 @@ public class UserControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+  }
+
+  @Test
+  public void shouldReturnInvalidUpdateUserRequestError()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 create user
+    UserEntity userEntity = newUserEntity();
+
+    userEntity = repository.saveAndFlush(userEntity);
+
+    // Step-2 call the API and expect INVALID_PATCH_USER_REQUEST error
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    UpdateEmailStatusRequest userRequest = new UpdateEmailStatusRequest();
+
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.INVALID_UPDATE_USER_REQUEST.getDescription()));
+  }
+
+  @Test
+  public void shouldUpdateEmail() throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 create user
+    UserEntity userEntity = newUserEntity();
+    userEntity = repository.saveAndFlush(userEntity);
+
+    // Step-2 call the API and expect email is updated
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    final String EMAIL_2 = "mockit_oauth_scim_user_2@grr.la";
+    UpdateEmailStatusRequest userRequest = new UpdateEmailStatusRequest();
+    userRequest.setEmail(EMAIL_2);
+
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.tempRegId").doesNotExist())
+        .andExpect(
+            jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
+
+    // Step-3 verify updated email
+    userEntity = repository.findByUserId(userEntity.getUserId()).get();
+    assertEquals(EMAIL_2, userEntity.getEmail());
+    assertEquals(UserAccountStatus.PENDING_CONFIRMATION.getStatus(), userEntity.getStatus());
+
+    repository.deleteByUserId(userEntity.getUserId());
+  }
+
+  @Test
+  public void shouldActivateUserAccount()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 create user
+    UserEntity userEntity = newUserEntity();
+    userEntity = repository.saveAndFlush(userEntity);
+
+    // Step-2 call the API and expect account status is ACTIVE
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    UpdateEmailStatusRequest userRequest = new UpdateEmailStatusRequest();
+    userRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    mockMvc
+        .perform(
+            put(ApiEndpoint.UPDATE_EMAIL_STATUS.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()))
+        .andExpect(jsonPath("$.tempRegId").isNotEmpty());
+
+    // Step-3 verify updated email
+    userEntity = repository.findByUserId(userEntity.getUserId()).get();
+    assertEquals(UserAccountStatus.ACTIVE.getStatus(), userEntity.getStatus());
+    assertFalse(userEntity.getTempRegId().isEmpty());
+    assertEquals(EMAIL_VALUE, userEntity.getEmail());
+
+    repository.deleteByUserId(userEntity.getUserId());
   }
 
   @Test
@@ -469,5 +567,18 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     return userRequest;
+  }
+
+  private UserEntity newUserEntity() {
+    UserEntity userEntity = new UserEntity();
+    userEntity.setAppId(APP_ID_VALUE);
+    userEntity.setEmail(EMAIL_VALUE);
+    userEntity.setOrgId(ORG_ID_VALUE);
+    userEntity.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userEntity.setUserId(IdGenerator.id());
+
+    ObjectNode userInfoNode = JsonUtils.getObjectNode();
+    userEntity.setUserInfo(userInfoNode);
+    return userEntity;
   }
 }

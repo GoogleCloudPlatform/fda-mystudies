@@ -10,16 +10,24 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-public class UpdateUserResponse extends BaseResponse {
+@Getter
+@Setter
+public class UpdateEmailStatusResponse extends BaseResponse {
 
-  public UpdateUserResponse() {}
+  @ToString.Exclude private String tempRegId;
 
-  public UpdateUserResponse(ErrorCode errorCode) {
+  public UpdateEmailStatusResponse() {}
+
+  public UpdateEmailStatusResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public UpdateUserResponse(MessageCode messageCode) {
+  public UpdateEmailStatusResponse(MessageCode messageCode, String tempRegId) {
     super(messageCode);
+    this.tempRegId = tempRegId;
   }
 }
