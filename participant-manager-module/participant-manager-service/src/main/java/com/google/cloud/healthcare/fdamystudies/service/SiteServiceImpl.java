@@ -8,8 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +34,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.util.SiteStatus;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -103,7 +102,7 @@ public class SiteServiceImpl implements SiteService {
           appPermissionRepository.findByUserIdAndAppId(siteRequest.getUserId(), appInfoId);
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
-        logger.exit(String.format("editValue=%d", Permission.READ_EDIT));
+        logger.exit(String.format("editValue=%d", Permission.READ_EDIT.value()));
         return studyPermission.getEditPermission() == Permission.READ_EDIT.value()
             || appPermission.getEditPermission() == Permission.READ_EDIT.value();
       }
@@ -129,7 +128,7 @@ public class SiteServiceImpl implements SiteService {
       site.setLocation(location.get());
     }
     site.setCreatedBy(userId);
-    site.setStatus(ACTIVE);
+    site.setStatus(SiteStatus.ACTIVE.value());
     addSitePermissions(userId, userStudypermissionList, site);
     site = siteRepository.save(site);
 

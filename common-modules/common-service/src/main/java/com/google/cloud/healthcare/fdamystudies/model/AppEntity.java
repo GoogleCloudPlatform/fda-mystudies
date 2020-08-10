@@ -112,10 +112,10 @@ public class AppEntity implements Serializable {
   @Column(name = "method_handler", length = 100)
   private Integer methodHandler;
 
-  @Column(name = "created_by", nullable = false, length = 64)
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
-  @Column(name = "modified_by", nullable = false, length = 64)
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
   @Column(

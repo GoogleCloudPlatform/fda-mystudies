@@ -34,7 +34,7 @@ public enum ErrorCode {
       "Malformed request syntax or invalid request message framing."),
 
   UNAUTHORIZED(401, "EC-401", "Unauthorized", "Invalid token"),
-  
+
   ACCOUNT_LOCKED(
       400,
       "EC-107",
@@ -72,6 +72,8 @@ public enum ErrorCode {
       "EC-105",
       Constants.BAD_REQUEST,
       "Your new password cannot repeat any of your previous 10 passwords;"),
+
+  INVALID_UPDATE_USER_REQUEST(400, "EC-120", Constants.BAD_REQUEST, "Email or Status is required."),
 
   EMAIL_EXISTS(
       409,
