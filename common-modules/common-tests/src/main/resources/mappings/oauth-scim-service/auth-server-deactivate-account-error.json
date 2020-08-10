@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "PUT",
+		"url": "/oauth-scim-service/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg",
+		"bodyPatterns": [
+			{
+				"contains": "Invalid@grr.la"
+			}
+		]
+	},
+	"response": {
+		"status": 400,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "participant-manager/auth-server-deactivate-account-response-error.json"
+	}
+}

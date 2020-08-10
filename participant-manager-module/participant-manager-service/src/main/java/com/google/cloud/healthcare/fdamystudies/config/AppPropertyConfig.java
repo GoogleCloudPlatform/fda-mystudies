@@ -27,4 +27,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${auth.server.register.url}")
   private String authRegisterUrl;
+
+  @Value("${auth.server.updateStatusUrl}")
+  private String authServerUpdateStatusUrl;
 }
