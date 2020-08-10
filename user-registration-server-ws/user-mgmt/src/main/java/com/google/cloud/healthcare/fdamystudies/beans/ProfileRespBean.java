@@ -8,11 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProfileRespBean {
   private String emailId = "";
 }
