@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
 public enum MessageCode {
   ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
 
-  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully");
+  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
 
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
