@@ -2,5 +2,6 @@
   "quoteProps": "consistent",
   "trailingComma": "all",
   "bracketSpacing": false,
-  "xmlWhitespaceSensitivity": "ignore"
+  "xmlWhitespaceSensitivity": "ignore",
+  "htmlWhitespaceSensitivity": "ignore"
 }
