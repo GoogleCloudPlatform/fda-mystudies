@@ -3,24 +3,24 @@
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
         <a routerLink="/user/dashboard" class="navbar-brand"><img class="mr-sm"
-            src="assets/images/landing-logo.gif" /><span class="header__logo__text">FDA MyStudies
+               src="assets/images/landing-logo.gif" /><span class="header__logo__text">FDA MyStudies
           </span></a>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <div class="navbar-nav ml-auto">
             <div class="navbar-nav display-flex-center">
               <div class="navbar-nav inner-addon right-addon search-icon">
                 <input type="text" [attr.placeholder]="searchPlaceholder" autocomplete="off" [(ngModel)]="filterQuery"
-                  class="form-control search-box search__" />
+                       class="form-control search-box search__" />
               </div>
 
               <a routerLink="/coordinator/participants/dashboard" routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link">Dashboard</a>
+                 [routerLinkActiveOptions]="{exact: true}" class="nav-item nav-link">Dashboard</a>
               <a routerLink="/coordinator/locations" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                class="nav-item nav-link">Locations</a>
+                 class="nav-item nav-link">Locations</a>
               <a routerLink="/coordinator/users" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                class="nav-item nav-link">Users</a>
+                 class="nav-item nav-link">Users</a>
               <a routerLink="/coordinator/accounts" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"
-                class="nav-item nav-link">My Account <span class="navbar__name">J</span></a>
+                 class="nav-item nav-link">My Account <span class="navbar__name">J</span></a>
             </div>
           </div>
         </div>
@@ -29,7 +29,7 @@
   </div>
 
   <mobile-menu [searchPlaceholder]="searchPlaceholder" [showSearchBar]="showSearchBar" [filterQuery]="filterQuery"
-    (onKeyDown)="onKeyDown($event)"></mobile-menu>
+               (keyDown)="onKeyDown($event)"></mobile-menu>
 </header>
 
 <router-outlet></router-outlet>

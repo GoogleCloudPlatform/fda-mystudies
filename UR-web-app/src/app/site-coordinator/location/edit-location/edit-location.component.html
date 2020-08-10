@@ -11,16 +11,16 @@
                 <div class="form-group">
                     <label>Location Name</label>
                     <input type="text" class="form-control" placeholder="Enter Location Name"
-                        [(ngModel)]="fieldUpdate.name" required name="name" maxlength="200" #name="ngModel" />
+                           [(ngModel)]="fieldUpdate.name" required name="name" maxlength="200" #name="ngModel" />
                     <div class="validation-error" *ngIf="name.invalid && (name.dirty || name.touched)">
-                        <span class="help-block with-errors error__msg" *ngIf="name.errors.required">
+                        <span class="help-block with-errors error__msg" *ngIf="name.errors?.required">
                             Location Name is required.
                         </span>
-                        <span class="help-block with-errors error__msg" *ngIf="name.errors.maxlength">
+                        <span class="help-block with-errors error__msg" *ngIf="name.errors?.maxlength">
                             Location Name exceeds max length (200 characters).
                         </span>
                         <span class="help-block with-errors error__msg"
-                            *ngIf="!name.errors.required && !name.errors.maxlength">
+                              *ngIf="name.errors && !name.errors.required && !name.errors.maxlength">
                             Location Name is invalid.
                         </span>
                     </div>
@@ -32,20 +32,20 @@
                 <div class="form-group">
                     <label for="description">Description</label>
                     <input type="text" class="form-control" placeholder="Enter Description"
-                        [(ngModel)]="fieldUpdate.description" required name="description" maxlength="500"
-                        #description="ngModel" />
+                           [(ngModel)]="fieldUpdate.description" required name="description" maxlength="500"
+                           #description="ngModel" />
                     <div class="validation-error" *ngIf="
                 description.invalid &&
                 (description.dirty || description.touched)
               ">
-                        <span class="help-block with-errors error__msg" *ngIf="description.errors.required">
+                        <span class="help-block with-errors error__msg" *ngIf="description.errors?.required">
                             Location Description is required.
                         </span>
-                        <span class="help-block with-errors error__msg" *ngIf="description.errors.maxlength">
+                        <span class="help-block with-errors error__msg" *ngIf="description.errors?.maxlength">
                             Location Description exceeds max length (500 characters).
                         </span>
                         <span class="help-block with-errors error__msg" *ngIf="
-                  !description.errors.required && !description.errors.maxlength
+                  description.errors && !description.errors.required && !description.errors.maxlength
                 ">
                             Location Description is invalid.
                         </span>
@@ -57,7 +57,7 @@
         <div class="p-xlg flex__justify__space-between">
             <div>
                 <button type="submit" name="update" class="btn bt__add mr-sm"
-                    [disabled]="!updateLocationForm.form.valid" (click)="update()">
+                        [disabled]="!updateLocationForm.form.valid" (click)="update()">
                     Save
                 </button>
                 <button type="button" name="cancel" class="btn bt__cancel" (click)="closeModal()">

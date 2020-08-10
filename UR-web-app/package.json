@@ -8,7 +8,7 @@
     "build": "ng build",
     "test": "ng test",
     "test:ci": "npm run test -- --no-watch --no-progress --browsers=ChromeHeadless",
-    "lint": "eslint --quiet . --ext .js,.ts",
+    "lint": "eslint --quiet . --ext .js,.ts,.component.html",
     "lint:fix": "npm run lint -- --fix",
     "e2e": "ng e2e",
     "build:prod": "ng build --prod",
@@ -59,7 +59,6 @@
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
-    "codelyzer": "^5.1.2",
     "eslint": "^7.6.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-unicorn": "^21.0.0",
@@ -75,6 +74,11 @@
     "prettier": "^2.0.5",
     "protractor": "~5.4.4",
     "ts-node": "~7.0.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "@angular-eslint/builder": "0.0.1-alpha.32",
+    "@angular-eslint/eslint-plugin": "0.0.1-alpha.32",
+    "@angular-eslint/eslint-plugin-template": "0.0.1-alpha.32",
+    "@angular-eslint/schematics": "0.0.1-alpha.32",
+    "@angular-eslint/template-parser": "0.0.1-alpha.32"
   }
 }
