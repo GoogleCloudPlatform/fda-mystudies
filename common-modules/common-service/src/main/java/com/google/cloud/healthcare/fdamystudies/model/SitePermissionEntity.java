@@ -66,8 +66,10 @@ public class SitePermissionEntity implements Serializable {
   @JoinColumn(name = "app_info_id")
   private AppEntity appInfo;
 
-  @Column(name = "can_edit", length = 2)
-  private Boolean canEdit;
+  @Column(name = "edit_permission", length = 2)
+  private Integer editPermission;
+  
+
 
   @Column(
       name = "created",

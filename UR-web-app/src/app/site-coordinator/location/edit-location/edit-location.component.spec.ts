@@ -20,7 +20,7 @@ import {By} from '@angular/platform-browser';
 import {
   updatedLocation,
   expectedSiteStatus,
-} from 'src/app/entity/mockLocationData';
+} from 'src/app/entity/mock-location-data';
 
 describe('EditLocationComponent', () => {
   let component: EditLocationComponent;

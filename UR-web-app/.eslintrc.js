@@ -11,7 +11,9 @@ module.exports = {
     'google',
   ],
   globals: {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     Atomics: 'readonly',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     SharedArrayBuffer: 'readonly',
     localStorage: true,
   },
@@ -22,7 +24,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: 'tsconfig.eslint.json',
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'unicorn'],
   rules: {
     'require-jsdoc': 'off',
     'no-unused-vars': 'off',
@@ -35,6 +37,33 @@ module.exports = {
     '@typescript-eslint/prefer-readonly': 'error',
     '@typescript-eslint/promise-function-async': 'error',
     '@typescript-eslint/switch-exhaustiveness-check': 'error',
+    '@typescript-eslint/naming-convention': [
+      'error',
+      {
+        selector: 'default',
+        format: ['camelCase'],
+      },
+
+      {
+        selector: 'variable',
+        format: ['camelCase', 'UPPER_CASE'],
+      },
+      {
+        selector: 'parameter',
+        format: ['camelCase'],
+        leadingUnderscore: 'allow',
+      },
+      {
+        selector: 'typeLike',
+        format: ['PascalCase'],
+      },
+    ],
+    'unicorn/filename-case': [
+      'error',
+      {
+        case: 'kebabCase',
+      },
+    ],
 
     // Handled by prettier.
     'semi': 'off',

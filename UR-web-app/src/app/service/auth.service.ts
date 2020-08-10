@@ -42,8 +42,10 @@ export class AuthService {
   }
   grantAuthorization(code: string, userId: string): void {
     const payload = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       grant_type: 'authorization_code',
       scope: 'openid',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       redirect_uri: environment.redirectUrl,
       code: code,
       userId: userId,
