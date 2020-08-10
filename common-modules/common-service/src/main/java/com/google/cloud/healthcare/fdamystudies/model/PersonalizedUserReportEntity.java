@@ -62,9 +62,6 @@ public class PersonalizedUserReportEntity implements Serializable {
   @Column(name = "report_title", length = MEDIUM_LENGTH)
   private String reportTitle;
 
-  // Length is an arbitrary multiple of 100 > 2^15 and < 2^16 to guarantee we
-  // get the `TEXT` data type. Marking `columnDefinition = Text` is not
-  // portable and doesn't work in tests.
   @Column(name = "report_content")
   @Type(type = "text")
   private String reportContent;
