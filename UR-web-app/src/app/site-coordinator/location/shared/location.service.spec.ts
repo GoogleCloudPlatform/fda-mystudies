@@ -17,7 +17,7 @@ import {
   expectedResponse,
   expectedLocatiodId,
   expectedLocationList,
-} from 'src/app/entity/mockLocationData';
+} from 'src/app/entity/mock-location-data';
 describe('LocationService', () => {
   let locationService: LocationService;
   let httpServicespyobj: jasmine.SpyObj<HttpClient>;

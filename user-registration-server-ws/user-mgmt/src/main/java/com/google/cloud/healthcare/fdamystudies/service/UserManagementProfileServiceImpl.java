@@ -59,10 +59,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       String userId, Integer appInfoId, Integer orgInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
     UserDetailsBO userDetailsBO = null;
-    UserProfileRespBean userProfileRespBean = new UserProfileRespBean();
+    UserProfileRespBean userProfileRespBean = null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
       if (userDetailsBO != null) {
+        userProfileRespBean = new UserProfileRespBean();
         userProfileRespBean.getProfile().setEmailId(userDetailsBO.getEmail());
         userProfileRespBean
             .getSettings()
@@ -311,7 +312,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       emailMap.put("$orgName", "Test Org");
       dynamicContent = MyStudiesUserRegUtil.generateEmailContent(content, emailMap);
       isSent =
-          emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
+          emailNotification.sendEmailNotification(
+              subject, dynamicContent, emailId, new ArrayList<>(), new ArrayList<>());
       if (!isSent) {
         isEmailSent = 1;
       } else {

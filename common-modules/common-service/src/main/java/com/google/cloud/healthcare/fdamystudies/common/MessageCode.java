@@ -23,13 +23,17 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @JsonSerialize(using = MessageCode.MessageCodeSerializer.class)
 public enum MessageCode {
+  ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
       HttpStatus.OK, "MSG-0002", "Your password has been changed successfully!"),
 
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
-      HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server.");
+      HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server."),
+
+  UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated.");
 
   private final HttpStatus httpStatus;
   private final String code;
