@@ -27,12 +27,9 @@
                                 </div>
                                 <div class="col-xs-12 col-md-12 p-none border__bottom__red progress__bar">
                                     <div *ngFor="let site of study.sites"
-                                        class="row display-flex-center progress__bar__row" (click)="
-                      study.type != 'OPEN'
-                        ? navigateToParticipantList('site', site.id)
-                        : navigateToParticipantList('study', study.id)
-                    ">
-                                        <div class="col-xs-12 col-md-8 p-none cursor__pointer">
+                                        class="row display-flex-center progress__bar__row"
+                                        [routerLink]="study.type === 'OPEN' ? ['/coordinator/studies', study.id]:['/coordinator/studies/sites/', site.id]">
+                                        <div class=" col-xs-12 col-md-8 p-none cursor__pointer">
                                             <span *ngIf="study.type != 'OPEN'" class="sites_row">{{site.name}}</span>
                                             <span *ngIf="study.type == 'OPEN'">Enrollment Registry</span>
                                         </div>
@@ -41,7 +38,8 @@
                                                 <div class="pro__base">
                                                     <div *ngIf="site.invitedCount != 0">
                                                         <div class="pro__top"
-                                                            [style.width.%]="site.enrollmentPercentage"></div>
+                                                            [style.width.%]="site.enrollmentPercentage">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
