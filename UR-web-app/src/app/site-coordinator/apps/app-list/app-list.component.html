@@ -2,7 +2,7 @@
     <div class="tab-content">
         <ng-container *ngIf="app$ | async as apps">
             <div *ngFor="let app of apps" class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row">
-                <div (click)="navigateToParticipantList('app', app.id)" class="flex__justify__space-between flex__wrap">
+                <div [routerLink]="['/coordinator/apps', app.id]" class="flex__justify__space-between flex__wrap">
                     <div>
                         <div class="blue__text__md text-capitalize">
                             {{ app.customId }}
