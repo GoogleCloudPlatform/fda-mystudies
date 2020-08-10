@@ -73,8 +73,9 @@ public final class UserMapper {
     sitePermission.setStudy(siteDetails.getStudy());
     sitePermission.setSite(siteDetails);
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
-    int edit = site != null && site.getPermission() == 1 ? 0 : 1;
-    sitePermission.setCanEdit(edit == 0 ? Permission.READ_VIEW : Permission.READ_EDIT);
+    Permission edit =
+        site != null && site.getPermission() == 1 ? Permission.READ_VIEW : Permission.READ_EDIT;
+    sitePermission.setCanEdit(edit);
     sitePermission.setUrAdminUser(superAdminDeatils);
     return sitePermission;
   }
@@ -88,8 +89,9 @@ public final class UserMapper {
     SitePermissionEntity sitePermission = new SitePermissionEntity();
     sitePermission.setApp(studyDetails.getApp());
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
-    int edit = study.getPermission() == 1 ? 0 : 1;
-    sitePermission.setCanEdit(edit == 0 ? Permission.READ_VIEW : Permission.READ_EDIT);
+    Permission edit =
+        study != null && study.getPermission() == 1 ? Permission.READ_VIEW : Permission.READ_EDIT;
+    sitePermission.setCanEdit(edit);
     sitePermission.setStudy(studyDetails);
     sitePermission.setSite(site);
     sitePermission.setUrAdminUser(superAdminDeatils);
@@ -108,15 +110,15 @@ public final class UserMapper {
         SitePermissionEntity sitePermission = new SitePermissionEntity();
         sitePermission.setApp(appDetails);
         sitePermission.setCreatedBy(user.getSuperAdminUserId());
-        int edit = app != null && app.getPermission() == 1 ? 0 : 1;
-        sitePermission.setCanEdit(edit == 0 ? Permission.READ_VIEW : Permission.READ_EDIT);
+        Permission edit =
+            app != null && app.getPermission() == 1 ? Permission.READ_VIEW : Permission.READ_EDIT;
+        sitePermission.setCanEdit(edit);
         sitePermission.setStudy(siteEntity.getStudy());
         sitePermission.setSite(siteEntity);
         sitePermission.setUrAdminUser(superAdminDeatils);
         sitePermissions.add(sitePermission);
       }
     }
-
     return sitePermissions;
   }
 
@@ -129,8 +131,9 @@ public final class UserMapper {
     studyPermission.setApp(studyDetails.getApp());
     studyPermission.setStudy(studyDetails);
     studyPermission.setCreatedBy(user.getSuperAdminUserId());
-    int edit = study != null && study.getPermission() == 1 ? 0 : 1;
-    studyPermission.setEdit(edit == 0 ? Permission.READ_VIEW : Permission.READ_EDIT);
+    Permission edit =
+        study != null && study.getPermission() == 1 ? Permission.READ_VIEW : Permission.READ_EDIT;
+    studyPermission.setEdit(edit);
     studyPermission.setUrAdminUser(superAdminDeatils);
     return studyPermission;
   }
@@ -147,8 +150,11 @@ public final class UserMapper {
         StudyPermissionEntity studyPermission = new StudyPermissionEntity();
         studyPermission.setApp(appDetails);
         studyPermission.setCreatedBy(userRequest.getSuperAdminUserId());
-        int edit = appRequest != null && appRequest.getPermission() == 1 ? 0 : 1;
-        studyPermission.setEdit(edit == 0 ? Permission.READ_VIEW : Permission.READ_EDIT);
+        Permission edit =
+            appRequest != null && appRequest.getPermission() == 1
+                ? Permission.READ_VIEW
+                : Permission.READ_EDIT;
+        studyPermission.setEdit(edit);
         studyPermission.setStudy(studyEntity);
         studyPermission.setUrAdminUser(superAdminDeatils);
         studyPermissions.add(studyPermission);
@@ -175,8 +181,9 @@ public final class UserMapper {
     AppPermissionEntity appPermission = new AppPermissionEntity();
     appPermission.setApp(appDetails);
     appPermission.setCreatedBy(userRequest.getSuperAdminUserId());
-    int edit = app != null && app.getPermission() == 1 ? 0 : 1;
-    appPermission.setEdit(edit == 0 ? Permission.READ_VIEW : Permission.READ_EDIT);
+    Permission edit =
+        app != null && app.getPermission() == 1 ? Permission.READ_VIEW : Permission.READ_EDIT;
+    appPermission.setEdit(edit);
     appPermission.setUrAdminUser(superAdminDeatils);
     return appPermission;
   }
