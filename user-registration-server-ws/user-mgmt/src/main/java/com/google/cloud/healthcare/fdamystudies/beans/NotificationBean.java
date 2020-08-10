@@ -9,7 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import org.json.JSONArray;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class NotificationBean {
   private String studyId;
   private String customStudyId;
@@ -100,5 +106,14 @@ public class NotificationBean {
 
   public void setAppId(String appId) {
     this.appId = appId;
+  }
+
+  public NotificationBean(
+      String studyId, String customStudyId, String appId, String notificationType) {
+    super();
+    this.studyId = studyId;
+    this.customStudyId = customStudyId;
+    this.appId = appId;
+    this.notificationType = notificationType;
   }
 }
