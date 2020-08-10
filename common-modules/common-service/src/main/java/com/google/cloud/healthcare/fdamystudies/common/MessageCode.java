@@ -23,6 +23,8 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @JsonSerialize(using = MessageCode.MessageCodeSerializer.class)
 public enum MessageCode {
+  ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(

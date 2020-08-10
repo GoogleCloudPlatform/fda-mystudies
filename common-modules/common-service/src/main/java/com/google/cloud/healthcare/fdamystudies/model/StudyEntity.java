@@ -69,23 +69,23 @@ public class StudyEntity implements Serializable {
   private String type;
 
   @Column(
-      name = "created_on",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by", nullable = false, length = 64)
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
   @Column(
-      name = "modified_date",
+      name = "modified",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
-  @Column(name = "modified_by", nullable = false, length = 64)
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
   @Column(name = "version", length = 100)
