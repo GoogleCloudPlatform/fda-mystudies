@@ -1,0 +1,12 @@
+{
+	"violations": [
+		{
+			"path": "studyId",
+			"message": "must not be blank"
+		},
+		{
+			"path": "locationId",
+			"message": "must not be blank"
+		}
+	]
+}

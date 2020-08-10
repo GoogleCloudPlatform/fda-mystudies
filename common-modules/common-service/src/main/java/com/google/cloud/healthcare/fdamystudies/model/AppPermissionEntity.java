@@ -65,6 +65,6 @@ public class AppPermissionEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by", nullable = false, length = 64)
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 }
