@@ -110,7 +110,9 @@ public enum ErrorCode {
 
   CUSTOM_ID_EXISTS(400, "EC_883", Constants.BAD_REQUEST, "customId already exists"),
 
-  USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active");
+  USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active"),
+
+  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found.");
 
   private final int status;
   private final String code;

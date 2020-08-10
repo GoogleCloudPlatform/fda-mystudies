@@ -5,25 +5,27 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
-@Repository
 @ConditionalOnProperty(
     value = "participant.manager.repository.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public interface SitePermissionRepository extends JpaRepository<SitePermissionEntity, String> {
+@Repository
+public interface UserDetailsRepository extends JpaRepository<UserDetailsEntity, String> {
+
   @Query(
-      "SELECT sp FROM SitePermissionEntity sp WHERE sp.urAdminUser.id=:userId ORDER BY sp.created DESC")
-  public List<SitePermissionEntity> findSitePermissionByUserId(String userId);
+      "SELECT ud.appInfo.id ,COUNT(ud.appInfo.id) FROM UserDetailsEntity ud WHERE ud.appInfo.id in (:appIds) GROUP BY ud.appInfo.id")
+  public Map<String, Long> findAppUsersCount(@Param("appIds") List<String> usersAppsIds);
 }
