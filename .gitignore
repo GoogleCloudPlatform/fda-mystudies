@@ -9,3 +9,5 @@
 **/.factorypath
 **/*.log
 user-registration-server-ws/consent-mgmt/ConsentMgmtServicesWs.iml
+UR-web-app/coverage/
+UR-web-app/node_modules/

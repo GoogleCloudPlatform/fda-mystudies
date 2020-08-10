@@ -18,7 +18,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
-import {expectedStudyList} from '../../../entity/mockStudiesData';
+import {expectedStudyList} from '../../../entity/mock-studies-data';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {LocationService} from '../../location/shared/location.service';

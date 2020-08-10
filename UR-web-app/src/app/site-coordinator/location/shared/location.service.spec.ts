@@ -10,7 +10,7 @@ import {throwError, of} from 'rxjs';
 import {Location, UpdateLocationResponse} from '../shared/location.model';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {HttpClient} from '@angular/common/http';
-import * as expectedResult from 'src/app/entity/mockLocationData';
+import * as expectedResult from 'src/app/entity/mock-location-data';
 
 describe('LocationService', () => {
   let locationService: LocationService;
@@ -71,8 +71,8 @@ describe('LocationService', () => {
         expectedResult.expectedLocatiodId.id.toString(),
       )
       .subscribe(
-        (Locations) =>
-          expect(Locations).toEqual(
+        (locations) =>
+          expect(locations).toEqual(
             expectedResult.expectedLocations,
             'expected Locations',
           ),
