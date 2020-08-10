@@ -13,13 +13,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = { "email.whitelisted_domains=" })
+@SpringBootTest(properties = {"email.whitelisted_domains="})
 @ActiveProfiles("test")
 @ContextConfiguration(initializers = TestApplicationContextInitializer.class)
 public class UserDomainEmptyWhitelistTest {
 
-  @Autowired
-  UserDomainWhitelist whitelist;
+  @Autowired UserDomainWhitelist whitelist;
 
   @Test
   public void emptyWhitelist() {

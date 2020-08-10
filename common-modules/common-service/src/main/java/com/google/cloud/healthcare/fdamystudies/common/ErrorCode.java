@@ -8,12 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.io.IOException;
+import java.time.Instant;
+
+import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import java.io.IOException;
-import java.time.Instant;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -85,7 +89,15 @@ public enum ErrorCode {
       500,
       "EC-500",
       "Internal Server Error",
-      "Sorry, an error has occurred and your request could not be processed. Please try again later.");
+      "Sorry, an error has occurred and your request could not be processed. Please try again later."),
+
+  SITE_PERMISSION_ACCESS_DENIED(
+      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have permission to add site"),
+
+  SITE_EXISTS(
+      400, "EC-106", Constants.BAD_REQUEST, "Site exists with the given locationId and studyId"),
+
+  SITE_ADDED(200, "EC-107", "Ok", "Site added successfully");
 
   private final int status;
   private final String code;

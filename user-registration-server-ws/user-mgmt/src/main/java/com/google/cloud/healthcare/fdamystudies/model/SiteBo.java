@@ -21,7 +21,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.UpdateTimestamp;
 
 @Setter
 @Getter
@@ -59,8 +58,9 @@ public class SiteBo implements Serializable {
   @Column(name = "created_by", columnDefinition = "INT(20) default 0")
   private Integer createdBy;
 
-  @Column(name = "modified_date")
-  @UpdateTimestamp
+  @Column(
+      name = "modified_date",
+      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
   private Date modifiedDate;
 
   @Column(name = "modified_by", columnDefinition = "INT(20)")
