@@ -8,11 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.helper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -31,8 +26,14 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
-
+import java.util.Collections;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 
 @Getter
 @Component
@@ -42,6 +43,12 @@ public class TestDataHelper {
       "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
 
   public static final String EMAIL_VALUE = "mockit_email@grr.la";
+
+  public static final String ADMIN_LAST_NAME = "mockito_last_name";
+
+  public static final String ADMIN_FIRST_NAME = "mockito";
+
+  protected static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
@@ -58,6 +65,14 @@ public class TestDataHelper {
   @Autowired AppRepository appRepository;
 
   @Autowired private SiteRepository siteRepository;
+
+  public HttpHeaders newCommonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    return headers;
+  }
 
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
