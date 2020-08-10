@@ -14,6 +14,7 @@
 
 name            = "mystudies-demo-audit"
 org_id          = "18510592047"
+folder_id       = "440087619763"
 billing_account = "01B494-31B256-17B2A6"
 apis = [
   "bigquery.googleapis.com",
