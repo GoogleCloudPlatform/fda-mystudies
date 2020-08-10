@@ -27,4 +27,6 @@ public final class CommonConstants {
 
   public static final int EDIT_VALUE = 1;
 
+  public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
+      "application/x-www-form-urlencoded;charset=UTF-8";
 }

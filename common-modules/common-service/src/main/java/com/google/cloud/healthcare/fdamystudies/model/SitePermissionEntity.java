@@ -70,6 +70,7 @@ public class SitePermissionEntity implements Serializable {
   private Integer editPermission;
   
 
+
   @Column(
       name = "created",
       insertable = false,
