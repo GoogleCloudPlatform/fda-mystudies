@@ -1,4 +1,6 @@
 import {Study} from '../site-coordinator/studies/shared/study.model';
+import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
+import {ApiResponse} from './api.response.model';
 
 export const expectedStudyList = [
   {
@@ -8,12 +10,23 @@ export const expectedStudyList = [
     enrolledCount: 41,
     enrollmentPercentage: 38,
     id: 1,
-    invitedCount: 0,
+    invitedCount: 4,
     name: 'New Study Test',
-    sites: [],
-    studyPermission: 0,
+    sites: [
+      {
+        edit: 1,
+        enrolledCount: 7,
+        enrollmentPercentage: 50,
+        id: 11,
+        invitedCount: 14,
+        name: 'Location 1',
+        status: '',
+      },
+    ],
+    studyPermission: 2,
     totalSitesCount: 16,
-    type: 'OPEN',
+    type: 'CLOSE',
+
     logo: '/path_to_img/',
   },
   {
@@ -25,10 +38,30 @@ export const expectedStudyList = [
     id: 12,
     invitedCount: 9,
     name: 'Open Study 02',
-    sites: [],
+    sites: [
+      {
+        edit: 1,
+        enrolledCount: 12,
+        enrollmentPercentage: 14,
+        id: 10,
+        invitedCount: 0,
+        name: 'Location 2',
+        status: '',
+      },
+      {
+        edit: 1,
+        enrolledCount: 32,
+        enrollmentPercentage: 44,
+        id: 10,
+        invitedCount: 0,
+        name: 'Location 3',
+        status: '',
+      },
+    ],
     studyPermission: 1,
     totalSitesCount: 5,
-    type: 'OPEN',
+    type: 'CLOSE',
+
     logo: '/path_to_img/',
   },
   {
@@ -43,7 +76,19 @@ export const expectedStudyList = [
     sites: [],
     studyPermission: 2,
     totalSitesCount: 6,
-    type: 'CLOSE',
+    type: 'OPEN',
     logo: '/path_to_img/',
   },
 ] as Study[];
+
+export const expectedSiteResponse = {
+  message: 'New site added successfully',
+  code: 'MSG_001',
+} as ApiResponse;
+
+export const expectedNewSite = {
+  studyId: '1',
+  locationId: '1',
+} as AddSiteRequest;
+
+export const expectedStudyId = {id: 1} as Study;
