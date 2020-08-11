@@ -26,6 +26,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
@@ -42,8 +43,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.
     name = "participant_study_info",
     uniqueConstraints = {
       @UniqueConstraint(
-          columnNames = {"participant_id", "site_id"},
-          name = "participant_study_info_participant_id_site_id__uidx")
+          columnNames = {"user_details_id", "study_info_id"},
+          name = "participant_study_info_user_details_id_study_info_id__uidx")
     })
 public class ParticipantStudyEntity implements Serializable {
 
@@ -56,7 +57,7 @@ public class ParticipantStudyEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "participant_id", length = XS_LENGTH)
+  @Column(name = "participant_id", unique = true, length = XS_LENGTH)
   private String participantId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -89,7 +90,7 @@ public class ParticipantStudyEntity implements Serializable {
   @CreationTimestamp
   private Timestamp enrolledDate;
 
-  @Column(length = XS_LENGTH)
+  @Type(type = "java.lang.Boolean")
   private String sharing;
 
   private Integer completion;
