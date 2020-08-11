@@ -20,19 +20,20 @@
 # Run like:
 # $ ./kubernetes/kubeapply.sh heroes-hat-cluster
 
-if [ "$#" -ne 1 ]; then
-  echo 'Please provide exactly 1 argument in the order of <cluster>'
+if [ "$#" -ne 2 ]; then
+  echo 'Please provide cluster and app prefix in the order of <cluster> <prefix>'
   exit 1
 fi
 
 cluster="${1}"
-shift 1
+prefix="${2}"
+shift 2
 
 set -e
 
 echo "=== Switching kubectl to cluster ${cluster} ==="
 read -p "Press enter to continue"
-gcloud container clusters get-credentials "${cluster}" --region="us-east1" --project="heroes-hat-dev-apps"
+gcloud container clusters get-credentials "${cluster}" --region="us-east1" --project="${prefix}-apps"
 
 for policy in $(find . -name "pod_security_policy*.yaml"); do
   echo "=== Applying ${policy} ==="

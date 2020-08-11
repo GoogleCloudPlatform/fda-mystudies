@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY app_name "App Name"><!ENTITY learn_more_txt "Learn more">]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY app_name "FDA MyStudies Demo App"><!ENTITY learn_more_txt "Learn more">]>
 <resources>
     <!--Shared Preference-->
     <string name="auth">authentication</string>
@@ -543,23 +543,21 @@
     <string name="rsb_consent_section_more_info">&learn_more_txt;</string>
 
     <string name="app_name">&app_name;</string>
-    <string name="poweredby">Powered by FDA MyStudies on Google Cloud</string>
-    <string name="website">https://www.google.com/</string>
-    <string name="websitetxt">App Website</string>
-    <string name="gateway_des">&lt;Introductory content paragraph goes here&gt;</string>
-    <string name="gateway_des1">&lt;Introductory content paragraph goes here&gt;</string>
-    <string name="delete_account_content">You have chosen to delete your FDA MyStudies Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
-    <string name="delete_message">Are you sure you wish to permanently delete your FDA MyStudies Gateway app account?  You will need to register again if you wish to join a study.</string>
-    <string name="studie_your_enrolled">It\'s been a while since you visited the FDA MyStudies app. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
-    <string name="termsurl">https://www.google.com/</string>
-    <string name="privacyurl">https://www.google.com/</string>
+    <string name="poweredby">Powered by Google Cloud</string>
+    <string name="website">https://cloud.google.com/solutions/healthcare-life-sciences/drug-development</string>
+    <string name="websitetxt">cloud.google.com</string>
+    <string name="gateway_des">&app_name;</string>
+    <string name="gateway_des1">This demo app has been put together to demonstrate FDA MyStudies application in action.</string>
+    <string name="delete_account_content">You have chosen to delete your &app_name; Account. This will result in automatic withdrawal from all studies.\n\nBelow is a list of studies that you are a part of and information on how your response data will be handled with each after you withdraw. Please review and confirm.</string>
+    <string name="delete_message">Are you sure you wish to permanently delete your &app_name;\'s account?  You will need to register again if you wish to join a study.</string>
+    <string name="studie_your_enrolled">It\'s been a while since you visited &app_name;. Please consider continuing your participation in any studies in which you\'re enrolled.</string>
+    <string name="termsurl">https://policies.google.com/terms</string>
+    <string name="privacyurl">https://policies.google.com/privacy</string>
     <string name="view_consent">View Consent</string>
     <string name="visit_website">Visit Website</string>
     <string name="join_study">Join Study</string>
     <string name="clientToken">clientToken</string>
-
-
+    
     <!--must change strings-->
-    <string name="FileProvider_authorities">com.myfileprovider</string>
-
+    <string name="FileProvider_authorities">net.joonix.hcls.mystudies</string>
 </resources>

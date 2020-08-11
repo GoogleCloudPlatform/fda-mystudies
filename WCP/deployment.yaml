@@ -89,6 +89,8 @@ spec:
             httpGet:
               path: /studybuilder/healthCheck.do
               port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

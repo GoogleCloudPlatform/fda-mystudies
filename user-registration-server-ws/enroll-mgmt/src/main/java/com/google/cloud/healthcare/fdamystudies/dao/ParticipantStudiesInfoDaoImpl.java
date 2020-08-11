@@ -33,7 +33,7 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
       throws SystemException {
 
     List<ParticipantStudiesBO> participantStudiesList = null;
-    logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Started");
+    logger.info("ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Started");
     if (userDetailsId != null) {
       try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
         Query<ParticipantStudiesBO> query =
@@ -43,11 +43,11 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
         participantStudiesList = query.getResultList();
         return participantStudiesList;
       } catch (Exception e) {
-        logger.error("(DAO)...UserDetailsDaoImpl.getParticipantStudiesInfo(): (ERROR) ", e);
+        logger.error("UserDetailsDaoImpl.getParticipantStudiesInfo(): (ERROR) ", e);
         throw new SystemException();
       }
     } else {
-      logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Ended");
+      logger.info("ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Ended");
       return null;
     }
   }

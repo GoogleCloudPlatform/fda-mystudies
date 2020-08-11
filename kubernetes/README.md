@@ -82,7 +82,7 @@ $ gsutil cp \
   ./response-server-ws/mystudies_response_server_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_app_info_update_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_user_registration_db_script.sql \
-gs://<data-project-id>-sql-import
+gs://mystudies-demo-data-sql-import
 ```
 
 Find the name of your Cloud SQL DB instance. If looking at the GCP Console, this
@@ -123,9 +123,9 @@ organization and deployment.
 In each tf-deployment.yaml file:
 
 *   For all images except `gcr.io/cloudsql-docker/gce-proxy`, replace the
-    `gcr.io/<project>` part with `gcr.io/<apps-project-id>`
+    `gcr.io/<project>` part with `gcr.io/mystudies-demo-apps`
 *   For the cloudsql-proxy container, set the `-instances` flag with
-    `-instances=<cloudsq-instance-connection-name>=tcp:3306`
+    `-instances=mystudies-demo-data:us-east1:my-studies=tcp:3306`
 
 In the ./kubernetes/cert.yaml file:
 
@@ -184,7 +184,7 @@ Run all commands below from the repo root.
 First, get kubectl credentials so you can interact with the cluster:
 
 ```
-$ gcloud container clusters get-credentials "<cluster-name>" --region="<region>" --project="<apps-project-id>"
+$ gcloud container clusters get-credentials "mystudies-cluster" --region="us-east1" --project="mystudies-demo-apps"
 ```
 
 Apply the pod security policies:

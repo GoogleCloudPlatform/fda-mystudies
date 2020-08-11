@@ -40,6 +40,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     } catch (Exception e) {
       logger.error("EnrollmentTokenServiceImpl enrollmentTokenRequired() - error ", e);
     }
+    logger.info("EnrollmentTokenServiceImpl hasParticipant() - ends. isTokenRequired: " + isTokenRequired);
     return isTokenRequired;
   }
 
@@ -52,7 +53,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     } catch (Exception e) {
       logger.error("EnrollmentTokenServiceImpl hasParticipant() - error ", e);
     }
-    logger.info("EnrollmentTokenServiceImpl hasParticipant() - Ends ");
+    logger.info("EnrollmentTokenServiceImpl hasParticipant() - Ends. hasParticipant: " + hasParticipant);
     return hasParticipant;
   }
 
@@ -65,13 +66,13 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     } catch (Exception e) {
       logger.error("EnrollmentTokenServiceImpl isValidStudyToken() - error ", e);
     }
-    logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Ends ");
+    logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Ends. isValidStudyToken : " + isValidStudyToken);
     return isValidStudyToken;
   }
 
   @Override
   public boolean studyExists(@NotNull String studyId) {
-    logger.info("EnrollmentTokenServiceImpl studyExists() - Starts ");
+    logger.info("EnrollmentTokenServiceImpl studyExists() - Starts. studyId: "+ studyId);
     boolean isStudyExist = false;
     try {
       isStudyExist = enrollmentTokenDao.studyExists(studyId);
@@ -79,7 +80,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       logger.error("EnrollmentTokenServiceImpl studyExists() - error ", e);
     }
 
-    logger.info("EnrollmentTokenServiceImpl studyExists() - Ends ");
+    logger.info("EnrollmentTokenServiceImpl studyExists() - Ends. isStudyExist: "+ isStudyExist);
     return isStudyExist;
   }
 
@@ -111,7 +112,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       logger.error("EnrollmentTokenServiceImpl enrollParticipant() - error ", e);
       throw e;
     } catch (Exception e) {
-      logger.error("********EnrollmentTokenServiceImpl enrollParticipant() - error ", e);
+      logger.error("EnrollmentTokenServiceImpl enrollParticipant() - error ", e);
       throw new SystemException();
     }
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Ends ");

@@ -18,7 +18,22 @@ spec:
     spec:
       containers:
         - name: study-designer
-          image: gcr.io/heroes-hat-dev-apps/study-designer:latest
+          image: gcr.io/mystudies-demo-apps/study-designer:latest
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            capabilities:
+              add:
+                - SYS_ADMIN
+          lifecycle:
+            postStart:
+              exec:
+                # The "mystudies-demo-my-studies-fda-resources" should be changed to the name os the fda-resources
+                # GCS bucket set up in the data project.
+                command: ["gcsfuse", "-o", "nonempty", "mystudies-demo-my-studies-fda-resources", "/usr/local/tomcat/webapps/fdaResources"]
+            preStop:
+              exec:
+                command: ["fusermount", "-u", "/usr/local/tomcat/webapps/fdaResources"]
           env:
             - name: DB_USER
               valueFrom:
@@ -78,6 +93,8 @@ spec:
             httpGet:
               path: /studybuilder/healthCheck.do
               port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 30
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key
@@ -85,7 +102,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=heroes-hat-dev-data:us-east1:my-studies=tcp:3306",
+            "-instances=mystudies-demo-data:us-east1:my-studies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume

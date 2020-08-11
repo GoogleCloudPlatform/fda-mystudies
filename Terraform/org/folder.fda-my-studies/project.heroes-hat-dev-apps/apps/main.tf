@@ -50,8 +50,8 @@ module "heroes_hat_cluster" {
   # Private endpoint must be disabled, otherwise the master is only accessible
   # via a Cloud Interconnect or Cloud VPN.
   # This allows access over the internet, but only from certain source ranges.
-  enable_private_endpoint    = false
-  master_authorized_networks = var.master_authorized_networks
+  enable_private_endpoint = false
+  # master_authorized_networks = var.master_authorized_networks
 }
 
 # Create a separate service account for each app.

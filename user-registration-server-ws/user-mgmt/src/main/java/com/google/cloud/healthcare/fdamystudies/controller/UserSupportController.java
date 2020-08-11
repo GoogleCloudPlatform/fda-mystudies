@@ -32,7 +32,8 @@ public class UserSupportController {
 
   private static final Logger logger = LoggerFactory.getLogger(UserSupportController.class);
 
-  @Autowired UserSupportService supportService;
+  @Autowired
+  UserSupportService supportService;
 
   @PostMapping(
       value = "/feedback",

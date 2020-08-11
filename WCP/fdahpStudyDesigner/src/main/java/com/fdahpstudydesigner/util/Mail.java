@@ -78,7 +78,6 @@ public class Mail {
   // will authenticate with the provided fromEmailAddress and fromEmailPass.
   private Boolean useIpWhitelist = false;
 
-
   public String getAttachmentPath() {
     return attachmentPath;
   }
@@ -156,15 +155,13 @@ public class Mail {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPassword();
       Properties props = makeProperties(useIpWhitelist);
-      Session session =
-          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
+      Session session = useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
 
       Message message = new MimeMessage(session);
       message.setFrom(new InternetAddress(username));
       if (StringUtils.isNotBlank(this.getToemail())) {
         if (this.getToemail().indexOf(',') != -1) {
-          message.setRecipients(
-              Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
+          message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
         } else {
           message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.getToemail()));
         }
@@ -192,6 +189,7 @@ public class Mail {
       logger.error("ERROR: sendemail() - ", e);
       sentMail = false;
     }
+    logger.info(" email send is: " + this.subject);
     logger.info("Mail.sendemail() :: Ends");
     return sentMail;
   }
@@ -206,14 +204,12 @@ public class Mail {
       final String username = this.getFromEmailAddress();
       final String password = this.getFromEmailPassword();
       Properties props = makeProperties(useIpWhitelist);
-      Session session =
-          useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
+      Session session = useIpWhitelist ? makeSession(props) : makeSession(props, username, password);
 
       Message message = new MimeMessage(session);
       if (StringUtils.isNotBlank(this.getToemail())) {
         if (this.getToemail().indexOf(',') != -1) {
-          message.setRecipients(
-              Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
+          message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse(this.getToemail()));
         } else {
           message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(this.getToemail()));
         }
@@ -279,16 +275,13 @@ public class Mail {
     return Session.getInstance(props, null);
   }
 
-  private Session makeSession(Properties props, final String username,
-      final String password) {
-    return Session.getInstance(
-        props,
-        new javax.mail.Authenticator() {
-          @Override
-          protected PasswordAuthentication getPasswordAuthentication() {
-            return new PasswordAuthentication(username, password);
-          }
-        });
+  private Session makeSession(Properties props, final String username, final String password) {
+    return Session.getInstance(props, new javax.mail.Authenticator() {
+      @Override
+      protected PasswordAuthentication getPasswordAuthentication() {
+        return new PasswordAuthentication(username, password);
+      }
+    });
   }
 
   public void setAttachmentPath(String attachmentPath) {

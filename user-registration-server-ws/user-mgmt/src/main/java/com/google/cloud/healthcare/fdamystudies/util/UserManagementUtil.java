@@ -54,9 +54,11 @@ public class UserManagementUtil {
 
   private static final Logger logger = LoggerFactory.getLogger(UserManagementUtil.class);
 
-  @Autowired private RestTemplate restTemplate;
+  @Autowired
+  private RestTemplate restTemplate;
 
-  @Autowired private ApplicationPropertyConfiguration appConfig;
+  @Autowired
+  private ApplicationPropertyConfiguration appConfig;
 
   public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
     logger.info("UserManagementUtil validateAccessToken() - starts ");
@@ -73,12 +75,8 @@ public class UserManagementUtil {
 
       requestBody = new HttpEntity<>(null, headers);
 
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerAccessTokenValidationUrl(),
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
+      responseEntity = restTemplate.exchange(appConfig.getAuthServerAccessTokenValidationUrl(), HttpMethod.POST,
+          requestBody, Integer.class);
 
       value = (Integer) responseEntity.getBody();
     } catch (Exception e) {
@@ -88,8 +86,7 @@ public class UserManagementUtil {
     return value;
   }
 
-  public String changePassword(
-      String userId, String clientToken, String oldPassword, String newPassword) {
+  public String changePassword(String userId, String clientToken, String oldPassword, String newPassword) {
     logger.info("UserManagementUtil changePassword() - starts ");
     Integer value = null;
     HttpHeaders headers = null;
@@ -110,12 +107,8 @@ public class UserManagementUtil {
 
       requestBody = new HttpEntity<>(providerBody, headers);
 
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerUrl() + "/changePassword",
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
+      responseEntity = restTemplate.exchange(appConfig.getAuthServerUrl() + "/changePassword", HttpMethod.POST,
+          requestBody, Integer.class);
       value = (Integer) responseEntity.getBody();
 
       if (value == 1) {
@@ -158,7 +151,7 @@ public class UserManagementUtil {
 
   public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
       String userId, String clientToken, String accessToken) {
-    logger.info("(Util)....UserRegistrationController.deleteUserInfoInAuthServer()......STARTED");
+    logger.info("UserRegistrationController.deleteUserInfoInAuthServer() - starts");
 
     DeleteAccountInfoResponseBean authResponse = null;
 
@@ -192,8 +185,9 @@ public class UserManagementUtil {
       } else {
         return authResponse;
       }
-
+      
     } catch (RestClientResponseException e) {
+      logger.error("UserRegistrationController.deleteUserInfoInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authResponse = new DeleteAccountInfoResponseBean();
@@ -235,7 +229,7 @@ public class UserManagementUtil {
       String orgId,
       String clientId,
       String secretKey) {
-    logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
+    logger.info("UserManagementUtil.registerUserInAuthServer - starts");
     AuthRegistrationResponseBean authServerResponse = null;
 
     HttpHeaders headers = new HttpHeaders();
@@ -254,9 +248,8 @@ public class UserManagementUtil {
     try {
       RestTemplate template = new RestTemplate();
 
-      ResponseEntity<?> responseEntity =
-          template.exchange(
-              appConfig.getAuthServerRegisterStatusUrl(), HttpMethod.POST, request, String.class);
+      ResponseEntity<?> responseEntity = template.exchange(appConfig.getAuthServerRegisterStatusUrl(), HttpMethod.POST,
+          request, String.class);
 
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
         String body = (String) responseEntity.getBody();
@@ -275,11 +268,12 @@ public class UserManagementUtil {
         return authServerResponse;
       }
     } catch (RestClientResponseException e) {
+      logger.error("UserManagementUtil.registerUserInAuthServer() - error ", e);
       if (e.getRawStatusCode() == 401) {
         Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
         authServerResponse = new AuthRegistrationResponseBean();
+        
         for (Entry<String, List<String>> entry : headerSet) {
-
           if (AppConstants.STATUS.equals(entry.getKey())) {
             authServerResponse.setCode(entry.getValue().get(0));
           }
@@ -394,14 +388,8 @@ public class UserManagementUtil {
 
       request = new HttpEntity<>(null, headers);
 
-      String url =
-          appConfig.getWithdrawStudyUrl()
-              + "?studyId="
-              + studyId
-              + "&participantId="
-              + participantId
-              + "&deleteResponses="
-              + String.valueOf(delete);
+      String url = appConfig.getWithdrawStudyUrl() + "?studyId=" + studyId + "&participantId=" + participantId
+          + "&deleteResponses=" + String.valueOf(delete);
 
       ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 
@@ -412,13 +400,13 @@ public class UserManagementUtil {
     } catch (RestClientResponseException e) {
       message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret.");
+        logger.error("Invalid client Id or client secret.", e);
         throw new UnAuthorizedRequestException();
       } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request");
+        logger.error("Client verification ended with Bad Request", e);
         throw new InvalidRequestException();
       } else {
-        logger.error("Client verification ended with Internal Server Error");
+        logger.error("Client verification ended with Internal Server Error", e);
         throw new SystemException();
       }
     }

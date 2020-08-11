@@ -13,13 +13,15 @@ metadata:
     seccomp.security.alpha.kubernetes.io/defaultProfileName:  'runtime/default'
     apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
 spec:
-  privileged: false
+  privileged: true
+  allowedCapabilities:
+  - 'SYS_ADMIN'
   # Required to prevent escalations to root.
-  allowPrivilegeEscalation: false
+  allowPrivilegeEscalation: true
   # This is redundant with non-root + disallow privilege escalation,
   # but we can provide it for defense in depth.
-  requiredDropCapabilities:
-    - ALL
+  # requiredDropCapabilities:
+  #   - ALL
   # Allow core volume types.
   volumes:
     - 'configMap'

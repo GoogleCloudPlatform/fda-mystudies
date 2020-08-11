@@ -12,10 +12,13 @@ TMPFILE=$(mktemp)
 # Write user registration server db name to TMPFILE.
 echo "USE \`mystudies_userregistration\`;" >> ${TMPFILE}
 
-# Read AppId and OrgId from secrets..
+# bundleID used for the Android App
 ANDROID_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=android-bundle-id`
+# found under settings > cloud messaging in the android app defined in your firebase project.
 ANDROID_SERVER_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=android-server-key`
+# bundleID used to build and distribute the iOS App. 
 IOS_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=ios-bundle-id`
+# certificate and password generated for APNs
 IOS_CERTIFICATE=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=ios-certificate`
 IOS_CERTIFICATE_PASSWORD=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=ios-certificate-password`
 

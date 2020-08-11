@@ -502,7 +502,6 @@ public class StudyMetaDataUtil {
 
   @SuppressWarnings({"rawtypes", "unchecked"})
   public static HashMap getAuthorizationProperties() {
-    LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Starts");
     HashMap hashMap = new HashMap<String, String>();
     ResourceBundle rb = ResourceBundle.getBundle("authorizationResource");
     Enumeration<String> keys = rb.getKeys();
@@ -511,7 +510,6 @@ public class StudyMetaDataUtil {
       String value = rb.getString(key);
       hashMap.put(key, value);
     }
-    LOGGER.info("INFO: StudyMetaDataUtil - getAuthorizationProperties() :: Ends");
     return hashMap;
   }
 

@@ -67,6 +67,7 @@ public class ProcessActivityStateController {
         ActivitiesBean activitiesBean =
             participantActivityStateResponseService.getParticipantActivities(
                 studyId, participantId);
+        logger.info("ProcessActivityStateController getActivityState() ends");
         return new ResponseEntity<>(activitiesBean, HttpStatus.OK);
       } catch (Exception e) {
         logger.warn("ProcessActivityStateController getActivityState() failed ", e);

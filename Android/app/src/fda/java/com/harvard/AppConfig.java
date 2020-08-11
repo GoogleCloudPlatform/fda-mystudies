@@ -40,5 +40,4 @@ public class AppConfig {
   public static String SECRET_KEY_VALUE = BuildConfig.SECRET_KEY_VALUE;
   //Client Token
   public static String CLIENT_TOKEN = "clientToken";
-
 }

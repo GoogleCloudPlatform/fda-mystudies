@@ -73,6 +73,7 @@ public class EnrollmentTokenController {
               response);
           return null;
         } else if (!enrollmentTokenfService.studyExists(enrollmentBean.getStudyId())) {
+          logger.warn("ValidateEnrollmentTokenController validateEnrollmentToken() - studyID not exist:" + enrollmentBean.getStudyId());
           ErrorResponseUtil.getFailureResponse(
               ErrorResponseUtil.ErrorCodes.STATUS_103.getValue(),
               ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -169,6 +170,7 @@ public class EnrollmentTokenController {
                             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
                       }
                     } else {
+                      logger.error("EnrollmentTokenController enrollParticipant() - UNKNOWN_TOKEN ");
                       ErrorResponseUtil.getFailureResponse(
                           ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                           ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -180,6 +182,7 @@ public class EnrollmentTokenController {
                       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                     }
                   } else {
+                    logger.error("EnrollmentTokenController enrollParticipant() - INVALID_TOKEN ");
                     ErrorResponseUtil.getFailureResponse(
                         ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                         ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -192,7 +195,8 @@ public class EnrollmentTokenController {
                     return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                   }
                 } else {
-                  ErrorResponseUtil.getFailureResponse(
+                  logger.error("EnrollmentTokenController enrollParticipant() - TOKEN_ALREADY_USE ");
+                    ErrorResponseUtil.getFailureResponse(
                       ErrorResponseUtil.ErrorCodes.STATUS_103.getValue(),
                       ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                       ErrorResponseUtil.ErrorCodes.TOKEN_ALREADY_USE.getValue(),
@@ -203,6 +207,7 @@ public class EnrollmentTokenController {
                   return new ResponseEntity<>(errorBean, HttpStatus.FORBIDDEN);
                 }
               } else {
+                logger.error("EnrollmentTokenController enrollParticipant() - TOKEN_REQUIRED ");
                 errorBean = new ErrorBean();
                 errorBean.setCode(ErrorCode.EC_103.code());
                 errorBean.setMessage(ErrorResponseUtil.ErrorCodes.TOKEN_REQUIRED.getValue());
@@ -227,6 +232,7 @@ public class EnrollmentTokenController {
               }
             }
           } else {
+            logger.error("EnrollmentTokenController enrollParticipant() - STUDYID_NOT_EXIST ");
             errorBean = new ErrorBean();
             errorBean.setCode(ErrorCode.EC_103.code());
             errorBean.setMessage(ErrorResponseUtil.ErrorCodes.STUDYID_NOT_EXIST.getValue());
@@ -238,6 +244,7 @@ public class EnrollmentTokenController {
             return null;
           }
         } else {
+          logger.error("EnrollmentTokenController enrollParticipant() - studyId missing.");
           errorBean = new ErrorBean();
           errorBean.setCode(ErrorCode.EC_102.code());
           errorBean.setMessage(ErrorResponseUtil.ErrorCodes.ERROR_REQUIRED.getValue());
@@ -249,6 +256,7 @@ public class EnrollmentTokenController {
           return null;
         }
       } else {
+        logger.error("EnrollmentTokenController enrollParticipant() - INVALID_INPUT_ERROR_MSG.");
         errorBean = new ErrorBean();
         errorBean.setCode(ErrorCode.EC_102.code());
         errorBean.setMessage(ErrorResponseUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue());

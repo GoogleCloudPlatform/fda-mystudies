@@ -1764,8 +1764,8 @@ INSERT INTO `statistic_master_images` (`statistic_image_id`, `value`) VALUES
 
 -- Dumping data for table fda_hphc.users: ~23 rows (approximately)
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `phone_number`, `role_id`, `created_by`, `created_date`, `modified_by`, `modified_date`, `status`, `access_code`, `accountNonExpired`, `accountNonLocked`, `created_date_time`, `credentialsNonExpired`, `modified_date_time`, `password_expairded_datetime`, `security_token`, `token_expiry_date`, `token_used`, `force_logout`, `user_login_datetime`, `email_changed`) VALUES
-	(1, 'Account', 'Manager', 'superadmin@gmail.com', '$2a$10$u9g0amp4vMlEZrfnfH/hBeqXZx9psguQeMb4nzIn798MF2/L51HTi', '333-333-3355', 1, 1, '2018-01-18 14:36:41', 47, '2018-01-18 15:42:55', 1, 'ja67Ll', 1, 1, NULL, 1, NULL, '2020-12-09 10:32:48', 'N8K7zYrc0F', '2020-06-07 19:01:14', 0, 'N', '2020-01-25 19:01:14', 0);
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `phone_number`, `role_id`, `created_by`, `modified_by`, `status`, `access_code`, `accountNonExpired`, `accountNonLocked`, `credentialsNonExpired`, `security_token`, `token_expiry_date`, `token_used`, `force_logout`, `email_changed`) VALUES
+	(1, 'Account', 'Manager', 'superadmin@gmail.com', '$2a$10$u9g0amp4vMlEZrfnfH/hBeqXZx9psguQeMb4nzIn798MF2/L51HTi', '333-333-3355', 1, 1, 47, 1, 'ja67Ll', 1, 1, NULL, 1, NULL, 'N8K7zYrc0F', 0, 'N', 0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 
 -- Dumping data for table fda_hphc.user_permissions: ~7 rows (approximately)

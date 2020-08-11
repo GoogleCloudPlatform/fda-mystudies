@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>ProductTitleName</key>
-	<string>App Name</string>
+	<string>FDA MyStudies Demo App</string>
 	<key>StandaloneStudyId</key>
 	<string>SingleStudy01</string>
 	<key>IsStandaloneStudyApp</key>
@@ -21,20 +21,20 @@
 	<key>LeaveStudyConfirmationText</key>
 	<string>If you tap “Proceed” you will no longer be able to use this app for eye doctor appointments and medication tracking</string>
 	<key>WebsiteLink</key>
-	<string></string>
+	<string>https://cloud.google.com/solutions/healthcare-life-sciences/drug-development</string>
 	<key>WebsiteButtonTitle</key>
-	<string>App Website</string>
+	<string>healthcare-life-sciences/drug-development</string>
 	<key>TermsAndConditionURL</key>
-	<string></string>
+	<string>https://policies.google.com/terms</string>
 	<key>PrivacyPolicyURL</key>
-	<string></string>
+	<string>https://policies.google.com/privacy</string>
 	<key>ValidatedTitle</key>
 	<string>Eligibility Confirmed</string>
 	<key>AllowFeedback</key>
 	<true/>
 	<key>NavigationTitleName</key>
-	<string>App Name</string>
+	<string>FDA MyStudies Demo App</string>
 	<key>PoweredByTitleName</key>
-	<string>Powered by FDA MyStudies on Google Cloud</string>
+	<string>Powered by Google Cloud</string>
 </dict>
 </plist>
