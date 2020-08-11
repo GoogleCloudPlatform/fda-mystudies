@@ -112,21 +112,21 @@ public class AppEntity implements Serializable {
   @Column(name = "method_handler", length = 100)
   private Integer methodHandler;
 
-  @Column(name = "created_by", nullable = false, length = 64)
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
-  @Column(name = "modified_by", nullable = false, length = 64)
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
   @Column(
-      name = "modified_date",
+      name = "modified",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
   @Column(
-      name = "created_on",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
@@ -154,5 +154,21 @@ public class AppEntity implements Serializable {
   public void addStudyPermissionEntity(StudyPermissionEntity studyPermission) {
     studyPermissions.add(studyPermission);
     studyPermission.setAppInfo(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  private List<UserDetailsEntity> userDetails = new ArrayList<>();
+
+  public void addUserDetailsEntity(UserDetailsEntity userDetail) {
+    userDetails.add(userDetail);
+    userDetail.setAppInfo(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  private List<StudyEntity> studies = new ArrayList<>();
+
+  public void addStudyEntity(StudyEntity study) {
+    studies.add(study);
+    study.setAppInfo(this);
   }
 }

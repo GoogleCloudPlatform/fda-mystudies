@@ -95,4 +95,21 @@ public class SiteEntity implements Serializable {
     sitePermissions.add(sitePermission);
     sitePermission.setSite(this);
   }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
+  private List<ParticipantRegistrySiteEntity> participantRegistrySites = new ArrayList<>();
+
+  public void addParticipantRegistrySiteEntity(
+      ParticipantRegistrySiteEntity participantRegistrySite) {
+    participantRegistrySites.add(participantRegistrySite);
+    participantRegistrySite.setSite(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
+  private List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
+
+  public void addParticipantStudiesEntity(ParticipantStudyEntity participantStudiesEntity) {
+    participantStudies.add(participantStudiesEntity);
+    participantStudiesEntity.setSite(this);
+  }
 }
