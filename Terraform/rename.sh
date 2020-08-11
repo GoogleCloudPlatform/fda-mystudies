@@ -15,15 +15,12 @@ export NEW_STATE="mystudies-terraform-state-19763"
 # It also gets used for naming some assets, 
 # such as your dns_name in cloud DNS, folder name, ...
 export OLD_APP_NAME="heroes-hat"
-export NEW_APP_NAME=
+export NEW_APP_NAME="mystudies"
 
 # Prefix for your deployment. We recomment ${app_name}-${env}
 # This prefix is used in numerous places to generate unique resource names.
 export OLD_PREFIX="heroes-hat-dev"
 export NEW_PREFIX="mystudies-demo"
-
-export OLD_GKE_PREFIX="heroes-hat"
-export NEW_GKE_PREFIX="mystudies"
 
 export OLD_BIGQUERY_PREFIX="heroes_hat_dev"
 export NEW_BIGQUERY_PREFIX="mystudies_demo"
@@ -48,9 +45,6 @@ export NEW_FOLDER_ID="440087619763"
 # GCP billing account.
 export OLD_BILLING_ACCOUNT="01EA90-3519E1-89CB1F"
 export NEW_BILLING_ACCOUNT="01B494-31B256-17B2A6"
-
-export OLD_ADMIN_GROUP="rocketturtle-gcp-admin@rocketturtle.net"
-export NEW_ADMIN_GROUP="hcls-mystudies-owners@google.com"
 
 export OLD_GITHUB_ORG="GoogleCloudPlatform"
 export NEW_GITHUB_ORG="zohrehj"
