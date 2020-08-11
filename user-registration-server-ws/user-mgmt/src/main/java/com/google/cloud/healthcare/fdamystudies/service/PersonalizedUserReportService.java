@@ -29,7 +29,9 @@ public class PersonalizedUserReportService {
       UserResourceBean.ResourceType.PERSONALIZED_REPORT;
 
   public List<UserResourceBean> getLatestPersonalizedUserReports(String userId, String studyId) {
-    return repository.findByUserDetailsUserIdAndStudyInfoCustomId(userId, studyId).stream()
+    return repository
+        .findByUserDetailsUserIdAndStudyInfoCustomId(userId, studyId)
+        .stream()
         .collect(
             Collectors.toMap(
                 PersonalizedUserReportBO::getReportTitle,
@@ -38,8 +40,14 @@ public class PersonalizedUserReportService {
                     Comparator.comparing(PersonalizedUserReportBO::getCreationTime))))
         .entrySet()
         .stream()
-        .filter(e -> e.getValue().getCreationTime()!=null)
-        .sorted(Comparator.comparing(e -> ((Map.Entry<String, PersonalizedUserReportBO>) e).getValue().getCreationTime()).reversed())
+        .filter(e -> e.getValue().getCreationTime() != null)
+        .sorted(
+            Comparator.comparing(
+                    e ->
+                        ((Map.Entry<String, PersonalizedUserReportBO>) e)
+                            .getValue()
+                            .getCreationTime())
+                .reversed())
         .map(
             e ->
                 new UserResourceBean(

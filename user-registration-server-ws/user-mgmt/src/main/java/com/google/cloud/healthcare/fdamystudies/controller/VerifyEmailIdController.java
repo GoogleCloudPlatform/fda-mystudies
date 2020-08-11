@@ -8,6 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.bean.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.bean.VerifyEmailIdResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailIdVerificationForm;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
+import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import com.google.cloud.healthcare.fdamystudies.util.ResponseUtil;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
@@ -21,18 +33,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.bean.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.bean.VerifyEmailIdResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.beans.EmailIdVerificationForm;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
-import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
-import com.google.cloud.healthcare.fdamystudies.util.ResponseUtil;
 
 @RestController
 public class VerifyEmailIdController {
