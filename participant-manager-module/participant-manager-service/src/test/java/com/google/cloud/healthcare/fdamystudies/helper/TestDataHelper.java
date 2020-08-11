@@ -34,21 +34,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.EMAIL_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 @Getter
 @Component
 public class TestDataHelper {
-
-  private static final String ADMIN_AUTH_ID_VALUE =
-      "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
-
-  public static final String EMAIL_VALUE = "mockit_email@grr.la";
-
-  public static final String ADMIN_LAST_NAME = "mockito_last_name";
-
-  public static final String ADMIN_FIRST_NAME = "mockito";
-
-  protected static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 

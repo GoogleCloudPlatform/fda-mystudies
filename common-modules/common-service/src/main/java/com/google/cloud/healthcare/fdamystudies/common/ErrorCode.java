@@ -111,7 +111,7 @@ public enum ErrorCode {
   USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active"),
 
   USER_NOT_INVITED(
-      400, "EC-869", Constants.BAD_REQUEST, "Provided emailId not exists or user not invited");
+      400, "EC-869", Constants.BAD_REQUEST, "Provided email not exists or user not invited");
 
   private final int status;
   private final String code;
