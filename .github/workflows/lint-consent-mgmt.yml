@@ -3,14 +3,14 @@ name: consent-mgmt-checkstyle
 on:
   pull_request:
     paths:
-    - 'user-registration-server-ws/consent-mgmt-module/**'
+    - 'user-registration-server-ws/consent-mgmt/**'
     - '.github/workflows/lint-consent-mgmt.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /user-registration-server-ws/consent-mgmt-module/consent-mgmt
+        working-directory: /user-registration-server-ws/consent-mgmt
     name: Checkstyle job
     steps:
     - name: Checkout
@@ -19,7 +19,7 @@ jobs:
       uses: nikitasavinov/checkstyle-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: 'github-pr-review'
-        level: warning
-        workdir: ./user-registration-server-ws/consent-mgmt-module/consent-mgmt/src
+        reporter: 'github-pr-check'
+        level: error
+        workdir: ./user-registration-server-ws/consent-mgmt/src
         tool_name: consent-mgmt Checks
