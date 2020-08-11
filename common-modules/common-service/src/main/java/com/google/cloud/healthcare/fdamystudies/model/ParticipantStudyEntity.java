@@ -91,7 +91,7 @@ public class ParticipantStudyEntity implements Serializable {
   private Timestamp enrolledDate;
 
   @Type(type = "java.lang.Boolean")
-  private String sharing;
+  private Boolean sharing;
 
   private Integer completion;
 
