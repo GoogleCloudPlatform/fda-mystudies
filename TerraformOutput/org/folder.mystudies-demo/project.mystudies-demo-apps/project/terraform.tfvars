@@ -14,7 +14,7 @@
 
 name = "mystudies-demo-apps"
 // org_id          = "18510592047"
-folder_id       = "582188324485"
+folder_id       = "folders/582188324485"
 billing_account = "01B494-31B256-17B2A6"
 apis = [
   "binaryauthorization.googleapis.com",
