@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import java.util.Calendar;
 import org.slf4j.ext.XLogger;
@@ -47,8 +48,7 @@ public class EmailServiceImpl implements EmailService {
       message.setSentDate(Calendar.getInstance().getTime());
       emailSender.send(message);
       logger.exit(String.format("status=%d", HttpStatus.ACCEPTED.value()));
-      return new EmailResponse(
-          HttpStatus.ACCEPTED, "The email is accepted by the receiving mail server.");
+      return new EmailResponse(MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER);
     } catch (Exception e) {
       logger.error("sendSimpleMail() failed with an exception.", e);
       return new EmailResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);

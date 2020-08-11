@@ -9,16 +9,18 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeedbackReqBean {
-  @NotBlank
-  private String subject;
-  @NotBlank
-  private String body;
+  @NotBlank private String subject;
+  @NotBlank private String body;
 }

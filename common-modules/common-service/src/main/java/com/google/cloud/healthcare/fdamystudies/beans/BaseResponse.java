@@ -8,16 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import org.springframework.http.HttpStatus;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Setter
 @Getter
@@ -30,6 +29,9 @@ public class BaseResponse {
   @JsonProperty("error_code")
   private String errorCode;
 
+  @JsonProperty("code")
+  private String code;
+
   @JsonProperty("error_type")
   private String errorType;
 
@@ -39,26 +41,23 @@ public class BaseResponse {
   @JsonProperty("message")
   private String message;
 
-  @JsonProperty("code")
-  private String code;
-
   public BaseResponse() {}
 
   public BaseResponse(ErrorCode errorCode) {
     this.httpStatusCode = errorCode.getStatus();
-    this.errorCode = errorCode.getCode();
+    this.code = errorCode.getCode();
     this.errorType = errorCode.getErrorType();
     this.errorDescription = errorCode.getDescription();
-  }
-
-  public BaseResponse(HttpStatus httpStatus, String message) {
-    this.httpStatusCode = httpStatus.value();
-    this.message = message;
   }
 
   public BaseResponse(MessageCode messageCode) {
     this.httpStatusCode = messageCode.getHttpStatus().value();
     this.code = messageCode.getCode();
     this.message = messageCode.getMessage();
+  }
+
+  @JsonIgnore
+  public boolean is2xxSuccessful() {
+    return HttpStatus.valueOf(httpStatusCode).is2xxSuccessful();
   }
 }
