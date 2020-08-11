@@ -8,30 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
@@ -49,6 +25,28 @@ import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsService;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 @Service
 public class StudiesServicesImpl implements StudiesServices {
@@ -96,9 +94,11 @@ public class StudiesServicesImpl implements StudiesServices {
       }
 
       if (appSet == null && appSet.isEmpty()) {
+        logger.debug("appset is empty return bad request");
         return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
       } else {
         List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoSet(appSet);
+        logger.debug(String.format("hasAppInfos=%b", (appInfos != null && !appInfos.isEmpty())));
         if (appInfos != null && !appInfos.isEmpty()) {
           allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfos);
           appInfobyAppCustomId =
@@ -106,7 +106,7 @@ public class StudiesServicesImpl implements StudiesServices {
                   .stream()
                   .collect(Collectors.toMap(AppInfoDetailsBO::getAppId, Function.identity()));
         }
-
+        logger.debug(String.format("hasStudiesSet=%b", (studySet != null && !studySet.isEmpty())));
         if (studySet != null && !studySet.isEmpty()) {
           List<StudyInfoBO> studyInfos = commonDao.getStudyInfoSet(studySet);
           if (studyInfos != null && !studyInfos.isEmpty()) {
@@ -128,6 +128,11 @@ public class StudiesServicesImpl implements StudiesServices {
                   sendGatewaylevelNotification(
                       allDeviceTokens, appInfobyAppCustomId, notificationBean);
 
+              logger.debug(
+                  String.format(
+                      "status=%d and fcmNotificationResponse=%s",
+                      fcmNotificationResponse.getStatus(),
+                      fcmNotificationResponse.getFcmResponse()));
               return new ErrorBean(
                   ErrorCode.EC_200.code(),
                   ErrorCode.EC_200.errorMessage(),
@@ -145,6 +150,11 @@ public class StudiesServicesImpl implements StudiesServices {
                   sendStudyLevelNotification(
                       studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);
 
+              logger.debug(
+                  String.format(
+                      "status=%d and fcmNotificationResponse=%s",
+                      fcmNotificationResponse.getStatus(),
+                      fcmNotificationResponse.getFcmResponse()));
               return new ErrorBean(
                   ErrorCode.EC_200.code(),
                   ErrorCode.EC_200.errorMessage(),
@@ -152,6 +162,11 @@ public class StudiesServicesImpl implements StudiesServices {
             }
           }
         } else {
+          logger.debug(
+              String.format(
+                  "hasDeviceTokens=%b and hasElementsInStudiesMap=%b",
+                  (allDeviceTokens != null && !allDeviceTokens.isEmpty()),
+                  (studiesMap != null && !studiesMap.isEmpty())));
           return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
         }
       }

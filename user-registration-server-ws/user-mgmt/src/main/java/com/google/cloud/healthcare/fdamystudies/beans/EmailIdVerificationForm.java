@@ -9,11 +9,15 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EmailIdVerificationForm {
   @NotBlank private String code;
   private String emailId;

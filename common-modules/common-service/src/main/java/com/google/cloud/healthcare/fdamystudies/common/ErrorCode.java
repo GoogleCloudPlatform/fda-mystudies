@@ -99,7 +99,20 @@ public enum ErrorCode {
   SITE_EXISTS(
       400, "EC-106", Constants.BAD_REQUEST, "Site exists with the given locationId and studyId"),
 
-  SITE_ADDED(200, "EC-107", "Ok", "Site added successfully");
+  LOCATION_ACCESS_DENIED(
+      403, "EC-882", "Forbidden", "You do not have permission to view or add or update locations"),
+
+  INVALID_ARGUMENTS(400, "EC_813", Constants.BAD_REQUEST, "Provided argument value is invalid"),
+
+  USER_NOT_EXISTS(401, "EC_861", "Unauthorized", "User does not exist"),
+
+  MISSING_REQUIRED_ARGUMENTS(400, "EC_812", Constants.BAD_REQUEST, "Missing required argument"),
+
+  CUSTOM_ID_EXISTS(400, "EC_883", Constants.BAD_REQUEST, "customId already exists"),
+
+  USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active"),
+
+  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found.");
 
   private final int status;
   private final String code;

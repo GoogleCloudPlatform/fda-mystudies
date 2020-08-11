@@ -19,10 +19,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -96,9 +95,6 @@ public class UserDetailsBO implements Serializable, Cloneable {
 
   // Use UserInstitution class to access institution.
   @Getter(AccessLevel.NONE)
-  @OneToOne(
-          mappedBy = "user",
-          fetch = FetchType.LAZY
-  )
+  @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
   private UserInstitution userInstitution;
 }

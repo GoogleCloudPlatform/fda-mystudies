@@ -1,9 +1,8 @@
 /*
  * Copyright 2020 Google LLC
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 
 package com.google.cloud.healthcare.fdamystudies.common;
@@ -25,13 +24,17 @@ import org.springframework.http.HttpStatus;
 public enum MessageCode {
   ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
 
+  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
+
+  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get Apps successfully"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
-  CHANGE_PASSWORD_SUCCESS(
-      HttpStatus.OK, "MSG-0002", "Your password has been changed successfully!"),
+  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG-0002",
+      "Your password has been changed successfully!"),
 
-  EMAIL_ACCEPTED_BY_MAIL_SERVER(
-      HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server."),
+  EMAIL_ACCEPTED_BY_MAIL_SERVER(HttpStatus.ACCEPTED, "MSG-0003",
+      "The email is accepted by the receiving mail server."),
 
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated.");
 
@@ -48,9 +51,8 @@ public enum MessageCode {
     }
 
     @Override
-    public void serialize(
-        MessageCode msgCode, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-        throws IOException {
+    public void serialize(MessageCode msgCode, JsonGenerator jsonGenerator,
+        SerializerProvider serializerProvider) throws IOException {
       jsonGenerator.writeStartObject();
       jsonGenerator.writeNumberField("status", msgCode.getHttpStatus().value());
       jsonGenerator.writeStringField("code", msgCode.getCode());
