@@ -1,11 +1,10 @@
 package com.google.cloud.healthcare.fdamystudies.exceptions;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import javax.servlet.ServletException;
 import lombok.Getter;
 
 @Getter
-public class ErrorCodeException extends ServletException {
+public class ErrorCodeException extends RuntimeException {
 
   private final ErrorCode errorCode;
 
