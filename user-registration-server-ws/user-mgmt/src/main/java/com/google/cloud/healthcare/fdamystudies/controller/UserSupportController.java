@@ -8,10 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
 public class UserSupportController {
@@ -79,10 +78,7 @@ public class UserSupportController {
     try {
       isEmailSent =
           supportService.contactUsDetails(
-              reqBean.getSubject(),
-              reqBean.getBody(),
-              reqBean.getFirstName(),
-              reqBean.getEmail());
+              reqBean.getSubject(), reqBean.getBody(), reqBean.getFirstName(), reqBean.getEmail());
       if (isEmailSent) {
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
