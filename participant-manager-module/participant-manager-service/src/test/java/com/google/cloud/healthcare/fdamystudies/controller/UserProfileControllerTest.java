@@ -165,7 +165,6 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void shouldDeactivateUserAccount() throws Exception {
-
     // Step 1: Call the API and expect DEACTIVATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
 
