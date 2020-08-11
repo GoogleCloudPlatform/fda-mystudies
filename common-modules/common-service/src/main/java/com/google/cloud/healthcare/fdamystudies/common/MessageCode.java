@@ -27,6 +27,8 @@ public enum MessageCode {
   ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
 
   GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get Apps successfully"),
+  
+  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfully"),
 
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
