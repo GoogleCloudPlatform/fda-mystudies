@@ -41,27 +41,26 @@ public class LocationEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
 
-  @ToString.Exclude
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "custom_id", columnDefinition = "VARCHAR(255)")
+  @Column(name = "custom_id", length = 200)
   private String customId;
 
-  @Column(name = "status")
-  private String status;
+  @Column(name = "status", length = 1)
+  private Integer status;
 
-  @Column(name = "name")
+  @Column(name = "name", length = 200)
   private String name;
 
-  @Column(name = "description")
+  @Column(name = "description", length = 500)
   private String description;
 
-  @Column(name = "is_default")
-  private String isdefault;
+  @Column(name = "is_default", length = 1)
+  private String isDefault;
 
   @Column(
       name = "created",
@@ -70,7 +69,8 @@ public class LocationEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @ToString.Exclude
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "location")

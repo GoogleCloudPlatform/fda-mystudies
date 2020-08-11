@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -20,13 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
+import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationFilter implements Filter {
@@ -171,7 +170,8 @@ public class AuthenticationFilter implements Filter {
               }
             }
           } else {
-            logger.warn("AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
+            logger.warn(
+                "AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpServletResponse.sendError(

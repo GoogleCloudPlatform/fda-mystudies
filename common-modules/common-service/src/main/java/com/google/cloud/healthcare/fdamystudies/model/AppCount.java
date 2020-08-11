@@ -5,10 +5,11 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+package com.google.cloud.healthcare.fdamystudies.model;
 
-package com.google.cloud.healthcare.fdamystudies.config;
+public interface AppCount {
 
-import org.springframework.context.annotation.Configuration;
+  String getAppId();
 
-@Configuration
-public class AppConfig {}
+  Long getCount();
+}

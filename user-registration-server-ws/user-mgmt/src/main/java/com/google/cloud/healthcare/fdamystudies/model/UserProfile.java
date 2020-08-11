@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.io.Serializable;
 
 @JsonInclude(Include.NON_NULL)
 public class UserProfile implements Serializable {

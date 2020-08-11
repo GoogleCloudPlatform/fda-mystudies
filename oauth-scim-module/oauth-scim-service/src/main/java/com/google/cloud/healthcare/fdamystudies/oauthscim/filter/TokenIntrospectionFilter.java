@@ -37,6 +37,9 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
     uriTemplateAndMethods.put(
         String.format("%s/v1/users/{userId}/change_password", context.getContextPath()),
         new String[] {HttpMethod.PUT.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/v1/users/{userId}", context.getContextPath()),
+        new String[] {HttpMethod.PATCH.name()});
   }
 
   @Override
