@@ -23,7 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.Site;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
@@ -755,7 +755,7 @@ public class SiteServiceImpl implements SiteService {
 
       Iterator<Row> rows = sheet.rowIterator();
       Set<String> invalidEmails = new HashSet<>();
-      Set<String> emails = new HashSet<>();
+      Set<String> validEmails = new HashSet<>();
 
       // Skip headers row
       rows.next();
@@ -767,11 +767,11 @@ public class SiteServiceImpl implements SiteService {
           invalidEmails.add(email);
           continue;
         }
-        emails.add(email);
+        validEmails.add(email);
       }
 
       ImportParticipantResponse importParticipantResponse =
-          saveImportParticipant(emails, userId, siteEntity);
+          saveImportParticipant(validEmails, userId, siteEntity);
       importParticipantResponse.getInvalidEmails().addAll(invalidEmails);
 
       return importParticipantResponse;
@@ -803,17 +803,17 @@ public class SiteServiceImpl implements SiteService {
         (List<String>)
             CollectionUtils.removeAll(new ArrayList<String>(emails), participantRegistryEmails);
 
-    List<ParticipantDetailRequest> savedParticipants = new ArrayList<>();
+    List<ParticipantDetail> savedParticipants = new ArrayList<>();
     for (String email : newEmails) {
-      ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
-      participantRequest.setEmail(email);
+      ParticipantDetail participantDetail = new ParticipantDetail();
+      participantDetail.setEmail(email);
       ParticipantRegistrySiteEntity participantRegistrySite =
-          ParticipantMapper.fromParticipantRequest(participantRequest, siteEntity);
+          ParticipantMapper.fromParticipantDetail(participantDetail, siteEntity);
       participantRegistrySite.setCreatedBy(userId);
       participantRegistrySite =
           participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
-      participantRequest.setParticipantId(participantRegistrySite.getId());
-      savedParticipants.add(participantRequest);
+      participantDetail.setId(participantRegistrySite.getId());
+      savedParticipants.add(participantDetail);
     }
 
     logger.exit(
@@ -959,16 +959,10 @@ public class SiteServiceImpl implements SiteService {
       StudyEntity study,
       StudyDetails studyDetail) {
     for (SiteEntity siteEntity : study.getSites()) {
-      Long invitedCount =
-          invitedCountBySiteIdMap.get(siteEntity.getId()) == null
-              ? 0L
-              : invitedCountBySiteIdMap.get(siteEntity.getId());
-      Long enrolledCount =
-          enrolledCountBySiteIdMap.get(siteEntity.getId()) == null
-              ? 0L
-              : enrolledCountBySiteIdMap.get(siteEntity.getId());
+      Long invitedCount = invitedCountBySiteIdMap.get(siteEntity.getId());
+      Long enrolledCount = enrolledCountBySiteIdMap.get(siteEntity.getId());
 
-      Site site = new Site();
+      SiteDetails site = new SiteDetails();
       site.setId(siteEntity.getId());
       site.setName(siteEntity.getLocation().getName());
       site.setEnrolled(enrolledCount);

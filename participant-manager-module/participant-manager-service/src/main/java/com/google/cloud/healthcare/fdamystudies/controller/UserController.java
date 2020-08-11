@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
+import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.ext.XLogger;
@@ -21,9 +24,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
-import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
 
 @RestController
 public class UserController {

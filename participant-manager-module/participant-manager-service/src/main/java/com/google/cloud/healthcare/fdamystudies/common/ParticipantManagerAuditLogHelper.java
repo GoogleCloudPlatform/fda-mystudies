@@ -1,13 +1,11 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ParticipantManagerAuditLogHelper {

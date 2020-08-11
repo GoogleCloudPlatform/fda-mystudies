@@ -168,11 +168,12 @@ public class SiteController {
   public ResponseEntity<ImportParticipantResponse> importParticipants(
       @PathVariable String siteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
-      @RequestParam MultipartFile file,
+      @RequestParam("file") MultipartFile inputFile,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
 
-    ImportParticipantResponse participants = siteService.importParticipants(userId, siteId, file);
+    ImportParticipantResponse participants =
+        siteService.importParticipants(userId, siteId, inputFile);
     logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
