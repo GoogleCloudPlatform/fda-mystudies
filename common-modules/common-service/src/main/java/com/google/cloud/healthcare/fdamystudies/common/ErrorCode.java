@@ -113,6 +113,9 @@ public enum ErrorCode {
   USER_NOT_INVITED(
       400, "EC-869", Constants.BAD_REQUEST, "Provided email not exists or user not invited");
   APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found.");
+  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found."),
+
+  STUDY_NOT_FOUND(404, "EC-816", Constants.BAD_REQUEST, "Study not found");
 
   private final int status;
   private final String code;
