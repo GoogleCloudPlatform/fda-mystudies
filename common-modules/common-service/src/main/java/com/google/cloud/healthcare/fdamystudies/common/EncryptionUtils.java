@@ -21,7 +21,7 @@ public final class EncryptionUtils {
   private EncryptionUtils() {}
 
   public static String salt() {
-    return DigestUtils.sha3_512Hex(IdGenerator.id());
+    return DigestUtils.sha512Hex(IdGenerator.id());
   }
 
   public static String encrypt(String input, String rawSalt) {
@@ -48,6 +48,6 @@ public final class EncryptionUtils {
   }
 
   public static String hash(String value) {
-    return DigestUtils.sha3_512Hex(value);
+    return DigestUtils.sha512Hex(value);
   }
 }

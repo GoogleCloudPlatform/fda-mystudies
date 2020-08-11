@@ -8,10 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 
 public interface LocationService {
 
-  public LocationResponse addNewLocation(LocationRequest locationRequest);
+  public LocationEntity addNewLocation(LocationEntity location, String userId)
+      throws ErrorCodeException;
 }

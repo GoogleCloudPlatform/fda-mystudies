@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -53,7 +55,7 @@ public class AppInfoDetailsBO implements Serializable {
   @Column(name = "android_bundle_id")
   private String androidBundleId;
 
-  @Column(name = "ios_certificate", columnDefinition = "VARCHAR(5000)")
+  @Column(name = "ios_certificate", columnDefinition = "TEXT")
   private String iosCertificate;
 
   @Column(name = "ios_certificate_password")
