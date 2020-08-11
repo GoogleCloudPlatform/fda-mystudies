@@ -6,7 +6,6 @@ import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -23,6 +22,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_FIRST_NAME;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_LAST_NAME;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.USER_EMAIL_VALUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,7 +63,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldSetUpNewAccount() throws Exception {
     // Step 1: Setting up the request for set up account
     SetUpAccountRequest request = setUpAccountRequest();
-    userRegAdminEntity.setEmail(TestConstants.USER_EMAIL_VALUE);
+    userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call the API and expect SET_UP_ACCOUNT_SUCCESS message
@@ -113,7 +115,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnAuthServerApplicationError() throws Exception {
     // Step 1: Setting up the request for AuthServerApplicationError
     SetUpAccountRequest request = setUpAccountRequest();
-    userRegAdminEntity.setEmail(TestConstants.USER_EMAIL_VALUE);
+    userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     request.setPassword("AuthServerError@b0ston");
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
@@ -136,7 +138,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnAuthServerBadRequestError() throws Exception {
     // Step 1: Setting up the request for bad request
     SetUpAccountRequest request = setUpAccountRequest();
-    userRegAdminEntity.setEmail(TestConstants.USER_EMAIL_VALUE);
+    userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     request.setPassword("AuthServerBadRequest@b0ston");
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
@@ -160,9 +162,9 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   private SetUpAccountRequest setUpAccountRequest() {
     SetUpAccountRequest request = new SetUpAccountRequest();
-    request.setEmail(TestConstants.USER_EMAIL_VALUE);
-    request.setFirstName(TestDataHelper.ADMIN_FIRST_NAME);
-    request.setLastName(TestDataHelper.ADMIN_LAST_NAME);
+    request.setEmail(USER_EMAIL_VALUE);
+    request.setFirstName(ADMIN_FIRST_NAME);
+    request.setLastName(ADMIN_LAST_NAME);
     request.setPassword("Kantharaj#1123");
     request.setAppId("PARTICIPANT MANAGER");
     request.setStatus(UserAccountStatus.ACTIVE.getStatus());
