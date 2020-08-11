@@ -112,7 +112,9 @@ public enum ErrorCode {
 
   USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active"),
 
-  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found.");
+  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found."),
+
+  STUDY_NOT_FOUND(404, "EC-816", Constants.BAD_REQUEST, "Study not found");
 
   private final int status;
   private final String code;
