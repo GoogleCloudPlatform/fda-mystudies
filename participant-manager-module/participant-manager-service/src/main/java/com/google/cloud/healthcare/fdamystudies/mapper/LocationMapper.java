@@ -20,8 +20,9 @@ public final class LocationMapper {
 
   private LocationMapper() {}
 
-  public static LocationResponse toLocationResponse(LocationEntity location) {
-    LocationResponse response = new LocationResponse(MessageCode.ADD_LOCATION_SUCCESS);
+  public static LocationResponse toLocationResponse(
+      LocationEntity location, MessageCode messageCode) {
+    LocationResponse response = new LocationResponse(messageCode);
     response.setLocationId(location.getId());
     response.setCustomId(location.getCustomId());
     response.setDescription(location.getDescription());
