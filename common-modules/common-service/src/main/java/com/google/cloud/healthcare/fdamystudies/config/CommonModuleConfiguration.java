@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.exceptions.RestResponseErrorHandler;
 import com.google.cloud.healthcare.fdamystudies.interceptor.RestTemplateAuthTokenModifierInterceptor;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
   public RestTemplate restTemplate() {
     RestTemplate restTemplate = new RestTemplate();
 
+    restTemplate.setErrorHandler(new RestResponseErrorHandler());
     addInterceptors(restTemplate);
 
     return restTemplate;

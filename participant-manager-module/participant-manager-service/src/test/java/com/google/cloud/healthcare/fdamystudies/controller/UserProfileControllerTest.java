@@ -2,13 +2,11 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
@@ -27,6 +25,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_FIRST_NAME;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_LAST_NAME;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.USER_EMAIL_VALUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,7 +72,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldSetUpNewAccount() throws Exception {
     // Step 1: Setting up the request for set up account
     SetUpAccountRequest request = setUpAccountRequest();
-    userRegAdminEntity.setEmail(TestConstants.USER_EMAIL_VALUE);
+    userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call the API and expect SET_UP_ACCOUNT_SUCCESS message
@@ -121,7 +123,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnAuthServerApplicationError() throws Exception {
     // Step 1: Setting up the request for AuthServerApplicationError
     SetUpAccountRequest request = setUpAccountRequest();
-    userRegAdminEntity.setEmail(TestConstants.USER_EMAIL_VALUE);
+    userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     request.setPassword("AuthServerError@b0ston");
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
@@ -144,7 +146,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnAuthServerBadRequestError() throws Exception {
     // Step 1: Setting up the request for bad request
     SetUpAccountRequest request = setUpAccountRequest();
-    userRegAdminEntity.setEmail(TestConstants.USER_EMAIL_VALUE);
+    userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
     request.setPassword("AuthServerBadRequest@b0ston");
     testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
@@ -163,17 +165,13 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void shouldDeactivateUserAccount() throws Exception {
-    // Step 1: Setting up the request for deactivate account
-    UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();
-    emailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
 
-    // Step 2: Call the API and expect DEACTIVATE_USER_SUCCESS message
+    // Step 1: Call the API and expect DEACTIVATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
 
     mockMvc
         .perform(
             patch(ApiEndpoint.DEACTIVATE_ACCOUNT.getPath(), userRegAdminEntity.getId())
-                .content(asJsonString(emailStatusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -192,24 +190,41 @@ public class UserProfileControllerTest extends BaseMockIT {
     verify(
         1,
         putRequestedFor(
-            urlEqualTo(
-                "/oauth-scim-service/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg")));
+            urlEqualTo(String.format("/oauth-scim-service/users/%s", ADMIN_AUTH_ID_VALUE))));
   }
 
   @Test
   public void shouldReturnUserNotFoundForDeactivateUser() throws Exception {
     // Step 2: Call the API and expect USER_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();
     mockMvc
         .perform(
             patch(ApiEndpoint.DEACTIVATE_ACCOUNT.getPath(), IdGenerator.id())
-                .content(asJsonString(emailStatusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnAuthServerApplicationErrorForDeactivateUser() throws Exception {
+    // Step 1: set invalid urAdminAuthId
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    userRegAdminEntity.setUrAdminAuthId(IdGenerator.id());
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    // Step 2: Call the API and expect APPLICATION_ERROR error
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.DEACTIVATE_ACCOUNT.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andDo(print())
+        .andExpect(status().isInternalServerError())
+        .andExpect(
+            jsonPath("$.error_description", is(ErrorCode.APPLICATION_ERROR.getDescription())));
   }
 
   @AfterEach
@@ -219,9 +234,9 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   private SetUpAccountRequest setUpAccountRequest() {
     SetUpAccountRequest request = new SetUpAccountRequest();
-    request.setEmail(TestConstants.USER_EMAIL_VALUE);
-    request.setFirstName(TestDataHelper.ADMIN_FIRST_NAME);
-    request.setLastName(TestDataHelper.ADMIN_LAST_NAME);
+    request.setEmail(USER_EMAIL_VALUE);
+    request.setFirstName(ADMIN_FIRST_NAME);
+    request.setLastName(ADMIN_LAST_NAME);
     request.setPassword("Kantharaj#1123");
     request.setAppId("PARTICIPANT MANAGER");
     request.setStatus(UserAccountStatus.ACTIVE.getStatus());

@@ -1,12 +1,7 @@
 {
 	"request": {
 		"method": "PUT",
-		"url": "/oauth-scim-service/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg",
-		"bodyPatterns": [
-			{
-				"contains": "Invalid@grr.la"
-			}
-		]
+		"url": "/oauth-scim-service/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg"
 	},
 	"response": {
 		"status": 400,

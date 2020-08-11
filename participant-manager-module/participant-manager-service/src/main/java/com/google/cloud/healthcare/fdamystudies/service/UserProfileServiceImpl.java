@@ -123,7 +123,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     return new DeactivateAccountResponse(MessageCode.DEACTIVATE_USER_SUCCESS);
   }
 
-  private UpdateEmailStatusResponse deactivateUserInAuthServer(String authUserId) {
+  private void deactivateUserInAuthServer(String authUserId) {
     logger.entry("updateUserInfoInAuthServer()");
 
     HttpHeaders headers = new HttpHeaders();
@@ -147,6 +147,5 @@ public class UserProfileServiceImpl implements UserProfileService {
     UpdateEmailStatusResponse updateEmailResponse = responseEntity.getBody();
 
     logger.exit(String.format("status=%d", updateEmailResponse.getHttpStatusCode()));
-    return updateEmailResponse;
   }
 }
