@@ -15,7 +15,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import javax.servlet.http.Cookie;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInfo;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,14 +35,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("mockit")
 @AutoConfigureMockMvc
 public class BaseMockIT {
+
+  private XLogger logger = XLoggerFactory.getXLogger(BaseMockIT.class.getName());
 
   protected static final ResultMatcher OK = status().isOk();
 
@@ -107,5 +115,15 @@ public class BaseMockIT {
         .andDo(print())
         .andExpect(resultMatcher)
         .andExpect(content().string(containsString(expectedTextInResponseBody)));
+  }
+
+  @BeforeEach
+  void setUp(TestInfo testInfo) {
+    logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
+  }
+
+  @AfterEach
+  void tearDown(TestInfo testInfo) {
+    logger.exit(String.format("TEST FINISHED: %s", testInfo.getDisplayName()));
   }
 }

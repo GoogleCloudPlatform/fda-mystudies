@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
 
 @Repository
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, Integer> {}

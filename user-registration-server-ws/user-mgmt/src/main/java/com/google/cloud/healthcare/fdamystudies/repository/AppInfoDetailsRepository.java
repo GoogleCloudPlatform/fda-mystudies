@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppInfoDetailsRepository extends JpaRepository<AppInfoDetailsBO, Integer> {}
