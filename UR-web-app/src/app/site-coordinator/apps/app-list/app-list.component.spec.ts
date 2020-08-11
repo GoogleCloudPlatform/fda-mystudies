@@ -8,34 +8,36 @@ import {
   BrowserAnimationsModule,
   NoopAnimationsModule,
 } from '@angular/platform-browser/animations';
-import {StudyListComponent} from './study-list.component';
+
 import {HttpClientModule} from '@angular/common/http';
 import {RouterTestingModule} from '@angular/router/testing';
 import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
-import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
-import {StudiesModule} from '../studies.module';
-import {StudiesService} from '../shared/studies.service';
-import {SiteCoordinatorModule} from '../../site-coordinator.module';
-import {expectedStudyList} from 'src/app/entity/mock-studies-data';
 import {of} from 'rxjs';
+import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
 
-describe('StudyListComponent', () => {
-  let component: StudyListComponent;
-  let fixture: ComponentFixture<StudyListComponent>;
+import {AppsModule} from '../apps.module';
+import {AppsService} from '../shared/apps.service';
+import {SiteCoordinatorModule} from '../../site-coordinator.module';
+import {expectedAppList} from 'src/app/entity/mock-apps-data';
+
+import {AppListComponent} from './app-list.component';
+
+describe('AppListComponent', () => {
+  let component: AppListComponent;
+  let fixture: ComponentFixture<AppListComponent>;
 
   beforeEach(async(async () => {
-    const studyServiceSpy = jasmine.createSpyObj<StudiesService>(
-      'StudiesService',
-      ['getStudies'],
-    );
+    const appsServiceSpy = jasmine.createSpyObj<AppsService>('AppsService', {
+      getApps: of(expectedAppList),
+    });
     await TestBed.configureTestingModule({
-      declarations: [StudyListComponent],
+      declarations: [AppListComponent],
       imports: [
         SiteCoordinatorModule,
         BrowserAnimationsModule,
-        StudiesModule,
         NoopAnimationsModule,
+        AppsModule,
         HttpClientModule,
         RouterTestingModule.withRoutes([]),
         ModalModule.forRoot(),
@@ -49,47 +51,42 @@ describe('StudyListComponent', () => {
         EntityService,
         BsModalService,
         BsModalRef,
-        {provide: StudiesService, useValue: studyServiceSpy},
+        {provide: AppsService, useValue: appsServiceSpy},
       ],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(StudyListComponent);
+        fixture = TestBed.createComponent(AppListComponent);
         component = fixture.componentInstance;
-
-        studyServiceSpy.getStudies.and.returnValue(of(expectedStudyList));
       });
   }));
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should NOT have studies before ngOnInit', () => {
-    component.study$.subscribe((studies) => {
-      expect(studies.length).toBe(0, 'should not have studies before ngOnInit');
+  it('should NOT have apps before ngOnInit', () => {
+    component.app$.subscribe((apps) => {
+      expect(apps.length).toBe(0, 'should not have apps before ngOnInit');
     });
   });
 
-  describe('after get studies', () => {
+  describe('after get apps', () => {
     beforeEach(async(() => {
       fixture.detectChanges();
-      void fixture.whenStable().then(() => {
-        fixture.detectChanges();
-      });
+      void fixture.whenStable();
     }));
 
-    it('should get the studies List via refresh function', fakeAsync(() => {
-      component.study$.subscribe((studies) => {
-        expect(studies.length).toEqual(3);
+    it('should get the apps List via refresh function', fakeAsync(() => {
+      component.app$.subscribe((apps) => {
+        expect(apps.length).toEqual(2);
       });
     }));
-    it('should display all studies', () => {
+    it('should display all apps', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       fixture.detectChanges();
-      expect(compiled.querySelectorAll('.studies_row').length).toBe(
-        3,
-        'should display all studies list',
+      expect(compiled.querySelectorAll('.apps_row').length).toBe(
+        2,
+        'should display all apps list',
       );
     });
   });
