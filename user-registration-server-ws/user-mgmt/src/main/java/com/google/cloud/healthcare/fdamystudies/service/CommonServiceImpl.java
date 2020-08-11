@@ -8,6 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
+import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,16 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
-import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 
 @Service
 public class CommonServiceImpl implements CommonService {

@@ -11,23 +11,12 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -35,6 +24,15 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.util.List;
+import java.util.Optional;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -49,25 +47,28 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationResponse addNewLocation(LocationRequest locationRequest) {
+  public LocationEntity addNewLocation(LocationEntity location, String userId)
+      throws ErrorCodeException {
     logger.entry("begin addNewLocation()");
 
-    Optional<UserRegAdminEntity> optUserRegAdminUser =
-        userRegAdminRepository.findById(locationRequest.getUserId());
+    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminUser.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (Permission.READ_EDIT != Permission.fromValue(adminUser.getEditPermission())) {
       logger.exit(
           String.format(
               "Add location failed with error code=%s", ErrorCode.LOCATION_ACCESS_DENIED));
-      return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
-    LocationEntity locationEntity = LocationMapper.fromLocationRequest(locationRequest);
-    locationEntity.setCreatedBy(adminUser.getId());
-    locationEntity = locationRepository.saveAndFlush(locationEntity);
-    logger.exit(String.format("locationId=%s", locationEntity.getId()));
 
-    return LocationMapper.toLocationResponse(locationEntity, MessageCode.ADD_LOCATION_SUCCESS);
+    location.setCreatedBy(adminUser.getId());
+    LocationEntity created = locationRepository.saveAndFlush(location);
+
+    logger.exit(String.format("locationId=%s", created.getId()));
+    return created;
   }
 
   @Override

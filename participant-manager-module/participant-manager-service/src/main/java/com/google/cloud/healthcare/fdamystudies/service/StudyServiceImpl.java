@@ -134,7 +134,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setSitesCount((long) permissions.size());
 
       if (studyPermissionsByStudyInfoId.get(studyId) != null) {
-        Integer studyEditPermission = studyPermissionsByStudyInfoId.get(study.getId()).getEdit();
+        Integer studyEditPermission = studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
         studyDetail.setStudyPermission(
             studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
         studyDetail.setStudyPermission(studyEditPermission);
@@ -191,7 +191,7 @@ public class StudyServiceImpl implements StudyService {
       studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
     }
 
-    if (studyType.equals(OPEN_STUDY)) {
+    if (sitePermission.getSite().getTargetEnrollment() != null && studyType.equals(OPEN_STUDY)) {
       studyInvitedCount += sitePermission.getSite().getTargetEnrollment();
     }
     return studyInvitedCount;

@@ -72,7 +72,7 @@ class StudyOverviewViewControllerFirst: UIViewController {
       fontSize = 14.0
     }
 
-    let attrStr = try! NSAttributedString(
+    if let attrStr = try? NSAttributedString(
       data: (overviewSectionDetail.text?.data(
         using: String.Encoding.unicode,
         allowLossyConversion: true
@@ -83,32 +83,33 @@ class StudyOverviewViewControllerFirst: UIViewController {
           .html,
       ],
       documentAttributes: nil
-    )
+    ) {
 
-    let attributedText: NSMutableAttributedString = NSMutableAttributedString(
-      attributedString: attrStr
-    )
-    attributedText.addAttributes(
-      [
-        NSAttributedString.Key.font: UIFont(
-          name: "HelveticaNeue",
-          size: CGFloat(fontSize)
-        )!,
-      ],
-      range: (attrStr.string as NSString).range(of: attrStr.string)
-    )
-    attributedText.addAttribute(
-      NSAttributedString.Key.foregroundColor,
-      value: UIColor.white,
-      range: (attrStr.string as NSString).range(of: attrStr.string)
-    )
+      let attributedText: NSMutableAttributedString = NSMutableAttributedString(
+        attributedString: attrStr
+      )
+      attributedText.addAttributes(
+        [
+          NSAttributedString.Key.font: UIFont(
+            name: "HelveticaNeue",
+            size: CGFloat(fontSize)
+          )!,
+        ],
+        range: (attrStr.string as NSString).range(of: attrStr.string)
+      )
+      attributedText.addAttribute(
+        NSAttributedString.Key.foregroundColor,
+        value: UIColor.white,
+        range: (attrStr.string as NSString).range(of: attrStr.string)
+      )
 
-    if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
-      self.labelDescription?.attributedText = attributedText
-    } else {
-      self.labelDescription?.text = ""
+      if Utilities.isValidValue(someObject: attrStr.string as AnyObject?) {
+        self.labelDescription?.attributedText = attributedText
+      } else {
+        self.labelDescription?.text = ""
+      }
+      self.labelDescription?.textAlignment = .center
     }
-    self.labelDescription?.textAlignment = .center
 
     setNeedsStatusBarAppearanceUpdate()
   }

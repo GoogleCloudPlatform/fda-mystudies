@@ -1,8 +1,11 @@
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
+import com.google.cloud.healthcare.fdamystudies.common.CommonApplicationPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Arrays;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,35 +17,22 @@ public final class AuditEventMapper {
 
   private static final String APP_ID = "appId";
 
-  private static final String CLIENT_ID = "clientId";
-
-  private static final String DEVICE_TYPE = "deviceType";
-
-  private static final String DEVICE_PLATFORM = "devicePlatform";
-
-  private static final String CLIENT_APP_VERSION = "clientAppVersion";
+  private static final String MOBILE_PLATFORM = "mobilePlatform";
 
   private static final String CORRELATION_ID = "correlationId";
 
   private static final String USER_ID = "userId";
 
-  private static final String ORG_ID = "orgId";
+  public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request) {
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(getValue(request, APP_ID));
+    auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
+    auditRequest.setUserId(getValue(request, USER_ID));
+    auditRequest.setUserIp(getUserIP(request));
 
-  public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request)
-      throws UnknownHostException {
-    AuditLogEventRequest aleRequest = new AuditLogEventRequest();
-    aleRequest.setOrgId(getValue(request, ORG_ID));
-    aleRequest.setAppId(getValue(request, APP_ID));
-    aleRequest.setClientAppVersion(getValue(request, CLIENT_APP_VERSION));
-    aleRequest.setCorrelationId(getValue(request, CORRELATION_ID));
-    aleRequest.setDeviceType(getValue(request, DEVICE_TYPE));
-    aleRequest.setDevicePlatform(getValue(request, DEVICE_PLATFORM));
-    aleRequest.setClientId(getValue(request, CLIENT_ID));
-    aleRequest.setUserId(getValue(request, USER_ID));
-    aleRequest.setClientIp(getClientIP(request));
-    aleRequest.setRequestUri(request.getRequestURI());
-    aleRequest.setSystemIp(InetAddress.getLocalHost().getHostAddress());
-    return aleRequest;
+    MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
+    auditRequest.setMobilePlatform(mobilePlatform.getValue());
+    return auditRequest;
   }
 
   private static String getValue(HttpServletRequest request, String name) {
@@ -53,7 +43,7 @@ public final class AuditEventMapper {
     return value;
   }
 
-  private static String getClientIP(HttpServletRequest request) {
+  private static String getUserIP(HttpServletRequest request) {
     return StringUtils.defaultIfEmpty(
         request.getHeader("X-FORWARDED-FOR"), request.getRemoteAddr());
   }
@@ -67,5 +57,21 @@ public final class AuditEventMapper {
           .orElse(null);
     }
     return null;
+  }
+
+  public static AuditLogEventRequest fromAuditLogEventEnumAndCommonPropConfig(
+      AuditLogEvent eventEnum,
+      CommonApplicationPropertyConfig commonPropConfig,
+      AuditLogEventRequest auditRequest) {
+    auditRequest.setEventCode(eventEnum.getEventCode());
+    auditRequest.setSource(eventEnum.getSource().getValue());
+    auditRequest.setDestination(eventEnum.getDestination().getValue());
+    auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().getValue());
+    auditRequest.setResourceServer(eventEnum.getResourceServer().getValue());
+    auditRequest.setSourceApplicationVersion(commonPropConfig.getApplicationVersion());
+    auditRequest.setDestinationApplicationVersion(commonPropConfig.getApplicationVersion());
+    auditRequest.setPlatformVersion(commonPropConfig.getApplicationVersion());
+    auditRequest.setOccured(new Timestamp(Instant.now().toEpochMilli()));
+    return auditRequest;
   }
 }

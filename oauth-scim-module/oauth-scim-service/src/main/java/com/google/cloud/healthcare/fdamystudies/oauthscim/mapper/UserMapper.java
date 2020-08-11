@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 
 public final class UserMapper {
@@ -23,7 +24,9 @@ public final class UserMapper {
     entity.setEmail(userRequest.getEmail());
     entity.setOrgId(userRequest.getOrgId());
     entity.setStatus(userRequest.getStatus());
-    entity.setTempRegId(IdGenerator.id());
+    if (UserAccountStatus.ACTIVE.getStatus() == userRequest.getStatus()) {
+      entity.setTempRegId(IdGenerator.id());
+    }
     entity.setUserId(IdGenerator.id());
     return entity;
   }

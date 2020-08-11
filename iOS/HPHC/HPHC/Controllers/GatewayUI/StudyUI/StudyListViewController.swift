@@ -319,12 +319,10 @@ class StudyListViewController: UIViewController {
       }
     } else {
       checkIfNotificationEnabled()
-      if NotificationHandler.instance.studyId.count > 0 {
+      if !NotificationHandler.instance.studyId.isEmpty {
         let studyId = NotificationHandler.instance.studyId
         let study = Gateway.instance.studies?.filter { $0.studyId == studyId }.first
         Study.updateCurrentStudy(study: study!)
-
-        NotificationHandler.instance.studyId = ""
         performTaskBasedOnStudyStatus()
       }
     }
