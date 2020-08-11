@@ -220,6 +220,14 @@ public class UserProfileController {
               response);
           return null;
         }
+      } else {
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            response);
+        return null;
+      }
     } catch (Exception e) {
       logger.error("UserProfileController resendConfirmation() - error ", e);
     }
