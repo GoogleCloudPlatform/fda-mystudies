@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.helper;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 
 import java.util.Collections;
@@ -18,7 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
-import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
@@ -87,7 +93,7 @@ public class TestDataHelper {
     userRegAdminEntity.setEmail(EMAIL_VALUE);
     userRegAdminEntity.setFirstName("mockito");
     userRegAdminEntity.setLastName("mockito_last_name");
-    userRegAdminEntity.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRegAdminEntity.setEditPermission(Permission.READ_EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
@@ -118,8 +124,21 @@ public class TestDataHelper {
   }
 
   public LocationEntity createLocation() {
+    LocationEntity locationEntity = newLocationEntity();
+    SiteEntity siteEntity = newSiteEntity();
+    locationEntity.addSiteEntity(siteEntity);
+    siteEntity.setStudy(newStudyEntity());
+    return locationRepository.saveAndFlush(locationEntity);
+  }
+
+  public LocationEntity newLocationEntity() {
     LocationEntity locationEntity = new LocationEntity();
-    return locationRepository.save(locationEntity);
+    locationEntity.setCustomId(CUSTOM_ID_VALUE);
+    locationEntity.setDescription(LOCATION_DESCRIPTION_VALUE);
+    locationEntity.setName(LOCATION_NAME_VALUE);
+    locationEntity.setStatus(ACTIVE_STATUS);
+    locationEntity.setIsDefault(NO);
+    return locationEntity;
   }
 
   public UserRegAdminEntity createUserRegAdminEntity() {
@@ -137,7 +156,7 @@ public class TestDataHelper {
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
     StudyEntity studyEntity = new StudyEntity();
-    studyEntity.setType("CLOSE");
+    studyEntity.setType(CLOSE_STUDY);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEditPermission(EDIT_VALUE);

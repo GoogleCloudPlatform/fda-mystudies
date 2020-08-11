@@ -80,8 +80,8 @@ public class UserRegAdminEntity implements Serializable {
   @Column(name = "super_admin", length = 1)
   private boolean superAdmin;
 
-  @Column(name = "manage_locations", length = 1)
-  private Integer manageLocations;
+  @Column(name = "edit_permission", length = 1)
+  private Integer editPermission;
 
   @Column(
       name = "created",

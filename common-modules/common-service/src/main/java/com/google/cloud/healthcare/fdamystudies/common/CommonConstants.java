@@ -26,7 +26,7 @@ public final class CommonConstants {
   public static final Integer READ_PERMISSION = 1;
 
   public static final Integer READ_AND_EDIT_PERMISSION = 2;
-  
+
   public static final Integer INACTIVE_STATUS = 0;
 
   public static final int ACTIVE = 1;
