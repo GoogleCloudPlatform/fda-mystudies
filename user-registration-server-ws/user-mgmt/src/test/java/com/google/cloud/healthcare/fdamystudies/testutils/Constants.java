@@ -43,4 +43,15 @@ public final class Constants {
   public static final String NOTIFICATION_TYPE = "ST";
   public static final String STUDY_LEVEL = "ST";
   public static final String GATEWAY_LEVEL = "GT";
+
+  public static final String SUBJECT = "How can I recommend this app to institutions?";
+  public static final String BODY = "Wanted to know if other organizations can partner";
+  public static final String FIRST_NAME = "fName";
+  public static final String CODE = "123code";
+  public static final String INVALID_CODE = "12";
+  public static final String INVALID_INPUT = "Invalid input.";
+  public static final String EMAIL_NOT_EXIST = "Email Doesn't Exists";
+  public static final String INVALID_PASSWORD = "Invalid Password";
+  public static final String EMAIL = "cdash93@gmail.com";
+  public static final Object INVALID_EMAIL_CODE = "Invalid email code";
 }

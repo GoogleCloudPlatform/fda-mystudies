@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import org.json.JSONArray;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.json.JSONArray;
 
 @NoArgsConstructor
 @AllArgsConstructor

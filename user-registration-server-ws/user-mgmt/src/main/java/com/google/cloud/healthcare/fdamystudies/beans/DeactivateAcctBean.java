@@ -8,8 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
