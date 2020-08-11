@@ -15,22 +15,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MvcResult;
-
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.service.StudyMetadataService;
+import com.google.cloud.healthcare.fdamystudies.dao.CloudFirestoreResponsesDaoImpl;
+import com.google.cloud.healthcare.fdamystudies.service.StudyMetadataServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MvcResult;
 
 public class StudyMetadataControllerTest extends BaseMockIT {
 
-  @Autowired StudyMetadataService studyMetadataService;
+  @MockBean private CloudFirestoreResponsesDaoImpl responsesDaoMock;
+
+  @InjectMocks private StudyMetadataServiceImpl studyMetadataService;
 
   @Test
   void testStudyMetadataSavedContent() throws Exception {
