@@ -1,0 +1,16 @@
+{
+  "violations": [
+    {
+      "path": "customId",
+      "message": "must not be blank"
+    },
+    {
+      "path": "description",
+      "message": "must not be blank"
+    },
+    {
+      "path": "name",
+      "message": "must not be blank"
+    }
+  ]
+}

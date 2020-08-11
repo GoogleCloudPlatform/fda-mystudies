@@ -11,15 +11,24 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 
-public class UpdateUserResponse extends BaseResponse {
+import lombok.Getter;
+import lombok.Setter;
 
-  public UpdateUserResponse() {}
+@Setter
+@Getter
+public class LocationResponse extends BaseResponse {
 
-  public UpdateUserResponse(ErrorCode errorCode) {
+  private String locationId;
+  private String customId;
+  private String description;
+  private String name;
+  private Integer status;
+
+  public LocationResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public UpdateUserResponse(MessageCode messageCode) {
+  public LocationResponse(MessageCode messageCode) {
     super(messageCode);
   }
 }
