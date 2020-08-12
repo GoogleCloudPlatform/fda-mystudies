@@ -22,4 +22,13 @@ public enum Permission {
   public Integer value() {
     return value;
   }
+
+  public static Permission fromValue(Integer value) {
+    for (Permission e : Permission.values()) {
+      if (e.value == value) {
+        return e;
+      }
+    }
+    return NO_PERMISSION;
+  }
 }

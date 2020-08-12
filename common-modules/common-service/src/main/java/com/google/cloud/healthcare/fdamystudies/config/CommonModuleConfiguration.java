@@ -37,6 +37,7 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
     restTemplate.setErrorHandler(new RestResponseErrorHandler());
     addInterceptors(restTemplate);
 
+    restTemplate.setErrorHandler(new RestResponseErrorHandler());
     return restTemplate;
   }
 

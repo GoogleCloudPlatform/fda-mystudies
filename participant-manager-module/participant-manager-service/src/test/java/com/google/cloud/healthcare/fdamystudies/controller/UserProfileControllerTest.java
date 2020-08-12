@@ -51,10 +51,6 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired UserRegAdminRepository userRegAdminRepository;
 
-  public static final String EMAIL_VALUE = "mockit_email@grr.la";
-
-  protected static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
-
   @Test
   public void contextLoads() {
     assertNotNull(controller);
@@ -103,6 +99,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserNotInvitedError() throws Exception {
     // Step 1: Setting up the request
     SetUpAccountRequest request = setUpAccountRequest();
+    request.setEmail("Invalid@grr.la");
 
     // Step 2: Call the API and expect USER_NOT_INVITED error
     HttpHeaders headers = testDataHelper.newCommonHeaders();

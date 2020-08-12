@@ -10,4 +10,7 @@ export class StudiesService {
   getStudies(): Observable<Study[]> {
     return this.entityService.getCollection('studies');
   }
+  getStudiesWithSites(): Observable<Study[]> {
+    return this.entityService.getCollection('sites');
+  }
 }
