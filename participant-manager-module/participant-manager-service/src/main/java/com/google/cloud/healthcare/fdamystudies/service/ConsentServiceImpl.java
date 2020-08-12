@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocument;
+import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocumentResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
@@ -44,7 +44,7 @@ public class ConsentServiceImpl implements ConsentService {
 
   @Override
   @Transactional(readOnly = true)
-  public ConsentDocument getConsentDocument(String consentId, String userId) {
+  public ConsentDocumentResponse getConsentDocument(String consentId, String userId) {
     logger.entry("begin getConsentDocument(consentId,userId)");
 
     Optional<StudyConsentEntity> optStudyConsent = studyConsentRepository.findById(consentId);
@@ -52,10 +52,9 @@ public class ConsentServiceImpl implements ConsentService {
 
     if (!optStudyConsent.isPresent()
         || studyConsentEntity.getParticipantStudy() == null
-        || studyConsentEntity.getParticipantStudy().getSite() == null
-        || studyConsentEntity.getParticipantStudy().getSite().getId() == null) {
+        || studyConsentEntity.getParticipantStudy().getSite() == null) {
       logger.exit(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
-      return new ConsentDocument(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
+      return new ConsentDocumentResponse(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
     }
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(
@@ -63,7 +62,7 @@ public class ConsentServiceImpl implements ConsentService {
 
     if (!optSitePermission.isPresent()) {
       logger.exit(ErrorCode.SITE_PERMISSION_ACEESS_DENIED);
-      return new ConsentDocument(ErrorCode.SITE_PERMISSION_ACEESS_DENIED);
+      return new ConsentDocumentResponse(ErrorCode.SITE_PERMISSION_ACEESS_DENIED);
     }
 
     String document = null;
@@ -72,10 +71,10 @@ public class ConsentServiceImpl implements ConsentService {
           storageService.get(BlobId.of(appConfig.getBucketName(), studyConsentEntity.getPdfPath()));
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       blob.downloadTo(outputStream);
-      document = new String(outputStream.toByteArray());
+      document = new String(blob.getContent());
     }
 
-    return new ConsentDocument(
+    return new ConsentDocumentResponse(
         MessageCode.GET_CONSENT_DOCUMENT_SUCCESS,
         studyConsentEntity.getVersion(),
         MediaType.APPLICATION_PDF_VALUE,

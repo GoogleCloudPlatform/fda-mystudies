@@ -32,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
+
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
@@ -45,23 +46,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ConsentControllerTest extends BaseMockIT {
 
-  @Autowired
-  private ConsentController controller;
+  @Autowired private ConsentController controller;
 
-  @Autowired
-  private ConsentService consentService;
+  @Autowired private ConsentService consentService;
 
-  @Autowired
-  private TestDataHelper testDataHelper;
+  @Autowired private TestDataHelper testDataHelper;
 
-  @Autowired
-  private ParticipantStudyRepository participantStudyRepository;
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
 
-  @Autowired
-  private Storage mockStorage;
+  @Autowired private Storage mockStorage;
 
-  @Autowired
-  private AppPropertyConfig appPropConfig;
+  @Autowired private AppPropertyConfig appPropConfig;
 
   protected MvcResult result;
 
@@ -84,8 +79,9 @@ public class ConsentControllerTest extends BaseMockIT {
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
     siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
-    participantStudyEntity = testDataHelper.createParticipantStudyEntity(siteEntity, studyEntity,
-        participantRegistrySiteEntity);
+    participantStudyEntity =
+        testDataHelper.createParticipantStudyEntity(
+            siteEntity, studyEntity, participantRegistrySiteEntity);
     studyConsentEntity = testDataHelper.createStudyConsentEntity(participantStudyEntity);
   }
 
@@ -104,14 +100,21 @@ public class ConsentControllerTest extends BaseMockIT {
     BlobId validBlobId = BlobId.of(appPropConfig.getBucketName(), "documents/test-document.pdf");
     Blob mockedBlob = mock(Blob.class);
 
+    String content = "sample consent document content";
+    when(mockedBlob.getContent()).thenReturn(content.getBytes());
+
     when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
 
     mockMvc
-        .perform(get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
-            .headers(headers).contextPath(getContextPath()))
-        .andDo(print()).andExpect(status().isOk())
+        .perform(
+            get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.type").value(MediaType.APPLICATION_PDF_VALUE))
-        .andExpect(jsonPath("$.content").isEmpty()).andExpect(
+        .andExpect(jsonPath("$.content").value(content))
+        .andExpect(
             jsonPath("$.message").value(MessageCode.GET_CONSENT_DOCUMENT_SUCCESS.getMessage()));
   }
 
@@ -127,14 +130,42 @@ public class ConsentControllerTest extends BaseMockIT {
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
-        .perform(get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
-            .headers(headers).contextPath(getContextPath()))
-        .andDo(print()).andExpect(status().isForbidden()).andExpect(jsonPath("$.error_description",
-            is(ErrorCode.SITE_PERMISSION_ACEESS_DENIED.getDescription())));
+        .perform(
+            get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.SITE_PERMISSION_ACEESS_DENIED.getDescription())));
   }
 
   @Test
   public void shouldReturnConsentDataNotAvailableForConsentDocument() throws Exception {
+    // Site 1: set siteEntity to null
+    studyConsentEntity.setParticipantStudy(null);
+    testDataHelper.getStudyConsentRepository().save(studyConsentEntity);
+
+    // Step 2: Call API and expect CONSENT_DATA_NOT_AVAILABLE error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnConsentDataNotAvailableForConsentDocumentForSite() throws Exception {
     // Site 1: set siteEntity to null
     studyConsentEntity.getParticipantStudy().setSite(null);
     testDataHelper.getStudyConsentRepository().save(studyConsentEntity);
@@ -144,10 +175,15 @@ public class ConsentControllerTest extends BaseMockIT {
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
-        .perform(get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
-            .headers(headers).contextPath(getContextPath()))
-        .andDo(print()).andExpect(status().isBadRequest()).andExpect(jsonPath("$.error_description",
-            is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
+        .perform(
+            get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
   }
 
   @AfterEach
