@@ -8,78 +8,38 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.common;
 
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_DATASTORE;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.SCIM_AUTH_SERVER;
+
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum AuthScimEvent implements AuditLogEvent {
   PASSWORD_RESET_SUCCESS(
-      false,
-      Constants.APP_USER,
-      Constants.FMSGCAUTHSVR,
-      Constants.FMSGCMOBAPP,
-      Constants.APP_LEVEL,
-      Constants.PARTICIPANT_DATASTORE,
-      "Password reset success",
-      "Password reset for User ID ${user_id} was successful.",
-      "PASSWORD_RESET_SUCCESS",
-      true),
+      PARTICIPANT_DATASTORE,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Password reset successful.",
+      UserAccessLevel.APP_STUDY_ADMIN,
+      "PASSWORD_RESET_SUCCESS"),
 
   PASSWORD_RESET_FAILED(
-      false,
-      Constants.APP_USER,
-      Constants.FMSGCAUTHSVR,
-      Constants.FMSGCMOBAPP,
-      Constants.APP_LEVEL,
-      Constants.PARTICIPANT_DATASTORE,
-      "Password reset failure",
-      "Password reset for User ID ${user_id}, failed.",
-      "PASSWORD_RESET_FAILED",
-      true);
+      PARTICIPANT_DATASTORE,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Password reset failed.",
+      UserAccessLevel.APP_STUDY_ADMIN,
+      "PASSWORD_RESET_FAILED");
 
-  private final String eventName;
-  private final boolean alert;
-  private final String systemId;
-  private final String accessLevel;
-  private final String clientId;
-  private final String clientAccessLevel;
-  private final String resourceServer;
-  private final String eventDetail;
+  private final PlatformComponent source;
+  private final PlatformComponent destination;
+  private final PlatformComponent resourceServer;
   private final String description;
-  private final boolean fallback;
-
-  private AuthScimEvent(
-      boolean alert,
-      String accessLevel,
-      String systemId,
-      String clientId,
-      String clientAccessLevel,
-      String resourceServer,
-      String eventDetail,
-      String description,
-      String eventName,
-      boolean fallback) {
-    this.alert = alert;
-    this.accessLevel = accessLevel;
-    this.systemId = systemId;
-    this.clientId = clientId;
-    this.clientAccessLevel = clientAccessLevel;
-    this.resourceServer = resourceServer;
-    this.description = description;
-    this.eventDetail = eventDetail;
-    this.eventName = eventName;
-    this.fallback = fallback;
-  }
-
-  private static class Constants {
-    private static final String APP_LEVEL = "App-level";
-
-    private static final String FMSGCAUTHSVR = "FMSGCAUTHSVR";
-
-    private static final String APP_USER = "App User";
-
-    private static final String PARTICIPANT_DATASTORE = "Participant Datastore";
-
-    private static final String FMSGCMOBAPP = "FMSGCMOBAPP";
-  }
+  private final UserAccessLevel userAccessLevel;
+  private final String eventCode;
 }

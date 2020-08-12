@@ -71,8 +71,8 @@ public class UserRegAdminEntity implements Serializable {
   @Column(name = "phone_number", length = 20)
   private String phoneNumber;
 
-  @Column(name = "email_changed", length = 1)
-  private boolean emailChanged;
+  @Column(name = "email_changed")
+  private Boolean emailChanged;
 
   @Column(name = "status", length = 1)
   private Integer status;
@@ -80,8 +80,8 @@ public class UserRegAdminEntity implements Serializable {
   @Column(name = "super_admin", length = 1)
   private boolean superAdmin;
 
-  @Column(name = "manage_locations", length = 1)
-  private Integer manageLocations;
+  @Column(name = "edit_permission", length = 1)
+  private Integer editPermission;
 
   @Column(
       name = "created",
