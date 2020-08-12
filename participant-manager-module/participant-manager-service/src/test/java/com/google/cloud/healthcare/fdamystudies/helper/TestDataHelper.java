@@ -8,20 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.helper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
-
-import java.util.Collections;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -53,9 +39,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.EMAIL_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 @Getter
@@ -180,8 +172,7 @@ public class TestDataHelper {
       StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
     SiteEntity siteEntity = newSiteEntity();
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
+    sitePermissionEntity.setEditPermission(Permission.READ_EDIT.value());
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
     sitePermissionEntity.setAppInfo(appEntity);

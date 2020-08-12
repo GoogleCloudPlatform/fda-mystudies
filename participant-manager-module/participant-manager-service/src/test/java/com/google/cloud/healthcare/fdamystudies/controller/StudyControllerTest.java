@@ -188,7 +188,7 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setLocation(locationEntity);
     siteEntity.setTargetEnrollment(0);
     siteEntity.setStudy(studyEntity);
-    participantRegistrySiteEntity.setEmail(testDataHelper.EMAIL_VALUE);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setStatus(ENROLLED_STATUS);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);

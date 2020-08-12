@@ -8,19 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
-
-import java.util.List;
-import java.util.Optional;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
@@ -47,6 +34,17 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.util.SiteStatus;
+import java.util.List;
+import java.util.Optional;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -212,7 +210,7 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
 
     if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getCanEdit().equals(Permission.READ_EDIT.value())) {
+        || !optSitePermission.get().getEditPermission().equals(Permission.READ_EDIT.value())) {
       return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
     }
 

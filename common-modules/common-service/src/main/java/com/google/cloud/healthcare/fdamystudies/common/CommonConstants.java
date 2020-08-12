@@ -19,8 +19,6 @@ public final class CommonConstants {
 
   public static final Integer ACTIVE_STATUS = 1;
 
-  public static final Integer INACTIVE_STATUS = 0;
-
   public static final String NOT_APPLICABLE = "NA";
 
   public static final String OPEN_STUDY = "OPEN";
@@ -40,7 +38,7 @@ public final class CommonConstants {
   public static final int EDIT_VALUE = 1;
 
   public static final String ENROLLED_STATUS = "Enrolled";
-  
+
   public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
       "application/x-www-form-urlencoded;charset=UTF-8";
 }
