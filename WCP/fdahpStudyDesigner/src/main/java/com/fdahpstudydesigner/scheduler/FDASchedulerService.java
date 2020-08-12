@@ -154,7 +154,7 @@ public class FDASchedulerService {
     logger.info("FDASchedulerService - createAuditLogs - Ends");
   }
 
-  @Scheduled(cron = "0 * * * * ?")
+  @Scheduled(cron = "0 0,30 * * * ?")
   public void sendPushNotification() {
     logger.info("FDASchedulerService - sendPushNotification - Starts");
     List<PushNotificationBean> pushNotificationBeans;
