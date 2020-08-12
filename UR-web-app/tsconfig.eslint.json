@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "include": ["src/**/*.js", "src/**/*.ts", ".eslintrc.js"],
+  "lib": ["dom", "es2018"],
   "compilerOptions": {
     "types": ["jasmine", "node"]
   }

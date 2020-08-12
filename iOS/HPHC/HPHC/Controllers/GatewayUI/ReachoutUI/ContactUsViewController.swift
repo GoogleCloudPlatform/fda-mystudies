@@ -241,8 +241,9 @@ extension ContactUsViewController: UITextFieldDelegate {
 
     let tag: ContactTextFieldTags = ContactTextFieldTags(rawValue: textField.tag)!
     let finalString = textField.text! + string
-
-    if string == " " {
+    if string == " "
+      && tag != .subject
+    {
       return false
     }
 
