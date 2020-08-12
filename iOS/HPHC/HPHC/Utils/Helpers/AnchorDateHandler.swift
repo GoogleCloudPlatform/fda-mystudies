@@ -181,7 +181,7 @@ class AnchorDateHandler {
     let tokenIdentifier = study.userParticipateState.tokenIdentifier ?? ""
     let siteID = study.userParticipateState.siteID ?? ""
     let activityVersion =
-      emptyAnchorDateDetail.activity.version ?? emptyAnchorDateDetail.sourceActivityVersion
+      emptyAnchorDateDetail.activity?.version ?? emptyAnchorDateDetail.sourceActivityVersion
     let participantId = study.userParticipateState.participantId ?? ""
 
     var urlString = ResponseServerURLConstants.DevelopmentURL + method.methodName + "?"

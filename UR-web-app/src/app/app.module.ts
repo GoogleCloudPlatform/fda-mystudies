@@ -42,6 +42,7 @@ import {CookieService} from 'ngx-cookie-service';
     }),
   ],
   providers: [
+    BsModalRef,
     CookieService,
     EntityService,
     BsModalRef,

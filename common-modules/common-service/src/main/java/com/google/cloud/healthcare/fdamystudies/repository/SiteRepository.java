@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -27,4 +28,8 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
   @Query(
       "SELECT site from SiteEntity site where site.location.id = :locationId and site.study.id= :studyId")
   public Optional<SiteEntity> findByLocationIdAndStudyId(String locationId, String studyId);
+
+  @Query(
+      "SELECT site from SiteEntity site where site.location.id = :locationId and site.status= :status")
+  public List<SiteEntity> findByLocationIdAndStatus(String locationId, Integer status);
 }

@@ -14,6 +14,7 @@ import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
@@ -31,4 +32,9 @@ public interface StudyPermissionRepository extends JpaRepository<StudyPermission
 
   @Query("SELECT sp from StudyPermissionEntity sp where sp.study.id=:studyId")
   public List<StudyPermissionEntity> findByStudyId(String studyId);
+
+  @Query(
+      "SELECT sp FROM StudyPermissionEntity sp WHERE  sp.study.id IN (:usersStudyIds) and  sp.urAdminUser.id=:userId")
+  public List<StudyPermissionEntity> findStudyPermissionsOfUserByStudyIds(
+      @Param("usersStudyIds") List<String> usersStudyIds, String userId);
 }

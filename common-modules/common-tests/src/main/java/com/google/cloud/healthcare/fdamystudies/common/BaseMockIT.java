@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +42,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
+
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -49,8 +53,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
   "classpath:application-mockit.properties",
   "classpath:application-mockit-common.properties"
 })
+@ComponentScan(basePackages = {"com.google.cloud.healthcare.fdamystudies"})
 public class BaseMockIT {
-
   private XLogger logger = XLoggerFactory.getXLogger(BaseMockIT.class.getName());
 
   protected static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";

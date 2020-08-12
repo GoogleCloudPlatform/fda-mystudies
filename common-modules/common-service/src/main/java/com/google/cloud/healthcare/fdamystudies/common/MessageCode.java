@@ -1,9 +1,8 @@
 /*
  * Copyright 2020 Google LLC
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 
 package com.google.cloud.healthcare.fdamystudies.common;
@@ -25,6 +24,18 @@ import org.springframework.http.HttpStatus;
 public enum MessageCode {
   ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
 
+  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
+
+  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get apps successfully"),
+
+  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfully"),
+
+  DECOMMISSION_SUCCESS(HttpStatus.OK, "MSG-0003", "Decommission successfully"),
+
+  REACTIVE_SUCCESS(HttpStatus.OK, "MSG-0004", "Reactivate successfully"),
+
+  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
@@ -33,7 +44,9 @@ public enum MessageCode {
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
       HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server."),
 
-  UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated.");
+  UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
+
+  SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

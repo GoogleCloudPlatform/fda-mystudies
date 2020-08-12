@@ -8,19 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.io.IOException;
-import java.time.Instant;
-
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
+import java.io.IOException;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @ToString
@@ -99,12 +97,59 @@ public enum ErrorCode {
   SITE_EXISTS(
       400, "EC-106", Constants.BAD_REQUEST, "Site exists with the given locationId and studyId"),
 
-  SITE_ADDED(200, "EC-107", "Ok", "Site added successfully");
+  LOCATION_ACCESS_DENIED(
+      403, "EC-882", "Forbidden", "You do not have permission to view or add or update locations"),
+
+  INVALID_ARGUMENTS(400, "EC_813", Constants.BAD_REQUEST, "Provided argument value is invalid"),
+
+  USER_NOT_EXISTS(401, "EC_861", "Unauthorized", "User does not exist"),
+
+  MISSING_REQUIRED_ARGUMENTS(400, "EC_812", Constants.BAD_REQUEST, "Missing required argument"),
+
+  CUSTOM_ID_EXISTS(400, "EC_883", Constants.BAD_REQUEST, "customId already exists"),
+
+  USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active"),
+
+  USER_NOT_INVITED(
+      400, "EC-869", Constants.BAD_REQUEST, "Provided email not exists or user not invited"),
+  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found."),
+
+  STUDY_NOT_FOUND(404, "EC-816", Constants.BAD_REQUEST, "Study not found"),
+
+  LOCATION_NOT_FOUND(404, "EC_881", "Not Found", "No Locations Found"),
+
+  DEFAULT_SITE_MODIFY_DENIED(
+      400, "EC_888", Constants.BAD_REQUEST, "Default site can't be modified"),
+
+  ALREADY_DECOMMISSIONED(
+      400, "EC_886", Constants.BAD_REQUEST, "Can't decommision an already decommissioned location"),
+
+  CANNOT_DECOMMISSIONED(
+      400,
+      "EC_885",
+      Constants.BAD_REQUEST,
+      "This Location is being used as an active Site in one or more studies and cannot be decomissioned"),
+
+  CANNOT_REACTIVATE(
+      400, "EC_887", Constants.BAD_REQUEST, "Can't reactivate an already active location"),
+
+  LOCATION_UPDATE_DENIED(
+      403, "EC-882", "Forbidden", "You do not have permission to update the location");
 
   private final int status;
   private final String code;
   private final String errorType;
   private final String description;
+
+  public static ErrorCode fromCodeAndDescription(String code, String description) {
+    for (ErrorCode e : ErrorCode.values()) {
+      if (StringUtils.equalsIgnoreCase(e.code, code)
+          && StringUtils.equalsIgnoreCase(e.description, description)) {
+        return e;
+      }
+    }
+    return null; // not found
+  }
 
   private static class Constants {
 
