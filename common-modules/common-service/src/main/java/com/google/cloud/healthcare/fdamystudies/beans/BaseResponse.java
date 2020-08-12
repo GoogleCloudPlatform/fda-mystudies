@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -44,10 +43,6 @@ public class BaseResponse {
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("message")
   private String message;
-
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("code")
-  private String code;
 
   public BaseResponse() {}
 
