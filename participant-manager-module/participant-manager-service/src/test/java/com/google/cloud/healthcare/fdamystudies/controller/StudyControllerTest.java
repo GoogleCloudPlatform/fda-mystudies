@@ -8,22 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Collections;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -39,6 +23,22 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.service.StudyService;
+import java.util.Collections;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class StudyControllerTest extends BaseMockIT {
 
@@ -93,6 +93,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].type").value(studyEntity.getType()))
         .andExpect(jsonPath("$.sitePermissionCount").value(1));
@@ -113,7 +114,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldNotReturnStudies() throws Exception {
+  public void shouldReturnStudyNotFound() throws Exception {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, IdGenerator.id());
 
@@ -183,8 +184,15 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
     locationEntity = testDataHelper.createLocation();
+    studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
-    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    siteEntity.setTargetEnrollment(0);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(testDataHelper.EMAIL_VALUE);
+    participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(ENROLLED_STATUS);
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
     mockMvc
         .perform(
@@ -201,7 +209,13 @@ public class StudyControllerTest extends BaseMockIT {
                 .value(siteEntity.getId()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(locationEntity.getName()));
+                .value(locationEntity.getName()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
+                .value(participantStudyEntity.getStatus()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.targetEnrollment")
+                .value(siteEntity.getTargetEnrollment()));
   }
 
   @Test
