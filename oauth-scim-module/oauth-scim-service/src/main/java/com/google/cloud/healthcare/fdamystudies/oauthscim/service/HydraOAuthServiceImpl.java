@@ -8,18 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 import java.util.Base64;
 import java.util.Collections;
@@ -157,65 +153,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
           String.format(
               "%s failed with status=%d and response=%s",
               loginAcceptEndpoint, response.getStatusCodeValue(), response.getBody()));
-    }
-
-    return response;
-  }
-
-  @Override
-  public ResponseEntity<JsonNode> requestConsent(MultiValueMap<String, String> paramMap) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-    StringBuilder url = new StringBuilder(consentEndpoint);
-    url.append("?consent_challenge=").append(paramMap.getFirst(CONSENT_CHALLENGE));
-
-    return getRestTemplate().getForEntity(url.toString(), JsonNode.class);
-  }
-
-  @Override
-  public ResponseEntity<JsonNode> consentAccept(MultiValueMap<String, String> paramMap) {
-
-    ArrayNode scopes = createArrayNode();
-    scopes.add("offline_access");
-    scopes.add("offline");
-    scopes.add("openid");
-
-    ObjectNode accessTokenNode = getObjectNode();
-    accessTokenNode.put("val", IdGenerator.id());
-
-    ObjectNode idTokenNode = getObjectNode();
-    idTokenNode.put("val", IdGenerator.id());
-
-    ObjectNode session = getObjectNode();
-    session.set("access_token", accessTokenNode);
-    session.set("id_token", idTokenNode);
-
-    ObjectNode request = getObjectNode();
-    request.set("grant_scope", scopes);
-    request.put("remember", remember);
-    request.set("session", session);
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-    StringBuilder url = new StringBuilder(consentAcceptEndpoint);
-    url.append("?")
-        .append(CONSENT_CHALLENGE)
-        .append("=")
-        .append(paramMap.getFirst(CONSENT_CHALLENGE));
-
-    HttpEntity<Object> requestEntity = new HttpEntity<>(request, headers);
-    ResponseEntity<JsonNode> response =
-        getRestTemplate().exchange(url.toString(), HttpMethod.PUT, requestEntity, JsonNode.class);
-
-    if (!response.getStatusCode().is2xxSuccessful()) {
-      logger.error(
-          String.format(
-              "consent accept failed with status %d and response=%s",
-              response.getStatusCodeValue(), response.getBody()));
     }
 
     return response;
