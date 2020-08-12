@@ -6,6 +6,7 @@ import {LocationModule} from './location/location.module';
 import {UserModule} from './user/user.module';
 import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
 import {StudiesModule} from './studies/studies.module';
+import {AppsModule} from './apps/apps.module';
 
 const routes: Routes = [
   {
@@ -35,6 +36,11 @@ const routes: Routes = [
             path: 'studies',
             loadChildren: async (): Promise<StudiesModule> =>
               import('./studies/studies.module').then((m) => m.StudiesModule),
+          },
+          {
+            path: 'apps',
+            loadChildren: async (): Promise<AppsModule> =>
+              import('./apps/apps.module').then((m) => m.AppsModule),
           },
           {
             path: '',
