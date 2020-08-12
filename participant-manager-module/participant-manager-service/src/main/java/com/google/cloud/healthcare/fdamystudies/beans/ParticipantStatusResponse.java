@@ -8,11 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.List;
-
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
