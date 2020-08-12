@@ -190,7 +190,8 @@ public class LoginController {
       return LOGIN;
     }
 
-    return redirectToConsentPage(loginChallenge, email, request, response);
+    return redirectToConsentPage(
+        loginChallenge, authenticationResponse.getUserId(), request, response);
   }
 
   private String autoLoginOrReturnLoginPage(
@@ -208,7 +209,7 @@ public class LoginController {
       logger.exit("tempRegId is valid, return to consent page");
       cookieHelper.addCookie(response, USER_ID, user.getUserId());
       userService.resetTempRegId(user.getUserId());
-      return redirectToConsentPage(loginChallenge, user.getEmail(), request, response);
+      return redirectToConsentPage(loginChallenge, user.getUserId(), request, response);
     }
   }
 
@@ -218,10 +219,10 @@ public class LoginController {
 
   private String redirectToConsentPage(
       String loginChallenge,
-      String email,
+      String userId,
       HttpServletRequest request,
       HttpServletResponse response) {
-    ResponseEntity<JsonNode> result = oauthService.loginAccept(email, loginChallenge);
+    ResponseEntity<JsonNode> result = oauthService.loginAccept(userId, loginChallenge);
     if (result.getStatusCode().is2xxSuccessful()) {
       String redirectUrl = JsonUtils.getTextValue(result.getBody(), REDIRECT_TO);
       return redirect(response, redirectUrl);

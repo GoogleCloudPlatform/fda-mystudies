@@ -42,12 +42,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private static final String CONTENT_TYPE = "Content-Type";
 
-  @Value("${security.oauth2.hydra.remember:false}")
-  private boolean remember;
-
-  @Value("${security.oauth2.hydra.remember-for-seconds:0}")
-  private int rememberForSeconds;
-
   @Value("${security.oauth2.hydra.token_endpoint}")
   private String tokenEndpoint;
 
@@ -126,7 +120,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   }
 
   @Override
-  public ResponseEntity<JsonNode> loginAccept(String email, String loginChallenge) {
+  public ResponseEntity<JsonNode> loginAccept(String userId, String loginChallenge) {
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -136,14 +130,8 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     url.append("?").append(LOGIN_CHALLENGE).append("=").append(loginChallenge);
 
     ObjectNode requestParams = getObjectNode();
-    requestParams.put("subject", email);
+    requestParams.put("subject", userId);
 
-    // if ORY Hydra should remember the subject's subject agent for future authentication attempts
-    // by setting a cookie.
-    requestParams.put("remember", remember);
-    if (remember) {
-      requestParams.put("remember_for", rememberForSeconds);
-    }
     HttpEntity<Object> requestEntity = new HttpEntity<>(requestParams, headers);
 
     ResponseEntity<JsonNode> response =
