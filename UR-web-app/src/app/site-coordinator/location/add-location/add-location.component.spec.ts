@@ -134,6 +134,7 @@ describe('AddLocationComponent', () => {
       studiesCount: 0,
       message: 'New location added successfully',
       code: 'MSG_001',
+      studies: [],
     };
     locationsServiceSpy.addLocation.and.returnValue(of(expectedResponse));
     fixture.componentInstance.location.customId = 'customid3';

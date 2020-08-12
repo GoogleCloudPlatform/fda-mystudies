@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '../shared/location.model';
@@ -26,7 +26,7 @@ export class LocationDetailsComponent extends UnsubscribeOnDestroyAdapter
   ) {
     super();
   }
-  openModal(template: HTMLElement): void {
+  openModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(template);
   }
   closeModal(location: Location): void {
