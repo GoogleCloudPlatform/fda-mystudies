@@ -66,10 +66,9 @@ describe('StudyListComponent', () => {
   });
 
   it('should NOT have studies before ngOnInit', () => {
-    expect(component.studies.length).toBe(
-      0,
-      'should not have studies before ngOnInit',
-    );
+    component.study$.subscribe((studies) => {
+      expect(studies.length).toBe(0, 'should not have studies before ngOnInit');
+    });
   });
 
   describe('after get studies', () => {
