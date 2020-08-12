@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuthUserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.BaseResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
@@ -135,7 +136,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     HttpEntity<UpdateEmailStatusRequest> request = new HttpEntity<>(emailStatusRequest, headers);
 
-    ResponseEntity<UpdateEmailStatusResponse> responseEntity =
+    ResponseEntity<?> responseEntity =
         restTemplate.exchange(
             appPropertyConfig.getAuthServerUpdateStatusUrl(),
             HttpMethod.PUT,
@@ -144,8 +145,8 @@ public class UserProfileServiceImpl implements UserProfileService {
             authUserId);
 
     // Bad request and errors handled in RestResponseErrorHandler class
-    UpdateEmailStatusResponse updateEmailResponse = responseEntity.getBody();
 
-    logger.exit(String.format("status=%d", updateEmailResponse.getHttpStatusCode()));
+    logger.exit(
+        String.format("status=%d", ((BaseResponse) responseEntity.getBody()).getHttpStatusCode()));
   }
 }
