@@ -36,8 +36,6 @@ public class LocationRequest {
   @NotBlank
   private String description;
 
-  private String userId;
-
   public LocationRequest(String customId, String name, String description) {
     this.customId = customId;
     this.name = name;

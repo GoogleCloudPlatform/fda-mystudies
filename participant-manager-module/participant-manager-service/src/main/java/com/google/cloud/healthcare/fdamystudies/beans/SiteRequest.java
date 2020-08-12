@@ -31,4 +31,9 @@ public class SiteRequest {
   private String locationId;
 
   private String userId;
+
+  public SiteRequest(String studyId, String locationId) {
+    this.studyId = studyId;
+    this.locationId = locationId;
+  }
 }
