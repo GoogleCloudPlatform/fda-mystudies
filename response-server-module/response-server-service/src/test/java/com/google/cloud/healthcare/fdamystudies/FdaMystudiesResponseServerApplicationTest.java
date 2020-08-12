@@ -21,7 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class FdaMystudiesResponseServerApplicationTest extends BaseMockIT {
-
   @Autowired HealthController healthController;
 
   @Test
