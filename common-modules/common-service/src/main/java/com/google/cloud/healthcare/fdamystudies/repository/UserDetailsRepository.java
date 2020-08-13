@@ -16,6 +16,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.AppCount;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+
 @ConditionalOnProperty(
     value = "participant.manager.repository.enabled",
     havingValue = "true",

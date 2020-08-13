@@ -40,7 +40,7 @@ public enum MessageCode {
       HttpStatus.OK, "MSG-0008", "Get participant registry successfully"),
 
   ADD_PARTICIPANT_SUCCESS(HttpStatus.CREATED, "MSG-0016", "Participant added successfully"),
-  
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
@@ -50,6 +50,8 @@ public enum MessageCode {
       HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server."),
 
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
+
+  GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0018", "Get App Details successfully"),
 
   SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully");
 
