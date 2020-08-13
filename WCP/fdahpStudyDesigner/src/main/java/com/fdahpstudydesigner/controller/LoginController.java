@@ -112,6 +112,7 @@ public class LoginController {
   }
 
   @RequestMapping("/healthCheck.do")
+  @ResponseBody
   public String healthCheck() {
     logger.info("LoginController - healthCheck");
     return "200 OK!";
