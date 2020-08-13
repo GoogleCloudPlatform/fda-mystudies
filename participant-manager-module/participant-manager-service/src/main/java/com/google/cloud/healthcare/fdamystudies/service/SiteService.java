@@ -13,6 +13,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 
 public interface SiteService {
 
@@ -22,4 +23,6 @@ public interface SiteService {
       String userId, String siteId, String onboardingStatus);
 
   public ParticipantResponse addNewParticipant(ParticipantDetailRequest participant, String userId);
+
+  public SiteStatusResponse toggleSiteStatus(String userId, String siteId);
 }

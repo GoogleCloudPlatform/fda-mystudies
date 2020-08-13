@@ -15,10 +15,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -38,7 +40,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionReposit
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
-import com.google.cloud.healthcare.fdamystudies.util.SiteStatus;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +56,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -336,6 +341,155 @@ public class SiteServiceImpl implements SiteService {
           ParticipantMapper.toParticipantDetails(
               participantStudies, participantRegistrySite, participant);
       participantRegistryDetail.getRegistryParticipants().add(participant);
+    }
+  }
+
+  private boolean isEditPermissionAllowed(String studyId, String userId) {
+    logger.entry("isEditPermissionAllowed(siteRequest)");
+    Optional<StudyPermissionEntity> optStudyPermissionEntity =
+        studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
+
+    if (optStudyPermissionEntity.isPresent()) {
+      StudyPermissionEntity studyPermission = optStudyPermissionEntity.get();
+      String appInfoId = studyPermission.getAppInfo().getId();
+      Optional<AppPermissionEntity> optAppPermissionEntity =
+          appPermissionRepository.findByUserIdAndAppId(userId, appInfoId);
+      if (optAppPermissionEntity.isPresent()) {
+        AppPermissionEntity appPermission = optAppPermissionEntity.get();
+        logger.exit(String.format("editValue=%d", Permission.READ_EDIT.value()));
+        return studyPermission.getEditPermission() == Permission.READ_EDIT.value()
+            || appPermission.getEditPermission() == Permission.READ_EDIT.value();
+      }
+    }
+    logger.exit("default permission is edit, return true");
+    return true;
+  }
+
+  @Override
+  @Transactional
+  public SiteStatusResponse toggleSiteStatus(String userId, String siteId) {
+    logger.entry("toggleSiteStatus()");
+
+    ErrorCode errorCode = validateDecommissionSiteRequest(userId, siteId);
+    if (errorCode != null) {
+      logger.exit(errorCode);
+      return new SiteStatusResponse(errorCode);
+    }
+
+    Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
+
+    SiteEntity site = optSiteEntity.get();
+    if (SiteStatus.DEACTIVE == SiteStatus.fromValue(site.getStatus())) {
+      site.setStatus(SiteStatus.ACTIVE.value());
+      site = siteRepository.saveAndFlush(site);
+
+      logger.exit(String.format(" Site status changed to ACTIVE for siteId=%s", site.getId()));
+      return new SiteStatusResponse(
+          site.getId(), site.getStatus(), MessageCode.RECOMMISSION_SITE_SUCCESS);
+    }
+
+    site.setStatus(SiteStatus.DEACTIVE.value());
+    siteRepository.saveAndFlush(site);
+    updateSitePermissions(siteId);
+
+    logger.exit(String.format("Site status changed to DEACTIVE for siteId=%s", site.getId()));
+    return new SiteStatusResponse(
+        site.getId(), site.getStatus(), MessageCode.DECOMMISSION_SITE_SUCCESS);
+  }
+
+  private ErrorCode validateDecommissionSiteRequest(String userId, String siteId) {
+    Optional<SitePermissionEntity> optSitePermission =
+        sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
+    if (!optSitePermission.isPresent()) {
+      // TODO (#702) throw ErrorCodeException
+      return ErrorCode.SITE_NOT_FOUND;
+    }
+
+    SitePermissionEntity sitePermission = optSitePermission.get();
+    if (OPEN.equalsIgnoreCase(sitePermission.getStudy().getType())) {
+      return ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY;
+    }
+
+    String studyId = sitePermission.getStudy().getId();
+    boolean canEdit = isEditPermissionAllowed(studyId, userId);
+    if (!canEdit) {
+      return ErrorCode.SITE_PERMISSION_ACCESS_DENIED;
+    }
+
+    List<String> status = Arrays.asList(ENROLLED_STATUS, STATUS_ACTIVE);
+    Optional<Long> optParticipantStudyCount =
+        participantStudyRepository.findByStudyIdAndStatus(status, studyId);
+
+    if (optParticipantStudyCount.isPresent() && optParticipantStudyCount.get() > 0) {
+      return ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS;
+    }
+
+    return null;
+  }
+
+  private void updateSitePermissions(String siteId) {
+
+    List<SitePermissionEntity> sitePermissions =
+        (List<SitePermissionEntity>)
+            CollectionUtils.emptyIfNull(sitePermissionRepository.findBySiteId(siteId));
+
+    List<String> studyIds =
+        sitePermissions
+            .stream()
+            .distinct()
+            .map(studyId -> studyId.getStudy().getId())
+            .collect(Collectors.toList());
+
+    List<String> siteAdminIds =
+        sitePermissions
+            .stream()
+            .distinct()
+            .map(urAdminId -> urAdminId.getUrAdminUser().getId())
+            .collect(Collectors.toList());
+
+    List<StudyPermissionEntity> studyPermissions =
+        (List<StudyPermissionEntity>)
+            CollectionUtils.emptyIfNull(
+                studyPermissionRepository.findByByUserIdsAndStudyIds(siteAdminIds, studyIds));
+
+    List<String> studyAdminIds =
+        studyPermissions
+            .stream()
+            .distinct()
+            .map(studyAdminId -> studyAdminId.getUrAdminUser().getId())
+            .collect(Collectors.toList());
+
+    for (SitePermissionEntity sitePermission : sitePermissions) {
+      if (studyAdminIds.contains(sitePermission.getUrAdminUser().getId())) {
+        sitePermission.setEditPermission(Permission.READ_VIEW.value());
+        sitePermissionRepository.saveAndFlush(sitePermission);
+      } else {
+        sitePermissionRepository.delete(sitePermission);
+      }
+    }
+    deactivateYetToEnrollParticipants(siteId);
+  }
+
+  private void deactivateYetToEnrollParticipants(String siteId) {
+    List<ParticipantStudyEntity> participantStudies =
+        (List<ParticipantStudyEntity>)
+            CollectionUtils.emptyIfNull(
+                participantStudyRepository.findBySiteIdAndStatus(siteId, YET_TO_JOIN));
+
+    List<String> participantRegistrySiteIds =
+        participantStudies
+            .stream()
+            .distinct()
+            .map(participantStudy -> participantStudy.getParticipantRegistrySite().getId())
+            .collect(Collectors.toList());
+
+    List<ParticipantRegistrySiteEntity> participantRegistrySites =
+        participantRegistrySiteRepository.findByIds(participantRegistrySiteIds);
+
+    for (ParticipantRegistrySiteEntity participantRegistrySite :
+        CollectionUtils.emptyIfNull(participantRegistrySites)) {
+      participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+      participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
     }
   }
 }

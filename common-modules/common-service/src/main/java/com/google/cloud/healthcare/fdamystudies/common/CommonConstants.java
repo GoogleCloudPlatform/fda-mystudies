@@ -40,6 +40,12 @@ public final class CommonConstants {
   public static final String ENROLLED_STATUS = "Enrolled";
 
   public static final String YET_TO_ENROLL = "Yet to Enroll";
+
+  public static final String YET_TO_JOIN = "Yet to Join";
+
+  public static final String OPEN = "Open";
+
+  public static final String STATUS_ACTIVE = "Active";
   
   public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
       "application/x-www-form-urlencoded;charset=UTF-8";
