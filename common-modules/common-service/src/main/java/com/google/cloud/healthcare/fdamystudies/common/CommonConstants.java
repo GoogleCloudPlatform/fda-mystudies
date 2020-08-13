@@ -19,6 +19,8 @@ public final class CommonConstants {
 
   public static final Integer ACTIVE_STATUS = 1;
 
+  public static final Integer INACTIVE_STATUS = 0;
+
   public static final String NOT_APPLICABLE = "NA";
 
   public static final String OPEN_STUDY = "OPEN";
