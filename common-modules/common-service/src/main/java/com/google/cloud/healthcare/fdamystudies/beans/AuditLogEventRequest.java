@@ -8,8 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import java.sql.Timestamp;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,29 +25,9 @@ public class AuditLogEventRequest {
   @Size(max = 36)
   private String correlationId;
 
-  @NotNull private Boolean alert;
-
-  @Size(max = 100)
-  @ToString.Exclude
-  private String userId;
-
-  @NotBlank
-  @Size(max = 30)
-  private String systemId;
-
   @NotBlank
   @Size(max = 40)
-  private String eventName;
-
-  @NotBlank
-  @Size(min = 7, max = 39)
-  @ToString.Exclude
-  private String systemIp;
-
-  @NotBlank
-  @Size(min = 7, max = 39)
-  @ToString.Exclude
-  private String clientIp;
+  private String eventCode;
 
   @NotBlank
   @Size(max = 255)
@@ -54,46 +35,57 @@ public class AuditLogEventRequest {
   private String description;
 
   @NotBlank
-  @Size(max = 255)
-  @ToString.Exclude
-  private String eventDetail;
+  @Size(max = 50)
+  private String source;
 
   @NotBlank
-  @Size(max = 60)
-  private String applicationVersion;
+  @Size(max = 50)
+  private String destination;
 
-  @NotBlank
-  @Size(max = 100)
-  private String applicationComponentName;
-
-  /** the number of milliseconds from the epoch of 1970-01-01T00:00:00Z */
-  @NotNull private Long occured;
-
-  @Size(max = 100)
-  private String appId;
-
-  @Size(max = 100)
-  private String clientId;
-
-  @Size(max = 10)
-  private String deviceType;
-
-  @Size(max = 255)
-  @ToString.Exclude
-  private String requestUri;
-
-  @Size(max = 10)
-  private String accessLevel;
-
-  @Size(max = 100)
-  private String devicePlatform;
-
-  @Size(max = 40)
+  @Size(max = 50)
   private String resourceServer;
 
-  @Size(max = 20)
-  private String clientAppVersion;
+  @Size(max = 64)
+  @ToString.Exclude
+  private String userId;
 
   @Size(max = 20)
-  private String clientAccessLevel;
+  private String userAccessLevel;
+
+  @NotBlank
+  @Size(max = 20)
+  private String sourceApplicationVersion;
+
+  @NotBlank
+  @Size(max = 20)
+  private String destinationApplicationVersion;
+
+  @NotBlank
+  @Size(max = 20)
+  private String platformVersion;
+
+  @PastOrPresent private Timestamp occured;
+
+  @Size(max = 64)
+  private String appId;
+
+  @ToString.Exclude
+  @Size(min = 7, max = 39)
+  private String userIp;
+
+  @NotBlank
+  @Size(max = 20)
+  private String mobilePlatform;
+
+  @Size(max = 20)
+  private String appVersion;
+
+  @Size(max = 64)
+  private String participantId;
+
+  @Size(max = 64)
+  private String studyId;
+
+  @Size(max = 20)
+  private String studyVersion;
 }

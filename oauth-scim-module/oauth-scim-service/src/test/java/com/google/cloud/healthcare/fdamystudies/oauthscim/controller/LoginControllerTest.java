@@ -42,6 +42,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import javax.servlet.http.Cookie;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.LinkedMultiValueMap;
@@ -138,7 +139,7 @@ public class LoginControllerTest extends BaseMockIT {
     user.setTempRegId(TEMP_REG_ID_VALUE);
     // UserInfo JSON contains password hash & salt, password history etc
     ObjectNode userInfo = JsonUtils.getObjectNode().put("password", PasswordGenerator.generate(12));
-    user.setUserInfo(userInfo.toString());
+    user.setUserInfo(userInfo);
     userRepository.saveAndFlush(user);
 
     // Step-2 redirect to auto signin page after signup
@@ -178,9 +179,6 @@ public class LoginControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()));
-
-    // Step-3 delete user account
-    userRepository.delete(userEntity);
   }
 
   @Test
@@ -205,9 +203,6 @@ public class LoginControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(
             content().string(containsString(ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription())));
-
-    // Step-3 delete user account
-    userRepository.delete(userEntity);
   }
 
   @Test
@@ -243,9 +238,11 @@ public class LoginControllerTest extends BaseMockIT {
     userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
     assertTrue(
         UserAccountStatus.ACCOUNT_LOCKED.equals(UserAccountStatus.valueOf(userEntity.getStatus())));
+  }
 
-    // Step-4 delete the user entity
-    userRepository.delete(userEntity);
+  @AfterEach
+  public void cleanUp() {
+    userRepository.deleteAll();
   }
 
   private UserRequest newUserRequest() {

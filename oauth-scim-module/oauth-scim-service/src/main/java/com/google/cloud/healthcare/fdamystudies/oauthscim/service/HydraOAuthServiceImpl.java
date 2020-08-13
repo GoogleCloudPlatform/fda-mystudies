@@ -17,7 +17,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
-import java.util.Base64;
 import java.util.Collections;
 import javax.annotation.PostConstruct;
 import org.slf4j.ext.XLogger;
@@ -78,8 +77,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @PostConstruct
   public void init() {
-    String credentials = clientId + ":" + clientSecret;
-    encodedAuthorization = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+    encodedAuthorization = getEncodedAuthorization(clientId, clientSecret);
   }
 
   public ResponseEntity<JsonNode> getToken(

@@ -28,17 +28,14 @@ public class AuditLogEventEntity {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
-  private String id;
+  @Column(name = "log_id", updatable = false, nullable = false)
+  private String logId;
 
   @Column(name = "correlation_id", nullable = false, length = 36)
   private String correlationId;
 
-  @Column(name = "event_name", nullable = false, length = 40)
-  private String eventName;
-
-  @Column(name = "system_id", nullable = false, length = 30)
-  private String systemId;
+  @Column(name = "event_code", nullable = false, length = 40)
+  private String eventCode;
 
   @Column(name = "occurred", nullable = false, updatable = false, columnDefinition = "TIMESTAMP")
   private Timestamp occurred;
@@ -50,59 +47,54 @@ public class AuditLogEventEntity {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "alert", nullable = false, length = 1)
-  private boolean alert;
-
-  @Column(name = "app_id", nullable = true, length = 100)
+  @Column(name = "app_id", nullable = true, length = 64)
   private String appId;
 
   @ToString.Exclude
-  @Column(name = "user_id", nullable = true, length = 100)
+  @Column(name = "user_id", nullable = true, length = 64)
   private String userId;
 
   @ToString.Exclude
-  @Column(name = "system_ip", nullable = false, length = 39)
-  private String systemIp;
+  @Column(name = "user_ip", nullable = true, length = 39)
+  private String userIp;
 
   @ToString.Exclude
   @Column(name = "description", nullable = false, length = 255)
   private String description;
 
-  @ToString.Exclude
-  @Column(name = "event_detail", nullable = false, length = 255)
-  private String eventDetail;
+  @Column(name = "app_version", nullable = true, length = 20)
+  private String appVersion;
 
-  @Column(name = "application_version", nullable = false, length = 60)
-  private String applicationVersion;
+  @Column(name = "destination", nullable = false, length = 50)
+  private String destination;
 
-  @Column(name = "application_component_name", nullable = false, length = 100)
-  private String applicationComponentName;
+  @Column(name = "source", nullable = false, length = 50)
+  private String source;
 
-  @Column(name = "client_id", nullable = true, length = 100)
-  private String clientId;
-
-  @Column(name = "device_type", nullable = true, length = 10)
-  private String deviceType;
-
-  @ToString.Exclude
-  @Column(name = "request_uri", nullable = true, length = 255)
-  private String requestUri;
-
-  @Column(name = "access_level", nullable = true, length = 10)
-  private String accessLevel;
-
-  @Column(name = "device_platform", nullable = true, length = 100)
-  private String devicePlatform;
-
-  @Column(name = "resource_server", nullable = true, length = 40)
+  @Column(name = "resource_server", nullable = true, length = 50)
   private String resourceServer;
 
-  @Column(name = "client_app_version", nullable = true, length = 20)
-  private String clientAppVersion;
+  @Column(name = "mobile_platform", nullable = false, length = 20)
+  private String mobilePlatform;
 
-  @Column(name = "client_access_level", nullable = true, length = 20)
-  private String clientAccessLevel;
+  @Column(name = "source_application_version", nullable = false, length = 20)
+  private String sourceApplicationVersion;
 
-  @Column(name = "platform_version", nullable = true, length = 20)
+  @Column(name = "destination_application_version", nullable = false, length = 20)
+  private String destinationApplicationVersion;
+
+  @Column(name = "user_access_level", nullable = true, length = 20)
+  private String userAccessLevel;
+
+  @Column(name = "platform_version", nullable = false, length = 20)
   private String platformVersion;
+
+  @Column(name = "participant_id", nullable = true, length = 64)
+  private String participantId;
+
+  @Column(name = "study_id", nullable = true, length = 64)
+  private String studyId;
+
+  @Column(name = "study_version", nullable = true, length = 20)
+  private String studyVersion;
 }
