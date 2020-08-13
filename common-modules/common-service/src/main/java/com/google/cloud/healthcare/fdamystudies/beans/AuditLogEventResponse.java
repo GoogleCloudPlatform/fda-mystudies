@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.http.HttpStatus;
 
 @Setter
 @Getter
@@ -27,14 +26,5 @@ public class AuditLogEventResponse extends BaseResponse {
 
   public AuditLogEventResponse(ErrorCode errorCode) {
     super(errorCode);
-  }
-
-  public AuditLogEventResponse(HttpStatus httpStatus, String message) {
-    super(httpStatus, message);
-  }
-
-  public AuditLogEventResponse(String eventId, HttpStatus httpStatus, String message) {
-    super(httpStatus, message);
-    this.eventId = eventId;
   }
 }

@@ -24,4 +24,13 @@ public enum UserAccountStatus {
   public int getStatus() {
     return status;
   }
+
+  public static UserAccountStatus valueOf(int status) {
+    for (UserAccountStatus type : UserAccountStatus.values()) {
+      if (status == type.getStatus()) {
+        return type;
+      }
+    }
+    return null;
+  }
 }

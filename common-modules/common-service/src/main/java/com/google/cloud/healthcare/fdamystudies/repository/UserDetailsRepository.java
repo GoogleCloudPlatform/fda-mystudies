@@ -7,8 +7,9 @@
  */
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.AppCount;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import java.util.List;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
