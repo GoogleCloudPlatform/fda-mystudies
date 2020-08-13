@@ -38,7 +38,7 @@ public enum MessageCode {
 
   GET_PARTICIPANT_REGISTRY_SUCCESS(
       HttpStatus.OK, "MSG-0008", "Get participant registry successfully"),
-  
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
