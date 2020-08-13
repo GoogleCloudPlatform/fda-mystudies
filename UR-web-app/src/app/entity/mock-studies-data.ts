@@ -1,6 +1,9 @@
 import {Study} from '../site-coordinator/studies/shared/study.model';
-import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
+import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
+import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
+import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
+import {EnrollmentStatus} from '../shared/enums';
 
 export const expectedStudyList = [
   {
@@ -81,6 +84,76 @@ export const expectedStudyList = [
   },
 ] as Study[];
 
+export const expectedStudiesDetails = {
+  participantRegistryDetail: {
+    studyId: '24',
+    customStudyId: 'CovidStudy',
+    studyName: 'COVID study',
+    studyType: 'OPEN',
+    appId: '4028617973be410f0173be41229e0001',
+
+    customAppId: 'mystudies-id-1',
+    appName: 'mystudies-1',
+    targetEnrollment: 1,
+    registryParticipants: [
+      {
+        customLocationId: '',
+        email: 'test1@grr.la',
+        enrollmentDate: '',
+        enrollmentStatus: EnrollmentStatus.Enrolled,
+        id: '408',
+        invitedDate: '06/05/2020',
+        locationName: '',
+        onboardingStatus: 'Invited',
+        siteId: '0',
+        enrolledStudies: [],
+        enrollments: [],
+        consentHistory: [],
+      },
+      {
+        customLocationId: '',
+        email: 'test12@grr.la',
+        enrollmentDate: '',
+        enrollmentStatus: EnrollmentStatus.Enrolled,
+        id: '407',
+        invitedDate: '06/05/2020',
+        locationName: '',
+        onboardingStatus: 'Invited',
+        siteId: '0',
+        enrolledStudies: [],
+        enrollments: [],
+        consentHistory: [],
+      },
+      {
+        customLocationId: '',
+        email: 'test123@grr.la',
+        enrollmentDate: '',
+        enrollmentStatus: EnrollmentStatus.Enrolled,
+        id: '406',
+        invitedDate: '06/05/2020',
+        locationName: '',
+        onboardingStatus: 'Invited',
+        siteId: '0',
+        enrolledStudies: [],
+        enrollments: [],
+        consentHistory: [],
+      },
+    ],
+  },
+  status: 200,
+  message: 'Get participant registry successfully',
+  code: 'MSG-0013',
+} as StudyDetails;
+
+export const expectedStudyId = {id: 1} as Study;
+
+export const expectedResponse = {
+  message: 'Target Enrollment updated successfully',
+} as ApiResponse;
+
+export const expectedTargetEnrollment: UpdateTargetEnrollmentRequest = {
+  targetEnrollment: 12,
+};
 export const expectedSiteResponse = {
   message: 'New site added successfully',
   code: 'MSG_001',
@@ -90,5 +163,3 @@ export const expectedNewSite = {
   studyId: '1',
   locationId: '1',
 } as AddSiteRequest;
-
-export const expectedStudyId = {id: 1} as Study;
