@@ -13,7 +13,10 @@ export interface Location extends ApiResponse {
   status: string;
 
   studiesCount: number;
+
+  studies: string[];
 }
+
 export interface StatusUpdateRequest {
   status: string;
 }
