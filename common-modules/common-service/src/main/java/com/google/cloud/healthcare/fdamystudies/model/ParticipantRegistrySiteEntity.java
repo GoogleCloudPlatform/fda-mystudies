@@ -83,12 +83,10 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   @Column(name = "invitation_count", columnDefinition = "BIGINT DEFAULT 0")
   private Long invitationCount;
 
-  @Column(name = "disabled_time", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "disabled_time")
   private Timestamp disabledDate;
 
-  @Column(
-      name = "enrollment_token_expiry",
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "enrollment_token_expiry")
   private Timestamp enrollmentTokenExpiry;
 
   @ToString.Exclude

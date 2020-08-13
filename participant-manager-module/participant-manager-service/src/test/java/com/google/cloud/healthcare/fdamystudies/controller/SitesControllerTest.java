@@ -147,12 +147,12 @@ public class SitesControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedForAddNewSite() throws Exception {
     // pre-condition: deny study permission
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEdit(Permission.READ_VIEW);
+    studyPermissionEntity.setEdit(Permission.VIEW);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     // pre-condition: deny app permission
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
-    appPermissionEntity.setEdit(Permission.READ_VIEW);
+    appPermissionEntity.setEdit(Permission.VIEW);
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
     HttpHeaders headers = newCommonHeaders();
     SiteRequest siteRequest = newSiteRequest();
@@ -264,7 +264,7 @@ public class SitesControllerTest extends BaseMockIT {
   public void shouldReturnAccessDeniedForAddNewParticipant() throws Exception {
     // Step 1: set manage site permission to view only
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
-    sitePermissionEntity.setCanEdit(Permission.READ_VIEW);
+    sitePermissionEntity.setCanEdit(Permission.VIEW);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
@@ -559,11 +559,11 @@ public class SitesControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedForDecommissionSite() throws Exception {
     // Step 1: Set permission to read only
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEdit(Permission.READ_VIEW);
+    studyPermissionEntity.setEdit(Permission.VIEW);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
-    appPermissionEntity.setEdit(Permission.READ_VIEW);
+    appPermissionEntity.setEdit(Permission.VIEW);
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
 
     // Step 2: call API and expect SITE_PERMISSION_ACEESS_DENIED error

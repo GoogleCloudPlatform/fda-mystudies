@@ -63,7 +63,7 @@ public class LocationServiceImpl implements LocationService {
         userRegAdminRepository.findById(locationRequest.getUserId());
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.READ_EDIT != Permission.fromValue(adminUser.getEditPermission())) {
+    if (Permission.EDIT != Permission.fromValue(adminUser.getEditPermission())) {
       logger.exit(
           String.format(
               "Add location failed with error code=%s", ErrorCode.LOCATION_ACCESS_DENIED));
@@ -128,7 +128,7 @@ public class LocationServiceImpl implements LocationService {
 
     if (optUserRegAdminUser.isPresent()) {
       UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-      if (Permission.READ_EDIT != Permission.fromValue(adminUser.getEditPermission())) {
+      if (Permission.EDIT != Permission.fromValue(adminUser.getEditPermission())) {
         return ErrorCode.LOCATION_UPDATE_DENIED;
       }
     }

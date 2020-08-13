@@ -131,7 +131,7 @@ public class LocationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnForbiddenForLocationAccessDenied() throws Exception {
 
-    userRegAdminEntity.setEditPermission(Permission.READ_VIEW.value());
+    userRegAdminEntity.setEditPermission(Permission.VIEW.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();

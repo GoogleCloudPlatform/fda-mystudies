@@ -109,7 +109,7 @@ public class TestDataHelper {
     userRegAdminEntity.setEmail(EMAIL_VALUE);
     userRegAdminEntity.setFirstName(FIRST_NAME);
     userRegAdminEntity.setLastName(LAST_NAME);
-    userRegAdminEntity.setEditPermission(Permission.READ_EDIT.value());
+    userRegAdminEntity.setEditPermission(Permission.EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
@@ -198,7 +198,7 @@ public class TestDataHelper {
   public AppEntity createAppEntity(UserRegAdminEntity userEntity) {
     AppEntity appEntity = newAppEntity();
     AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
-    appPermissionEntity.setEdit(Permission.READ_EDIT);
+    appPermissionEntity.setEdit(Permission.EDIT);
     appPermissionEntity.setUrAdminUser(userEntity);
     appEntity.addAppPermissionEntity(appPermissionEntity);
     return appRepository.saveAndFlush(appEntity);
@@ -212,7 +212,7 @@ public class TestDataHelper {
     studyEntity.setApp(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
-    studyPermissionEntity.setEdit(Permission.READ_EDIT);
+    studyPermissionEntity.setEdit(Permission.EDIT);
     studyPermissionEntity.setApp(appEntity);
     studyEntity.addStudyPermissionEntity(studyPermissionEntity);
     return studyRepository.saveAndFlush(studyEntity);
@@ -230,8 +230,8 @@ public class TestDataHelper {
     SiteEntity siteEntity = newSiteEntity();
     siteEntity.setStudy(studyEntity);
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT);
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT);
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
     sitePermissionEntity.setApp(appEntity);
@@ -258,6 +258,7 @@ public class TestDataHelper {
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    participantStudyEntity.setSharing(true);
     return participantStudyRepository.saveAndFlush(participantStudyEntity);
   }
 
