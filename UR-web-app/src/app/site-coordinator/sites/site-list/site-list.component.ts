@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
@@ -60,7 +60,7 @@ export class SiteListComponent implements OnInit {
       return 'green__text__sm';
     }
   }
-  openAddSiteModal(template: HTMLElement, study: Study): void {
+  openAddSiteModal(template: TemplateRef<unknown>, study: Study): void {
     this.modalRef = this.modalService.show(template);
     this.study = study;
   }
