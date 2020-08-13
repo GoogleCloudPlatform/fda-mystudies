@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: mystudies-demo
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: my-studies-ingress-ip
+    kubernetes.io/ingress.global-static-ip-name: mystudies-ingress-ip
     networking.gke.io/managed-certificates: mystudies-demo-cert
 spec:
   rules:
