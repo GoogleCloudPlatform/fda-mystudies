@@ -136,7 +136,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     HttpEntity<UpdateEmailStatusRequest> request = new HttpEntity<>(emailStatusRequest, headers);
 
-    ResponseEntity<?> responseEntity =
+    ResponseEntity<UpdateEmailStatusResponse> responseEntity =
         restTemplate.exchange(
             appPropertyConfig.getAuthServerUpdateStatusUrl(),
             HttpMethod.PUT,
