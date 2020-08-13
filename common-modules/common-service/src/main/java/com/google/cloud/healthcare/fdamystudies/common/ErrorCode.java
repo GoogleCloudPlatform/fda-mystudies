@@ -8,19 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.io.IOException;
-import java.time.Instant;
-
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
+import java.io.IOException;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @ToString
@@ -35,15 +33,45 @@ public enum ErrorCode {
 
   UNAUTHORIZED(401, "EC-401", "Unauthorized", "Invalid token"),
 
+  ACCOUNT_LOCKED(
+      400,
+      "EC-107",
+      Constants.BAD_REQUEST,
+      "Due to consecutive failed sign-in attempts with incorrect password, your account has been locked for a period of 15 minutes. Please check your registered email inbox for assistance to reset your password in this period or wait until the lock period is over to sign in again."),
+
+  TEMP_PASSWORD_EXPIRED(
+      401,
+      "EC-110",
+      Constants.BAD_REQUEST,
+      "Your temporary password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+
+  PASSWORD_EXPIRED(
+      401,
+      "EC-111",
+      Constants.BAD_REQUEST,
+      "Your password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+
   USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found"),
 
+  ACCOUNT_DEACTIVATED(403, "EC-116", Constants.BAD_REQUEST, "Your account has been deactivated."),
+
+  PENDING_CONFIRMATION(
+      403,
+      "EC-117",
+      Constants.BAD_REQUEST,
+      "Your account has not been activated yet. Account need to be activated by an activation link that arrives via email to the address you provided."),
+
   CURRENT_PASSWORD_INVALID(400, "EC-119", Constants.BAD_REQUEST, "Current password is invalid"),
+
+  INVALID_LOGIN_CREDENTIALS(400, "EC-120", Constants.BAD_REQUEST, "Invalid email or password."),
 
   ENFORCE_PASSWORD_HISTORY(
       400,
       "EC-105",
       Constants.BAD_REQUEST,
       "Your new password cannot repeat any of your previous 10 passwords;"),
+
+  INVALID_UPDATE_USER_REQUEST(400, "EC-120", Constants.BAD_REQUEST, "Email or Status is required."),
 
   EMAIL_EXISTS(
       409,
@@ -82,6 +110,8 @@ public enum ErrorCode {
 
   USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active"),
 
+  USER_NOT_INVITED(
+      400, "EC-869", Constants.BAD_REQUEST, "Provided email not exists or user not invited"),
   APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found."),
 
   STUDY_NOT_FOUND(404, "EC-816", Constants.BAD_REQUEST, "Study not found"),
@@ -113,7 +143,7 @@ public enum ErrorCode {
       403, "EC-105", HttpStatus.FORBIDDEN.toString(), "You do not have permission to manage site"),
 
   OPEN_STUDY(
-      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Can not add participant to open study"),
+      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add participant to open study"),
 
   ENROLLED_PARTICIPANT(400, "EC-862", Constants.BAD_REQUEST, "Participant already enrolled"),
 
@@ -135,12 +165,24 @@ public enum ErrorCode {
       "EC_885",
       Constants.BAD_REQUEST,
       "This Site is associated with active and enrolled participants"
-          + " and cannot be decomissioned");
+          + " and cannot be decomissioned"),
+  
+  INVALID_APPS_FIELDS_VALUES(400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
 
   private final int status;
   private final String code;
   private final String errorType;
   private final String description;
+
+  public static ErrorCode fromCodeAndDescription(String code, String description) {
+    for (ErrorCode e : ErrorCode.values()) {
+      if (StringUtils.equalsIgnoreCase(e.code, code)
+          && StringUtils.equalsIgnoreCase(e.description, description)) {
+        return e;
+      }
+    }
+    return null; // not found
+  }
 
   private static class Constants {
 

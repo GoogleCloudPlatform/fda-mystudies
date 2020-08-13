@@ -8,12 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies;
 
+import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication(scanBasePackages = {"com.google.cloud.healthcare.fdamystudies"})
 @EnableScheduling
+@SpringBootApplication()
+@Import(CommonModuleConfiguration.class)
 public class Application {
 
   public static void main(String[] args) {

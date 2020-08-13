@@ -8,26 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
@@ -61,6 +41,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import java.util.Arrays;
+import com.google.cloud.healthcare.fdamystudies.util.SiteStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +63,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ST
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -108,9 +90,9 @@ public class SiteServiceImpl implements SiteService {
   @Transactional
   public SiteResponse addSite(SiteRequest siteRequest) {
     logger.entry("begin addSite()");
-    boolean allowed = isEditPermissionAllowed(siteRequest);
+    boolean canEdit = isEditPermissionAllowed(siteRequest);
 
-    if (!allowed) {
+    if (!canEdit) {
       logger.exit(
           String.format(
               "Add site for locationId=%s and studyId=%s failed with error code=%s",
@@ -155,8 +137,9 @@ public class SiteServiceImpl implements SiteService {
           appPermissionRepository.findByUserIdAndAppId(siteRequest.getUserId(), appInfoId);
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
-        logger.exit(String.format("editValue=%d", EDIT_VALUE));
-        return studyPermission.getEdit() == EDIT_VALUE || appPermission.getEdit() == EDIT_VALUE;
+        logger.exit(String.format("editValue=%d", Permission.READ_EDIT.value()));
+        return studyPermission.getEditPermission() == Permission.READ_EDIT.value()
+            || appPermission.getEditPermission() == Permission.READ_EDIT.value();
       }
     }
     logger.exit("default permission is edit, return true");
@@ -171,7 +154,7 @@ public class SiteServiceImpl implements SiteService {
         studyPermissionRepository.findByStudyId(studyId);
 
     SiteEntity site = new SiteEntity();
-    Optional<StudyEntity> studyInfo = studyRepository.findByStudyId(studyId);
+    Optional<StudyEntity> studyInfo = studyRepository.findById(studyId);
     if (studyInfo.isPresent()) {
       site.setStudy(studyInfo.get());
     }
@@ -180,7 +163,7 @@ public class SiteServiceImpl implements SiteService {
       site.setLocation(location.get());
     }
     site.setCreatedBy(userId);
-    site.setStatus(ACTIVE);
+    site.setStatus(SiteStatus.ACTIVE.value());
     addSitePermissions(userId, userStudypermissionList, site);
     site = siteRepository.save(site);
 
@@ -196,13 +179,13 @@ public class SiteServiceImpl implements SiteService {
     for (StudyPermissionEntity studyPermission : userStudypermissionList) {
       Integer editPermission =
           studyPermission.getUrAdminUser().getId().equals(userId)
-              ? EDIT_VALUE
-              : studyPermission.getEdit();
+              ? Permission.READ_EDIT.value()
+              : studyPermission.getEditPermission();
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
       sitePermission.setStudy(studyPermission.getStudy());
       sitePermission.setAppInfo(studyPermission.getAppInfo());
-      sitePermission.setCanEdit(editPermission);
+      sitePermission.setEditPermission(editPermission);
       sitePermission.setCreatedBy(userId);
       site.addSitePermissionEntity(sitePermission);
     }
@@ -243,11 +226,12 @@ public class SiteServiceImpl implements SiteService {
 
   private ErrorCode validationForAddNewParticipant(
       ParticipantDetailRequest participant, String userId, SiteEntity site) {
+
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
 
     if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getCanEdit().equals(Permission.READ_EDIT.value())) {
+        || !optSitePermission.get().getEditPermission().equals(Permission.READ_EDIT.value())) {
       return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
     }
 
@@ -291,7 +275,8 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
 
     if (!optSitePermission.isPresent()
-        || Permission.NO_PERMISSION == Permission.fromValue(optSitePermission.get().getCanEdit())) {
+        || Permission.NO_PERMISSION
+            == Permission.fromValue(optSitePermission.get().getEditPermission())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new ParticipantRegistryResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }

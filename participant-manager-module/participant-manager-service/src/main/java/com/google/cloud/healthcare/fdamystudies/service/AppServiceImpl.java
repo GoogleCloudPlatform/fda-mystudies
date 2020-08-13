@@ -8,27 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
@@ -54,6 +33,31 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
 @Service
 public class AppServiceImpl implements AppService {
@@ -147,7 +151,7 @@ public class AppServiceImpl implements AppService {
       appDetails.setAppUsersCount(appIdbyUsersCount.get(app.getId()));
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
-        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit();
+        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEditPermission();
         appDetails.setAppPermission(
             appEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
       }
@@ -186,7 +190,8 @@ public class AppServiceImpl implements AppService {
           appInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
         }
 
-        if (OPEN_STUDY.equals(studyType)) {
+        if (sitePermission.getSite().getTargetEnrollment() != null
+            && OPEN_STUDY.equals(studyType)) {
           appInvitedCount += sitePermission.getSite().getTargetEnrollment();
         }
 
@@ -264,23 +269,20 @@ public class AppServiceImpl implements AppService {
   public AppResponse getAppsWithOptionalFields(String userId, String[] fields) {
     logger.entry("getAppsWithOptionalFields(userId,fields)");
 
-    Optional<UserRegAdminEntity> optUserRegAdminEntity =
-        userRegAdminRepository.findByUserRegAdminId(userId);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
 
     if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
       logger.exit(ErrorCode.USER_ADMIN_ACCESS_DENIED);
       return new AppResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
     }
 
-    List<AppEntity> apps =
-        (List<AppEntity>) CollectionUtils.emptyIfNull(appRepository.findAllApps());
-    List<String> appIds = apps.stream().map(AppEntity::getId).collect(Collectors.toList());
+    List<AppEntity> apps = appRepository.findAll();
 
-    List<StudyEntity> studies =
-        (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findByAppIds(appIds));
-    List<String> studyIds = studies.stream().map(StudyEntity::getId).collect(Collectors.toList());
+    List<StudyEntity> studies = new ArrayList<>();
+    apps.stream().map(AppEntity::getStudies).forEach(studies::addAll);
 
-    List<SiteEntity> sites = siteRepository.findBySites(studyIds);
+    List<SiteEntity> sites = new ArrayList<>();
+    studies.stream().map(StudyEntity::getSites).forEach(sites::addAll);
 
     AppResponse appResponse = prepareAppResponse(apps, studies, sites, fields);
 
@@ -300,9 +302,15 @@ public class AppServiceImpl implements AppService {
     for (AppEntity app : apps) {
       AppDetails appDetails = AppMapper.toAppDetails(app);
       if (ArrayUtils.contains(fields, "studies")) {
+        List<StudyEntity> appStudies = groupByAppIdStudyMap.get(app.getId());
         List<AppStudyResponse> appStudyResponses =
-            StudyMapper.toAppDetailsResponseList(
-                groupByAppIdStudyMap.get(app.getId()), groupByStudyIdSiteMap, fields);
+            appStudies
+                .stream()
+                .map(
+                    study ->
+                        StudyMapper.toAppStudyResponse(
+                            study, groupByStudyIdSiteMap.get(study.getId()), fields))
+                .collect(Collectors.toList());
 
         appDetails.getStudies().addAll(appStudyResponses);
       }

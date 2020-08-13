@@ -8,15 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
@@ -29,6 +20,13 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
 public final class ParticipantMapper {
 
@@ -36,7 +34,7 @@ public final class ParticipantMapper {
 
   public static ParticipantDetail fromParticipantStudy(ParticipantStudyEntity participantStudy) {
     ParticipantDetail participantDetail = new ParticipantDetail();
-    participantDetail.setId(participantStudy.getParticipantId());
+    participantDetail.setId(participantStudy.getId());
     participantDetail.setEnrollmentStatus(participantStudy.getStatus());
     participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());
     participantDetail.setSiteId(participantStudy.getSite().getId());
@@ -85,14 +83,15 @@ public final class ParticipantMapper {
       participants.setStudyId(study.getId());
       participants.setStudyName(study.getName());
       participants.setCustomStudyId(study.getCustomId());
-      participants.setSitePermission(sitePermission.getCanEdit());
-      fromAppInfo(participants, study);
-      fromLocation(site, participants);
+      participants.setSitePermission(sitePermission.getEditPermission());
+      setParticipantRegistryAppInfo(participants, study);
+      setParticipantRegistryLocation(site, participants);
     }
     return participants;
   }
 
-  private static void fromAppInfo(ParticipantRegistryDetail participants, StudyEntity study) {
+  private static void setParticipantRegistryAppInfo(
+      ParticipantRegistryDetail participants, StudyEntity study) {
     if (study.getAppInfo() != null) {
       participants.setAppName(study.getAppInfo().getAppName());
       participants.setCustomAppId(study.getAppInfo().getAppId());
@@ -100,7 +99,8 @@ public final class ParticipantMapper {
     }
   }
 
-  private static void fromLocation(SiteEntity site, ParticipantRegistryDetail participants) {
+  private static void setParticipantRegistryLocation(
+      SiteEntity site, ParticipantRegistryDetail participants) {
     if (site.getLocation() != null) {
       participants.setLocationName(site.getLocation().getName());
       participants.setCustomLocationId(site.getLocation().getCustomId());

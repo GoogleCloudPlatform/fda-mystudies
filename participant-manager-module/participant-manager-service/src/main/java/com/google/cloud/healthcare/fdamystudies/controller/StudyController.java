@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
+import com.google.cloud.healthcare.fdamystudies.service.StudyService;
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
-import com.google.cloud.healthcare.fdamystudies.service.StudyService;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
 @RestController
 @RequestMapping("/studies")
@@ -51,7 +49,7 @@ public class StudyController {
       value = "{studyId}/participants",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getStudyParticipants(
+  public ResponseEntity<ParticipantRegistryResponse> getStudyParticipants(
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @PathVariable String studyId,
       HttpServletRequest request) {

@@ -21,6 +21,16 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 @JsonInclude(Include.NON_NULL)
 @Component
@@ -37,6 +47,8 @@ public class ParticipantDetailRequest {
   private String email;
 
   private String invitedDate;
+
+  private String onboardingStatus;
 
   private String siteId;
 }
