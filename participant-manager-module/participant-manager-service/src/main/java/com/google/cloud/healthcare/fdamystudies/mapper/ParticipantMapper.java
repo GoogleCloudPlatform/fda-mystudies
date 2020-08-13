@@ -11,9 +11,13 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
@@ -50,5 +54,16 @@ public final class ParticipantMapper {
     participantRegistryDetail.setAppName(app.getAppName());
     participantRegistryDetail.setCustomAppId(app.getAppId());
     return participantRegistryDetail;
+  }
+
+  public static ParticipantRegistrySiteEntity fromParticipantRequest(
+      ParticipantDetail participantRequest, SiteEntity site) {
+    ParticipantRegistrySiteEntity participantRegistrySite = new ParticipantRegistrySiteEntity();
+    participantRegistrySite.setEmail(participantRequest.getEmail());
+    participantRegistrySite.setSite(site);
+    participantRegistrySite.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySite.setEnrollmentToken(RandomStringUtils.randomAlphanumeric(8));
+    participantRegistrySite.setStudy(site.getStudy());
+    return participantRegistrySite;
   }
 }
