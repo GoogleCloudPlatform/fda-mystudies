@@ -13,31 +13,31 @@ html {
 }
 
 #body-container {
-  &.padding__0__140 {
+  .padding__0__140 {
     padding: 0 140px;
   }
-  &.blue__btn {
+  .blue__btn {
     color: var(--white);
     background-color: var(--blue);
     border-color: var(--blue);
     font-size: 100%;
     padding: 5px 15px;
   }
-  &.blue__btn:hover {
+  .blue__btn:hover {
     color: var(--white);
     background-color: var(--blue);
     border-color: var(--blue);
   }
-  &.blue__link {
+  .blue__link {
     color: var(--light-blue);
     font-size: 75%;
     text-decoration: none;
     cursor: pointer;
   }
-  &.blue__link:hover {
+  .blue__link:hover {
     color: var(--light-blue);
   }
-  &.search__ {
+  .search__ {
     border: transparent;
     min-width: 300px;
     height: 32px;
@@ -51,14 +51,14 @@ html {
     padding-right: 30px;
     padding-left: 10px;
   }
-  &.bg__white .search__user__details {
+  .bg__white .search__user__details {
     height: 32px;
     margin-bottom: 20px;
     text-indent: 40px;
     background-position: 2%;
     min-width: 500px;
   }
-  &.bs__example a.nav-link {
+  .bs__example a.nav-link {
     color: var(--stone-gray);
     font-size: 87.5%;
     position: relative;
@@ -68,30 +68,30 @@ html {
     margin-right: 20px;
     font-weight: 600;
   }
-  &.bs__example a.nav-link:last-child {
+  .bs__example a.nav-link:last-child {
     margin-right: 0;
   }
-  &.subheader {
+  .subheader {
     background: var(--white);
     box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
     border-bottom: none;
     padding: 23px 0px;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
   }
-  &.nav-tabs.subheader__menu {
+  .nav-tabs.subheader__menu {
     border-bottom: 0;
   }
-  &.progress {
+  .progress {
     border-radius: 30px;
   }
-  &.progress-bar {
+  .progress-bar {
     border-radius: 30px;
     background-color: var(--dark-blue);
   }
-  &.progress {
+  .progress {
     background: var(--sea-blue);
   }
-  &.bt__add {
+  .bt__add {
     width: 110px;
     height: 38px;
     line-height: 100%;
@@ -99,11 +99,11 @@ html {
     background: var(--blue);
     color: var(--white);
   }
-  &.bt__add__auto {
+  .bt__add__auto {
     width: auto;
     padding: 5px 30px;
   }
-  &.bt__cancel {
+  .bt__cancel {
     width: 110px;
     height: 38px;
     line-height: 100%;
@@ -111,54 +111,54 @@ html {
     background: var(--pigeon-gray);
     color: var(--river-gray);
   }
-  &.banner__primary__btn {
+  .banner__primary__btn {
     color: var(--white);
     background-color: var(--blue);
     font-size: 87.5%;
     padding: 5px 13px;
   }
-  &.banner__default__btn {
+  .banner__default__btn {
     background: var(--bold-gray);
     padding: 6px 15px;
     font-size: 87.5%;
     color: var(--white);
   }
-  &.pad__5__13 {
+  .pad__5__13 {
     padding: 5px 13px;
   }
-  &.bt__font12__pad113 {
+  .bt__font12__pad113 {
     font-size: 75%;
     padding: 2px 13px;
   }
-  &.table th,
-  &.table td {
+  .table th,
+  .table td {
     border: none;
     background: var(--white);
     font-weight: normal;
     border-bottom: none;
     border-top: none;
   }
-  &.table th {
+  .table th {
     border-top: none;
     color: var(--blue);
     font-size: 75%;
     padding: 15px 30px;
     font-weight: 700;
   }
-  &.table td {
+  .table td {
     border-top: 1px solid var(--periwinkle-gray);
     color: var(--space-gray);
     font-size: 87.5%;
     padding: 75% 30px;
     font-weight: 600;
   }
-  &.table tfoot tr td {
+  .table tfoot tr td {
     border-top: none;
   }
-  &.pagination {
+  .pagination {
     justify-content: center;
   }
-  &.page-item.active .page-link {
+  .page-item.active .page-link {
     z-index: 1;
     color: var(--space-gray);
     background-color: transparent;
@@ -166,28 +166,28 @@ html {
     border: none;
     font-size: 81.3%;
   }
-  &.page-item.disabled .page-link {
+  .page-item.disabled .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
     font-size: 81.3%;
   }
-  &.page-link {
+  .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
     font-size: 81.3%;
   }
-  &.page-item:last-child .page-link {
+  .page-item:last-child .page-link {
     color: var(--blue);
     background-color: transparent;
     border-color: transparent;
     border: none;
     font-size: 81.3%;
   }
-  &.pagination li:first-child:before {
+  .pagination li:first-child:before {
     position: relative;
     float: right;
     content: "Previous";
@@ -198,7 +198,7 @@ html {
     font-size: 81.3%;
     top: -1px;
   }
-  &.pagination li:last-child:before {
+  .pagination li:last-child:before {
     position: relative;
     float: right;
     content: "Next";
@@ -209,96 +209,96 @@ html {
     font-size: 81.3%;
     top: -1px;
   }
-  &.tbl__td__label {
+  .tbl__td__label {
     color: var(--light-gray);
     font-size: 87.5%;
     margin-right: 5px;
   }
-  &.pad__15__20 {
+  .pad__15__20 {
     padding: 15px 20px;
   }
-  &::placeholder {
+  ::placeholder {
     color: var(--oslo-gray);
     font-weight: normal;
   }
-  &.subheader__title svg {
+  .subheader__title svg {
     margin-right: 7px;
     margin-bottom: 2px;
   }
-  &.white__text {
+  .white__text {
     color: var(--white);
   }
-  &.user__card__title {
+  .user__card__title {
     font-size: 100%;
     color: var(--space-gray);
     line-height: 100%;
     font-weight: 700;
   }
-  &.accordion > .card {
+  .accordion > .card {
     margin-bottom: 8px;
     border: none;
     border-bottom: none;
   }
-  &.card-header:first-child {
+  .card-header:first-child {
     border-radius: 7px;
   }
-  &.card-header {
+  .card-header {
     border: 1px solid var(--periwinkle-gray);
     border-radius: 7px;
     padding: 15px 20px;
   }
-  &.accordion > .card .card-header {
+  .accordion > .card .card-header {
     margin-bottom: 0;
   }
-  &div.show + div {
+  div.show + div {
     border-radius: 7px;
   }
-  &.collapse.show + .card-header {
+  .collapse.show + .card-header {
     border-radius: 7px 7px 0 0;
   }
-  &.card-header {
+  .card-header {
     background: var(--aqua-gray);
   }
-  &.sub__accordian .card-header {
+  .sub__accordian .card-header {
     border: none;
     background: var(--white);
     padding: 0;
   }
-  &.sub__accordian .card-body {
+  .sub__accordian .card-body {
     border: none;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-left: 30px;
   }
-  &.sub__accordian.accordion > .card {
+  .sub__accordian.accordion > .card {
     margin-bottom: 0;
   }
-  &.sub__sub__accordian .card-body {
+  .sub__sub__accordian .card-body {
     border: none;
     padding-top: 10px;
     padding-bottom: 0;
     padding-left: 26px;
   }
-  &.sub__accordian .custom__labels label {
+  .sub__accordian .custom__labels label {
     font-size: 87.5%;
   }
-  &.sub__accordian .card-header {
+  .sub__accordian .card-header {
     border-radius: 0;
     margin-bottom: 10px;
   }
-  &.sub__accordian .card {
+  .sub__accordian .card {
     border-bottom: 1px solid var(--periwinkle-gray);
     border-radius: 0;
     padding: 10px 0;
   }
-  &.pad__T10__B20 {
+  .pad__T10__B20 {
     padding-top: 5px;
     padding-bottom: 15px;
   }
-  &.pad__T10 {
+  .pad__T10 {
     padding-top: 10px;
   }
-  &#closeMobile {
+  #closeMobile {
     color: var(--slate-gray);
     margin-right: 10px;
     position: relative;
@@ -307,56 +307,56 @@ html {
     line-height: 15px;
     font-family: monospace;
   }
-  &.cir__pos {
+  .cir__pos {
     position: absolute;
     top: 12px;
     right: 10px;
     color: var(--grey-dark);
   }
-  &.ng-dropdown-panel {
+  .ng-dropdown-panel {
     position: inherit;
   }
-  &.ng-value {
+  .ng-value {
     display: none;
   }
-  &.ng-placeholder {
+  .ng-placeholder {
     display: block;
   }
-  &.ng-select.ng-select-multiple {
+  .ng-select.ng-select-multiple {
     border: none;
     height: 26px;
     line-height: 10px;
   }
-  &.ng-select.ng-select-multiple .ng-select-container .ng-value-container {
+  .ng-select.ng-select-multiple .ng-select-container .ng-value-container {
     padding: 0;
   }
-  &.ng-select.ng-select-multiple .ng-select-container {
+  .ng-select.ng-select-multiple .ng-select-container {
     border: none;
   }
-  &.ng-select.ng-select-multiple
+  .ng-select.ng-select-multiple
     .ng-select-container
     .ng-value-container
     .ng-placeholder {
     padding: 0;
   }
-  &.ng-select.ng-select-multiple.form-control:focus {
+  .ng-select.ng-select-multiple.form-control:focus {
     box-shadow: none;
     border-top: none;
   }
-  &.ng-select.ng-select-multiple .ng-arrow-wrapper .ng-arrow {
+  .ng-select.ng-select-multiple .ng-arrow-wrapper .ng-arrow {
     top: -75%;
   }
-  &.ng-select.ng-select-multiple .ng-select-container {
+  .ng-select.ng-select-multiple .ng-select-container {
     box-shadow: none;
   }
-  &.ng-select.ng-select-opened > .ng-select-container .ng-arrow {
+  .ng-select.ng-select-opened > .ng-select-container .ng-arrow {
     top: -75%;
   }
-  &.table td,
-  &.table th {
+  .table td,
+  .table th {
     vertical-align: inherit;
   }
-  &.table thead tr th .fa:before {
+  .table thead tr th .fa:before {
     color: var(--periwinkle-gray);
     margin-left: 5px;
   }
@@ -1015,5 +1015,22 @@ pre {
 }
 
 .dashboard-card__title {
+  font-weight: 700;
+}
+
+.subheader {
+  min-height: 67px;
+  line-height: 59px;
+  padding: 0;
+}
+
+.study-participant-registry.subheader {
+  line-height: inherit;
+  height: inherit;
+}
+
+.enrollment-label {
+  color: var(--tunder-gray);
+  font-size: 80%;
   font-weight: 700;
 }
