@@ -8,37 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Collections;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
@@ -49,6 +18,7 @@ import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -64,8 +34,37 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
-import com.google.cloud.healthcare.fdamystudies.util.Constants;
 import com.jayway.jsonpath.JsonPath;
+import java.util.Collections;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SitesControllerTest extends BaseMockIT {
 
@@ -133,12 +132,12 @@ public class SitesControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedForAddNewSite() throws Exception {
     // pre-condition: deny study permission
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEdit(Constants.VIEW_VALUE);
+    studyPermissionEntity.setEditPermission(VIEW_VALUE);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     // pre-condition: deny app permission
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
-    appPermissionEntity.setEdit(Constants.VIEW_VALUE);
+    appPermissionEntity.setEditPermission(VIEW_VALUE);
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
     HttpHeaders headers = newCommonHeaders();
     SiteRequest siteRequest = newSiteRequest();
@@ -154,7 +153,7 @@ public class SitesControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.SITE_PERMISSION_ACEESS_DENIED.getDescription())));
+                is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
   }
 
   @Test
@@ -250,7 +249,7 @@ public class SitesControllerTest extends BaseMockIT {
   public void shouldReturnAccessDeniedForAddNewParticipant() throws Exception {
     // Step 1: set manage site permission to view only
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
-    sitePermissionEntity.setCanEdit(Permission.READ_VIEW.value());
+    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
@@ -345,7 +344,7 @@ public class SitesControllerTest extends BaseMockIT {
 
   private HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
-    headers.add(Constants.USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
     return headers;
@@ -360,7 +359,7 @@ public class SitesControllerTest extends BaseMockIT {
 
   private ParticipantDetail newParticipantRequest() {
     ParticipantDetail participantRequest = new ParticipantDetail();
-    participantRequest.setEmail(TestDataHelper.EMAIL_VALUE);
+    participantRequest.setEmail(TestConstants.EMAIL_VALUE);
     return participantRequest;
   }
 }

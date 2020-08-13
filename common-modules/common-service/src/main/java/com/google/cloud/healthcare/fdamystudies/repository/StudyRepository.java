@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,8 +19,4 @@ import org.springframework.stereotype.Repository;
     value = "participant.manager.repository.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public interface StudyRepository extends JpaRepository<StudyEntity, String> {
-
-  @Query("SELECT study from StudyEntity study where study.id=:studyId")
-  public Optional<StudyEntity> findByStudyId(String studyId);
-}
+public interface StudyRepository extends JpaRepository<StudyEntity, String> {}

@@ -8,11 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
@@ -22,6 +17,10 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEnt
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
 public final class ParticipantMapper {
 
@@ -29,7 +28,7 @@ public final class ParticipantMapper {
 
   public static ParticipantDetail fromParticipantStudy(ParticipantStudyEntity participantStudy) {
     ParticipantDetail participantDetail = new ParticipantDetail();
-    participantDetail.setId(participantStudy.getParticipantId());
+    participantDetail.setId(participantStudy.getId());
     participantDetail.setEnrollmentStatus(participantStudy.getStatus());
     participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());
     participantDetail.setSiteId(participantStudy.getSite().getId());

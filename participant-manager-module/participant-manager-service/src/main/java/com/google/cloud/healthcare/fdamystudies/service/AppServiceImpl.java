@@ -41,6 +41,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,7 +151,7 @@ public class AppServiceImpl implements AppService {
       appDetails.setAppUsersCount(appIdbyUsersCount.get(app.getId()));
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
-        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit();
+        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEditPermission();
         appDetails.setAppPermission(
             appEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
       }
@@ -184,7 +190,8 @@ public class AppServiceImpl implements AppService {
           appInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
         }
 
-        if (OPEN_STUDY.equals(studyType)) {
+        if (sitePermission.getSite().getTargetEnrollment() != null
+            && OPEN_STUDY.equals(studyType)) {
           appInvitedCount += sitePermission.getSite().getTargetEnrollment();
         }
 

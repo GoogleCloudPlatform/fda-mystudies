@@ -165,8 +165,6 @@ public class OAuthControllerTest extends BaseMockIT {
   @Test
   @Order(5)
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
     requestParams.add(SCOPE, "openid");
@@ -175,6 +173,7 @@ public class OAuthControllerTest extends BaseMockIT {
     requestParams.add(USER_ID, UUID.randomUUID().toString());
     requestParams.add(CODE_VERIFIER, UUID.randomUUID().toString());
 
+    HttpHeaders headers = getCommonHeaders();
     mockMvc
         .perform(
             post(ApiEndpoint.TOKEN.getPath())
@@ -260,6 +259,44 @@ public class OAuthControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth2/revoke"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+  }
+
+  @Test
+  @Order(9)
+  public void shouldReturnBadRequestForRevokeToken() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.REVOKE_TOKEN.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.violations[0].path").value("token"))
+        .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
+  }
+
+  @Test
+  @Order(10)
+  public void shouldReturnBadRequestForIntrospectToken() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.TOKEN_INTROSPECT.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.violations[0].path").value("token"))
+        .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
   }
 
   private HttpHeaders getCommonHeaders() {

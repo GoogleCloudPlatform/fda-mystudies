@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,4 +30,9 @@ public class SiteRequest {
   private String locationId;
 
   private String userId;
+
+  public SiteRequest(String studyId, String locationId) {
+    this.studyId = studyId;
+    this.locationId = locationId;
+  }
 }
