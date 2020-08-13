@@ -30,9 +30,9 @@ public enum ApiEndpoint {
 
   TOKEN_INTROSPECT("http://localhost:8002/oauth-scim-service/oauth2/introspect"),
 
-  CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/v1/users/{userId}/change_password"),
+  CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/users/{userId}/change_password"),
 
-  UPDATE_EMAIL_STATUS("http://localhost:8002/oauth-scim-service/v1/users/{userId}");
+  UPDATE_EMAIL_STATUS("http://localhost:8002/oauth-scim-service/users/{userId}");
 
   private String url;
 
