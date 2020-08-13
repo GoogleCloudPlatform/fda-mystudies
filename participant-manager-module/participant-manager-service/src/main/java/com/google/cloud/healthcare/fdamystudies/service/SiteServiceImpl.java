@@ -41,7 +41,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import java.util.Arrays;
-import com.google.cloud.healthcare.fdamystudies.util.SiteStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +60,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -361,8 +357,8 @@ public class SiteServiceImpl implements SiteService {
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
         logger.exit(String.format("editValue=%d", Permission.READ_EDIT.value()));
-        return studyPermission.getEdit() == Permission.READ_EDIT.value()
-            || appPermission.getEdit() == Permission.READ_EDIT.value();
+        return studyPermission.getEditPermission() == Permission.READ_EDIT.value()
+            || appPermission.getEditPermission() == Permission.READ_EDIT.value();
       }
     }
     logger.exit("default permission is edit, return true");
@@ -465,7 +461,7 @@ public class SiteServiceImpl implements SiteService {
 
     for (SitePermissionEntity sitePermission : sitePermissions) {
       if (studyAdminIds.contains(sitePermission.getUrAdminUser().getId())) {
-        sitePermission.setCanEdit(Permission.READ_VIEW.value());
+        sitePermission.setEditPermission(Permission.READ_VIEW.value());
         sitePermissionRepository.saveAndFlush(sitePermission);
       } else {
         sitePermissionRepository.delete(sitePermission);

@@ -53,7 +53,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
@@ -563,11 +562,11 @@ public class SitesControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedForDecommissionSite() throws Exception {
     // Step 1: Set permission to read only
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEdit(Permission.READ_VIEW.value());
+    studyPermissionEntity.setEditPermission(Permission.READ_VIEW.value());
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
-    appPermissionEntity.setEdit(Permission.READ_VIEW.value());
+    appPermissionEntity.setEditPermission(Permission.READ_VIEW.value());
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
 
     // Step 2: call API and expect SITE_PERMISSION_ACCESS_DENIED error
