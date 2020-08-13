@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -54,14 +54,17 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.US
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -347,7 +350,7 @@ public class SitesControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedError() throws Exception {
     // Site 1: set manage site permission to no permission
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
-    sitePermissionEntity.setCanEdit(Permission.NO_PERMISSION.value());
+    sitePermissionEntity.setEditPermission(Permission.NO_PERMISSION.value());
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API and expect MANAGE_SITE_PERMISSION_ACCESS_DENIED error
@@ -397,7 +400,7 @@ public class SitesControllerTest extends BaseMockIT {
     //  testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
     participantRegistrySiteEntity.setSite(siteEntity);
-    participantRegistrySiteEntity.setEmail(testDataHelper.EMAIL_VALUE);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     testDataHelper
         .getParticipantRegistrySiteRepository()
         .saveAndFlush(participantRegistrySiteEntity);
@@ -458,7 +461,7 @@ public class SitesControllerTest extends BaseMockIT {
 
   private ParticipantDetailRequest newParticipantRequest() {
     ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
-    participantRequest.setEmail(TestDataHelper.EMAIL_VALUE);
+    participantRequest.setEmail(TestConstants.EMAIL_VALUE);
     return participantRequest;
   }
 }
