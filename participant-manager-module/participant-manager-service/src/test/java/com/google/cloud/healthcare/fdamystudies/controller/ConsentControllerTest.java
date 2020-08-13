@@ -139,11 +139,12 @@ public class ConsentControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.SITE_PERMISSION_ACEESS_DENIED.getDescription())));
+                is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
   }
 
   @Test
-  public void shouldReturnConsentDataNotAvailableForConsentDocument() throws Exception {
+  public void shouldReturnConsentDataNotAvailableWithNullStudyForConsentDocument()
+      throws Exception {
     // Site 1: set siteEntity to null
     studyConsentEntity.setParticipantStudy(null);
     testDataHelper.getStudyConsentRepository().save(studyConsentEntity);
@@ -165,7 +166,7 @@ public class ConsentControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnConsentDataNotAvailableForConsentDocumentForSite() throws Exception {
+  public void shouldReturnConsentDataNotAvailableWithNullSiteForConsentDocument() throws Exception {
     // Site 1: set siteEntity to null
     studyConsentEntity.getParticipantStudy().setSite(null);
     testDataHelper.getStudyConsentRepository().save(studyConsentEntity);

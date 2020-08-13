@@ -61,8 +61,8 @@ public class ConsentServiceImpl implements ConsentService {
             userId, studyConsentEntity.getParticipantStudy().getSite().getId());
 
     if (!optSitePermission.isPresent()) {
-      logger.exit(ErrorCode.SITE_PERMISSION_ACEESS_DENIED);
-      return new ConsentDocumentResponse(ErrorCode.SITE_PERMISSION_ACEESS_DENIED);
+      logger.exit(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+      return new ConsentDocumentResponse(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
     String document = null;
