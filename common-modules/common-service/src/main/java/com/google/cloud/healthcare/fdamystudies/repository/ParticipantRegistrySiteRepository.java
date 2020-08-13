@@ -16,6 +16,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 
 @ConditionalOnProperty(
@@ -33,4 +34,16 @@ public interface ParticipantRegistrySiteRepository
       "SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id = :studyId and pr.email = :email")
   public Optional<ParticipantRegistrySiteEntity> findByStudyIdAndEmail(
       String studyId, String email);
+
+  @Query(
+      "SELECT pr.onboardingStatus AS onboardingStatus, count(pr.email) AS count FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id= :siteId group by pr.onboardingStatus")
+  public List<ParticipantRegistrySiteCount> findStatusCountBySiteId(String siteId);
+
+  @Query(
+      "SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
+  public List<ParticipantRegistrySiteEntity> findBySiteIdAndStatus(
+      String siteId, String onboardingStatus);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id =:siteId")
+  public List<ParticipantRegistrySiteEntity> findBySiteId(String siteId);
 }
