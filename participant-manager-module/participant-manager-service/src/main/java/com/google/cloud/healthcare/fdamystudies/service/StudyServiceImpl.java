@@ -7,39 +7,49 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
-
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
 @Service
 public class StudyServiceImpl implements StudyService {
@@ -49,9 +59,15 @@ public class StudyServiceImpl implements StudyService {
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
-  @Autowired private ParticipantStudyRepository participantStudiesRepository;
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private SitePermissionRepository sitePermissionRepository;
+
+  @Autowired private AppRepository appRepository;
+
+  @Autowired private StudyRepository studyRepository;
+
+  @Autowired private SiteRepository siteRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -199,7 +215,7 @@ public class StudyServiceImpl implements StudyService {
 
   private Map<String, Long> getSiteWithEnrolledParticipantCountMap(List<String> usersSiteIds) {
     List<ParticipantStudyEntity> participantsEnrollments =
-        participantStudiesRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
+        participantStudyRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
 
     return participantsEnrollments
         .stream()
@@ -216,5 +232,79 @@ public class StudyServiceImpl implements StudyService {
             Collectors.groupingBy(
                 e -> e.getSite().getId(),
                 Collectors.summingLong(ParticipantRegistrySiteEntity::getInvitationCount)));
+  }
+
+  @Override
+  public ParticipantRegistryResponse getStudyParticipants(String userId, String studyId) {
+    logger.entry("getStudyParticipants(String userId, String studyId)");
+    // validations
+    Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
+    if (!optStudy.isPresent()) {
+      logger.exit(ErrorCode.STUDY_NOT_FOUND);
+      return new ParticipantRegistryResponse(ErrorCode.STUDY_NOT_FOUND);
+    }
+
+    Optional<StudyPermissionEntity> optStudyPermission =
+        studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
+
+    if (!optStudyPermission.isPresent()) {
+      logger.exit(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+      return new ParticipantRegistryResponse(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+    }
+
+    StudyPermissionEntity studyPermission = optStudyPermission.get();
+
+    if (studyPermission.getAppInfo() == null) {
+      logger.exit(ErrorCode.APP_NOT_FOUND);
+      return new ParticipantRegistryResponse(ErrorCode.APP_NOT_FOUND);
+    }
+
+    Optional<AppEntity> optApp =
+        appRepository.findById(optStudyPermission.get().getAppInfo().getId());
+
+    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get());
+  }
+
+  private ParticipantRegistryResponse prepareRegistryParticipantResponse(
+      StudyEntity study, AppEntity app) {
+    ParticipantRegistryDetail participantRegistryDetail =
+        ParticipantMapper.fromStudyAndApp(study, app);
+
+    if (OPEN_STUDY.equalsIgnoreCase(study.getType())) {
+      Optional<SiteEntity> optSiteEntity =
+          siteRepository.findByStudyIdAndType(study.getId(), study.getType());
+      if (optSiteEntity.isPresent()) {
+        participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
+      }
+    }
+
+    List<ParticipantStudyEntity> participantStudiesList =
+        participantStudyRepository.findParticipantsByStudy(study.getId());
+    List<ParticipantDetail> registryParticipants = new ArrayList<>();
+
+    if (CollectionUtils.isNotEmpty(participantStudiesList)) {
+      for (ParticipantStudyEntity participantStudy : participantStudiesList) {
+        ParticipantDetail participantDetail =
+            ParticipantMapper.fromParticipantStudy(participantStudy);
+
+        String onboardingStatusCode =
+            participantStudy.getParticipantRegistrySite().getOnboardingStatus();
+        onboardingStatusCode =
+            StringUtils.defaultString(onboardingStatusCode, OnboardingStatus.DISABLED.getCode());
+        participantDetail.setOnboardingStatus(
+            OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
+
+        registryParticipants.add(participantDetail);
+      }
+    }
+
+    participantRegistryDetail.setRegistryParticipants(registryParticipants);
+
+    ParticipantRegistryResponse participantRegistryResponse =
+        new ParticipantRegistryResponse(
+            MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
+
+    logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
+    return participantRegistryResponse;
   }
 }
