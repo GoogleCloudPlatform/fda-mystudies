@@ -13,7 +13,7 @@ import {getMessage} from 'src/app/shared/success.codes.enum';
 })
 export class AddLocationComponent {
   @Input() enabled = true;
-  location = <Location>{};
+  location = {} as Location;
   sub: Subscription = new Subscription();
   constructor(
     private readonly router: Router,
