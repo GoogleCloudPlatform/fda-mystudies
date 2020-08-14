@@ -24,13 +24,10 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.DevicePlatform;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import javax.servlet.http.Cookie;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class ConsentControllerTest extends BaseMockIT {
 
   protected static final String CONSENT_CHALLENGE_VALUE = "c11e62a0-5555-4b0e-b498-c878f5e4bd85";
