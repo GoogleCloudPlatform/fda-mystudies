@@ -8,9 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;

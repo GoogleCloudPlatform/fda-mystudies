@@ -8,19 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import javax.validation.constraints.Email;

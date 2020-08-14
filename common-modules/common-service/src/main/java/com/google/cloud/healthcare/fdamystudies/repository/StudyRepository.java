@@ -8,13 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-
-import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationIdStudyNamesPair;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

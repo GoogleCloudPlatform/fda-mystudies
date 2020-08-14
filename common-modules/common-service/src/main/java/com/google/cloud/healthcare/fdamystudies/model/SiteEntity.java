@@ -23,14 +23,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
