@@ -7,11 +7,11 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
 import {map} from 'rxjs/operators';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {
-  StudyTypes,
+  StudyType,
   OnboardingStatus,
   EnrollmentStatus,
 } from 'src/app/shared/enums';
-import {PermisssionEnum} from 'src/app/shared/permission.enums';
+import {Permisssion} from 'src/app/shared/permission-enums';
 import {TemplateRef} from '@angular/core';
 import {RegistryParticipant} from 'src/app/shared/participant';
 
@@ -25,10 +25,10 @@ export class StudyDetailsComponent extends UnsubscribeOnDestroyAdapter
   studyId = '';
   query$ = new BehaviorSubject('');
   studyDetail$: Observable<StudyDetails> = of();
-  studyTypes = StudyTypes;
+  studyTypes = StudyType;
   onboardingStatus = OnboardingStatus;
   enrollmentStatus = EnrollmentStatus;
-  permisssionEnum = PermisssionEnum;
+  permisssion = Permisssion;
   constructor(
     private readonly modalService: BsModalService,
     private modalRef: BsModalRef,
