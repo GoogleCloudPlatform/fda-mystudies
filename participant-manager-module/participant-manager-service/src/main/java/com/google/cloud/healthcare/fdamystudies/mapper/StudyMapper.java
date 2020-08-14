@@ -8,8 +8,19 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.google.cloud.healthcare.fdamystudies.beans.AppSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
@@ -32,5 +43,21 @@ public final class StudyMapper {
       appStudyResponse.getSites().addAll(appSiteResponsesList);
     }
     return appStudyResponse;
+  }
+
+  public static AppStudyDetails toAppStudyDetails(
+      Map<StudyEntity, List<ParticipantStudyEntity>> enrolledStudiesByStudyInfoId) {
+    AppStudyDetails appStudyDetails = new AppStudyDetails();
+
+    for (Entry<StudyEntity, List<ParticipantStudyEntity>> entry :
+        enrolledStudiesByStudyInfoId.entrySet()) {
+      StudyEntity study = entry.getKey();
+      appStudyDetails.setCustomStudyId(study.getCustomId());
+      appStudyDetails.setStudyName(study.getName());
+      appStudyDetails.setStudyId(study.getId());
+      List<AppSiteDetails> sites = SiteMapper.toParticipantSiteList(entry);
+      appStudyDetails.setSites(sites);
+    }
+    return appStudyDetails;
   }
 }
