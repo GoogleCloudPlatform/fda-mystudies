@@ -82,7 +82,7 @@
     <dependency>
       <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
       <artifactId>common-service</artifactId>
-      <version>0.0.1-RELEASE</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -91,7 +91,7 @@
     <dependency>
       <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
       <artifactId>common-tests</artifactId>
-      <version>0.0.1-RELEASE</version>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

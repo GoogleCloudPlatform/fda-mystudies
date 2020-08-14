@@ -10,13 +10,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class RemoveExpiredTempRegIdScheduledTask {
 
+  private static final int INITIAL_DELAY_MILLI_SEC = 10000;
+
+  private static final int FIXED_DELAY_MILLI_SEC = 1800000;
+
   private XLogger logger =
       XLoggerFactory.getXLogger(RemoveExpiredTempRegIdScheduledTask.class.getName());
 
   @Autowired private UserService userService;
 
   // 30min fixed delay and 10s initial delay
-  @Scheduled(fixedDelay = 1800000, initialDelay = 10000)
+  @Scheduled(fixedDelay = FIXED_DELAY_MILLI_SEC, initialDelay = INITIAL_DELAY_MILLI_SEC)
   public void removeExpiredTempRegIds() {
     logger.info("begin removeExpiredTempRegIds()");
     userService.removeExpiredTempRegIds();

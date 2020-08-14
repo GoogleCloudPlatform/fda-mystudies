@@ -1,0 +1,39 @@
+@import "./colors.scss";
+#body-container {
+  .modal__body .form-group {
+    padding: 22px 30px;
+    margin-bottom: 0;
+  }
+  .modal__body .form-control {
+    padding: 0px;
+    color: var(--black);
+    height: auto;
+    font-size: 100%;
+    font-weight: 700;
+  }
+  .modal__body .form-control:disabled,
+  .modal__body .form-control[readonly] {
+    background: var(--mystic-gray);
+  }
+  .modal-backdrop.show {
+    opacity: 0.7;
+  }
+  .modal__body label {
+    margin-bottom: 0;
+    font-size: 75%;
+    color: var(--light-blue);
+    text-transform: capitalize;
+  }
+  .modal__body input {
+    background: transparent;
+  }
+  .modal-content {
+    border-radius: 10px;
+  }
+  .modal__body .form-group.border-radius__77 {
+    border-radius: 7px 7px 0 0px;
+  }
+  .modal-dialog {
+    max-width: 600px;
+  }
+}

@@ -33,9 +33,9 @@ public class AuditLogEventServiceImpl extends BaseServiceImpl implements AuditLo
 
   @Override
   @Transactional
-  public AuditLogEventResponse saveAuditLogEvent(AuditLogEventRequest aleRequest) {
+  public AuditLogEventResponse saveAuditLogEvent(AuditLogEventRequest auditRequest) {
     logger.entry("begin saveAuditLogEvent()");
-    AuditLogEventEntity aleEntity = AuditLogEventMapper.fromAuditLogEventRequest(aleRequest);
+    AuditLogEventEntity aleEntity = AuditLogEventMapper.fromAuditLogEventRequest(auditRequest);
     aleEntity.setPlatformVersion(platformVersion);
 
     aleEntity = repository.saveAndFlush(aleEntity);

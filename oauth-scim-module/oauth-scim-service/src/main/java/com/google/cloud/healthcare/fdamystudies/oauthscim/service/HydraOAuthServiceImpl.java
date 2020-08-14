@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
@@ -21,12 +20,9 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
-import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
-import java.util.Base64;
 import java.util.Collections;
 import javax.annotation.PostConstruct;
 import org.slf4j.ext.XLogger;
@@ -51,14 +47,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
       "application/x-www-form-urlencoded;charset=UTF-8";
 
   private static final String CONTENT_TYPE = "Content-Type";
-
-  @Autowired private UserService userService;
-
-  @Value("${security.oauth2.hydra.remember:false}")
-  private boolean remember;
-
-  @Value("${security.oauth2.hydra.remember-for-seconds:0}")
-  private int rememberForSeconds;
 
   @Value("${security.oauth2.hydra.token_endpoint}")
   private String tokenEndpoint;
@@ -89,10 +77,11 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private String encodedAuthorization;
 
+  @Autowired private UserService userService;
+
   @PostConstruct
   public void init() {
-    String credentials = clientId + ":" + clientSecret;
-    encodedAuthorization = "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+    encodedAuthorization = getEncodedAuthorization(clientId, clientSecret);
   }
 
   public ResponseEntity<?> getToken(MultiValueMap<String, String> paramMap, HttpHeaders headers)
@@ -152,7 +141,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   }
 
   @Override
-  public ResponseEntity<JsonNode> loginAccept(String email, String loginChallenge) {
+  public ResponseEntity<JsonNode> loginAccept(String userId, String loginChallenge) {
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -162,14 +151,8 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     url.append("?").append(LOGIN_CHALLENGE).append("=").append(loginChallenge);
 
     ObjectNode requestParams = getObjectNode();
-    requestParams.put("subject", email);
+    requestParams.put("subject", userId);
 
-    // if ORY Hydra should remember the subject's subject agent for future authentication attempts
-    // by setting a cookie.
-    requestParams.put("remember", remember);
-    if (remember) {
-      requestParams.put("remember_for", rememberForSeconds);
-    }
     HttpEntity<Object> requestEntity = new HttpEntity<>(requestParams, headers);
 
     ResponseEntity<JsonNode> response =
@@ -199,27 +182,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @Override
   public ResponseEntity<JsonNode> consentAccept(MultiValueMap<String, String> paramMap) {
-
-    ArrayNode scopes = createArrayNode();
-    scopes.add("offline_access");
-    scopes.add("offline");
-    scopes.add("openid");
-
-    ObjectNode accessTokenNode = getObjectNode();
-    accessTokenNode.put("val", IdGenerator.id());
-
-    ObjectNode idTokenNode = getObjectNode();
-    idTokenNode.put("val", IdGenerator.id());
-
-    ObjectNode session = getObjectNode();
-    session.set("access_token", accessTokenNode);
-    session.set("id_token", idTokenNode);
-
-    ObjectNode request = getObjectNode();
-    request.set("grant_scope", scopes);
-    request.put("remember", remember);
-    request.set("session", session);
-
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -230,7 +192,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
         .append("=")
         .append(paramMap.getFirst(CONSENT_CHALLENGE));
 
-    HttpEntity<Object> requestEntity = new HttpEntity<>(request, headers);
+    HttpEntity<Object> requestEntity = new HttpEntity<>(getObjectNode(), headers);
     ResponseEntity<JsonNode> response =
         getRestTemplate().exchange(url.toString(), HttpMethod.PUT, requestEntity, JsonNode.class);
 

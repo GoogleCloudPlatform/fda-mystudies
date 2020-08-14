@@ -13,27 +13,34 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Setter
 @Getter
-@JsonInclude(Include.NON_NULL)
 public class BaseResponse {
 
   @JsonProperty("status")
   private Integer httpStatusCode;
 
-  @JsonProperty("code")
+  @JsonInclude(Include.NON_NULL)
+  @JsonProperty("error_code")
   private String errorCode;
+
+  @JsonInclude(Include.NON_NULL)
+  @JsonProperty("code")
+  private String code;
 
   @JsonProperty("error_type")
   private String errorType;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("error_description")
   private String errorDescription;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("message")
   private String message;
 
@@ -41,14 +48,15 @@ public class BaseResponse {
 
   public BaseResponse(ErrorCode errorCode) {
     this.httpStatusCode = errorCode.getStatus();
-    this.errorCode = errorCode.getCode();
+    this.code = errorCode.getCode();
     this.errorType = errorCode.getErrorType();
     this.errorDescription = errorCode.getDescription();
   }
 
-  public BaseResponse(HttpStatus httpStatus, String message) {
-    this.httpStatusCode = httpStatus.value();
-    this.message = message;
+  public BaseResponse(MessageCode messageCode) {
+    this.httpStatusCode = messageCode.getHttpStatus().value();
+    this.code = messageCode.getCode();
+    this.message = messageCode.getMessage();
   }
 
   @JsonIgnore
