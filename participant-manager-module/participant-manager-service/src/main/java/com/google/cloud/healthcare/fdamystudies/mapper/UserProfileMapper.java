@@ -29,12 +29,11 @@ public final class UserProfileMapper {
     return profileResponse;
   }
 
-  public static UserRegAdminEntity fromUserProfileRequest(UserProfileRequest userProfileRequest) {
-    UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
+  public static UserRegAdminEntity fromUserProfileRequest(
+      UserRegAdminEntity userRegAdminEntity, UserProfileRequest userProfileRequest) {
     userRegAdminEntity.setFirstName(userProfileRequest.getFirstName());
     userRegAdminEntity.setLastName(userProfileRequest.getLastName());
     userRegAdminEntity.setEmail(userProfileRequest.getEmail());
-    userRegAdminEntity.setId(userProfileRequest.getUserId());
     return userRegAdminEntity;
   }
 }
