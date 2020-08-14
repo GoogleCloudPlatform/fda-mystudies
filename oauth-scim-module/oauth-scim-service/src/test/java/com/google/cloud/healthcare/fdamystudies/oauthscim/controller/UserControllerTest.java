@@ -179,7 +179,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -205,7 +205,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -261,7 +261,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -288,7 +288,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -333,7 +333,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -362,7 +362,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -394,7 +394,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -442,7 +442,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -498,11 +498,6 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.tempRegId").doesNotExist())
         .andExpect(
             jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/audit-log-service/events"))
-            .withRequestBody(new ContainsPattern("CorrelationIdValue_For_5XX_ERROR")));
 
     verify(
         1,
