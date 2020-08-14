@@ -1,11 +1,11 @@
 import {RegistryParticipant} from './participant';
-import {PermisssionEnum} from './permission.enums';
-import {StudyTypes} from './enums';
+import {Permisssion} from './permission-enums';
+import {StudyType} from './enums';
 
 export interface ParticipantRegistryDetail {
   studyId: string;
   customStudyId: string;
-  studyType: StudyTypes;
+  studyType: StudyType;
   targetEnrollment: number;
   studyName: string;
   appId: string;
@@ -15,8 +15,8 @@ export interface ParticipantRegistryDetail {
   customLocationId?: string;
   locationName?: string;
   locationStatus?: string;
-  sitePermission?: PermisssionEnum;
-  openStudySitePermission?: PermisssionEnum;
+  sitePermission?: Permisssion;
+  openStudySitePermission?: Permisssion;
   siteStatus?: string;
   registryParticipants: RegistryParticipant[];
   countByStatus?: string;

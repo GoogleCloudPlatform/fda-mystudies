@@ -1034,3 +1034,11 @@ pre {
   font-size: 80%;
   font-weight: 700;
 }
+.select__form-control__parent .wrap {
+  overflow: initial;
+}
+
+.select__form-control__parent .ng-dropdown-panel {
+  position: absolute;
+  border-radius: 5px;
+}
