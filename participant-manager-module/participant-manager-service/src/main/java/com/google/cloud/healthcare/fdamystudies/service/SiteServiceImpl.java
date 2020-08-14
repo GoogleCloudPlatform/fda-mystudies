@@ -650,10 +650,11 @@ public class SiteServiceImpl implements SiteService {
       participantRegistrySiteEntity.setInvitationDate(new Timestamp(Instant.now().toEpochMilli()));
 
       if (OnboardingStatus.NEW == onboardingStatus) {
-        participantRegistrySiteEntity.setInvitationCount(
-            participantRegistrySiteEntity.getInvitationCount() + 1);
         participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
       }
+
+      participantRegistrySiteEntity.setInvitationCount(
+          participantRegistrySiteEntity.getInvitationCount() + 1);
 
       participantRegistrySiteEntity.setEnrollmentTokenExpiry(
           new Timestamp(
@@ -675,7 +676,7 @@ public class SiteServiceImpl implements SiteService {
       ParticipantRegistrySiteEntity participantRegistrySiteEntity, SiteEntity siteEntity) {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("study name", siteEntity.getStudy().getName());
-    templateArgs.put("org name", siteEntity.getStudy().getApp().getOrgInfo().getName());
+    templateArgs.put("org name", appPropertyConfig.getOrgName());
     templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
     templateArgs.put("contact email address", appPropertyConfig.getFromEmailAddress());
     EmailRequest emailRequest =

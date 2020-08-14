@@ -47,4 +47,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${smtpHostName}")
   private String smtpHostName;
+
+  @Value("${org.name}")
+  private String orgName;
 }
