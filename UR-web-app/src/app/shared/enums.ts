@@ -14,7 +14,7 @@ export enum EnrollmentStatus {
   Withdrawn = 'Withdrawn',
   YetToEnroll = 'Yet To Enroll',
 }
-export enum StudyTypes {
+export enum StudyType {
   Open = 'OPEN',
   Close = 'CLOSE',
 }
