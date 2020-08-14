@@ -18,8 +18,8 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
   appId = '';
   query$ = new BehaviorSubject('');
   appDetail$: Observable<AppDetails> = of();
-  enrolledStudies: EnrolledStudy[] = [];
   statusEnum = Status;
+  enrolledStudies: EnrolledStudy[] = [];
 
   constructor(
     private readonly modalService: BsModalService,
@@ -30,27 +30,30 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
     super();
   }
 
-  openModal(template: TemplateRef<unknown>, enrollStudies: EnrolledStudy[]) {
-    this.enrolledStudies = enrollStudies;
-    if (enrollStudies !== []) {
-      this.modalRef = this.modalService.show(template);
+  openModal(
+    appEnrollList: TemplateRef<unknown>,
+    enrolledStudies: EnrolledStudy[],
+  ) {
+    this.enrolledStudies = enrolledStudies;
+    if (enrolledStudies.length > 0) {
+      this.modalRef = this.modalService.show(appEnrollList);
     }
   }
 
   ngOnInit(): void {
     this.subs.add(
       this.route.params.subscribe((params) => {
-        if (params['appId']) {
+        if (params.appId) {
           this.appId = params.appId as string;
         }
-        this.appParticipantsDetails();
+        this.fetchParticipantsDetails();
       }),
     );
   }
 
-  appParticipantsDetails(): void {
+  fetchParticipantsDetails(): void {
     this.appDetail$ = combineLatest(
-      this.appDetailsService.getAppDetails(this.appId),
+      this.appDetailsService.get(this.appId),
       this.query$,
     ).pipe(
       map(([appDetails, query]) => {

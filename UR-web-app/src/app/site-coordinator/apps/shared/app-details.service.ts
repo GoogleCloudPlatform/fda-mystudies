@@ -9,7 +9,7 @@ import {EntityService} from 'src/app/service/entity.service';
 export class AppDetailsService {
   constructor(private readonly entityService: EntityService<AppDetails>) {}
 
-  getAppDetails(appId: string): Observable<AppDetails> {
+  get(appId: string): Observable<AppDetails> {
     return this.entityService.get(`apps/${appId}/participants`);
   }
 }

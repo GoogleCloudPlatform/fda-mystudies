@@ -14,7 +14,7 @@ export interface Participant {
   registrationStatus: string;
   registrationDate: string;
   enrolledStudies: EnrolledStudy[];
-  enrollments: Enrollments[];
+  enrollments: Enrollment[];
   consentHistory: Consent[];
 }
 
@@ -40,7 +40,7 @@ export interface Consent {
   consentDocumentPath: string;
   dataSharingPermissions: string;
 }
-export interface Enrollments {
+export interface Enrollment {
   participantId: string;
   withdrawalDate: string;
   enrollmentStatus: string;

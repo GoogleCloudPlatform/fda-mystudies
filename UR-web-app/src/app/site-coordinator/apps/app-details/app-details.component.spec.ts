@@ -22,7 +22,7 @@ describe('AppDetailsComponent', () => {
   beforeEach(async(async () => {
     const appDetailsServiceSpy = jasmine.createSpyObj<AppDetailsService>(
       'AppDetailsService',
-      {getAppDetails: of(expectedAppDetails)},
+      {get: of(expectedAppDetails)},
     );
 
     await TestBed.configureTestingModule({

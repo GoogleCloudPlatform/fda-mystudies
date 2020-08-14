@@ -84,7 +84,7 @@
               <span class="tbl__td__label">Number of Studies Enrolled:</span>
               <span
                 [class.no_st_en]="applists.enrolledStudies.length > 0"
-                (click)="openModal(template, applists.enrolledStudies)"
+                (click)="openModal(appEnrollList, applists.enrolledStudies)"
               >
                 {{ applists.enrolledStudies.length }}
               </span>
@@ -103,7 +103,7 @@
   </section>
 </ng-container>
 
-<ng-template #template>
+<ng-template #appEnrollList>
   <div #appsListData class="modal-body modal__body">
     <button type="button" class="close pad__15__20" (click)="modalRef.hide()">
       &times;
