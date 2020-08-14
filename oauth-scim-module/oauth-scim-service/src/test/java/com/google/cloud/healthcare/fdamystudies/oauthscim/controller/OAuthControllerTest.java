@@ -14,7 +14,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_CREDENTIALS;
@@ -213,7 +212,7 @@ public class OAuthControllerTest extends BaseMockIT {
 
     // Step-2 check refresh token saved in database
     userEntity = userRepository.findByUserId(userEntity.getUserId()).get();
-    ObjectNode userInfo = (ObjectNode) toJsonNode(userEntity.getUserInfo());
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     assertEquals(refreshToken, encryptor.decrypt(getTextValue(userInfo, REFRESH_TOKEN)));
   }
 
@@ -249,7 +248,7 @@ public class OAuthControllerTest extends BaseMockIT {
     user.setTempRegId(TEMP_REG_ID_VALUE);
     // UserInfo JSON contains password hash & salt, password history etc
     ObjectNode userInfo = getObjectNode().put("password", PasswordGenerator.generate(12));
-    user.setUserInfo(userInfo.toString());
+    user.setUserInfo(userInfo);
     return user;
   }
 
