@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AppParticipantsResponse;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +39,8 @@ public class AppController {
   @Autowired private AppService appService;
 
   private static final String STATUS_LOG = "status=%d";
+
+  private static final String BEGIN_REQUEST_LOG = "%s request";
 
   @GetMapping
   public ResponseEntity<AppResponse> getApps(
@@ -62,5 +66,19 @@ public class AppController {
 
     logger.exit(String.format(STATUS_LOG, appResponse.getHttpStatusCode()));
     return ResponseEntity.status(appResponse.getHttpStatusCode()).body(appResponse);
+  }
+
+  @GetMapping("/{appId}/participants")
+  public ResponseEntity<AppParticipantsResponse> getAppParticipants(
+      @PathVariable String appId,
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    AppParticipantsResponse appParticipantsResponse = appService.getAppParticipants(appId, userId);
+
+    logger.exit(String.format(STATUS_LOG, appParticipantsResponse.getHttpStatusCode()));
+    return ResponseEntity.status(appParticipantsResponse.getHttpStatusCode())
+        .body(appParticipantsResponse);
   }
 }

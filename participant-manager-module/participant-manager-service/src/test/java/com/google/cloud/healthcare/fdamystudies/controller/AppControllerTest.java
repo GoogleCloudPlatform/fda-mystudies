@@ -37,6 +37,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 public class AppControllerTest extends BaseMockIT {
 
   @Autowired private AppController controller;
@@ -199,6 +208,68 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnGetAppParticipants() throws Exception {
+    // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    participantStudyEntity.setUserDetails(userDetailsEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    // Step 2: Call API to return GET_APPS_PARTICIPANTS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participants").isArray())
+        .andExpect(jsonPath("$.participants", hasSize(1)))
+        .andExpect(jsonPath("$.participants[0].enrolledStudies").isArray())
+        .andExpect(jsonPath("$.participants[0].enrolledStudies", hasSize(1)))
+        .andExpect(jsonPath("$.participants[0].email").value(userDetailsEntity.getEmail()))
+        .andExpect(
+            jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
+        .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
+        .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
+  }
+
+  @Test
+  public void shouldNotReturnAppsForGetAppParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description").value(ErrorCode.APP_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnBadRequestForGetAppParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.violations").isArray())
+        .andExpect(jsonPath("$.violations[0].path").value("userId"))
+        .andExpect(jsonPath("$.violations[0].message").value("header is required"));
+  }
+  
   public void shouldReturnInvalidAppsFieldsValues() throws Exception {
     // Step 1: set app and study
     studyEntity.setAppInfo(appEntity);
