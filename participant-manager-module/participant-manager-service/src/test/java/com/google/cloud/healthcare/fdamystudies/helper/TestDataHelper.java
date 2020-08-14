@@ -9,18 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.helper;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-
-import java.util.Collections;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -46,8 +40,12 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionReposi
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
-
+import java.util.Collections;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Component
@@ -146,7 +144,7 @@ public class TestDataHelper {
   public AppEntity createAppEntity(UserRegAdminEntity userEntity) {
     AppEntity appEntity = newAppEntity();
     AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
-    appPermissionEntity.setEdit(EDIT_VALUE);
+    appPermissionEntity.setEditPermission(EDIT_VALUE);
     appPermissionEntity.setUrAdminUser(userEntity);
     appEntity.addAppPermissionEntity(appPermissionEntity);
     return appRepository.saveAndFlush(appEntity);
@@ -154,10 +152,10 @@ public class TestDataHelper {
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
     StudyEntity studyEntity = new StudyEntity();
-    studyEntity.setType("CLOSE");
+    studyEntity.setType(CLOSE_STUDY);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
-    studyPermissionEntity.setEdit(EDIT_VALUE);
+    studyPermissionEntity.setEditPermission(EDIT_VALUE);
     studyPermissionEntity.setAppInfo(appEntity);
     studyEntity.addStudyPermissionEntity(studyPermissionEntity);
     return studyRepository.saveAndFlush(studyEntity);
@@ -174,8 +172,7 @@ public class TestDataHelper {
       StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
     SiteEntity siteEntity = newSiteEntity();
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
+    sitePermissionEntity.setEditPermission(Permission.READ_EDIT.value());
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
     sitePermissionEntity.setAppInfo(appEntity);

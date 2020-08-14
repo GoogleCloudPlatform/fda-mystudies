@@ -142,7 +142,7 @@ class FetalKickCounterStepViewController: ORKStepViewController {
       }
 
       if differenceInSec >= 0 {
-        initialTime = initialTime + differenceInSec
+        initialTime += differenceInSec
       }
 
       // Setting the maximum time allowed for the task

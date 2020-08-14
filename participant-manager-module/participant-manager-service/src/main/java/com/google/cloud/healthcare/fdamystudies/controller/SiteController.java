@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

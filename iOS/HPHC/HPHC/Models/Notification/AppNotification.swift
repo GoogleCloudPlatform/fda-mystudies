@@ -27,6 +27,33 @@ enum Audience: String {
 class AppLocalNotification: AppNotification {
   var startDate: Date?
   var endDate: Date?
+
+  convenience init(
+    with resource: Resource,
+    id: String,
+    startDate: Date,
+    endDate: Date,
+    studyID: String
+  ) {
+    self.init()
+    self.id = id
+    message = resource.notificationMessage
+    title = LocalizableString.newResourceMessage.localizedString
+    self.startDate = startDate
+    self.endDate = endDate
+    type =
+      AppNotification.NotificationType
+      .study
+    subType =
+      AppNotification
+      .NotificationSubType.resource
+    audience = Audience.limited
+    studyId = studyID
+  }
+
+  override init() {
+    super.init()
+  }
 }
 
 class AppNotification {

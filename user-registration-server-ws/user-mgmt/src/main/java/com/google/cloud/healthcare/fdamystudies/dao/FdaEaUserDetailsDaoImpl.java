@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -19,11 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 
 @Repository
 public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {

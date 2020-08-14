@@ -14,21 +14,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.RE
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
@@ -54,6 +39,19 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AppServiceImpl implements AppService {
@@ -147,7 +145,7 @@ public class AppServiceImpl implements AppService {
       appDetails.setAppUsersCount(appIdbyUsersCount.get(app.getId()));
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
-        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit();
+        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEditPermission();
         appDetails.setAppPermission(
             appEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
       }
@@ -186,7 +184,8 @@ public class AppServiceImpl implements AppService {
           appInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
         }
 
-        if (OPEN_STUDY.equals(studyType)) {
+        if (sitePermission.getSite().getTargetEnrollment() != null
+            && OPEN_STUDY.equals(studyType)) {
           appInvitedCount += sitePermission.getSite().getTargetEnrollment();
         }
 
