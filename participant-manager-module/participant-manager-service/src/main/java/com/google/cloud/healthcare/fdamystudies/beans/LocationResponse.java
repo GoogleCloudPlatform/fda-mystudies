@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-
 import lombok.Getter;
 import lombok.Setter;
 

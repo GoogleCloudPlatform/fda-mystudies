@@ -23,31 +23,26 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.ArrayUtils;
 
 public final class StudyMapper {
 
   private StudyMapper() {}
 
-  public static List<AppStudyResponse> toAppDetailsResponseList(
-      List<StudyEntity> studies,
-      Map<String, List<SiteEntity>> groupByStudyIdSiteMap,
-      String[] fields) {
-    List<AppStudyResponse> studyResponseList = new ArrayList<>();
-    if (CollectionUtils.isNotEmpty(studies)) {
-      for (StudyEntity study : studies) {
-        AppStudyResponse appStudyResponse = new AppStudyResponse();
-        appStudyResponse.setStudyId(study.getId());
-        appStudyResponse.setCustomStudyId(study.getCustomId());
-        appStudyResponse.setStudyName(study.getName());
-        if (ArrayUtils.contains(fields, "sites")) {
-          List<AppSiteResponse> appSiteResponsesList =
-              SiteMapper.toAppDetailsResponseList(groupByStudyIdSiteMap.get(study.getId()));
-          appStudyResponse.getSites().addAll(appSiteResponsesList);
-        }
-        studyResponseList.add(appStudyResponse);
-      }
+  public static AppStudyResponse toAppStudyResponse(
+      StudyEntity study, List<SiteEntity> sites, String[] fields) {
+    AppStudyResponse appStudyResponse = new AppStudyResponse();
+    appStudyResponse.setStudyId(study.getId());
+    appStudyResponse.setCustomStudyId(study.getCustomId());
+    appStudyResponse.setStudyName(study.getName());
+    if (ArrayUtils.contains(fields, "sites")) {
+      List<AppSiteResponse> appSiteResponsesList =
+          sites.stream().map(SiteMapper::toAppSiteResponse).collect(Collectors.toList());
+      appStudyResponse.getSites().addAll(appSiteResponsesList);
     }
-    return studyResponseList;
+    return appStudyResponse;
   }
 
   public static AppStudyDetails toAppStudyDetails(

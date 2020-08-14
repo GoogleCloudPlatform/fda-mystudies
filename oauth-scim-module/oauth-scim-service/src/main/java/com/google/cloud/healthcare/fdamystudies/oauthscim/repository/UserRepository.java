@@ -11,6 +11,9 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.repository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,4 +26,15 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
   public long deleteByUserId(String userId);
 
   public Optional<UserEntity> findByUserId(String userId);
+
+  public Optional<UserEntity> findByTempRegId(String tempRegId);
+
+  @Modifying
+  @Query(
+      "update UserEntity u set u.email = :email, status= :status, tempRegId= :tempRegId  where u.userId = :userId")
+  void updateEmailStatusAndTempRegId(
+      @Param("email") String email,
+      @Param("status") int status,
+      @Param("tempRegId") String tempRegId,
+      @Param("userId") String userId);
 }
