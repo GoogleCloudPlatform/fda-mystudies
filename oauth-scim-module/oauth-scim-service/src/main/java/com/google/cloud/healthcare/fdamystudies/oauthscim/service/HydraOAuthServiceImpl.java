@@ -8,14 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 import java.util.Collections;
 import javax.annotation.PostConstruct;
@@ -40,8 +41,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private static final String CONTENT_TYPE = "Content-Type";
 
-  private static final int REMEMBER_FOR_SECONDS = 3600;
-
   @Value("${security.oauth2.hydra.token_endpoint}")
   private String tokenEndpoint;
 
@@ -62,6 +61,12 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @Value("${security.oauth2.hydra.login_accept_endpoint}")
   private String loginAcceptEndpoint;
+
+  @Value("${security.oauth2.hydra.consent_endpoint}")
+  private String consentEndpoint;
+
+  @Value("${security.oauth2.hydra.consent_accept_endpoint}")
+  private String consentAcceptEndpoint;
 
   private String encodedAuthorization;
 
@@ -113,7 +118,7 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
   }
 
   @Override
-  public ResponseEntity<JsonNode> loginAccept(String email, String loginChallenge) {
+  public ResponseEntity<JsonNode> loginAccept(String userId, String loginChallenge) {
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -122,10 +127,8 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     StringBuilder url = new StringBuilder(loginAcceptEndpoint);
     url.append("?").append(LOGIN_CHALLENGE).append("=").append(loginChallenge);
 
-    ObjectNode requestParams = JsonUtils.getObjectNode();
-    requestParams.put("subject", email);
-    requestParams.put("remember", true);
-    requestParams.put("remember_for", REMEMBER_FOR_SECONDS);
+    ObjectNode requestParams = getObjectNode();
+    requestParams.put("subject", userId);
 
     HttpEntity<Object> requestEntity = new HttpEntity<>(requestParams, headers);
 
@@ -137,6 +140,44 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
           String.format(
               "%s failed with status=%d and response=%s",
               loginAcceptEndpoint, response.getStatusCodeValue(), response.getBody()));
+    }
+
+    return response;
+  }
+
+  @Override
+  public ResponseEntity<JsonNode> requestConsent(MultiValueMap<String, String> paramMap) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    StringBuilder url = new StringBuilder(consentEndpoint);
+    url.append("?consent_challenge=").append(paramMap.getFirst(CONSENT_CHALLENGE));
+
+    return getRestTemplate().getForEntity(url.toString(), JsonNode.class);
+  }
+
+  @Override
+  public ResponseEntity<JsonNode> consentAccept(MultiValueMap<String, String> paramMap) {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+    StringBuilder url = new StringBuilder(consentAcceptEndpoint);
+    url.append("?")
+        .append(CONSENT_CHALLENGE)
+        .append("=")
+        .append(paramMap.getFirst(CONSENT_CHALLENGE));
+
+    HttpEntity<Object> requestEntity = new HttpEntity<>(getObjectNode(), headers);
+    ResponseEntity<JsonNode> response =
+        getRestTemplate().exchange(url.toString(), HttpMethod.PUT, requestEntity, JsonNode.class);
+
+    if (!response.getStatusCode().is2xxSuccessful()) {
+      logger.error(
+          String.format(
+              "consent accept failed with status %d and response=%s",
+              response.getStatusCodeValue(), response.getBody()));
     }
 
     return response;

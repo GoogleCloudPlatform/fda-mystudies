@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN;
+
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,8 @@ public class AppConfig extends CommonModuleConfiguration {
         .addViewController(String.format("%s/login", context.getContextPath()))
         .setViewName("login");
     registry
-        .addViewController(String.format("%s/signin", context.getContextPath()))
-        .setViewName("signin");
+        .addViewController(String.format("%s/autoLogin", context.getContextPath()))
+        .setViewName(AUTO_LOGIN);
     registry
         .addViewController(String.format("%s/error", context.getContextPath()))
         .setViewName("error");

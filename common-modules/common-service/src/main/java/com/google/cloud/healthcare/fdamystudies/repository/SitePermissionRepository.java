@@ -8,14 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 
 @Repository
 @ConditionalOnProperty(
@@ -26,4 +25,13 @@ public interface SitePermissionRepository extends JpaRepository<SitePermissionEn
   @Query(
       "SELECT sp FROM SitePermissionEntity sp WHERE sp.urAdminUser.id=:userId ORDER BY sp.created DESC")
   public List<SitePermissionEntity> findSitePermissionByUserId(String userId);
+
+  @Query(
+      "SELECT sp FROM SitePermissionEntity sp WHERE sp.urAdminUser.id = :userId and sp.site.id = :siteId")
+  public Optional<SitePermissionEntity> findByUserIdAndSiteId(String userId, String siteId);
+
+  @Query(
+      "SELECT sitePermission from SitePermissionEntity sitePermission "
+          + "where sitePermission.site.id=:siteId")
+  public List<SitePermissionEntity> findBySiteId(String siteId);
 }

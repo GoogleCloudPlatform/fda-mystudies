@@ -55,7 +55,9 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EmailService;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -81,13 +83,13 @@ public class UserServiceImpl implements UserService {
   @Autowired private AuthScimAuditLogHelper auditHelper;
 
   @Override
+  @Transactional
   public UserResponse createUser(UserRequest userRequest) {
     logger.entry("begin createUser()");
 
     // check if the email already been used
     Optional<UserEntity> user =
-        repository.findByAppIdAndOrgIdAndEmail(
-            userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
+        repository.findByAppIdAndEmail(userRequest.getAppId(), userRequest.getEmail());
 
     if (user.isPresent()) {
       UserResponse userResponse = new UserResponse(ErrorCode.EMAIL_EXISTS);
@@ -159,10 +161,8 @@ public class UserServiceImpl implements UserService {
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
-        repository.findByAppIdAndOrgIdAndEmail(
-            resetPasswordRequest.getAppId(),
-            resetPasswordRequest.getOrgId(),
-            resetPasswordRequest.getEmail());
+        repository.findByAppIdAndEmail(
+            resetPasswordRequest.getAppId(), resetPasswordRequest.getEmail());
 
     if (!entity.isPresent()) {
       logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
@@ -193,7 +193,6 @@ public class UserServiceImpl implements UserService {
   private EmailResponse sendPasswordResetEmail(
       ResetPasswordRequest resetPasswordRequest, String tempPassword) {
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("orgId", resetPasswordRequest.getOrgId());
     templateArgs.put("appId", resetPasswordRequest.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
@@ -268,15 +267,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<UserEntity> findUserByTempRegId(String tempRegId) {
-    logger.entry("begin findUserByTempRegId()");
     return repository.findByTempRegId(tempRegId);
   }
 
+  @Override
+  @Transactional
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
     // check if the email present in the database
     Optional<UserEntity> optUserEntity =
-        repository.findByAppIdAndOrgIdAndEmail(user.getAppId(), user.getOrgId(), user.getEmail());
+        repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
 
     if (!optUserEntity.isPresent()) {
       return new AuthenticationResponse(ErrorCode.USER_NOT_FOUND);
@@ -292,7 +292,7 @@ public class UserServiceImpl implements UserService {
     // check the account status and password expiry condition
     ErrorCode errorCode = validatePasswordExpiryAndAccountStatus(userEntity, userInfo);
     if (errorCode != null) {
-      return new AuthenticationResponse(errorCode);
+      return new AuthenticationResponse(errorCode, userEntity.getUserId(), userEntity.getStatus());
     }
 
     String passwordHash = hash(encrypt(user.getPassword(), salt));
@@ -407,6 +407,20 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public void resetTempRegId(String userId) {
+    repository.removeTempRegIDForUser(userId);
+  }
+
+  @Override
+  @Transactional
+  public void removeExpiredTempRegIds() {
+    long timeInMillis =
+        Instant.now()
+            .minus(appConfig.getTempRegIdExpiryMinutes(), ChronoUnit.MINUTES)
+            .toEpochMilli();
+    repository.removeTempRegIdBeforeTime(new Timestamp(timeInMillis));
+  }
+
   @Transactional
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException {

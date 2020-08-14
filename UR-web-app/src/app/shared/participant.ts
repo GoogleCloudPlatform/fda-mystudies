@@ -21,7 +21,7 @@ export interface RegistryParticipant {
   studiesEnrolled?: string;
   registrationDate?: string;
   enrolledStudies: string[];
-  enrollments: Enrollments[];
+  enrollments: Enrollment[];
   consentHistory: Consent[];
 }
 export interface Site {
@@ -39,7 +39,7 @@ export interface Consent {
   consentDocumentPath: string;
   dataSharingPermissions: string;
 }
-export interface Enrollments {
+export interface Enrollment {
   participantId: string;
   withdrawalDate: string;
   enrollmentStatus: string;
