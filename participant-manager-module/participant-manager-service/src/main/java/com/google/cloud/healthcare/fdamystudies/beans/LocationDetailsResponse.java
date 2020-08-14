@@ -8,23 +8,36 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
-@NoArgsConstructor
-public class ParticipantRegistryResponse extends BaseResponse {
-  private ParticipantRegistryDetail participantRegistryDetail;
+public class LocationDetailsResponse extends BaseResponse {
 
-  public ParticipantRegistryResponse(ErrorCode errorCode) {
+  private String locationId;
+
+  private String customId;
+
+  private String description;
+
+  private String name;
+
+  private Integer status;
+
+  private List<String> studies = new ArrayList<>();
+
+  public LocationDetailsResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public ParticipantRegistryResponse(
-      MessageCode messageCode, ParticipantRegistryDetail participantRegistryDetail) {
+  public LocationDetailsResponse(MessageCode messageCode) {
     super(messageCode);
-    this.participantRegistryDetail = participantRegistryDetail;
   }
 }

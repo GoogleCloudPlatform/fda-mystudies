@@ -12,4 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 
 public interface AppService {
   public AppResponse getApps(String userId);
+
+  public AppResponse getAppsWithOptionalFields(String userId, String[] fields);
 }

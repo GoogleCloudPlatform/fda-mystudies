@@ -137,7 +137,37 @@ public enum ErrorCode {
       403, "EC-882", "Forbidden", "You do not have permission to update the location"),
 
   STUDY_PERMISSION_ACCESS_DENIED(
-      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have study permission");
+      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have study permission"),
+
+  MANAGE_SITE_PERMISSION_ACCESS_DENIED(
+      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "You do not have permission to manage site"),
+
+  OPEN_STUDY(
+      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add participant to open study"),
+
+  ENROLLED_PARTICIPANT(400, "EC-862", Constants.BAD_REQUEST, "Participant already enrolled"),
+
+  SITE_NOT_EXIST_OR_INACTIVE(
+      400, "EC-869", Constants.BAD_REQUEST, "Site doesn't exists or is inactive"),
+
+  SITE_NOT_FOUND(404, "EC-94", HttpStatus.NOT_FOUND.toString(), "Site not found"),
+
+  INVALID_ONBOARDING_STATUS(
+      400, "EC-816", HttpStatus.BAD_REQUEST.toString(), "allowed values: N, D, I and E"),
+
+  USER_ADMIN_ACCESS_DENIED(403, "EC-882", "Forbidden", "You do not have permission of Super Admin"),
+
+  CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY(
+      400, "EC-95", Constants.BAD_REQUEST, " Cannot decomission site as study type is open"),
+
+  CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS(
+      400,
+      "EC_885",
+      Constants.BAD_REQUEST,
+      "This Site is associated with active and enrolled participants"
+          + " and cannot be decomissioned"),
+  
+  INVALID_APPS_FIELDS_VALUES(400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
 
   private final int status;
   private final String code;

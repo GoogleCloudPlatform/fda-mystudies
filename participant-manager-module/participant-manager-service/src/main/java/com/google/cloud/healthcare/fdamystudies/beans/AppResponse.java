@@ -11,14 +11,18 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class AppResponse extends BaseResponse {
 
   private List<AppDetails> apps = new ArrayList<>();
@@ -33,5 +37,10 @@ public class AppResponse extends BaseResponse {
     super(messageCode);
     this.apps.addAll(apps);
     this.studyPermissionCount = studyPermissionCount;
+  }
+
+  public AppResponse(MessageCode messageCode, List<AppDetails> apps) {
+    super(messageCode);
+    this.apps.addAll(apps);
   }
 }

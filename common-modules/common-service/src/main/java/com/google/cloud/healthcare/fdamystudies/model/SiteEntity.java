@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,6 +23,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -47,11 +53,11 @@ public class SiteEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "location_id", insertable = true, updatable = true)
   private LocationEntity location;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "study_id", insertable = true, updatable = true)
   private StudyEntity study;
 
@@ -107,5 +113,10 @@ public class SiteEntity implements Serializable {
   public void addParticipantStudiesEntity(ParticipantStudyEntity participantStudiesEntity) {
     participantStudies.add(participantStudiesEntity);
     participantStudiesEntity.setSite(this);
+  }
+
+  @Transient
+  public String getStudyId() {
+    return study != null ? study.getId() : StringUtils.EMPTY;
   }
 }

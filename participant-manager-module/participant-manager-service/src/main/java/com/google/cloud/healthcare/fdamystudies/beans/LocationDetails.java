@@ -8,9 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.builder.ToStringExclude;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,24 +20,25 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class LocationRequest {
+public class LocationDetails {
 
-  public static final String ALPHA_NUMERIC_REGEX = "^[0-9a-zA-Z]{1,15}$";
-
-  @Size(max = 15)
-  @NotBlank
-  @Pattern(regexp = ALPHA_NUMERIC_REGEX, message = "Custom id does not meet the required criteria.")
   private String customId;
 
-  @Size(max = 255)
-  @NotBlank
   private String name;
 
-  @Size(max = 255)
-  @NotBlank
   private String description;
 
-  public LocationRequest(String customId, String name, String description) {
+  @ToStringExclude private String userId;
+
+  private String locationId;
+
+  private Integer status;
+
+  private Integer studiesCount = 0;
+
+  private List<String> studyNames = new ArrayList<>();
+
+  public LocationDetails(String customId, String name, String description) {
     this.customId = customId;
     this.name = name;
     this.description = description;

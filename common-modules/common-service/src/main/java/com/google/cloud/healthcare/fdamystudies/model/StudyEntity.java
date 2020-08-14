@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import java.beans.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -22,6 +23,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -142,5 +150,10 @@ public class StudyEntity implements Serializable {
   public void addParticipantStudiesEntity(ParticipantStudyEntity participantStudiesEntity) {
     participantStudies.add(participantStudiesEntity);
     participantStudiesEntity.setStudy(this);
+  }
+
+  @Transient
+  public String getAppId() {
+    return appInfo != null ? appInfo.getId() : StringUtils.EMPTY;
   }
 }

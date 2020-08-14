@@ -1,32 +1,28 @@
-/*
- * Copyright 2020 Google LLC
- *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
- */
-
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
+@Getter
 @NoArgsConstructor
-public class SiteResponse extends BaseResponse {
+public class SiteStatusResponse extends BaseResponse {
 
   private String siteId;
 
-  public SiteResponse(ErrorCode errorCode) {
+  private Integer status;
+
+  public SiteStatusResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public SiteResponse(String siteId, MessageCode messageCode) {
+  public SiteStatusResponse(String siteId, Integer status, MessageCode messageCode) {
     super(messageCode);
+    this.status = status;
     this.siteId = siteId;
   }
 }
