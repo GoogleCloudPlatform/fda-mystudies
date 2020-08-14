@@ -18,26 +18,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YE
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
@@ -81,6 +61,24 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -650,10 +648,11 @@ public class SiteServiceImpl implements SiteService {
       participantRegistrySiteEntity.setInvitationDate(new Timestamp(Instant.now().toEpochMilli()));
 
       if (OnboardingStatus.NEW == onboardingStatus) {
-        participantRegistrySiteEntity.setInvitationCount(
-            participantRegistrySiteEntity.getInvitationCount() + 1);
         participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
       }
+
+      participantRegistrySiteEntity.setInvitationCount(
+          participantRegistrySiteEntity.getInvitationCount() + 1);
 
       participantRegistrySiteEntity.setEnrollmentTokenExpiry(
           new Timestamp(
@@ -675,7 +674,7 @@ public class SiteServiceImpl implements SiteService {
       ParticipantRegistrySiteEntity participantRegistrySiteEntity, SiteEntity siteEntity) {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("study name", siteEntity.getStudy().getName());
-    templateArgs.put("org name", siteEntity.getStudy().getAppInfo().getOrgInfo().getName());
+    templateArgs.put("org name", appPropertyConfig.getOrgName());
     templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
     templateArgs.put("contact email address", appPropertyConfig.getFromEmailAddress());
     EmailRequest emailRequest =
