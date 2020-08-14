@@ -235,6 +235,11 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse =
         readJsonFile("/response/change_password_bad_request_response_from_annotations.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -454,7 +459,7 @@ public class UserControllerTest extends BaseMockIT {
 
     userEntity = repository.saveAndFlush(userEntity);
 
-    // Step-2 call the API and expect INVALID_PATCH_USER_REQUEST error
+    // Step-2 call the API and expect INVALID_UPDATE_USER_REQUEST error
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 

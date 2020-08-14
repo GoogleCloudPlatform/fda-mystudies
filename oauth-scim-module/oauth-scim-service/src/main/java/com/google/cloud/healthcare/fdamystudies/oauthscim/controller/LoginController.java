@@ -189,7 +189,6 @@ public class LoginController {
       model.addAttribute(ERROR_DESCRIPTION, authenticationResponse.getErrorDescription());
       return LOGIN;
     }
-
     return redirectToConsentPage(
         loginChallenge, authenticationResponse.getUserId(), request, response);
   }
@@ -231,6 +230,7 @@ public class LoginController {
   }
 
   private String redirectToLoginOrAutoLoginPage(
+
       HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
 
     String requestUrl = responseBody.get("request_url").textValue();
@@ -295,5 +295,21 @@ public class LoginController {
     response.setHeader("Location", redirectUrl);
     response.setStatus(HttpStatus.FOUND.value());
     return "redirect:" + redirectUrl;
+  }
+
+  public void addCookies(
+      HttpServletResponse response, MultiValueMap<String, String> params, String... cookieNames) {
+    for (String cookieName : cookieNames) {
+      addCookie(response, cookieName, params.getFirst(cookieName));
+    }
+  }
+
+  public void addCookie(HttpServletResponse response, String cookieName, String cookieValue) {
+    Cookie cookie = new Cookie(cookieName, cookieValue);
+    cookie.setMaxAge(600);
+    cookie.setSecure(appConfig.isSecureCookie());
+    cookie.setHttpOnly(true);
+    cookie.setPath("/");
+    response.addCookie(cookie);
   }
 }
