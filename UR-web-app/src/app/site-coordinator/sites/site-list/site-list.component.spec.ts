@@ -99,8 +99,8 @@ describe('SiteListComponent', () => {
     );
     const sitesLists = compiled.querySelectorAll('.sites_row');
     const sitesListPCT = compiled.querySelectorAll('.enrolled');
-    expect(sitesLists[0].innerHTML).toEqual('Location 1');
-    expect(sitesListPCT[0].innerHTML).toEqual('7 / 14');
+    expect(sitesLists[0].textContent).toContain('Location 1');
+    expect(sitesListPCT[0].textContent).toContain('7 / 14');
   });
 
   it('should display the modal when Add site button is clicked', fakeAsync(async () => {

@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
-@JsonInclude(Include.NON_NULL)
 @Component
 @Scope(value = "prototype")
 @ToString
@@ -42,7 +42,9 @@ public class ParticipantDetail {
 
   private String siteId;
 
+  private String locationName;
+  
   private String customLocationId;
 
-  private String locationName;
+  private Boolean newlyCreatedUser = Boolean.FALSE;
 }

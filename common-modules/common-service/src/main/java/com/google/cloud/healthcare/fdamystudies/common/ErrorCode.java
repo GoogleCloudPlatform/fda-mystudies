@@ -8,19 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.io.IOException;
-import java.time.Instant;
-
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-
+import java.io.IOException;
+import java.time.Instant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @ToString
@@ -112,6 +110,8 @@ public enum ErrorCode {
 
   USER_NOT_ACTIVE(400, "EC_93", Constants.BAD_REQUEST, "User not Active"),
 
+  USER_NOT_INVITED(
+      400, "EC-869", Constants.BAD_REQUEST, "Provided email not exists or user not invited"),
   APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found."),
 
   STUDY_NOT_FOUND(404, "EC-816", Constants.BAD_REQUEST, "Study not found"),
@@ -143,14 +143,14 @@ public enum ErrorCode {
       403, "EC-105", HttpStatus.FORBIDDEN.toString(), "You do not have permission to manage site"),
 
   OPEN_STUDY(
-      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Can not add participant to open study"),
+      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add participant to open study"),
 
   ENROLLED_PARTICIPANT(400, "EC-862", Constants.BAD_REQUEST, "Participant already enrolled"),
 
   SITE_NOT_EXIST_OR_INACTIVE(
       400, "EC-869", Constants.BAD_REQUEST, "Site doesn't exists or is inactive"),
 
-  SITE_NOT_FOUND(404, "EC-94", Constants.BAD_REQUEST, "Site not found"),
+  SITE_NOT_FOUND(404, "EC-94", HttpStatus.NOT_FOUND.toString(), "Site not found"),
 
   INVALID_ONBOARDING_STATUS(
       400, "EC-816", HttpStatus.BAD_REQUEST.toString(), "allowed values: N, D, I and E"),
@@ -165,12 +165,24 @@ public enum ErrorCode {
       "EC_885",
       Constants.BAD_REQUEST,
       "This Site is associated with active and enrolled participants"
-          + " and cannot be decomissioned");
+          + " and cannot be decomissioned"),
+  
+  INVALID_APPS_FIELDS_VALUES(400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
 
   private final int status;
   private final String code;
   private final String errorType;
   private final String description;
+
+  public static ErrorCode fromCodeAndDescription(String code, String description) {
+    for (ErrorCode e : ErrorCode.values()) {
+      if (StringUtils.equalsIgnoreCase(e.code, code)
+          && StringUtils.equalsIgnoreCase(e.description, description)) {
+        return e;
+      }
+    }
+    return null; // not found
+  }
 
   private static class Constants {
 

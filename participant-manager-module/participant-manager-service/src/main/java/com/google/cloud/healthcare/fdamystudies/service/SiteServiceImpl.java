@@ -222,6 +222,7 @@ public class SiteServiceImpl implements SiteService {
 
   private ErrorCode validationForAddNewParticipant(
       ParticipantDetailRequest participant, String userId, SiteEntity site) {
+
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
 
@@ -262,6 +263,7 @@ public class SiteServiceImpl implements SiteService {
 
     if (!optSite.isPresent()) {
       logger.exit(ErrorCode.SITE_NOT_FOUND);
+      // TODO (#702) throw ErrorCodeException
       return new ParticipantRegistryResponse(ErrorCode.SITE_NOT_FOUND);
     }
 
@@ -275,24 +277,24 @@ public class SiteServiceImpl implements SiteService {
       return new ParticipantRegistryResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
 
-    ParticipantRegistryDetail participantRegistry =
+    ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromSite(optSite.get(), optSitePermission.get(), siteId);
     Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
-    participantRegistry.setCountByStatus(statusWithCountMap);
+    participantRegistryDetail.setCountByStatus(statusWithCountMap);
 
-    List<ParticipantRegistrySiteEntity> registryParticipants = null;
+    List<ParticipantRegistrySiteEntity> participantRegistrySites = null;
     if (StringUtils.isEmpty(onboardingStatus)) {
-      registryParticipants = participantRegistrySiteRepository.findBySiteId(siteId);
+      participantRegistrySites = participantRegistrySiteRepository.findBySiteId(siteId);
     } else {
-      registryParticipants =
+      participantRegistrySites =
           participantRegistrySiteRepository.findBySiteIdAndStatus(siteId, onboardingStatus);
     }
 
-    addRegistryParticipants(participantRegistry, registryParticipants);
+    addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
-            MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistry);
+            MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
     return participantRegistryResponse;
@@ -315,15 +317,15 @@ public class SiteServiceImpl implements SiteService {
       statusWithCountMap.put(count.getOnboardingStatus(), count.getCount());
     }
 
-    statusWithCountMap.put("A", total);
+    statusWithCountMap.put(OnboardingStatus.ALL.getCode(), total);
     return statusWithCountMap;
   }
 
   private void addRegistryParticipants(
-      ParticipantRegistryDetail participantRegistry,
-      List<ParticipantRegistrySiteEntity> registryParticipants) {
+      ParticipantRegistryDetail participantRegistryDetail,
+      List<ParticipantRegistrySiteEntity> participantRegistrySites) {
     List<String> registryIds =
-        CollectionUtils.emptyIfNull(registryParticipants)
+        CollectionUtils.emptyIfNull(participantRegistrySites)
             .stream()
             .map(ParticipantRegistrySiteEntity::getId)
             .collect(Collectors.toList());
@@ -333,12 +335,12 @@ public class SiteServiceImpl implements SiteService {
             CollectionUtils.emptyIfNull(
                 participantStudyRepository.findByParticipantRegistrySiteId(registryIds));
 
-    for (ParticipantRegistrySiteEntity participantRegistrySite : registryParticipants) {
+    for (ParticipantRegistrySiteEntity participantRegistrySite : participantRegistrySites) {
       ParticipantDetail participant = new ParticipantDetail();
       participant =
           ParticipantMapper.toParticipantDetails(
               participantStudies, participantRegistrySite, participant);
-      participantRegistry.getRegistryParticipants().add(participant);
+      participantRegistryDetail.getRegistryParticipants().add(participant);
     }
   }
 
@@ -388,7 +390,7 @@ public class SiteServiceImpl implements SiteService {
 
     site.setStatus(SiteStatus.DEACTIVE.value());
     siteRepository.saveAndFlush(site);
-    setPermissions(siteId);
+    updateSitePermissions(siteId);
 
     logger.exit(String.format("Site status changed to DEACTIVE for siteId=%s", site.getId()));
     return new SiteStatusResponse(
@@ -399,6 +401,7 @@ public class SiteServiceImpl implements SiteService {
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
     if (!optSitePermission.isPresent()) {
+      // TODO (#702) throw ErrorCodeException
       return ErrorCode.SITE_NOT_FOUND;
     }
 
@@ -424,7 +427,7 @@ public class SiteServiceImpl implements SiteService {
     return null;
   }
 
-  private void setPermissions(String siteId) {
+  private void updateSitePermissions(String siteId) {
 
     List<SitePermissionEntity> sitePermissions =
         (List<SitePermissionEntity>)
