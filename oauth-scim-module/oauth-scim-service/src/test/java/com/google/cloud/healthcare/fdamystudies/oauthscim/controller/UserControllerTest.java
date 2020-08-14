@@ -58,7 +58,6 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
-import com.google.cloud.healthcare.fdamystudies.repository.AuditEventRepository;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
@@ -86,11 +85,7 @@ public class UserControllerTest extends BaseMockIT {
 
   @Autowired private UserRepository repository;
 
-  @Autowired private AuditEventRepository auditEventRepository;
-
   @Autowired private TextEncryptor encryptor;
-
-  private static String userId;
 
   @Autowired private UserService userService;
 
@@ -269,7 +264,7 @@ public class UserControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userEntity.getUserId())
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -325,7 +320,7 @@ public class UserControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userEntity.getUserId())
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))
@@ -357,6 +352,13 @@ public class UserControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnEnforcePasswordHistoryErrroCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-0 change the password
+    ChangePasswordRequest userRequest = new ChangePasswordRequest();
+    userRequest.setCurrentPassword(CURRENT_PASSWORD_VALUE);
+    userRequest.setNewPassword(NEW_PASSWORD_VALUE);
+    userRequest.setUserId(userEntity.getUserId());
+    userService.changePassword(userRequest);
+
     // Step-1 call API to change the password
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
@@ -367,7 +369,7 @@ public class UserControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userId)
+            put(ApiEndpoint.CHANGE_PASSWORD.getPath(), userEntity.getUserId())
                 .contextPath(getContextPath())
                 .content(asJsonString(request))
                 .headers(headers))

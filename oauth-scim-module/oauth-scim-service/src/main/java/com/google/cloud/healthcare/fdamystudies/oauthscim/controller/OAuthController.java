@@ -71,7 +71,7 @@ public class OAuthController {
     ValidationErrorResponse errors = null;
     switch (grantType) {
       case REFRESH_TOKEN:
-        errors = validateRequiredParams(paramMap, REFRESH_TOKEN, REDIRECT_URI, CLIENT_ID);
+        errors = validateRequiredParams(paramMap, REFRESH_TOKEN, REDIRECT_URI, CLIENT_ID, USER_ID);
         break;
       case AUTHORIZATION_CODE:
         errors =
