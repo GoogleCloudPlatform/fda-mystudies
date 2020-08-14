@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.filter;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -38,9 +41,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
-
 @Component
 @Order(3)
 @ConditionalOnProperty(
@@ -69,6 +69,12 @@ public class ActiveUserFilter implements Filter {
     uriTemplateAndMethods.put(
         String.format("%s/locations/{locationId}", context.getContextPath()),
         new String[] {HttpMethod.PUT.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/locations", context.getContextPath()),
+        new String[] {HttpMethod.GET.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/locations/{locationId}", context.getContextPath()),
+        new String[] {HttpMethod.GET.name()});
   }
 
   protected Map<String, String[]> getUriTemplateAndHttpMethodsMap() {

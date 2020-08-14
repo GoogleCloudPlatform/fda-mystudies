@@ -7,16 +7,14 @@
  */
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 
 @ConditionalOnProperty(
     value = "participant.manager.repository.enabled",
@@ -50,4 +48,10 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
       "SELECT participantStudy from ParticipantStudyEntity participantStudy "
           + "where participantStudy.site.id = :siteId and participantStudy.status = :status")
   public List<ParticipantStudyEntity> findBySiteIdAndStatus(String siteId, String status);
+
+  @Query(
+      "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id in (:appsStudyInfoIds) AND ps.userDetails.id in (:userDetailsIds)")
+  public List<ParticipantStudyEntity> findByAppIdAndUserId(
+      @Param("appsStudyInfoIds") List<String> appsStudyInfoIds,
+      @Param("userDetailsIds") List<String> userDetailsIds);
 }

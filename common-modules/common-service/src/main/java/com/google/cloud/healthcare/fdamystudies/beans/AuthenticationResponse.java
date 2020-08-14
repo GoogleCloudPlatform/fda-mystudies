@@ -26,4 +26,10 @@ public class AuthenticationResponse extends BaseResponse {
   public AuthenticationResponse(ErrorCode errorCode) {
     super(errorCode);
   }
+
+  public AuthenticationResponse(ErrorCode errorCode, String userId, int accountStatus) {
+    super(errorCode);
+    this.userId = userId;
+    this.accountStatus = accountStatus;
+  }
 }
