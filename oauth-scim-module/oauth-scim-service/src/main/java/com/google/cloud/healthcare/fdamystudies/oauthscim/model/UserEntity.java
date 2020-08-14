@@ -57,9 +57,6 @@ public class UserEntity {
   @Column(name = "app_id", nullable = false, length = 100)
   private String appId;
 
-  @Column(name = "org_id", nullable = false, length = 100)
-  private String orgId;
-
   @ToString.Exclude
   @Column(name = "user_info", nullable = false, columnDefinition = "json")
   @Convert(converter = JsonNodeConverter.class)

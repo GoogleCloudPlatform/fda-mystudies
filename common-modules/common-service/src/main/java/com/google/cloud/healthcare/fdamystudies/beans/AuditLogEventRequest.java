@@ -69,6 +69,7 @@ public class AuditLogEventRequest {
   @Size(max = 64)
   private String appId;
 
+  @Size(max = 255)
   @ToString.Exclude
   @Size(min = 7, max = 39)
   private String userIp;

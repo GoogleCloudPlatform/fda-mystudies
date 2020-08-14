@@ -76,8 +76,6 @@ public class UserControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "MyStudies";
 
-  private static final String ORG_ID_VALUE = "FDA";
-
   private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
 
   private static final String CURRENT_PASSWORD_VALUE = "M0ck!tPassword";
@@ -112,7 +110,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(INVALID_TOKEN)));
   }
 
@@ -142,7 +140,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -181,7 +179,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -207,7 +205,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -237,6 +235,11 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse =
         readJsonFile("/response/change_password_bad_request_response_from_annotations.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -263,7 +266,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -290,7 +293,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -335,7 +338,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -364,7 +367,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -396,7 +399,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -410,7 +413,6 @@ public class UserControllerTest extends BaseMockIT {
 
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
-    userRequest.setOrgId(ORG_ID_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
 
     mockMvc
@@ -429,7 +431,6 @@ public class UserControllerTest extends BaseMockIT {
     UserEntity userEntity = repository.findByUserId(userId).get();
     assertNotNull(userEntity);
     assertEquals(EMAIL_VALUE, userEntity.getEmail());
-    assertEquals(ORG_ID_VALUE, userEntity.getOrgId());
     assertEquals(APP_ID_VALUE, userEntity.getAppId());
 
     // Step 2A- assert password hash value and password_history size
@@ -446,7 +447,7 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -458,7 +459,7 @@ public class UserControllerTest extends BaseMockIT {
 
     userEntity = repository.saveAndFlush(userEntity);
 
-    // Step-2 call the API and expect INVALID_PATCH_USER_REQUEST error
+    // Step-2 call the API and expect INVALID_UPDATE_USER_REQUEST error
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
@@ -503,6 +504,10 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
 
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
     // Step-3 verify updated email
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     assertEquals(EMAIL_2, userEntity.getEmail());
@@ -562,7 +567,6 @@ public class UserControllerTest extends BaseMockIT {
   private UserRequest createUserRequest() {
     UserRequest userRequest = new UserRequest();
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setOrgId(ORG_ID_VALUE);
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
@@ -573,7 +577,6 @@ public class UserControllerTest extends BaseMockIT {
     UserEntity userEntity = new UserEntity();
     userEntity.setAppId(APP_ID_VALUE);
     userEntity.setEmail(EMAIL_VALUE);
-    userEntity.setOrgId(ORG_ID_VALUE);
     userEntity.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     userEntity.setUserId(IdGenerator.id());
 
