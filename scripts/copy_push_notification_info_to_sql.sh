@@ -2,10 +2,12 @@
 # Script to copy Push Notification info from gcloud secret to CloudSQL.
 set -e
 
-# TODO: Change these to env variables.
-SECRET_PROJECT=heroes-hat-dev-devops
-DATA_PROJECT=heroes-hat-dev-data
-SQL_IMPORT_BUCKET=heroes-hat-dev-data-sql-import
+PREFIX=example
+ENV=dev
+
+SECRET_PROJECT=${PREFIX}-${ENV}-secrets
+DATA_PROJECT=${PREFIX}-${ENV}-data
+SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-my-studies-sql-import
 
 TMPFILE=$(mktemp)
 
@@ -13,14 +15,14 @@ TMPFILE=$(mktemp)
 echo "USE \`mystudies_userregistration\`;" >> ${TMPFILE}
 
 # Read AppId and OrgId from secrets..
-ANDROID_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=android-bundle-id`
-ANDROID_SERVER_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=android-server-key`
-IOS_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=ios-bundle-id`
-IOS_CERTIFICATE=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=ios-certificate`
-IOS_CERTIFICATE_PASSWORD=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=ios-certificate-password`
+ANDROID_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-android-bundle-id`
+ANDROID_SERVER_KEY=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-android-server-key`
+IOS_BUNDLE_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-ios-bundle-id`
+IOS_CERTIFICATE=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-ios-certificate`
+IOS_CERTIFICATE_PASSWORD=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-ios-certificate-password`
 
 # Write corresponding SQL commands to TMPFILE.
-echo "UPDATE app_info SET 
+echo "UPDATE app_info SET
   android_bundle_id=\"${ANDROID_BUNDLE_ID}\",
   android_server_key=\"${ANDROID_SERVER_KEY}\",
   ios_bundle_id=\"${IOS_BUNDLE_ID}\",

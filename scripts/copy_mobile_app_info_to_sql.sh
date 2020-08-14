@@ -2,10 +2,12 @@
 # Script to copy AppId and OrgId from gcloud secret to CloudSQL.
 set -e
 
-# TODO: Change these to env variables.
-SECRET_PROJECT=heroes-hat-dev-devops
-DATA_PROJECT=heroes-hat-dev-data
-SQL_IMPORT_BUCKET=heroes-hat-dev-data-sql-import
+PREFIX=example
+ENV=dev
+
+SECRET_PROJECT=${PREFIX}-${ENV}-secrets
+DATA_PROJECT=${PREFIX}-${ENV}-data
+SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-my-studies-sql-import
 TMPFILE=$(mktemp)
 ORG_NAME="Test Org"
 
@@ -13,8 +15,8 @@ ORG_NAME="Test Org"
 echo "USE \`mystudies_userregistration\`;" >> ${TMPFILE}
 
 # Read AppId and OrgId from secrets..
-APP_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mobile-app-appid`
-ORG_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=mobile-app-orgid`
+APP_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-mobile-app-appid`
+ORG_ID=`gcloud --project=${SECRET_PROJECT} secrets versions access latest --secret=manual-mobile-app-orgid`
 
 # Write corresponding SQL commands to TMPFILE.
 echo "INSERT INTO org_info (id, name, org_id) VALUES(1, \"${ORG_NAME}\", \"${ORG_ID}\");" >> ${TMPFILE}
