@@ -136,6 +136,10 @@ template "project_secrets" {
         {
           secret_id = "manual-mobile-app-appid"
         },
+        # This is no longer needed in develop branch.
+        {
+          secret_id = "manual-mobile-app-orgid"
+        },
         # bundleID used for the Android App.
         {
           secret_id = "manual-android-bundle-id"
