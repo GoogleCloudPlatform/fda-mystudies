@@ -10,15 +10,17 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.validator.UserValidator;
-import java.net.UnknownHostException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
@@ -36,8 +38,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController {
-
-  private static final String VALIDATION_ERROS_LOG = "validation erros=%s";
 
   private static final String STATUS_LOG = "status=%d";
 
@@ -65,55 +65,61 @@ public class UserController {
     return ResponseEntity.status(status).body(userResponse);
   }
 
-  @PutMapping(
-      value = "/users/{userId}",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> updateUser(
-      @PathVariable String userId,
-      @Valid @RequestBody UpdateUserRequest userRequest,
-      HttpServletRequest request)
-      throws JsonProcessingException {
-    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
-    userRequest.setUserId(userId);
-    ValidationErrorResponse validationResult = UserValidator.validate(userRequest);
-    if (validationResult.hasErrors()) {
-      logger.exit(String.format(VALIDATION_ERROS_LOG, validationResult));
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
-    }
-
-    UpdateUserResponse userResponse = userService.updateUser(userRequest);
-    int status =
-        StringUtils.isEmpty(userResponse.getErrorDescription())
-            ? HttpStatus.OK.value()
-            : userResponse.getHttpStatusCode();
-
-    logger.exit(String.format(STATUS_LOG, status));
-    return ResponseEntity.status(status).body(userResponse);
-  }
-
-  @PutMapping(
+  @PostMapping(
       value = "/user/reset_password",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resetPassword(
-      @Valid @RequestBody UpdateUserRequest userRequest, HttpServletRequest request)
-      throws JsonProcessingException, UnknownHostException {
+      @Valid @RequestBody ResetPasswordRequest resetPasswordRequest, HttpServletRequest request)
+      throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
-    ValidationErrorResponse validationResult = UserValidator.validate(userRequest);
-    if (validationResult.hasErrors()) {
-      logger.exit(String.format(VALIDATION_ERROS_LOG, validationResult));
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    ResetPasswordResponse resetPasswordResponse =
+        userService.resetPassword(resetPasswordRequest, auditRequest);
+
+    logger.exit(String.format(STATUS_LOG, resetPasswordResponse.getHttpStatusCode()));
+    return ResponseEntity.status(resetPasswordResponse.getHttpStatusCode())
+        .body(resetPasswordResponse);
+  }
+
+  @PutMapping(
+      value = "/users/{userId}/change_password",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> changePassword(
+      @PathVariable String userId,
+      @Valid @RequestBody ChangePasswordRequest userRequest,
+      HttpServletRequest request)
+      throws JsonProcessingException {
+    logger.entry(String.format("begin %s request", request.getRequestURI()));
+    userRequest.setUserId(userId);
+
+    ChangePasswordResponse userResponse = userService.changePassword(userRequest);
+
+    logger.exit(String.format("status=%d", userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+  }
+
+  @PutMapping(
+      value = "/users/{userId}",
+      produces = MediaType.APPLICATION_JSON_VALUE,
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UpdateEmailStatusResponse> updateEmailStatus(
+      @PathVariable String userId,
+      @Valid @RequestBody UpdateEmailStatusRequest userRequest,
+      HttpServletRequest request)
+      throws JsonProcessingException {
+    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+    userRequest.setUserId(userId);
+
+    if (!userRequest.hasAtleastOneRequiredValue()) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+          .body(new UpdateEmailStatusResponse(ErrorCode.INVALID_UPDATE_USER_REQUEST));
     }
 
-    AuditLogEventRequest aleRequest = AuditEventMapper.fromHttpServletRequest(request);
-    UpdateUserResponse userResponse = userService.resetPassword(userRequest, aleRequest);
-    int status =
-        StringUtils.isEmpty(userResponse.getErrorDescription())
-            ? HttpStatus.OK.value()
-            : userResponse.getHttpStatusCode();
+    UpdateEmailStatusResponse userResponse = userService.updateEmailStatusAndTempRegId(userRequest);
 
-    logger.exit(String.format(STATUS_LOG, status));
-    return ResponseEntity.status(status).body(userResponse);
+    logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 }

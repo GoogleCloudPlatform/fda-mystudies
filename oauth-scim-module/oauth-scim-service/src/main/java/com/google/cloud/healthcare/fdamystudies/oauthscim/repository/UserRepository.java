@@ -39,4 +39,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
   @Modifying
   @Query("update UserEntity u set u.tempRegId=null where u.created < :timestamp")
   public void removeTempRegIdBeforeTime(@Param("timestamp") Timestamp timestamp);
+
+  @Modifying
+  @Query(
+      "update UserEntity u set u.email = :email, status= :status, tempRegId= :tempRegId  where u.userId = :userId")
+  void updateEmailStatusAndTempRegId(
+      @Param("email") String email,
+      @Param("status") int status,
+      @Param("tempRegId") String tempRegId,
+      @Param("userId") String userId);
 }

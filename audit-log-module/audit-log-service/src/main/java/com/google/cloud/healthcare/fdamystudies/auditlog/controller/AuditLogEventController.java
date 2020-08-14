@@ -35,10 +35,10 @@ public class AuditLogEventController {
       produces = {MediaType.APPLICATION_JSON_VALUE},
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<AuditLogEventResponse> logEvent(
-      @Valid @RequestBody AuditLogEventRequest aleRequest, HttpServletRequest request) {
+      @Valid @RequestBody AuditLogEventRequest auditRequest, HttpServletRequest request) {
     logger.entry(String.format("begin %s request", request.getRequestURI()));
 
-    AuditLogEventResponse response = aleService.saveAuditLogEvent(aleRequest);
+    AuditLogEventResponse response = aleService.saveAuditLogEvent(auditRequest);
 
     logger.exit(String.format("eventId=%s", response.getEventId()));
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
