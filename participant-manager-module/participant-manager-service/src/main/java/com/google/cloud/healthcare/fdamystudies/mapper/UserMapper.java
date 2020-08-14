@@ -73,8 +73,7 @@ public final class UserMapper {
     sitePermission.setStudy(siteDetails.getStudy());
     sitePermission.setSite(siteDetails);
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
-    Permission edit =
-        site != null && site.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    Permission edit = site != null && site.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
     sitePermission.setCanEdit(edit);
     sitePermission.setUrAdminUser(superAdminDeatils);
     return sitePermission;
@@ -181,8 +180,7 @@ public final class UserMapper {
     AppPermissionEntity appPermission = new AppPermissionEntity();
     appPermission.setApp(appDetails);
     appPermission.setCreatedBy(userRequest.getSuperAdminUserId());
-    Permission edit =
-        app != null && app.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    Permission edit = app != null && app.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
     appPermission.setEdit(edit);
     appPermission.setUrAdminUser(superAdminDeatils);
     return appPermission;

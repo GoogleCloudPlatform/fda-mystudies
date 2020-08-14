@@ -8,10 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
@@ -34,6 +30,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientResponseException;
+
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.toJsonNode;
 
 @Service
 @ConditionalOnProperty(

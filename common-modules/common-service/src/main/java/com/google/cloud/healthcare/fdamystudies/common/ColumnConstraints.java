@@ -13,8 +13,8 @@ public final class ColumnConstraints {
   private ColumnConstraints() {}
 
   public static final int TINY_LENGTH = 3;
-  
-  public static final int APP_STUDY_ID_LENGTH =15 ;
+
+  public static final int APP_STUDY_ID_LENGTH = 15;
 
   public static final int XS_LENGTH = 32;
 
