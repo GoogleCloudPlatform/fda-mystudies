@@ -34,11 +34,13 @@ import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.util.Optional;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -72,6 +74,8 @@ public class LoginController {
   @Autowired private RedirectConfig redirectConfig;
 
   @Autowired private CookieHelper cookieHelper;
+
+  @Autowired private AppPropertyConfig appConfig;
 
   /**
    * @param loginChallenge is optional. ORY Hydra sends this field as query param when login/consent
@@ -230,7 +234,6 @@ public class LoginController {
   }
 
   private String redirectToLoginOrAutoLoginPage(
-
       HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
 
     String requestUrl = responseBody.get("request_url").textValue();
