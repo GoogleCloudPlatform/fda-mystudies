@@ -29,7 +29,7 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
   @PostConstruct
   public void init() {
     uriTemplateAndMethods.put(
-        String.format("%s/v1/events", context.getContextPath()),
+        String.format("%s/events", context.getContextPath()),
         new String[] {HttpMethod.POST.name()});
   }
 

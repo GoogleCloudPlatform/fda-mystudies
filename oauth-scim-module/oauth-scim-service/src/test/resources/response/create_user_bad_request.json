@@ -15,10 +15,6 @@
 		{
 			"path": "appId",
 			"message": "must not be blank"
-		},
-		{
-			"path": "orgId",
-			"message": "must not be blank"
 		}
 	]
 }

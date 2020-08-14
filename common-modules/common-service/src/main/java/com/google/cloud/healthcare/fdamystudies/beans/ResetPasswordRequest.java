@@ -29,9 +29,5 @@ public class ResetPasswordRequest {
   @NotBlank
   private String appId;
 
-  @Size(max = 100)
-  @NotBlank
-  private String orgId;
-
   @ToString.Exclude private String userId;
 }

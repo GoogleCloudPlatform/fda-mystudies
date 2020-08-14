@@ -67,8 +67,6 @@ public final class AuthScimConstants {
 
   public static final String CLIENT_APP_VERSION = "clientAppVersion";
 
-  public static final String ORG_ID = "orgId";
-
   public static final String TEMP_REG_ID = "temp_reg_id";
 
   public static final String EMAIL = "email";
@@ -86,4 +84,12 @@ public final class AuthScimConstants {
   public static final String OTP_USED = "otp_used";
 
   public static final String ACCOUNT_LOCK_EMAIL_TIMESTAMP = "account_lock_email_timestamp";
+
+  public static final String CONSENT_CHALLENGE = "consent_challenge";
+
+  public static final String FORGOT_PASSWORD_LINK = "forgot_password_link";
+
+  public static final String SIGNUP_LINK = "signup_link";
+
+  public static final String AUTO_LOGIN = "autoLogin";
 }
