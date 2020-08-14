@@ -90,4 +90,6 @@ public final class AuthScimConstants {
   public static final String FORGOT_PASSWORD_LINK = "forgot_password_link";
 
   public static final String SIGNUP_LINK = "signup_link";
+
+  public static final String AUTO_LOGIN = "autoLogin";
 }

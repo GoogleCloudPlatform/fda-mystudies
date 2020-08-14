@@ -55,7 +55,9 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EmailService;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -81,6 +83,7 @@ public class UserServiceImpl implements UserService {
   @Autowired private AuthScimAuditLogHelper auditHelper;
 
   @Override
+  @Transactional
   public UserResponse createUser(UserRequest userRequest) {
     logger.entry("begin createUser()");
 
@@ -264,10 +267,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<UserEntity> findUserByTempRegId(String tempRegId) {
-    logger.entry("begin findUserByTempRegId()");
     return repository.findByTempRegId(tempRegId);
   }
 
+  @Override
+  @Transactional
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
     // check if the email present in the database
@@ -288,7 +292,7 @@ public class UserServiceImpl implements UserService {
     // check the account status and password expiry condition
     ErrorCode errorCode = validatePasswordExpiryAndAccountStatus(userEntity, userInfo);
     if (errorCode != null) {
-      return new AuthenticationResponse(errorCode);
+      return new AuthenticationResponse(errorCode, userEntity.getUserId(), userEntity.getStatus());
     }
 
     String passwordHash = hash(encrypt(user.getPassword(), salt));
@@ -403,6 +407,20 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public void resetTempRegId(String userId) {
+    repository.removeTempRegIDForUser(userId);
+  }
+
+  @Override
+  @Transactional
+  public void removeExpiredTempRegIds() {
+    long timeInMillis =
+        Instant.now()
+            .minus(appConfig.getTempRegIdExpiryMinutes(), ChronoUnit.MINUTES)
+            .toEpochMilli();
+    repository.removeTempRegIdBeforeTime(new Timestamp(timeInMillis));
+  }
+
   @Transactional
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException {

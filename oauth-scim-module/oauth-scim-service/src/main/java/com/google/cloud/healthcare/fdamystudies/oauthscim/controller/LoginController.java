@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_APP_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
@@ -32,6 +33,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
@@ -70,6 +72,8 @@ public class LoginController {
   @Autowired private UserService userService;
 
   @Autowired private RedirectConfig redirectConfig;
+
+  @Autowired private CookieHelper cookieHelper;
 
   @Autowired private AppPropertyConfig appConfig;
 
@@ -114,7 +118,7 @@ public class LoginController {
         logger.exit("skip login, return to callback URL");
         return redirectToCallbackUrl(request, code, response);
       }
-      return redirectToLoginOrSigninPage(response, responseBody, model, loginChallenge);
+      return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
     }
 
     return redirectToError(request, response);
@@ -139,6 +143,7 @@ public class LoginController {
       @CookieValue(name = TEMP_REG_ID, required = false) String tempRegId,
       @CookieValue(name = APP_ID) String appId,
       @CookieValue(name = LOGIN_CHALLENGE) String loginChallenge,
+      @CookieValue(name = DEVICE_PLATFORM) String devicePlatform,
       HttpServletRequest request,
       HttpServletResponse response,
       Model model)
@@ -146,7 +151,7 @@ public class LoginController {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
     if (StringUtils.isNotEmpty(tempRegId)) {
-      return redirectToLoginOrConsentPage(email, tempRegId, loginChallenge, request, response);
+      return autoLoginOrReturnLoginPage(tempRegId, loginChallenge, request, response);
     }
 
     // validate user credentials
@@ -163,9 +168,23 @@ public class LoginController {
     user.setAppId(appId);
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user);
+
+    if (ErrorCode.PENDING_CONFIRMATION
+        .getDescription()
+        .equalsIgnoreCase(authenticationResponse.getErrorDescription())) {
+      String redirectUrl = redirectConfig.getAccountActivationUrl(devicePlatform);
+      String url =
+          String.format(
+              "%s?userId=%s&accountStatus=%s",
+              redirectUrl,
+              authenticationResponse.getUserId(),
+              authenticationResponse.getAccountStatus());
+      return redirect(response, url);
+    }
+
     if (authenticationResponse.is2xxSuccessful()) {
       logger.exit("authentication success, redirect to consent page");
-      addCookie(response, USER_ID, authenticationResponse.getUserId());
+      cookieHelper.addCookie(response, USER_ID, authenticationResponse.getUserId());
     } else {
       logger.error(
           String.format(
@@ -174,12 +193,11 @@ public class LoginController {
       model.addAttribute(ERROR_DESCRIPTION, authenticationResponse.getErrorDescription());
       return LOGIN;
     }
-
-    return redirectToConsentPage(loginChallenge, email, request, response);
+    return redirectToConsentPage(
+        loginChallenge, authenticationResponse.getUserId(), request, response);
   }
 
-  private String redirectToLoginOrConsentPage(
-      String email,
+  private String autoLoginOrReturnLoginPage(
       String tempRegId,
       String loginChallenge,
       HttpServletRequest request,
@@ -187,11 +205,14 @@ public class LoginController {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
     if (!optUser.isPresent()) {
       logger.exit("tempRegId is invalid, return to login page");
+      cookieHelper.deleteCookie(response, TEMP_REG_ID);
       return LOGIN;
     } else {
+      UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
-      addCookie(response, USER_ID, optUser.get().getUserId());
-      return redirectToConsentPage(loginChallenge, email, request, response);
+      cookieHelper.addCookie(response, USER_ID, user.getUserId());
+      userService.resetTempRegId(user.getUserId());
+      return redirectToConsentPage(loginChallenge, user.getUserId(), request, response);
     }
   }
 
@@ -201,10 +222,10 @@ public class LoginController {
 
   private String redirectToConsentPage(
       String loginChallenge,
-      String email,
+      String userId,
       HttpServletRequest request,
       HttpServletResponse response) {
-    ResponseEntity<JsonNode> result = oauthService.loginAccept(email, loginChallenge);
+    ResponseEntity<JsonNode> result = oauthService.loginAccept(userId, loginChallenge);
     if (result.getStatusCode().is2xxSuccessful()) {
       String redirectUrl = JsonUtils.getTextValue(result.getBody(), REDIRECT_TO);
       return redirect(response, redirectUrl);
@@ -212,15 +233,15 @@ public class LoginController {
     return redirectToError(request, response);
   }
 
-  private String redirectToLoginOrSigninPage(
+  private String redirectToLoginOrAutoLoginPage(
       HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
 
     String requestUrl = responseBody.get("request_url").textValue();
     MultiValueMap<String, String> qsParams =
         UriComponentsBuilder.fromUriString(requestUrl).build().getQueryParams();
 
-    addCookie(response, LOGIN_CHALLENGE, loginChallenge);
-    addCookies(
+    cookieHelper.addCookie(response, LOGIN_CHALLENGE, loginChallenge);
+    cookieHelper.addCookies(
         response,
         qsParams,
         APP_ID,
@@ -236,10 +257,19 @@ public class LoginController {
     model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(devicePlatform));
     model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(devicePlatform));
 
-    // tempRegId for auto signin after signup
+    // tempRegId for auto login after signup
     if (StringUtils.isNotEmpty(tempRegId)) {
       Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
-      return optUser.isPresent() ? "signin" : LOGIN;
+      if (optUser.isPresent()) {
+        UserEntity user = optUser.get();
+        logger.exit("tempRegId is valid, return to auto login page");
+        cookieHelper.addCookie(response, USER_ID, user.getUserId());
+        return AUTO_LOGIN;
+      }
+
+      logger.exit("tempRegId is invalid, return to login page");
+      cookieHelper.deleteCookie(response, TEMP_REG_ID);
+      return LOGIN;
     }
     return LOGIN;
   }

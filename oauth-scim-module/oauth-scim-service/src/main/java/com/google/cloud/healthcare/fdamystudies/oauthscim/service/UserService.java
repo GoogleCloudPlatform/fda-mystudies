@@ -39,4 +39,8 @@ public interface UserService {
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException;
+
+  public void resetTempRegId(String userId);
+
+  public void removeExpiredTempRegIds();
 }
