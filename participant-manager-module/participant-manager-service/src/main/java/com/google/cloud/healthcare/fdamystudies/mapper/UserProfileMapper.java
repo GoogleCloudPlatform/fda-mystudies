@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -27,13 +26,5 @@ public final class UserProfileMapper {
     profileResponse.setManageLocations(userRegAdminEntity.getEditPermission());
     profileResponse.setSuperAdmin(userRegAdminEntity.isSuperAdmin());
     return profileResponse;
-  }
-
-  public static UserRegAdminEntity fromUserProfileRequest(
-      UserRegAdminEntity userRegAdminEntity, UserProfileRequest userProfileRequest) {
-    userRegAdminEntity.setFirstName(userProfileRequest.getFirstName());
-    userRegAdminEntity.setLastName(userProfileRequest.getLastName());
-    userRegAdminEntity.setEmail(userProfileRequest.getEmail());
-    return userRegAdminEntity;
   }
 }
