@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
@@ -15,7 +16,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 import java.util.Collections;
 import javax.annotation.PostConstruct;
@@ -40,7 +40,11 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   private static final String CONTENT_TYPE = "Content-Type";
 
-  private static final int REMEMBER_FOR_SECONDS = 3600;
+  @Value("${security.oauth2.hydra.remember:false}")
+  private boolean remember;
+
+  @Value("${security.oauth2.hydra.remember-for-seconds:0}")
+  private int rememberForSeconds;
 
   @Value("${security.oauth2.hydra.token_endpoint}")
   private String tokenEndpoint;
@@ -62,6 +66,12 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @Value("${security.oauth2.hydra.login_accept_endpoint}")
   private String loginAcceptEndpoint;
+
+  @Value("${security.oauth2.hydra.consent_endpoint}")
+  private String consentEndpoint;
+
+  @Value("${security.oauth2.hydra.consent_accept_endpoint}")
+  private String consentAcceptEndpoint;
 
   private String encodedAuthorization;
 
@@ -122,11 +132,15 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     StringBuilder url = new StringBuilder(loginAcceptEndpoint);
     url.append("?").append(LOGIN_CHALLENGE).append("=").append(loginChallenge);
 
-    ObjectNode requestParams = JsonUtils.getObjectNode();
+    ObjectNode requestParams = getObjectNode();
     requestParams.put("subject", email);
-    requestParams.put("remember", true);
-    requestParams.put("remember_for", REMEMBER_FOR_SECONDS);
 
+    // if ORY Hydra should remember the subject's subject agent for future authentication attempts
+    // by setting a cookie.
+    requestParams.put("remember", remember);
+    if (remember) {
+      requestParams.put("remember_for", rememberForSeconds);
+    }
     HttpEntity<Object> requestEntity = new HttpEntity<>(requestParams, headers);
 
     ResponseEntity<JsonNode> response =

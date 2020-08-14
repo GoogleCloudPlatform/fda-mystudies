@@ -166,8 +166,9 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This Site is associated with active and enrolled participants"
           + " and cannot be decomissioned"),
-  
-  INVALID_APPS_FIELDS_VALUES(400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
+
+  INVALID_APPS_FIELDS_VALUES(
+      400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
 
   private final int status;
   private final String code;

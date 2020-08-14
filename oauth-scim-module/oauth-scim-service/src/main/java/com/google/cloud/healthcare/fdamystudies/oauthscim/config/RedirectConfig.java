@@ -32,6 +32,33 @@ public class RedirectConfig implements Serializable {
   @Value("${mystudies.android.app.callback-url}")
   private String myStudiesAndroidAppCallbackUrl;
 
+  @Value("${participant.manager.forgot-password-url}")
+  private String participantManagerForgotPasswordUrl;
+
+  @Value("${mystudies.ios.app.forgot-password-url}")
+  private String myStudiesIosAppForgotPasswordUrl;
+
+  @Value("${mystudies.android.app.forgot-password-url}")
+  private String myStudiesAndroidAppForgotPasswordUrl;
+
+  @Value("${mystudies.ios.app.signup-url}")
+  private String myStudiesIosAppSignupUrl;
+
+  @Value("${mystudies.android.app.signup-url}")
+  private String myStudiesAndroidAppSignupUrl;
+
+  @Value("${participant.manager.signup-url}")
+  private String participantManagerSignupUrl;
+
+  @Value("${mystudies.ios.app.error-url}")
+  private String myStudiesIosAppErrorUrl;
+
+  @Value("${mystudies.android.app.error-url}")
+  private String myStudiesAndroidAppErrorUrl;
+
+  @Value("${participant.manager.error-url}")
+  private String participantManagerErrorUrl;
+
   public String getCallbackUrl(String devicePlatform) {
     if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
       return myStudiesAndroidAppCallbackUrl;
@@ -39,5 +66,36 @@ public class RedirectConfig implements Serializable {
       return myStudiesIosAppCallbackUrl;
     }
     return participantManagerCallbackUrl;
+  }
+
+  public String getForgotPasswordUrl(String devicePlatform) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+      return myStudiesAndroidAppForgotPasswordUrl;
+    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+      return myStudiesIosAppForgotPasswordUrl;
+    }
+    return participantManagerForgotPasswordUrl;
+  }
+
+  public String getSignupUrl(String devicePlatform) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+      return myStudiesAndroidAppSignupUrl;
+    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+      return myStudiesIosAppSignupUrl;
+    }
+    return participantManagerSignupUrl;
+  }
+
+  public String getErrorUrl(String devicePlatform) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+      return myStudiesAndroidAppErrorUrl;
+    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+      return myStudiesIosAppErrorUrl;
+    }
+    return participantManagerErrorUrl;
+  }
+
+  public String getDefaultErrorUrl() {
+    return getErrorUrl(null);
   }
 }

@@ -16,10 +16,11 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ORG_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
@@ -62,8 +63,6 @@ public class LoginController {
 
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
-  private static final String ERROR = "error";
-
   private static final String LOGIN = "login";
 
   @Autowired private OAuthService oauthService;
@@ -74,6 +73,16 @@ public class LoginController {
 
   @Autowired private AppPropertyConfig appConfig;
 
+  /**
+   * @param loginChallenge is optional. ORY Hydra sends this field as query param when login/consent
+   *     flow is initiated.
+   * @param code ORY Hydra redirects to this path again when the login/consent flow is completed.
+   *     ORY Hydra sends authorization 'code' and no login challenge in query params.
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   */
   @GetMapping(value = "/login")
   public String login(
       @RequestParam(name = LOGIN_CHALLENGE, required = false) String loginChallenge,
@@ -83,14 +92,16 @@ public class LoginController {
       Model model) {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
+    // login/consent flow completed
     if (StringUtils.isNotBlank(code)) {
       logger.exit(
           "login/consent flow completed, redirect to callbackUrl with auth code and userId");
       return redirectToCallbackUrl(request, code, response);
     }
 
+    // login/consent flow initiated
     if (StringUtils.isEmpty(loginChallenge)) {
-      return ERROR;
+      return redirectConfig.getDefaultErrorUrl();
     }
 
     // show or skip login page
@@ -103,19 +114,30 @@ public class LoginController {
         logger.exit("skip login, return to callback URL");
         return redirectToCallbackUrl(request, code, response);
       }
-      return redirectToLoginOrSigninPage(request, response, responseBody, model, loginChallenge);
+      return redirectToLoginOrSigninPage(response, responseBody, model, loginChallenge);
     }
 
-    return ERROR;
+    return redirectToError(request, response);
   }
 
+  /**
+   * @param email
+   * @param password
+   * @param tempRegId optional field. It enables auto sign-in after signup.
+   * @param appId cookie value
+   * @param loginChallenge cookie value
+   * @param request
+   * @param response
+   * @param model
+   * @return
+   * @throws JsonProcessingException
+   */
   @PostMapping(value = "/login")
   public String authenticate(
       @RequestParam(required = false) String email,
       @RequestParam(required = false) String password,
       @CookieValue(name = TEMP_REG_ID, required = false) String tempRegId,
       @CookieValue(name = APP_ID) String appId,
-      @CookieValue(name = ORG_ID) String orgId,
       @CookieValue(name = LOGIN_CHALLENGE) String loginChallenge,
       HttpServletRequest request,
       HttpServletResponse response,
@@ -139,7 +161,6 @@ public class LoginController {
     user.setEmail(email);
     user.setPassword(password);
     user.setAppId(appId);
-    user.setOrgId(orgId);
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user);
     if (authenticationResponse.is2xxSuccessful()) {
@@ -154,7 +175,7 @@ public class LoginController {
       return LOGIN;
     }
 
-    return redirectToConsentPage(loginChallenge, email, response);
+    return redirectToConsentPage(loginChallenge, email, request, response);
   }
 
   private String redirectToLoginOrConsentPage(
@@ -170,7 +191,7 @@ public class LoginController {
     } else {
       logger.exit("tempRegId is valid, return to consent page");
       addCookie(response, USER_ID, optUser.get().getUserId());
-      return redirectToConsentPage(loginChallenge, email, response);
+      return redirectToConsentPage(loginChallenge, email, request, response);
     }
   }
 
@@ -179,21 +200,20 @@ public class LoginController {
   }
 
   private String redirectToConsentPage(
-      String loginChallenge, String email, HttpServletResponse response) {
+      String loginChallenge,
+      String email,
+      HttpServletRequest request,
+      HttpServletResponse response) {
     ResponseEntity<JsonNode> result = oauthService.loginAccept(email, loginChallenge);
     if (result.getStatusCode().is2xxSuccessful()) {
       String redirectUrl = JsonUtils.getTextValue(result.getBody(), REDIRECT_TO);
       return redirect(response, redirectUrl);
     }
-    return ERROR;
+    return redirectToError(request, response);
   }
 
   private String redirectToLoginOrSigninPage(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      JsonNode responseBody,
-      Model model,
-      String loginChallenge) {
+      HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
 
     String requestUrl = responseBody.get("request_url").textValue();
     MultiValueMap<String, String> qsParams =
@@ -204,7 +224,6 @@ public class LoginController {
         response,
         qsParams,
         APP_ID,
-        ORG_ID,
         CORRELATION_ID,
         CLIENT_APP_VERSION,
         DEVICE_TYPE,
@@ -212,7 +231,10 @@ public class LoginController {
         TEMP_REG_ID);
 
     String tempRegId = qsParams.getFirst(TEMP_REG_ID);
+    String devicePlatform = qsParams.getFirst(DEVICE_PLATFORM);
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
+    model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(devicePlatform));
+    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(devicePlatform));
 
     // tempRegId for auto signin after signup
     if (StringUtils.isNotEmpty(tempRegId)) {
@@ -235,6 +257,14 @@ public class LoginController {
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {
+    response.setHeader("Location", redirectUrl);
+    response.setStatus(HttpStatus.FOUND.value());
+    return "redirect:" + redirectUrl;
+  }
+
+  private String redirectToError(HttpServletRequest request, HttpServletResponse response) {
+    String devicePlatform = WebUtils.getCookie(request, DEVICE_PLATFORM).getValue();
+    String redirectUrl = redirectConfig.getErrorUrl(devicePlatform);
     response.setHeader("Location", redirectUrl);
     response.setStatus(HttpStatus.FOUND.value());
     return "redirect:" + redirectUrl;

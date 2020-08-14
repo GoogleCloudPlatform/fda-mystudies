@@ -11,9 +11,10 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ORG_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertTrue;
@@ -21,8 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
@@ -62,8 +65,6 @@ public class LoginControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "MyStudies";
 
-  private static final String ORG_ID_VALUE = "FDA";
-
   private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
 
   @Autowired private RedirectConfig redirectConfig;
@@ -76,7 +77,9 @@ public class LoginControllerTest extends BaseMockIT {
   public void shouldReturnLoginPage() throws Exception {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-
+    String forgotPasswordRedirectUrl =
+        redirectConfig.getForgotPasswordUrl(DevicePlatform.UNKNOWN.getValue());
+    String signupRedirectUrl = redirectConfig.getSignupUrl(DevicePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -84,6 +87,8 @@ public class LoginControllerTest extends BaseMockIT {
                 .queryParams(queryParams))
         .andDo(print())
         .andExpect(status().isOk())
+        .andExpect(model().attribute(FORGOT_PASSWORD_LINK, forgotPasswordRedirectUrl))
+        .andExpect(model().attribute(SIGNUP_LINK, signupRedirectUrl))
         .andExpect(content().string(containsString("<title>Login</title>")))
         .andReturn();
   }
@@ -91,16 +96,13 @@ public class LoginControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnErrorPage() throws Exception {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .queryParams(queryParams))
         .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString("<title>Error</title>")))
-        .andReturn();
+        .andExpect(view().name("http://localhost:8003/participant-manager/error"));
   }
 
   @Test
@@ -132,7 +134,6 @@ public class LoginControllerTest extends BaseMockIT {
     // Step-1 user registration
     UserEntity user = new UserEntity();
     user.setEmail("mockit_email@grr.la");
-    user.setOrgId("FDA");
     user.setAppId("MyStudies");
     user.setStatus(UserAccountStatus.ACTIVE.getStatus());
     user.setTempRegId(TEMP_REG_ID_VALUE);
@@ -168,14 +169,13 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
-    Cookie orgIdCookie = new Cookie(ORG_ID, "FDA");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, orgIdCookie, loginChallenge))
+                .cookie(appIdCookie, loginChallenge))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()));
@@ -193,14 +193,13 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
-    Cookie orgIdCookie = new Cookie(ORG_ID, "FDA");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, orgIdCookie, loginChallenge))
+                .cookie(appIdCookie, loginChallenge))
         .andDo(print())
         .andExpect(
             content().string(containsString(ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription())));
@@ -212,13 +211,12 @@ public class LoginControllerTest extends BaseMockIT {
     UserResponse userResponse = userService.createUser(newUserRequest());
     UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
     userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
-    userRepository.saveAndFlush(userEntity);
+    userEntity = userRepository.saveAndFlush(userEntity);
 
     // Step-2 call API for 5 times with invalid login credentials to lock the account
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
     requestParams.set(PASSWORD, "invalid_password");
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
-    Cookie orgIdCookie = new Cookie(ORG_ID, "FDA");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
 
     ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
@@ -231,7 +229,7 @@ public class LoginControllerTest extends BaseMockIT {
               post(ApiEndpoint.LOGIN_PAGE.getPath())
                   .contextPath(getContextPath())
                   .params(requestParams)
-                  .cookie(appIdCookie, orgIdCookie, loginChallenge))
+                  .cookie(appIdCookie, loginChallenge))
           .andDo(print())
           .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
     }
@@ -250,7 +248,6 @@ public class LoginControllerTest extends BaseMockIT {
   private UserRequest newUserRequest() {
     UserRequest userRequest = new UserRequest();
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setOrgId(ORG_ID_VALUE);
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setPassword(PASSWORD_VALUE);
     userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());

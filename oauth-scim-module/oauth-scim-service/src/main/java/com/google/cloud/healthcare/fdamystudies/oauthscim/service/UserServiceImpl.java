@@ -86,8 +86,7 @@ public class UserServiceImpl implements UserService {
 
     // check if the email already been used
     Optional<UserEntity> user =
-        repository.findByAppIdAndOrgIdAndEmail(
-            userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
+        repository.findByAppIdAndEmail(userRequest.getAppId(), userRequest.getEmail());
 
     if (user.isPresent()) {
       UserResponse userResponse = new UserResponse(ErrorCode.EMAIL_EXISTS);
@@ -159,10 +158,8 @@ public class UserServiceImpl implements UserService {
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
-        repository.findByAppIdAndOrgIdAndEmail(
-            resetPasswordRequest.getAppId(),
-            resetPasswordRequest.getOrgId(),
-            resetPasswordRequest.getEmail());
+        repository.findByAppIdAndEmail(
+            resetPasswordRequest.getAppId(), resetPasswordRequest.getEmail());
 
     if (!entity.isPresent()) {
       logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
@@ -193,7 +190,6 @@ public class UserServiceImpl implements UserService {
   private EmailResponse sendPasswordResetEmail(
       ResetPasswordRequest resetPasswordRequest, String tempPassword) {
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("orgId", resetPasswordRequest.getOrgId());
     templateArgs.put("appId", resetPasswordRequest.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
@@ -276,7 +272,7 @@ public class UserServiceImpl implements UserService {
     logger.entry("begin authenticate(user)");
     // check if the email present in the database
     Optional<UserEntity> optUserEntity =
-        repository.findByAppIdAndOrgIdAndEmail(user.getAppId(), user.getOrgId(), user.getEmail());
+        repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
 
     if (!optUserEntity.isPresent()) {
       return new AuthenticationResponse(ErrorCode.USER_NOT_FOUND);

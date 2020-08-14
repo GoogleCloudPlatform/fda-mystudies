@@ -29,17 +29,16 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
   @PostConstruct
   public void init() {
     uriTemplateAndMethods.put(
-        String.format("%s/v1/users", context.getContextPath()),
+        String.format("%s/users", context.getContextPath()), new String[] {HttpMethod.POST.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/user/reset_password", context.getContextPath()),
         new String[] {HttpMethod.POST.name()});
     uriTemplateAndMethods.put(
-        String.format("%s/v1/user/reset_password", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/v1/users/{userId}/change_password", context.getContextPath()),
+        String.format("%s/users/{userId}/change_password", context.getContextPath()),
         new String[] {HttpMethod.PUT.name()});
     uriTemplateAndMethods.put(
-        String.format("%s/v1/users/{userId}", context.getContextPath()),
-        new String[] {HttpMethod.PATCH.name()});
+        String.format("%s/users/{userId}", context.getContextPath()),
+        new String[] {HttpMethod.PUT.name()});
   }
 
   @Override
