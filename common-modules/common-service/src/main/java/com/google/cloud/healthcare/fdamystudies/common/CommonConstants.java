@@ -46,7 +46,7 @@ public final class CommonConstants {
   public static final String OPEN = "Open";
 
   public static final String STATUS_ACTIVE = "Active";
-  
+
   public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
       "application/x-www-form-urlencoded;charset=UTF-8";
 }

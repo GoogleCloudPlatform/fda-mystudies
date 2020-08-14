@@ -13,21 +13,31 @@ import java.util.List;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-public class LocationResponse extends BaseResponse {
+public class LocationDetailsResponse extends BaseResponse {
 
-  private List<LocationDetails> locations = new ArrayList<>();
+  private String locationId;
 
-  public LocationResponse(ErrorCode errorCode) {
+  private String customId;
+
+  private String description;
+
+  private String name;
+
+  private Integer status;
+
+  private List<String> studies = new ArrayList<>();
+
+  public LocationDetailsResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public LocationResponse(MessageCode messageCode, List<LocationDetails> locations) {
+  public LocationDetailsResponse(MessageCode messageCode) {
     super(messageCode);
-    this.locations.addAll(locations);
   }
 }
