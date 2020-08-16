@@ -171,7 +171,12 @@ public class LoginController {
     // validate login credentials
     ValidationErrorResponse errors = validateRequiredParams(request, "email", "password");
     if (bindingResult.hasErrors() || errors.hasErrors()) {
-      logger.exit(String.format("login validation errors=%s", ErrorCode.INVALID_LOGIN_CREDENTIALS));
+      // don't log the binding errors, rejected value contains PII information such as email,
+      // password
+      logger.error(
+          String.format(
+              "hasBindingErrors=%b and missing required params=%b, error code=%s",
+              bindingResult.hasErrors(), errors.hasErrors(), ErrorCode.INVALID_LOGIN_CREDENTIALS));
       model.addAttribute(ERROR_DESCRIPTION, ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription());
       return LOGIN_VIEW_NAME;
     }
