@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.common.DevicePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ public class ConsentControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnLoginPage() throws Exception {
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
+    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
     Cookie consentChallengeCookie = new Cookie(CONSENT_CHALLENGE, CONSENT_CHALLENGE_VALUE);
     Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
     mockMvc

@@ -43,13 +43,13 @@ public enum ErrorCode {
       401,
       "EC-110",
       Constants.BAD_REQUEST,
-      "Your temporary password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+      "Your temporary password is expired. Please use the Forgot Password link to reset your password"),
 
   PASSWORD_EXPIRED(
       401,
       "EC-111",
       Constants.BAD_REQUEST,
-      "Your password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+      "Your password is expired. Please use the Forgot Password link to reset your password"),
 
   USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found"),
 

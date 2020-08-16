@@ -63,11 +63,11 @@ public final class AuthScimConstants {
 
   public static final String DEVICE_TYPE = "deviceType";
 
-  public static final String DEVICE_PLATFORM = "devicePlatform";
+  public static final String DEVICE_PLATFORM = "mobilePlatform";
 
   public static final String CLIENT_APP_VERSION = "clientAppVersion";
 
-  public static final String TEMP_REG_ID = "temp_reg_id";
+  public static final String TEMP_REG_ID = "tempRegId";
 
   public static final String EMAIL = "email";
 
@@ -97,5 +97,9 @@ public final class AuthScimConstants {
 
   public static final String ABOUT_LINK = "about_link";
 
-  public static final String AUTO_LOGIN = "autoLogin";
+  public static final String AUTO_LOGIN_VIEW_NAME = "autoLogin";
+
+  public static final String ERROR_VIEW_NAME = "error";
+
+  public static final String LOGIN_VIEW_NAME = "login";
 }
