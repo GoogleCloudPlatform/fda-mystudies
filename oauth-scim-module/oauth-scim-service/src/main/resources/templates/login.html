@@ -55,16 +55,18 @@
           <div class="input__field">
             <div class="err__msg" id="email_error" style="display: none">Please
               enter valid email address</div>
-            <label>Email</label> <input type="email" name="email" th:field="*{email}"
-              id="email" placeholder="Enter Email" value=""
-              required="required" onblur="validateField('email');" />
+            <label>Email</label> <input type="email" name="email"
+              th:field="*{email}" id="email" placeholder="Enter Email"
+              value="" required="required"
+              onblur="validateField('email');" />
           </div>
           <div class="input__field">
             <div class="err__msg" id="password_error"
               style="display: none">Please enter valid password</div>
-            <label>Password</label> <input type="password" th:field="*{password}"
-              name="password" id="password" placeholder="Enter Password"
-              required="required" minlength="8" maxlength="64" value=""
+            <label>Password</label> <input type="password"
+              th:field="*{password}" name="password" id="password"
+              placeholder="Enter Password" required="required"
+              minlength="8" maxlength="64" value=""
               onblur="validateField('password');" />
             <div class="cmn__error"
               th:if="${!#strings.isEmpty(error_description)}"
@@ -87,9 +89,8 @@
             <div class="col-md-5 pr-none text-right">
               <a class="blue__link forgot__pwd desktop"
                 th:href="${forgot_password_link}">Forgot Password?</a> <span
-                class="mobile"
-                th:if="${mobilePlatform == 'ANDROID' || mobilePlatform == 'IOS'}">New
-                User? <a th:href="${signup_link}" class="sign__up">SignUP</a>
+                class="mobile" th:if="${mobileDevice}">New User?
+                <a th:href="${signup_link}" class="sign__up">SignUP</a>
               </span>
             </div>
           </div>
@@ -102,17 +103,11 @@
     <div>&copy; 2019 FDA MyStudies. All rights reserved.</div>
     <div>
       <ul>
-        <li
-          th:if="${mobilePlatform != 'ANDROID' && mobilePlatform != 'IOS'}"><a
-          th:href="${about_link}">About</a></li>
-        <li
-          th:if="${mobilePlatform != 'ANDROID' && mobilePlatform != 'IOS'}"><a
-          th:href="${terms_link}">Terms of Service</a></li>
-        <li
-          th:if="${mobilePlatform == 'ANDROID' || mobilePlatform == 'IOS'}"><a
-          th:href="${terms_link}">Terms</a></li>
-        <li
-          th:if="${mobilePlatform == 'ANDROID' || mobilePlatform == 'IOS'}"><a
+        <li th:if="${!mobileDevice}"><a th:href="${about_link}">About</a></li>
+        <li th:if="${!mobileDevice}"><a th:href="${terms_link}">Terms
+            of Service</a></li>
+        <li th:if="${mobileDevice}"><a th:href="${terms_link}">Terms</a></li>
+        <li th:if="${mobileDevice}"><a
           th:href="${privacy_policy_link}">Privacy Policy</a></li>
       </ul>
     </div>

@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
@@ -78,7 +78,7 @@ public class ConsentController {
   private String redirectToCallbackUrl(
       HttpServletRequest request, boolean skipConsent, HttpServletResponse response) {
     String userId = WebUtils.getCookie(request, USER_ID).getValue();
-    String mobilePlatform = WebUtils.getCookie(request, DEVICE_PLATFORM).getValue();
+    String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM).getValue();
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
 
     String redirectUrl =

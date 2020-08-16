@@ -86,9 +86,12 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   public ResponseEntity<?> getToken(MultiValueMap<String, String> paramMap, HttpHeaders headers)
       throws JsonProcessingException {
+    logger.entry(String.format("getToken() for grant_type=%s", paramMap.getFirst(GRANT_TYPE)));
+
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
 
-    if (REFRESH_TOKEN.equals(paramMap.getFirst(GRANT_TYPE))) {
+    String grantType = paramMap.getFirst(GRANT_TYPE);
+    if (REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType)) {
       headers.set(AUTHORIZATION, encodedAuthorization);
     }
 
@@ -96,17 +99,20 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     ResponseEntity<JsonNode> response =
         getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);
 
-    String grantType = paramMap.getFirst(GRANT_TYPE);
     if ((REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType))
         && response.getBody().hasNonNull(REFRESH_TOKEN)) {
       String refreshToken = getTextValue(response.getBody(), REFRESH_TOKEN);
       UserResponse userResponse =
           userService.revokeAndReplaceRefreshToken(paramMap.getFirst(USER_ID), refreshToken);
       if (!HttpStatus.valueOf(userResponse.getHttpStatusCode()).is2xxSuccessful()) {
+        logger.exit(
+            String.format(
+                "revokeAndReplaceRefreshToken error=%s", userResponse.getErrorDescription()));
         return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
       }
     }
 
+    logger.exit(String.format("status=%d", response.getStatusCodeValue()));
     return response;
   }
 

@@ -10,17 +10,17 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.RequestParamValidator.validateRequiredParams;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CLIENT_APP_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_DESCRIPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_VIEW_NAME;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
@@ -36,6 +36,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
+import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
@@ -72,6 +73,8 @@ import org.springframework.web.util.WebUtils;
 @Controller
 public class LoginController {
 
+  private static final String MOBILE_DEVICE = "mobileDevice";
+
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
   @Autowired private OAuthService oauthService;
@@ -98,6 +101,7 @@ public class LoginController {
   public String login(
       @RequestParam(name = LOGIN_CHALLENGE, required = false) String loginChallenge,
       @RequestParam(required = false) String code,
+      @CookieValue(name = ACCOUNT_STATUS, required = false) String accountStatus,
       HttpServletRequest request,
       HttpServletResponse response,
       Model model) {
@@ -109,7 +113,7 @@ public class LoginController {
     if (StringUtils.isNotBlank(code)) {
       logger.exit(
           "login/consent flow completed, redirect to callbackUrl with auth code and userId");
-      return redirectToCallbackUrl(request, code, response);
+      return redirectToCallbackUrl(request, code, accountStatus, response);
     }
 
     // login/consent flow initiated
@@ -125,7 +129,7 @@ public class LoginController {
       JsonNode responseBody = loginResponse.getBody();
       if (skipLogin(responseBody)) {
         logger.exit("skip login, return to callback URL");
-        return redirectToCallbackUrl(request, code, response);
+        return redirectToCallbackUrl(request, code, accountStatus, response);
       }
       return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
     }
@@ -152,11 +156,13 @@ public class LoginController {
       @CookieValue(name = TEMP_REG_ID, required = false) String tempRegId,
       @CookieValue(name = APP_ID) String appId,
       @CookieValue(name = LOGIN_CHALLENGE) String loginChallenge,
-      @CookieValue(name = DEVICE_PLATFORM) String mobilePlatform,
+      @CookieValue(name = MOBILE_PLATFORM) String mobilePlatform,
       HttpServletRequest request,
       HttpServletResponse response)
       throws JsonProcessingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+
+    model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
 
     if (StringUtils.isNotEmpty(tempRegId)) {
       return autoLoginOrReturnLoginPage(tempRegId, loginChallenge, request, response);
@@ -181,18 +187,15 @@ public class LoginController {
         .getDescription()
         .equalsIgnoreCase(authenticationResponse.getErrorDescription())) {
       String redirectUrl = redirectConfig.getAccountActivationUrl(mobilePlatform);
-      String url =
-          String.format(
-              "%s?userId=%s&accountStatus=%s",
-              redirectUrl,
-              authenticationResponse.getUserId(),
-              authenticationResponse.getAccountStatus());
+      String url = String.format("%s?email=%s", redirectUrl, loginRequest.getEmail());
       return redirect(response, url);
     }
 
     if (authenticationResponse.is2xxSuccessful()) {
       logger.exit("authentication success, redirect to consent page");
       cookieHelper.addCookie(response, USER_ID, authenticationResponse.getUserId());
+      addCookie(
+          response, ACCOUNT_STATUS, String.valueOf(authenticationResponse.getAccountStatus()));
     } else {
       logger.error(
           String.format(
@@ -255,18 +258,18 @@ public class LoginController {
         APP_ID,
         CORRELATION_ID,
         CLIENT_APP_VERSION,
-        DEVICE_TYPE,
-        DEVICE_PLATFORM,
+        MOBILE_PLATFORM,
         TEMP_REG_ID);
 
     String tempRegId = qsParams.getFirst(TEMP_REG_ID);
-    String mobilePlatform = qsParams.getFirst(DEVICE_PLATFORM);
+    String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
     model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform));
     model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
     model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform));
     model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
     model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
+    model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
 
     // tempRegId for auto login after signup
     if (StringUtils.isNotEmpty(tempRegId)) {
@@ -286,12 +289,14 @@ public class LoginController {
   }
 
   private String redirectToCallbackUrl(
-      HttpServletRequest request, String code, HttpServletResponse response) {
+      HttpServletRequest request, String code, String accountStatus, HttpServletResponse response) {
     String userId = WebUtils.getCookie(request, USER_ID).getValue();
-    String mobilePlatform = WebUtils.getCookie(request, DEVICE_PLATFORM).getValue();
+    String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM).getValue();
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
 
-    String redirectUrl = String.format("%s?code=%s&userId=%s", callbackUrl, code, userId);
+    String redirectUrl =
+        String.format(
+            "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
 
     logger.exit(String.format("redirect to %s from /login", callbackUrl));
     return redirect(response, redirectUrl);

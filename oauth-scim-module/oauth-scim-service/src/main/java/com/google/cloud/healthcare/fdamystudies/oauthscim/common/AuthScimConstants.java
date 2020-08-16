@@ -61,9 +61,7 @@ public final class AuthScimConstants {
 
   public static final String APP_ID = "appId";
 
-  public static final String DEVICE_TYPE = "deviceType";
-
-  public static final String DEVICE_PLATFORM = "mobilePlatform";
+  public static final String MOBILE_PLATFORM = "mobilePlatform";
 
   public static final String CLIENT_APP_VERSION = "clientAppVersion";
 
@@ -102,4 +100,6 @@ public final class AuthScimConstants {
   public static final String ERROR_VIEW_NAME = "error";
 
   public static final String LOGIN_VIEW_NAME = "login";
+
+  public static final String ACCOUNT_STATUS = "accountStatus";
 }
