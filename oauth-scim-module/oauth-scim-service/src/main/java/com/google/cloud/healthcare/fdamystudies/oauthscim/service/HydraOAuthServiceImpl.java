@@ -8,11 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION_CODE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_SCOPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.GRANT_TYPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
@@ -20,6 +22,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
@@ -192,13 +195,23 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
+    ArrayNode scopes = getObjectMapper().createArrayNode();
+    scopes.add("offline_access");
+    scopes.add("offline");
+    scopes.add("openid");
+
+    // When accepting the consent request, offline_access must be in the list of grant_scope to get
+    // the refresh_token
+    ObjectNode request = getObjectNode();
+    request.set(GRANT_SCOPE, scopes);
+
     StringBuilder url = new StringBuilder(consentAcceptEndpoint);
     url.append("?")
         .append(CONSENT_CHALLENGE)
         .append("=")
         .append(paramMap.getFirst(CONSENT_CHALLENGE));
 
-    HttpEntity<Object> requestEntity = new HttpEntity<>(getObjectNode(), headers);
+    HttpEntity<Object> requestEntity = new HttpEntity<>(request, headers);
     ResponseEntity<JsonNode> response =
         getRestTemplate().exchange(url.toString(), HttpMethod.PUT, requestEntity, JsonNode.class);
 

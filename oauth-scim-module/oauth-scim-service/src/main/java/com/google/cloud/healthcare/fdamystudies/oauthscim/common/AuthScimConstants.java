@@ -102,4 +102,6 @@ public final class AuthScimConstants {
   public static final String LOGIN_VIEW_NAME = "login";
 
   public static final String ACCOUNT_STATUS = "accountStatus";
+
+  public static final String GRANT_SCOPE = "grant_scope";
 }
