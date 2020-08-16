@@ -49,7 +49,7 @@ public class ConsentControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnLoginPage() throws Exception {
-    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
     Cookie consentChallengeCookie = new Cookie(CONSENT_CHALLENGE, CONSENT_CHALLENGE_VALUE);
     Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
     mockMvc
@@ -57,7 +57,7 @@ public class ConsentControllerTest extends BaseMockIT {
             post(CONSENT_PAGE.getPath())
                 .contextPath(getContextPath())
                 .queryParams(getConsentQSParams())
-                .cookie(devicePlatformCookie, consentChallengeCookie, userIdCookie))
+                .cookie(mobilePlatformCookie, consentChallengeCookie, userIdCookie))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(ApiEndpoint.LOGIN_PAGE.getUrl()))
         .andReturn();

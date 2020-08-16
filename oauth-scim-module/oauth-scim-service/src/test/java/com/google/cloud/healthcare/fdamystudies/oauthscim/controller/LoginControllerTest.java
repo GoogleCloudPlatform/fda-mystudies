@@ -9,12 +9,14 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
@@ -36,9 +38,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
+import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
@@ -142,7 +144,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .queryParams(queryParams))
         .andDo(print())
-        .andExpect(view().name("http://localhost:8003/participant-manager/error"));
+        .andExpect(view().name(ERROR_VIEW_NAME));
   }
 
   @Test
@@ -150,19 +152,21 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add("code", AUTH_CODE_VALUE);
 
-    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
     Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
+    Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS, "0");
 
     String callbackUrl = redirectConfig.getCallbackUrl(MobilePlatform.UNKNOWN.getValue());
     String expectedRedirectUrl =
-        String.format("%s?code=%s&userId=%s", callbackUrl, AUTH_CODE_VALUE, USER_ID_VALUE);
+        String.format(
+            "%s?code=%s&userId=%s&accountStatus=0", callbackUrl, AUTH_CODE_VALUE, USER_ID_VALUE);
 
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .queryParams(queryParams)
-                .cookie(devicePlatformCookie, userIdCookie))
+                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(expectedRedirectUrl))
@@ -210,21 +214,19 @@ public class LoginControllerTest extends BaseMockIT {
     String activationUrl =
         redirectConfig.getAccountActivationUrl(MobilePlatform.UNKNOWN.getValue());
     String expectedViedName =
-        String.format(
-            "redirect:%s?userId=%s&accountStatus=%s",
-            activationUrl, userEntity.getUserId(), userEntity.getStatus());
+        String.format("redirect:%s?email=%s", activationUrl, userEntity.getEmail());
 
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name(expectedViedName));
@@ -246,13 +248,13 @@ public class LoginControllerTest extends BaseMockIT {
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()));
@@ -271,13 +273,13 @@ public class LoginControllerTest extends BaseMockIT {
 
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(
             content().string(containsString(ErrorCode.INVALID_LOGIN_CREDENTIALS.getDescription())));
@@ -293,10 +295,10 @@ public class LoginControllerTest extends BaseMockIT {
 
     // Step-2 call API for 5 times with invalid login credentials to lock the account
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
-    requestParams.set(PASSWORD, "invalid_password");
+    requestParams.set(PASSWORD, PASSWORD_VALUE + 1);
     Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie devicePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
 
     ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
     for (int loginAttempts = 1; loginAttempts <= MAX_LOGIN_ATTEMPTS; loginAttempts++) {
@@ -308,7 +310,7 @@ public class LoginControllerTest extends BaseMockIT {
               post(ApiEndpoint.LOGIN_PAGE.getPath())
                   .contextPath(getContextPath())
                   .params(requestParams)
-                  .cookie(appIdCookie, loginChallenge, devicePlatformCookie))
+                  .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
           .andDo(print())
           .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
     }
