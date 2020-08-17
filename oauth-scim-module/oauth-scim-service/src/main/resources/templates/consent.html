@@ -4,7 +4,7 @@
   Use of this source code is governed by an MIT-style
   license that can be found in the LICENSE file or at
   https://opensource.org/licenses/MIT. -->
-  
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
   xmlns:th="https://www.thymeleaf.org">
@@ -16,19 +16,13 @@
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <link rel="stylesheet" th:href="@{/css/utilities.css}">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script type="text/javascript">
-	window.onload = function() {
-		window.setTimeout(function() {
-			document.consentForm.submit();
-		}, 5000);
-	};
-</script>
+<script type="text/javascript" th:src="@{/js/consent.js}"></script>
 </head>
 <body class="bg__aqua-gray">
   <form th:action="@{/consent}" method="post" id="consentForm"
     name="consentForm">
     <div class="loader">
-      <img th:src="@{/images/loader.svg}"/>
+      <img th:src="@{/images/loader.svg}" />
       <div>
         <div>Please wait while we set things up for you…</div>
         <div>this might take a few seconds.</div>

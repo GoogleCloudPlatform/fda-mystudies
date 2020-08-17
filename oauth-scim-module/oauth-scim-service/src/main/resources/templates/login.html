@@ -19,26 +19,7 @@
   href="https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script type="text/javascript">
-	function validateField(elementId) {
-		var element = document.getElementById(elementId);
-		var isValid = element.checkValidity();
-		var errorDiv = document.getElementById(elementId + "_error");
-
-		if (isValid) {
-			errorDiv.style.display = "none";
-		} else {
-			errorDiv.style.display = "block";
-		}
-
-		return isValid;
-	}
-
-	function validateform() {
-		return validateField("email") && validateField("password");
-	}
-</script>
+<script type="text/javascript" th:src="@{/js/login.js}"></script>
 
 </head>
 <body class="bg__aqua-gray">

@@ -20,7 +20,7 @@ import lombok.ToString;
 public class LoginRequest {
 
   private static final String PASSWORD_REGEX =
-      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\\\\\"#$%&'()*+,-.:;<=>?@\\\\\\\\[\\\\\\\\]^_`{|}~]).{8,64}$";
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
 
   @ToString.Exclude
   @Size(max = 320)
@@ -28,11 +28,6 @@ public class LoginRequest {
   private String email;
 
   @ToString.Exclude
-  @Size(
-      min = 8,
-      max = 64,
-      message =
-          "Password must contain at least 8 characters, including uppercase, lowercase letters, numbers and allowed special characters.")
   @Pattern(regexp = PASSWORD_REGEX, message = "Your password does not meet the required criteria.")
   private String password;
 }
