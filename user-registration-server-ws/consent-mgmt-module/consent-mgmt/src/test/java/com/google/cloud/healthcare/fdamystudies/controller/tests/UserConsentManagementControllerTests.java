@@ -1,5 +1,24 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.bean.ConsentReqBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
+import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
+import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
+import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
+import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
+import com.google.cloud.healthcare.fdamystudies.testutils.MockUtils;
+import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -10,22 +29,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import com.google.cloud.healthcare.fdamystudies.bean.ConsentReqBean;
-import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
-import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
-import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
-import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
-import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
-import com.google.cloud.healthcare.fdamystudies.testutils.MockUtils;
-import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 
 @ExtendWith(MockitoExtension.class)
 public class UserConsentManagementControllerTests extends BaseMockIT {
@@ -35,6 +38,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
   @InjectMocks @Autowired private UserConsentManagementServiceImpl userConsentManagementService;
 
   @InjectMocks @Autowired private UserConsentManagementController controller;
+
+  @Autowired private ObjectMapper objectMapper;
+
+  protected ObjectMapper getObjectMapper() {
+    return objectMapper;
+  }
 
   @Test
   public void contextLoads() {
@@ -68,7 +77,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     TestUtils.addContentTypeAcceptHeaders(headers);
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
@@ -107,7 +120,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     TestUtils.addContentTypeAcceptHeaders(headers);
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
@@ -145,7 +162,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     TestUtils.addContentTypeAcceptHeaders(headers);
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
@@ -154,12 +175,14 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
 
     // Invoke http api endpoint to get consent and verify pdf content
-    String path =
-        String.format(
-            "/consentDocument?studyId=%s&consentVersion=%s",
-            Constants.STUDYOF_HEALTH, Constants.VERSION_1_2);
+
     mockMvc
-        .perform(get(path).headers(headers))
+        .perform(
+            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .param("studyId", Constants.STUDYOF_HEALTH)
+                .param("consentVersion", Constants.VERSION_1_2))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
@@ -169,12 +192,14 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         cloudStorageService, Constants.CONTENT_1_0_UPDATED);
 
     // Invoke http api endpoint to get old consent and verify pdf content
-    path =
-        String.format(
-            "/consentDocument?studyId=%s&consentVersion=%s",
-            Constants.STUDYOF_HEALTH, Constants.VERSION_1_0);
+
     mockMvc
-        .perform(get(path).headers(headers))
+        .perform(
+            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .param("studyId", Constants.STUDYOF_HEALTH)
+                .param("consentVersion", Constants.VERSION_1_0))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
@@ -183,9 +208,12 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
 
     // Invoke http api endpoint to get content without mentioning version
-    path = String.format("/consentDocument?studyId=%s", Constants.STUDYOF_HEALTH);
     mockMvc
-        .perform(get(path).headers(headers))
+        .perform(
+            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .param("studyId", Constants.STUDYOF_HEALTH))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
@@ -201,7 +229,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     TestUtils.addContentTypeAcceptHeaders(headers);
     String requestJson = "";
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
@@ -209,7 +241,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     ConsentStatusBean consentRequest = new ConsentStatusBean();
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
@@ -221,7 +257,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
@@ -232,7 +272,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
@@ -243,7 +287,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
@@ -255,7 +303,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
@@ -269,7 +321,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     headers.remove(Constants.USER_ID_HEADER);
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isUnauthorized());
 
@@ -285,7 +341,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     headers.add(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
 
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
@@ -297,7 +357,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     headers.remove(Constants.USER_ID_HEADER);
     TestUtils.addUserIdHeader(headers);
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
   }
@@ -315,7 +379,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     String requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 
@@ -328,7 +396,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 
@@ -353,7 +425,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
     mockMvc
-        .perform(post("/updateEligibilityConsentStatus").content(requestJson).headers(headers))
+        .perform(
+            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
   }

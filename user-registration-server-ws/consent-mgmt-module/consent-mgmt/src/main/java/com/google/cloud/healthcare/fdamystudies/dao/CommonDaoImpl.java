@@ -24,9 +24,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.OrgInfo;
+import com.google.cloud.healthcare.fdamystudies.consent.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Repository

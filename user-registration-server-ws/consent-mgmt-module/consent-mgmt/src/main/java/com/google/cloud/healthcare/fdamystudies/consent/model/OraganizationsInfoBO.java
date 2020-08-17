@@ -1,4 +1,4 @@
-package com.google.cloud.healthcare.fdamystudies.model;
+package com.google.cloud.healthcare.fdamystudies.consent.model;
 
 import java.util.Date;
 import javax.persistence.Column;

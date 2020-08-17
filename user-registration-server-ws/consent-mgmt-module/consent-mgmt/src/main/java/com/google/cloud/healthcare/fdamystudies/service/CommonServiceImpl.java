@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ActivityLogBO;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
 import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
 
 @Service

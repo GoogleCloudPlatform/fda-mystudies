@@ -11,8 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyConsentBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 
 public interface UserConsentManagementService {
 
