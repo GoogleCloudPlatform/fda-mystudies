@@ -25,12 +25,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationIdStudyNamesPair;
@@ -40,6 +40,19 @@ import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -56,26 +69,28 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationDetailsResponse addNewLocation(LocationRequest locationRequest) {
+  public LocationEntity addNewLocation(LocationEntity location, String userId)
+      throws ErrorCodeException {
     logger.entry("begin addNewLocation()");
 
-    Optional<UserRegAdminEntity> optUserRegAdminUser =
-        userRegAdminRepository.findById(locationRequest.getUserId());
+    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminUser.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (Permission.READ_EDIT != Permission.fromValue(adminUser.getEditPermission())) {
       logger.exit(
           String.format(
               "Add location failed with error code=%s", ErrorCode.LOCATION_ACCESS_DENIED));
-      return new LocationDetailsResponse(ErrorCode.LOCATION_ACCESS_DENIED);
-    }
-    LocationEntity locationEntity = LocationMapper.fromLocationRequest(locationRequest);
-    locationEntity.setCreatedBy(adminUser.getId());
-    locationEntity = locationRepository.saveAndFlush(locationEntity);
-    logger.exit(String.format("locationId=%s", locationEntity.getId()));
 
-    return LocationMapper.toLocationDetailsResponse(
-        locationEntity, MessageCode.ADD_LOCATION_SUCCESS);
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
+    location.setCreatedBy(adminUser.getId());
+    LocationEntity created = locationRepository.saveAndFlush(location);
+
+    logger.exit(String.format("locationId=%s", created.getId()));
+    return created;
   }
 
   @Override

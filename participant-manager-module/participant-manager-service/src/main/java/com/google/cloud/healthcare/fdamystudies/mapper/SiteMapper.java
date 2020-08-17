@@ -35,20 +35,14 @@ public class SiteMapper {
     return response;
   }
 
-  public static List<AppSiteResponse> toAppDetailsResponseList(List<SiteEntity> sites) {
-    List<AppSiteResponse> siteResponseList = new ArrayList<>();
-    if (CollectionUtils.isNotEmpty(sites)) {
-      for (SiteEntity site : sites) {
-        AppSiteResponse appSiteResponse = new AppSiteResponse();
-        appSiteResponse.setSiteId(site.getId());
-        appSiteResponse.setCustomLocationId(site.getLocation().getCustomId());
-        appSiteResponse.setLocationDescription(site.getLocation().getDescription());
-        appSiteResponse.setLocationId(site.getLocation().getId());
-        appSiteResponse.setLocationName(site.getLocation().getName());
-        siteResponseList.add(appSiteResponse);
-      }
-    }
-    return siteResponseList;
+  public static AppSiteResponse toAppSiteResponse(SiteEntity site) {
+    AppSiteResponse appSiteResponse = new AppSiteResponse();
+    appSiteResponse.setSiteId(site.getId());
+    appSiteResponse.setCustomLocationId(site.getLocation().getCustomId());
+    appSiteResponse.setLocationDescription(site.getLocation().getDescription());
+    appSiteResponse.setLocationId(site.getLocation().getId());
+    appSiteResponse.setLocationName(site.getLocation().getName());
+    return appSiteResponse;
   }
 
   public static List<AppSiteDetails> toParticipantSiteList(

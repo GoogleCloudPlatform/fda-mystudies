@@ -13,6 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 @Configuration
 @Setter
@@ -23,4 +29,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${securityCodeExpireDate}")
   private String securityCodeExpireDate;
+  
+  @Value("${auth.server.register.url}")
+  private String authRegisterUrl;
 }

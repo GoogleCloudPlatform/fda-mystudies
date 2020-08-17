@@ -27,6 +27,9 @@ import org.springframework.data.annotation.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.annotation.Transient;
 
 @ToString
 @Getter
