@@ -228,7 +228,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
         argumentsAccessor.getString(1) == null ? "" : argumentsAccessor.getString(1);
     requestParams.add("studyId", studyIdArg);
     requestParams.add("participantId", participantIdArg);
-    // Step 1: Call API to get activity state
+
     MvcResult result =
         mockMvc
             .perform(
