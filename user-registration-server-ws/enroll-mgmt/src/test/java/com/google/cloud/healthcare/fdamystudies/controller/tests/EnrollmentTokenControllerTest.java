@@ -74,11 +74,11 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // study id not exists
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYID_NOT_EXIST);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", FORBIDDEN);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
 
     // token already use
     requestJson = getEnrollmentJson(Constants.TOKEN_ALREADY_USED, Constants.STUDYOF_HEALTH_1);
-    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", FORBIDDEN);
+    performPost(VALIDATE_ENROLLMENT_TOKEN_PATH, requestJson, headers, "", BAD_REQUEST);
   }
 
   @Test
