@@ -44,9 +44,10 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
   @Test
   void shouldUpdateActivityState() throws Exception {
-    HttpHeaders headers = TestUtils.newHeadersUser();
+
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
     // Step 1: Call API to update activity state
+    HttpHeaders headers = TestUtils.newHeadersUser();
     mockMvc
         .perform(
             post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
@@ -86,7 +87,6 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
   @Test
   void shouldGetActivityStateValidParams() throws Exception {
-    HttpHeaders headers = TestUtils.newHeadersUser();
     // Step 1: Save the activity first
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
     ActivityStateRequestBean activityStateBean =
@@ -100,6 +100,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     requestParams.add("participantId", "567");
 
     // Step 3: Call API to get activity state
+    HttpHeaders headers = TestUtils.newHeadersUser();
     MvcResult result =
         mockMvc
             .perform(
@@ -118,10 +119,11 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
   @Test
   void shouldUpdateActivityStateMultiple() throws Exception {
-    HttpHeaders headers = TestUtils.newHeadersUser();
+
     String inputJsonContent =
         readJsonFile("/update_activity_state_runs_info__multiple_request.json");
     // Step 1: Call API to update activity state
+    HttpHeaders headers = TestUtils.newHeadersUser();
     mockMvc
         .perform(
             post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
@@ -183,7 +185,6 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
   @CsvSource({"RT4,567", "RT3,568"})
   void shouldGetEmptyActivityStateParamsNotFound(ArgumentsAccessor argumentsAccessor)
       throws Exception {
-    HttpHeaders headers = TestUtils.newHeadersUser();
     // Step 1: Save the activity first
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
     ActivityStateRequestBean activityStateBean =
@@ -199,6 +200,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     requestParams.add("participantId", participantIdArg);
 
     // Step 3: Call API to update activity state
+    HttpHeaders headers = TestUtils.newHeadersUser();
     MvcResult result =
         mockMvc
             .perform(
@@ -220,7 +222,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
   @CsvSource({",567", "RT3,"})
   void shouldGetActivityStateBadRequestInvalidParams(ArgumentsAccessor argumentsAccessor)
       throws Exception {
-    HttpHeaders headers = TestUtils.newHeadersUser();
+
     LinkedMultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     String studyIdArg =
         argumentsAccessor.getString(0) == null ? "" : argumentsAccessor.getString(0);
@@ -229,6 +231,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     requestParams.add("studyId", studyIdArg);
     requestParams.add("participantId", participantIdArg);
 
+    HttpHeaders headers = TestUtils.newHeadersUser();
     MvcResult result =
         mockMvc
             .perform(
