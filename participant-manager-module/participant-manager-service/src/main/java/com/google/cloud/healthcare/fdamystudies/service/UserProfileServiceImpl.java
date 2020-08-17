@@ -114,7 +114,6 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     UserRegAdminEntity userRegAdmin = optUserRegAdmin.get();
-
     deactivateUserInAuthServer(userRegAdmin.getUrAdminAuthId());
 
     userRegAdmin.setStatus(UserStatus.DEACTIVATED.getValue());
