@@ -9,11 +9,15 @@
 package com.google.cloud.healthcare.fdamystudies.helper;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.EMAIL_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -50,11 +54,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestDataHelper {
 
-  private static final String ADMIN_AUTH_ID_VALUE =
-      "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
-
-  public static final String EMAIL_VALUE = "mockit_email@grr.la";
-
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Autowired private StudyRepository studyRepository;
@@ -81,6 +80,7 @@ public class TestDataHelper {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     return headers;
   }
 
@@ -143,18 +143,18 @@ public class TestDataHelper {
   public AppEntity createAppEntity(UserRegAdminEntity userEntity) {
     AppEntity appEntity = newAppEntity();
     AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
-    appPermissionEntity.setEdit(EDIT_VALUE);
+    appPermissionEntity.setEditPermission(EDIT_VALUE);
     appPermissionEntity.setUrAdminUser(userEntity);
     appEntity.addAppPermissionEntity(appPermissionEntity);
     return appRepository.saveAndFlush(appEntity);
   }
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
-    StudyEntity studyEntity = newStudyEntity();
-    studyEntity.setType("CLOSE");
+    StudyEntity studyEntity = new StudyEntity();
+    studyEntity.setType(CLOSE_STUDY);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
-    studyPermissionEntity.setEdit(EDIT_VALUE);
+    studyPermissionEntity.setEditPermission(EDIT_VALUE);
     studyPermissionEntity.setAppInfo(appEntity);
     studyEntity.addStudyPermissionEntity(studyPermissionEntity);
     return studyRepository.saveAndFlush(studyEntity);
@@ -171,8 +171,7 @@ public class TestDataHelper {
       StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
     SiteEntity siteEntity = newSiteEntity();
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
-    sitePermissionEntity.setCanEdit(Permission.READ_EDIT.value());
+    sitePermissionEntity.setEditPermission(Permission.READ_EDIT.value());
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
     sitePermissionEntity.setAppInfo(appEntity);

@@ -48,6 +48,15 @@ class AnchorDateHandler {
   var handler: AnchordDateFetchCompletionHandler!
   var study: Study
 
+  static let anchorDateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    let locale = Locale(identifier: "en_US_POSIX")
+    dateFormatter.timeZone = TimeZone.current
+    dateFormatter.locale = locale
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    return dateFormatter
+  }()
+
   init(study: Study) {
     self.study = study
   }
@@ -172,7 +181,7 @@ class AnchorDateHandler {
     let tokenIdentifier = study.userParticipateState.tokenIdentifier ?? ""
     let siteID = study.userParticipateState.siteID ?? ""
     let activityVersion =
-      emptyAnchorDateDetail.activity.version ?? emptyAnchorDateDetail.sourceActivityVersion
+      emptyAnchorDateDetail.activity?.version ?? emptyAnchorDateDetail.sourceActivityVersion
     let participantId = study.userParticipateState.participantId ?? ""
 
     var urlString = ResponseServerURLConstants.DevelopmentURL + method.methodName + "?"
@@ -237,7 +246,7 @@ class AnchorDateHandler {
                 as? [String: String],
               let anchorDateString = anchorDateObject["value"]
             {
-              let date = ResponseDataFetch.responseDateFormatter.date(from: anchorDateString)
+              let date = AnchorDateHandler.anchorDateFormatter.date(from: anchorDateString)
               emptyAnchorDateDetail.anchorDate = date
               completion()
             } else {
@@ -258,6 +267,14 @@ class AnchorDateHandler {
 
     let listItems = emptyAnchorDateMetaDataList.filter {
       $0.anchorDate != nil
+    }
+    if !listItems.isEmpty {
+      // To reshedule the notifications for anchor date activities.
+      DBHandler.updateLocalNotificationScheduleStatus(
+        studyId: study.studyId,
+        status: false
+      )
+      Study.currentStudy?.activitiesLocalNotificationUpdated = false
     }
     for item in listItems {
       if item.fetchAnchorDateFor == .activity {

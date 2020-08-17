@@ -23,4 +23,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${securityCodeExpireDate}")
   private String securityCodeExpireDate;
+
+  @Value("${auth.server.register.url}")
+  private String authRegisterUrl;
 }

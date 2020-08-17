@@ -260,9 +260,10 @@ class Schedule {
   /// Sets Daily Frequency Run
   func setDailyFrequenyRuns() {
 
+    guard let endTime = endTime else { return }
     dailyFrequencyTimings = activity.frequencyRuns!
 
-    var numberOfDays = self.getNumberOfDaysBetween(startDate: startTime, endDate: endTime!)
+    var numberOfDays = self.getNumberOfDaysBetween(startDate: startTime, endDate: endTime)
     let calendar = Calendar.currentUTC()
     var runId = 1
     let startDateString = Schedule.formatter?.string(from: startTime)

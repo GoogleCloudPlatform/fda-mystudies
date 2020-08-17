@@ -29,10 +29,6 @@ public final class JsonUtils {
     return getObjectMapper().createObjectNode();
   }
 
-  public static JsonNode toJsonNode(String jsonTree) throws JsonProcessingException {
-    return getObjectMapper().readTree(jsonTree);
-  }
-
   public static ArrayNode createArrayNode() {
     return getObjectMapper().createArrayNode();
   }
