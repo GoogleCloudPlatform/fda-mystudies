@@ -24,8 +24,26 @@ public enum ApiEndpoint {
 
   GET_STUDIES("http://localhost:8080/participant-manager-service/studies"),
 
-  UPDATE_LOCATION("http://localhost:8080/participant-manager-service/locations/{locationId}");
+  UPDATE_LOCATION("http://localhost:8080/participant-manager-service/locations/{locationId}"),
 
+  GET_STUDY_PARTICIPANT(
+      "http://localhost:8080/participant-manager-service/studies/{studyId}/participants"),
+
+  GET_SITE_PARTICIPANTS(
+      "http://localhost:8080/participant-manager-service/sites/{siteId}/participants"),
+
+  ADD_NEW_PARTICIPANT(
+      "http://localhost:8080/participant-manager-service/sites/{siteId}/participants"),
+
+  DECOMISSION_SITE("http://localhost:8080/participant-manager-service/sites/{siteId}/decommission"),
+
+  GET_LOCATIONS("http://localhost:8003/participant-manager-service/locations"),
+
+  GET_LOCATION_BY_LOCATION_ID(
+      "http://localhost:8003/participant-manager-service/locations/{locationId}"),
+
+  GET_APP_PARTICIPANTS(
+      "http://localhost:8080/participant-manager-service/apps/{appId}/participants");
 
   private String url;
 

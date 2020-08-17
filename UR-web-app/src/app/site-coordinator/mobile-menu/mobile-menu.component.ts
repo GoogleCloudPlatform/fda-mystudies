@@ -10,9 +10,7 @@ export class MobileMenuComponent {
   navIsOpen = false;
   @Input() showSearchBar = true;
   @Input() filterQuery = '';
-  @Output('onKeyDown') onKeyDown: EventEmitter<
-    KeyboardEvent
-  > = new EventEmitter();
+  @Output() keyDown: EventEmitter<KeyboardEvent> = new EventEmitter();
   showSearchOnClick = false;
 
   toggleNav(): void {
@@ -20,7 +18,7 @@ export class MobileMenuComponent {
   }
 
   mobileOnKeyDown(event: KeyboardEvent): void {
-    this.onKeyDown.emit(event);
+    this.keyDown.emit(event);
   }
   showSearchBarOnClick(): void {
     this.showSearchOnClick = true;
