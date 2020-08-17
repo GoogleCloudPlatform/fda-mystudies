@@ -210,9 +210,21 @@ footer ul li:last-child a {
   text-align: center;
 }
 
-.loader img {
-  width: 40px;
+.loader img{
+  width: 50px;
   margin-bottom: 10px;
+  animation-name: spin;
+  animation-duration: 3000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .flex__justify {
@@ -230,19 +242,18 @@ footer ul li:last-child a {
 }
 
 .cmn__error{
-  position: absolute;
-  bottom: -12px;
-  background: #F44336;
-  padding: 3px 6px;
-  color: #fff;
-  width: 140px;
-  text-align: center;
-  left: 50%;
-  margin-left: -70px;
-  font-weight: 600;
-  z-index: 99;
-  border-radius: 3px;
-  font-size: 13px;
+    position: absolute;
+    bottom: 10%;
+    background: #F44336;
+    padding: 3px 6px;
+    color: #fff;
+    text-align: center;
+    left: 50%;
+    font-weight: 600;
+    z-index: 99;
+    border-radius: 3px;
+    font-size: 13px;
+    transform: translate(-50%, -50%);
 }
 
 /* media queries scss */

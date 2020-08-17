@@ -68,9 +68,6 @@
               placeholder="Enter your password" required="required"
               minlength="8" maxlength="64" value=""
               onblur="validateField('password');" />
-            <div class="cmn__error"
-              th:if="${!#strings.isEmpty(error_description)}"
-              th:text="${error_description}" />
           </div>
 
         </div>
@@ -98,7 +95,11 @@
         </div>
       </div>
     </div>
+    <div class="cmn__error"
+      th:if="${!#strings.isEmpty(error_description)}"
+      th:text="${error_description}" />
   </form>
+
   <footer>
     <div>&copy; 2019 FDA MyStudies. All rights reserved.</div>
     <div>
