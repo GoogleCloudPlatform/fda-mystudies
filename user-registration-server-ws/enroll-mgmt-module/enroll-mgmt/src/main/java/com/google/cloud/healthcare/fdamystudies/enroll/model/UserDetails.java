@@ -1,14 +1,5 @@
-/*
- * Copyright 2020 Google LLC
- *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
- */
+package com.google.cloud.healthcare.fdamystudies.enroll.model;
 
-package com.google.cloud.healthcare.fdamystudies.model;
-
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import javax.persistence.Column;
@@ -19,15 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+@ToString
 @Setter
 @Getter
 @Entity
 @Table(name = "user_details")
-public class UserDetailsBO implements Serializable {
-
-  private static final long serialVersionUID = 3298208288501854383L;
-
+public class UserDetails {
   @Id
   @Column(name = "user_details_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -83,4 +73,21 @@ public class UserDetailsBO implements Serializable {
 
   @Column(name = "email_code")
   private String emailCode;
+
+  /*
+   @Column(name = "password")
+   private String password;
+
+  @Column(name = "temp_password", columnDefinition = "TINYINT(1)")
+  private Boolean tempPassword = false;
+
+  @Column(name = "reset_password")
+  private String resetPassword;
+
+  @Column(name = "temp_password_date")
+  private Date tempPasswordDate;
+
+  @Column(name = "password_updated_date")
+  private Date passwordUpdatedDate;
+  */
 }

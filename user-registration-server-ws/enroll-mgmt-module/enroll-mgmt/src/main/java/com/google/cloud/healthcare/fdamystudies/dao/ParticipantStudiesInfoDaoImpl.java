@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 
 @Repository
 public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao {
