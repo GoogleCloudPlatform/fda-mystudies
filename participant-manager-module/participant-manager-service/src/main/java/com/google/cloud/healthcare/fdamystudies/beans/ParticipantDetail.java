@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.context.annotation.Scope;
@@ -22,13 +22,11 @@ import org.springframework.stereotype.Component;
 @ToString
 @Getter
 @Setter
+@NoArgsConstructor
 public class ParticipantDetail {
+
   private String id;
 
-  @ToString.Exclude
-  @NotBlank
-  @Size(max = 320)
-  @Email
   private String email;
 
   private String onboardingStatus;
@@ -41,9 +39,19 @@ public class ParticipantDetail {
 
   private String siteId;
 
+  private String locationName;
+
   private String customLocationId;
 
-  private String locationName;
+  private String userDetailsId;
+
+  private String registrationStatus;
+
+  private String studiesEnrolled;
+
+  private String registrationDate;
+
+  private List<AppStudyDetails> enrolledStudies = new ArrayList<>();
 
   private Boolean newlyCreatedUser = Boolean.FALSE;
 }

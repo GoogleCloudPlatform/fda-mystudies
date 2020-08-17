@@ -11,11 +11,14 @@ package com.google.cloud.healthcare.fdamystudies.filter;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.annotation.PostConstruct;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -25,7 +28,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -38,11 +40,6 @@ import org.springframework.http.server.PathContainer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 
 @Component
 @Order(3)
@@ -72,6 +69,12 @@ public class ActiveUserFilter implements Filter {
     uriTemplateAndMethods.put(
         String.format("%s/locations/{locationId}", context.getContextPath()),
         new String[] {HttpMethod.PUT.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/locations", context.getContextPath()),
+        new String[] {HttpMethod.GET.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/locations/{locationId}", context.getContextPath()),
+        new String[] {HttpMethod.GET.name()});
   }
 
   protected Map<String, String[]> getUriTemplateAndHttpMethodsMap() {
