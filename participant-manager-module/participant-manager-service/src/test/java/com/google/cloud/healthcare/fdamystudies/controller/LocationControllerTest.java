@@ -83,6 +83,8 @@ public class LocationControllerTest extends BaseMockIT {
 
   private LocationEntity locationEntity;
 
+  protected MvcResult result;
+
   private AppEntity appEntity;
 
   private StudyEntity studyEntity;
@@ -91,6 +93,7 @@ public class LocationControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+
     userRegAdminEntity = testDataHelper.createUserRegAdmin();
     locationEntity = testDataHelper.createLocation();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
@@ -110,7 +113,7 @@ public class LocationControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     LocationRequest locationRequest = new LocationRequest();
-    MvcResult result =
+    result =
         mockMvc
             .perform(
                 post(ApiEndpoint.ADD_NEW_LOCATION.getPath())
@@ -132,9 +135,9 @@ public class LocationControllerTest extends BaseMockIT {
 
     userRegAdminEntity.setEditPermission(Permission.READ_VIEW.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_NEW_LOCATION.getPath())
@@ -143,7 +146,8 @@ public class LocationControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isForbidden())
-        .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
+        .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())))
+        .andReturn();
   }
 
   @Test
@@ -151,7 +155,7 @@ public class LocationControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     // Step 1: Call API to create new location
-    MvcResult result =
+    result =
         mockMvc
             .perform(
                 post(ApiEndpoint.ADD_NEW_LOCATION.getPath())
@@ -173,9 +177,6 @@ public class LocationControllerTest extends BaseMockIT {
     assertEquals(CUSTOM_ID_VALUE, locationEntity.getCustomId());
     assertEquals(LOCATION_NAME_VALUE, locationEntity.getName());
     assertEquals(LOCATION_DESCRIPTION_VALUE, locationEntity.getDescription());
-
-    // Step 3: delete location
-    locationRepository.deleteById(locationId);
   }
 
   @Test
@@ -259,7 +260,7 @@ public class LocationControllerTest extends BaseMockIT {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     // Step 1: Call API to update location
-    MvcResult result =
+    result =
         mockMvc
             .perform(
                 put(ApiEndpoint.UPDATE_LOCATION.getPath(), locationEntity.getId())
@@ -280,9 +281,6 @@ public class LocationControllerTest extends BaseMockIT {
     assertNotNull(locationEntity);
     assertEquals(UPDATE_LOCATION_NAME_VALUE, locationEntity.getName());
     assertEquals(UPDATE_LOCATION_DESCRIPTION_VALUE, locationEntity.getDescription());
-
-    // Step 3: delete location
-    locationRepository.deleteById(locationId);
   }
 
   @Test
@@ -296,7 +294,7 @@ public class LocationControllerTest extends BaseMockIT {
     updateLocationRequest.setStatus(ACTIVE_STATUS);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-    MvcResult result =
+    result =
         mockMvc
             .perform(
                 put(ApiEndpoint.UPDATE_LOCATION.getPath(), locationEntity.getId())
@@ -316,9 +314,6 @@ public class LocationControllerTest extends BaseMockIT {
     LocationEntity locationEntity = optLocationEntity.get();
     assertNotNull(locationEntity);
     assertEquals(ACTIVE_STATUS, locationEntity.getStatus());
-
-    // Step 4: delete location
-    locationRepository.deleteById(locationId);
   }
 
   @Test

@@ -17,6 +17,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import com.google.cloud.healthcare.fdamystudies.model.LocationIdStudyNamesPair;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 
 @Repository
 @ConditionalOnProperty(
@@ -33,14 +35,14 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query(
       value =
-          "SELECT s.location_id AS locationId, GROUP_CONCAT(DISTINCT si.name SEPARATOR ',') AS studyNames from sites s, study_info si where s.study_id=si.id AND s.location_id in (:locationIds) GROUP BY s.location_id",
+          "SELECT s.location_id AS locationId, GROUP_CONCAT(DISTINCT si.name SEPARATOR ',') AS studyNames from sites s, study_info si where s.study_id=si.study_id AND s.location_id in (:locationIds) GROUP BY s.location_id",
       nativeQuery = true)
   public List<LocationIdStudyNamesPair> getStudyNameLocationIdPairs(List<String> locationIds);
 
   @Query(
       value =
           "SELECT GROUP_CONCAT(DISTINCT si.name SEPARATOR ',') from sites s, study_info si "
-              + "where s.study_id=si.id AND s.location_id = :locationId",
+              + "where s.study_id=si.study_id AND s.location_id = :locationId",
       nativeQuery = true)
   public String getStudyNamesByLocationId(String locationId);
 

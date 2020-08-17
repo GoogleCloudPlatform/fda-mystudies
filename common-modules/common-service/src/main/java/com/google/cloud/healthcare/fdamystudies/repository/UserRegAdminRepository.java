@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -20,6 +21,9 @@ import org.springframework.stereotype.Repository;
     havingValue = "true",
     matchIfMissing = false)
 public interface UserRegAdminRepository extends JpaRepository<UserRegAdminEntity, String> {
+
+  @Query("SELECT ua FROM UserRegAdminEntity ua WHERE ua.id = :userId")
+  Optional<UserRegAdminEntity> findByUserRegAdminId(String userId);
 
   public Optional<UserRegAdminEntity> findByEmail(String email);
 }
