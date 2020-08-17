@@ -43,9 +43,4 @@ public class BeanConfig implements WebMvcConfigurer {
     authenticationBean.addUrlPatterns("/*");
     return authenticationBean;
   }
-
-  /* @Bean
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
-  }*/
 }
