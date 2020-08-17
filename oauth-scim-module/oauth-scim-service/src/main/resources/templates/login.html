@@ -65,7 +65,7 @@
               style="display: none">Please enter valid password</div>
             <label>Password</label> <input type="password"
               th:field="*{password}" name="password" id="password"
-              placeholder="Enter Password" required="required"
+              placeholder="Enter your password" required="required"
               minlength="8" maxlength="64" value=""
               onblur="validateField('password');" />
             <div class="cmn__error"
@@ -78,7 +78,7 @@
         <div class="input__field">
           <div class="col-md-12 p-none forgot__pwd__link mobile">
             <a class="blue__link forgot__pwd"
-              th:href="${forgot_password_link}">Forgot Password?</a>
+              th:href="${forgot_password_link}">Forgot password?</a>
           </div>
           <div class="display-flex-center login__btn__container">
             <div class="col-md-7 pl-none">
@@ -88,9 +88,9 @@
             </div>
             <div class="col-md-5 pr-none text-right">
               <a class="blue__link forgot__pwd desktop"
-                th:href="${forgot_password_link}">Forgot Password?</a> <span
-                class="mobile" th:if="${mobileDevice}">New User?
-                <a th:href="${signup_link}" class="sign__up">SignUP</a>
+                th:href="${forgot_password_link}">Forgot password?</a> <span
+                class="mobile" th:if="${mobileDevice}">New user?
+                <a th:href="${signup_link}" class="sign__up">Sign up</a>
               </span>
             </div>
           </div>
