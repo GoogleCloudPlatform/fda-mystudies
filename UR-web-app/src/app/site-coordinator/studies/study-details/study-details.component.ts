@@ -11,7 +11,7 @@ import {
   OnboardingStatus,
   EnrollmentStatus,
 } from 'src/app/shared/enums';
-import {Permisssion} from 'src/app/shared/permission-enums';
+import {Permission} from 'src/app/shared/permission-enums';
 import {TemplateRef} from '@angular/core';
 import {RegistryParticipant} from 'src/app/shared/participant';
 
@@ -28,7 +28,7 @@ export class StudyDetailsComponent extends UnsubscribeOnDestroyAdapter
   studyTypes = StudyType;
   onboardingStatus = OnboardingStatus;
   enrollmentStatus = EnrollmentStatus;
-  permisssion = Permisssion;
+  permission = Permission;
   constructor(
     private readonly modalService: BsModalService,
     private modalRef: BsModalRef,
