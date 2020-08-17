@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
+import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 export interface NavLink {
   label: string;
   link: string;
@@ -10,10 +11,11 @@ export interface NavLink {
   templateUrl: './dashboard-header.component.html',
   styleUrls: ['./dashboard-header.component.scss'],
 })
-export class DashboardHeaderComponent implements OnInit {
+export class DashboardHeaderComponent extends UnsubscribeOnDestroyAdapter {
   navLinks: NavLink[];
   showNavBar = true;
   constructor(private readonly router: Router) {
+    super();
     this.navLinks = [
       {
         label: 'Sites',
@@ -31,17 +33,17 @@ export class DashboardHeaderComponent implements OnInit {
         index: 2,
       },
     ];
-  }
-  ngOnInit(): void {
-    this.router.events.subscribe(() => {
-      for (const navLink of this.navLinks) {
-        if (navLink.link === this.router.url) {
-          this.showNavBar = true;
-          break;
-        } else {
-          this.showNavBar = false;
+    this.subs.add(
+      router.events.subscribe(() => {
+        for (const navLink of this.navLinks) {
+          if (navLink.link === this.router.url) {
+            this.showNavBar = true;
+            break;
+          } else {
+            this.showNavBar = false;
+          }
         }
-      }
-    });
+      }),
+    );
   }
 }
