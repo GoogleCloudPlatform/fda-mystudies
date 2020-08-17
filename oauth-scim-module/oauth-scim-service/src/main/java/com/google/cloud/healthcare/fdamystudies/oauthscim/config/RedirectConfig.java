@@ -47,9 +47,6 @@ public class RedirectConfig implements Serializable {
   @Value("${mystudies.android.app.signup-url}")
   private String myStudiesAndroidAppSignupUrl;
 
-  @Value("${participant.manager.signup-url}")
-  private String participantManagerSignupUrl;
-
   @Value("${mystudies.ios.app.error-url}")
   private String myStudiesIosAppErrorUrl;
 
@@ -67,6 +64,24 @@ public class RedirectConfig implements Serializable {
 
   @Value("${participant.manager.account-activation-url}")
   private String participantManagerAccountActivationUrl;
+
+  @Value("${mystudies.ios.app.terms-url}")
+  private String myStudiesIosAppTermsUrl;
+
+  @Value("${mystudies.android.app.terms-url}")
+  private String myStudiesAndroidAppTermsUrl;
+
+  @Value("${participant.manager.terms-url}")
+  private String participantManagerTermsUrl;
+
+  @Value("${mystudies.ios.app.privacy-policy-url}")
+  private String myStudiesIosAppPrivacyPolicyUrl;
+
+  @Value("${mystudies.android.app.privacy-policy-url}")
+  private String myStudiesAndroidAppPrivacyPolicyUrl;
+
+  @Value("${participant.manager.about-url}")
+  private String participantManagerAboutUrl;
 
   public String getCallbackUrl(String devicePlatform) {
     if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
@@ -92,7 +107,7 @@ public class RedirectConfig implements Serializable {
     } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
       return myStudiesIosAppSignupUrl;
     }
-    return participantManagerSignupUrl;
+    return null;
   }
 
   public String getErrorUrl(String devicePlatform) {
@@ -111,6 +126,32 @@ public class RedirectConfig implements Serializable {
       return myStudiesIosAppAccountActivationUrl;
     }
     return participantManagerAccountActivationUrl;
+  }
+
+  public String getTermsUrl(String devicePlatform) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+      return myStudiesAndroidAppTermsUrl;
+    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+      return myStudiesIosAppTermsUrl;
+    }
+    return participantManagerTermsUrl;
+  }
+
+  public String getPrivacyPolicyUrl(String devicePlatform) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+      return myStudiesAndroidAppPrivacyPolicyUrl;
+    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+      return myStudiesIosAppPrivacyPolicyUrl;
+    }
+    return null;
+  }
+
+  public String getAboutUrl(String devicePlatform) {
+    if (DevicePlatform.fromString(devicePlatform) == ANDROID
+        || DevicePlatform.fromString(devicePlatform) == IOS) {
+      return null;
+    }
+    return participantManagerAboutUrl;
   }
 
   public String getDefaultErrorUrl() {

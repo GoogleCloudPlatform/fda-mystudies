@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
@@ -15,9 +16,12 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -81,9 +85,12 @@ public class LoginControllerTest extends BaseMockIT {
   public void shouldReturnLoginPage() throws Exception {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
+
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(DevicePlatform.UNKNOWN.getValue());
-    String signupRedirectUrl = redirectConfig.getSignupUrl(DevicePlatform.UNKNOWN.getValue());
+    String termsRedirectUrl = redirectConfig.getTermsUrl(DevicePlatform.UNKNOWN.getValue());
+    String aboutRedirectUrl = redirectConfig.getAboutUrl(DevicePlatform.UNKNOWN.getValue());
+
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -92,7 +99,10 @@ public class LoginControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(model().attribute(FORGOT_PASSWORD_LINK, forgotPasswordRedirectUrl))
-        .andExpect(model().attribute(SIGNUP_LINK, signupRedirectUrl))
+        .andExpect(model().attribute(SIGNUP_LINK, nullValue()))
+        .andExpect(model().attribute(PRIVACY_POLICY_LINK, nullValue()))
+        .andExpect(model().attribute(TERMS_LINK, termsRedirectUrl))
+        .andExpect(model().attribute(ABOUT_LINK, aboutRedirectUrl))
         .andExpect(content().string(containsString("<title>Login</title>")))
         .andReturn();
   }
@@ -104,6 +114,9 @@ public class LoginControllerTest extends BaseMockIT {
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(DevicePlatform.ANDROID.getValue());
     String signupRedirectUrl = redirectConfig.getSignupUrl(DevicePlatform.ANDROID.getValue());
+    String termsRedirectUrl = redirectConfig.getTermsUrl(DevicePlatform.ANDROID.getValue());
+    String privacyPolicyRedirectUrl =
+        redirectConfig.getPrivacyPolicyUrl(DevicePlatform.ANDROID.getValue());
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -111,8 +124,11 @@ public class LoginControllerTest extends BaseMockIT {
                 .queryParams(queryParams))
         .andDo(print())
         .andExpect(status().isOk())
+        .andExpect(model().attribute(ABOUT_LINK, nullValue()))
         .andExpect(model().attribute(FORGOT_PASSWORD_LINK, forgotPasswordRedirectUrl))
         .andExpect(model().attribute(SIGNUP_LINK, signupRedirectUrl))
+        .andExpect(model().attribute(TERMS_LINK, termsRedirectUrl))
+        .andExpect(model().attribute(PRIVACY_POLICY_LINK, privacyPolicyRedirectUrl))
         .andExpect(content().string(containsString("<title>Login</title>")))
         .andReturn();
   }

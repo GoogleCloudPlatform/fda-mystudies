@@ -91,5 +91,11 @@ public final class AuthScimConstants {
 
   public static final String SIGNUP_LINK = "signup_link";
 
+  public static final String TERMS_LINK = "terms_link";
+
+  public static final String PRIVACY_POLICY_LINK = "privacy_policy_link";
+
+  public static final String ABOUT_LINK = "about_link";
+
   public static final String AUTO_LOGIN = "autoLogin";
 }
