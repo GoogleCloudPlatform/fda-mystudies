@@ -104,4 +104,22 @@ public final class AuthScimConstants {
   public static final String ACCOUNT_STATUS = "accountStatus";
 
   public static final String GRANT_SCOPE = "grant_scope";
+
+  public static final String MOBILE_PLATFORM_COOKIE = "mystudies_mobilePlatform";
+
+  public static final String TEMP_REG_ID_COOKIE = "mystudies_tempRegId";
+
+  public static final String ACCOUNT_STATUS_COOKIE = "mystudies_accountStatus";
+
+  public static final String APP_ID_COOKIE = "mystudies_appId";
+
+  public static final String LOGIN_CHALLENGE_COOKIE = "mystudies_login_challenge";
+
+  public static final String CORRELATION_ID_COOKIE = "mystudies_correlationId";
+
+  public static final String CLIENT_APP_VERSION_COOKIE = "mystudies_clientAppVersion";
+
+  public static final String USER_ID_COOKIE = "mystudies_userId";
+
+  public static final String CONSENT_CHALLENGE_COOKIE = "mystudies_consent_challenge";
 }

@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.interceptor;
 
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;

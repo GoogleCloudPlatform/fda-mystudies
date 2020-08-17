@@ -195,15 +195,14 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-    ArrayNode scopes = getObjectMapper().createArrayNode();
-    scopes.add("offline_access");
-    scopes.add("offline");
-    scopes.add("openid");
+    // When accepting the consent request, offline_access and openid must be in the list of
+    // grant_scope to get the refresh_token and id_token from /oauth2/token
+    ArrayNode grantScopes = getObjectMapper().createArrayNode();
+    grantScopes.add("offline_access");
+    grantScopes.add("openid");
 
-    // When accepting the consent request, offline_access must be in the list of grant_scope to get
-    // the refresh_token
     ObjectNode request = getObjectNode();
-    request.set(GRANT_SCOPE, scopes);
+    request.set(GRANT_SCOPE, grantScopes);
 
     StringBuilder url = new StringBuilder(consentAcceptEndpoint);
     url.append("?")

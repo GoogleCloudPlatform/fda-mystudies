@@ -10,11 +10,12 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
@@ -58,7 +59,7 @@ public class ConsentController {
       Model model) {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
-    cookieHelper.addCookie(response, CONSENT_CHALLENGE, consentChallenge);
+    cookieHelper.addCookie(response, CONSENT_CHALLENGE_COOKIE, consentChallenge);
     // show or skip consent page
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
     paramMap.add(CONSENT_CHALLENGE, consentChallenge);
@@ -77,8 +78,8 @@ public class ConsentController {
 
   private String redirectToCallbackUrl(
       HttpServletRequest request, boolean skipConsent, HttpServletResponse response) {
-    String userId = WebUtils.getCookie(request, USER_ID).getValue();
-    String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM).getValue();
+    String userId = WebUtils.getCookie(request, USER_ID_COOKIE).getValue();
+    String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM_COOKIE).getValue();
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
 
     String redirectUrl =
@@ -96,8 +97,8 @@ public class ConsentController {
 
   @PostMapping(value = "/consent")
   public String authenticate(
-      @CookieValue(name = CONSENT_CHALLENGE) String consentChallenge,
-      @CookieValue(name = USER_ID) String userId,
+      @CookieValue(name = CONSENT_CHALLENGE_COOKIE) String consentChallenge,
+      @CookieValue(name = USER_ID_COOKIE) String userId,
       HttpServletRequest request,
       HttpServletResponse response,
       Model model) {

@@ -9,19 +9,20 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.FORGOT_PASSWORD_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertTrue;
@@ -152,9 +153,10 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add("code", AUTH_CODE_VALUE);
 
-    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
-    Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
-    Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS, "0");
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
+    Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
 
     String callbackUrl = redirectConfig.getCallbackUrl(MobilePlatform.UNKNOWN.getValue());
     String expectedRedirectUrl =
@@ -218,9 +220,10 @@ public class LoginControllerTest extends BaseMockIT {
 
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
 
-    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
-    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -246,9 +249,10 @@ public class LoginControllerTest extends BaseMockIT {
     // Step-2 call API with login credentials
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
 
-    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
-    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -271,9 +275,10 @@ public class LoginControllerTest extends BaseMockIT {
     // Step-2 call API with invalid login credentials
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
 
-    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
-    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -296,9 +301,10 @@ public class LoginControllerTest extends BaseMockIT {
     // Step-2 call API for 5 times with invalid login credentials to lock the account
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
     requestParams.set(PASSWORD, PASSWORD_VALUE + 1);
-    Cookie appIdCookie = new Cookie(APP_ID, "MyStudies");
-    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
-    Cookie mobilePlatformCookie = new Cookie(MOBILE_PLATFORM, MobilePlatform.UNKNOWN.getValue());
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
 
     ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
     for (int loginAttempts = 1; loginAttempts <= MAX_LOGIN_ATTEMPTS; loginAttempts++) {
