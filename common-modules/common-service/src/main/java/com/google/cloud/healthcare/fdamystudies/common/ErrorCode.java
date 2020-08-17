@@ -43,15 +43,15 @@ public enum ErrorCode {
       401,
       "EC-110",
       Constants.BAD_REQUEST,
-      "Your temporary password is expired. Please use the Forgot Password link to reset your password"),
+      "Your temporary password is expired. Please use the Forgot Password link to reset your password."),
 
   PASSWORD_EXPIRED(
       401,
       "EC-111",
       Constants.BAD_REQUEST,
-      "Your password is expired. Please use the Forgot Password link to reset your password"),
+      "Your password is expired. Please use the Forgot Password link to reset your password."),
 
-  USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found"),
+  USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found."),
 
   ACCOUNT_DEACTIVATED(403, "EC-116", Constants.BAD_REQUEST, "Your account has been deactivated."),
 
@@ -69,7 +69,7 @@ public enum ErrorCode {
       400,
       "EC-105",
       Constants.BAD_REQUEST,
-      "Your new password cannot repeat any of your previous 10 passwords;"),
+      "Your new password cannot repeat any of your previous 10 passwords."),
 
   INVALID_UPDATE_USER_REQUEST(400, "EC-120", Constants.BAD_REQUEST, "Email or Status is required."),
 
