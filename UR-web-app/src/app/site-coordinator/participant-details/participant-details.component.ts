@@ -1,0 +1,97 @@
+import {Component, OnInit} from '@angular/core';
+import {Participant, UpdateInviteResponse} from './participant-details';
+import {Observable, of} from 'rxjs';
+import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {ParticipantDetailsService} from './participant-details.service';
+import {ActivatedRoute} from '@angular/router';
+import {ToastrService} from 'ngx-toastr';
+import {getMessage} from 'src/app/shared/success.codes.enum';
+import {OnboardingStatus} from 'src/app/shared/enums';
+import {ApiResponse} from 'src/app/entity/api.response.model';
+
+@Component({
+  selector: 'app-participant-details',
+  templateUrl: './participant-details.component.html',
+  styleUrls: ['./participant-details.component.scss'],
+})
+export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
+  implements OnInit {
+  participantId = '';
+  participant$: Observable<Participant> = of();
+  onBoardingStatus = OnboardingStatus;
+
+  constructor(
+    private readonly participantDetailsService: ParticipantDetailsService,
+    private readonly route: ActivatedRoute,
+    private readonly toastr: ToastrService,
+  ) {
+    super();
+  }
+
+  ngOnInit(): void {
+    this.subs.add(
+      this.route.params.subscribe((params) => {
+        if (params.participantId) {
+          this.participantId = params.participantId as string;
+        }
+        this.getParticipant();
+      }),
+    );
+  }
+
+  getParticipant(): void {
+    this.participant$ = this.participantDetailsService.get(this.participantId);
+  }
+
+  downloadPDF(consentId: string): void {
+    this.participantDetailsService
+      .getConsentFile(consentId)
+      .subscribe((consentProp) => {
+        const currentTime = Date.now();
+        const fileName = `consent_${currentTime}.pdf`;
+        const downloadLink = document.createElement('a');
+        const linkSource = `data:${consentProp.type};base64,${consentProp.content}`;
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+      });
+  }
+
+  sendInvitation(siteId: string) {
+    const sendInvitations = {
+      ids: [this.participantId],
+    };
+    this.subs.add(
+      this.participantDetailsService
+        .sendInvitation(siteId, sendInvitations)
+        .subscribe((successResponse: UpdateInviteResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success('Success');
+            this.ngOnInit();
+          }
+        }),
+    );
+  }
+
+  toggleInvitation(siteId: string, status: string): void {
+    const statusUpdate = status === 'Disabled' ? 'N' : 'D';
+    const invitationUpdate = {
+      ids: [this.participantId],
+      status: statusUpdate,
+    };
+    this.subs.add(
+      this.participantDetailsService
+        .toggleInvitation(siteId, invitationUpdate)
+        .subscribe((successResponse: ApiResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success('Success');
+            this.ngOnInit();
+          }
+        }),
+    );
+  }
+}
