@@ -9,9 +9,11 @@ import com.google.cloud.healthcare.fdamystudies.controller.EnrollmentTokenContro
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -306,5 +308,13 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   private String getEnrollmentJson(String tokenId, String studyId) throws JsonProcessingException {
     EnrollmentBean enrollmentBean = new EnrollmentBean(tokenId, studyId);
     return getObjectMapper().writeValueAsString(enrollmentBean);
+  }
+
+  public HttpHeaders newCommonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    return headers;
   }
 }

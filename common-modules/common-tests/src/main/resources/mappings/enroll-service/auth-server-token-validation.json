@@ -8,6 +8,6 @@
 		"headers": {
 			"Content-Type": "application/json;charset=UTF-8"
 		},
-		"bodyFileName": "auth-server-token-validation-response.json"
+		"bodyFileName": "enroll-service/auth-server-token-validation-response.json"
 	}
 }
