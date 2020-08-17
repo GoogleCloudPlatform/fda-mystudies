@@ -4,7 +4,7 @@ import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
 import {App} from '../shared/app.model';
-import {Permisssion} from 'src/app/shared/permission-enums';
+import {Permission} from 'src/app/shared/permission-enums';
 @Component({
   selector: 'app-app-list',
   templateUrl: './app-list.component.html',
@@ -53,6 +53,6 @@ export class AppListComponent implements OnInit {
     }
   }
   checkEditPermission(permission: number): boolean {
-    return permission === Permisssion.ViewAndEdit;
+    return permission === Permission.ViewAndEdit;
   }
 }

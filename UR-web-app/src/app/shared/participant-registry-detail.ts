@@ -1,5 +1,5 @@
 import {RegistryParticipant} from './participant';
-import {Permisssion} from './permission-enums';
+import {Permission} from './permission-enums';
 import {StudyType} from './enums';
 
 export interface ParticipantRegistryDetail {
@@ -15,8 +15,8 @@ export interface ParticipantRegistryDetail {
   customLocationId?: string;
   locationName?: string;
   locationStatus?: string;
-  sitePermission?: Permisssion;
-  openStudySitePermission?: Permisssion;
+  sitePermission?: Permission;
+  openStudySitePermission?: Permission;
   siteStatus?: string;
   registryParticipants: RegistryParticipant[];
   countByStatus?: string;

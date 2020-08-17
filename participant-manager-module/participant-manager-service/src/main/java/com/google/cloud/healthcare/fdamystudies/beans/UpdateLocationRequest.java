@@ -9,12 +9,10 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import javax.validation.constraints.Size;
-
-import org.apache.commons.lang3.builder.ToStringExclude;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 @Setter
 @Getter

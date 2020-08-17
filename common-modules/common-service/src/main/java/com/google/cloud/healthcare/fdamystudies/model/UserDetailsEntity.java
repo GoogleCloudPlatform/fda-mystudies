@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,13 +22,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
@@ -76,15 +73,15 @@ public class UserDetailsEntity implements Serializable {
   @Column(name = "remote_notification_flag")
   private Boolean remoteNotificationFlag;
 
-  @Column(name = "status")
+  @Column(name = "status", nullable = false)
   private Integer status;
 
   @ToString.Exclude
   @Column(name = "password")
   private String password;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "app_info_id", insertable = false, updatable = false)
+  @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+  @JoinColumn(name = "app_info_id")
   private AppEntity appInfo;
 
   @ToString.Exclude
