@@ -4,7 +4,7 @@
 		"url": "/oauth2/introspect",
 		"bodyPatterns": [
 			{
-				"equalTo": "token=Uap2pEAXWoNc7Zrp.021ZirM4bOKwh-DWBmrlIzxiWUSRAv44.3KsjxRCuno0KzkNXlB5LeOKTpNwIeC4QGuQ1eg"
+				"equalTo": "token=7fd50c2c-d618-493c-89d6-f1887e3e4bb8"
 			}
 		]
 	},
