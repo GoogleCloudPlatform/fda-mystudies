@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+// TODO (#761) Added @Ignore to test classes written by UNC team, should be fixed later or next
+// track
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @Ignore

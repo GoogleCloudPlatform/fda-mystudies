@@ -12,6 +12,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+// TODO (#761) Added @Ignore to test classes written by UNC team, should be fixed later or next
+// track
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(properties = {"email.whitelisted_domains="})
 @ActiveProfiles("test")
