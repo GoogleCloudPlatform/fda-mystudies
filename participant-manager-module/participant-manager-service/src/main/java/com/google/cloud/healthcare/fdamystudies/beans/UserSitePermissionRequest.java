@@ -11,25 +11,25 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Setter
 @Getter
+@Setter
 @ToString
-@Component
-@Scope(value = "prototype")
-public class AppSiteDetails {
+public class UserSitePermissionRequest {
 
   private String siteId;
 
-  private String customSiteId;
+  private String locationId;
 
-  private String siteName;
+  private String customLocationId;
 
-  private String enrollmentDate;
+  private String locationName;
 
-  private String withdrawlDate;
+  private String locationDescription;
 
-  private String siteStatus;
+  private boolean selected;
+
+  private boolean disabled;
+
+  private int permission;
 }
