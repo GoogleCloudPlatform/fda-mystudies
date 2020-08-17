@@ -28,15 +28,13 @@ public class AppStudyResponse {
 
   private String studyName;
 
-  private Boolean selected = false;
-
-  private Boolean disabled = false;
+  private boolean selected;
 
   private String permission;
 
-  private String totalSitesCount;
+  private int totalSitesCount;
 
-  private String selectedSitesCount;
+  private int selectedSitesCount;
 
   private List<AppSiteResponse> sites = new ArrayList<>();
 }

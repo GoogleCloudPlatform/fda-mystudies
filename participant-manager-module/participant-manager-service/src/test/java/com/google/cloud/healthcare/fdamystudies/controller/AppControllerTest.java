@@ -143,7 +143,12 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].studies").isArray())
         .andExpect(jsonPath("$.apps[0].studies[0].sites").isArray())
         .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
-        .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()));
+        .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
+        .andExpect(jsonPath("$.apps[0].totalSitesCount").value(1))
+        .andExpect(jsonPath("$.apps[0].selected").value(false))
+        .andExpect(jsonPath("$.apps[0].selectedSitesCount").value(0))
+        .andExpect(jsonPath("$.apps[0].studies[0].totalSitesCount").value(1))
+        .andExpect(jsonPath("$.apps[0].studies[0].selectedSitesCount").value(0));
   }
 
   @Test
@@ -260,7 +265,7 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations[0].path").value("userId"))
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
   }
-  
+
   public void shouldReturnInvalidAppsFieldsValues() throws Exception {
     // Step 1: set app and study
     studyEntity.setAppInfo(appEntity);

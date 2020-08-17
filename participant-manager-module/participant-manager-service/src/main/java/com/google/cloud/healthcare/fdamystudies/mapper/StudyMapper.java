@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StudyMapper {
@@ -33,9 +34,17 @@ public final class StudyMapper {
     appStudyResponse.setStudyName(study.getName());
     if (ArrayUtils.contains(fields, "sites")) {
       List<AppSiteResponse> appSiteResponsesList =
-          sites.stream().map(SiteMapper::toAppSiteResponse).collect(Collectors.toList());
+          CollectionUtils.emptyIfNull(sites)
+              .stream()
+              .map(SiteMapper::toAppSiteResponse)
+              .collect(Collectors.toList());
       appStudyResponse.getSites().addAll(appSiteResponsesList);
+      int selectedSitesCount =
+          (int) appSiteResponsesList.stream().filter(AppSiteResponse::isSelected).count();
+      appStudyResponse.setSelectedSitesCount(selectedSitesCount);
     }
+    int totalSiteCountPerStudy = appStudyResponse.getSites().size();
+    appStudyResponse.setTotalSitesCount(totalSiteCountPerStudy);
     return appStudyResponse;
   }
 

@@ -30,9 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
@@ -107,6 +104,9 @@ public class StudyEntity implements Serializable {
 
   @Column(name = "enrolling", length = 100)
   private String enrolling;
+
+  @Column(name = "selected", columnDefinition = "boolean default false")
+  private boolean selected;
 
   @OneToMany(
       cascade = CascadeType.ALL,

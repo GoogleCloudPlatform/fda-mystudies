@@ -34,5 +34,13 @@ public class AppDetails {
 
   private Integer appPermission;
 
+  private int totalSitesCount;
+
+  private boolean selected;
+
+  private int selectedStudiesCount;
+
+  private int selectedSitesCount;
+
   private List<AppStudyResponse> studies = new ArrayList<>();
 }
