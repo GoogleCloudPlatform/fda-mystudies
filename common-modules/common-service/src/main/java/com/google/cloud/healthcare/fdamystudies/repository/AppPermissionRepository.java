@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,5 +42,5 @@ public interface AppPermissionRepository extends JpaRepository<AppPermissionEnti
   public void deleteByAdminUserId(String adminId);
 
   @Query("SELECT ap from AppPermissionEntity ap where ap.urAdminUser.id=:adminId")
-  public List<AppPermissionEntity> findByAdminUser(String adminId);
+  public List<AppPermissionEntity> findByAdminUserId(String adminId);
 }

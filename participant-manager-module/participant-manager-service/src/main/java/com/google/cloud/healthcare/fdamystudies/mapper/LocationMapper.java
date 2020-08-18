@@ -11,9 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
@@ -45,17 +42,13 @@ public final class LocationMapper {
     return locationEntity;
   }
 
-  public static List<LocationDetails> toLocations(List<LocationEntity> locations) {
-    List<LocationDetails> list = new ArrayList<>();
-    for (LocationEntity locationEntity : locations) {
-      LocationDetails location = new LocationDetails();
-      location.setLocationId(locationEntity.getId());
-      location.setName(locationEntity.getName());
-      location.setDescription(locationEntity.getDescription());
-      location.setCustomId(locationEntity.getCustomId());
-      location.setStatus(locationEntity.getStatus());
-      list.add(location);
-    }
-    return list;
+  public static LocationDetails toLocationDetails(LocationEntity locationEntity) {
+    LocationDetails location = new LocationDetails();
+    location.setLocationId(locationEntity.getId());
+    location.setName(locationEntity.getName());
+    location.setDescription(locationEntity.getDescription());
+    location.setCustomId(locationEntity.getCustomId());
+    location.setStatus(locationEntity.getStatus());
+    return location;
   }
 }

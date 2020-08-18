@@ -11,6 +11,10 @@
 		{
 			"path": "client_id",
 			"message": "must not be blank"
-		}
+		},
+		{
+      "path": "userId",
+      "message": "must not be blank"
+    }
 	]
 }

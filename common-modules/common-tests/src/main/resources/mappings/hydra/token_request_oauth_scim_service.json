@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "POST",
-		"url": "/oauth-scim-service/v1/oauth2/token"
+		"url": "/oauth-scim-service/oauth2/token"
 	},
 	"response": {
 		"status": 200,

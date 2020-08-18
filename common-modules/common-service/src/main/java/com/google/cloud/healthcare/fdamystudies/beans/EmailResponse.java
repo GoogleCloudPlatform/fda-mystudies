@@ -9,6 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import org.springframework.http.HttpStatus;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
