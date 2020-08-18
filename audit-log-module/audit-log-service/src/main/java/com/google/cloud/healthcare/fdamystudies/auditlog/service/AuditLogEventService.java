@@ -13,5 +13,5 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 
 public interface AuditLogEventService {
 
-  public AuditLogEventResponse saveAuditLogEvent(AuditLogEventRequest aleRequest);
+  public AuditLogEventResponse saveAuditLogEvent(AuditLogEventRequest auditRequest);
 }

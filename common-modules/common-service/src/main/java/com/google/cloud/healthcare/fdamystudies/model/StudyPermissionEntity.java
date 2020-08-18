@@ -23,6 +23,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
@@ -56,8 +58,8 @@ public class StudyPermissionEntity implements Serializable {
   @JoinColumn(name = "ur_admin_user_id")
   private UserRegAdminEntity urAdminUser;
 
-  @Column(name = "edit")
-  private Integer edit = 0;
+  @Column(name = "edit_permission", nullable = true, length = 1)
+  private Integer editPermission;
 
   @Column(
       name = "created",
@@ -66,6 +68,6 @@ public class StudyPermissionEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 }
