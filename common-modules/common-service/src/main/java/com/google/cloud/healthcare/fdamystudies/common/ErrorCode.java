@@ -10,7 +10,9 @@ package com.google.cloud.healthcare.fdamystudies.common;
 
 import java.io.IOException;
 import java.time.Instant;
+
 import org.springframework.http.HttpStatus;
+
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -181,6 +183,10 @@ public enum ErrorCode {
 
   PERMISSION_MISSING(
       400, "EC_978", Constants.BAD_REQUEST, "Admin should have atleast one permission"),
+
+  INVALID_SECURITY_CODE(404, "EC_869", "Not Found", "Invalid Security code"),
+
+  SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired"),
 
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");

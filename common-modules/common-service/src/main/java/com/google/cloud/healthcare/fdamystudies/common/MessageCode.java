@@ -7,6 +7,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.io.IOException;
+import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -57,6 +59,11 @@ public enum MessageCode {
 
   UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully"),
 
+  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfully"),
+
+  GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
+      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfully"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
@@ -68,6 +75,7 @@ public enum MessageCode {
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
 
   SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully");
+
 
   private final HttpStatus httpStatus;
   private final String code;
