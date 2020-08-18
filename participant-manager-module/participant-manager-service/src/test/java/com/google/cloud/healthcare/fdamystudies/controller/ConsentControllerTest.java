@@ -25,6 +25,8 @@ import com.google.cloud.healthcare.fdamystudies.service.ConsentService;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
+import com.jayway.jsonpath.JsonPath;
+import java.util.Base64;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -101,21 +104,27 @@ public class ConsentControllerTest extends BaseMockIT {
     Blob mockedBlob = mock(Blob.class);
 
     String content = "sample consent document content";
-    when(mockedBlob.getContent()).thenReturn(content.getBytes());
+    byte[] encodedContent = Base64.getEncoder().encode(content.getBytes());
+    when(mockedBlob.getContent()).thenReturn(encodedContent);
 
     when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
 
-    mockMvc
-        .perform(
-            get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.type").value(MediaType.APPLICATION_PDF_VALUE))
-        .andExpect(jsonPath("$.content").value(content))
-        .andExpect(
-            jsonPath("$.message").value(MessageCode.GET_CONSENT_DOCUMENT_SUCCESS.getMessage()));
+    MvcResult result =
+        mockMvc
+            .perform(
+                get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.type").value(MediaType.APPLICATION_PDF_VALUE))
+            .andExpect(
+                jsonPath("$.message").value(MessageCode.GET_CONSENT_DOCUMENT_SUCCESS.getMessage()))
+            .andReturn();
+
+    String sampleContent = JsonPath.read(result.getResponse().getContentAsString(), "$.content");
+
+    assertThat(Base64.getDecoder().decode(sampleContent.getBytes()), is(encodedContent));
   }
 
   @Test

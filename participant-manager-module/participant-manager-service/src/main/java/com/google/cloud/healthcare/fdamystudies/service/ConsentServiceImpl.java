@@ -20,6 +20,7 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -71,7 +72,7 @@ public class ConsentServiceImpl implements ConsentService {
           storageService.get(BlobId.of(appConfig.getBucketName(), studyConsentEntity.getPdfPath()));
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
       blob.downloadTo(outputStream);
-      document = new String(blob.getContent());
+      document = new String(Base64.getEncoder().encode(blob.getContent()));
     }
 
     return new ConsentDocumentResponse(
