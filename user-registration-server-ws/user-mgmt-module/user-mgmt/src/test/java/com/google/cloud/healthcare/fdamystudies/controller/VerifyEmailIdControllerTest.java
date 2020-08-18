@@ -1,6 +1,6 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.hamcrest.CoreMatchers.is;
@@ -123,7 +123,8 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     assertNotNull(userDetailsBO);
     assertTrue(VERIFIED_STATUS == userDetailsBO.getStatus());
 
-    verify(1, postRequestedFor(urlEqualTo("/AuthServer/updateStatus")));
+    verify(
+        1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + userDetailsBO.getUserId())));
 
     verifyTokenIntrospectRequest(1);
   }

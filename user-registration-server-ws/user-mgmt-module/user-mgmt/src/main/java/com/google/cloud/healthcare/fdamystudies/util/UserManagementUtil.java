@@ -17,14 +17,15 @@ import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -57,6 +58,8 @@ public class UserManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private OAuthService oauthService;
 
   public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
     logger.info("UserManagementUtil validateAccessToken() - starts ");
@@ -130,30 +133,32 @@ public class UserManagementUtil {
     return respMessage;
   }
 
-  public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-      UpdateAccountInfo accountInfo, String userId) {
+  public UpdateEmailStatusResponse updateUserInfoInAuthServer(
+      UpdateEmailStatusRequest updateEmailStatusRequest, String userId) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.USER_ID, userId);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
-    HttpEntity<UpdateAccountInfo> request = new HttpEntity<>(accountInfo, headers);
-    ResponseEntity<?> responseEntity = null;
+    HttpEntity<UpdateEmailStatusRequest> request =
+        new HttpEntity<>(updateEmailStatusRequest, headers);
+    ResponseEntity<UpdateEmailStatusResponse> responseEntity =
+        restTemplate.exchange(
+            appConfig.getAuthServerUpdateStatusUrl(),
+            HttpMethod.PUT,
+            request,
+            UpdateEmailStatusResponse.class,
+            userId);
+    UpdateEmailStatusResponse updateEmailResponse = responseEntity.getBody();
 
-    try {
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerUpdateStatusUrl(), HttpMethod.POST, request, String.class);
-      return new UpdateAccountInfoResponseBean(
-          responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase());
-
-    } catch (RestClientResponseException e) {
-      logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
-      return new UpdateAccountInfoResponseBean(
-          HttpStatus.INTERNAL_SERVER_ERROR.value(),
-          HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-    }
+    logger.debug(
+        String.format(
+            "status =%d, message=%s, error=%s",
+            updateEmailResponse.getHttpStatusCode(),
+            updateEmailResponse.getMessage(),
+            updateEmailResponse.getErrorDescription()));
+    return updateEmailResponse;
   }
 
   public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(

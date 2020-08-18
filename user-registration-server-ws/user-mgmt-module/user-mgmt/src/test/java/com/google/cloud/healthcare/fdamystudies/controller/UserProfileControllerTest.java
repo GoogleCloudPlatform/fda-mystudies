@@ -1,6 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -171,7 +172,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
     assertEquals(3, daoResp.getStatus());
 
-    verify(1, postRequestedFor(urlEqualTo("/AuthServer/deactivate")));
+    verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
     verify(
         1,
         postRequestedFor(

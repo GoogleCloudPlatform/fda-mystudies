@@ -1,13 +1,13 @@
 {
 	"request": {
-		"method": "POST",
-		"url": "/AuthServer/updateStatus"
+		"method": "PUT",
+		"urlPathPattern": "/oauth-scim-service/users/([a-zA-Z0-9-]*)"
 	},
 	"response": {
 		"status": 200,
 		"headers": {
 			"Content-Type": "application/json;charset=UTF-8"
 		},
-		"bodyFileName": "oauth-scim-service/auth-server-update-status-response.json"
+		"bodyFileName": "/oauth-scim-service/auth-server-update-status-response.json"
 	}
 }
