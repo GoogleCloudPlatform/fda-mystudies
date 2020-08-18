@@ -59,6 +59,8 @@ public class TestDataHelper {
 
   public static final String NON_SUPER_ADMIN_EMAIL_ID = "mockit_non_super_admin_email@grr.la";
 
+  public static final String SUPER_ADMIN_EMAIL_ID = "super_admin_email@grr.la";
+
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Autowired private StudyRepository studyRepository;
@@ -119,6 +121,22 @@ public class TestDataHelper {
 
   public UserRegAdminEntity createNonSuperAdmin() {
     UserRegAdminEntity userRegAdminEntity = newNonSuperAdmin();
+    return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+  }
+
+  public UserRegAdminEntity newSuperAdminForUpdate() {
+    UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
+    userRegAdminEntity.setEmail(SUPER_ADMIN_EMAIL_ID);
+    userRegAdminEntity.setFirstName("mockito_fname");
+    userRegAdminEntity.setLastName("mockito__lname");
+    userRegAdminEntity.setEditPermission(ManageLocation.ALLOW.getValue());
+    userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
+    userRegAdminEntity.setSuperAdmin(true);
+    return userRegAdminEntity;
+  }
+
+  public UserRegAdminEntity createSuperAdmin() {
+    UserRegAdminEntity userRegAdminEntity = newSuperAdminForUpdate();
     return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
   }
 
