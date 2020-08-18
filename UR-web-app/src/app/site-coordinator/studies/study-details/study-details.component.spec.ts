@@ -79,18 +79,12 @@ describe('StudyDetailsComponent', () => {
 
     it('should get the list of study participants via refresh function', fakeAsync(() => {
       component.studyDetail$.subscribe((studyDetail) => {
-        studyDetail;
         expect(
           studyDetail.participantRegistryDetail.registryParticipants.length,
         ).toEqual(
           expectedStudiesDetails.participantRegistryDetail.registryParticipants
             .length,
         );
-      });
-    }));
-
-    it('should check the participant list received and the appId and studyId should match', () => {
-      component.studyDetail$.subscribe((studyDetail) => {
         expect(studyDetail.participantRegistryDetail.appId).toEqual(
           expectedStudiesDetails.participantRegistryDetail.appId,
         );
@@ -98,6 +92,6 @@ describe('StudyDetailsComponent', () => {
           expectedStudiesDetails.participantRegistryDetail.studyId,
         );
       });
-    });
+    }));
   });
 });

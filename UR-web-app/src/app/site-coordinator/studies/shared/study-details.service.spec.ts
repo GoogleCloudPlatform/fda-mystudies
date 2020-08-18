@@ -111,8 +111,8 @@ describe('StudyDetailsService', () => {
         expectedResult.expectedStudiesDetails.participantRegistryDetail.studyId.toString(),
       )
       .subscribe(
-        (succesResponse: ApiResponse) =>
-          expect(succesResponse).toEqual(
+        (successResponse: ApiResponse) =>
+          expect(successResponse).toEqual(
             expectedResult.expectedResponse,
             '{code:MSG_013,message:Target Enrollment updated successfully}',
           ),
