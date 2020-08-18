@@ -8,12 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.collections4.CollectionUtils;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserSitePermissionRequest;
@@ -28,6 +22,12 @@ import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 
 public final class UserMapper {
 
@@ -80,7 +80,7 @@ public final class UserMapper {
     sitePermission.setSite(siteDetails);
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
     int edit = site != null && site.getPermission() == 1 ? 0 : 1;
-    sitePermission.setCanEdit(edit);
+    sitePermission.setEditPermission(edit);
     sitePermission.setUrAdminUser(superAdminDetails);
     return sitePermission;
   }
@@ -98,7 +98,7 @@ public final class UserMapper {
         study.getPermission() == CommonConstants.READ_PERMISSION
             ? Permission.READ_VIEW.value()
             : Permission.READ_EDIT.value();
-    sitePermission.setCanEdit(edit);
+    sitePermission.setEditPermission(edit);
     sitePermission.setStudy(studyDetails);
     sitePermission.setSite(site);
     sitePermission.setUrAdminUser(superAdminDetails);
@@ -121,7 +121,7 @@ public final class UserMapper {
             app != null && app.getPermission() == CommonConstants.READ_PERMISSION
                 ? Permission.READ_VIEW.value()
                 : Permission.READ_EDIT.value();
-        sitePermission.setCanEdit(edit);
+        sitePermission.setEditPermission(edit);
         sitePermission.setStudy(siteEntity.getStudy());
         sitePermission.setSite(siteEntity);
         sitePermission.setUrAdminUser(superAdminDetails);
@@ -145,7 +145,7 @@ public final class UserMapper {
         study != null && study.getPermission() == CommonConstants.READ_PERMISSION
             ? Permission.READ_VIEW.value()
             : Permission.READ_EDIT.value();
-    studyPermission.setEdit(edit);
+    studyPermission.setEditPermission(edit);
     studyPermission.setUrAdminUser(superAdminDetails);
     return studyPermission;
   }
@@ -166,7 +166,7 @@ public final class UserMapper {
             appRequest != null && appRequest.getPermission() == CommonConstants.READ_PERMISSION
                 ? Permission.READ_VIEW.value()
                 : Permission.READ_EDIT.value();
-        studyPermission.setEdit(edit);
+        studyPermission.setEditPermission(edit);
         studyPermission.setStudy(studyEntity);
         studyPermission.setUrAdminUser(superAdminDetails);
         studyPermissions.add(studyPermission);
@@ -180,7 +180,7 @@ public final class UserMapper {
     AppPermissionEntity appPermission = new AppPermissionEntity();
     appPermission.setAppInfo(app);
     appPermission.setCreatedBy(user.getSuperAdminUserId());
-    appPermission.setEdit(Permission.READ_EDIT.value());
+    appPermission.setEditPermission(Permission.READ_EDIT.value());
     appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
   }
@@ -197,7 +197,7 @@ public final class UserMapper {
         app != null && app.getPermission() == CommonConstants.READ_PERMISSION
             ? Permission.READ_VIEW.value()
             : Permission.READ_EDIT.value();
-    appPermission.setEdit(edit);
+    appPermission.setEditPermission(edit);
     appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
   }
