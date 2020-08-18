@@ -77,6 +77,8 @@ public class UserSupportControllerTest extends BaseMockIT {
             eq(appConfig.getFeedbackToEmail()),
             Mockito.any(),
             Mockito.any());
+
+    verifyTokenIntrospectRequest(1);
   }
 
   @Test
@@ -93,11 +95,7 @@ public class UserSupportControllerTest extends BaseMockIT {
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER,
-            Constants.USER_ID_HEADER);
+            Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
 
     String requestJson =
         getContactUsRequest(
@@ -120,6 +118,8 @@ public class UserSupportControllerTest extends BaseMockIT {
             eq(appConfig.getContactusToEmail()),
             Mockito.any(),
             Mockito.any());
+
+    verifyTokenIntrospectRequest(1);
   }
 
   private String getContactUsRequest(String subject, String body, String firstName, String email)

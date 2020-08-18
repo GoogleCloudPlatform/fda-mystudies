@@ -230,11 +230,7 @@ public class UserManagementUtil {
   }
 
   public AuthRegistrationResponseBean registerUserInAuthServer(
-      UserRegistrationForm userForm,
-      String appId,
-      String orgId,
-      String clientId,
-      String secretKey) {
+      UserRegistrationForm userForm, String appId, String orgId) {
     logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
     AuthRegistrationResponseBean authServerResponse = null;
 
@@ -242,8 +238,6 @@ public class UserManagementUtil {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set(AppConstants.APP_ID, appId);
     headers.set(AppConstants.ORGANIZATION_ID, orgId);
-    headers.set(AppConstants.CLIENT_ID, clientId);
-    headers.set(AppConstants.SECRET_KEY, secretKey);
 
     AuthServerRegistrationBody providerBody = new AuthServerRegistrationBody();
     providerBody.setEmailId(userForm.getEmailId());
@@ -389,8 +383,6 @@ public class UserManagementUtil {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set(AppConstants.APPLICATION_ID, null);
-      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
 
       request = new HttpEntity<>(null, headers);
 

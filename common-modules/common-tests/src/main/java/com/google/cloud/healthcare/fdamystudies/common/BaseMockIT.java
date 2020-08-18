@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,6 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import java.util.Base64;
@@ -30,8 +35,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
@@ -41,9 +46,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 
 @ContextConfiguration(initializers = {WireMockInitializer.class})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -150,6 +152,7 @@ public class BaseMockIT {
   @BeforeEach
   void setUp(TestInfo testInfo) {
     logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
+    WireMock.resetAllRequests();
   }
 
   @AfterEach
@@ -160,4 +163,15 @@ public class BaseMockIT {
   @TestConfiguration
   @Import(CommonModuleConfiguration.class)
   static class BaseMockITConfiguration {}
+
+  protected void verifyTokenIntrospectRequest() {
+    verifyTokenIntrospectRequest(1);
+  }
+
+  protected void verifyTokenIntrospectRequest(int times) {
+    verify(
+        times,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+  }
 }

@@ -98,6 +98,8 @@ public class StudiesControllerTest extends BaseMockIT {
     assertNotNull(studyInfoBo);
     assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -118,6 +120,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest(1);
+
     // without studyVersion
     metadataBean = createStudyMetadataBean();
     metadataBean.setStudyVersion("");
@@ -130,6 +134,8 @@ public class StudiesControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
 
     // without appId
     metadataBean = createStudyMetadataBean();
@@ -144,6 +150,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest(3);
+
     // without orgId
     metadataBean = createStudyMetadataBean();
     metadataBean.setOrgId("");
@@ -156,13 +164,14 @@ public class StudiesControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(4);
   }
 
   @Test
   public void sendNotificationBadRequest() throws Exception {
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
 
     // null body
     NotificationForm notificationForm = null;
@@ -176,6 +185,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest(1);
+
     // empty notificationType
     requestJson =
         getNotificationForm(
@@ -188,14 +199,14 @@ public class StudiesControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
   @Disabled
   // TODO(#668) Remove @Disabled when Github test case failed issue fix
   public void sendNotificationSuccess() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
 
     // StudyLevel notificationType
     String requestJson =
@@ -219,6 +230,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
+    verifyTokenIntrospectRequest(1);
+
     // GatewayLevel notificationType
     requestJson =
         getNotificationForm(
@@ -241,6 +254,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   private String getNotificationForm(
