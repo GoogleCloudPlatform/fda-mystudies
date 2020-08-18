@@ -25,12 +25,16 @@ import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -53,6 +57,12 @@ public class ManageUserServiceImpl implements ManageUserService {
   @Autowired private StudyRepository studyRepository;
 
   @Autowired private SiteRepository siteRepository;
+
+  @Autowired private AppPermissionRepository appPermissionRepository;
+
+  @Autowired private StudyPermissionRepository studyPermissionRepository;
+
+  @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Autowired private AppPropertyConfig appConfig;
 
@@ -139,8 +149,106 @@ public class ManageUserServiceImpl implements ManageUserService {
     UserRegAdminEntity adminDetails =
         UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
     adminDetails = userAdminRepository.saveAndFlush(adminDetails);
+
+    Map<Boolean, List<UserAppPermissionRequest>> groupBySelectedAppMap =
+        user.getApps()
+            .stream()
+            .collect(Collectors.groupingBy(UserAppPermissionRequest::isSelected));
+
+    // save permissions for selected apps
+    for (UserAppPermissionRequest app :
+        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.SELECTED))) {
+      saveAppStudySitePermissions(user, adminDetails, app);
+    }
+
+    // save permissions for unselected apps
+    for (UserAppPermissionRequest app :
+        CollectionUtils.emptyIfNull(groupBySelectedAppMap.get(CommonConstants.UNSELECTED))) {
+      for (UserStudyPermissionRequest study : CollectionUtils.emptyIfNull(app.getStudies())) {
+        if (study.isSelected()) {
+          saveStudySitePermissions(user, adminDetails, study);
+        } else if (CollectionUtils.isNotEmpty(study.getSites())) {
+          saveSitePermissions(user, adminDetails, study);
+        }
+      }
+    }
     logger.exit("Successfully saved admin details.");
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
+  }
+
+  private void saveAppStudySitePermissions(
+      UserRequest user, UserRegAdminEntity adminDetails, UserAppPermissionRequest app) {
+    logger.entry("saveAppStudySitePermissions()");
+    Optional<AppEntity> optApp = appRepository.findById(app.getId());
+    if (!optApp.isPresent()) {
+      return;
+    }
+
+    AppEntity appDetails = optApp.get();
+    AppPermissionEntity appPermission =
+        UserMapper.newAppPermissionEntity(user, adminDetails, app, appDetails);
+    appPermissionRepository.save(appPermission);
+
+    List<StudyEntity> studies =
+        (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findByAppId(app.getId()));
+
+    List<StudyPermissionEntity> studyPermissions =
+        UserMapper.newStudyPermissionList(user, adminDetails, app, appDetails, studies);
+    studyPermissionRepository.saveAll(studyPermissions);
+
+    List<String> studyIds = studies.stream().map(StudyEntity::getId).collect(Collectors.toList());
+
+    List<SiteEntity> sites =
+        (List<SiteEntity>) CollectionUtils.emptyIfNull(siteRepository.findByStudyIds(studyIds));
+
+    List<SitePermissionEntity> sitePermissions =
+        UserMapper.newSitePermissionList(user, adminDetails, app, appDetails, sites);
+    sitePermissionRepository.saveAll(sitePermissions);
+
+    logger.exit("Successfully saved app study and site permissions.");
+  }
+
+  private void saveStudySitePermissions(
+      UserRequest userId, UserRegAdminEntity superAdminDetails, UserStudyPermissionRequest study) {
+    logger.entry("saveStudySitePermissions()");
+    Optional<StudyEntity> optStudyInfo = studyRepository.findById(study.getStudyId());
+    if (!optStudyInfo.isPresent()) {
+      return;
+    }
+    List<SiteEntity> sites = siteRepository.findAll();
+    StudyEntity studyDetails = optStudyInfo.get();
+    StudyPermissionEntity studyPermission =
+        UserMapper.newStudyPermissionEntity(userId, superAdminDetails, study, studyDetails);
+    studyPermissionRepository.save(studyPermission);
+    if (CollectionUtils.isNotEmpty(sites)) {
+      for (SiteEntity site : sites) {
+        if (site.getStudy().getId().equals(study.getStudyId())) {
+          SitePermissionEntity sitePermission =
+              UserMapper.newSitePermissionEntity(
+                  userId, superAdminDetails, study, studyDetails, site);
+          sitePermissionRepository.save(sitePermission);
+        }
+      }
+    }
+    logger.exit("Successfully saved study and site permissions.");
+  }
+
+  private void saveSitePermissions(
+      UserRequest user, UserRegAdminEntity superAdminDetails, UserStudyPermissionRequest study) {
+    for (UserSitePermissionRequest site : study.getSites()) {
+      logger.entry("saveSitePermission()");
+      if (site.isSelected()) {
+        Optional<SiteEntity> optSite = siteRepository.findById(site.getSiteId());
+        if (!optSite.isPresent()) {
+          return;
+        }
+        SiteEntity siteDetails = optSite.get();
+        SitePermissionEntity sitePermission =
+            UserMapper.newSitePermissionEntity(user, site, superAdminDetails, siteDetails);
+        sitePermissionRepository.save(sitePermission);
+      }
+    }
+    logger.exit("Successfully saved site permissions.");
   }
 
   private AdminUserResponse saveSuperAdminDetails(UserRequest user) {
