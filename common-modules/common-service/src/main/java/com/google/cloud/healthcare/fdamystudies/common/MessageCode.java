@@ -64,6 +64,9 @@ public enum MessageCode {
   GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
       HttpStatus.OK, "MSG-0023", "Get user profile with security code successfully"),
 
+  GET_PARTICIPANT_DETAILS_SUCCESS(
+      HttpStatus.OK, "MSG-0019", "Get participant details successfully"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
@@ -75,7 +78,6 @@ public enum MessageCode {
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
 
   SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully");
-
 
   private final HttpStatus httpStatus;
   private final String code;

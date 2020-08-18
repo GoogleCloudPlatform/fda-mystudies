@@ -188,9 +188,11 @@ public enum ErrorCode {
 
   SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired"),
 
+  PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
+      400, "EC-105", Constants.BAD_REQUEST, "Error getting participants."),
+
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
-
 
   private final int status;
   private final String code;

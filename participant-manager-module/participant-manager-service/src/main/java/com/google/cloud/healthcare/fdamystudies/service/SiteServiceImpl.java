@@ -13,10 +13,14 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EN
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
+import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
@@ -28,6 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
+import com.google.cloud.healthcare.fdamystudies.mapper.ConsentMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -37,6 +42,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEnt
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
@@ -45,6 +51,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import java.util.Arrays;
@@ -81,6 +88,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
+
+  @Autowired private StudyConsentRepository studyConsentRepository;
 
   @Override
   @Transactional
@@ -491,5 +500,71 @@ public class SiteServiceImpl implements SiteService {
       participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
     }
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public ParticipantDetailResponse getParticipantDetails(
+      String participantRegistrySiteId, String userId) {
+    logger.entry("begin getParticipantDetails()");
+
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
+        participantRegistrySiteRepository.findById(participantRegistrySiteId);
+
+    ErrorCode errorCode = validateParticipantDetailsRequest(optParticipantRegistry, userId);
+    if (errorCode != null) {
+      logger.exit(errorCode);
+      return new ParticipantDetailResponse(errorCode);
+    }
+
+    ParticipantDetail participantDetail =
+        ParticipantMapper.toParticipantDetailsResponse(optParticipantRegistry.get());
+    List<ParticipantStudyEntity> participantsEnrollments =
+        participantStudyRepository.findParticipantsEnrollment(participantRegistrySiteId);
+
+    if (CollectionUtils.isEmpty(participantsEnrollments)) {
+      Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
+      participantDetail.getEnrollments().add(enrollment);
+    } else {
+      ParticipantMapper.addEnrollments(participantDetail, participantsEnrollments);
+      List<String> participantStudyIds =
+          participantsEnrollments
+              .stream()
+              .map(ParticipantStudyEntity::getId)
+              .collect(Collectors.toList());
+
+      List<StudyConsentEntity> studyConsents =
+          studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+
+      List<ConsentHistory> consentHistories =
+          studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
+      participantDetail.getConsentHistory().addAll(consentHistories);
+    }
+
+    logger.exit(
+        String.format(
+            "total enrollments=%d, and consentHistories=%d",
+            participantDetail.getEnrollments().size(),
+            participantDetail.getConsentHistory().size()));
+
+    return new ParticipantDetailResponse(
+        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS, participantDetail);
+  }
+
+  private ErrorCode validateParticipantDetailsRequest(
+      Optional<ParticipantRegistrySiteEntity> optParticipantRegistry, String userId) {
+    if (!optParticipantRegistry.isPresent()) {
+      logger.exit(ErrorCode.PARTICIPANT_REGISTRY_SITE_NOT_FOUND);
+      return ErrorCode.PARTICIPANT_REGISTRY_SITE_NOT_FOUND;
+    }
+
+    Optional<SitePermissionEntity> sitePermission =
+        sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
+            userId, optParticipantRegistry.get().getSite().getId());
+    if (!sitePermission.isPresent()) {
+      logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+    }
+    return null;
   }
 }
