@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
