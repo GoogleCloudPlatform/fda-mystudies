@@ -13,7 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ALREADY_DECOMMISSIONED;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.CANNOT_REACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.CANNOT_REACTIVATE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.DEFAULT_SITE_MODIFY_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.LOCATION_ACCESS_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.LOCATION_NOT_FOUND;
@@ -35,15 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import java.util.Optional;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MvcResult;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
@@ -63,8 +55,19 @@ import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
 import com.jayway.jsonpath.JsonPath;
+import java.util.Optional;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MvcResult;
 
 public class LocationControllerTest extends BaseMockIT {
+
+  private static final String CUSTOM_LOCATION_ID = "OpenStudy02";
 
   @Autowired private LocationController controller;
 
@@ -212,7 +215,7 @@ public class LocationControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.error_description", is(CANNOT_REACTIVE.getDescription())));
+        .andExpect(jsonPath("$.error_description", is(CANNOT_REACTIVATE.getDescription())));
   }
 
   @Test
@@ -350,7 +353,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
         .andExpect(jsonPath("$.locations", hasSize(1)))
-        .andExpect(jsonPath("$.locations[0].customId", is("OpenStudy02")))
+        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)))
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
         .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
@@ -379,6 +382,33 @@ public class LocationControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnNoLocationsForSiteExcludedByStudyId() throws Exception {
+    // Step 1: Set studies for location
+    siteEntity.setStudy(studyEntity);
+    siteEntity.getStudy().setName("LIMITJP001");
+    locationEntity.addSiteEntity(siteEntity);
+    testDataHelper.getLocationRepository().save(locationEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    // Step 2: Call API and expect message GET_LOCATION_FOR_SITE_SUCCESS
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .queryParam("excludeStudyId", studyEntity.getId())
+                .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
+                .content(asJsonString(getLocationRequest()))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.locations").isArray())
+        .andExpect(jsonPath("$.locations", hasSize(0)));
+  }
+
+  @Test
   public void shouldReturnLocationsForSite() throws Exception {
     // Step 1: Set studies for location
     siteEntity.setStudy(testDataHelper.newStudyEntity());
@@ -404,7 +434,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations", hasSize(1)))
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
-        .andExpect(jsonPath("$.locations[0].customId", is("OpenStudy02")));
+        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
   }
 
   @Test

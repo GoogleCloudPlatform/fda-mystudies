@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.interceptor;
 
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.io.IOException;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -28,8 +27,7 @@ public class RestTemplateAuthTokenModifierInterceptor implements ClientHttpReque
       HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
     ClientHttpResponse response = execution.execute(request, body);
     if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
-      HttpServletRequest req = (HttpServletRequest) request;
-      String auth = req.getHeader("Authorization");
+      String auth = request.getHeaders().getFirst("Authorization");
       if (StringUtils.startsWith(auth, "Bearer")) {
         request.getHeaders().set("Authorization", "Bearer " + oauthService.getNewAccessToken());
         return execution.execute(request, body);

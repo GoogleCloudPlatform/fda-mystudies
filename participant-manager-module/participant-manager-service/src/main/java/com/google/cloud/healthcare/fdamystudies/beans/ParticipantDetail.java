@@ -19,7 +19,6 @@ import lombok.ToString;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@JsonInclude(Include.NON_NULL)
 @Component
 @Scope(value = "prototype")
 @ToString
@@ -42,9 +41,9 @@ public class ParticipantDetail {
 
   private String siteId;
 
-  private String customLocationId;
-
   private String locationName;
+
+  private String customLocationId;
 
   private String participantRegistrySiteid;
 
@@ -73,4 +72,7 @@ public class ParticipantDetail {
   private List<Enrollment> enrollments = new ArrayList<>();
 
   private List<ConsentHistory> consentHistory = new ArrayList<>();
+
+  private Boolean newlyCreatedUser = Boolean.FALSE;
+
 }

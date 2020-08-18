@@ -8,8 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.common.JsonNodeConverter;
 import java.sql.Timestamp;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,8 +20,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringEscapeUtils;
 import org.hibernate.annotations.GenericGenerator;
 
 @Setter
@@ -46,7 +47,7 @@ public class UserEntity {
   private Timestamp created;
 
   @ToString.Exclude
-  @Column(name = "temp_reg_id", nullable = true, length = 64)
+  @Column(name = "tempRegId", nullable = true, length = 64)
   private String tempRegId;
 
   @ToString.Exclude
@@ -56,22 +57,12 @@ public class UserEntity {
   @Column(name = "app_id", nullable = false, length = 100)
   private String appId;
 
-  @Column(name = "org_id", nullable = false, length = 100)
-  private String orgId;
-
   @ToString.Exclude
   @Column(name = "user_info", nullable = false, columnDefinition = "json")
-  private String userInfo;
+  @Convert(converter = JsonNodeConverter.class)
+  private JsonNode userInfo;
 
   /** Refer UserAccountStatus enum for values. */
   @Column(name = "status", nullable = false)
   private Integer status;
-
-  public String getUserInfo() {
-    if (StringUtils.startsWith(userInfo, "\"")) {
-      userInfo = userInfo.substring(1, userInfo.length() - 1);
-    }
-    userInfo = StringEscapeUtils.unescapeJava(userInfo);
-    return userInfo;
-  }
 }

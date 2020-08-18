@@ -21,16 +21,13 @@ import lombok.ToString;
 @Setter
 public class UserRequest {
 
+  // TODO (769) change the password regex
   private static final String PASSWORD_REGEX =
-      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\\\\\"#$%&'()*+,-.:;<=>?@\\\\\\\\[\\\\\\\\]^_`{|}~]).{8,64}$";
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
 
   @NotBlank
   @Size(max = 100)
   private String appId;
-
-  @NotBlank
-  @Size(max = 100)
-  private String orgId;
 
   @ToString.Exclude
   @NotBlank

@@ -12,11 +12,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  HEALTH("http://localhost:8080/participant-manager-service/v1/healthCheck"),
-
   ADD_NEW_SITE("http://localhost:8080/participant-manager-service/sites"),
 
   ADD_NEW_LOCATION("http://localhost:8080/participant-manager-service/locations"),
+
+  HEALTH("http://localhost:8080/participant-manager-service/healthCheck"),
+
+  SET_UP_ACCOUNT("http://localhost:8080/participant-manager-service/users/"),
 
   GET_APPS("http://localhost:8080/participant-manager-service/apps"),
 
@@ -51,7 +53,10 @@ public enum ApiEndpoint {
   GET_USER_DETAILS("http://localhost:8080/participant-manager-service/users"),
 
   GET_PARTICIPANT_DETAILS(
-      "http://localhost:8080/participant-manager-service/sites/{participantRegistrySite}/participant");
+      "http://localhost:8080/participant-manager-service/sites/{participantRegistrySite}/participant"),
+
+  GET_USER_DETAILS_BY_SECURITY_CODE(
+      "http://localhost:8080/participant-manager-service/users/securitycodes/{securityCode}");
 
   private String url;
 

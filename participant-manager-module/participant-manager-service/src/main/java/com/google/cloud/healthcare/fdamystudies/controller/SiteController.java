@@ -8,11 +8,19 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -78,7 +86,7 @@ public class SiteController {
   public ResponseEntity<ParticipantResponse> addNewParticipant(
       @PathVariable String siteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
-      @RequestBody ParticipantDetailRequest participant,
+      @Valid @RequestBody ParticipantDetailRequest participant,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     participant.setSiteId(siteId);
