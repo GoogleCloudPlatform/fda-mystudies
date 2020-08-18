@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import lombok.AllArgsConstructor;
+import java.util.Optional;
 import lombok.Getter;
 
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.MOBILE_APPS;
@@ -16,7 +16,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.RESPONSE_DATASTORE;
 
 @Getter
-@AllArgsConstructor
 public enum EnrollAuditEvent implements AuditLogEvent {
   USER_FOUND_ELGIBLE_FOR_STUDY(
       MOBILE_APPS, PARTICIPANT_DATASTORE, null, null, "USER_FOUND_ELGIBLE_FOR_STUDY"),
@@ -102,7 +101,20 @@ public enum EnrollAuditEvent implements AuditLogEvent {
 
   private final PlatformComponent source;
   private final PlatformComponent destination;
-  private final PlatformComponent resourceServer;
+  private final Optional<PlatformComponent> resourceServer;
   private final String description;
   private final String eventCode;
+
+  private EnrollAuditEvent(
+      PlatformComponent source,
+      PlatformComponent destination,
+      PlatformComponent resourceServer,
+      String description,
+      String eventCode) {
+    this.source = source;
+    this.destination = destination;
+    this.resourceServer = Optional.ofNullable(resourceServer);
+    this.description = description;
+    this.eventCode = eventCode;
+  }
 }
