@@ -71,7 +71,7 @@ public class StudyStateController {
       HttpServletRequest request) {
     logger.info("StudyStateController updateStudyState() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
-    AuditLogEventRequest aleRequest = AuditEventMapper.fromHttpServletRequest(request);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     Map<String, String> map = new HashMap<>();
     try {
       if (studyStateReqBean != null && userId != null && !StringUtils.isEmpty(userId)) {
@@ -89,9 +89,11 @@ public class StudyStateController {
                     .getMessage()
                     .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
               studyStateRespBean.setCode(HttpStatus.OK.value());
+
+              auditRequest.setUserId(userId);
               map.put("study_state_value", studyStateReqBean.getStudies().get(0).getStudyId());
               enrollAuditEventHelper.logEvent(
-                  EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, aleRequest, map);
+                  EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, map);
             }
           } else {
             MyStudiesUserRegUtil.getFailureResponse(
@@ -101,7 +103,7 @@ public class StudyStateController {
                 response);
             map.put("study_state_value", studyStateReqBean.getStudies().get(0).getStudyId());
             enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED, aleRequest, map);
+                EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, map);
             return null;
           }
         } else {
@@ -132,7 +134,7 @@ public class StudyStateController {
       @RequestHeader("userId") String userId,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
-    AuditLogEventRequest aleRequest = AuditEventMapper.fromHttpServletRequest(request);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     logger.info("(C)...StudyStateController.getStudyState()...Started");
     if (((userId.length() != 0) || StringUtils.isNotEmpty(userId))) {
@@ -143,7 +145,7 @@ public class StudyStateController {
         studyStateResponse.setMessage(AppConstants.SUCCESS);
 
         enrollAuditEventHelper.logEvent(
-            EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, aleRequest, null);
+            EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest, null);
 
         return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
       } catch (InvalidUserIdException e) {
@@ -172,7 +174,7 @@ public class StudyStateController {
           response);
 
       enrollAuditEventHelper.logEvent(
-          EnrollAuditEvent.READ_OPEARATION_FAILED_FOR_STUDY_INFO, aleRequest, null);
+          EnrollAuditEvent.READ_OPEARATION_FAILED_FOR_STUDY_INFO, auditRequest, null);
       logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
       return null;
     }
@@ -188,7 +190,8 @@ public class StudyStateController {
       HttpServletRequest request) {
     logger.info("StudyStateController withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
-    AuditLogEventRequest aleRequest = AuditEventMapper.fromHttpServletRequest(request);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    Map<String, String> map = new HashMap<>();
     try {
       if (withdrawFromStudyBean != null) {
         if (withdrawFromStudyBean.getParticipantId() != null
@@ -205,7 +208,12 @@ public class StudyStateController {
             respBean.setCode(ErrorCode.EC_200.code());
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
             enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED, aleRequest, null);
+                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest, null);
+
+            map.put("enrolment_Status", AppConstants.WITHDRAWN);
+            enrollAuditEventHelper.logEvent(
+                EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_ENROLMENT_STATUS, auditRequest, map);
+
             return new ResponseEntity<>(respBean, HttpStatus.OK);
           } else {
             MyStudiesUserRegUtil.getFailureResponse(
@@ -214,7 +222,7 @@ public class StudyStateController {
                 MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
                 response);
             enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, aleRequest, null);
+                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, auditRequest, null);
             return null;
           }
         } else {
@@ -224,7 +232,7 @@ public class StudyStateController {
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
               response);
           enrollAuditEventHelper.logEvent(
-              EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, aleRequest, null);
+              EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, auditRequest, null);
           return null;
         }
       } else {

@@ -14,6 +14,10 @@ public class EnrollAuditEventHelper {
 
   @Autowired private CommonApplicationPropertyConfig commonPropConfig;
 
+  public void logEvent(AuditLogEvent eventEnum, AuditLogEventRequest aleRequest) {
+    logEvent(eventEnum, aleRequest, null);
+  }
+
   public void logEvent(
       AuditLogEvent eventEnum, AuditLogEventRequest aleRequest, Map<String, String> values) {
     String description = eventEnum.getDescription();
