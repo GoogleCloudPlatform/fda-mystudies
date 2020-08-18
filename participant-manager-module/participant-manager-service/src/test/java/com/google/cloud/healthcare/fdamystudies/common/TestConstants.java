@@ -9,8 +9,6 @@ public final class TestConstants {
 
   public static final String LOCATION_DESCRIPTION_VALUE = "Marlborough, MA";
 
-  public static final String USER_EMAIL_VALUE = "super_admin_test@gmail.com";
-
   public static final String ADMIN_AUTH_ID_VALUE =
       "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
 
@@ -47,5 +45,4 @@ public final class TestConstants {
   public static final String USER_EMAIL_VALUE = "super_admin_test@gmail.com";
 
   public static final String CONSENT_VERSION = "1.0";
-
 }
