@@ -49,4 +49,7 @@ public interface StudyPermissionRepository extends JpaRepository<StudyPermission
   @Modifying
   @Query("DELETE from StudyPermissionEntity sp where sp.urAdminUser.id=:adminId")
   public void deleteByAdminUserId(String adminId);
+
+  @Query("SELECT sp from StudyPermissionEntity sp where sp.urAdminUser.id=:adminId")
+  public List<StudyPermissionEntity> findByAdminUserId(String adminId);
 }

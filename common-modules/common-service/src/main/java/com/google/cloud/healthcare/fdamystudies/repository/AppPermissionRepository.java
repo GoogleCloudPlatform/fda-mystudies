@@ -40,4 +40,7 @@ public interface AppPermissionRepository extends JpaRepository<AppPermissionEnti
   @Modifying
   @Query("DELETE from AppPermissionEntity ap where ap.urAdminUser.id=:adminId")
   public void deleteByAdminUserId(String adminId);
+
+  @Query("SELECT ap from AppPermissionEntity ap where ap.urAdminUser.id=:adminId")
+  public List<AppPermissionEntity> findByAdminUserId(String adminId);
 }
