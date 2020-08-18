@@ -199,7 +199,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
 
     verifyTokenIntrospectRequest(2);
-    /*
+
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(
         cloudStorageService, Constants.CONTENT_1_0_UPDATED);
@@ -217,7 +217,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
 
-    verifyTokenIntrospectRequest(3);*/
+    verifyTokenIntrospectRequest(3);
 
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
@@ -233,7 +233,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
 
-    verifyTokenIntrospectRequest(3);
+    verifyTokenIntrospectRequest(4);
   }
 
   @Test
