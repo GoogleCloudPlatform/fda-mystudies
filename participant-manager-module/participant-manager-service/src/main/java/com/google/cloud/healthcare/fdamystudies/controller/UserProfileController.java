@@ -8,11 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
-import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
-import javax.servlet.http.HttpServletRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -60,6 +58,7 @@ public class UserProfileController {
 
     logger.exit(String.format(STATUS_LOG, userProfileResponse.getHttpStatusCode()));
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
+  }
 
   @PostMapping(
       value = "/users/",
