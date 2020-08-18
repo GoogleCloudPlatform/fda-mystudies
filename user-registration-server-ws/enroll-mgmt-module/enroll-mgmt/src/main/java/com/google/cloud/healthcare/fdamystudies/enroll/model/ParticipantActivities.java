@@ -1,4 +1,4 @@
-package com.google.cloud.healthcare.fdamystudies.model;
+package com.google.cloud.healthcare.fdamystudies.enroll.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -8,6 +8,6 @@
 		"headers": {
 			"Content-Type": "application/json;charset=UTF-8"
 		},
-		"bodyFileName": "add_Participant_Id_response.json"
+		"bodyFileName": "enroll-service/add_Participant_Id_response.json"
 	}
 }
