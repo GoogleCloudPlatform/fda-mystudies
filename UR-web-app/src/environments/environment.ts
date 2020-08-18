@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://35.222.67.4:8086/urwebappws',
+  baseUrl: 'http://192.168.0.44:8003/participant-manager-service',
   authServerUrl: 'http://35.193.185.224:8087/oauth-scim-service',
   redirectUrl: 'http://35.193.185.224:8087/oauth-scim-service/login',
 };

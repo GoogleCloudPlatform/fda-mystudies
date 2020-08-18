@@ -1,13 +1,17 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.ParticipantInformationController;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ParticipantInformationControllerTest extends BaseMockIT {
 
@@ -23,37 +27,47 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
 
   @Test
   public void getParticipantDetailsSuccess() throws Exception {
-
-    String path =
-        String.format(
-            "/participantInfo?participantId=%s&studyId=%s",
-            Constants.PARTICIPANT_ID, Constants.STUDY_ID_OF_PARTICIPANT);
-
-    performGet(path, new HttpHeaders(), Constants.SUCCESS, OK);
+    mockMvc
+        .perform(
+            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .param("participantId", Constants.PARTICIPANT_ID)
+                .param("studyId", Constants.STUDY_ID_OF_PARTICIPANT)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk());
   }
 
   @Test
   public void getParticipantDetailsFailure() throws Exception {
 
     // participant id null
-    String path =
-        String.format(
-            "/participantInfo?participantId=%s&studyId=%s", "", Constants.STUDY_ID_OF_PARTICIPANT);
-
-    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
+    mockMvc
+        .perform(
+            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .param("participantId", "")
+                .param("studyId", Constants.STUDY_ID_OF_PARTICIPANT)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
 
     // study id null
-    path =
-        String.format("/participantInfo?participantId=%s&studyId=%s", Constants.PARTICIPANT_ID, "");
-
-    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
+    mockMvc
+        .perform(
+            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .param("participantId", Constants.PARTICIPANT_ID)
+                .param("studyId", "")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
 
     // participant id not exists
-    path =
-        String.format(
-            "/participantInfo?participantId=%s&studyId=%s",
-            Constants.PARTICIPANT_ID_NOT_EXISTS, Constants.STUDY_ID_OF_PARTICIPANT);
-
-    performGet(path, new HttpHeaders(), "", BAD_REQUEST);
+    mockMvc
+        .perform(
+            get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .param("participantId", Constants.PARTICIPANT_ID_NOT_EXISTS)
+                .param("studyId", Constants.STUDY_ID_OF_PARTICIPANT)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
   }
 }
