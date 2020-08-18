@@ -5,23 +5,17 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
-@Setter
 @Getter
+@Setter
 @ToString
-@Component
-@Scope(value = "prototype")
-public class AppStudyDetails {
+public class UserStudyPermissionRequest {
 
   private String studyId;
 
@@ -29,5 +23,11 @@ public class AppStudyDetails {
 
   private String studyName;
 
-  private List<AppSiteDetails> sites = new ArrayList<>();
+  private boolean selected;
+
+  private boolean disabled;
+
+  private Integer permission;
+
+  private List<UserSitePermissionRequest> sites;
 }
