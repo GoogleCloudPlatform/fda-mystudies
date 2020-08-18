@@ -66,8 +66,12 @@ public final class AuditEventMapper {
     auditRequest.setEventCode(eventEnum.getEventCode());
     auditRequest.setSource(eventEnum.getSource().getValue());
     auditRequest.setDestination(eventEnum.getDestination().getValue());
-    auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().getValue());
-    auditRequest.setResourceServer(eventEnum.getResourceServer().getValue());
+    if (null != eventEnum.getUserAccessLevel()) {
+      auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().getValue());
+    }
+    if (null != eventEnum.getResourceServer()) {
+      auditRequest.setResourceServer(eventEnum.getResourceServer().getValue());
+    }
     auditRequest.setSourceApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setDestinationApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setPlatformVersion(commonPropConfig.getApplicationVersion());

@@ -19,6 +19,7 @@ public class ParticipantInfoRespBean {
 
   private String sharing;
   private String enrollment;
+  private String status;
   private String withdrawal;
   private String message;
   private Integer code;
