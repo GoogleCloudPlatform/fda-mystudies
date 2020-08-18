@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.consent.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.OrgInfo;
+import com.google.cloud.healthcare.fdamystudies.consent.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -22,12 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
-import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.consent.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.consent.model.OrgInfo;
-import com.google.cloud.healthcare.fdamystudies.consent.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Repository
 public class CommonDaoImpl implements CommonDao {

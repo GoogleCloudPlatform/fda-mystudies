@@ -8,6 +8,20 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
+import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementService;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
+import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,20 +42,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
-import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
-import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
-import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementService;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 
 @RestController
 public class UserConsentManagementController {
