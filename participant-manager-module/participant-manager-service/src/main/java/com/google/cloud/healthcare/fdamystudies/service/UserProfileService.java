@@ -15,4 +15,6 @@ public interface UserProfileService {
   public UserProfileResponse getUserProfile(String userId);
 
   public UserProfileResponse findUserProfileBySecurityCode(String securityCode);
+  
+  public SetUpAccountResponse saveUser(SetUpAccountRequest setUpAccountRequest);
 }
