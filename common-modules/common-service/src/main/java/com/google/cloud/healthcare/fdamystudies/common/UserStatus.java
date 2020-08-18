@@ -12,6 +12,7 @@ import lombok.Getter;
 
 @Getter
 public enum UserStatus {
+  DEACTIVATED(0, "Deactivated"),
   ACTIVE(1, "Active"),
   PENDING(2, "Pending"),
   INACTIVE(3, "Inactive");
