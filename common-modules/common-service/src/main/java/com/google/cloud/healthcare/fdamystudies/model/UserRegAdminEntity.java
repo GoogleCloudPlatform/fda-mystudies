@@ -21,6 +21,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.annotation.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -45,7 +48,7 @@ public class UserRegAdminEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(name = "ur_admin_user_id", updatable = false, nullable = false)
   private String id;
 
   @ToString.Exclude
@@ -88,14 +91,14 @@ public class UserRegAdminEntity implements Serializable {
   private Timestamp created;
 
   @ToString.Exclude
-  @Column(name = "created_by", length = 20)
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
   @Column(name = "security_code_expire_date", columnDefinition = "TIMESTAMP")
   private Timestamp securityCodeExpireDate;
 
   @ToString.Exclude
-  @Column(name = "security_code", length = 50)
+  @Column(name = "security_code", length = 64)
   private String securityCode;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")

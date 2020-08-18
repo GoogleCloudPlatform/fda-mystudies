@@ -22,6 +22,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -44,7 +46,7 @@ public class AppEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(name = "app_info_id", updatable = false, nullable = false)
   private String id;
 
   @ToString.Exclude
@@ -129,7 +131,11 @@ public class AppEntity implements Serializable {
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "appInfo",
+      orphanRemoval = true)
   private List<AppPermissionEntity> appPermissions = new ArrayList<>();
 
   public void addAppPermissionEntity(AppPermissionEntity appPermission) {
@@ -137,7 +143,11 @@ public class AppEntity implements Serializable {
     appPermission.setAppInfo(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "appInfo",
+      orphanRemoval = true)
   private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
 
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {
@@ -145,7 +155,11 @@ public class AppEntity implements Serializable {
     sitePermission.setAppInfo(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appInfo")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "appInfo",
+      orphanRemoval = true)
   private List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
 
   public void addStudyPermissionEntity(StudyPermissionEntity studyPermission) {

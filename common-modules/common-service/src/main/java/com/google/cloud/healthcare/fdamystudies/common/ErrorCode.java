@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.io.IOException;
+import java.time.Instant;
+import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -98,7 +101,10 @@ public enum ErrorCode {
       400, "EC-106", Constants.BAD_REQUEST, "Site exists with the given locationId and studyId"),
 
   LOCATION_ACCESS_DENIED(
-      403, "EC-882", "Forbidden", "You do not have permission to view or add or update locations"),
+      403,
+      "EC-882",
+      HttpStatus.FORBIDDEN.toString(),
+      "You do not have permission to view or add or update locations"),
 
   INVALID_ARGUMENTS(400, "EC_813", Constants.BAD_REQUEST, "Provided argument value is invalid"),
 
@@ -167,8 +173,18 @@ public enum ErrorCode {
       "This Site is associated with active and enrolled participants"
           + " and cannot be decomissioned"),
 
+  NOT_SUPER_ADMIN_ACCESS(
+      403,
+      "EC_870",
+      HttpStatus.FORBIDDEN.toString(),
+      "You are not authorized to access this information"),
+
+  PERMISSION_MISSING(
+      400, "EC_978", Constants.BAD_REQUEST, "Admin should have atleast one permission"),
+
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
+
 
   private final int status;
   private final String code;

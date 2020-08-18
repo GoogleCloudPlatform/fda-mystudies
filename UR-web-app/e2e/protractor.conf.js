@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/naming-convention */
+
 // Protractor configuration file, see link for more information
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const {SpecReporter} = require('jasmine-spec-reporter');
 
 exports.config = {

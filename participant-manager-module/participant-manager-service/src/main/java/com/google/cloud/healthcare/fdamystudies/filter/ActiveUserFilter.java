@@ -8,9 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.filter;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -40,6 +37,9 @@ import org.springframework.http.server.PathContainer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 
 @Component
 @Order(3)
