@@ -86,4 +86,16 @@ class DBActivityRun: Object {
   @objc dynamic var toBeSynced: Bool = false
   @objc dynamic var responseData: Data?
 
+  convenience init(
+    activityRun: ActivityRun,
+    activity: Activity
+  ) {
+    self.init()
+    self.startDate = activityRun.startDate
+    self.endDate = activityRun.endDate
+    self.activityId = activity.actvityId
+    self.studyId = activity.studyId
+    self.runId = activityRun.runId
+    self.isCompleted = activityRun.isCompleted
+  }
 }

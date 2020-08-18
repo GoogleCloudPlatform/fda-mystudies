@@ -31,6 +31,8 @@ public final class CommonConstants {
 
   public static final Integer READ_AND_EDIT_PERMISSION = 2;
 
+  public static final int ACTIVE = 1;
+
   public static final int VIEW_VALUE = 0;
 
   public static final int EDIT_VALUE = 1;
@@ -39,7 +41,7 @@ public final class CommonConstants {
 
   public static final String YET_TO_ENROLL = "Yet to Enroll";
 
-  public static final String YET_TO_JOIN = "yetToJoin";
+  public static final String YET_TO_JOIN = "Yet to Join";
 
   public static final String OPEN = "Open";
 
@@ -56,4 +58,7 @@ public final class CommonConstants {
   public static final String ERROR_CODE_LOG = "error code=%s";
 
   public static final String MESSAGE_CODE_LOG = "message code=%s";
+
+  public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
+      "application/x-www-form-urlencoded;charset=UTF-8";
 }
