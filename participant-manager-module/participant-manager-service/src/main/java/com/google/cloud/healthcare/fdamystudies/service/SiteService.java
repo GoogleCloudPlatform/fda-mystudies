@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
@@ -29,4 +31,7 @@ public interface SiteService {
 
   public ParticipantDetailResponse getParticipantDetails(
       String participantRegistrySiteId, String userId);
+
+  public InviteParticipantResponse inviteParticipants(
+      InviteParticipantRequest inviteparticipantBean);
 }

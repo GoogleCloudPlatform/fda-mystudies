@@ -17,7 +17,11 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YE
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
@@ -32,6 +36,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
+import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.mapper.ConsentMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
@@ -54,6 +59,10 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +70,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -90,6 +100,10 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
+
+  @Autowired private AppPropertyConfig appPropertyConfig;
+
+  @Autowired private EmailService emailService;
 
   @Override
   @Transactional
@@ -566,5 +580,115 @@ public class SiteServiceImpl implements SiteService {
       return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
     }
     return null;
+  }
+
+  @Override
+  @Transactional
+  public InviteParticipantResponse inviteParticipants(
+      InviteParticipantRequest inviteParticipantRequest) {
+    logger.entry("begin inviteParticipants()");
+
+    Optional<SiteEntity> optSiteEntity =
+        siteRepository.findById(inviteParticipantRequest.getSiteId());
+
+    if (!optSiteEntity.isPresent() || !ACTIVE_STATUS.equals(optSiteEntity.get().getStatus())) {
+      logger.exit(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+      return new InviteParticipantResponse(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+    }
+
+    Optional<SitePermissionEntity> optSitePermissionEntity =
+        sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
+            inviteParticipantRequest.getUserId(), inviteParticipantRequest.getSiteId());
+    if (!optSitePermissionEntity.isPresent()
+        || Permission.READ_EDIT
+            != Permission.fromValue(optSitePermissionEntity.get().getEditPermission())) {
+      logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      return new InviteParticipantResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    }
+
+    List<ParticipantRegistrySiteEntity> participantsList =
+        participantRegistrySiteRepository.findByIds(inviteParticipantRequest.getIds());
+    SiteEntity siteEntity = optSiteEntity.get();
+    List<ParticipantRegistrySiteEntity> invitedParticipants =
+        findEligibleParticipantsAndSendInviteEmail(participantsList, siteEntity);
+
+    participantRegistrySiteRepository.saveAll(invitedParticipants);
+
+    participantsList.removeAll(invitedParticipants);
+    List<String> failedParticipantIds =
+        participantsList
+            .stream()
+            .map(ParticipantRegistrySiteEntity::getId)
+            .collect(Collectors.toList());
+
+    List<String> invitedParticipantIds =
+        invitedParticipants
+            .stream()
+            .map(ParticipantRegistrySiteEntity::getId)
+            .collect(Collectors.toList());
+
+    logger.exit(
+        String.format(
+            "%d email invitations sent and %d failed",
+            invitedParticipantIds.size(), failedParticipantIds.size()));
+    return new InviteParticipantResponse(
+        MessageCode.PARTICIPANTS_INVITED_SUCCESS, invitedParticipantIds, failedParticipantIds);
+  }
+
+  private List<ParticipantRegistrySiteEntity> findEligibleParticipantsAndSendInviteEmail(
+      List<ParticipantRegistrySiteEntity> participants, SiteEntity siteEntity) {
+    List<ParticipantRegistrySiteEntity> invitedParticipants = new ArrayList<>();
+    for (ParticipantRegistrySiteEntity participantRegistrySiteEntity : participants) {
+      OnboardingStatus onboardingStatus =
+          OnboardingStatus.fromCode(participantRegistrySiteEntity.getOnboardingStatus());
+      if (OnboardingStatus.DISABLED == onboardingStatus
+          || OnboardingStatus.ENROLLED == onboardingStatus) {
+        continue;
+      }
+
+      String token = RandomStringUtils.randomAlphanumeric(8);
+      participantRegistrySiteEntity.setEnrollmentToken(token);
+      participantRegistrySiteEntity.setInvitationDate(new Timestamp(Instant.now().toEpochMilli()));
+
+      if (OnboardingStatus.NEW == onboardingStatus) {
+        participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.INVITED.getCode());
+      }
+
+      participantRegistrySiteEntity.setInvitationCount(
+          participantRegistrySiteEntity.getInvitationCount() + 1);
+
+      participantRegistrySiteEntity.setEnrollmentTokenExpiry(
+          new Timestamp(
+              Instant.now()
+                  .plus(appPropertyConfig.getEnrollmentTokenExpiryInHours(), ChronoUnit.HOURS)
+                  .toEpochMilli()));
+      EmailResponse emailResponse = sendInvitationEmail(participantRegistrySiteEntity, siteEntity);
+      if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+          .getMessage()
+          .equals(emailResponse.getMessage())) {
+        invitedParticipants.add(participantRegistrySiteEntity);
+      }
+    }
+
+    return invitedParticipants;
+  }
+
+  private EmailResponse sendInvitationEmail(
+      ParticipantRegistrySiteEntity participantRegistrySiteEntity, SiteEntity siteEntity) {
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("study name", siteEntity.getStudy().getName());
+    templateArgs.put("org name", appPropertyConfig.getOrgName());
+    templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
+    templateArgs.put("contact email address", appPropertyConfig.getFromEmailAddress());
+    EmailRequest emailRequest =
+        new EmailRequest(
+            appPropertyConfig.getFromEmailAddress(),
+            new String[] {participantRegistrySiteEntity.getEmail()},
+            null,
+            null,
+            appPropertyConfig.getParticipantInviteSubject(),
+            appPropertyConfig.getParticipantInviteBody(),
+            templateArgs);
+    return emailService.sendMimeMail(emailRequest);
   }
 }

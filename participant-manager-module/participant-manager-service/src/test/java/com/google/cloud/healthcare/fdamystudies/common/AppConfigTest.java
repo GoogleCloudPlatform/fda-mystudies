@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.oauthscim.common;
+package com.google.cloud.healthcare.fdamystudies.common;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;

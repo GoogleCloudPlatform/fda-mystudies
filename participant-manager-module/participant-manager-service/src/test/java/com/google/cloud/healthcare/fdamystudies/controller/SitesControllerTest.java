@@ -27,6 +27,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -34,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
@@ -64,8 +68,10 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.jayway.jsonpath.JsonPath;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,6 +81,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class SitesControllerTest extends BaseMockIT {
@@ -89,6 +96,7 @@ public class SitesControllerTest extends BaseMockIT {
   @Autowired private SiteRepository siteRepository;
   @Autowired private ParticipantStudyRepository participantStudyRepository;
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
+  @Autowired private JavaMailSender emailSender;
 
   private UserRegAdminEntity userRegAdminEntity;
   private StudyEntity studyEntity;
@@ -666,6 +674,132 @@ public class SitesControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnSiteNotFoundForInviteParticipant() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
+    mockMvc
+        .perform(
+            post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), IdGenerator.id())
+                .content(asJsonString(inviteParticipantRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
+    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    // Step 1: New participant invite
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Disabled participant invite
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity1 =
+        testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity1);
+    participantRegistrySiteEntity1.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity1);
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(
+        Arrays.asList(
+            participantRegistrySiteEntity.getId(), participantRegistrySiteEntity1.getId()));
+    // Step 3: call the API and assert the error description
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                    .content(asJsonString(inviteParticipantRequest))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.invitedParticipantIds").isArray())
+            .andExpect(jsonPath("$.invitedParticipantIds", hasSize(1)))
+            .andExpect(jsonPath("$.failedParticipantIds").isArray())
+            .andExpect(jsonPath("$.failedParticipantIds", hasSize(1)))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
+            .andReturn();
+
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+
+    // Step 4: verify updated values
+    String id =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(id);
+
+    assertNotNull(optParticipantRegistrySite);
+    assertEquals(
+        OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
+  }
+
+  @Test
+  public void shouldInviteParticipant() throws Exception {
+    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    // Step 1: New participant invite
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
+    // Step 2: call the API and expect PARTICIPANTS_INVITED_SUCCESS message
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                    .content(asJsonString(inviteParticipantRequest))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.invitedParticipantIds").isArray())
+            .andExpect(jsonPath("$.invitedParticipantIds", hasSize(1)))
+            .andExpect(jsonPath("$.failedParticipantIds").isArray())
+            .andExpect(jsonPath("$.failedParticipantIds", hasSize(0)))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
+            .andReturn();
+
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    // Step 3: verify updated values
+    String id =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(id);
+
+    assertNotNull(optParticipantRegistrySite);
+    assertEquals(
+        OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
   }
 
   @AfterEach

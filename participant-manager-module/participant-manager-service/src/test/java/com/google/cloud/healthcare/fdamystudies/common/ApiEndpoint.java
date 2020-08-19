@@ -55,8 +55,12 @@ public enum ApiEndpoint {
   GET_PARTICIPANT_DETAILS(
       "http://localhost:8080/participant-manager-service/sites/{participantRegistrySite}/participant"),
 
+  INVITE_PARTICIPANTS(
+      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/invite"),
+
   GET_USER_DETAILS_BY_SECURITY_CODE(
       "http://localhost:8080/participant-manager-service/users/securitycodes/{securityCode}");
+
 
   private String url;
 
