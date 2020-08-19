@@ -14,4 +14,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 public interface ManageUserService {
 
   public AdminUserResponse createUser(UserRequest user);
+
+  public AdminUserResponse updateUser(UserRequest user, String loggedInAdminUserId);
 }

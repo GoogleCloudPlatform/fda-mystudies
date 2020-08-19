@@ -21,6 +21,7 @@ import lombok.ToString;
 @Setter
 public class UserRequest {
 
+  // TODO (769) change the password regex
   private static final String PASSWORD_REGEX =
       "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
 

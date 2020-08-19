@@ -26,6 +26,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEnt
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
@@ -37,10 +38,14 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySi
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,12 +57,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestDataHelper {
 
-  private static final String ADMIN_AUTH_ID_VALUE =
+  public static final String ADMIN_LAST_NAME = "mockito_last_name";
+
+  public static final String ADMIN_FIRST_NAME = "mockito";
+
+  public static final String ADMIN_AUTH_ID_VALUE =
       "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
 
   public static final String EMAIL_VALUE = "mockit_email@grr.la";
 
   public static final String NON_SUPER_ADMIN_EMAIL_ID = "mockit_non_super_admin_email@grr.la";
+
+  public static final String SUPER_ADMIN_EMAIL_ID = "super_admin_email@grr.la";
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
@@ -81,6 +92,8 @@ public class TestDataHelper {
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
+  @Autowired private StudyConsentRepository studyConsentRepository;
+
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -92,12 +105,15 @@ public class TestDataHelper {
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(EMAIL_VALUE);
-    userRegAdminEntity.setFirstName("mockito");
-    userRegAdminEntity.setLastName("mockito_last_name");
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
     userRegAdminEntity.setEditPermission(Permission.READ_EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
+    userRegAdminEntity.setSecurityCode("xnsxU1Ax1V2Xtpk-qNLeiZ-417JiqyjytC-706-km6gCq9HAXNYWd8");
+    userRegAdminEntity.setSecurityCodeExpireDate(
+        new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
     return userRegAdminEntity;
   }
 
@@ -109,8 +125,8 @@ public class TestDataHelper {
   public UserRegAdminEntity newNonSuperAdmin() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
-    userRegAdminEntity.setFirstName("mockito");
-    userRegAdminEntity.setLastName("mockito_last_name");
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
     userRegAdminEntity.setEditPermission(ManageLocation.DENY.getValue());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setSuperAdmin(false);
@@ -119,6 +135,22 @@ public class TestDataHelper {
 
   public UserRegAdminEntity createNonSuperAdmin() {
     UserRegAdminEntity userRegAdminEntity = newNonSuperAdmin();
+    return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+  }
+
+  public UserRegAdminEntity newSuperAdminForUpdate() {
+    UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
+    userRegAdminEntity.setEmail(SUPER_ADMIN_EMAIL_ID);
+    userRegAdminEntity.setFirstName("mockito_fname");
+    userRegAdminEntity.setLastName("mockito__lname");
+    userRegAdminEntity.setEditPermission(ManageLocation.ALLOW.getValue());
+    userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
+    userRegAdminEntity.setSuperAdmin(true);
+    return userRegAdminEntity;
+  }
+
+  public UserRegAdminEntity createSuperAdmin() {
+    UserRegAdminEntity userRegAdminEntity = newSuperAdminForUpdate();
     return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
   }
 
@@ -229,8 +261,8 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
     userDetailsEntity.setEmail(EMAIL_VALUE);
     userDetailsEntity.setStatus(1);
-    userDetailsEntity.setFirstName("mockito");
-    userDetailsEntity.setLastName("mockito_last_name");
+    userDetailsEntity.setFirstName(ADMIN_FIRST_NAME);
+    userDetailsEntity.setLastName(ADMIN_LAST_NAME);
     userDetailsEntity.setLocalNotificationFlag(false);
     userDetailsEntity.setRemoteNotificationFlag(false);
     userDetailsEntity.setTouchId(false);
@@ -242,5 +274,15 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = newUserDetails();
     userDetailsEntity.setAppInfo(appEntity);
     return userDetailsRepository.saveAndFlush(userDetailsEntity);
+  }
+
+  public StudyConsentEntity createStudyConsentEntity(ParticipantStudyEntity participantStudy) {
+    StudyConsentEntity studyConsent = new StudyConsentEntity();
+    studyConsent.setPdfPath(
+        "cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9/CovidStudy/cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9_CovidStudy_1.3_06302020071346.pdf");
+    studyConsent.setPdfStorage(1);
+    studyConsent.setVersion("1.0");
+    studyConsent.setParticipantStudy(participantStudy);
+    return studyConsentRepository.saveAndFlush(studyConsent);
   }
 }
