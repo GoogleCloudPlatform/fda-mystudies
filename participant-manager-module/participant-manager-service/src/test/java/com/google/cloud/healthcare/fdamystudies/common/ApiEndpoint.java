@@ -65,7 +65,9 @@ public enum ApiEndpoint {
       "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/status"),
 
   GET_SITES("http://localhost:8080/participant-manager-service/sites"),
-  
+
+  UPDATE_USER_PROFILE("http://localhost:8080/participant-manager-service/users/{userId}/profile"),
+
   GET_USER_DETAILS_BY_SECURITY_CODE(
       "http://localhost:8080/participant-manager-service/users/securitycodes/{securityCode}");
 
