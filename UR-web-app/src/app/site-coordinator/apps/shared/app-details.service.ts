@@ -10,6 +10,8 @@ export class AppDetailsService {
   constructor(private readonly entityService: EntityService<AppDetails>) {}
 
   get(appId: string): Observable<AppDetails> {
-    return this.entityService.get(`apps/${appId}/participants`);
+    return this.entityService.get(
+      `apps/${encodeURIComponent(appId)}/participants`,
+    );
   }
 }
