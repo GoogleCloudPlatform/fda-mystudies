@@ -49,7 +49,7 @@ public class StudyController {
       value = "{studyId}/participants",
       produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getStudyParticipants(
+  public ResponseEntity<ParticipantRegistryResponse> getStudyParticipants(
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @PathVariable String studyId,
       HttpServletRequest request) {

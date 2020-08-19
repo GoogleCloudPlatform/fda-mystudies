@@ -263,7 +263,6 @@ class ActivityStepResult {
 
           self.value = [ActivityStepResult]()
           var formResultArray: [Any] = [Any]()
-          var i: Int! = 0
           var j: Int! = 0
           var isAddMore: Bool? = false
 
@@ -275,7 +274,7 @@ class ActivityStepResult {
           }
           var localArray: [[String: Any]] = [[String: Any]]()
 
-          for result in stepResult.results! {
+          for (i, result) in stepResult.results!.enumerated() {
 
             let activityStepResult: ActivityStepResult? = ActivityStepResult()
             activityStepResult?.startTime = self.startTime
@@ -332,7 +331,6 @@ class ActivityStepResult {
                 }
               }
             }
-            i = i + 1
           }
 
           if isAddMore! {
