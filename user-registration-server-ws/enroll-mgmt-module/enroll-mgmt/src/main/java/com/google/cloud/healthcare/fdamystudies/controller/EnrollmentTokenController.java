@@ -26,8 +26,6 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorResponseUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.TokenUtil;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -72,10 +70,10 @@ public class EnrollmentTokenController {
       @Context HttpServletResponse response,
       @Context HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    Map<String, String> map = new HashMap<>();
     logger.info("ValidateEnrollmentTokenController validateEnrollmentToken() - Starts ");
     ErrorBean errorBean = null;
     try {
+
       if (enrollmentBean != null) {
         if (StringUtils.isEmpty(enrollmentBean.getStudyId())) {
           ErrorResponseUtil.getFailureResponse(
@@ -106,9 +104,10 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
                 response);
-            map.put("token_value", enrollmentBean.getToken());
+            auditRequest.setUserId(userId);
+            auditRequest.setStudyId(enrollmentBean.getStudyId());
             enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.ENROLMENT_TOKEN_FOUND_INVALID, auditRequest, map);
+                EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID, auditRequest);
             return null;
           } else if (!enrollmentTokenfService.isValidStudyToken(
               enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
@@ -117,8 +116,9 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue(),
                 response);
+
             enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.ENROLMENT_TOKEN_FOUND_INVALID, auditRequest, map);
+                EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID, auditRequest);
             return null;
           }
         }
@@ -165,10 +165,8 @@ public class EnrollmentTokenController {
     logger.info("EnrollmentTokenController enrollParticipant() - Starts ");
     EnrollmentResponseBean respBean = null;
     ErrorBean errorBean = null;
-    boolean isTokenRequired = false;
     String tokenValue = "";
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    Map<String, String> placeHolders = new HashMap<>();
     try {
       if (enrollmentBean != null) {
         if (!StringUtils.isEmpty(enrollmentBean.getStudyId())) {
@@ -180,17 +178,21 @@ public class EnrollmentTokenController {
                   if (enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
                     if (enrollmentTokenfService.isValidStudyToken(
                         enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
+
+                      auditRequest.setUserId(userId);
+                      auditRequest.setStudyId(enrollmentBean.getStudyId());
+                      enrollAuditEventHelper.logEvent(
+                          EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY, auditRequest);
                       respBean =
                           enrollmentTokenfService.enrollParticipant(
-                              enrollmentBean.getStudyId(), enrollmentBean.getToken(), userId);
+                              enrollmentBean.getStudyId(),
+                              enrollmentBean.getToken(),
+                              userId,
+                              auditRequest);
                       if (respBean != null) {
                         respBean.setCode(ErrorCode.EC_200.code());
                         respBean.setMessage(
                             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-                        auditRequest.setUserId(userId);
-                        auditRequest.setStudyId(enrollmentBean.getStudyId());
-                        enrollAuditEventHelper.logEvent(
-                            EnrollAuditEvent.USER_FOUND_ELGIBLE_FOR_STUDY, auditRequest);
                       }
                     } else {
                       ErrorResponseUtil.getFailureResponse(
@@ -205,7 +207,7 @@ public class EnrollmentTokenController {
                       auditRequest.setUserId(userId);
                       auditRequest.setStudyId(enrollmentBean.getStudyId());
                       enrollAuditEventHelper.logEvent(
-                          EnrollAuditEvent.USER_FOUND_INELGIBLE_FOR_STUDY, auditRequest);
+                          EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
                       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                     }
                   } else {
@@ -222,7 +224,7 @@ public class EnrollmentTokenController {
                     auditRequest.setUserId(userId);
                     auditRequest.setStudyId(enrollmentBean.getStudyId());
                     enrollAuditEventHelper.logEvent(
-                        EnrollAuditEvent.USER_FOUND_INELGIBLE_FOR_STUDY, auditRequest);
+                        EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
                     return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                   }
                 } else {
@@ -253,16 +255,11 @@ public class EnrollmentTokenController {
               }
               respBean =
                   enrollmentTokenfService.enrollParticipant(
-                      enrollmentBean.getStudyId(), tokenValue, userId);
+                      enrollmentBean.getStudyId(), tokenValue, userId, auditRequest);
               if (respBean != null) {
                 respBean.setCode(ErrorCode.EC_200.code());
                 respBean.setMessage(
                     MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-
-                auditRequest.setUserId(userId);
-                auditRequest.setStudyId(enrollmentBean.getStudyId());
-                enrollAuditEventHelper.logEvent(
-                    EnrollAuditEvent.USER_FOUND_ELGIBLE_FOR_STUDY, auditRequest);
               }
             }
           } else {
@@ -275,10 +272,6 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.STUDYID_NOT_EXIST.getValue(),
                 response);
 
-            auditRequest.setUserId(userId);
-            auditRequest.setStudyId(enrollmentBean.getStudyId());
-            enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.USER_FOUND_INELGIBLE_FOR_STUDY, auditRequest);
             return null;
           }
         } else {
@@ -306,10 +299,6 @@ public class EnrollmentTokenController {
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
             ErrorResponseUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
             response);
-
-        auditRequest.setUserId(userId);
-        auditRequest.setStudyId(enrollmentBean.getStudyId());
-        enrollAuditEventHelper.logEvent(EnrollAuditEvent.STUDY_ENROLLMENT_FAILED, auditRequest);
         return null;
       }
     } catch (InvalidRequestException e) {

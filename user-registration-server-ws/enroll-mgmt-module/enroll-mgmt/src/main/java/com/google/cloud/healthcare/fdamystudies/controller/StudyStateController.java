@@ -30,9 +30,7 @@ import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -72,7 +70,6 @@ public class StudyStateController {
     logger.info("StudyStateController updateStudyState() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    Map<String, String> map = new HashMap<>();
     try {
       if (studyStateReqBean != null && userId != null && !StringUtils.isEmpty(userId)) {
         if (studyStateReqBean.getStudies() != null && !studyStateReqBean.getStudies().isEmpty()) {
@@ -81,19 +78,15 @@ public class StudyStateController {
           if (user != null) {
             List<ParticipantStudiesBO> existParticipantStudies =
                 studyStateService.getParticipantStudiesList(user);
+
             studyStateRespBean =
                 studyStateService.saveParticipantStudies(
-                    studiesBeenList, existParticipantStudies, userId);
+                    studiesBeenList, existParticipantStudies, userId, auditRequest);
             if (studyStateRespBean != null
                 && studyStateRespBean
                     .getMessage()
                     .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
               studyStateRespBean.setCode(HttpStatus.OK.value());
-
-              auditRequest.setUserId(userId);
-              map.put("study_state_value", studyStateReqBean.getStudies().get(0).getStudyId());
-              enrollAuditEventHelper.logEvent(
-                  EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, map);
             }
           } else {
             MyStudiesUserRegUtil.getFailureResponse(
@@ -101,9 +94,7 @@ public class StudyStateController {
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
                 response);
-            map.put("study_state_value", studyStateReqBean.getStudies().get(0).getStudyId());
-            enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, map);
+
             return null;
           }
         } else {
@@ -144,8 +135,9 @@ public class StudyStateController {
         studyStateResponse.setStudies(studies);
         studyStateResponse.setMessage(AppConstants.SUCCESS);
 
+        auditRequest.setUserId(userId);
         enrollAuditEventHelper.logEvent(
-            EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest, null);
+            EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
 
         return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
       } catch (InvalidUserIdException e) {
@@ -172,9 +164,9 @@ public class StudyStateController {
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
           response);
-
+      auditRequest.setUserId(userId);
       enrollAuditEventHelper.logEvent(
-          EnrollAuditEvent.READ_OPEARATION_FAILED_FOR_STUDY_INFO, auditRequest, null);
+          EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
       logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
       return null;
     }
@@ -191,7 +183,6 @@ public class StudyStateController {
     logger.info("StudyStateController withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    Map<String, String> map = new HashMap<>();
     try {
       if (withdrawFromStudyBean != null) {
         if (withdrawFromStudyBean.getParticipantId() != null
@@ -207,12 +198,11 @@ public class StudyStateController {
             logger.info("StudyStateController withdrawFromStudy() - Ends ");
             respBean.setCode(ErrorCode.EC_200.code());
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
-            enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest, null);
 
-            map.put("enrolment_Status", AppConstants.WITHDRAWN);
+            auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
+            auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
             enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_ENROLMENT_STATUS, auditRequest, map);
+                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
 
             return new ResponseEntity<>(respBean, HttpStatus.OK);
           } else {
@@ -221,8 +211,10 @@ public class StudyStateController {
                 MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
                 MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
                 response);
+            auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
+            auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
             enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, auditRequest, null);
+                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, auditRequest);
             return null;
           }
         } else {
@@ -231,8 +223,7 @@ public class StudyStateController {
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
               response);
-          enrollAuditEventHelper.logEvent(
-              EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, auditRequest, null);
+
           return null;
         }
       } else {

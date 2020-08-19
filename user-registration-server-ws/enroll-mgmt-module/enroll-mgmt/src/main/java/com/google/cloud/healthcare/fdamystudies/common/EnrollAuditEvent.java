@@ -17,18 +17,18 @@ import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.
 
 @Getter
 public enum EnrollAuditEvent implements AuditLogEvent {
-  USER_FOUND_ELGIBLE_FOR_STUDY(
-      MOBILE_APPS, PARTICIPANT_DATASTORE, null, null, "USER_FOUND_ELGIBLE_FOR_STUDY"),
+  USER_FOUND_ELIGIBLE_FOR_STUDY(
+      MOBILE_APPS, PARTICIPANT_DATASTORE, null, null, "USER_FOUND_ELIGIBLE_FOR_STUDY"),
 
-  ENROLMENT_TOKEN_FOUND_INVALID(
-      MOBILE_APPS, PARTICIPANT_DATASTORE, null, null, "ENROLMENT_TOKEN_FOUND_INVALID"),
+  ENROLLMENT_TOKEN_FOUND_INVALID(
+      MOBILE_APPS, PARTICIPANT_DATASTORE, null, null, "ENROLLMENT_TOKEN_FOUND_INVALID"),
 
-  USER_FOUND_INELGIBLE_FOR_STUDY(
+  USER_FOUND_INELIGIBLE_FOR_STUDY(
       MOBILE_APPS,
       PARTICIPANT_DATASTORE,
       null,
       "App user found in-eligible for study.",
-      "USER_FOUND_INELGIBLE_FOR_STUDY"),
+      "USER_FOUND_INELIGIBLE_FOR_STUDY"),
 
   PARTICIPANT_ID_RECEIVED(
       PARTICIPANT_DATASTORE,
@@ -49,7 +49,7 @@ public enum EnrollAuditEvent implements AuditLogEvent {
       PARTICIPANT_DATASTORE,
       null,
       "App user could not be enrolled into the study.",
-      "STUDY_ENROLMENT__FAILED"),
+      "STUDY_ENROLLMENT_FAILED"),
 
   STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT(
       MOBILE_APPS,
@@ -71,19 +71,19 @@ public enum EnrollAuditEvent implements AuditLogEvent {
   WITHDRAWAL_FROM_STUDY_FAILED(
       MOBILE_APPS, PARTICIPANT_DATASTORE, null, null, "WITHDRAWAL_FROM_STUDY_FAILED"),
 
-  READ_OPERATION_SUCCEEDED_FOR_ENROLMENT_STATUS(
+  READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS(
       RESPONSE_DATASTORE,
       PARTICIPANT_DATASTORE,
       null,
-      "Participant's Enrolment Status '${enrolment_Status}' read.",
-      "READ_OPERATION_SUCCEEDED_FOR_ENROLMENT_STATUS"),
+      "Participant's enrollment status '${enrollment_status}' read.",
+      "READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS"),
 
-  READ_OPERATION_FAILED_FOR_ENROLMENT_STATUS(
+  READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS(
       RESPONSE_DATASTORE,
       PARTICIPANT_DATASTORE,
       null,
-      "Attempt to read participant's Enrolment Status '${enrolment_Status}' failed.",
-      "READ_OPERATION_FAILED_FOR_ENROLMENT_STATUS"),
+      "Attempt to read participant's enrollment status failed.",
+      "READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS"),
 
   READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO(
       MOBILE_APPS,
@@ -92,12 +92,12 @@ public enum EnrollAuditEvent implements AuditLogEvent {
       "App user's study participation status for 1 or more studies read.",
       "READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO"),
 
-  READ_OPEARATION_FAILED_FOR_STUDY_INFO(
+  READ_OPERATION_FAILED_FOR_STUDY_INFO(
       MOBILE_APPS,
       PARTICIPANT_DATASTORE,
       null,
       "Attempt to read app user's study participation status for 1 or more studies, failed.",
-      "READ_OPEARATION_FAILED_FOR_STUDY_INFO");
+      "READ_OPERATION_FAILED_FOR_STUDY_INFO");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

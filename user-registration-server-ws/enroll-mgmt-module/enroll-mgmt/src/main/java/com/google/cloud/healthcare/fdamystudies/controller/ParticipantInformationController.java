@@ -16,6 +16,8 @@ import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
 import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -49,8 +51,12 @@ public class ParticipantInformationController {
     logger.info("ParticipantInformationController getParticipantDetails() - starts ");
     ParticipantInfoRespBean participantInfoResp = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    Map<String, String> placeHolders = new HashMap<>();
     try {
       if (StringUtils.hasText(participantId) && StringUtils.hasText(studyId)) {
+
+        auditRequest.setStudyId(studyId);
+        auditRequest.setParticipantId(participantId);
         participantInfoResp =
             participantInfoService.getParticipantInfoDetails(participantId, studyId);
         if (participantInfoResp != null) {
@@ -58,10 +64,11 @@ public class ParticipantInformationController {
               MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
           participantInfoResp.setCode(HttpStatus.OK.value());
 
-          auditRequest.setStudyId(studyId);
-          auditRequest.setParticipantId(participantId);
+          placeHolders.put("enrollment_status", participantInfoResp.getEnrollment());
           enrollAuditEventHelper.logEvent(
-              EnrollAuditEvent.PARTICIPANT_ID_RECEIVED, auditRequest, null);
+              EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS,
+              auditRequest,
+              placeHolders);
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
@@ -69,9 +76,8 @@ public class ParticipantInformationController {
               MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
               response);
 
-          auditRequest.setStudyId(studyId);
           enrollAuditEventHelper.logEvent(
-              EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED, auditRequest, null);
+              EnrollAuditEvent.READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS, auditRequest);
           return null;
         }
       } else {
