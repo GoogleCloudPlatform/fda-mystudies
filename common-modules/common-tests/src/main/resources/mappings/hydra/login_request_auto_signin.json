@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/oauth2/auth/requests/login?login_challenge=117eb076-23cf-4653-a76d-14ec1ead4317"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "hydra/login_request_auto_sigin_response.json"
+  }
+}

@@ -10,11 +10,14 @@ package com.google.cloud.healthcare.fdamystudies.exceptions;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse.Violation;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException.BadRequest;
 
 @ControllerAdvice
+@Order(0)
 public class GlobalExceptionHandler {
 
   private XLogger logger = XLoggerFactory.getXLogger(GlobalExceptionHandler.class.getName());
@@ -84,5 +88,11 @@ public class GlobalExceptionHandler {
     ValidationErrorResponse error = new ValidationErrorResponse();
     error.getViolations().add(new Violation("", "request body is required"));
     return error;
+  }
+
+  @ExceptionHandler(ErrorCodeException.class)
+  public ResponseEntity<ErrorCode> handleHttpMessageNotReadableException(ErrorCodeException e) {
+    logger.error("request failed with ErrorCode", e);
+    return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getErrorCode());
   }
 }

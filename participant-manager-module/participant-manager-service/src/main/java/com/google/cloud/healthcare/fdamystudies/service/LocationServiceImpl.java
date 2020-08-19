@@ -13,12 +13,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN
 
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationIdStudyNamesPair;
@@ -57,26 +57,28 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationDetailsResponse addNewLocation(LocationRequest locationRequest) {
+  public LocationEntity addNewLocation(LocationEntity location, String userId)
+      throws ErrorCodeException {
     logger.entry("begin addNewLocation()");
 
-    Optional<UserRegAdminEntity> optUserRegAdminUser =
-        userRegAdminRepository.findById(locationRequest.getUserId());
+    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminUser.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (Permission.READ_EDIT != Permission.fromValue(adminUser.getEditPermission())) {
       logger.exit(
           String.format(
               "Add location failed with error code=%s", ErrorCode.LOCATION_ACCESS_DENIED));
-      return new LocationDetailsResponse(ErrorCode.LOCATION_ACCESS_DENIED);
-    }
-    LocationEntity locationEntity = LocationMapper.fromLocationRequest(locationRequest);
-    locationEntity.setCreatedBy(adminUser.getId());
-    locationEntity = locationRepository.saveAndFlush(locationEntity);
-    logger.exit(String.format("locationId=%s", locationEntity.getId()));
 
-    return LocationMapper.toLocationDetailsResponse(
-        locationEntity, MessageCode.ADD_LOCATION_SUCCESS);
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
+    location.setCreatedBy(adminUser.getId());
+    LocationEntity created = locationRepository.saveAndFlush(location);
+
+    logger.exit(String.format("locationId=%s", created.getId()));
+    return created;
   }
 
   @Override
@@ -157,7 +159,7 @@ public class LocationServiceImpl implements LocationService {
 
     if (ACTIVE_STATUS.equals(locationRequest.getStatus())
         && ACTIVE_STATUS.equals(locationEntity.getStatus())) {
-      return ErrorCode.CANNOT_REACTIVE;
+      return ErrorCode.CANNOT_REACTIVATE;
     }
 
     return null;
@@ -181,7 +183,8 @@ public class LocationServiceImpl implements LocationService {
         locations.stream().map(LocationEntity::getId).distinct().collect(Collectors.toList());
     Map<String, List<String>> locationStudies = getStudiesAndGroupByLocationId(locationIds);
 
-    List<LocationDetails> locationDetailsList = LocationMapper.toLocations(locations);
+    List<LocationDetails> locationDetailsList =
+        locations.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
     for (LocationDetails locationDetails : locationDetailsList) {
       List<String> studies = locationStudies.get(locationDetails.getLocationId());
       locationDetails.getStudyNames().addAll(studies);
@@ -193,7 +196,7 @@ public class LocationServiceImpl implements LocationService {
     return locationResponse;
   }
 
-  public Map<String, List<String>> getStudiesAndGroupByLocationId(List<String> locationIds) {
+  private Map<String, List<String>> getStudiesAndGroupByLocationId(List<String> locationIds) {
     List<LocationIdStudyNamesPair> studyNames =
         (List<LocationIdStudyNamesPair>)
             CollectionUtils.emptyIfNull(studyRepository.getStudyNameLocationIdPairs(locationIds));
@@ -256,9 +259,9 @@ public class LocationServiceImpl implements LocationService {
     List<LocationEntity> listOfLocation =
         (List<LocationEntity>)
             CollectionUtils.emptyIfNull(
-                locationRepository.findByStatusAndStudyId(status, excludeStudyId));
-    List<LocationDetails> locationDetails = LocationMapper.toLocations(listOfLocation);
-
+                locationRepository.findByStatusAndExcludeStudyId(status, excludeStudyId));
+    List<LocationDetails> locationDetails =
+        listOfLocation.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
     logger.exit(String.format("locations size=%d", locationDetails.size()));
     return new LocationResponse(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS, locationDetails);
   }
