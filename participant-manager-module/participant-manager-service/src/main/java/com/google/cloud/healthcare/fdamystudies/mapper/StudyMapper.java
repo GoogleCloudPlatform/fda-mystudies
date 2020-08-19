@@ -17,10 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,7 +69,8 @@ public final class StudyMapper {
     studyDetail.setAppInfoId(study.getAppInfo().getId());
 
     if (studyPermissionsByStudyInfoId.get(study.getId()) != null) {
-      Integer studyEditPermission = studyPermissionsByStudyInfoId.get(study.getId()).getEdit();
+      Integer studyEditPermission =
+          studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
       studyDetail.setStudyPermission(
           studyEditPermission == Permission.NO_PERMISSION.value()
               ? Permission.READ_VIEW.value()
