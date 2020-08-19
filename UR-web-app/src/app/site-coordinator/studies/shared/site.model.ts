@@ -7,3 +7,6 @@ export interface Site {
   name: string;
   status: string;
 }
+export interface UpdateTargetEnrollmentRequest {
+  targetEnrollment: number;
+}

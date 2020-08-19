@@ -53,13 +53,35 @@ public enum MessageCode {
 
   GET_APP_PARTICIPANTS_SUCCESS(HttpStatus.OK, "MSG-0005", "get App Participants successfully"),
 
+  ADD_NEW_USER_SUCCESS(HttpStatus.CREATED, "MSG-0020", "New user added successfully"),
+
+  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully"),
+
+  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfully"),
+
+  GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
+      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfully"),
+
+  GET_PARTICIPANT_DETAILS_SUCCESS(
+      HttpStatus.OK, "MSG-0019", "Get participant details successfully"),
+
+  PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "Participants are invited"),
+
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 
   CHANGE_PASSWORD_SUCCESS(
       HttpStatus.OK, "MSG-0002", "Your password has been changed successfully!"),
 
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
-      HttpStatus.ACCEPTED, "MSG-0003", "The email is accepted by the receiving mail server."),
+      HttpStatus.ACCEPTED, "MSG-0022", "The email is accepted by the receiving mail server."),
+
+  IMPORT_PARTICIPANT_SUCCESS(HttpStatus.OK, "MSG-0026", "Participants imported successfully"),
+
+  UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG-0028", "Status updated successfully"),
+
+  GET_SITES_SUCCESS(HttpStatus.OK, "MSG-0018", "Get sites successfully"),
+
+  PROFILE_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0011", "Profile updated successfully"),
 
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
 

@@ -43,15 +43,15 @@ public enum ErrorCode {
       401,
       "EC-110",
       Constants.BAD_REQUEST,
-      "Your temporary password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+      "Your temporary password is expired. Please use the Forgot Password link to reset your password."),
 
   PASSWORD_EXPIRED(
       401,
       "EC-111",
       Constants.BAD_REQUEST,
-      "Your password is expired. Please use the Forgot Your Login/Reset Password link to reset your password"),
+      "Your password is expired. Please use the Forgot Password link to reset your password."),
 
-  USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found"),
+  USER_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "User not found."),
 
   ACCOUNT_DEACTIVATED(403, "EC-116", Constants.BAD_REQUEST, "Your account has been deactivated."),
 
@@ -69,7 +69,7 @@ public enum ErrorCode {
       400,
       "EC-105",
       Constants.BAD_REQUEST,
-      "Your new password cannot repeat any of your previous 10 passwords;"),
+      "Your new password cannot repeat any of your previous 10 passwords."),
 
   INVALID_UPDATE_USER_REQUEST(400, "EC-120", Constants.BAD_REQUEST, "Email or Status is required."),
 
@@ -98,7 +98,10 @@ public enum ErrorCode {
       400, "EC-106", Constants.BAD_REQUEST, "Site exists with the given locationId and studyId"),
 
   LOCATION_ACCESS_DENIED(
-      403, "EC-882", "Forbidden", "You do not have permission to view or add or update locations"),
+      403,
+      "EC-882",
+      HttpStatus.FORBIDDEN.toString(),
+      "You do not have permission to view or add or update locations"),
 
   INVALID_ARGUMENTS(400, "EC_813", Constants.BAD_REQUEST, "Provided argument value is invalid"),
 
@@ -166,6 +169,31 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This Site is associated with active and enrolled participants"
           + " and cannot be decomissioned"),
+
+  NOT_SUPER_ADMIN_ACCESS(
+      403,
+      "EC_870",
+      HttpStatus.FORBIDDEN.toString(),
+      "You are not authorized to access this information"),
+
+  PERMISSION_MISSING(
+      400, "EC_978", Constants.BAD_REQUEST, "Admin should have atleast one permission"),
+
+  INVALID_SECURITY_CODE(404, "EC_869", "Not Found", "Invalid Security code"),
+
+  SECURITY_CODE_EXPIRED(401, "EC_880", "Unauthorized", "Security code has expired"),
+
+  PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
+      400, "EC-105", Constants.BAD_REQUEST, "Error getting participants."),
+
+  DOCUMENT_NOT_IN_PRESCRIBED_FORMAT(
+      400, "EC_866", Constants.BAD_REQUEST, "Import Document not in prescribed format"),
+
+  FAILED_TO_IMPORT_PARTICIPANTS(
+      500,
+      "EC_914",
+      HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+      "Unable to import the participants"),
 
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");

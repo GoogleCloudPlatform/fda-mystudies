@@ -21,8 +21,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
 
 @Repository
 public class ParticipantInformationDaoImpl implements ParticipantInformationDao {

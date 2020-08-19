@@ -9,25 +9,25 @@
 package com.google.cloud.healthcare.fdamystudies.helper;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.EMAIL_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
@@ -35,14 +35,19 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.OrgInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,16 +55,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-
 @Getter
 @Component
 public class TestDataHelper {
+
+  public static final String ADMIN_LAST_NAME = "mockito_last_name";
+
+  public static final String ADMIN_FIRST_NAME = "mockito";
+
+  public static final String ADMIN_AUTH_ID_VALUE =
+      "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
+
+  public static final String EMAIL_VALUE = "mockit_email@grr.la";
+
+  public static final String NON_SUPER_ADMIN_EMAIL_ID = "mockit_non_super_admin_email@grr.la";
+
+  public static final String SUPER_ADMIN_EMAIL_ID = "super_admin_email@grr.la";
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
@@ -83,6 +94,10 @@ public class TestDataHelper {
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
+  @Autowired private StudyConsentRepository studyConsentRepository;
+
+  @Autowired private OrgInfoRepository orgInfoRepository;
+
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -94,17 +109,52 @@ public class TestDataHelper {
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(EMAIL_VALUE);
-    userRegAdminEntity.setFirstName("mockito");
-    userRegAdminEntity.setLastName("mockito_last_name");
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
     userRegAdminEntity.setEditPermission(Permission.READ_EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
+    userRegAdminEntity.setSecurityCode("xnsxU1Ax1V2Xtpk-qNLeiZ-417JiqyjytC-706-km6gCq9HAXNYWd8");
+    userRegAdminEntity.setSecurityCodeExpireDate(
+        new Timestamp(Instant.now().plus(1, ChronoUnit.DAYS).toEpochMilli()));
     return userRegAdminEntity;
   }
 
   public UserRegAdminEntity createUserRegAdmin() {
     UserRegAdminEntity userRegAdminEntity = newUserRegAdminEntity();
+    return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+  }
+
+  public UserRegAdminEntity newNonSuperAdmin() {
+    UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
+    userRegAdminEntity.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
+    userRegAdminEntity.setEditPermission(ManageLocation.DENY.getValue());
+    userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
+    userRegAdminEntity.setSuperAdmin(false);
+    return userRegAdminEntity;
+  }
+
+  public UserRegAdminEntity createNonSuperAdmin() {
+    UserRegAdminEntity userRegAdminEntity = newNonSuperAdmin();
+    return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+  }
+
+  public UserRegAdminEntity newSuperAdminForUpdate() {
+    UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
+    userRegAdminEntity.setEmail(SUPER_ADMIN_EMAIL_ID);
+    userRegAdminEntity.setFirstName("mockito_fname");
+    userRegAdminEntity.setLastName("mockito__lname");
+    userRegAdminEntity.setEditPermission(ManageLocation.ALLOW.getValue());
+    userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
+    userRegAdminEntity.setSuperAdmin(true);
+    return userRegAdminEntity;
+  }
+
+  public UserRegAdminEntity createSuperAdmin() {
+    UserRegAdminEntity userRegAdminEntity = newSuperAdminForUpdate();
     return userRegAdminRepository.saveAndFlush(userRegAdminEntity);
   }
 
@@ -157,8 +207,10 @@ public class TestDataHelper {
   }
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
-    StudyEntity studyEntity = new StudyEntity();
-    studyEntity.setType(CLOSE_STUDY);
+    StudyEntity studyEntity = newStudyEntity();
+    studyEntity.setType("CLOSE");
+    studyEntity.setName("COVID Study");
+    studyEntity.setAppInfo(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEditPermission(EDIT_VALUE);
@@ -177,6 +229,7 @@ public class TestDataHelper {
   public SiteEntity createSiteEntity(
       StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
     SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setStudy(studyEntity);
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
     sitePermissionEntity.setEditPermission(Permission.READ_EDIT.value());
     sitePermissionEntity.setStudy(studyEntity);
@@ -212,8 +265,8 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
     userDetailsEntity.setEmail(EMAIL_VALUE);
     userDetailsEntity.setStatus(1);
-    userDetailsEntity.setFirstName("mockito");
-    userDetailsEntity.setLastName("mockito_last_name");
+    userDetailsEntity.setFirstName(ADMIN_FIRST_NAME);
+    userDetailsEntity.setLastName(ADMIN_LAST_NAME);
     userDetailsEntity.setLocalNotificationFlag(false);
     userDetailsEntity.setRemoteNotificationFlag(false);
     userDetailsEntity.setTouchId(false);
@@ -225,5 +278,21 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = newUserDetails();
     userDetailsEntity.setAppInfo(appEntity);
     return userDetailsRepository.saveAndFlush(userDetailsEntity);
+  }
+
+  public StudyConsentEntity createStudyConsentEntity(ParticipantStudyEntity participantStudy) {
+    StudyConsentEntity studyConsent = new StudyConsentEntity();
+    studyConsent.setPdfPath(
+        "cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9/CovidStudy/cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9_CovidStudy_1.3_06302020071346.pdf");
+    studyConsent.setPdfStorage(1);
+    studyConsent.setVersion("1.0");
+    studyConsent.setParticipantStudy(participantStudy);
+    return studyConsentRepository.saveAndFlush(studyConsent);
+  }
+
+  public OrgInfoEntity createOrgInfo() {
+    OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
+    orgInfoEntity.setName("OrgName");
+    return orgInfoRepository.saveAndFlush(orgInfoEntity);
   }
 }

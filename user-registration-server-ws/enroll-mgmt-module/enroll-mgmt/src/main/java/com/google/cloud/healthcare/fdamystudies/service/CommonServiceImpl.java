@@ -28,11 +28,11 @@ import org.springframework.web.client.RestTemplate;
 import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 
 @Service

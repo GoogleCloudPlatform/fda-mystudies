@@ -38,4 +38,6 @@ public class ParticipantDetailRequest {
   private String onboardingStatus;
 
   private String siteId;
+
+  private String participantId;
 }
