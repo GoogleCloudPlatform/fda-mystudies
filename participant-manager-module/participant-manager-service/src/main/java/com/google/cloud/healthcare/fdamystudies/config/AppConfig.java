@@ -20,3 +20,7 @@ public class AppConfig extends BaseAppConfig {
 	    return StorageOptions.getDefaultInstance().getService();
 	  }
 }
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class AppConfig extends CommonModuleConfiguration {}

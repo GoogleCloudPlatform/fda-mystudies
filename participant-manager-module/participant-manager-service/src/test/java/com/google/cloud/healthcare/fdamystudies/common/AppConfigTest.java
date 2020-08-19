@@ -21,6 +21,22 @@ import org.springframework.context.annotation.Profile;
 @Profile("mockit")
 @Configuration
 @Import(GoogleStorageProtocolResolver.class)
+
+package com.google.cloud.healthcare.fdamystudies.common;
+
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import javax.mail.internet.MimeMessage;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
+import org.springframework.mail.javamail.JavaMailSender;
+
+@Profile("mockit")
+@Configuration
 public class AppConfigTest {
 
   @Bean
@@ -32,5 +48,11 @@ public class AppConfigTest {
   @Bean
   public static GoogleStorageProtocolResolverSettings googleStorageProtocolResolverSettings() {
     return new GoogleStorageProtocolResolverSettings();
+  public JavaMailSender javaMailSender() {
+    JavaMailSender javaMailSender = mock(JavaMailSender.class);
+    MimeMessage mimeMessage = mock(MimeMessage.class);
+    when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
+    doNothing().when(javaMailSender).send(mimeMessage);
+    return javaMailSender;
   }
 }

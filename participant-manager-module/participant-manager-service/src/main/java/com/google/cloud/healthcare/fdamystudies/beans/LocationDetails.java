@@ -10,12 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang3.builder.ToStringExclude;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringExclude;
 
 @Setter
 @Getter

@@ -9,12 +9,10 @@
 package com.google.cloud.healthcare.fdamystudies.config;
 
 import java.io.Serializable;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Setter
@@ -25,7 +23,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${securityCodeExpireDate}")
   private String securityCodeExpireDate;
-
+  
   @Value("${enrollmentTokenExpiryInHours}")
   private Integer enrollmentTokenExpiryInHours;
 
@@ -52,4 +50,10 @@ public class AppPropertyConfig implements Serializable {
   
   @Value("${bucket.name}")
   private String bucketName;
+
+  @Value("${org.name}")
+  private String orgName;
+
+  @Value("${auth.server.register.url}")
+  private String authRegisterUrl;
 }
