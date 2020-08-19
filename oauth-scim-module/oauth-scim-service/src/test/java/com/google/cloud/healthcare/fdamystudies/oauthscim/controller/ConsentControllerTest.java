@@ -10,8 +10,9 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint.CONSENT_PAGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.DEVICE_PLATFORM;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.common.DevicePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
@@ -49,15 +50,16 @@ public class ConsentControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnLoginPage() throws Exception {
-    Cookie devicePlatformCookie = new Cookie(DEVICE_PLATFORM, DevicePlatform.UNKNOWN.getValue());
-    Cookie consentChallengeCookie = new Cookie(CONSENT_CHALLENGE, CONSENT_CHALLENGE_VALUE);
-    Cookie userIdCookie = new Cookie(USER_ID, USER_ID_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie consentChallengeCookie = new Cookie(CONSENT_CHALLENGE_COOKIE, CONSENT_CHALLENGE_VALUE);
+    Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
     mockMvc
         .perform(
             post(CONSENT_PAGE.getPath())
                 .contextPath(getContextPath())
                 .queryParams(getConsentQSParams())
-                .cookie(devicePlatformCookie, consentChallengeCookie, userIdCookie))
+                .cookie(mobilePlatformCookie, consentChallengeCookie, userIdCookie))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(ApiEndpoint.LOGIN_PAGE.getUrl()))
         .andReturn();

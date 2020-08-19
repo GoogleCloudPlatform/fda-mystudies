@@ -3,9 +3,9 @@ package com.google.cloud.healthcare.fdamystudies.testutils;
 public final class Constants {
   private Constants() {}
 
-  public static final String ACCESS_TOKEN_VALUE = "access Token value";
+  public static final String ACCESS_TOKEN_VALUE = "1";
 
-  public static final String CLIENT_TOKEN_VALUE = "client token value";
+  public static final String CLIENT_TOKEN_VALUE = "1";
 
   public static final String ACCESS_TOKEN_HEADER = "accessToken";
 

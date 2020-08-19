@@ -9,11 +9,11 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import java.util.List;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 public interface CommonService {
 

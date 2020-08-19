@@ -54,4 +54,11 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
   public List<ParticipantStudyEntity> findByAppIdAndUserId(
       @Param("appsStudyInfoIds") List<String> appsStudyInfoIds,
       @Param("userDetailsIds") List<String> userDetailsIds);
+
+  @Query(
+      "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.participantRegistrySite.id = :participantRegistrySiteId")
+  public List<ParticipantStudyEntity> findParticipantsEnrollment(String participantRegistrySiteId);
+
+  @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.site.id in (:siteIds)")
+  public List<ParticipantStudyEntity> findBySiteIds(@Param("siteIds") List<String> usersSiteIds);
 }

@@ -7,6 +7,7 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
+
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
@@ -119,7 +120,7 @@ public class StudyServiceImpl implements StudyService {
   private Map<String, StudyPermissionEntity> getStudyPermissionsByStudyInfoId(
       String userId, List<String> usersStudyIds) {
     List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findStudyPermissionsOfUserByStudyIds(usersStudyIds, userId);
+        studyPermissionRepository.findByStudyIds(usersStudyIds, userId);
 
     Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId = new HashMap<>();
     if (CollectionUtils.isNotEmpty(studyPermissions)) {
@@ -143,6 +144,10 @@ public class StudyServiceImpl implements StudyService {
       StudyEntity study = entry.getKey();
       String studyId = study.getId();
       studyDetail.setId(studyId);
+      studyDetail.setCustomId(entry.getKey().getCustomId());
+      studyDetail.setName(entry.getKey().getName());
+      studyDetail.setType(entry.getKey().getType());
+      studyDetail.setSitesCount((long) entry.getValue().size());
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
