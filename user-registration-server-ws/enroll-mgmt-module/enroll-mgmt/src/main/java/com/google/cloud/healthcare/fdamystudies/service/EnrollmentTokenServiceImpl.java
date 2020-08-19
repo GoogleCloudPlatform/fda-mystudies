@@ -10,8 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.dao.EnrollmentTokenDao;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
@@ -31,8 +29,6 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   @Autowired EnrollmentManagementUtil enrollUtil;
 
   @Autowired CommonService commonService;
-
-  @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   private static final Logger logger = LoggerFactory.getLogger(EnrollmentTokenServiceImpl.class);
 
@@ -103,12 +99,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
     try {
       isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
       hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue);
-      participantId = enrollUtil.getParticipantId("", hashedTokenValue, shortName);
-
-      if (null != participantId) {
-        enrollAuditEventHelper.logEvent(EnrollAuditEvent.PARTICIPANT_ID_RECEIVED, auditRequest);
-      }
-      enrollAuditEventHelper.logEvent(EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED, auditRequest);
+      participantId = enrollUtil.getParticipantId("", hashedTokenValue, shortName, auditRequest);
 
       participantBean =
           enrollmentTokenDao.enrollParticipant(

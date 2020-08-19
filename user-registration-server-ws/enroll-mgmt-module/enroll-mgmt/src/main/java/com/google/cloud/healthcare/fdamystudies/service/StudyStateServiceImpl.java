@@ -87,10 +87,15 @@ public class StudyStateServiceImpl implements StudyStateService {
     List<ParticipantStudiesBO> addParticipantStudiesList = new ArrayList<ParticipantStudiesBO>();
     List<String> customStudyIdList = new LinkedList<>();
     ParticipantStudiesBO participantStudyBo = new ParticipantStudiesBO();
-    Map<String, String> map = new HashMap<>();
+    Map<String, String> placeHolder = new HashMap<>();
+    auditRequest.setUserId(userId);
     try {
       for (int i = 0; i < studiesBeenList.size(); i++) {
+
         StudiesBean studiesBean = studiesBeenList.get(i);
+        auditRequest.setStudyId(studiesBean.getStudyId());
+        auditRequest.setParticipantId(studiesBean.getParticipantId());
+
         studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
         if (existParticipantStudies != null && !existParticipantStudies.isEmpty()) {
           for (ParticipantStudiesBO participantStudies : existParticipantStudies) {
@@ -173,15 +178,15 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateRespBean.setMessage(
             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
-        auditRequest.setUserId(userId);
-        map.put("study_state_value", participantStudyBo.getStatus());
+        placeHolder.put("study_state_value", participantStudyBo.getStatus());
         enrollAuditEventHelper.logEvent(
-            EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, map);
+            EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT,
+            auditRequest,
+            placeHolder);
 
       } else {
-        auditRequest.setUserId(userId);
         enrollAuditEventHelper.logEvent(
-            EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, map);
+            EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, placeHolder);
       }
     } catch (Exception e) {
       logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);

@@ -69,6 +69,7 @@ public class ParticipantInformationController {
               EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS,
               auditRequest,
               placeHolders);
+
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
@@ -78,6 +79,7 @@ public class ParticipantInformationController {
 
           enrollAuditEventHelper.logEvent(
               EnrollAuditEvent.READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS, auditRequest);
+
           return null;
         }
       } else {

@@ -34,7 +34,7 @@ public enum EnrollAuditEvent implements AuditLogEvent {
       PARTICIPANT_DATASTORE,
       RESPONSE_DATASTORE,
       null,
-      "Participant ID received after study consent capturer.",
+      "Participant ID received after study consent captured.",
       "PARTICIPANT_ID_RECEIVED"),
 
   PARTICIPANT_ID_NOT_RECEIVED(

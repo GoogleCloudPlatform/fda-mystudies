@@ -164,9 +164,11 @@ public class StudyStateController {
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
           response);
+
       auditRequest.setUserId(userId);
       enrollAuditEventHelper.logEvent(
           EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
+
       logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
       return null;
     }
@@ -189,6 +191,9 @@ public class StudyStateController {
             && !withdrawFromStudyBean.getParticipantId().isEmpty()
             && withdrawFromStudyBean.getStudyId() != null
             && !withdrawFromStudyBean.getStudyId().isEmpty()) {
+
+          auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
+          auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
           respBean =
               studyStateService.withdrawFromStudy(
                   withdrawFromStudyBean.getParticipantId(),
@@ -199,8 +204,6 @@ public class StudyStateController {
             respBean.setCode(ErrorCode.EC_200.code());
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
 
-            auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
-            auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
             enrollAuditEventHelper.logEvent(
                 EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
 
@@ -211,10 +214,10 @@ public class StudyStateController {
                 MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
                 MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
                 response);
-            auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
-            auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
+
             enrollAuditEventHelper.logEvent(
                 EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, auditRequest);
+
             return null;
           }
         } else {

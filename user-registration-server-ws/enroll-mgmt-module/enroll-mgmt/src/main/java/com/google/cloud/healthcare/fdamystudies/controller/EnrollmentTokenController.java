@@ -69,12 +69,17 @@ public class EnrollmentTokenController {
       @RequestBody EnrollmentBean enrollmentBean,
       @Context HttpServletResponse response,
       @Context HttpServletRequest request) {
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     logger.info("ValidateEnrollmentTokenController validateEnrollmentToken() - Starts ");
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(userId);
+
     ErrorBean errorBean = null;
     try {
-
       if (enrollmentBean != null) {
+
+        auditRequest.setStudyId(enrollmentBean.getStudyId());
+
         if (StringUtils.isEmpty(enrollmentBean.getStudyId())) {
           ErrorResponseUtil.getFailureResponse(
               ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
@@ -104,8 +109,7 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
                 ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
                 response);
-            auditRequest.setUserId(userId);
-            auditRequest.setStudyId(enrollmentBean.getStudyId());
+
             enrollAuditEventHelper.logEvent(
                 EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID, auditRequest);
             return null;
@@ -167,9 +171,13 @@ public class EnrollmentTokenController {
     ErrorBean errorBean = null;
     String tokenValue = "";
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(userId);
     try {
       if (enrollmentBean != null) {
+
         if (!StringUtils.isEmpty(enrollmentBean.getStudyId())) {
+          auditRequest.setStudyId(enrollmentBean.getStudyId());
+
           if (enrollmentTokenfService.studyExists(enrollmentBean.getStudyId())) {
             if (enrollmentTokenfService.enrollmentTokenRequired(enrollmentBean.getStudyId())) {
               if (!StringUtils.isEmpty(enrollmentBean.getToken())) {
@@ -179,10 +187,9 @@ public class EnrollmentTokenController {
                     if (enrollmentTokenfService.isValidStudyToken(
                         enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
 
-                      auditRequest.setUserId(userId);
-                      auditRequest.setStudyId(enrollmentBean.getStudyId());
                       enrollAuditEventHelper.logEvent(
                           EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY, auditRequest);
+
                       respBean =
                           enrollmentTokenfService.enrollParticipant(
                               enrollmentBean.getStudyId(),
@@ -204,10 +211,11 @@ public class EnrollmentTokenController {
                       errorBean.setCode(HttpStatus.BAD_REQUEST.value());
                       errorBean.setMessage(ErrorResponseUtil.ErrorCodes.UNKNOWN_TOKEN.getValue());
 
-                      auditRequest.setUserId(userId);
-                      auditRequest.setStudyId(enrollmentBean.getStudyId());
                       enrollAuditEventHelper.logEvent(
                           EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
+
+                      enrollAuditEventHelper.logEvent(
+                          EnrollAuditEvent.STUDY_ENROLLMENT_FAILED, auditRequest);
                       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                     }
                   } else {
@@ -221,8 +229,6 @@ public class EnrollmentTokenController {
                     errorBean.setCode(HttpStatus.BAD_REQUEST.value());
                     errorBean.setMessage(ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue());
 
-                    auditRequest.setUserId(userId);
-                    auditRequest.setStudyId(enrollmentBean.getStudyId());
                     enrollAuditEventHelper.logEvent(
                         EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
                     return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
@@ -284,9 +290,6 @@ public class EnrollmentTokenController {
               ErrorResponseUtil.ErrorCodes.ERROR_REQUIRED.getValue(),
               response);
 
-          auditRequest.setUserId(userId);
-          auditRequest.setStudyId(enrollmentBean.getStudyId());
-          enrollAuditEventHelper.logEvent(EnrollAuditEvent.STUDY_ENROLLMENT_FAILED, auditRequest);
           return null;
         }
       } else {

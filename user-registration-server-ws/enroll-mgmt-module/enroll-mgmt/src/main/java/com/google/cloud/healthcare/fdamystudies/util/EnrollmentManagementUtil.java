@@ -8,6 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -27,12 +36,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 
 @Component
 public class EnrollmentManagementUtil {
@@ -47,6 +50,8 @@ public class EnrollmentManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   public boolean isChecksumValid(@NotNull String token) {
     try {
@@ -130,7 +135,11 @@ public class EnrollmentManagementUtil {
     return generatedHash;
   }
 
-  public String getParticipantId(String applicationId, String hashedTokenValue, String studyId)
+  public String getParticipantId(
+      String applicationId,
+      String hashedTokenValue,
+      String studyId,
+      AuditLogEventRequest auditRequest)
       throws InvalidRequestException, UnAuthorizedRequestException, SystemException {
     logger.info("EnrollmentManagementUtil deactivateAcct() - starts ");
     HttpHeaders headers = null;
@@ -152,6 +161,11 @@ public class EnrollmentManagementUtil {
           restTemplate.postForEntity(appConfig.getAddParticipantId(), requestBody, String.class);
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
         participantId = (String) responseEntity.getBody();
+        auditRequest.setParticipantId(participantId);
+
+        enrollAuditEventHelper.logEvent(EnrollAuditEvent.PARTICIPANT_ID_RECEIVED, auditRequest);
+      } else {
+        enrollAuditEventHelper.logEvent(EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED, auditRequest);
       }
     } catch (RestClientResponseException e) {
 
