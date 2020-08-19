@@ -46,14 +46,14 @@ public class SiteEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(name = "site_id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
+  @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "location_id", insertable = true, updatable = true)
   private LocationEntity location;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
+  @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "study_id", insertable = true, updatable = true)
   private StudyEntity study;
 
@@ -86,7 +86,11 @@ public class SiteEntity implements Serializable {
   @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "site")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "site",
+      orphanRemoval = true)
   private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
 
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {

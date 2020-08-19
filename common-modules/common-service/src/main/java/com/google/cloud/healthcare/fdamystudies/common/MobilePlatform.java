@@ -29,4 +29,9 @@ public enum MobilePlatform {
     }
     return UNKNOWN;
   }
+
+  public static boolean isMobileDevice(String mobilePlatform) {
+    MobilePlatform platform = fromValue(mobilePlatform);
+    return platform == ANDROID || platform == IOS;
+  }
 }

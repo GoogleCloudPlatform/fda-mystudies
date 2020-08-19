@@ -7,15 +7,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.io.IOException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import java.io.IOException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import org.springframework.http.HttpStatus;
 
 @Getter
 @ToString
@@ -52,6 +53,20 @@ public enum MessageCode {
   GET_LOCATION_FOR_SITE_SUCCESS(HttpStatus.OK, "MSG-0009", "Get locations for site successfully"),
 
   GET_APP_PARTICIPANTS_SUCCESS(HttpStatus.OK, "MSG-0005", "get App Participants successfully"),
+
+  ADD_NEW_USER_SUCCESS(HttpStatus.CREATED, "MSG-0020", "New user added successfully"),
+
+  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully"),
+
+  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfully"),
+
+  GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
+      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfully"),
+
+  GET_PARTICIPANT_DETAILS_SUCCESS(
+      HttpStatus.OK, "MSG-0019", "Get participant details successfully"),
+
+  PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "Participants are invited"),
 
   PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
 

@@ -8,8 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
+
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
+import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
@@ -30,7 +32,6 @@ import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
 public final class ParticipantMapper {
 
@@ -153,5 +154,48 @@ public final class ParticipantMapper {
     participant.setRegistrationStatus(userStatus.getDescription());
     participant.setRegistrationDate(DateTimeUtils.format(userDetailsEntity.getVerificationDate()));
     return participant;
+  }
+
+  public static void addEnrollments(
+      ParticipantDetail participantDetail, List<ParticipantStudyEntity> participantsEnrollments) {
+    for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
+      Enrollment enrollment = new Enrollment();
+      enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
+      enrollment.setParticipantId(participantsEnrollment.getParticipantId());
+
+      String enrollmentDate = DateTimeUtils.format(participantsEnrollment.getEnrolledDate());
+      enrollment.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+
+      String withdrawalDate = DateTimeUtils.format(participantsEnrollment.getWithdrawalDate());
+      enrollment.setWithdrawalDate(StringUtils.defaultIfEmpty(withdrawalDate, NOT_APPLICABLE));
+      participantDetail.getEnrollments().add(enrollment);
+    }
+  }
+
+  public static ParticipantDetail toParticipantDetailsResponse(
+      ParticipantRegistrySiteEntity participantRegistry) {
+    ParticipantDetail participantDetail = new ParticipantDetail();
+    participantDetail.setParticipantRegistrySiteid(participantRegistry.getId());
+    participantDetail.setAppName(participantRegistry.getStudy().getAppInfo().getAppName());
+    participantDetail.setCustomAppId(participantRegistry.getStudy().getAppInfo().getAppId());
+    participantDetail.setStudyName(participantRegistry.getStudy().getName());
+    participantDetail.setCustomStudyId(participantRegistry.getStudy().getCustomId());
+    participantDetail.setLocationName(participantRegistry.getSite().getLocation().getName());
+    participantDetail.setCustomLocationId(
+        participantRegistry.getSite().getLocation().getCustomId());
+    participantDetail.setEmail(participantRegistry.getEmail());
+
+    String invitedDate = DateTimeUtils.format(participantRegistry.getInvitationDate());
+    participantDetail.setInvitationDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+
+    OnboardingStatus onboardingStatus =
+        OnboardingStatus.fromCode(participantRegistry.getOnboardingStatus());
+
+    String status =
+        (OnboardingStatus.INVITED == onboardingStatus || OnboardingStatus.NEW == onboardingStatus)
+            ? onboardingStatus.getStatus()
+            : OnboardingStatus.DISABLED.getStatus();
+    participantDetail.setOnboardringStatus(status);
+    return participantDetail;
   }
 }

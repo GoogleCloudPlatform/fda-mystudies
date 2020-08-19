@@ -47,6 +47,24 @@ public final class CommonConstants {
 
   public static final String STATUS_ACTIVE = "Active";
 
+  public static final int INVITED_STATUS = 2;
+
+  public static final boolean SELECTED = true;
+
+  public static final boolean UNSELECTED = false;
+
+  public static final String STATUS_LOG = "status=%d";
+
+  public static final String ERROR_CODE_LOG = "error code=%s";
+
+  public static final String MESSAGE_CODE_LOG = "message code=%s";
+
   public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
       "application/x-www-form-urlencoded;charset=UTF-8";
+
+  public static final String PASSWORD_REGEX =
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$";
+
+  public static final String PASSWORD_REGEX_MESSAGE =
+      "Your password does not meet the required criteria.";
 }

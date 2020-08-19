@@ -8,7 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
@@ -25,4 +28,10 @@ public interface SiteService {
   public ParticipantResponse addNewParticipant(ParticipantDetailRequest participant, String userId);
 
   public SiteStatusResponse toggleSiteStatus(String userId, String siteId);
+
+  public ParticipantDetailResponse getParticipantDetails(
+      String participantRegistrySiteId, String userId);
+
+  public InviteParticipantResponse inviteParticipants(
+      InviteParticipantRequest inviteparticipantBean);
 }

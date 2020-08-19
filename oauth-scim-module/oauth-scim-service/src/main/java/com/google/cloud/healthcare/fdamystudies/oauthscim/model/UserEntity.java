@@ -47,7 +47,7 @@ public class UserEntity {
   private Timestamp created;
 
   @ToString.Exclude
-  @Column(name = "temp_reg_id", nullable = true, length = 64)
+  @Column(name = "tempRegId", nullable = true, length = 64)
   private String tempRegId;
 
   @ToString.Exclude

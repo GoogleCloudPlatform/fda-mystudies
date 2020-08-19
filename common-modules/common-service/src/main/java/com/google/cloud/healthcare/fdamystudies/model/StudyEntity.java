@@ -47,7 +47,7 @@ public class StudyEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "id", updatable = false, nullable = false)
+  @Column(name = "study_id", updatable = false, nullable = false)
   private String id;
 
   @Column(name = "custom_id", length = 100)
@@ -105,7 +105,11 @@ public class StudyEntity implements Serializable {
   @Column(name = "enrolling", length = 100)
   private String enrolling;
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "study",
+      orphanRemoval = true)
   private List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
 
   public void addStudyPermissionEntity(StudyPermissionEntity studyPermission) {
@@ -113,7 +117,11 @@ public class StudyEntity implements Serializable {
     studyPermission.setStudy(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "study",
+      orphanRemoval = true)
   private List<SiteEntity> sites = new ArrayList<>();
 
   public void addSiteEntity(SiteEntity site) {
@@ -121,7 +129,11 @@ public class StudyEntity implements Serializable {
     site.setStudy(this);
   }
 
-  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "study")
+  @OneToMany(
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY,
+      mappedBy = "study",
+      orphanRemoval = true)
   private List<SitePermissionEntity> sitePermissions = new ArrayList<>();
 
   public void addSitePermissionEntity(SitePermissionEntity sitePermission) {

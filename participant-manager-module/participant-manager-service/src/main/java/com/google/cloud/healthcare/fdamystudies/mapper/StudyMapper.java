@@ -8,14 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ArrayUtils;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
@@ -24,6 +16,8 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 
