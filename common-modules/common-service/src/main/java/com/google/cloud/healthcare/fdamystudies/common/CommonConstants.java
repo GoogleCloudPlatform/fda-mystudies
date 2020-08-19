@@ -31,6 +31,8 @@ public final class CommonConstants {
 
   public static final Integer READ_AND_EDIT_PERMISSION = 2;
 
+  public static final int ACTIVE = 1;
+
   public static final int VIEW_VALUE = 0;
 
   public static final int EDIT_VALUE = 1;
@@ -39,7 +41,7 @@ public final class CommonConstants {
 
   public static final String YET_TO_ENROLL = "Yet to Enroll";
 
-  public static final String YET_TO_JOIN = "yetToJoin";
+  public static final String YET_TO_JOIN = "Yet to Join";
 
   public static final String OPEN = "Open";
 
@@ -59,4 +61,13 @@ public final class CommonConstants {
 
   public static final String EMAIL_REGEX =
       "^[A-Za-z0-9_+]+([\\.-]?[A-Za-z0-9_+]+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
+
+  public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
+      "application/x-www-form-urlencoded;charset=UTF-8";
+
+  public static final String PASSWORD_REGEX =
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$";
+
+  public static final String PASSWORD_REGEX_MESSAGE =
+      "Your password does not meet the required criteria.";
 }

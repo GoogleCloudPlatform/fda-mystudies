@@ -14,6 +14,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
+import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -21,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,20 +48,20 @@ public class LocationController {
   @Autowired private LocationService locationService;
 
   @PostMapping("/locations")
-  public ResponseEntity<LocationDetailsResponse> addNewLocation(
+  @ResponseStatus(HttpStatus.CREATED)
+  public LocationDetailsResponse addNewLocation(
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @Valid @RequestBody LocationRequest locationRequest,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    locationRequest.setUserId(userId);
 
-    LocationDetailsResponse locationResponse = locationService.addNewLocation(locationRequest);
+    LocationEntity location = LocationMapper.fromLocationRequest(locationRequest);
+    LocationEntity created = locationService.addNewLocation(location, userId);
 
-    logger.exit(
-        String.format(
-            "status=%d and locationId=%s",
-            locationResponse.getHttpStatusCode(), locationResponse.getLocationId()));
-    return ResponseEntity.status(locationResponse.getHttpStatusCode()).body(locationResponse);
+    logger.exit(String.format("locationId=%s", created.getId()));
+    // TODO(675): return created instead of response
+    return LocationMapper.toLocationDetailsResponse(created, MessageCode.ADD_LOCATION_SUCCESS);
   }
 
   @PutMapping("/locations/{locationId}")

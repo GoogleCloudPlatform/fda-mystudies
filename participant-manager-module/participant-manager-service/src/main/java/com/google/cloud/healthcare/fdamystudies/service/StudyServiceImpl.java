@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
@@ -32,6 +33,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import java.util.ArrayList;
@@ -64,6 +66,8 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private AppRepository appRepository;
 
   @Autowired private StudyRepository studyRepository;
+
+  @Autowired private SiteRepository siteRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -136,16 +140,18 @@ public class StudyServiceImpl implements StudyService {
     List<StudyDetails> studies = new ArrayList<>();
     for (Map.Entry<StudyEntity, List<SitePermissionEntity>> entry : studyPermissionMap.entrySet()) {
       StudyDetails studyDetail = new StudyDetails();
-      String studyId = entry.getKey().getId();
+      StudyEntity study = entry.getKey();
+      String studyId = study.getId();
       studyDetail.setId(studyId);
-      studyDetail.setCustomId(entry.getKey().getCustomId());
-      studyDetail.setName(entry.getKey().getName());
-      studyDetail.setType(entry.getKey().getType());
-      studyDetail.setTotalSitesCount((long) entry.getValue().size());
+      studyDetail.setCustomId(study.getCustomId());
+      studyDetail.setName(study.getName());
+      studyDetail.setType(study.getType());
+      List<SitePermissionEntity> permissions = entry.getValue();
+      studyDetail.setSitesCount((long) permissions.size());
 
       if (studyPermissionsByStudyInfoId.get(studyId) != null) {
         Integer studyEditPermission =
-            studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit();
+            studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
         studyDetail.setStudyPermission(
             studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
         studyDetail.setStudyPermission(studyEditPermission);
@@ -177,9 +183,8 @@ public class StudyServiceImpl implements StudyService {
           getStudyInvitedCount(
               siteWithInvitedParticipantCountMap, entry, studyInvitedCount, sitePermission);
 
-      studyEnrolledCount =
-          studyEnrolledCount
-              + siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
+      studyEnrolledCount +=
+          siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
     }
 
     studyDetail.setEnrolled(studyEnrolledCount);
@@ -200,11 +205,11 @@ public class StudyServiceImpl implements StudyService {
     String siteId = sitePermission.getSite().getId();
     String studyType = entry.getKey().getType();
     if (siteWithInvitedParticipantCountMap.get(siteId) != null && studyType.equals(CLOSE_STUDY)) {
-      studyInvitedCount = studyInvitedCount + siteWithInvitedParticipantCountMap.get(siteId);
+      studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
     }
 
-    if (studyType.equals(OPEN_STUDY)) {
-      studyInvitedCount = studyInvitedCount + sitePermission.getSite().getTargetEnrollment();
+    if (sitePermission.getSite().getTargetEnrollment() != null && studyType.equals(OPEN_STUDY)) {
+      studyInvitedCount += sitePermission.getSite().getTargetEnrollment();
     }
     return studyInvitedCount;
   }
@@ -265,6 +270,14 @@ public class StudyServiceImpl implements StudyService {
       StudyEntity study, AppEntity app) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
+
+    if (OPEN_STUDY.equalsIgnoreCase(study.getType())) {
+      Optional<SiteEntity> optSiteEntity =
+          siteRepository.findByStudyIdAndType(study.getId(), study.getType());
+      if (optSiteEntity.isPresent()) {
+        participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
+      }
+    }
 
     List<ParticipantStudyEntity> participantStudiesList =
         participantStudyRepository.findParticipantsByStudy(study.getId());
