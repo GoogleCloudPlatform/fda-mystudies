@@ -29,17 +29,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCESS;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -88,7 +77,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -345,7 +333,7 @@ public class UserServiceImpl implements UserService {
             appConfig.getMailAccountLockedSubject(),
             appConfig.getMailAccountLockedBody(),
             templateArgs);
-    EmailResponse emailResponse = emailService.sendSimpleMail(emailRequest);
+    EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
     logger.exit(
         String.format("send account locked email status=%d", emailResponse.getHttpStatusCode()));
     return emailResponse;

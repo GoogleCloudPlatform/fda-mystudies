@@ -8,10 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import org.springframework.http.HttpStatus;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 
@@ -25,9 +21,5 @@ public class EmailResponse extends BaseResponse {
 
   public EmailResponse(MessageCode messageCode) {
     super(messageCode);
-  }
-
-  public EmailResponse(HttpStatus httpStatus, String message) {
-    super(httpStatus, message);
   }
 }

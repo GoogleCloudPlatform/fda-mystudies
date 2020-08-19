@@ -14,9 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import java.util.Calendar;
-
 import javax.mail.internet.MimeMessage;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -26,12 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 
 @Service
 @ConditionalOnProperty(
@@ -49,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
     logger.entry("Begin sendMimeMail()");
     try {
       MimeMessage message = emailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(message, true);
+      MimeMessageHelper helper = new MimeMessageHelper(message, false);
       helper.setFrom(emailRequest.getFrom());
       helper.setTo(emailRequest.getTo());
 

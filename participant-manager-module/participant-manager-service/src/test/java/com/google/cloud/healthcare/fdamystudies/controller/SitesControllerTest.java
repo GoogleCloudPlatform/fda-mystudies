@@ -27,28 +27,16 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
@@ -81,8 +69,10 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.jayway.jsonpath.JsonPath;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -92,6 +82,7 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class SitesControllerTest extends BaseMockIT {
@@ -106,6 +97,7 @@ public class SitesControllerTest extends BaseMockIT {
   @Autowired private SiteRepository siteRepository;
   @Autowired private ParticipantStudyRepository participantStudyRepository;
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
+  @Autowired private JavaMailSender emailSender;
 
   private UserRegAdminEntity userRegAdminEntity;
   private StudyEntity studyEntity;
@@ -130,6 +122,8 @@ public class SitesControllerTest extends BaseMockIT {
         testDataHelper.createParticipantStudyEntity(
             siteEntity, studyEntity, participantRegistrySiteEntity);
     studyConsentEntity = testDataHelper.createStudyConsentEntity(participantStudyEntity);
+
+    reset(emailSender);
   }
 
   @Test
@@ -750,6 +744,8 @@ public class SitesControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
+    verify(emailSender, times(1)).send(isA(MimeMessage.class));
+
     // Step 4: verify updated values
     String id =
         JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
@@ -797,6 +793,7 @@ public class SitesControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
+    verify(emailSender, times(1)).send(isA(MimeMessage.class));
     // Step 3: verify updated values
     String id =
         JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");

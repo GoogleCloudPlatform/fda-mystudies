@@ -15,8 +15,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.EDIT_VALUE;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
@@ -603,7 +601,7 @@ public class SiteServiceImpl implements SiteService {
             inviteParticipantRequest.getUserId(), inviteParticipantRequest.getSiteId());
     if (!optSitePermissionEntity.isPresent()
         || Permission.READ_EDIT
-            != Permission.fromValue(optSitePermissionEntity.get().getCanEdit())) {
+            != Permission.fromValue(optSitePermissionEntity.get().getEditPermission())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new InviteParticipantResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
