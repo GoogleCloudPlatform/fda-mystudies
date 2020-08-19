@@ -1068,6 +1068,46 @@ public class SitesControllerTest extends BaseMockIT {
         participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
   }
 
+  @Test
+  public void shouldReturnSites() throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setLocation(locationEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+  }
+
+  @Test
+  public void shouldReturnNotFoundForGetSites() throws Exception {
+    // Step 1: set the userId to invalid
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+
+    // Step 2: Call API and expect SITE_NOT_FOUND error
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.SITE_NOT_FOUND.getDescription())));
+  }
+
   @AfterEach
   public void cleanUp() {
     if (StringUtils.isNotEmpty(siteId)) {

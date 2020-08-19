@@ -8,15 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
-
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
@@ -32,9 +23,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryRespons
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
@@ -44,6 +38,7 @@ import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.mapper.ConsentMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.SiteMapper;
+import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCount;
@@ -77,6 +72,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
@@ -94,6 +90,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
 
 @Service
 public class SiteServiceImpl implements SiteService {
@@ -861,5 +867,123 @@ public class SiteServiceImpl implements SiteService {
             participantStatusRequest.getIds().size(),
             participantStatusRequest.getSiteId()));
     return new ParticipantStatusResponse(MessageCode.UPDATE_STATUS_SUCCESS);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public SiteDetailsResponse getSites(String userId) {
+    logger.entry("getSites(userId)");
+
+    List<SitePermissionEntity> sitePermissions =
+        sitePermissionRepository.findSitePermissionByUserId(userId);
+    if (CollectionUtils.isEmpty(sitePermissions)) {
+      logger.exit(ErrorCode.SITE_NOT_FOUND);
+      return new SiteDetailsResponse(ErrorCode.SITE_NOT_FOUND);
+    }
+
+    List<String> siteIds =
+        sitePermissions
+            .stream()
+            .map(s -> s.getSite().getId())
+            .distinct()
+            .collect(Collectors.toList());
+
+    Map<String, Long> invitedCountBySiteIdMap = getInvitedCountBySiteId(siteIds);
+
+    Map<String, Long> enrolledCountBySiteIdMap = getEnrolledCountBySiteId(siteIds);
+
+    Map<StudyEntity, List<SitePermissionEntity>> sitePermissionsByStudy =
+        sitePermissions.stream().collect(Collectors.groupingBy(SitePermissionEntity::getStudy));
+
+    Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId =
+        getStudyPermissionsByStudyId(userId, sitePermissions);
+
+    List<StudyDetails> studies = new ArrayList<>();
+    for (Map.Entry<StudyEntity, List<SitePermissionEntity>> entry :
+        sitePermissionsByStudy.entrySet()) {
+      StudyEntity study = entry.getKey();
+      StudyDetails studyDetail = StudyMapper.toStudyDetails(studyPermissionsByStudyInfoId, study);
+
+      addSites(invitedCountBySiteIdMap, enrolledCountBySiteIdMap, study, studyDetail);
+      studyDetail.setSitesCount((long) studyDetail.getSites().size());
+
+      studies.add(studyDetail);
+    }
+
+    logger.exit(String.format("%d studies found", studies.size()));
+    return new SiteDetailsResponse(studies, MessageCode.GET_SITES_SUCCESS);
+  }
+
+  private Map<String, StudyPermissionEntity> getStudyPermissionsByStudyId(
+      String userId, List<SitePermissionEntity> sitePermissions) {
+    List<String> usersStudyIds =
+        sitePermissions
+            .stream()
+            .distinct()
+            .map(studyEntity -> studyEntity.getStudy().getId())
+            .collect(Collectors.toList());
+
+    List<StudyPermissionEntity> studyPermissions =
+        studyPermissionRepository.findByStudyIds(usersStudyIds, userId);
+
+    Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId = new HashMap<>();
+    if (CollectionUtils.isNotEmpty(studyPermissions)) {
+      studyPermissionsByStudyInfoId =
+          studyPermissions
+              .stream()
+              .collect(Collectors.toMap(e -> e.getStudy().getId(), Function.identity()));
+    }
+    return studyPermissionsByStudyInfoId;
+  }
+
+  private Map<String, Long> getInvitedCountBySiteId(List<String> usersSiteIds) {
+    List<ParticipantRegistrySiteEntity> participantRegistry =
+        participantRegistrySiteRepository.findBySiteIds(usersSiteIds);
+
+    return participantRegistry
+        .stream()
+        .collect(
+            Collectors.groupingBy(
+                e -> e.getSite().getId(),
+                Collectors.summingLong(ParticipantRegistrySiteEntity::getInvitationCount)));
+  }
+
+  private Map<String, Long> getEnrolledCountBySiteId(List<String> usersSiteIds) {
+    List<ParticipantStudyEntity> participantsEnrollments =
+        participantStudyRepository.findBySiteIds(usersSiteIds);
+
+    return participantsEnrollments
+        .stream()
+        .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
+  }
+
+  private void addSites(
+      Map<String, Long> invitedCountBySiteIdMap,
+      Map<String, Long> enrolledCountBySiteIdMap,
+      StudyEntity study,
+      StudyDetails studyDetail) {
+    for (SiteEntity siteEntity : study.getSites()) {
+      Long invitedCount = invitedCountBySiteIdMap.get(siteEntity.getId());
+      Long enrolledCount = enrolledCountBySiteIdMap.get(siteEntity.getId());
+
+      SiteDetails site = new SiteDetails();
+      site.setId(siteEntity.getId());
+      site.setName(siteEntity.getLocation().getName());
+      site.setEnrolled(enrolledCount);
+
+      Double percentage;
+      String studyType = study.getType();
+      if (studyType.equals(OPEN_STUDY)) {
+        site.setInvited(Long.valueOf(siteEntity.getTargetEnrollment()));
+      } else if (studyType.equals(CLOSE_STUDY)) {
+        site.setInvited(invitedCount);
+      }
+
+      if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
+        percentage = (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
+        site.setEnrollmentPercentage(percentage);
+      }
+      studyDetail.getSites().add(site);
+    }
   }
 }

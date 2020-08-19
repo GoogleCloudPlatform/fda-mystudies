@@ -79,6 +79,8 @@ public enum MessageCode {
 
   UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG-0028", "Status updated successfully"),
 
+  GET_SITES_SUCCESS(HttpStatus.OK, "MSG-0018", "Get sites successfully"),
+  
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
 
   SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully");
