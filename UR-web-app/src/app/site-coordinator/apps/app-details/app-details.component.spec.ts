@@ -69,7 +69,6 @@ describe('AppDetailsComponent', () => {
   }));
 
   it('should get apps participants enrolledStudies details', fakeAsync(() => {
-    spyOn(component, 'search').and.callThrough();
     component.search('mockittest@grr.la');
     fixture.detectChanges();
     component.appDetail$.subscribe((appDetail) => {
