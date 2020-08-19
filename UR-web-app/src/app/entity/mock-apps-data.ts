@@ -71,6 +71,46 @@ export const expectedAppDetails = {
       enrollments: [],
       consentHistory: [],
     },
+    {
+      email: 'mockitTest@grr.la',
+      userDetailsId: '2861A007',
+      registrationStatus: 'Active',
+      registrationDate: '8/11/2019',
+      enrolledStudies: [
+        {
+          studyId: '4ef1e4a0004',
+          customStudyId: 'NewCovidStudy2019',
+          studyName: 'TestStudy',
+          sites: [
+            {
+              siteId: '617973b45',
+              customSiteId: 'EcternalStudy12',
+              siteName: 'Americano',
+              enrollmentDate: '11/05/2020',
+              withdrawlDate: '02/08/2020',
+              siteStatus: 'Active',
+            },
+          ],
+        },
+        {
+          studyId: '3dfde4a00',
+          customStudyId: 'latestStudy',
+          studyName: 'Latest Updated Study',
+          sites: [
+            {
+              siteId: '61fdgfg307',
+              customSiteId: 'Local Testdata',
+              siteName: 'Espacino',
+              enrollmentDate: '29/03/2020',
+              withdrawlDate: '16/06/2020',
+              siteStatus: 'Active',
+            },
+          ],
+        },
+      ],
+      enrollments: [],
+      consentHistory: [],
+    },
   ],
   status: 200,
   message: 'get App Participants successfully',
@@ -78,3 +118,54 @@ export const expectedAppDetails = {
 } as AppDetails;
 
 export const expectedAppId = {appId: '1'} as AppDetails;
+
+export const filteredEmail = {
+  appId: '1',
+  customId: 'MyStudies-Id-1',
+  name: 'MyStudies-1',
+  participants: [
+    {
+      email: 'mockitTest@grr.la',
+      userDetailsId: '2861A007',
+      registrationStatus: 'Active',
+      registrationDate: '8/11/2019',
+      enrolledStudies: [
+        {
+          studyId: '4ef1e4a0004',
+          customStudyId: 'NewCovidStudy2019',
+          studyName: 'TestStudy',
+          sites: [
+            {
+              siteId: '617973b45',
+              customSiteId: 'EcternalStudy12',
+              siteName: 'Americano',
+              enrollmentDate: '11/05/2020',
+              withdrawlDate: '02/08/2020',
+              siteStatus: 'Active',
+            },
+          ],
+        },
+        {
+          studyId: '3dfde4a00',
+          customStudyId: 'latestStudy',
+          studyName: 'Latest Updated Study',
+          sites: [
+            {
+              siteId: '61fdgfg307',
+              customSiteId: 'Local Testdata',
+              siteName: 'Espacino',
+              enrollmentDate: '29/03/2020',
+              withdrawlDate: '16/06/2020',
+              siteStatus: 'Active',
+            },
+          ],
+        },
+      ],
+      enrollments: [],
+      consentHistory: [],
+    },
+  ],
+  status: 200,
+  message: 'get App Participants successfully',
+  code: 'MSG-0021',
+} as AppDetails;

@@ -12,7 +12,10 @@ import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {AppDetailsService} from '../shared/app-details.service';
 import {AppDetailsComponent} from './app-details.component';
-import {expectedAppDetails} from '../../../entity/mock-apps-data';
+import {
+  expectedAppDetails,
+  filteredEmail,
+} from '../../../entity/mock-apps-data';
 import {AppsModule} from '../apps.module';
 
 describe('AppDetailsComponent', () => {
@@ -66,10 +69,12 @@ describe('AppDetailsComponent', () => {
   }));
 
   it('should get apps participants enrolledStudies details', fakeAsync(() => {
+    spyOn(component, 'search').and.callThrough();
+    component.search('mockittest@grr.la');
+    fixture.detectChanges();
     component.appDetail$.subscribe((appDetail) => {
-      expect(appDetail.participants[0].enrolledStudies.length).toEqual(
-        expectedAppDetails.participants[0].enrolledStudies.length,
-      );
+      expect(appDetail.participants.length).toBe(1);
+      expect(appDetail).toEqual(filteredEmail);
     });
   }));
 });
