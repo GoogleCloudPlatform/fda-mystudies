@@ -23,13 +23,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
@@ -50,59 +50,59 @@ public class StudyEntity implements Serializable {
   @Column(name = "study_id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "custom_id")
+  @Column(name = "custom_id", length = 100)
   private String customId;
 
   @ManyToOne
   @JoinColumn(name = "app_info_id", insertable = true, updatable = true)
   private AppEntity appInfo;
 
-  @Column(name = "name")
+  @Column(name = "name", length = 100)
   private String name;
 
-  @Column(name = "description")
+  @Column(name = "description", length = 100)
   @Type(type = "text")
   private String description;
 
-  @Column(name = "type")
+  @Column(name = "type", length = 100)
   private String type;
 
   @Column(
-      name = "created_on",
+      name = "created",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp created;
 
-  @Column(name = "created_by")
+  @Column(name = "created_by", length = 64)
   private String createdBy;
 
   @Column(
-      name = "modified_date",
+      name = "modified",
       insertable = false,
       updatable = false,
       columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Timestamp modified;
 
-  @Column(name = "modified_by")
+  @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
-  @Column(name = "version")
+  @Column(name = "version", length = 100)
   private Float version;
 
-  @Column(name = "status")
+  @Column(name = "status", length = 100)
   private String status;
 
-  @Column(name = "category")
+  @Column(name = "category", length = 100)
   private String category;
 
-  @Column(name = "tagline")
+  @Column(name = "tagline", length = 100)
   private String tagline;
 
-  @Column(name = "sponsor")
+  @Column(name = "sponsor", length = 100)
   private String sponsor;
 
-  @Column(name = "enrolling")
+  @Column(name = "enrolling", length = 100)
   private String enrolling;
 
   @OneToMany(
