@@ -17,6 +17,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
@@ -33,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -172,5 +175,22 @@ public class SiteController {
         siteService.importParticipants(userId, siteId, inputFile);
     logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
+  }
+
+  @PatchMapping("/sites/{siteId}/participants/status")
+  public ResponseEntity<ParticipantStatusResponse> updateOnboardingStatus(
+      @PathVariable String siteId,
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @Valid @RequestBody ParticipantStatusRequest participantStatusRequest,
+      HttpServletRequest request) {
+    logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+
+    participantStatusRequest.setSiteId(siteId);
+    participantStatusRequest.setUserId(userId);
+    ParticipantStatusResponse response =
+        siteService.updateOnboardingStatus(participantStatusRequest);
+
+    logger.exit(String.format(STATUS_LOG, response.getHttpStatusCode()));
+    return ResponseEntity.status(response.getHttpStatusCode()).body(response);
   }
 }

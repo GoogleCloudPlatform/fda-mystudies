@@ -77,6 +77,8 @@ public enum MessageCode {
 
   IMPORT_PARTICIPANT_SUCCESS(HttpStatus.OK, "MSG-0026", "Participants imported successfully"),
 
+  UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG-0028", "Status updated successfully"),
+
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
 
   SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully");

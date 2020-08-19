@@ -33,6 +33,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -41,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -75,6 +77,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -974,6 +977,97 @@ public class SitesControllerTest extends BaseMockIT {
     assertEquals(IMPORT_EMAIL_1, optParticipantRegistrySite.get().getEmail());
   }
 
+  @Test
+  public void shouldReturnSiteNotExistOrInactiveError() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), IdGenerator.id())
+                .headers(headers)
+                .content(asJsonString(newParticipantStatusRequest()))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnAccessDeniedError() throws Exception {
+    // Step 1: set manage site permission to view only
+    sitePermissionEntity = siteEntity.getSitePermissions().get(0);
+    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(newParticipantStatusRequest()))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnInvalidStatus() throws Exception {
+    // Step 1:set request body
+    ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
+    participantStatusRequest.setStatus("Z");
+
+    // Step 2: Call API to INVALID_ONBOARDING_STATUS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(participantStatusRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(INVALID_ONBOARDING_STATUS.getDescription())));
+  }
+
+  @Test
+  public void shouldUpdateParticipantStatus() throws Exception {
+    // Step 1:set request body
+    ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
+
+    // Step 2: Call API to UPDATE_STATUS_SUCCESS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(participantStatusRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(MessageCode.UPDATE_STATUS_SUCCESS.getMessage())));
+
+    // Step 3: verify updated values
+    List<ParticipantRegistrySiteEntity> optParticipantRegistrySiteEntity =
+        participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity =
+        optParticipantRegistrySiteEntity.get(0);
+    assertNotNull(participantRegistrySiteEntity);
+    assertEquals(
+        participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
+  }
+
   @AfterEach
   public void cleanUp() {
     if (StringUtils.isNotEmpty(siteId)) {
@@ -1009,6 +1103,13 @@ public class SitesControllerTest extends BaseMockIT {
     ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
     participantRequest.setEmail(TestConstants.EMAIL_VALUE);
     return participantRequest;
+  }
+
+  private ParticipantStatusRequest newParticipantStatusRequest() {
+    ParticipantStatusRequest request = new ParticipantStatusRequest();
+    request.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
+    request.setStatus(OnboardingStatus.NEW.getCode());
+    return request;
   }
 
   private MockMultipartFile getMultipartFile(String fileName) throws IOException {

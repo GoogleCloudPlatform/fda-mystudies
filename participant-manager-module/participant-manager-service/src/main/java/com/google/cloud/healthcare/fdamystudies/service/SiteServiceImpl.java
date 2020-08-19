@@ -30,6 +30,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
@@ -818,5 +820,46 @@ public class SiteServiceImpl implements SiteService {
             participantRegistryEmails.size(), newEmails.size()));
     return new ImportParticipantResponse(
         MessageCode.IMPORT_PARTICIPANT_SUCCESS, savedParticipants, participantRegistryEmails);
+  }
+
+  @Override
+  @Transactional
+  public ParticipantStatusResponse updateOnboardingStatus(
+      ParticipantStatusRequest participantStatusRequest) {
+    logger.entry("begin updateOnboardingStatus()");
+
+    Optional<SiteEntity> optSite = siteRepository.findById(participantStatusRequest.getSiteId());
+
+    if (!optSite.isPresent() || !optSite.get().getStatus().equals(ACTIVE_STATUS)) {
+      logger.exit(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+      return new ParticipantStatusResponse(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
+    }
+
+    Optional<SitePermissionEntity> optSitePermission =
+        sitePermissionRepository.findByUserIdAndSiteId(
+            participantStatusRequest.getUserId(), participantStatusRequest.getSiteId());
+
+    if (!optSitePermission.isPresent()
+        || !optSitePermission.get().getEditPermission().equals(Permission.READ_EDIT.value())) {
+      logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      return new ParticipantStatusResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    }
+
+    OnboardingStatus onboardingStatus =
+        OnboardingStatus.fromCode(participantStatusRequest.getStatus());
+    if (onboardingStatus == null) {
+      return new ParticipantStatusResponse(ErrorCode.INVALID_ONBOARDING_STATUS);
+    }
+
+    participantRegistrySiteRepository.updateOnboardingStatus(
+        participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+
+    logger.exit(
+        String.format(
+            "Onboarding status changed to %s for %d participants in Site %s",
+            participantStatusRequest.getStatus(),
+            participantStatusRequest.getIds().size(),
+            participantStatusRequest.getSiteId()));
+    return new ParticipantStatusResponse(MessageCode.UPDATE_STATUS_SUCCESS);
   }
 }
