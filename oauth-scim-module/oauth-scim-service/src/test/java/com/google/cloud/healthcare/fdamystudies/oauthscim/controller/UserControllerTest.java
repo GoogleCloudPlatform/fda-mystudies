@@ -28,8 +28,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -98,8 +97,6 @@ public class UserControllerTest extends BaseMockIT {
   @BeforeEach
   public void setUp() {
     WireMock.resetAllRequests();
-
-    reset(emailSender);
 
     // create a user
     UserResponse userResponse = userService.createUser(newUserRequest());
@@ -437,7 +434,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
 
-    verify(emailSender, times(1)).send(isA(MimeMessage.class));
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     assertNotNull(userEntity);
@@ -513,11 +510,6 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.tempRegId").doesNotExist())
         .andExpect(
             jsonPath("$.message").value(MessageCode.UPDATE_USER_DETAILS_SUCCESS.getMessage()));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/audit-log-service/v1/events"))
-            .withRequestBody(new ContainsPattern("CorrelationIdValue_For_5XX_ERROR")));
 
     verify(
         1,

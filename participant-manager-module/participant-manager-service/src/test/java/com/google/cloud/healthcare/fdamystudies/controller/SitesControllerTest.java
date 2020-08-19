@@ -28,8 +28,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -122,8 +121,6 @@ public class SitesControllerTest extends BaseMockIT {
         testDataHelper.createParticipantStudyEntity(
             siteEntity, studyEntity, participantRegistrySiteEntity);
     studyConsentEntity = testDataHelper.createStudyConsentEntity(participantStudyEntity);
-
-    reset(emailSender);
   }
 
   @Test
@@ -744,7 +741,7 @@ public class SitesControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
-    verify(emailSender, times(1)).send(isA(MimeMessage.class));
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
     // Step 4: verify updated values
     String id =
@@ -793,7 +790,7 @@ public class SitesControllerTest extends BaseMockIT {
                 jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
             .andReturn();
 
-    verify(emailSender, times(1)).send(isA(MimeMessage.class));
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
     // Step 3: verify updated values
     String id =
         JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
