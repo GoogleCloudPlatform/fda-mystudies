@@ -39,6 +39,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
@@ -985,5 +987,49 @@ public class SiteServiceImpl implements SiteService {
       }
       studyDetail.getSites().add(site);
     }
+  }
+
+  @Override
+  @Transactional
+  public UpdateTargetEnrollmentResponse updateTargetEnrollment(
+      UpdateTargetEnrollmentRequest enrollmentRequest) {
+    logger.entry("updateTargetEnrollment()");
+
+    Optional<StudyPermissionEntity> optStudyPermission =
+        studyPermissionRepository.findByStudyIdAndUserId(
+            enrollmentRequest.getStudyId(), enrollmentRequest.getUserId());
+
+    StudyPermissionEntity studyPermission = optStudyPermission.get();
+    if (!optStudyPermission.isPresent()
+        || Permission.READ_VIEW == Permission.fromValue(studyPermission.getEditPermission())) {
+      return new UpdateTargetEnrollmentResponse(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+    }
+
+    if (CLOSE_STUDY.equalsIgnoreCase(studyPermission.getStudy().getType())) {
+      return new UpdateTargetEnrollmentResponse(
+          ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY);
+    }
+
+    Optional<SiteEntity> optSiteEntity =
+        siteRepository.findByStudyId(enrollmentRequest.getStudyId());
+    if (!optSiteEntity.isPresent()) {
+      return new UpdateTargetEnrollmentResponse(ErrorCode.SITE_NOT_FOUND);
+    }
+
+    SiteEntity site = optSiteEntity.get();
+    if (SiteStatus.DEACTIVE == SiteStatus.fromValue(site.getStatus())) {
+      return new UpdateTargetEnrollmentResponse(
+          ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE);
+    }
+
+    site.setTargetEnrollment(enrollmentRequest.getTargetEnrollment());
+    siteRepository.saveAndFlush(site);
+
+    logger.exit(
+        String.format(
+            "target enrollment changed to %d for siteId=%s",
+            site.getTargetEnrollment(), site.getId()));
+    return new UpdateTargetEnrollmentResponse(
+        site.getId(), MessageCode.TARGET_ENROLLMENT_UPDATE_SUCCESS);
   }
 }

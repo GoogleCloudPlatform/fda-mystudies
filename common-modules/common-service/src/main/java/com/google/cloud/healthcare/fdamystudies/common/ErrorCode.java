@@ -195,6 +195,15 @@ public enum ErrorCode {
       HttpStatus.INTERNAL_SERVER_ERROR.toString(),
       "Unable to import the participants"),
 
+  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY(
+      400, "EC-95", Constants.BAD_REQUEST, " Cannot update enrollment target for closed study"),
+
+  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE(
+      400,
+      "EC-95",
+      Constants.BAD_REQUEST,
+      " Cannot update enrollment target for decommissionned site"),
+
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
 

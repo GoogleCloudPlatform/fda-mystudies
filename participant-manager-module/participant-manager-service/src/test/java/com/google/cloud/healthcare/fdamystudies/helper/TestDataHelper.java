@@ -80,11 +80,11 @@ public class TestDataHelper {
 
   @Autowired private StudyPermissionRepository studyPermissionRepository;
 
-  @Autowired SitePermissionRepository sitePermissionRepository;
+  @Autowired private SitePermissionRepository sitePermissionRepository;
 
-  @Autowired AppPermissionRepository appPermissionRepository;
+  @Autowired private AppPermissionRepository appPermissionRepository;
 
-  @Autowired AppRepository appRepository;
+  @Autowired private AppRepository appRepository;
 
   @Autowired private SiteRepository siteRepository;
 
@@ -294,5 +294,17 @@ public class TestDataHelper {
     OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
     orgInfoEntity.setName("OrgName");
     return orgInfoRepository.saveAndFlush(orgInfoEntity);
+  }
+
+  public void cleanUp() {
+    getStudyConsentRepository().deleteAll();
+    getParticipantStudyRepository().deleteAll();
+    getParticipantRegistrySiteRepository().deleteAll();
+    getSiteRepository().deleteAll();
+    getStudyRepository().deleteAll();
+    getAppRepository().deleteAll();
+    getUserRegAdminRepository().deleteAll();
+    getLocationRepository().deleteAll();
+    getUserDetailsRepository().deleteAll();
   }
 }
