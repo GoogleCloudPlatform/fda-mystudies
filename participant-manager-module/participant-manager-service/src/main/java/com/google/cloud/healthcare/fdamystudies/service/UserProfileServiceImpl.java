@@ -127,6 +127,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     return new UserProfileResponse(MessageCode.PROFILE_UPDATE_SUCCESS);
   }
 
+  @Override
+  @Transactional
   public SetUpAccountResponse saveUser(SetUpAccountRequest setUpAccountRequest) {
     logger.entry("saveUser");
 

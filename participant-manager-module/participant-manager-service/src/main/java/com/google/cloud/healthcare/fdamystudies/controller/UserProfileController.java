@@ -8,9 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+<<<<<<< HEAD
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
+=======
+import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
+>>>>>>> d0f71d8290b89764596ccc00b0f9b5e1b78d3db0
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +28,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+<<<<<<< HEAD
+=======
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+>>>>>>> d0f71d8290b89764596ccc00b0f9b5e1b78d3db0
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +74,10 @@ public class UserProfileController {
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d0f71d8290b89764596ccc00b0f9b5e1b78d3db0
   @PutMapping(
       value = "/users/{userId}/profile",
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -78,8 +94,13 @@ public class UserProfileController {
 
     logger.exit(String.format(STATUS_LOG, userProfileResponse.getHttpStatusCode()));
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
+<<<<<<< HEAD
   }
 
+=======
+}
+  
+>>>>>>> d0f71d8290b89764596ccc00b0f9b5e1b78d3db0
   @PostMapping(
       value = "/users/",
       consumes = MediaType.APPLICATION_JSON_VALUE,
