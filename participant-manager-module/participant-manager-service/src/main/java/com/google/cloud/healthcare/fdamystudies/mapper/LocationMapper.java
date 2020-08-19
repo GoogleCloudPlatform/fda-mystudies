@@ -16,6 +16,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class LocationMapper {
 

@@ -40,7 +40,7 @@ public class UserProfileServiceImpl implements UserProfileService {
   private XLogger logger = XLoggerFactory.getXLogger(StudyServiceImpl.class.getName());
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
-  
+
   @Autowired private AppPropertyConfig appPropertyConfig;
 
   @Autowired private RestTemplate restTemplate;
@@ -99,7 +99,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     logger.exit(String.format("message=%s", userProfileResponse.getMessage()));
     return userProfileResponse;
   }
-  
+
   @Override
   @Transactional
   public SetUpAccountResponse saveUser(SetUpAccountRequest setUpAccountRequest) {

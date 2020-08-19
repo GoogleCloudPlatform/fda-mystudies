@@ -16,6 +16,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EX
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
@@ -31,6 +32,7 @@ import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -68,6 +70,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.jayway.jsonpath.JsonPath;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
@@ -82,7 +87,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.ResourceUtils;
 
 public class SitesControllerTest extends BaseMockIT {
 
@@ -107,6 +114,12 @@ public class SitesControllerTest extends BaseMockIT {
   private ParticipantStudyEntity participantStudyEntity;
   private SitePermissionEntity sitePermissionEntity;
   private StudyConsentEntity studyConsentEntity;
+
+  private static final String IMPORT_EMAIL_1 = "mockitoimport01@grr.la";
+
+  private static final String IMPORT_EMAIL_2 = "mockitoimport@grr.la";
+
+  private static final String INVALID_TEST_EMAIL = "mockito";
 
   @BeforeEach
   public void setUp() {
@@ -802,6 +815,165 @@ public class SitesControllerTest extends BaseMockIT {
         OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
   }
 
+  @Test
+  public void shouldReturnAccessDeniedForImportNewParticipant() throws Exception {
+    // Step 1: set manage site permission to view only
+    sitePermissionEntity = siteEntity.getSitePermissions().get(0);
+    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnOpenStudyForImportNewParticipant() throws Exception {
+    // Step 1: set study type to open study
+    sitePermissionEntity = siteEntity.getSitePermissions().get(0);
+    studyEntity.setType(CommonConstants.OPEN_STUDY);
+    siteEntity.setStudy(studyEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API to return OPEN_STUDY error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.error_description", is(OPEN_STUDY.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnSiteNotExistForImportNewParticipant() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), IdGenerator.id())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnWithBadHeaders() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template_bad_header.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.DOCUMENT_NOT_IN_PRESCRIBED_FORMAT.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnImportNewParticipantAndInvalidEmail() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 1: Call API to import new participants
+    MockMultipartFile file =
+        getMultipartFile("classpath:Email_Import_Template_Invalid_Emails.xlsx");
+    MvcResult result =
+        mockMvc
+            .perform(
+                multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                    .file(file)
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.IMPORT_PARTICIPANT_SUCCESS.getMessage())))
+            .andExpect(jsonPath("$.participants").isArray())
+            .andExpect(jsonPath("$.participants", hasSize(1)))
+            .andExpect(jsonPath("$.participants[0].email", is(IMPORT_EMAIL_2)))
+            .andExpect(jsonPath("$.invalidEmails", hasSize(1)))
+            .andExpect(jsonPath("$.invalidEmails[0]", is(INVALID_TEST_EMAIL)))
+            .andReturn();
+
+    String participantId =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].id");
+
+    // Step 2: verify saved values
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(participantId);
+    assertNotNull(optParticipantRegistrySite.get().getSite());
+    assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
+    assertEquals(IMPORT_EMAIL_2, optParticipantRegistrySite.get().getEmail());
+  }
+
+  @Test
+  public void shouldReturnImportNewParticipant() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 1: Call API to import new participants
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    MvcResult result =
+        mockMvc
+            .perform(
+                multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                    .file(file)
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.IMPORT_PARTICIPANT_SUCCESS.getMessage())))
+            .andExpect(jsonPath("$.participants").isArray())
+            .andExpect(jsonPath("$.participants", hasSize(2)))
+            .andExpect(jsonPath("$.participants[0].email", is(IMPORT_EMAIL_1)))
+            .andExpect(jsonPath("$.participants[1].email", is(IMPORT_EMAIL_2)))
+            .andReturn();
+
+    String participantId =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].id");
+
+    // Step 2: verify saved values
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(participantId);
+    assertNotNull(optParticipantRegistrySite.get().getSite());
+    assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
+    assertEquals(IMPORT_EMAIL_1, optParticipantRegistrySite.get().getEmail());
+  }
+
   @AfterEach
   public void cleanUp() {
     if (StringUtils.isNotEmpty(siteId)) {
@@ -837,5 +1009,16 @@ public class SitesControllerTest extends BaseMockIT {
     ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
     participantRequest.setEmail(TestConstants.EMAIL_VALUE);
     return participantRequest;
+  }
+
+  private MockMultipartFile getMultipartFile(String fileName) throws IOException {
+    File file = ResourceUtils.getFile(fileName);
+    MockMultipartFile multipart =
+        new MockMultipartFile(
+            "file",
+            file.getName(),
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            Files.readAllBytes(file.toPath()));
+    return multipart;
   }
 }

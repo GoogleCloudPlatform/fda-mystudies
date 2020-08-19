@@ -11,6 +11,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteCou
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -47,4 +48,11 @@ public interface ParticipantRegistrySiteRepository
 
   @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.id in (:ids)")
   public List<ParticipantRegistrySiteEntity> findByIds(@Param("ids") List<String> ids);
+
+  @Query(
+      value =
+          "SELECT pr FROM ParticipantRegistrySiteEntity pr "
+              + "where pr.study.id = :studyId and pr.email IN (:emails)")
+  public List<ParticipantRegistrySiteEntity> findByStudyIdAndEmails(
+      String studyId, Set<String> emails);
 }

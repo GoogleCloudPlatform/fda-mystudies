@@ -164,7 +164,6 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isUnauthorized())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.SECURITY_CODE_EXPIRED.getDescription())));
-
   }
 
   @Test
@@ -278,5 +277,4 @@ public class UserProfileControllerTest extends BaseMockIT {
     request.setStatus(UserAccountStatus.ACTIVE.getStatus());
     return request;
   }
-
 }
