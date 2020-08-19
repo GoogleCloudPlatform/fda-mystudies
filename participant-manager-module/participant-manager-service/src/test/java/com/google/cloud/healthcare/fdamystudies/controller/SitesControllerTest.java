@@ -16,23 +16,33 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EX
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -53,6 +63,7 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEnt
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -61,8 +72,14 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepos
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.jayway.jsonpath.JsonPath;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -72,7 +89,10 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.ResourceUtils;
 
 public class SitesControllerTest extends BaseMockIT {
 
@@ -86,6 +106,7 @@ public class SitesControllerTest extends BaseMockIT {
   @Autowired private SiteRepository siteRepository;
   @Autowired private ParticipantStudyRepository participantStudyRepository;
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
+  @Autowired private JavaMailSender emailSender;
 
   private UserRegAdminEntity userRegAdminEntity;
   private StudyEntity studyEntity;
@@ -95,6 +116,13 @@ public class SitesControllerTest extends BaseMockIT {
   private ParticipantRegistrySiteEntity participantRegistrySiteEntity;
   private ParticipantStudyEntity participantStudyEntity;
   private SitePermissionEntity sitePermissionEntity;
+  private StudyConsentEntity studyConsentEntity;
+
+  private static final String IMPORT_EMAIL_1 = "mockitoimport01@grr.la";
+
+  private static final String IMPORT_EMAIL_2 = "mockitoimport@grr.la";
+
+  private static final String INVALID_TEST_EMAIL = "mockito";
 
   @BeforeEach
   public void setUp() {
@@ -108,6 +136,7 @@ public class SitesControllerTest extends BaseMockIT {
     participantStudyEntity =
         testDataHelper.createParticipantStudyEntity(
             siteEntity, studyEntity, participantRegistrySiteEntity);
+    studyConsentEntity = testDataHelper.createStudyConsentEntity(participantStudyEntity);
   }
 
   @Test
@@ -584,12 +613,508 @@ public class SitesControllerTest extends BaseMockIT {
                 is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
   }
 
+  @Test
+  public void shouldReturnParticipantDetails() throws Exception {
+    // Step 1: Set data needed to get Participant details
+    participantRegistrySiteEntity.getStudy().setAppInfo(appEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API and expect GET_PARTICIPANT_DETAILS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantDetails", notNullValue()))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.participantRegistrySiteid",
+                is(participantRegistrySiteEntity.getId())))
+        .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
+        .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(1)))
+        .andExpect(
+            jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+  }
+
+  @Test
+  public void shouldReturnParticipantRegistryNotFoundError() throws Exception {
+    // Call API and expect PARTICIPANT_REGISTRY_SITE_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(), IdGenerator.id())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.PARTICIPANT_REGISTRY_SITE_NOT_FOUND.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnAccessDeniedForGetParticipantDetails() throws Exception {
+    // Step 1: Set userId to invalid
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+
+    // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnSiteNotFoundForInviteParticipant() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
+    mockMvc
+        .perform(
+            post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), IdGenerator.id())
+                .content(asJsonString(inviteParticipantRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
+    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    // Step 1: New participant invite
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Disabled participant invite
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity1 =
+        testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity1);
+    participantRegistrySiteEntity1.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity1);
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(
+        Arrays.asList(
+            participantRegistrySiteEntity.getId(), participantRegistrySiteEntity1.getId()));
+    // Step 3: call the API and assert the error description
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                    .content(asJsonString(inviteParticipantRequest))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.invitedParticipantIds").isArray())
+            .andExpect(jsonPath("$.invitedParticipantIds", hasSize(1)))
+            .andExpect(jsonPath("$.failedParticipantIds").isArray())
+            .andExpect(jsonPath("$.failedParticipantIds", hasSize(1)))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
+            .andReturn();
+
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+
+    // Step 4: verify updated values
+    String id =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(id);
+
+    assertNotNull(optParticipantRegistrySite);
+    assertEquals(
+        OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
+  }
+
+  @Test
+  public void shouldInviteParticipant() throws Exception {
+    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    // Step 1: New participant invite
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
+    // Step 2: call the API and expect PARTICIPANTS_INVITED_SUCCESS message
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                    .content(asJsonString(inviteParticipantRequest))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.invitedParticipantIds").isArray())
+            .andExpect(jsonPath("$.invitedParticipantIds", hasSize(1)))
+            .andExpect(jsonPath("$.failedParticipantIds").isArray())
+            .andExpect(jsonPath("$.failedParticipantIds", hasSize(0)))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.PARTICIPANTS_INVITED_SUCCESS.getMessage())))
+            .andReturn();
+
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    // Step 3: verify updated values
+    String id =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.invitedParticipantIds[0]");
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(id);
+
+    assertNotNull(optParticipantRegistrySite);
+    assertEquals(
+        OnboardingStatus.INVITED.getCode(), optParticipantRegistrySite.get().getOnboardingStatus());
+  }
+
+  @Test
+  public void shouldReturnAccessDeniedForImportNewParticipant() throws Exception {
+    // Step 1: set manage site permission to view only
+    sitePermissionEntity = siteEntity.getSitePermissions().get(0);
+    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnOpenStudyForImportNewParticipant() throws Exception {
+    // Step 1: set study type to open study
+    sitePermissionEntity = siteEntity.getSitePermissions().get(0);
+    studyEntity.setType(CommonConstants.OPEN_STUDY);
+    siteEntity.setStudy(studyEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API to return OPEN_STUDY error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.error_description", is(OPEN_STUDY.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnSiteNotExistForImportNewParticipant() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), IdGenerator.id())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnWithBadHeaders() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template_bad_header.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.DOCUMENT_NOT_IN_PRESCRIBED_FORMAT.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnImportNewParticipantAndInvalidEmail() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 1: Call API to import new participants
+    MockMultipartFile file =
+        getMultipartFile("classpath:Email_Import_Template_Invalid_Emails.xlsx");
+    MvcResult result =
+        mockMvc
+            .perform(
+                multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                    .file(file)
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.IMPORT_PARTICIPANT_SUCCESS.getMessage())))
+            .andExpect(jsonPath("$.participants").isArray())
+            .andExpect(jsonPath("$.participants", hasSize(1)))
+            .andExpect(jsonPath("$.participants[0].email", is(IMPORT_EMAIL_2)))
+            .andExpect(jsonPath("$.invalidEmails", hasSize(1)))
+            .andExpect(jsonPath("$.invalidEmails[0]", is(INVALID_TEST_EMAIL)))
+            .andReturn();
+
+    String participantId =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].id");
+
+    // Step 2: verify saved values
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(participantId);
+    assertNotNull(optParticipantRegistrySite.get().getSite());
+    assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
+    assertEquals(IMPORT_EMAIL_2, optParticipantRegistrySite.get().getEmail());
+  }
+
+  @Test
+  public void shouldReturnImportNewParticipant() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 1: Call API to import new participants
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    MvcResult result =
+        mockMvc
+            .perform(
+                multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                    .file(file)
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.IMPORT_PARTICIPANT_SUCCESS.getMessage())))
+            .andExpect(jsonPath("$.participants").isArray())
+            .andExpect(jsonPath("$.participants", hasSize(2)))
+            .andExpect(jsonPath("$.participants[0].email", is(IMPORT_EMAIL_1)))
+            .andExpect(jsonPath("$.participants[1].email", is(IMPORT_EMAIL_2)))
+            .andReturn();
+
+    String participantId =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.participants[0].id");
+
+    // Step 2: verify saved values
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(participantId);
+    assertNotNull(optParticipantRegistrySite.get().getSite());
+    assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
+    assertEquals(IMPORT_EMAIL_1, optParticipantRegistrySite.get().getEmail());
+  }
+
+  @Test
+  public void shouldReturnSiteNotExistOrInactiveError() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), IdGenerator.id())
+                .headers(headers)
+                .content(asJsonString(newParticipantStatusRequest()))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnAccessDeniedError() throws Exception {
+    // Step 1: set manage site permission to view only
+    sitePermissionEntity = siteEntity.getSitePermissions().get(0);
+    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(newParticipantStatusRequest()))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+  }
+
+  @Test
+  public void shouldReturnInvalidStatus() throws Exception {
+    // Step 1:set request body
+    ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
+    participantStatusRequest.setStatus("Z");
+
+    // Step 2: Call API to INVALID_ONBOARDING_STATUS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(participantStatusRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error_description", is(INVALID_ONBOARDING_STATUS.getDescription())));
+  }
+
+  @Test
+  public void shouldUpdateParticipantStatus() throws Exception {
+    // Step 1:set request body
+    ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
+
+    // Step 2: Call API to UPDATE_STATUS_SUCCESS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(participantStatusRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(MessageCode.UPDATE_STATUS_SUCCESS.getMessage())));
+
+    // Step 3: verify updated values
+    List<ParticipantRegistrySiteEntity> optParticipantRegistrySiteEntity =
+        participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity =
+        optParticipantRegistrySiteEntity.get(0);
+    assertNotNull(participantRegistrySiteEntity);
+    assertEquals(
+        participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
+  }
+
+  @Test
+  public void shouldReturnSites() throws Exception {
+    // Step 1: set the data needed to get studies with sites
+    studyEntity.setAppInfo(appEntity);
+    siteEntity.setLocation(locationEntity);
+    participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
+    testDataHelper.getSiteRepository().save(siteEntity);
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+
+    // Step 2: call API and expect GET_SITES_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
+        .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
+        .andExpect(jsonPath("$.studies[0].sites").isArray())
+        .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+  }
+
+  @Test
+  public void shouldReturnNotFoundForGetSites() throws Exception {
+    // Step 1: set the userId to invalid
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+
+    // Step 2: Call API and expect SITE_NOT_FOUND error
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.SITE_NOT_FOUND.getDescription())));
+  }
+
   @AfterEach
   public void cleanUp() {
     if (StringUtils.isNotEmpty(siteId)) {
       siteRepository.deleteById(siteId);
       siteId = null;
     }
+    testDataHelper.getStudyConsentRepository().deleteAll();
     testDataHelper.getParticipantStudyRepository().deleteAll();
     testDataHelper.getParticipantRegistrySiteRepository().deleteAll();
     testDataHelper.getSiteRepository().deleteAll();
@@ -618,5 +1143,23 @@ public class SitesControllerTest extends BaseMockIT {
     ParticipantDetailRequest participantRequest = new ParticipantDetailRequest();
     participantRequest.setEmail(TestConstants.EMAIL_VALUE);
     return participantRequest;
+  }
+
+  private ParticipantStatusRequest newParticipantStatusRequest() {
+    ParticipantStatusRequest request = new ParticipantStatusRequest();
+    request.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
+    request.setStatus(OnboardingStatus.NEW.getCode());
+    return request;
+  }
+
+  private MockMultipartFile getMultipartFile(String fileName) throws IOException {
+    File file = ResourceUtils.getFile(fileName);
+    MockMultipartFile multipart =
+        new MockMultipartFile(
+            "file",
+            file.getName(),
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            Files.readAllBytes(file.toPath()));
+    return multipart;
   }
 }
