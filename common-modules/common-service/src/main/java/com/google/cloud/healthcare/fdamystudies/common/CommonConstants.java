@@ -61,4 +61,10 @@ public final class CommonConstants {
 
   public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
       "application/x-www-form-urlencoded;charset=UTF-8";
+
+  public static final String PASSWORD_REGEX =
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$";
+
+  public static final String PASSWORD_REGEX_MESSAGE =
+      "Your password does not meet the required criteria.";
 }

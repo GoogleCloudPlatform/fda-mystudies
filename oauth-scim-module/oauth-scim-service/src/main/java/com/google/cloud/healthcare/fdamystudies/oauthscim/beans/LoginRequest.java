@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -19,15 +22,12 @@ import lombok.ToString;
 @Setter
 public class LoginRequest {
 
-  private static final String PASSWORD_REGEX =
-      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
-
   @ToString.Exclude
   @Size(max = 320)
   @Email
   private String email;
 
   @ToString.Exclude
-  @Pattern(regexp = PASSWORD_REGEX, message = "Your password does not meet the required criteria.")
+  @Pattern(regexp = PASSWORD_REGEX, message = PASSWORD_REGEX_MESSAGE)
   private String password;
 }
