@@ -9,7 +9,7 @@ import {
 import {EntityService} from 'src/app/service/entity.service';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {environment} from 'src/environments/environment.prod';
+import {environment} from '@environment';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 
 @Injectable({

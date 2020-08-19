@@ -17,8 +17,8 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   participantId = '';
-  buttonText1 = '';
-  buttonText2 = '';
+  sendResend = '';
+  enableDisable = '';
   participant$: Observable<Participant> = of();
   onBoardingStatus = OnboardingStatus;
 
@@ -42,16 +42,17 @@ export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
   getParticipant(): void {
     this.participant$ = this.participantDetailsService.get(this.participantId);
     this.participant$.subscribe((participant) => {
-      this.buttonText1 =
+      this.sendResend =
         participant.participantDetail.onboardingStatus ===
-        this.onBoardingStatus.New ?
-          'Send Invitation' :
-          'Resend Invitation';
-      this.buttonText2 =
+        this.onBoardingStatus.New
+          ? 'Send Invitation'
+          : 'Resend Invitation';
+
+      this.enableDisable =
         participant.participantDetail.onboardingStatus ===
-        this.onBoardingStatus.Disabled ?
-          'Enable Invitation' :
-          'Disable Invitation';
+        this.onBoardingStatus.Disabled
+          ? 'Enable Invitation'
+          : 'Disable Invitation';
     });
   }
 

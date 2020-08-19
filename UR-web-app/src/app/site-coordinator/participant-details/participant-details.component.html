@@ -51,23 +51,27 @@
                 onBoardingStatus.Disabled
               "
             >
-              <app-button-template
+              <button
                 name="sendInvite"
-                [buttonName]="buttonText1"
+                class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
                 (click)="sendInvitation(participant.participantDetail.siteId)"
-              ></app-button-template>
+              >
+                {{ sendResend }}
+              </button>
             </div>
             <div>
-              <app-button-template
+              <button
                 name="toggleInvite"
-                [buttonName]="buttonText2"
+                class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
                 (click)="
                   toggleInvitation(
                     participant.participantDetail.siteId,
                     participant.participantDetail.onboardingStatus
                   )
                 "
-              ></app-button-template>
+              >
+                {{ enableDisable }}
+              </button>
             </div>
           </div>
         </section>
@@ -77,21 +81,25 @@
 
   <section class="subheader p-none pl-none mobile__view border-top__c4d1e6">
     <div class="flex__ flex__justify__center">
-      <app-button-template
+      <button
         name="sendInvite"
-        [buttonName]="buttonText1"
+        class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
         (click)="sendInvitation(participant.participantDetail.siteId)"
-      ></app-button-template>
-      <app-button-template
+      >
+        {{ sendResend }}
+      </button>
+      <button
         name="toggleInvite"
-        [buttonName]="buttonText2"
+        class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
         (click)="
           toggleInvitation(
             participant.participantDetail.siteId,
             participant.participantDetail.onboardingStatus
           )
         "
-      ></app-button-template>
+      >
+        {{ enableDisable }}
+      </button>
     </div>
   </section>
 
