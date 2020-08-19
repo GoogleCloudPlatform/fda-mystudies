@@ -147,6 +147,34 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnAppsWithOptionalStudies() throws Exception {
+    // Step 1: set app and study
+    studyEntity.setAppInfo(appEntity);
+    testDataHelper.getStudyRepository().save(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    String[] fields = {"studies"};
+
+    // Step 2: Call API and expect success message
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .queryParam("fields", fields))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.apps").isArray())
+        .andExpect(jsonPath("$.apps", hasSize(1)))
+        .andExpect(jsonPath("$.apps[0].studies").isArray())
+        .andExpect(jsonPath("$.apps[0].studies[0].sites").isEmpty())
+        .andExpect(jsonPath("$.apps[0].studies[0].studyName").value(studyEntity.getName()))
+        .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
+        .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()));
+  }
+
+  @Test
   public void shouldReturnForbiddenForGetAppDetailsAccessDenied() throws Exception {
     // Step 1 : set SuperAdmin to false
     userRegAdminEntity.setSuperAdmin(false);
@@ -192,7 +220,12 @@ public class AppControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.participants").isArray())
+        .andExpect(jsonPath("$.participants", hasSize(1)))
         .andExpect(jsonPath("$.participants[0].enrolledStudies").isArray())
+        .andExpect(jsonPath("$.participants[0].enrolledStudies", hasSize(1)))
+        .andExpect(jsonPath("$.participants[0].email").value(userDetailsEntity.getEmail()))
+        .andExpect(
+            jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
         .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
   }
@@ -226,6 +259,29 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations").isArray())
         .andExpect(jsonPath("$.violations[0].path").value("userId"))
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
+  }
+  
+  public void shouldReturnInvalidAppsFieldsValues() throws Exception {
+    // Step 1: set app and study
+    studyEntity.setAppInfo(appEntity);
+    testDataHelper.getStudyRepository().save(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    String[] fields = {"apps"};
+
+    // Step 2: Call API
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APPS.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .queryParam("fields", fields))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.INVALID_APPS_FIELDS_VALUES.getDescription()));
   }
 
   @AfterEach

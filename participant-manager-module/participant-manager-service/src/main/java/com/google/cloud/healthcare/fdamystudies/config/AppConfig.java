@@ -11,4 +11,4 @@ package com.google.cloud.healthcare.fdamystudies.config;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AppConfig extends BaseAppConfig {}
+public class AppConfig extends CommonModuleConfiguration {}

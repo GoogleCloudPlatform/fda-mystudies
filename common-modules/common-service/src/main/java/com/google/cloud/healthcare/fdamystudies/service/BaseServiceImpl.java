@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Base64;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -51,5 +52,14 @@ public abstract class BaseServiceImpl {
 
   protected RestTemplate getRestTemplate() {
     return restTemplate;
+  }
+
+  protected boolean isSuccessful(ResponseEntity<?> response) {
+    return response.getStatusCode().is2xxSuccessful();
+  }
+
+  protected String getEncodedAuthorization(String clientId, String clientSecret) {
+    String credentials = clientId + ":" + clientSecret;
+    return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
   }
 }

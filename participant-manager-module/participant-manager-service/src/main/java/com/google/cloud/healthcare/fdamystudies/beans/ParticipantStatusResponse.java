@@ -20,10 +20,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ParticipantStatusResponse extends BaseResponse {
 
-  private String onboardingStatus;
-
-  private List<String> ids;
-
   public ParticipantStatusResponse(ErrorCode errorCode) {
     super(errorCode);
   }

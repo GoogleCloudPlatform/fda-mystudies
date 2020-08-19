@@ -91,7 +91,7 @@ class ConsentResult {
                 fullPath = path + "/" + fileName
 
                 if !FileManager.default.fileExists(atPath: path) {
-                  try! FileManager.default.createDirectory(
+                  try? FileManager.default.createDirectory(
                     atPath: path,
                     withIntermediateDirectories: true,
                     attributes: nil
@@ -147,7 +147,7 @@ class ConsentResult {
             fullPath = path + "/" + fileName
 
             if !FileManager.default.fileExists(atPath: path) {
-              try! FileManager.default.createDirectory(
+              try? FileManager.default.createDirectory(
                 atPath: path,
                 withIntermediateDirectories: true,
                 attributes: nil

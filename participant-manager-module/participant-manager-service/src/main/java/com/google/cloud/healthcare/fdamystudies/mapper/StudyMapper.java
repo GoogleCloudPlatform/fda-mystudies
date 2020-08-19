@@ -22,33 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.collections4.CollectionUtils;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StudyMapper {
 
   private StudyMapper() {}
 
-  public static List<AppStudyResponse> toAppDetailsResponseList(
-      List<StudyEntity> studies,
-      Map<String, List<SiteEntity>> groupByStudyIdSiteMap,
-      String[] fields) {
-    List<AppStudyResponse> studyResponseList = new ArrayList<>();
-    if (CollectionUtils.isNotEmpty(studies)) {
-      for (StudyEntity study : studies) {
-        AppStudyResponse appStudyResponse = new AppStudyResponse();
-        appStudyResponse.setStudyId(study.getId());
-        appStudyResponse.setCustomStudyId(study.getCustomId());
-        appStudyResponse.setStudyName(study.getName());
-        if (ArrayUtils.contains(fields, "sites")) {
-          List<AppSiteResponse> appSiteResponsesList =
-              SiteMapper.toAppDetailsResponseList(groupByStudyIdSiteMap.get(study.getId()));
-          appStudyResponse.getSites().addAll(appSiteResponsesList);
-        }
-        studyResponseList.add(appStudyResponse);
-      }
+  public static AppStudyResponse toAppStudyResponse(
+      StudyEntity study, List<SiteEntity> sites, String[] fields) {
+    AppStudyResponse appStudyResponse = new AppStudyResponse();
+    appStudyResponse.setStudyId(study.getId());
+    appStudyResponse.setCustomStudyId(study.getCustomId());
+    appStudyResponse.setStudyName(study.getName());
+    if (ArrayUtils.contains(fields, "sites")) {
+      List<AppSiteResponse> appSiteResponsesList =
+          sites.stream().map(SiteMapper::toAppSiteResponse).collect(Collectors.toList());
+      appStudyResponse.getSites().addAll(appSiteResponsesList);
     }
-    return studyResponseList;
+    return appStudyResponse;
   }
 
   public static AppStudyDetails toAppStudyDetails(
@@ -78,7 +70,8 @@ public final class StudyMapper {
     studyDetail.setAppInfoId(study.getAppInfo().getId());
 
     if (studyPermissionsByStudyInfoId.get(study.getId()) != null) {
-      Integer studyEditPermission = studyPermissionsByStudyInfoId.get(study.getId()).getEdit();
+      Integer studyEditPermission =
+          studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
       studyDetail.setStudyPermission(
           studyEditPermission == Permission.NO_PERMISSION.value()
               ? Permission.READ_VIEW.value()
