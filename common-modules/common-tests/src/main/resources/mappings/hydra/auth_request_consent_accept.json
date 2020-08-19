@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "PUT",
+    "url": "/oauth2/auth/requests/consent/accept?consent_challenge=c11e62a0-5555-4b0e-b498-c878f5e4bd85"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "bodyFileName": "hydra/auth_requests_consent__accept_response.json"
+  }
+}

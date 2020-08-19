@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,7 +18,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 
 @Repository
 @ConditionalOnProperty(
@@ -50,5 +50,5 @@ public interface StudyPermissionRepository extends JpaRepository<StudyPermission
   public void deleteByAdminUserId(String adminId);
 
   @Query("SELECT sp from StudyPermissionEntity sp where sp.urAdminUser.id=:adminId")
-  public List<StudyPermissionEntity> findByAdminUser(String adminId);
+  public List<StudyPermissionEntity> findByAdminUserId(String adminId);
 }

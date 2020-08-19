@@ -1,9 +1,8 @@
 /*
  * Copyright 2020 Google LLC
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 
 package com.google.cloud.healthcare.fdamystudies.common;
@@ -68,12 +67,21 @@ public enum MessageCode {
 
   PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "Participants are invited"),
 
+  PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
+
+  CHANGE_PASSWORD_SUCCESS(
+      HttpStatus.OK, "MSG-0002", "Your password has been changed successfully!"),
+
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
       HttpStatus.ACCEPTED, "MSG-0022", "The email is accepted by the receiving mail server."),
 
   IMPORT_PARTICIPANT_SUCCESS(HttpStatus.OK, "MSG-0026", "Participants imported successfully"),
 
   UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG-0028", "Status updated successfully");
+  
+  UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
+
+  SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

@@ -8,8 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,6 @@ import lombok.ToString;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@JsonInclude(Include.NON_NULL)
 @Component
 @Scope(value = "prototype")
 @ToString

@@ -15,7 +15,8 @@ public enum OnboardingStatus {
   INVITED("I", "Invited"),
   ENROLLED("E", "Enrolled"),
   NEW("N", "New"),
-  DISABLED("D", "Disabled");
+  DISABLED("D", "Disabled"),
+  ALL("A", "All");
 
   private String code;
 
