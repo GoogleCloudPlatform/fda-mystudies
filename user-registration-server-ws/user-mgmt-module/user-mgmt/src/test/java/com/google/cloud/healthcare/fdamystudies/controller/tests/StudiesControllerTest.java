@@ -16,11 +16,16 @@ import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.StudiesController;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
+import com.google.cloud.healthcare.fdamystudies.model.AppPermission;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermission;
+import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.Permission;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,6 +46,10 @@ public class StudiesControllerTest extends BaseMockIT {
   @Autowired private StudiesServices studiesServices;
 
   @Autowired private CommonDaoImpl commonDao;
+
+  @Autowired private AppPermissionRepository appPermissionRepository;
+
+  @Autowired private StudyPermissionRepository studyPermissionRepository;
 
   @Test
   public void contextLoads() {
@@ -84,6 +93,39 @@ public class StudiesControllerTest extends BaseMockIT {
     assertNotNull(studyInfoBo);
     assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
+  }
+
+  @Test
+  public void addUpdateStudyMetadataSuccessForPermissions() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    StudyMetadataBean studyMetaDataBean = createStudyMetadataBean();
+    studyMetaDataBean.setStudyId(Constants.NEW_STUDY_ID);
+    studyMetaDataBean.setAppId(Constants.NEW_APP_ID_VALUE);
+    String requestJson = getObjectMapper().writeValueAsString(studyMetaDataBean);
+    performPost(
+        STUDY_METADATA_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
+
+    List<AppPermission> appPermission = appPermissionRepository.findAll();
+    List<StudyPermission> studyPermission = studyPermissionRepository.findAll();
+
+    AppPermission app =
+        appPermission
+            .stream()
+            .filter(x -> x.getAppInfo().getAppId().equals(Constants.NEW_APP_ID_VALUE))
+            .findFirst()
+            .orElse(null);
+    StudyPermission study =
+        studyPermission
+            .stream()
+            .filter(x -> x.getStudyInfo().getCustomId().equals(Constants.NEW_STUDY_ID))
+            .findFirst()
+            .orElse(null);
+    assertNotNull(app);
+    assertEquals(Constants.NEW_APP_ID_VALUE, app.getAppInfo().getAppId());
+    assertEquals(Permission.READ_EDIT.value(), app.getEdit());
+    assertNotNull(study);
+    assertEquals(Constants.NEW_STUDY_ID, study.getStudyInfo().getCustomId());
+    assertEquals(Permission.READ_EDIT.value(), study.getEdit());
   }
 
   @Test
