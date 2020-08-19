@@ -51,37 +51,23 @@
                 onBoardingStatus.Disabled
               "
             >
-              <button
-                type="submit"
-                class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
+              <app-button-template
+                name="sendInvite"
+                [buttonName]="buttonText1"
                 (click)="sendInvitation(participant.participantDetail.siteId)"
-              >
-                {{
-                  participant.participantDetail.onboardingStatus ===
-                  onBoardingStatus.New
-                    ? "Send Invitation"
-                    : "Resend Invitation"
-                }}
-              </button>
+              ></app-button-template>
             </div>
             <div>
-              <button
-                type="submit"
-                class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
+              <app-button-template
+                name="toggleInvite"
+                [buttonName]="buttonText2"
                 (click)="
                   toggleInvitation(
                     participant.participantDetail.siteId,
                     participant.participantDetail.onboardingStatus
                   )
                 "
-              >
-                {{
-                  participant.participantDetail.onboardingStatus ===
-                  onBoardingStatus.Disabled
-                    ? "Enable Invitation"
-                    : "Disable Invitation"
-                }}
-              </button>
+              ></app-button-template>
             </div>
           </div>
         </section>
@@ -91,39 +77,21 @@
 
   <section class="subheader p-none pl-none mobile__view border-top__c4d1e6">
     <div class="flex__ flex__justify__center">
-      <button
-        type="submit"
+      <app-button-template
         name="sendInvite"
-        class="btn banner__primary__btn white__text pad__5__13 font14 mr-sm"
+        [buttonName]="buttonText1"
         (click)="sendInvitation(participant.participantDetail.siteId)"
-      >
-        {{
-          participant.participantDetail.onboardingStatus ===
-            onBoardingStatus.New ||
-          participant.participantDetail.onboardingStatus ===
-            onBoardingStatus.Disabled
-            ? "Send Invitation"
-            : "Resend Invitation"
-        }}
-      </button>
-      <button
-        type="submit"
+      ></app-button-template>
+      <app-button-template
         name="toggleInvite"
-        class="btn banner__default__btn pad__5__13 font14"
+        [buttonName]="buttonText2"
         (click)="
           toggleInvitation(
             participant.participantDetail.siteId,
             participant.participantDetail.onboardingStatus
           )
         "
-      >
-        {{
-          participant.participantDetail.onboardingStatus ===
-          onBoardingStatus.Disabled
-            ? "Enable Invitation"
-            : "Disable Invitation"
-        }}
-      </button>
+      ></app-button-template>
     </div>
   </section>
 

@@ -1,5 +1,11 @@
-import * as TypeDeclared from '../site-coordinator/participant-details/participant-details';
+import {
+  Participant,
+  StatusUpdate,
+  InviteSend,
+  UpdateInviteResponse,
+} from '../site-coordinator/participant-details/participant-details';
 import {ApiResponse} from './api.response.model';
+import {RegistryParticipant} from '../shared/participant';
 
 export const expectedParticipantDetails = {
   participantDetail: {
@@ -44,13 +50,13 @@ export const expectedParticipantDetails = {
   status: 200,
   message: 'Get participant details successfully',
   code: 'MSG_0020',
-} as TypeDeclared.Participant;
+} as Participant;
 
 export const expectedParticipantId = {
   id: '1',
-} as TypeDeclared.ParticipantDetail;
+} as RegistryParticipant;
 
-export const expectedSiteId = {siteId: '1'} as TypeDeclared.ParticipantDetail;
+export const expectedSiteId = {siteId: '1'} as RegistryParticipant;
 
 export const expectedToggleResponse = {
   message: 'Site status updated successfully',
@@ -59,13 +65,13 @@ export const expectedToggleResponse = {
 export const expectedToggleInvitation = {
   ids: ['1'],
   status: 'D',
-} as TypeDeclared.StatusUpdate;
+} as StatusUpdate;
 
-export const expectedSendInvitation = {ids: ['1']} as TypeDeclared.InviteSend;
+export const expectedSendInvitation = {ids: ['1']} as InviteSend;
 
 export const expectedSendInviteResponse = {
   invitedParticipantIds: ['1'],
   failedParticipantIds: [],
   code: 'MSG_0002',
   message: '1 Invitations sent successfully',
-} as TypeDeclared.UpdateInviteResponse;
+} as UpdateInviteResponse;

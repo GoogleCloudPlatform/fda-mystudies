@@ -7,6 +7,7 @@ import {NgxDataTableModule} from 'angular-9-datatable';
 import {MobileMenuComponent} from './mobile-menu/mobile-menu.component';
 import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
 import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
+import {ButtonTemplateComponent} from './button-template/button-template.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import {ParticipantDetailsComponent} from './participant-details/participant-det
     MobileMenuComponent,
     DashboardHeaderComponent,
     ParticipantDetailsComponent,
+    ButtonTemplateComponent,
   ],
   imports: [
     CommonModule,

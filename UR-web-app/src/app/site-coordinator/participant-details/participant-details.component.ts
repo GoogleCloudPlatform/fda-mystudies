@@ -17,6 +17,8 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   participantId = '';
+  buttonText1 = '';
+  buttonText2 = '';
   participant$: Observable<Participant> = of();
   onBoardingStatus = OnboardingStatus;
 
@@ -31,9 +33,7 @@ export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
   ngOnInit(): void {
     this.subs.add(
       this.route.params.subscribe((params) => {
-        if (params.participantId) {
-          this.participantId = params.participantId as string;
-        }
+        this.participantId = params.participantId as string;
         this.getParticipant();
       }),
     );
@@ -41,6 +41,18 @@ export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
 
   getParticipant(): void {
     this.participant$ = this.participantDetailsService.get(this.participantId);
+    this.participant$.subscribe((participant) => {
+      this.buttonText1 =
+        participant.participantDetail.onboardingStatus ===
+        this.onBoardingStatus.New ?
+          'Send Invitation' :
+          'Resend Invitation';
+      this.buttonText2 =
+        participant.participantDetail.onboardingStatus ===
+        this.onBoardingStatus.Disabled ?
+          'Enable Invitation' :
+          'Disable Invitation';
+    });
   }
 
   downloadPDF(consentId: string): void {
@@ -69,7 +81,7 @@ export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.ngOnInit();
+            this.getParticipant();
           }
         }),
     );
@@ -89,7 +101,7 @@ export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.ngOnInit();
+            this.getParticipant();
           }
         }),
     );
