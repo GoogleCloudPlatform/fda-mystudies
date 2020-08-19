@@ -62,7 +62,7 @@ public class StudyConsentEntity implements Serializable {
   private String pdfPath;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "participant_study_id", nullable = false, updatable = false)
+  @JoinColumn(name = "participant_study_id")
   private ParticipantStudyEntity participantStudy;
 
   // represents whether pdf content is stored in db=0 or gcp=1

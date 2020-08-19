@@ -85,6 +85,8 @@ public enum MessageCode {
 
   TARGET_ENROLLMENT_UPDATE_SUCCESS(
       HttpStatus.OK, "MSG-0030", "Target enrollment updated successfully"),
+  
+  GET_CONSENT_DOCUMENT_SUCCESS(HttpStatus.OK, "MSG-0023", "Get consent document successfully"),
 
   UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
 

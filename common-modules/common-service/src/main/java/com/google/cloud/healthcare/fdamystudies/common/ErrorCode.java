@@ -203,6 +203,8 @@ public enum ErrorCode {
       "EC-95",
       Constants.BAD_REQUEST,
       " Cannot update enrollment target for decommissionned site"),
+  
+  CONSENT_DATA_NOT_AVAILABLE(400, "EC_885", Constants.BAD_REQUEST, "error getting consent data"),
 
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
