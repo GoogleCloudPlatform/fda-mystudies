@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
 import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
@@ -64,6 +65,8 @@ import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +154,42 @@ public class UserControllerTest extends BaseMockIT {
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "test@b0ston",
+        "TEST@B0STON",
+        "TEST@BoSTON",
+        "TEST@0a",
+        "T3stB0ston",
+        "Test @b0ston"
+      })
+  public void shouldReturnBadRequestForCreateUserAccount(String password)
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    UserRequest request = newUserRequest();
+    request.setPassword(password);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.USERS.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(request))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.violations").isArray())
+        .andExpect(jsonPath("$.violations[0].path").value("password"))
+        .andExpect(jsonPath("$.violations[0].message").value(PASSWORD_REGEX_MESSAGE));
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+  }
+
   @Test
   public void shouldCreateANewUser() throws Exception {
     // Step-0: remove any users created in setUp()
@@ -210,6 +249,47 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.userId").doesNotExist())
         .andExpect(jsonPath("$.error_description").value(ErrorCode.EMAIL_EXISTS.getDescription()));
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
+            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+  }
+
+  @ParameterizedTest
+  @ValueSource(
+      strings = {
+        "test@b0ston",
+        "TEST@B0STON",
+        "TEST@BoSTON",
+        "TEST@0a",
+        "T3stB0ston",
+        "Test @b0ston"
+      })
+  public void shouldReturnPasswordInvalidForChangePassword(String password)
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    ChangePasswordRequest userRequest = new ChangePasswordRequest();
+    userRequest.setNewPassword(password);
+    userRequest.setCurrentPassword(password);
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                put(ApiEndpoint.CHANGE_PASSWORD.getPath(), IdGenerator.id())
+                    .contextPath(getContextPath())
+                    .content(asJsonString(userRequest))
+                    .headers(headers))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.violations").isArray())
+            .andReturn();
+
+    String actualResponse = result.getResponse().getContentAsString();
+    String expectedResponse = readJsonFile("/response/password_regex_match_failed.json");
+    JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
 
     verify(
         1,
