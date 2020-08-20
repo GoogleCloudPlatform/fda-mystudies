@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
@@ -31,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-
 
 public final class ParticipantMapper {
 
@@ -88,7 +86,7 @@ public final class ParticipantMapper {
       participants.setStudyId(study.getId());
       participants.setStudyName(study.getName());
       participants.setCustomStudyId(study.getCustomId());
-      participants.setSitePermission(sitePermission.getEditPermission());
+      participants.setSitePermission(sitePermission.getCanEdit().value());
       setParticipantRegistryAppInfo(participants, study);
       setParticipantRegistryLocation(site, participants);
     }
@@ -97,10 +95,10 @@ public final class ParticipantMapper {
 
   private static void setParticipantRegistryAppInfo(
       ParticipantRegistryDetail participants, StudyEntity study) {
-    if (study.getAppInfo() != null) {
-      participants.setAppName(study.getAppInfo().getAppName());
-      participants.setCustomAppId(study.getAppInfo().getAppId());
-      participants.setAppId(study.getAppInfo().getAppId());
+    if (study.getApp() != null) {
+      participants.setAppName(study.getApp().getAppName());
+      participants.setCustomAppId(study.getApp().getAppId());
+      participants.setAppId(study.getApp().getAppId());
     }
   }
 
@@ -176,8 +174,8 @@ public final class ParticipantMapper {
       ParticipantRegistrySiteEntity participantRegistry) {
     ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setParticipantRegistrySiteid(participantRegistry.getId());
-    participantDetail.setAppName(participantRegistry.getStudy().getAppInfo().getAppName());
-    participantDetail.setCustomAppId(participantRegistry.getStudy().getAppInfo().getAppId());
+    participantDetail.setAppName(participantRegistry.getStudy().getApp().getAppName());
+    participantDetail.setCustomAppId(participantRegistry.getStudy().getApp().getAppId());
     participantDetail.setStudyName(participantRegistry.getStudy().getName());
     participantDetail.setCustomStudyId(participantRegistry.getStudy().getCustomId());
     participantDetail.setLocationName(participantRegistry.getSite().getLocation().getName());
@@ -197,5 +195,16 @@ public final class ParticipantMapper {
             : OnboardingStatus.DISABLED.getStatus();
     participantDetail.setOnboardringStatus(status);
     return participantDetail;
+  }
+
+  public static ParticipantRegistrySiteEntity fromParticipantDetail(
+      ParticipantDetail participant, SiteEntity site) {
+    ParticipantRegistrySiteEntity participantRegistrySite = new ParticipantRegistrySiteEntity();
+    participantRegistrySite.setEmail(participant.getEmail());
+    participantRegistrySite.setSite(site);
+    participantRegistrySite.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantRegistrySite.setEnrollmentToken(RandomStringUtils.randomAlphanumeric(8));
+    participantRegistrySite.setStudy(site.getStudy());
+    return participantRegistrySite;
   }
 }

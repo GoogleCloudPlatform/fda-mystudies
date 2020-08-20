@@ -19,10 +19,10 @@ import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromS
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
-import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LoginAttemptsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;

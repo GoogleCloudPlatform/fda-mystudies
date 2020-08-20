@@ -9,8 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
-import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportBO;
 import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.PersonalizedUserReportBO;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

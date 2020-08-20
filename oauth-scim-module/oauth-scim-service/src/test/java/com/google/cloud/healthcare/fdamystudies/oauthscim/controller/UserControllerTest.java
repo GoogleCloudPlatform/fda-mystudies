@@ -29,8 +29,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -62,6 +61,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,7 +72,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -101,8 +100,6 @@ public class UserControllerTest extends BaseMockIT {
   @BeforeEach
   public void setUp() {
     WireMock.resetAllRequests();
-
-    reset(emailSender);
 
     // create a user
     UserResponse userResponse = userService.createUser(newUserRequest());
@@ -460,6 +457,7 @@ public class UserControllerTest extends BaseMockIT {
                 .value(ErrorCode.ENFORCE_PASSWORD_HISTORY.getDescription()));
 
     verify(
+        1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
@@ -516,8 +514,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
 
-    verify(emailSender, times(1)).send(isA(SimpleMailMessage.class));
-
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     assertNotNull(userEntity);
@@ -532,7 +529,7 @@ public class UserControllerTest extends BaseMockIT {
     String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
 
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
-    assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
+
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
 
     verify(

@@ -19,8 +19,8 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudiesDao;
-import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.notnoop.apns.APNS;
