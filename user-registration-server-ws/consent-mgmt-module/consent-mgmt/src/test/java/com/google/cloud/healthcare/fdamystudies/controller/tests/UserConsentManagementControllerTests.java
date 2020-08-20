@@ -1,5 +1,16 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentReqBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
@@ -18,17 +29,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
 public class UserConsentManagementControllerTests extends BaseMockIT {
@@ -113,7 +113,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.STATUS_COMPLETE,
             Constants.ENCODED_CONTENT_1_0_UPDATED);
     ConsentStatusBean consentStatus =
-        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
 
     // Invoke http api endpoint to Update study consent pdf content value
@@ -155,7 +155,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(
             Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
     ConsentStatusBean consentStatus =
-        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
 
     // Invoke http api endpoint to Add new study consent pdf version
@@ -392,7 +392,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     // Invoke http api endpoint to Add new study consent pdf version
     consent = new ConsentReqBean(Constants.VERSION_1_3, Constants.STATUS_COMPLETE, "");
-    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    consentRequest =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -422,7 +423,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(
             Constants.VERSION_VERY_LONG, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
     ConsentStatusBean consentStatus =
-        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
     mockMvc
         .perform(
