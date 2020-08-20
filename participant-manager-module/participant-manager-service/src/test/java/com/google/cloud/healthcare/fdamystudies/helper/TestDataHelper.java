@@ -210,6 +210,7 @@ public class TestDataHelper {
     StudyEntity studyEntity = newStudyEntity();
     studyEntity.setType("CLOSE");
     studyEntity.setName("COVID Study");
+    studyEntity.setCustomId("COVID Custom StudyId");
     studyEntity.setAppInfo(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
@@ -281,18 +282,78 @@ public class TestDataHelper {
   }
 
   public StudyConsentEntity createStudyConsentEntity(ParticipantStudyEntity participantStudy) {
-	  StudyConsentEntity studyConsent = new StudyConsentEntity();
-	    studyConsent.setPdfPath("documents/test-document.pdf");
-	    studyConsent.setPdfStorage(1);
-	    studyConsent.setVersion("1.0");
-	    studyConsent.setParticipantStudy(participantStudy);
-	    return studyConsentRepository.saveAndFlush(studyConsent);
+    StudyConsentEntity studyConsent = new StudyConsentEntity();
+    studyConsent.setPdfPath("documents/test-document.pdf");
+    studyConsent.setPdfStorage(1);
+    studyConsent.setVersion("1.0");
+    studyConsent.setParticipantStudy(participantStudy);
+    return studyConsentRepository.saveAndFlush(studyConsent);
   }
 
   public OrgInfoEntity createOrgInfo() {
     OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
     orgInfoEntity.setName("OrgName");
     return orgInfoRepository.saveAndFlush(orgInfoEntity);
+  }
+
+  public SiteEntity createSiteEntityForManageUsers(
+      StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setStudy(studyEntity);
+    LocationEntity location = createLocationEntity();
+    siteEntity.setLocation(location);
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setEditPermission(Permission.READ_EDIT.value());
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setAppInfo(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
+  }
+
+  public LocationEntity createLocationEntity() {
+    LocationEntity locationEntity = newLocationEntity();
+    return locationRepository.saveAndFlush(locationEntity);
+  }
+
+  public void createAppPermission(
+      UserRegAdminEntity superAdmin, AppEntity appEntity, String adminId) {
+    AppPermissionEntity appPermission = new AppPermissionEntity();
+    appPermission.setAppInfo(appEntity);
+    appPermission.setCreatedBy(adminId);
+    appPermission.setEditPermission(Permission.READ_EDIT.value());
+    appPermission.setUrAdminUser(superAdmin);
+    appPermissionRepository.saveAndFlush(appPermission);
+  }
+
+  public void createStudyPermission(
+      UserRegAdminEntity superAdmin,
+      AppEntity appEntity,
+      StudyEntity studyDetails,
+      String adminId) {
+    StudyPermissionEntity studyPermission = new StudyPermissionEntity();
+    studyPermission.setAppInfo(studyDetails.getAppInfo());
+    studyPermission.setStudy(studyDetails);
+    studyPermission.setCreatedBy(adminId);
+    studyPermission.setEditPermission(Permission.READ_EDIT.value());
+    studyPermission.setUrAdminUser(superAdmin);
+    studyPermissionRepository.saveAndFlush(studyPermission);
+  }
+
+  public void createSitePermission(
+      UserRegAdminEntity superAdmin,
+      AppEntity appDetails,
+      StudyEntity studyEntity,
+      SiteEntity siteEntity,
+      String adminId) {
+    SitePermissionEntity sitePermission = new SitePermissionEntity();
+    sitePermission.setAppInfo(appDetails);
+    sitePermission.setCreatedBy(adminId);
+    sitePermission.setEditPermission(Permission.READ_EDIT.value());
+    sitePermission.setStudy(siteEntity.getStudy());
+    sitePermission.setSite(siteEntity);
+    sitePermission.setUrAdminUser(superAdmin);
+    sitePermissionRepository.saveAndFlush(sitePermission);
   }
 
   public void cleanUp() {

@@ -18,9 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
@@ -64,4 +66,9 @@ public class AppPermissionEntity implements Serializable {
 
   @Column(name = "created_by", length = 64)
   private String createdBy;
+
+  @Transient
+  public String getAppId() {
+    return appInfo == null ? StringUtils.EMPTY : appInfo.getId();
+  }
 }
