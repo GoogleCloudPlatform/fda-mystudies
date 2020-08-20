@@ -298,8 +298,9 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReturnNotFoundForUpdateTargetEnrollment() throws Exception {
     // Step 1:Set studyId to invalid
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
-
-    StudyEntity study = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
+    StudyEntity study = testDataHelper.newStudyEntity();
+    study.setCustomId("CovidStudy1");
+    study.setApp(appEntity);
     siteEntity.setStudy(study);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
