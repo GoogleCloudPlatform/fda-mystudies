@@ -65,11 +65,7 @@ public class StudiesDaoImpl implements StudiesDao {
     AppInfoDetailsBO appInfo = null;
     OrgInfo orgInfo = null;
 
-    UserRegAdminUser superAdminUser = null;
-
-    AppPermission appPermission = null;
-
-    StudyPermission studyPermission = null;
+    UserRegAdminUser superAdminUser;
 
     ErrorBean errorBean = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
@@ -152,7 +148,7 @@ public class StudiesDaoImpl implements StudiesDao {
           appInfo.setOrgInfo(orgInfo);
           session.save(appInfo);
 
-          appPermission = new AppPermission();
+          AppPermission appPermission = new AppPermission();
           appPermission.setAppInfo(appInfo);
           appPermission.setUrAdminUser(superAdminUser);
           appPermission.setEdit(Permission.READ_EDIT.value());
@@ -176,7 +172,7 @@ public class StudiesDaoImpl implements StudiesDao {
         studyInfo.setCreatedOn(UserManagementUtil.getCurrentUtilDateTime());
         int generatedStudyid = (int) session.save(studyInfo);
 
-        studyPermission = new StudyPermission();
+        StudyPermission studyPermission = new StudyPermission();
         studyPermission.setAppInfo(appInfo);
         studyPermission.setStudyInfo(studyInfo);
         studyPermission.setUrAdminUser(superAdminUser);

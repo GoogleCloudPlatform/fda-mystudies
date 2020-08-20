@@ -19,8 +19,10 @@ import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermission;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermission;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminUser;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminUserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -50,6 +52,8 @@ public class StudiesControllerTest extends BaseMockIT {
   @Autowired private AppPermissionRepository appPermissionRepository;
 
   @Autowired private StudyPermissionRepository studyPermissionRepository;
+
+  @Autowired private UserRegAdminUserRepository userRegAdminUserRepository;
 
   @Test
   public void contextLoads() {
@@ -105,27 +109,41 @@ public class StudiesControllerTest extends BaseMockIT {
     performPost(
         STUDY_METADATA_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
 
-    List<AppPermission> appPermission = appPermissionRepository.findAll();
-    List<StudyPermission> studyPermission = studyPermissionRepository.findAll();
+    List<AppPermission> appPermissionList = appPermissionRepository.findAll();
+    List<StudyPermission> studyPermissionList = studyPermissionRepository.findAll();
+    List<UserRegAdminUser> userRegAdminUserList = userRegAdminUserRepository.findAll();
 
-    AppPermission app =
-        appPermission
+    AppPermission appPermission =
+        appPermissionList
             .stream()
             .filter(x -> x.getAppInfo().getAppId().equals(Constants.NEW_APP_ID_VALUE))
             .findFirst()
             .orElse(null);
-    StudyPermission study =
-        studyPermission
+    StudyPermission studyPermission =
+        studyPermissionList
             .stream()
             .filter(x -> x.getStudyInfo().getCustomId().equals(Constants.NEW_STUDY_ID))
             .findFirst()
             .orElse(null);
-    assertNotNull(app);
-    assertEquals(Constants.NEW_APP_ID_VALUE, app.getAppInfo().getAppId());
-    assertEquals(Permission.READ_EDIT.value(), app.getEdit());
-    assertNotNull(study);
-    assertEquals(Constants.NEW_STUDY_ID, study.getStudyInfo().getCustomId());
-    assertEquals(Permission.READ_EDIT.value(), study.getEdit());
+    UserRegAdminUser userRegAdminUser =
+        userRegAdminUserList
+            .stream()
+            .filter(x -> x.getSuperAdmin().equals(true))
+            .findFirst()
+            .orElse(null);
+
+    assertNotNull(userRegAdminUser);
+    assertNotNull(appPermission);
+    assertNotNull(appPermission.getUrAdminUser());
+    assertEquals(Constants.NEW_APP_ID_VALUE, appPermission.getAppInfo().getAppId());
+    assertEquals(Permission.READ_EDIT.value(), appPermission.getEdit());
+    assertEquals(appPermission.getCreatedBy(), userRegAdminUser.getId());
+
+    assertNotNull(studyPermission);
+    assertNotNull(studyPermission.getUrAdminUser());
+    assertEquals(Constants.NEW_STUDY_ID, studyPermission.getStudyInfo().getCustomId());
+    assertEquals(Permission.READ_EDIT.value(), studyPermission.getEdit());
+    assertEquals(studyPermission.getCreatedBy(), userRegAdminUser.getId());
   }
 
   @Test
