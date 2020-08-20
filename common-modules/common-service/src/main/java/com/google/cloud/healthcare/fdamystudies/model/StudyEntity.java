@@ -105,9 +105,6 @@ public class StudyEntity implements Serializable {
   @Column(name = "enrolling", length = 100)
   private String enrolling;
 
-  @Column(name = "selected", columnDefinition = "boolean default false")
-  private boolean selected;
-
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,

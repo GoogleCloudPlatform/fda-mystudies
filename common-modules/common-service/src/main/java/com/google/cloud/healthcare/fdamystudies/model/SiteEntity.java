@@ -86,9 +86,6 @@ public class SiteEntity implements Serializable {
   @Column(name = "modified_by", length = 64)
   private String modifiedBy;
 
-  @Column(name = "selected", columnDefinition = "boolean default false")
-  private boolean selected;
-
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,

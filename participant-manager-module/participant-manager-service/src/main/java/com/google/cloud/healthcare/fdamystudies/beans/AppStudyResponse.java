@@ -28,13 +28,7 @@ public class AppStudyResponse {
 
   private String studyName;
 
-  private boolean selected;
-
-  private String permission;
-
   private int totalSitesCount;
-
-  private int selectedSitesCount;
 
   private List<AppSiteResponse> sites = new ArrayList<>();
 }

@@ -151,7 +151,7 @@ public class AppServiceImpl implements AppService {
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
         Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEditPermission();
-        appDetails.setPermission(
+        appDetails.setAppPermission(
             appEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
       }
 
@@ -310,17 +310,6 @@ public class AppServiceImpl implements AppService {
                         StudyMapper.toAppStudyResponse(
                             study, groupByStudyIdSiteMap.get(study.getId()), fields))
                 .collect(Collectors.toList());
-        int selectedStudiesCount =
-            (int) appStudyResponses.stream().filter(AppStudyResponse::isSelected).count();
-        appDetails.setSelectedStudiesCount(selectedStudiesCount);
-
-        int selectedSitesCountPerApp =
-            appDetails
-                .getStudies()
-                .stream()
-                .mapToInt(appStudyResponse -> appStudyResponse.getSelectedSitesCount())
-                .sum();
-        appDetails.setSelectedSitesCount(selectedSitesCountPerApp);
 
         appDetails.getStudies().addAll(appStudyResponses);
       }
@@ -331,7 +320,6 @@ public class AppServiceImpl implements AppService {
               .map(study -> study.getSites().size())
               .reduce(0, Integer::sum);
       appDetails.setTotalSitesCount(totalSitesCount);
-      appDetails.setSelected(app.isSelected());
 
       appsList.add(appDetails);
     }

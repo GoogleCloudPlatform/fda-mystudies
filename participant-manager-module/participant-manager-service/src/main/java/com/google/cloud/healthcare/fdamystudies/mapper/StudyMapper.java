@@ -39,9 +39,6 @@ public final class StudyMapper {
               .map(SiteMapper::toAppSiteResponse)
               .collect(Collectors.toList());
       appStudyResponse.getSites().addAll(appSiteResponsesList);
-      int selectedSitesCount =
-          (int) appSiteResponsesList.stream().filter(AppSiteResponse::isSelected).count();
-      appStudyResponse.setSelectedSitesCount(selectedSitesCount);
     }
     int totalSiteCountPerStudy = appStudyResponse.getSites().size();
     appStudyResponse.setTotalSitesCount(totalSiteCountPerStudy);

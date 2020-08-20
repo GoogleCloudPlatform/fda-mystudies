@@ -29,9 +29,5 @@ public class AppSiteResponse {
 
   private String locationName;
 
-  private boolean selected;
-
-  private String permission;
-
   private String locationDescription;
 }
