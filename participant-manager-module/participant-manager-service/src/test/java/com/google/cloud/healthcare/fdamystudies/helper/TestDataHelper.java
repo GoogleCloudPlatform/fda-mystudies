@@ -22,6 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -34,6 +35,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.OrgInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
@@ -78,11 +80,11 @@ public class TestDataHelper {
 
   @Autowired private StudyPermissionRepository studyPermissionRepository;
 
-  @Autowired SitePermissionRepository sitePermissionRepository;
+  @Autowired private SitePermissionRepository sitePermissionRepository;
 
-  @Autowired AppPermissionRepository appPermissionRepository;
+  @Autowired private AppPermissionRepository appPermissionRepository;
 
-  @Autowired AppRepository appRepository;
+  @Autowired private AppRepository appRepository;
 
   @Autowired private SiteRepository siteRepository;
 
@@ -93,6 +95,8 @@ public class TestDataHelper {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
+
+  @Autowired private OrgInfoRepository orgInfoRepository;
 
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -277,12 +281,29 @@ public class TestDataHelper {
   }
 
   public StudyConsentEntity createStudyConsentEntity(ParticipantStudyEntity participantStudy) {
-    StudyConsentEntity studyConsent = new StudyConsentEntity();
-    studyConsent.setPdfPath(
-        "cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9/CovidStudy/cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9_CovidStudy_1.3_06302020071346.pdf");
-    studyConsent.setPdfStorage(1);
-    studyConsent.setVersion("1.0");
-    studyConsent.setParticipantStudy(participantStudy);
-    return studyConsentRepository.saveAndFlush(studyConsent);
+	  StudyConsentEntity studyConsent = new StudyConsentEntity();
+	    studyConsent.setPdfPath("documents/test-document.pdf");
+	    studyConsent.setPdfStorage(1);
+	    studyConsent.setVersion("1.0");
+	    studyConsent.setParticipantStudy(participantStudy);
+	    return studyConsentRepository.saveAndFlush(studyConsent);
+  }
+
+  public OrgInfoEntity createOrgInfo() {
+    OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
+    orgInfoEntity.setName("OrgName");
+    return orgInfoRepository.saveAndFlush(orgInfoEntity);
+  }
+
+  public void cleanUp() {
+    getStudyConsentRepository().deleteAll();
+    getParticipantStudyRepository().deleteAll();
+    getParticipantRegistrySiteRepository().deleteAll();
+    getSiteRepository().deleteAll();
+    getStudyRepository().deleteAll();
+    getAppRepository().deleteAll();
+    getUserRegAdminRepository().deleteAll();
+    getLocationRepository().deleteAll();
+    getUserDetailsRepository().deleteAll();
   }
 }

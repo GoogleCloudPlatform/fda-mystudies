@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,13 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
@@ -65,7 +62,7 @@ public class StudyConsentEntity implements Serializable {
   private String pdfPath;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "participant_study_id", nullable = false, updatable = false)
+  @JoinColumn(name = "participant_study_id")
   private ParticipantStudyEntity participantStudy;
 
   // represents whether pdf content is stored in db=0 or gcp=1

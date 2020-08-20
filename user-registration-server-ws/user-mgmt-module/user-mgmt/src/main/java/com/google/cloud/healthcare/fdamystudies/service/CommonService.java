@@ -12,7 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.ActivityLog;
 
 public interface CommonService {
 

@@ -8,11 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.io.IOException;
-import java.time.Instant;
-
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -190,6 +185,26 @@ public enum ErrorCode {
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC-105", Constants.BAD_REQUEST, "Error getting participants."),
+
+  DOCUMENT_NOT_IN_PRESCRIBED_FORMAT(
+      400, "EC_866", Constants.BAD_REQUEST, "Import Document not in prescribed format"),
+
+  FAILED_TO_IMPORT_PARTICIPANTS(
+      500,
+      "EC_914",
+      HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+      "Unable to import the participants"),
+
+  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY(
+      400, "EC-95", Constants.BAD_REQUEST, " Cannot update enrollment target for closed study"),
+
+  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE(
+      400,
+      "EC-95",
+      Constants.BAD_REQUEST,
+      " Cannot update enrollment target for decommissionned site"),
+  
+  CONSENT_DATA_NOT_AVAILABLE(400, "EC_885", Constants.BAD_REQUEST, "error getting consent data"),
 
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
