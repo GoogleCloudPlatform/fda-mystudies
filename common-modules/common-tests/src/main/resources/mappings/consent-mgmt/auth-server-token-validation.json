@@ -8,6 +8,6 @@
 		"headers": {
 			"Content-Type": "application/json;charset=UTF-8"
 		},
-		"bodyFileName": "auth-server-token-validation-response.json"
+		"bodyFileName": "consent-mgmt/auth-server-token-validation-response.json"
 	}
 }
