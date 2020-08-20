@@ -7,7 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.service;
 
-
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
@@ -156,7 +155,7 @@ public class StudyServiceImpl implements StudyService {
 
       if (studyPermissionsByStudyInfoId.get(studyId) != null) {
         Integer studyEditPermission =
-            studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
+            studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit().value();
         studyDetail.setStudyPermission(
             studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
         studyDetail.setStudyPermission(studyEditPermission);
@@ -260,13 +259,12 @@ public class StudyServiceImpl implements StudyService {
 
     StudyPermissionEntity studyPermission = optStudyPermission.get();
 
-    if (studyPermission.getAppInfo() == null) {
+    if (studyPermission.getApp() == null) {
       logger.exit(ErrorCode.APP_NOT_FOUND);
       return new ParticipantRegistryResponse(ErrorCode.APP_NOT_FOUND);
     }
 
-    Optional<AppEntity> optApp =
-        appRepository.findById(optStudyPermission.get().getAppInfo().getId());
+    Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
     return prepareRegistryParticipantResponse(optStudy.get(), optApp.get());
   }

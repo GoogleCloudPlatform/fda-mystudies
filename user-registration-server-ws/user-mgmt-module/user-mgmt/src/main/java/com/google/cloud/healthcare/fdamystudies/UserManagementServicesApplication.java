@@ -10,8 +10,10 @@ package com.google.cloud.healthcare.fdamystudies;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
+@EntityScan("com.google.cloud.healthcare.fdamystudies.usermgmt.model")
 public class UserManagementServicesApplication {
 
   public static void main(String[] args) {

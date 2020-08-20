@@ -321,8 +321,8 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @AfterEach
-  public void cleanUp() {
-    testDataHelper.getUserRegAdminRepository().deleteAll();
+  public void clean() {
+    testDataHelper.cleanUp();
   }
 
   private SetUpAccountRequest setUpAccountRequest() {
