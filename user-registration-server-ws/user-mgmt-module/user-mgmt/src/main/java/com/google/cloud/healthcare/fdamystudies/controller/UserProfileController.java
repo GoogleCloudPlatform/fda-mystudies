@@ -132,7 +132,7 @@ public class UserProfileController {
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
     try {
-      message = userManagementProfService.deActivateAcct(userId, deactivateAcctBean);
+      message = userManagementProfService.deactivateAcct(userId, deactivateAcctBean);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
         commonService.createActivityLog(
             userId,

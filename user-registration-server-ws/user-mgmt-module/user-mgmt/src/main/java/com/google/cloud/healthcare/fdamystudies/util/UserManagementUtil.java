@@ -318,37 +318,6 @@ public class UserManagementUtil {
     }
   }
 
-  public String deactivateAcct(String userId, String accessToken, String clientToken) {
-    logger.info("UserManagementUtil deactivateAcct() - starts ");
-    Integer value = null;
-    HttpHeaders headers = null;
-    BodyForProvider bodyProvider = new BodyForProvider();
-    HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
-    String respMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
-      headers.set(AppConstants.USER_ID, userId);
-      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
-
-      requestBody = new HttpEntity<>(null, headers);
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerDeactivateUrl(), HttpMethod.POST, requestBody, Integer.class);
-      value = (Integer) responseEntity.getBody();
-      if (value == 1) {
-        respMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-      }
-
-    } catch (Exception e) {
-      logger.error("UserManagementUtil deactivateAcct() - error ", e);
-    }
-    logger.info("UserManagementUtil deactivateAcct() - Ends ");
-    return respMessage;
-  }
-
   public static Date getCurrentUtilDateTime() {
     Date date = new Date();
     Calendar currentDate = Calendar.getInstance();
