@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.model;
+package com.google.cloud.healthcare.fdamystudies.consent.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -22,22 +22,22 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "login_attempts")
-public class LoginAttemptsBO implements Serializable {
+@Table(name = "user_app_details")
+public class UserAppDetailsBO implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id")
-  private Integer id;
+  @Column(name = "user_app_details_id")
+  private Integer userAppDetailsId;
 
-  @Column(name = "email")
-  private String email;
+  @Column(name = "app_info_id")
+  private Integer appInfoId;
 
-  @Column(name = "last_modified")
-  private Date lastModified;
+  @Column(name = "user_details_id")
+  private Integer userDetailsId;
 
-  @Column(name = "no_of_attempts")
-  private Integer attempts;
+  @Column(name = "created_on")
+  private Date createdOn;
 }

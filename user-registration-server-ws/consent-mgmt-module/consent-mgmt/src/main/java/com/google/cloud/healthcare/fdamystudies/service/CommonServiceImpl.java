@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
+import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
 import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
-import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
 
 @Service
 public class CommonServiceImpl implements CommonService {
