@@ -8,6 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -27,12 +34,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 
 @Component
 public class EnrollmentManagementUtil {
@@ -47,6 +48,8 @@ public class EnrollmentManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private OAuthService oAuthService;
 
   public boolean isChecksumValid(@NotNull String token) {
     try {
@@ -132,7 +135,7 @@ public class EnrollmentManagementUtil {
 
   public String getParticipantId(String applicationId, String hashedTokenValue, String studyId)
       throws InvalidRequestException, UnAuthorizedRequestException, SystemException {
-    logger.info("EnrollmentManagementUtil deactivateAcct() - starts ");
+    logger.info("EnrollmentManagementUtil getParticipantId() - starts ");
     HttpHeaders headers = null;
     EnrollmentBodyProvider bodyProvider = null;
     HttpEntity<EnrollmentBodyProvider> requestBody = null;
@@ -142,8 +145,7 @@ public class EnrollmentManagementUtil {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("applicationId", applicationId);
-      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
+      headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
       bodyProvider = new EnrollmentBodyProvider();
       bodyProvider.setTokenIdentifier(hashedTokenValue);
       bodyProvider.setCustomStudyId(studyId);
@@ -163,10 +165,10 @@ public class EnrollmentManagementUtil {
         throw new SystemException();
       }
     } catch (Exception e) {
-      logger.error("EnrollmentManagementUtil deactivateAcct() - Ends ", e);
+      logger.error("EnrollmentManagementUtil getParticipantId() - Ends ", e);
       throw new SystemException();
     }
-    logger.info("EnrollmentManagementUtil deactivateAcct() - Ends ");
+    logger.info("EnrollmentManagementUtil getParticipantId() - Ends ");
     return participantId;
   }
 
@@ -180,8 +182,7 @@ public class EnrollmentManagementUtil {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set(AppConstants.APPLICATION_ID, null);
-      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
+      headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
 
       request = new HttpEntity<>(null, headers);
 
