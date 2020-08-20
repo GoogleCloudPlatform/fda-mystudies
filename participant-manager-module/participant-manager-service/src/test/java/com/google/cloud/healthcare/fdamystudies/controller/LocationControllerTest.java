@@ -496,15 +496,6 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
   }
 
-  @AfterEach
-  public void cleanUp() {
-    testDataHelper.getSiteRepository().deleteAll();
-    testDataHelper.getStudyRepository().deleteAll();
-    testDataHelper.getAppRepository().deleteAll();
-    testDataHelper.getLocationRepository().deleteAll();
-    testDataHelper.getUserRegAdminRepository().deleteAll();
-  }
-
   private LocationRequest getLocationRequest() throws JsonProcessingException {
     return new LocationRequest(CUSTOM_ID_VALUE, LOCATION_NAME_VALUE, LOCATION_DESCRIPTION_VALUE);
   }
@@ -514,5 +505,10 @@ public class LocationControllerTest extends BaseMockIT {
     updateLocationRequest.setName(UPDATE_LOCATION_NAME_VALUE);
     updateLocationRequest.setDescription(UPDATE_LOCATION_DESCRIPTION_VALUE);
     return updateLocationRequest;
+  }
+
+  @AfterEach
+  public void clean() {
+    testDataHelper.cleanUp();
   }
 }

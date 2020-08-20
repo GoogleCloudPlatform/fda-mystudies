@@ -30,9 +30,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
