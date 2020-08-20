@@ -248,10 +248,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     if number >= 1 {
       self.updateNotification()
     }
-    // Clear the delivered notifications when user enter's in the app.
-    DispatchQueue.main.async {
-      LocalNotification.removeAllDeliveredNotifications()
-    }
     // Check For Updates
     self.checkForAppUpdate()
   }
@@ -343,13 +339,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // Update device Token to Local server
       UserServices().updateUserProfile(deviceToken: deviceTokenString, delegate: self)
     }
-  }
-
-  func application(
-    _ application: UIApplication,
-    didFailToRegisterForRemoteNotificationsWithError error: Error
-  ) {
-    // Logger.sharedInstance.error("Token Registration failed  \(error)")
   }
 
   // MARK: - Jailbreak Methods
@@ -715,7 +704,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     guard
       ((viewController.presentedViewController as? ORKTaskViewController)?
-        .currentStepViewController as? ORKPasscodeStepViewController) == nil
+        .currentStepViewController)?.step?.identifier
+        != kPasscodeStepIdentifier
     else { return }  // If already presented. Return.
     if User.currentUser.userType == .loggedInUser {  // FDA user
 

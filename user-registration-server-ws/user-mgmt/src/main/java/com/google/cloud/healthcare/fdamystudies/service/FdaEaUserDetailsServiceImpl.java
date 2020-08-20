@@ -8,15 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import javax.transaction.Transactional;
-import org.apache.commons.lang3.SerializationUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
@@ -26,6 +17,15 @@ import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import javax.transaction.Transactional;
+import org.apache.commons.lang3.SerializationUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 @Service
 public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {

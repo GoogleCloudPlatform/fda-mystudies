@@ -8,6 +8,20 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
+import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
+import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -29,20 +43,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
-import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
 @Validated
@@ -171,62 +171,63 @@ public class UserProfileController {
     UserDetailsBO participantDetails = null;
     ResponseBean responseBean = new ResponseBean();
     try {
-        String isValidAppMsg =
-            commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId, orgId);
-        if (!StringUtils.isEmpty(isValidAppMsg)) {
-          AppOrgInfoBean appOrgInfoBean =
-              commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId, orgId);
-          if (appOrgInfoBean != null) {
-            participantDetails =
-                userManagementProfService.getParticipantDetailsByEmail(
-                    loginBean.getEmailId(),
-                    appOrgInfoBean.getAppInfoId(),
-                    appOrgInfoBean.getOrgInfoId());
-          }
-          if (participantDetails != null) {
-            if (participantDetails.getStatus() == 2) {
-              String code = RandomStringUtils.randomAlphanumeric(6);
-              participantDetails.setEmailCode(code);
-              participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
-              participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-              UserDetailsBO updParticipantDetails = userManagementProfService.saveParticipant(participantDetails);
-              if (updParticipantDetails != null) {
-                int isSent =
-                    userManagementProfService.resendConfirmationthroughEmail(
-                        appId, participantDetails.getEmailCode(), participantDetails.getEmail());
-                if (isSent == 2) {
-                  commonService.createActivityLog(
-                      null,
-                      "Requested Confirmation mail",
-                      "Confirmation mail sent to email " + loginBean.getEmailId() + ".");
-                  responseBean.setMessage(
-                      MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-                }
+      String isValidAppMsg =
+          commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId, orgId);
+      if (!StringUtils.isEmpty(isValidAppMsg)) {
+        AppOrgInfoBean appOrgInfoBean =
+            commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId, orgId);
+        if (appOrgInfoBean != null) {
+          participantDetails =
+              userManagementProfService.getParticipantDetailsByEmail(
+                  loginBean.getEmailId(),
+                  appOrgInfoBean.getAppInfoId(),
+                  appOrgInfoBean.getOrgInfoId());
+        }
+        if (participantDetails != null) {
+          if (participantDetails.getStatus() == 2) {
+            String code = RandomStringUtils.randomAlphanumeric(6);
+            participantDetails.setEmailCode(code);
+            participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
+            participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+            UserDetailsBO updParticipantDetails =
+                userManagementProfService.saveParticipant(participantDetails);
+            if (updParticipantDetails != null) {
+              int isSent =
+                  userManagementProfService.resendConfirmationthroughEmail(
+                      appId, participantDetails.getEmailCode(), participantDetails.getEmail());
+              if (isSent == 2) {
+                commonService.createActivityLog(
+                    null,
+                    "Requested Confirmation mail",
+                    "Confirmation mail sent to email " + loginBean.getEmailId() + ".");
+                responseBean.setMessage(
+                    MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
               }
-            } else {
-              MyStudiesUserRegUtil.getFailureResponse(
-                  MyStudiesUserRegUtil.ErrorCodes.STATUS_103.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
-                  MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
-                  response);
-              return null;
             }
           } else {
             MyStudiesUserRegUtil.getFailureResponse(
-                MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
+                MyStudiesUserRegUtil.ErrorCodes.STATUS_103.getValue(),
+                MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
+                MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
                 response);
             return null;
           }
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
               response);
           return null;
         }
+      } else {
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            response);
+        return null;
+      }
     } catch (Exception e) {
       logger.error("UserProfileController resendConfirmation() - error ", e);
     }

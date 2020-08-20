@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,8 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 
 public class MyStudiesUserRegUtil {
 

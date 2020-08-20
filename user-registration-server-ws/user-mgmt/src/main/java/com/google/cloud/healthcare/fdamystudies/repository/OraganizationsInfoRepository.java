@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OraganizationsInfoRepository extends JpaRepository<OrgInfo, Integer> {}
