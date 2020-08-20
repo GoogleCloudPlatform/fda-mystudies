@@ -8,14 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 
 @Service
 @ConditionalOnProperty(
