@@ -19,6 +19,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuditLogEventServiceImpl extends BaseServiceImpl implements AuditLogEventService {
@@ -31,9 +32,10 @@ public class AuditLogEventServiceImpl extends BaseServiceImpl implements AuditLo
   private String platformVersion;
 
   @Override
-  public AuditLogEventResponse saveAuditLogEvent(AuditLogEventRequest aleRequest) {
+  @Transactional
+  public AuditLogEventResponse saveAuditLogEvent(AuditLogEventRequest auditRequest) {
     logger.entry("begin saveAuditLogEvent()");
-    AuditLogEventEntity aleEntity = AuditLogEventMapper.fromAuditLogEventRequest(aleRequest);
+    AuditLogEventEntity aleEntity = AuditLogEventMapper.fromAuditLogEventRequest(auditRequest);
     aleEntity.setPlatformVersion(platformVersion);
 
     aleEntity = repository.saveAndFlush(aleEntity);

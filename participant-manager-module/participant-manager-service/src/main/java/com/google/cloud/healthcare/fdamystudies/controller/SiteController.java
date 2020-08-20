@@ -8,12 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+
+import com.google.cloud.healthcare.fdamystudies.beans.ImportParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.SiteDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
@@ -30,6 +36,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,8 +44,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.google.cloud.healthcare.fdamystudies.util.Constants.USER_ID_HEADER;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class SiteController {
@@ -78,7 +84,7 @@ public class SiteController {
   public ResponseEntity<ParticipantResponse> addNewParticipant(
       @PathVariable String siteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
-      @RequestBody ParticipantDetailRequest participant,
+      @Valid @RequestBody ParticipantDetailRequest participant,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     participant.setSiteId(siteId);
@@ -154,5 +160,49 @@ public class SiteController {
     logger.exit(String.format(STATUS_LOG, inviteParticipantResponse.getHttpStatusCode()));
     return ResponseEntity.status(inviteParticipantResponse.getHttpStatusCode())
         .body(inviteParticipantResponse);
+  }
+
+  @PostMapping(
+      value = "/sites/{siteId}/participants/import",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ImportParticipantResponse> importParticipants(
+      @PathVariable String siteId,
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @RequestParam("file") MultipartFile inputFile,
+      HttpServletRequest request) {
+    logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+
+    ImportParticipantResponse participants =
+        siteService.importParticipants(userId, siteId, inputFile);
+    logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
+    return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
+  }
+
+  @PatchMapping("/sites/{siteId}/participants/status")
+  public ResponseEntity<ParticipantStatusResponse> updateOnboardingStatus(
+      @PathVariable String siteId,
+      @RequestHeader(name = USER_ID_HEADER) String userId,
+      @Valid @RequestBody ParticipantStatusRequest participantStatusRequest,
+      HttpServletRequest request) {
+    logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+
+    participantStatusRequest.setSiteId(siteId);
+    participantStatusRequest.setUserId(userId);
+    ParticipantStatusResponse response =
+        siteService.updateOnboardingStatus(participantStatusRequest);
+
+    logger.exit(String.format(STATUS_LOG, response.getHttpStatusCode()));
+    return ResponseEntity.status(response.getHttpStatusCode()).body(response);
+  }
+
+  @GetMapping("/sites")
+  public ResponseEntity<SiteDetailsResponse> getSites(
+      @RequestHeader(name = USER_ID_HEADER) String userId, HttpServletRequest request) {
+    logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+
+    SiteDetailsResponse siteDetails = siteService.getSites(userId);
+
+    logger.exit(String.format(STATUS_LOG, siteDetails.getHttpStatusCode()));
+    return ResponseEntity.status(siteDetails.getHttpStatusCode()).body(siteDetails);
   }
 }

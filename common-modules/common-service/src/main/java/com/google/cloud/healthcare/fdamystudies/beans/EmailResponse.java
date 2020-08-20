@@ -23,8 +23,4 @@ public class EmailResponse extends BaseResponse {
   public EmailResponse(MessageCode messageCode) {
     super(messageCode);
   }
-
-  public EmailResponse(HttpStatus httpStatus, String message) {
-    super(httpStatus, message);
-  }
 }

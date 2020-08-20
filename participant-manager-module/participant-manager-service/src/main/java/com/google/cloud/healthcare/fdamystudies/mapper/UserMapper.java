@@ -47,7 +47,10 @@ public final class UserMapper {
     admin.setSecurityCodeExpireDate(
         new Timestamp(
             Instant.now().plus(securityCodeExpireTime, ChronoUnit.MINUTES).toEpochMilli()));
-    int manageLocation = userRequest.isSuperAdmin() ? 2 : userRequest.getManageLocations();
+    int manageLocation =
+        userRequest.isSuperAdmin()
+            ? CommonConstants.READ_AND_EDIT_PERMISSION
+            : userRequest.getManageLocations();
     admin.setEditPermission(manageLocation);
     return admin;
   }
@@ -58,7 +61,10 @@ public final class UserMapper {
     adminDetails.setFirstName(userRequest.getFirstName());
     adminDetails.setLastName(userRequest.getLastName());
     adminDetails.setSuperAdmin(userRequest.isSuperAdmin());
-    int manageLocation = userRequest.isSuperAdmin() ? 2 : userRequest.getManageLocations();
+    int manageLocation =
+        userRequest.isSuperAdmin()
+            ? CommonConstants.READ_AND_EDIT_PERMISSION
+            : userRequest.getManageLocations();
     adminDetails.setEditPermission(manageLocation);
     return adminDetails;
   }
@@ -66,7 +72,7 @@ public final class UserMapper {
   public static SitePermissionEntity newSitePermissionEntity(
       UserRequest user,
       UserSitePermissionRequest site,
-      UserRegAdminEntity superAdminDeatils,
+      UserRegAdminEntity superAdminDetails,
       SiteEntity siteDetails) {
     SitePermissionEntity sitePermission = new SitePermissionEntity();
     sitePermission.setApp(siteDetails.getStudy().getApp());
@@ -75,13 +81,13 @@ public final class UserMapper {
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
     Permission edit = site != null && site.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
     sitePermission.setCanEdit(edit);
-    sitePermission.setUrAdminUser(superAdminDeatils);
+    sitePermission.setUrAdminUser(superAdminDetails);
     return sitePermission;
   }
 
   public static SitePermissionEntity newSitePermissionEntity(
       UserRequest user,
-      UserRegAdminEntity superAdminDeatils,
+      UserRegAdminEntity superAdminDetails,
       UserStudyPermissionRequest study,
       StudyEntity studyDetails,
       SiteEntity site) {
@@ -93,13 +99,13 @@ public final class UserMapper {
     sitePermission.setCanEdit(edit);
     sitePermission.setStudy(studyDetails);
     sitePermission.setSite(site);
-    sitePermission.setUrAdminUser(superAdminDeatils);
+    sitePermission.setUrAdminUser(superAdminDetails);
     return sitePermission;
   }
 
   public static List<SitePermissionEntity> newSitePermissionList(
       UserRequest user,
-      UserRegAdminEntity superAdminDeatils,
+      UserRegAdminEntity superAdminDetails,
       UserAppPermissionRequest app,
       AppEntity appDetails,
       List<SiteEntity> sites) {
@@ -114,7 +120,7 @@ public final class UserMapper {
         sitePermission.setCanEdit(edit);
         sitePermission.setStudy(siteEntity.getStudy());
         sitePermission.setSite(siteEntity);
-        sitePermission.setUrAdminUser(superAdminDeatils);
+        sitePermission.setUrAdminUser(superAdminDetails);
         sitePermissions.add(sitePermission);
       }
     }
@@ -123,7 +129,7 @@ public final class UserMapper {
 
   public static StudyPermissionEntity newStudyPermissionEntity(
       UserRequest user,
-      UserRegAdminEntity superAdminDeatils,
+      UserRegAdminEntity superAdminDetails,
       UserStudyPermissionRequest study,
       StudyEntity studyDetails) {
     StudyPermissionEntity studyPermission = new StudyPermissionEntity();
@@ -133,13 +139,13 @@ public final class UserMapper {
     Permission edit =
         study != null && study.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
     studyPermission.setEdit(edit);
-    studyPermission.setUrAdminUser(superAdminDeatils);
+    studyPermission.setUrAdminUser(superAdminDetails);
     return studyPermission;
   }
 
   public static List<StudyPermissionEntity> newStudyPermissionList(
       UserRequest userRequest,
-      UserRegAdminEntity superAdminDeatils,
+      UserRegAdminEntity superAdminDetails,
       UserAppPermissionRequest appRequest,
       AppEntity appDetails,
       List<StudyEntity> studies) {
@@ -155,7 +161,7 @@ public final class UserMapper {
                 : Permission.EDIT;
         studyPermission.setEdit(edit);
         studyPermission.setStudy(studyEntity);
-        studyPermission.setUrAdminUser(superAdminDeatils);
+        studyPermission.setUrAdminUser(superAdminDetails);
         studyPermissions.add(studyPermission);
       }
     }
@@ -163,18 +169,18 @@ public final class UserMapper {
   }
 
   public static AppPermissionEntity newAppPermissionEntity(
-      UserRequest user, UserRegAdminEntity superAdminDeatils, AppEntity app) {
+      UserRequest user, UserRegAdminEntity superAdminDetails, AppEntity app) {
     AppPermissionEntity appPermission = new AppPermissionEntity();
     appPermission.setApp(app);
     appPermission.setCreatedBy(user.getSuperAdminUserId());
     appPermission.setEdit(Permission.EDIT);
-    appPermission.setUrAdminUser(superAdminDeatils);
+    appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
   }
 
   public static AppPermissionEntity newAppPermissionEntity(
       UserRequest userRequest,
-      UserRegAdminEntity superAdminDeatils,
+      UserRegAdminEntity superAdminDetails,
       UserAppPermissionRequest app,
       AppEntity appDetails) {
     AppPermissionEntity appPermission = new AppPermissionEntity();
@@ -182,7 +188,7 @@ public final class UserMapper {
     appPermission.setCreatedBy(userRequest.getSuperAdminUserId());
     Permission edit = app != null && app.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
     appPermission.setEdit(edit);
-    appPermission.setUrAdminUser(superAdminDeatils);
+    appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
   }
 }

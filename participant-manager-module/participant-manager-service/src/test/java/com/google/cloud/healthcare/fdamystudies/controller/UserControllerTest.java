@@ -8,6 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
@@ -43,18 +55,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MvcResult;
-
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerTest extends BaseMockIT {
 
@@ -534,12 +534,12 @@ public class UserControllerTest extends BaseMockIT {
 
   private void assertStudyPermissionDetails(String userId) {
     List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findByAdminUser(userId);
+        studyPermissionRepository.findByAdminUserId(userId);
     assertNotNull(studyPermissions);
   }
 
   private void assertAppPermissionDetails(String userId) {
-    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUser(userId);
+    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
     assertNotNull(appPermissions);
   }
 
@@ -563,10 +563,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @AfterEach
-  public void cleanUp() throws JsonParseException, JsonMappingException, IOException {
-    testDataHelper.getSiteRepository().deleteAll();
-    testDataHelper.getStudyRepository().deleteAll();
-    testDataHelper.getAppRepository().deleteAll();
-    testDataHelper.getUserRegAdminRepository().deleteAll();
+  public void clean() {
+    testDataHelper.cleanUp();
   }
 }

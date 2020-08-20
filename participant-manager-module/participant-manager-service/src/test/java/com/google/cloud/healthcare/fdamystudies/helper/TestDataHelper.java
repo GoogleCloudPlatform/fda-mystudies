@@ -8,6 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.helper;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
+
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -48,19 +55,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
-
 @Getter
 @Component
 public class TestDataHelper {
 
-  public static final String LAST_NAME = "mockito_last_name";
+  public static final String ADMIN_LAST_NAME = "mockito_last_name";
 
-  public static final String FIRST_NAME = "mockito";
+  public static final String ADMIN_FIRST_NAME = "mockito";
 
   public static final String ADMIN_AUTH_ID_VALUE =
       "TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg";
@@ -79,11 +80,11 @@ public class TestDataHelper {
 
   @Autowired private StudyPermissionRepository studyPermissionRepository;
 
-  @Autowired SitePermissionRepository sitePermissionRepository;
+  @Autowired private SitePermissionRepository sitePermissionRepository;
 
-  @Autowired AppPermissionRepository appPermissionRepository;
+  @Autowired private AppPermissionRepository appPermissionRepository;
 
-  @Autowired AppRepository appRepository;
+  @Autowired private AppRepository appRepository;
 
   @Autowired private SiteRepository siteRepository;
 
@@ -101,14 +102,15 @@ public class TestDataHelper {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     return headers;
   }
 
   public UserRegAdminEntity newUserRegAdminEntity() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(EMAIL_VALUE);
-    userRegAdminEntity.setFirstName(FIRST_NAME);
-    userRegAdminEntity.setLastName(LAST_NAME);
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
     userRegAdminEntity.setEditPermission(Permission.EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
@@ -127,8 +129,8 @@ public class TestDataHelper {
   public UserRegAdminEntity newNonSuperAdmin() {
     UserRegAdminEntity userRegAdminEntity = new UserRegAdminEntity();
     userRegAdminEntity.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
-    userRegAdminEntity.setFirstName(FIRST_NAME);
-    userRegAdminEntity.setLastName(LAST_NAME);
+    userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
+    userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
     userRegAdminEntity.setEditPermission(ManageLocation.DENY.getValue());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setSuperAdmin(false);
@@ -205,7 +207,7 @@ public class TestDataHelper {
   }
 
   public StudyEntity createStudyEntity(UserRegAdminEntity userEntity, AppEntity appEntity) {
-    StudyEntity studyEntity = new StudyEntity();
+    StudyEntity studyEntity = newStudyEntity();
     studyEntity.setType("CLOSE");
     studyEntity.setName("COVID Study");
     studyEntity.setCustomId("CovidStudy");
@@ -230,7 +232,6 @@ public class TestDataHelper {
     SiteEntity siteEntity = newSiteEntity();
     siteEntity.setStudy(studyEntity);
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setCanEdit(Permission.EDIT);
     sitePermissionEntity.setCanEdit(Permission.EDIT);
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
@@ -266,8 +267,8 @@ public class TestDataHelper {
     UserDetailsEntity userDetailsEntity = new UserDetailsEntity();
     userDetailsEntity.setEmail(EMAIL_VALUE);
     userDetailsEntity.setStatus(1);
-    userDetailsEntity.setFirstName(FIRST_NAME);
-    userDetailsEntity.setLastName(LAST_NAME);
+    userDetailsEntity.setFirstName(ADMIN_FIRST_NAME);
+    userDetailsEntity.setLastName(ADMIN_LAST_NAME);
     userDetailsEntity.setLocalNotificationFlag(false);
     userDetailsEntity.setRemoteNotificationFlag(false);
     userDetailsEntity.setTouchId(false);
@@ -283,8 +284,7 @@ public class TestDataHelper {
 
   public StudyConsentEntity createStudyConsentEntity(ParticipantStudyEntity participantStudy) {
     StudyConsentEntity studyConsent = new StudyConsentEntity();
-    studyConsent.setPdfPath(
-        "cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9/CovidStudy/cAvBCM8isqMvQU3-Hijx4ewHavrfW5t-Lm8fpgsDuu0DPQ9_CovidStudy_1.3_06302020071346.pdf");
+    studyConsent.setPdfPath("documents/test-document.pdf");
     studyConsent.setPdfStorage(1);
     studyConsent.setVersion("1.0");
     studyConsent.setParticipantStudy(participantStudy);
@@ -296,5 +296,17 @@ public class TestDataHelper {
     orgInfoEntity.setName("OrgName");
     orgInfoEntity.setOrgId("OrgName");
     return orgInfoRepository.saveAndFlush(orgInfoEntity);
+  }
+
+  public void cleanUp() {
+    getStudyConsentRepository().deleteAll();
+    getParticipantStudyRepository().deleteAll();
+    getParticipantRegistrySiteRepository().deleteAll();
+    getSiteRepository().deleteAll();
+    getStudyRepository().deleteAll();
+    getAppRepository().deleteAll();
+    getUserRegAdminRepository().deleteAll();
+    getLocationRepository().deleteAll();
+    getUserDetailsRepository().deleteAll();
   }
 }

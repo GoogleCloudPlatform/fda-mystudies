@@ -12,40 +12,34 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import java.util.ArrayList;
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.commons.collections4.CollectionUtils;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StudyMapper {
 
   private StudyMapper() {}
 
-  public static List<AppStudyResponse> toAppDetailsResponseList(
-      List<StudyEntity> studies,
-      Map<String, List<SiteEntity>> groupByStudyIdSiteMap,
-      String[] fields) {
-    List<AppStudyResponse> studyResponseList = new ArrayList<>();
-    if (CollectionUtils.isNotEmpty(studies)) {
-      for (StudyEntity study : studies) {
-        AppStudyResponse appStudyResponse = new AppStudyResponse();
-        appStudyResponse.setStudyId(study.getId());
-        appStudyResponse.setCustomStudyId(study.getCustomId());
-        appStudyResponse.setStudyName(study.getName());
-        if (ArrayUtils.contains(fields, "sites")) {
-          List<AppSiteResponse> appSiteResponsesList =
-              SiteMapper.toAppDetailsResponseList(groupByStudyIdSiteMap.get(study.getId()));
-          appStudyResponse.getSites().addAll(appSiteResponsesList);
-        }
-        studyResponseList.add(appStudyResponse);
-      }
+  public static AppStudyResponse toAppStudyResponse(
+      StudyEntity study, List<SiteEntity> sites, String[] fields) {
+    AppStudyResponse appStudyResponse = new AppStudyResponse();
+    appStudyResponse.setStudyId(study.getId());
+    appStudyResponse.setCustomStudyId(study.getCustomId());
+    appStudyResponse.setStudyName(study.getName());
+    if (ArrayUtils.contains(fields, "sites")) {
+      List<AppSiteResponse> appSiteResponsesList =
+          sites.stream().map(SiteMapper::toAppSiteResponse).collect(Collectors.toList());
+      appStudyResponse.getSites().addAll(appSiteResponsesList);
     }
-    return studyResponseList;
+    return appStudyResponse;
   }
 
   public static AppStudyDetails toAppStudyDetails(
@@ -62,5 +56,27 @@ public final class StudyMapper {
       appStudyDetails.setSites(sites);
     }
     return appStudyDetails;
+  }
+
+  public static StudyDetails toStudyDetails(
+      Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId, StudyEntity study) {
+    StudyDetails studyDetail = new StudyDetails();
+    studyDetail.setId(study.getId());
+    studyDetail.setCustomId(study.getCustomId());
+    studyDetail.setName(study.getName());
+    studyDetail.setType(study.getType());
+    studyDetail.setAppId(study.getApp().getAppId());
+    studyDetail.setAppInfoId(study.getApp().getId());
+
+    if (studyPermissionsByStudyInfoId.get(study.getId()) != null) {
+      Integer studyEditPermission =
+          studyPermissionsByStudyInfoId.get(study.getId()).getEdit().value();
+      studyDetail.setStudyPermission(
+          studyEditPermission == Permission.NO_PERMISSION.value()
+              ? Permission.VIEW.value()
+              : Permission.EDIT.value());
+      studyDetail.setStudyPermission(studyEditPermission);
+    }
+    return studyDetail;
   }
 }

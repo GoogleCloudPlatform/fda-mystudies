@@ -30,15 +30,14 @@ public class ParticipantDetailRequest {
   @ToString.Exclude
   @Size(max = 320)
   @Email
-  private String email;
-
-  @Size(max = 255)
   @NotBlank
-  private String onboardingStatus;
+  private String email;
 
   private String invitedDate;
 
-  @Size(max = 255)
-  @NotBlank
+  private String onboardingStatus;
+
   private String siteId;
+
+  private String participantId;
 }

@@ -12,40 +12,40 @@ import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEnti
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 public final class AuditLogEventMapper {
 
   private AuditLogEventMapper() {}
 
-  public static AuditLogEventEntity fromAuditLogEventRequest(AuditLogEventRequest aleRequest) {
+  public static AuditLogEventEntity fromAuditLogEventRequest(AuditLogEventRequest auditRequest) {
     AuditLogEventEntity entity = new AuditLogEventEntity();
-    entity.setAccessLevel(aleRequest.getAccessLevel());
-    entity.setAlert(aleRequest.getAlert());
-    entity.setAppId(aleRequest.getAppId());
-    entity.setApplicationComponentName(aleRequest.getApplicationComponentName());
-    entity.setApplicationVersion(aleRequest.getApplicationVersion());
-    entity.setClientId(aleRequest.getClientId());
-    entity.setCorrelationId(aleRequest.getCorrelationId());
-    entity.setClientAccessLevel(aleRequest.getClientAccessLevel());
-    entity.setClientAppVersion(aleRequest.getClientAppVersion());
-    entity.setDescription(aleRequest.getDescription());
-    entity.setDevicePlatform(aleRequest.getDevicePlatform());
-    entity.setDeviceType(aleRequest.getDeviceType());
-    entity.setEventDetail(aleRequest.getEventDetail());
-    entity.setEventName(aleRequest.getEventName());
-    entity.setOccurred(new Timestamp(aleRequest.getOccured()));
-    entity.setOrgId(aleRequest.getOrgId());
-    entity.setRequestUri(aleRequest.getRequestUri());
-    entity.setResourceServer(aleRequest.getResourceServer());
-    entity.setSystemId(aleRequest.getSystemId());
-    entity.setSystemIp(aleRequest.getSystemIp());
-    entity.setUserId(aleRequest.getUserId());
+    entity.setCreated(new Timestamp(Instant.now().toEpochMilli()));
+    entity.setAppId(auditRequest.getAppId());
+    entity.setDestination(auditRequest.getDestination());
+    entity.setAppVersion(auditRequest.getAppVersion());
+    entity.setSource(auditRequest.getSource());
+    entity.setResourceServer(auditRequest.getResourceServer());
+    entity.setCorrelationId(auditRequest.getCorrelationId());
+    entity.setUserAccessLevel(auditRequest.getUserAccessLevel());
+    entity.setSourceApplicationVersion(auditRequest.getSourceApplicationVersion());
+    entity.setDestinationApplicationVersion(auditRequest.getDestinationApplicationVersion());
+    entity.setDescription(auditRequest.getDescription());
+    entity.setMobilePlatform(auditRequest.getMobilePlatform());
+    entity.setEventCode(auditRequest.getEventCode());
+    entity.setOccurred(auditRequest.getOccured());
+    entity.setUserIp(auditRequest.getUserIp());
+    entity.setUserId(auditRequest.getUserId());
+    entity.setPlatformVersion(auditRequest.getPlatformVersion());
+    entity.setParticipantId(auditRequest.getParticipantId());
+    entity.setStudyId(auditRequest.getStudyId());
+    entity.setStudyVersion(auditRequest.getStudyVersion());
     return entity;
   }
 
   public static AuditLogEventResponse toAuditLogEventResponse(AuditLogEventEntity eventEntity) {
     AuditLogEventResponse response = new AuditLogEventResponse();
-    response.setEventId(eventEntity.getId());
+    response.setEventId(eventEntity.getLogId());
     return response;
   }
 }

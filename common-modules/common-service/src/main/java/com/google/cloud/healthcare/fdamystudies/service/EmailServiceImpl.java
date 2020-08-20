@@ -41,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
     logger.entry("Begin sendMimeMail()");
     try {
       MimeMessage message = emailSender.createMimeMessage();
-      MimeMessageHelper helper = new MimeMessageHelper(message, true);
+      MimeMessageHelper helper = new MimeMessageHelper(message, false);
       helper.setFrom(emailRequest.getFrom());
       helper.setTo(emailRequest.getTo());
 

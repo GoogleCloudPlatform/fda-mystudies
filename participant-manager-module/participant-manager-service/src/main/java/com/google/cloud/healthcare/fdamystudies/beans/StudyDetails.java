@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,13 +22,13 @@ public class StudyDetails {
 
   private String name;
 
-  private Long totalSitesCount;
+  private Long sitesCount;
 
-  private List<SiteRequest> sites;
+  private List<SiteDetails> sites = new ArrayList<>();
 
   private String type;
 
-  private Integer appInfoId;
+  private String appInfoId;
 
   private String appId;
 
