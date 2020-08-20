@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
@@ -31,6 +30,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS;
 
 @RestController
 public class ParticipantInformationController {
@@ -66,9 +68,7 @@ public class ParticipantInformationController {
 
           placeHolders.put("enrollment_status", participantInfoResp.getEnrollment());
           enrollAuditEventHelper.logEvent(
-              EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS,
-              auditRequest,
-              placeHolders);
+              READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS, auditRequest, placeHolders);
 
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
@@ -78,7 +78,7 @@ public class ParticipantInformationController {
               response);
 
           enrollAuditEventHelper.logEvent(
-              EnrollAuditEvent.READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS, auditRequest);
+              READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS, auditRequest);
 
           return null;
         }

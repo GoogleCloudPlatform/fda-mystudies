@@ -16,7 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
@@ -46,6 +45,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
 
 @RestController
 public class StudyStateController {
@@ -136,8 +140,7 @@ public class StudyStateController {
         studyStateResponse.setMessage(AppConstants.SUCCESS);
 
         auditRequest.setUserId(userId);
-        enrollAuditEventHelper.logEvent(
-            EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
+        enrollAuditEventHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
 
         return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
       } catch (InvalidUserIdException e) {
@@ -166,8 +169,7 @@ public class StudyStateController {
           response);
 
       auditRequest.setUserId(userId);
-      enrollAuditEventHelper.logEvent(
-          EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
+      enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
 
       logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
       return null;
@@ -204,8 +206,7 @@ public class StudyStateController {
             respBean.setCode(ErrorCode.EC_200.code());
             respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
 
-            enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
+            enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
 
             return new ResponseEntity<>(respBean, HttpStatus.OK);
           } else {
@@ -215,8 +216,7 @@ public class StudyStateController {
                 MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
                 response);
 
-            enrollAuditEventHelper.logEvent(
-                EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED, auditRequest);
+            enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_FAILED, auditRequest);
 
             return null;
           }

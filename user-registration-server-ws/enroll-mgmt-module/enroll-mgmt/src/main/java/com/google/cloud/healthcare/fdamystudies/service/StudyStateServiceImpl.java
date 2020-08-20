@@ -13,7 +13,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
@@ -40,6 +39,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
 
 @Service
 public class StudyStateServiceImpl implements StudyStateService {
@@ -180,13 +182,11 @@ public class StudyStateServiceImpl implements StudyStateService {
 
         placeHolder.put("study_state_value", participantStudyBo.getStatus());
         enrollAuditEventHelper.logEvent(
-            EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT,
-            auditRequest,
-            placeHolder);
+            STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, placeHolder);
 
       } else {
         enrollAuditEventHelper.logEvent(
-            EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, placeHolder);
+            STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, placeHolder);
       }
     } catch (Exception e) {
       logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);

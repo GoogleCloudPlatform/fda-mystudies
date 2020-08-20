@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.util;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
@@ -36,6 +35,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
+
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_RECEIVED;
 
 @Component
 public class EnrollmentManagementUtil {
@@ -163,9 +165,9 @@ public class EnrollmentManagementUtil {
         participantId = (String) responseEntity.getBody();
         auditRequest.setParticipantId(participantId);
 
-        enrollAuditEventHelper.logEvent(EnrollAuditEvent.PARTICIPANT_ID_RECEIVED, auditRequest);
+        enrollAuditEventHelper.logEvent(PARTICIPANT_ID_RECEIVED, auditRequest);
       } else {
-        enrollAuditEventHelper.logEvent(EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED, auditRequest);
+        enrollAuditEventHelper.logEvent(PARTICIPANT_ID_NOT_RECEIVED, auditRequest);
       }
     } catch (RestClientResponseException e) {
 
