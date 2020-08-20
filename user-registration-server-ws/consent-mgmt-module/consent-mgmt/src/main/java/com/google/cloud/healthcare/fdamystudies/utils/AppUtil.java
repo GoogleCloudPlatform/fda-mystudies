@@ -37,26 +37,17 @@ public class AppUtil {
     logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: starts");
     ErrorBean errorBean = null;
 
-    try {
-      errorBean =
-          new ErrorBean()
-              .setCode(ErrorCode.EC_500.code())
-              .setMessage(ErrorCode.EC_500.errorMessage());
-    } catch (Exception e) {
-      logger.error("ERROR: AppUtil - httpResponseForInternalServerError()", e);
-    }
+    errorBean =
+        new ErrorBean()
+            .setCode(ErrorCode.EC_500.code())
+            .setMessage(ErrorCode.EC_500.errorMessage());
+
     logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: ends");
     return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   public static ErrorBean dynamicResponse(int code, String message) {
-    ErrorBean error = null;
-    try {
-      error = new ErrorBean(code, message);
-    } catch (Exception e) {
-      logger.error("ERROR: AppUtil - dynamicResponse() - error()", e);
-    }
-    return error;
+    return new ErrorBean(code, message);
   }
 
   public static long isValidSession(String sesionExpiryTime) {
@@ -66,20 +57,16 @@ public class AppUtil {
     long finalValue = 0;
     long expiryTime = 0;
     long currentTime = 0;
-    try {
-      if (!StringUtils.isEmpty(sesionExpiryTime)) {
-        baseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        lastReqTime = LocalDateTime.parse(sesionExpiryTime, baseFormatter);
-        expiryTime = Long.parseLong(formatter.format(lastReqTime));
-        LocalDateTime timeNow = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
-        currentTime = Long.parseLong(formatter.format(timeNow));
-        if (currentTime > expiryTime) {
-          finalValue = -1;
-        }
+    if (!StringUtils.isEmpty(sesionExpiryTime)) {
+      baseFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+      lastReqTime = LocalDateTime.parse(sesionExpiryTime, baseFormatter);
+      expiryTime = Long.parseLong(formatter.format(lastReqTime));
+      LocalDateTime timeNow = LocalDateTime.now(ZoneId.of(AppConstants.SERVER_TIMEZONE));
+      currentTime = Long.parseLong(formatter.format(timeNow));
+      if (currentTime > expiryTime) {
+        finalValue = -1;
       }
-    } catch (Exception e) {
-      logger.error("ERROR: AppUtil - getDifferenceInMinutes() - error()", e);
     }
     return finalValue;
   }

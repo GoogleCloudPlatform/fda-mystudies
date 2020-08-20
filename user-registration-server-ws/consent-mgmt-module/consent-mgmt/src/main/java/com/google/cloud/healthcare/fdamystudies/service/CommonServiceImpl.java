@@ -41,37 +41,32 @@ public class CommonServiceImpl implements CommonService {
     BodyForProvider providerBody = null;
     HttpEntity<BodyForProvider> requestBody = null;
     ResponseEntity<Integer> responseEntity = null;
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientToken", clientToken);
-      headers.set("userId", userId);
-      headers.set("accessToken", accessToken);
 
-      requestBody = new HttpEntity<BodyForProvider>(null, headers);
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerAccessTokenValidationUrl(),
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
-      value = responseEntity.getBody();
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl validateAccessToken() - error ", e);
-    }
+    headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set("clientToken", clientToken);
+    headers.set("userId", userId);
+    headers.set("accessToken", accessToken);
+
+    requestBody = new HttpEntity<BodyForProvider>(null, headers);
+    responseEntity =
+        restTemplate.exchange(
+            appConfig.getAuthServerAccessTokenValidationUrl(),
+            HttpMethod.POST,
+            requestBody,
+            Integer.class);
+    value = responseEntity.getBody();
+
     logger.info("CommonServiceImpl validateAccessToken() - ends ");
     return value;
   }
 
   @Override
   public Integer getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
+    logger.info("CommonServiceImpl getUserDetailsId() - Starts ");
     Integer userDetailId = null;
-    try {
-      userDetailId = commonDao.getUserDetailsId(userId);
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl getStudyInfoId() - error ", e);
-    }
+
+    userDetailId = commonDao.getUserDetailsId(userId);
 
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Ends ");
     return userDetailId;

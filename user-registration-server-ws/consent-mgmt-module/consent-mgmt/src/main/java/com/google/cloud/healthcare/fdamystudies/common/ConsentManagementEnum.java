@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.common;
 
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.MOBILE_APPS;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_DATASTORE;
-
 import java.util.Optional;
 import lombok.Getter;
 

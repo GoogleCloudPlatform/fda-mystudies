@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudies
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.exceptions.TransactionRollback;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import java.util.List;
@@ -102,6 +103,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       }
     } catch (Exception e) {
       logger.error("UserConsentManagementDaoImpl getParticipantStudies() - error ", e);
+      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getParticipantStudies() - Ends ");
     return participantStudiesBO;
@@ -148,14 +150,8 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       transaction.commit();
     } catch (Exception e) {
       logger.error("UserConsentManagementDaoImpl saveParticipantStudies() - error ", e);
-      if (transaction != null) {
-        try {
-          transaction.rollback();
-        } catch (Exception e1) {
-          logger.error(
-              "UserConsentManagementDaoImpl - saveParticipantStudies() - error rollback", e1);
-        }
-      }
+      TransactionRollback.rollback(transaction);
+      throw e;
     }
     logger.info("UserConsentManagementDaoImpl saveParticipantStudies() - Ends ");
     return message;
@@ -219,6 +215,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       }
     } catch (Exception e) {
       logger.error("UserConsentManagementDaoImpl getStudyConsent() - error ", e);
+      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getStudyConsent() - Ends ");
     return studyConsent;
@@ -232,8 +229,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     CriteriaBuilder criteriaBuilder = null;
     CriteriaUpdate<StudyConsentBO> criteriaUpdate = null;
     Root<StudyConsentBO> studyConsentBoRoot = null;
-    Predicate[] predicates = new Predicate[1];
-    List<StudyConsentBO> studyConsentBoList = null;
     Integer isUpdated = 0;
     Integer isSaved = 0;
 
@@ -263,13 +258,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       transaction.commit();
     } catch (Exception e) {
       logger.error("UserConsentManagementDaoImpl saveStudyConsent() - error ", e);
-      if (transaction != null) {
-        try {
-          transaction.rollback();
-        } catch (Exception e1) {
-          logger.error("UserConsentManagementDaoImpl - saveStudyConsent() - error rollback", e1);
-        }
-      }
+      TransactionRollback.rollback(transaction);
     }
     logger.info("UserConsentManagementDaoImpl saveStudyConsent() - Ends ");
     return addOrUpdateConsentMessage;
@@ -277,7 +266,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
   @Override
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId) {
-    logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
+    logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppInfoDetailsBO> appDetailsBoCriteria = null;
     Root<AppInfoDetailsBO> appDetailsBoRoot = null;
@@ -291,7 +280,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     List<OrgInfo> orgDetailsBoList = null;
     OrgInfo orgDetailsBo = null;
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    String message = "";
     int appInfoId = 0;
     int orgInfoId = 0;
 
@@ -326,6 +314,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       appOrgInfoBean.setAppInfoId(appInfoId);
       appOrgInfoBean.setOrgInfoId(orgInfoId);
       logger.error("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - error ", e);
+      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
@@ -361,7 +350,8 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       }
     } catch (Exception e) {
       studyInfoBean.setStudyInfoId(studyInfoId);
-      logger.error("UserProfileManagementDaoImpl validatedUserAppDetailsByAllApi() - error ", e);
+      logger.error("UserConsentManagementDaoImpl getStudyInfoId() - error ", e);
+      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
     return studyInfoBean;
@@ -369,7 +359,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
   @Override
   public Integer getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Starts ");
+    logger.info("UserConsentManagementDaoImpl getUserDetailsId() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsBO> userDetailsBoCriteria = null;
     Root<UserDetailsBO> userDetailsBoRoot = null;
@@ -393,9 +383,10 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       }
     } catch (Exception e) {
       userDetailsId = 0;
-      logger.error("UserProfileManagementDaoImpl validatedUserAppDetailsByAllApi() - error ", e);
+      logger.error("UserProfileManagementDaoImpl getUserDetailsId() - error ", e);
+      throw e;
     }
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
+    logger.info("UserConsentManagementDaoImpl getUserDetailsId() - Ends ");
     return userDetailsId;
   }
 }

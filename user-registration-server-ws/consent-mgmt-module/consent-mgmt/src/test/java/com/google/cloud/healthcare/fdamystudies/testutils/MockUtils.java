@@ -5,9 +5,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
-
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.storage.StorageException;
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class MockUtils {
@@ -15,7 +15,7 @@ public class MockUtils {
   private MockUtils() {}
 
   public static void setCloudStorageSaveFileExpectations(
-      final FileStorageService cloudStorageService) {
+      final FileStorageService cloudStorageService) throws IOException {
     when(cloudStorageService.saveFile(anyString(), anyString(), anyString()))
         .thenAnswer(
             (invocation) -> {

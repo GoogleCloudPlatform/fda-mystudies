@@ -20,7 +20,6 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 import javax.annotation.PostConstruct;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,8 @@ public class CloudStorageService implements FileStorageService {
   }
 
   @Override
-  public String saveFile(String fileName, String content, String underDirectory) {
+  public String saveFile(String fileName, String content, String underDirectory)
+      throws IOException {
     String absoluteFileName = null;
     if (!StringUtils.isBlank(content)) {
       absoluteFileName =
@@ -58,8 +58,6 @@ public class CloudStorageService implements FileStorageService {
         bytes = Base64.getDecoder().decode(content.replaceAll("\n", ""));
 
         writer.write(ByteBuffer.wrap(bytes, 0, bytes.length));
-      } catch (IOException e) {
-        throw new RuntimeException(e);
       }
     }
     return absoluteFileName;
@@ -67,26 +65,12 @@ public class CloudStorageService implements FileStorageService {
 
   @Override
   public void downloadFileTo(String absoluteFileName, OutputStream outputStream) {
-    try {
-      if (StringUtils.isNotBlank(absoluteFileName)) {
-        Blob blob = storageService.get(BlobId.of(appConfig.getBucketName(), absoluteFileName));
-        blob.downloadTo(outputStream);
-      }
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    if (StringUtils.isNotBlank(absoluteFileName)) {
+      Blob blob = storageService.get(BlobId.of(appConfig.getBucketName(), absoluteFileName));
+      blob.downloadTo(outputStream);
     }
-
-    return;
   }
 
   @Override
   public void printMetadata() {}
-
-  public static void main(String[] args) {
-    CloudStorageService css = new CloudStorageService();
-    css.init();
-    String underDirectory = "APP002/studyId001";
-    System.out.println(
-        css.saveFile("sample-file1.txt" + UUID.randomUUID().toString(), "hello", underDirectory));
-  }
 }

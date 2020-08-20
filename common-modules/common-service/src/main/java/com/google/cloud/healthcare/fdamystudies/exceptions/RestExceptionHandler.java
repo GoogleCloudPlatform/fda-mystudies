@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.exceptions;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorResponse;
+import javax.persistence.RollbackException;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -47,5 +48,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             "%s request failed due to RestClientResponseException, response=%s", uri, response),
         ex);
     return response;
+  }
+
+  @ExceptionHandler(RollbackException.class)
+  public ResponseEntity<?> handleRollBackException(RollbackException ex, WebRequest request) {
+    String uri = ((ServletWebRequest) request).getRequest().getRequestURI();
+    logger.error(String.format("%s request failed due to RollbackException", uri), ex);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(ErrorCode.APPLICATION_ERROR);
   }
 }

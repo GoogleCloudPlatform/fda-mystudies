@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface FileStorageService {
 
   List<String> listFiles(String underDirectory, boolean recursive);
 
-  String saveFile(String fileName, String content, String underDirectory);
+  String saveFile(String fileName, String content, String underDirectory) throws IOException;
 
   void downloadFileTo(String fileName, OutputStream outputStream);
 

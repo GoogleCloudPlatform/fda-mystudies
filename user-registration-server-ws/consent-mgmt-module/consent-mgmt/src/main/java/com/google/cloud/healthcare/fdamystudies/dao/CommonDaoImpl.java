@@ -22,7 +22,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,7 @@ public class CommonDaoImpl implements CommonDao {
 
   @Override
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId) {
-    logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
-    Transaction transaction = null;
+    logger.info("CommonDaoImpl getUserAppDetailsByAllApi() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppInfoDetailsBO> appDetailsBoCriteria = null;
     Root<AppInfoDetailsBO> appDetailsBoRoot = null;
@@ -55,7 +53,6 @@ public class CommonDaoImpl implements CommonDao {
     List<OrgInfo> orgDetailsBoList = null;
     OrgInfo orgDetailsBo = null;
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    String message = "";
     int appInfoId = 0;
     int orgInfoId = 0;
 
@@ -93,16 +90,16 @@ public class CommonDaoImpl implements CommonDao {
     } catch (Exception e) {
       appOrgInfoBean.setAppInfoId(appInfoId);
       appOrgInfoBean.setOrgInfoId(orgInfoId);
-      logger.error("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - error ", e);
+      logger.error("CommonDaoImpl getUserAppDetailsByAllApi() - error ", e);
+      throw e;
     }
-    logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
+    logger.info("CommonDaoImpl getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
   }
 
   @Override
   public Integer getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Starts ");
-    Transaction transaction = null;
+    logger.info("CommonDaoImpl getUserDetailsId() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsBO> userDetailsBoCriteria = null;
     Root<UserDetailsBO> userDetailsBoRoot = null;
@@ -129,10 +126,11 @@ public class CommonDaoImpl implements CommonDao {
       }
     } catch (Exception e) {
       userDetailsId = 0;
-      logger.error("UserProfileManagementDaoImpl validatedUserAppDetailsByAllApi() - error ", e);
+      logger.error("CommonDaoImpl getUserDetailsId() - error ", e);
+      throw e;
     }
 
-    logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
+    logger.info("CommonDaoImpl getUserDetailsId() - Ends ");
     return userDetailsId;
   }
 }
