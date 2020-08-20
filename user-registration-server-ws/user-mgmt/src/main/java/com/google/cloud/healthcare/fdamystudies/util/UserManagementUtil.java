@@ -8,6 +8,23 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
+import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
+import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
+import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,23 +48,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
-import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
-import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
-import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
-import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
 
 @Component
 public class UserManagementUtil {
@@ -337,10 +337,7 @@ public class UserManagementUtil {
       requestBody = new HttpEntity<>(null, headers);
       responseEntity =
           restTemplate.exchange(
-              appConfig.getAuthServerUrl() + "/deactivate",
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
+              appConfig.getAuthServerDeactivateUrl(), HttpMethod.POST, requestBody, Integer.class);
       value = (Integer) responseEntity.getBody();
       if (value == 1) {
         respMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();

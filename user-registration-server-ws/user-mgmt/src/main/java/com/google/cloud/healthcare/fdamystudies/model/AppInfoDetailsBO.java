@@ -53,7 +53,7 @@ public class AppInfoDetailsBO implements Serializable {
   @Column(name = "android_bundle_id")
   private String androidBundleId;
 
-  @Column(name = "ios_certificate", columnDefinition = "VARCHAR(5000)")
+  @Column(name = "ios_certificate", columnDefinition = "TEXT")
   private String iosCertificate;
 
   @Column(name = "ios_certificate_password")

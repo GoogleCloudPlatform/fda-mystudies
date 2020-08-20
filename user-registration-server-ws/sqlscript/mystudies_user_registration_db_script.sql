@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `app_info` (
   `from_email_id` varchar(255) DEFAULT NULL,
   `from_email_password` varchar(255) DEFAULT NULL,
   `ios_bundle_id` varchar(255) DEFAULT NULL,
-  `ios_certificate` varchar(255) DEFAULT NULL,
+  `ios_certificate` text,
   `ios_certificate_password` varchar(255) DEFAULT NULL,
   `method_handler` tinyint(1) DEFAULT NULL,
   `modified_by` int(20) DEFAULT NULL,
@@ -441,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `user_details` (
 CREATE TABLE IF NOT EXISTS `personalized_user_report` (
   `id` INT NOT NULL AUTO_INCREMENT, 
   `activity_date_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-  `report_content` TEXT, 
+  `report_content` LONGTEXT,
   `report_title` varchar(255), 
   `study_info_id` INT, 
   `user_id` INTEGER, 
