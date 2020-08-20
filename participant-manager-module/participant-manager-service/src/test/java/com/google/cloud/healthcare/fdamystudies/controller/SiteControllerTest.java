@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
@@ -59,6 +58,7 @@ import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -116,6 +116,7 @@ public class SiteControllerTest extends BaseMockIT {
   private ParticipantStudyEntity participantStudyEntity;
   private SitePermissionEntity sitePermissionEntity;
   private StudyConsentEntity studyConsentEntity;
+  private OrgInfoEntity orgInfoEntity;
 
   private static final String IMPORT_EMAIL_1 = "mockitoimport01@grr.la";
 
@@ -125,6 +126,7 @@ public class SiteControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+    orgInfoEntity = testDataHelper.createOrgInfo();
     locationEntity = testDataHelper.createLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
@@ -170,12 +172,13 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedForAddNewSite() throws Exception {
     // pre-condition: deny study permission
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEditPermission(VIEW_VALUE);
+    studyPermissionEntity.setEdit(Permission.VIEW);
+
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     // pre-condition: deny app permission
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
-    appPermissionEntity.setEditPermission(VIEW_VALUE);
+    appPermissionEntity.setEdit(Permission.VIEW);
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
     HttpHeaders headers = newCommonHeaders();
     SiteRequest siteRequest = newSiteRequest();
@@ -287,7 +290,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnAccessDeniedForAddNewParticipant() throws Exception {
     // Step 1: set manage site permission to view only
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
-    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    sitePermissionEntity.setCanEdit(Permission.VIEW);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
@@ -384,7 +387,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedError() throws Exception {
     // Site 1: set manage site permission to no permission
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
-    sitePermissionEntity.setEditPermission(Permission.NO_PERMISSION.value());
+    sitePermissionEntity.setCanEdit(Permission.NO_PERMISSION);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API and expect MANAGE_SITE_PERMISSION_ACCESS_DENIED error
@@ -590,11 +593,11 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnSitePermissionAccessDeniedForDecommissionSite() throws Exception {
     // Step 1: Set permission to read only
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    studyPermissionEntity.setEdit(Permission.VIEW);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
-    appPermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    appPermissionEntity.setEdit(Permission.VIEW);
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
 
     // Step 2: call API and expect SITE_PERMISSION_ACCESS_DENIED error
@@ -615,7 +618,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnParticipantDetails() throws Exception {
     // Step 1: Set data needed to get Participant details
-    participantRegistrySiteEntity.getStudy().setAppInfo(appEntity);
+    participantRegistrySiteEntity.getStudy().setApp(appEntity);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
     testDataHelper
         .getParticipantRegistrySiteRepository()
@@ -713,8 +716,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
-    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
-    studyEntity.setAppInfo(appEntity);
+    appEntity.setOrgInfo(orgInfoEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
     testDataHelper.getSiteRepository().save(siteEntity);
@@ -771,8 +774,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldInviteParticipant() throws Exception {
-    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
-    studyEntity.setAppInfo(appEntity);
+    appEntity.setOrgInfo(orgInfoEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
     testDataHelper.getSiteRepository().save(siteEntity);
@@ -821,7 +824,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnAccessDeniedForImportNewParticipant() throws Exception {
     // Step 1: set manage site permission to view only
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
-    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    sitePermissionEntity.setCanEdit(Permission.VIEW);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
@@ -997,7 +1000,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnAccessDeniedError() throws Exception {
     // Step 1: set manage site permission to view only
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
-    sitePermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    sitePermissionEntity.setCanEdit(Permission.VIEW);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
@@ -1070,7 +1073,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSites() throws Exception {
     // Step 1: set the data needed to get studies with sites
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setLocation(locationEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
     testDataHelper.getSiteRepository().save(siteEntity);
