@@ -8,8 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -26,8 +24,15 @@ import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
 
 @Setter
 @Getter
@@ -47,31 +52,37 @@ public class LocationEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "custom_id", length = 200)
+  @Column(name = "custom_id", nullable = false, length = SMALL_LENGTH)
   private String customId;
 
-  @Column(name = "status", length = 1)
+  @Column(name = "status")
   private Integer status;
 
-  @Column(name = "name", length = 200)
+  @Column(name = "name", length = LARGE_LENGTH)
   private String name;
 
-  @Column(name = "description", length = 500)
+  @Column(name = "description")
+  @Type(type = "text")
   private String description;
 
-  @Column(name = "is_default", length = 1)
+  @Column(name = "is_default", nullable = false, columnDefinition = "Varchar(1) default 'N'")
   private String isDefault;
 
-  @Column(
-      name = "created",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
   @ToString.Exclude
-  @Column(name = "created_by", length = 64)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
+
+  @ToString.Exclude
+  @Column(name = "modified_by", length = LARGE_LENGTH)
+  private String modifiedBy;
+
+  @Column(name = "updated_time")
+  @UpdateTimestamp
+  private Timestamp modified;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "location")
   private List<SiteEntity> sites = new ArrayList<>();
