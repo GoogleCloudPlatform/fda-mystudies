@@ -44,7 +44,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 
-  private XLogger logger = XLoggerFactory.getXLogger(StudyServiceImpl.class.getName());
+  private XLogger logger = XLoggerFactory.getXLogger(UserProfileServiceImpl.class.getName());
 
   @Autowired private UserRegAdminRepository userRegAdminRepository;
 
