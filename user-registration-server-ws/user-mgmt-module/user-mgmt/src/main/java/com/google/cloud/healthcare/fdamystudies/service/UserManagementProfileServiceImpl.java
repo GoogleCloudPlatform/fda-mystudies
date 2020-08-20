@@ -8,14 +8,23 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATION_FAILED;
+
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
+import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
@@ -32,6 +41,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +61,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Autowired CommonDao commonDao;
 
   @Autowired private UserManagementUtil userManagementUtil;
+
+  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
@@ -228,7 +241,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       String userId,
       DeactivateAcctBean deactivateAcctBean,
       String accessToken,
-      String clientToken) {
+      String clientToken,
+      AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     Integer userDetailsId = 0;
@@ -254,9 +268,45 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             studyBean.setDelete(studyReqBean.getDelete());
             studyBean.setStudyId(studyReqBean.getStudyId());
             deleteData.add(studyReqBean.getStudyId());
+
+            auditRequest.setStudyId(studyBean.getStudyId());
+            auditRequest.setParticipantId(studyBean.getParticipantId());
+
             retVal =
                 userManagementUtil.withdrawParticipantFromStudy(
-                    studyBean.getParticipantId(), studyBean.getStudyId(), studyBean.getDelete());
+                    studyBean.getParticipantId(),
+                    studyBean.getStudyId(),
+                    studyBean.getDelete(),
+                    auditRequest);
+
+            if (Boolean.valueOf(studyReqBean.getDelete())) {
+              Map<String, String> map =
+                  Stream.of(
+                          new String[][] {
+                            {"delete_or_retain", "delete"},
+                          })
+                      .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+              userMgmntAuditHelper.logEvent(
+                  DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
+
+              AuditLogEvent auditEvent =
+                  retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
+                      ? PARTICIPANT_DATA_DELETED
+                      : PARTICIPANT_DATA_DELETION_FAILED;
+              userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
+
+            } else {
+              Map<String, String> map =
+                  Stream.of(
+                          new String[][] {
+                            {"delete_or_retain", "retain"},
+                          })
+                      .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+              userMgmntAuditHelper.logEvent(
+                  DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
+            }
           }
         } else {
           retVal = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
@@ -264,11 +314,18 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         if (retVal != null
             && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
           returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
-          if (returnVal) {
-            message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-          } else {
-            message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+          if (retVal != null
+              && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+            returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
+            if (returnVal) {
+              message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+            } else {
+              message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+            }
           }
+          AuditLogEvent auditEvent =
+              returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
+          userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
         }
       }
     } catch (Exception e) {

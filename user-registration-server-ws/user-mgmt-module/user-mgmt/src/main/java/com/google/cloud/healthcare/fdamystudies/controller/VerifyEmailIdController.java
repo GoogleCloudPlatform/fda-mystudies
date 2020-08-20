@@ -8,11 +8,22 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_ACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION;
+
 import com.google.cloud.healthcare.fdamystudies.bean.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.VerifyEmailIdResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailIdVerificationForm;
+import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
@@ -20,6 +31,8 @@ import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ResponseUtil;
+import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
@@ -45,14 +58,19 @@ public class VerifyEmailIdController {
 
   @Autowired UserManagementProfileService userManagementProfService;
 
+  @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
+
   @PostMapping("/verifyEmailId")
   public ResponseEntity<?> verifyEmailId(
       @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
-      @Context HttpServletResponse response) {
-
+      @Context HttpServletResponse response,
+      HttpServletRequest request) {
     logger.info("VerifyEmailIdController verifyEmailId() - starts");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setAppId(appId);
+
     VerifyEmailIdResponse verifyEmailIdResponse = null;
     String isValidAppMsg = "";
     UserDetailsBO participantDetails = null;
@@ -63,6 +81,9 @@ public class VerifyEmailIdController {
               "", verificationForm.getEmailId(), appId, orgId);
 
       if (!StringUtils.isNotEmpty(isValidAppMsg)) {
+        userMgmntAuditHelper.logEvent(
+            ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED, auditRequest);
+
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -76,12 +97,23 @@ public class VerifyEmailIdController {
         participantDetails = getParticipantDetails(verificationForm, appOrgInfoBean);
       }
       if (participantDetails == null) {
+        userMgmntAuditHelper.logEvent(
+            ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED, auditRequest);
+
         ResponseBean responseBean =
             ResponseUtil.prepareBadRequestResponse(response, AppConstants.EMAIL_NOT_EXISTS);
         return new ResponseEntity<>(responseBean, HttpStatus.BAD_REQUEST);
       }
       boolean verifyEmailCodeResponse =
           userDetailsService.verifyCode(verificationForm.getCode().trim(), participantDetails);
+
+      if (!verificationForm.getCode().trim().equals(participantDetails.getEmailCode())) {
+        userMgmntAuditHelper.logEvent(
+            ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE, auditRequest);
+      } else if (LocalDateTime.now().isBefore(participantDetails.getCodeExpireDate())) {
+        userMgmntAuditHelper.logEvent(
+            ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE, auditRequest);
+      }
 
       if (!verifyEmailCodeResponse) {
         ResponseBean respBean =
@@ -90,6 +122,11 @@ public class VerifyEmailIdController {
       }
 
       boolean serviceResponse = userDetailsService.updateStatus(participantDetails);
+
+      AuditLogEvent auditEvent =
+          serviceResponse ? USER_ACCOUNT_ACTIVATED : ACCOUNT_ACTIVATION_FAILED;
+      userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
+
       if (!serviceResponse) {
         ResponseBean respBean = ResponseUtil.prepareSystemExceptionResponse(response);
         return new ResponseEntity<>(respBean, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -98,6 +135,9 @@ public class VerifyEmailIdController {
       ResponseBean respBean = ResponseUtil.prepareSuccessResponse(response);
       verifyEmailIdResponse =
           new VerifyEmailIdResponse(respBean.getCode(), respBean.getMessage(), true);
+
+      userMgmntAuditHelper.logEvent(USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION, auditRequest);
+
       return new ResponseEntity<>(verifyEmailIdResponse, HttpStatus.OK);
 
     } catch (IllegalArgumentException e) {

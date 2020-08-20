@@ -8,9 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
 import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
@@ -21,6 +25,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
@@ -35,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +65,8 @@ public class UserManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
   public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
     logger.info("UserManagementUtil validateAccessToken() - starts ");
@@ -378,7 +388,8 @@ public class UserManagementUtil {
     return generatedHash;
   }
 
-  public String withdrawParticipantFromStudy(String participantId, String studyId, String delete)
+  public String withdrawParticipantFromStudy(
+      String participantId, String studyId, String delete, AuditLogEventRequest auditRequest)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
     logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
@@ -406,7 +417,31 @@ public class UserManagementUtil {
       ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 
       if (response.getStatusCode() == HttpStatus.OK) {
+        userMgmntAuditHelper.logEvent(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE, auditRequest);
         message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+      } else {
+        if (Boolean.valueOf(delete)) {
+          Map<String, String> map =
+              Stream.of(
+                      new String[][] {
+                        {"delete_or_retain", "delete"},
+                      })
+                  .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+          userMgmntAuditHelper.logEvent(
+              UserMgmntEvent.WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED, auditRequest, map);
+
+        } else {
+          Map<String, String> map =
+              Stream.of(
+                      new String[][] {
+                        {"delete_or_retain", "retain"},
+                      })
+                  .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+
+          userMgmntAuditHelper.logEvent(
+              WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED, auditRequest, map);
+        }
       }
 
     } catch (RestClientResponseException e) {
