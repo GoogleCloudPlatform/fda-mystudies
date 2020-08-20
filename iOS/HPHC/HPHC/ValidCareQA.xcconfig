@@ -1,0 +1,66 @@
+//  Copyright 2020 Google LLC
+//
+//  Use of this source code is governed by an MIT-style
+//  license that can be found in the LICENSE file or at
+//  https://opensource.org/licenses/MIT.
+//
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+//
+// Server configuration
+// By default App will connect to network over Https, in order to connect over http
+// Change the settings in HPHC/Networking/Configurations/Environment/APIConfiguration.swift
+// Update the enum `AppProtocol` get value for Debug and Release.
+// Update the App Transport Security Settings in info.plist
+
+// URL of study metadata server.
+// e.g. mystudiesdeployment.com/StudyMetaData/
+
+BASE_URL = validcare-research-qa.validcare.com
+
+WCP_URL = ${BASE_URL}/StudyMetaData/
+
+// URL of response datastore.
+// e.g. mystudiesdeployment.com/mystudies-response-server/
+RESPONSE_URL = ${BASE_URL}/mystudies-response-server/
+
+// URL of different service bundles within participant datastore.
+// e.g. mystudiesdeployment.com/myStudiesUserMgmtWS/
+REGISTRATION_URL = ${BASE_URL}/myStudiesUserMgmtWS/
+// e.g. mystudiesdeployment.com/myStudiesEnrollmentMgmt/
+ENROLLMENT_URL = ${BASE_URL}/myStudiesEnrollmentMgmt/
+// e.g. mystudiesdeployment.com/myStudiesConsentMgmtWS/
+CONSENTMGMT_URL = ${BASE_URL}/myStudiesConsentMgmtWS/
+
+// URL of AuthServer.
+// e.g. mystudiesdeployment.com/AuthServer/
+AUTH_URL = ${BASE_URL}/AuthServer/
+
+// This is used to generate base64 basic Autherization token for WCP WS bundle validation.
+AUTH_USERNAME = AvxfEsgX9u
+AUTH_PASSWORD = ee91a4f6-d9c4-4ee9-a0e2-5682c5b1c916
+
+// API_KEY is <bundleid>:<apptoken>
+// These values should match the ones set in study metadata server.
+REGISTRATIONSERVER_API_KEY = test_client_id_ma
+
+// SHA-256 of the byte representation of the secret used by mobile apps.
+// In terraform deployment, this values is stored as `mystudies-ma-secret-key`
+//
+// For more details see implementation of getHashedValue in:
+// response-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/utils/ResponseServerUtil.java
+REGISTRATIONSERVER_API_SECERET = 7e6ff2ce9282512f202c7acae2b49718bed203da8a899ea7bf7a51a2eabbe3c9
+
+// OrgID used for this application.
+ORG_ID = ValidCare
+
+// AppID of this application.
+// Study builder would use this appID to match studies to apps.
+//
+// should be max 15 character, human readable and URL safe.
+// If following terraform deployment steps, these APP_ID and ORG_ID
+// should match the ones you manually set in GCP secret manager.
+APP_ID = VCTEST001
+
+// VCSTUDY
+// VRAPP001
