@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.CascadeType;
@@ -25,9 +28,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 
 @Setter
 @Getter
@@ -69,7 +69,7 @@ public class StudyConsentEntity implements Serializable {
   private String pdfPath;
 
   @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "participant_study_id", nullable = false, updatable = false)
+  @JoinColumn(name = "participant_study_id")
   private ParticipantStudyEntity participantStudy;
 
   // represents whether pdf content is stored in db=0 or gcp=1

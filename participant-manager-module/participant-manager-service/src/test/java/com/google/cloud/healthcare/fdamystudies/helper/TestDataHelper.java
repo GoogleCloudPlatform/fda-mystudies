@@ -308,5 +308,6 @@ public class TestDataHelper {
     getUserRegAdminRepository().deleteAll();
     getLocationRepository().deleteAll();
     getUserDetailsRepository().deleteAll();
+    getOrgInfoRepository().deleteAll();
   }
 }

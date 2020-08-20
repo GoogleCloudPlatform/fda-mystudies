@@ -58,6 +58,7 @@ import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -115,6 +116,7 @@ public class SiteControllerTest extends BaseMockIT {
   private ParticipantStudyEntity participantStudyEntity;
   private SitePermissionEntity sitePermissionEntity;
   private StudyConsentEntity studyConsentEntity;
+  private OrgInfoEntity orgInfoEntity;
 
   private static final String IMPORT_EMAIL_1 = "mockitoimport01@grr.la";
 
@@ -124,6 +126,7 @@ public class SiteControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
+    orgInfoEntity = testDataHelper.createOrgInfo();
     locationEntity = testDataHelper.createLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
@@ -713,7 +716,7 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
-    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
+    appEntity.setOrgInfo(orgInfoEntity);
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
@@ -771,7 +774,7 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldInviteParticipant() throws Exception {
-    appEntity.setOrgInfo(testDataHelper.createOrgInfo());
+    appEntity.setOrgInfo(orgInfoEntity);
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
