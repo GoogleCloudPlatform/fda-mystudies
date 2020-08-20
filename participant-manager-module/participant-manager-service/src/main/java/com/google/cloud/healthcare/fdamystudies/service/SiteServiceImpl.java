@@ -178,14 +178,14 @@ public class SiteServiceImpl implements SiteService {
 
     if (optStudyPermissionEntity.isPresent()) {
       StudyPermissionEntity studyPermission = optStudyPermissionEntity.get();
-      String appInfoId = studyPermission.getAppInfo().getId();
+      String appInfoId = studyPermission.getApp().getId();
       Optional<AppPermissionEntity> optAppPermissionEntity =
           appPermissionRepository.findByUserIdAndAppId(siteRequest.getUserId(), appInfoId);
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
-        logger.exit(String.format("editValue=%d", Permission.READ_EDIT.value()));
-        return studyPermission.getEditPermission() == Permission.READ_EDIT.value()
-            || appPermission.getEditPermission() == Permission.READ_EDIT.value();
+        logger.exit(String.format("editValue=%d", Permission.EDIT.value()));
+        return studyPermission.getEdit() == Permission.EDIT
+            || appPermission.getEdit() == Permission.EDIT;
       }
     }
     logger.exit("default permission is edit, return true");
@@ -223,15 +223,15 @@ public class SiteServiceImpl implements SiteService {
   private void addSitePermissions(
       String userId, List<StudyPermissionEntity> userStudypermissionList, SiteEntity site) {
     for (StudyPermissionEntity studyPermission : userStudypermissionList) {
-      Integer editPermission =
+      Permission editPermission =
           studyPermission.getUrAdminUser().getId().equals(userId)
-              ? Permission.READ_EDIT.value()
-              : studyPermission.getEditPermission();
+              ? Permission.EDIT
+              : studyPermission.getEdit();
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
       sitePermission.setStudy(studyPermission.getStudy());
-      sitePermission.setAppInfo(studyPermission.getAppInfo());
-      sitePermission.setEditPermission(editPermission);
+      sitePermission.setApp(studyPermission.getApp());
+      sitePermission.setCanEdit(editPermission);
       sitePermission.setCreatedBy(userId);
       site.addSitePermissionEntity(sitePermission);
     }
@@ -277,7 +277,7 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
 
     if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getEditPermission().equals(Permission.READ_EDIT.value())) {
+        || !optSitePermission.get().getCanEdit().equals(Permission.EDIT)) {
       return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
     }
 
@@ -322,7 +322,7 @@ public class SiteServiceImpl implements SiteService {
 
     if (!optSitePermission.isPresent()
         || Permission.NO_PERMISSION
-            == Permission.fromValue(optSitePermission.get().getEditPermission())) {
+            == Permission.fromValue(optSitePermission.get().getCanEdit().value())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new ParticipantRegistryResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
@@ -401,14 +401,14 @@ public class SiteServiceImpl implements SiteService {
 
     if (optStudyPermissionEntity.isPresent()) {
       StudyPermissionEntity studyPermission = optStudyPermissionEntity.get();
-      String appInfoId = studyPermission.getAppInfo().getId();
+      String appInfoId = studyPermission.getApp().getId();
       Optional<AppPermissionEntity> optAppPermissionEntity =
           appPermissionRepository.findByUserIdAndAppId(userId, appInfoId);
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
-        logger.exit(String.format("editValue=%d", Permission.READ_EDIT.value()));
-        return studyPermission.getEditPermission() == Permission.READ_EDIT.value()
-            || appPermission.getEditPermission() == Permission.READ_EDIT.value();
+        logger.exit(String.format("editValue=%d", Permission.EDIT.value()));
+        return studyPermission.getEdit() == Permission.EDIT
+            || appPermission.getEdit() == Permission.EDIT;
       }
     }
     logger.exit("default permission is edit, return true");
@@ -511,7 +511,7 @@ public class SiteServiceImpl implements SiteService {
 
     for (SitePermissionEntity sitePermission : sitePermissions) {
       if (studyAdminIds.contains(sitePermission.getUrAdminUser().getId())) {
-        sitePermission.setEditPermission(Permission.READ_VIEW.value());
+        sitePermission.setCanEdit(Permission.VIEW);
         sitePermissionRepository.saveAndFlush(sitePermission);
       } else {
         sitePermissionRepository.delete(sitePermission);
@@ -627,8 +627,8 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
             inviteParticipantRequest.getUserId(), inviteParticipantRequest.getSiteId());
     if (!optSitePermissionEntity.isPresent()
-        || Permission.READ_EDIT
-            != Permission.fromValue(optSitePermissionEntity.get().getEditPermission())) {
+        || Permission.EDIT
+            != Permission.fromValue(optSitePermissionEntity.get().getCanEdit().value())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new InviteParticipantResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
@@ -743,7 +743,7 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.findSitePermissionByUserIdAndSiteId(userId, siteId);
 
     if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getEditPermission().equals(Permission.READ_EDIT.value())) {
+        || !optSitePermission.get().getCanEdit().value().equals(Permission.EDIT.value())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new ImportParticipantResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
@@ -848,7 +848,7 @@ public class SiteServiceImpl implements SiteService {
             participantStatusRequest.getUserId(), participantStatusRequest.getSiteId());
 
     if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getEditPermission().equals(Permission.READ_EDIT.value())) {
+        || !optSitePermission.get().getCanEdit().value().equals(Permission.EDIT.value())) {
       logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
       return new ParticipantStatusResponse(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
     }
@@ -1000,8 +1000,7 @@ public class SiteServiceImpl implements SiteService {
             enrollmentRequest.getStudyId(), enrollmentRequest.getUserId());
 
     StudyPermissionEntity studyPermission = optStudyPermission.get();
-    if (!optStudyPermission.isPresent()
-        || Permission.READ_VIEW == Permission.fromValue(studyPermission.getEditPermission())) {
+    if (!optStudyPermission.isPresent() || Permission.VIEW == studyPermission.getEdit()) {
       return new UpdateTargetEnrollmentResponse(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
     }
 

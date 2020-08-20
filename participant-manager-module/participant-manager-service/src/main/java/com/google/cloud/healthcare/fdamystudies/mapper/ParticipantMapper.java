@@ -86,7 +86,7 @@ public final class ParticipantMapper {
       participants.setStudyId(study.getId());
       participants.setStudyName(study.getName());
       participants.setCustomStudyId(study.getCustomId());
-      participants.setSitePermission(sitePermission.getEditPermission());
+      participants.setSitePermission(sitePermission.getCanEdit().value());
       setParticipantRegistryAppInfo(participants, study);
       setParticipantRegistryLocation(site, participants);
     }
@@ -95,10 +95,10 @@ public final class ParticipantMapper {
 
   private static void setParticipantRegistryAppInfo(
       ParticipantRegistryDetail participants, StudyEntity study) {
-    if (study.getAppInfo() != null) {
-      participants.setAppName(study.getAppInfo().getAppName());
-      participants.setCustomAppId(study.getAppInfo().getAppId());
-      participants.setAppId(study.getAppInfo().getAppId());
+    if (study.getApp() != null) {
+      participants.setAppName(study.getApp().getAppName());
+      participants.setCustomAppId(study.getApp().getAppId());
+      participants.setAppId(study.getApp().getAppId());
     }
   }
 
@@ -174,8 +174,8 @@ public final class ParticipantMapper {
       ParticipantRegistrySiteEntity participantRegistry) {
     ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setParticipantRegistrySiteid(participantRegistry.getId());
-    participantDetail.setAppName(participantRegistry.getStudy().getAppInfo().getAppName());
-    participantDetail.setCustomAppId(participantRegistry.getStudy().getAppInfo().getAppId());
+    participantDetail.setAppName(participantRegistry.getStudy().getApp().getAppName());
+    participantDetail.setCustomAppId(participantRegistry.getStudy().getApp().getAppId());
     participantDetail.setStudyName(participantRegistry.getStudy().getName());
     participantDetail.setCustomStudyId(participantRegistry.getStudy().getCustomId());
     participantDetail.setLocationName(participantRegistry.getSite().getLocation().getName());
