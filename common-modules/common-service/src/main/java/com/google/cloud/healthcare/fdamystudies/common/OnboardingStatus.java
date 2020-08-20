@@ -29,7 +29,7 @@ public enum OnboardingStatus {
 
   public static OnboardingStatus fromCode(String code) {
     for (OnboardingStatus e : OnboardingStatus.values()) {
-      if (e.code == code) {
+      if (e.code.equals(code)) {
         return e;
       }
     }

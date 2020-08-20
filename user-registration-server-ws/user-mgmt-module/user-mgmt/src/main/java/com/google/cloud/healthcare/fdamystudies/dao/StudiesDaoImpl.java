@@ -10,11 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.LocationBo;
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
-import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LocationBo;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.OrgInfo;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.SiteBo;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;

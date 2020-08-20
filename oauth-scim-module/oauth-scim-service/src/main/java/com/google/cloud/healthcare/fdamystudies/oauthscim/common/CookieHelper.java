@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.common;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
@@ -20,10 +21,17 @@ public class CookieHelper {
 
   @Autowired private AppPropertyConfig appConfig;
 
+  private static final String COOKIE_PREFIX = "mystudies_";
+
   public void addCookies(
       HttpServletResponse response, MultiValueMap<String, String> params, String... cookieNames) {
+    String paramName = null;
     for (String cookieName : cookieNames) {
-      addCookie(response, cookieName, params.getFirst(cookieName));
+      paramName =
+          StringUtils.startsWith(cookieName, COOKIE_PREFIX)
+              ? cookieName.substring(cookieName.indexOf('_') + 1)
+              : cookieName;
+      addCookie(response, cookieName, params.getFirst(paramName));
     }
   }
 

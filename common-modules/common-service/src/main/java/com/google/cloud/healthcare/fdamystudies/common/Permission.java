@@ -10,8 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.common;
 
 public enum Permission {
   NO_PERMISSION(null),
-  READ_VIEW(0),
-  READ_EDIT(1);
+  VIEW(0),
+  EDIT(1);
 
   private Integer value;
 

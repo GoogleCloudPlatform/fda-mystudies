@@ -7,7 +7,7 @@
  */
 package com.google.cloud.healthcare.fdamystudies.matchers;
 
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
