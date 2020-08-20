@@ -7,7 +7,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.AppPermission;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppPermissionRepository extends JpaRepository<AppPermission, Integer> {
