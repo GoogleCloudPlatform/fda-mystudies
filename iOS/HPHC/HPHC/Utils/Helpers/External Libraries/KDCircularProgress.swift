@@ -141,7 +141,7 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
       progressLayer.glowAmount = glowAmount
     }
   }
-  
+
   @IBInspectable var glowMode: Int = KDCircularProgressGlowMode.forward.rawValue {
     didSet {
       progressLayer.glowMode = KDCircularProgressGlowMode(rawValue: glowMode) ?? .forward

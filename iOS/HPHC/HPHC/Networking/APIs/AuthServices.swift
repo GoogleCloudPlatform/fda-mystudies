@@ -263,7 +263,8 @@ extension AuthServices: NMWebServiceDelegate {
         || requestName as String
           == AuthServerMethods
           .logout
-          .description {
+          .description
+      {
         // Unauthorized Access
         let errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
         let localError = NSError(domain: error.domain, code: 403, userInfo: errorInfo)
@@ -272,7 +273,8 @@ extension AuthServices: NMWebServiceDelegate {
       } else if requestName as String
         == AuthServerMethods
         .changePassword
-        .description {
+        .description
+      {
         // Update Refresh Token
         AuthServices().updateToken(delegate: self.delegate)
       } else {
