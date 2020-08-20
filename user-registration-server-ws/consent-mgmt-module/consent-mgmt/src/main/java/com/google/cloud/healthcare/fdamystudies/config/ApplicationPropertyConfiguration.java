@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
+import lombok.ToString;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import lombok.ToString;
 
 @Configuration
 @ToString

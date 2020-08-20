@@ -119,7 +119,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAppsWithOptionalStudiesAndSites() throws Exception {
     // Step 1: set app,study and location
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
@@ -151,7 +151,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAppsWithOptionalStudies() throws Exception {
     // Step 1: set app and study
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     testDataHelper.getStudyRepository().save(studyEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -203,7 +203,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnGetAppParticipants() throws Exception {
     // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
@@ -265,7 +265,7 @@ public class AppControllerTest extends BaseMockIT {
 
   public void shouldReturnInvalidAppsFieldsValues() throws Exception {
     // Step 1: set app and study
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     testDataHelper.getStudyRepository().save(studyEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -287,14 +287,7 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @AfterEach
-  public void cleanUp() {
-    testDataHelper.getParticipantStudyRepository().deleteAll();
-    testDataHelper.getParticipantRegistrySiteRepository().deleteAll();
-    testDataHelper.getUserDetailsRepository().deleteAll();
-    testDataHelper.getSiteRepository().deleteAll();
-    testDataHelper.getLocationRepository().deleteAll();
-    testDataHelper.getStudyRepository().deleteAll();
-    testDataHelper.getAppRepository().deleteAll();
-    testDataHelper.getUserRegAdminRepository().deleteAll();
+  public void clean() {
+    testDataHelper.cleanUp();
   }
 }

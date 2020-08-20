@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
+import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
+import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
 import org.slf4j.Logger;
@@ -20,10 +24,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
-import com.google.cloud.healthcare.fdamystudies.service.ParticipantInformationService;
-import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
 public class ParticipantInformationController {

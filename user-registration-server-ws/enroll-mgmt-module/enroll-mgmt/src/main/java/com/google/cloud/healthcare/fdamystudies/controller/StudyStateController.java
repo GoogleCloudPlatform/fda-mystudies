@@ -8,6 +8,24 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyStateReqBean;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
+import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
+import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -23,24 +41,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyStateReqBean;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
-import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
-import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
 public class StudyStateController {

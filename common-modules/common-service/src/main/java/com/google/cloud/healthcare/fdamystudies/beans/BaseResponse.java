@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class BaseResponse {
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("status")
   private Integer httpStatusCode;
 
@@ -33,6 +34,7 @@ public class BaseResponse {
   @JsonProperty("code")
   private String code;
 
+  @JsonInclude(Include.NON_NULL)
   @JsonProperty("error_type")
   private String errorType;
 

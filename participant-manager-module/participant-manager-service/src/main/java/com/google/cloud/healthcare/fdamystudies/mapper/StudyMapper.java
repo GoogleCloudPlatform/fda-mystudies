@@ -12,9 +12,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppSiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -59,5 +62,27 @@ public final class StudyMapper {
       appStudyDetails.setSites(sites);
     }
     return appStudyDetails;
+  }
+
+  public static StudyDetails toStudyDetails(
+      Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId, StudyEntity study) {
+    StudyDetails studyDetail = new StudyDetails();
+    studyDetail.setId(study.getId());
+    studyDetail.setCustomId(study.getCustomId());
+    studyDetail.setName(study.getName());
+    studyDetail.setType(study.getType());
+    studyDetail.setAppId(study.getApp().getAppId());
+    studyDetail.setAppInfoId(study.getApp().getId());
+
+    if (studyPermissionsByStudyInfoId.get(study.getId()) != null) {
+      Integer studyEditPermission =
+          studyPermissionsByStudyInfoId.get(study.getId()).getEdit().value();
+      studyDetail.setStudyPermission(
+          studyEditPermission == Permission.NO_PERMISSION.value()
+              ? Permission.VIEW.value()
+              : Permission.EDIT.value());
+      studyDetail.setStudyPermission(studyEditPermission);
+    }
+    return studyDetail;
   }
 }
