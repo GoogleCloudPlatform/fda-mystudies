@@ -8,6 +8,23 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -38,21 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
-
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class StudyControllerTest extends BaseMockIT {
 
@@ -111,6 +113,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.studies").isArray())
+        .andExpect(jsonPath("$.studies", hasSize(1)))
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].type").value(studyEntity.getType()))
         .andExpect(jsonPath("$.sitePermissionCount").value(1));
@@ -131,7 +134,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldNotReturnStudies() throws Exception {
+  public void shouldReturnStudyNotFound() throws Exception {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, IdGenerator.id());
 
@@ -165,7 +168,7 @@ public class StudyControllerTest extends BaseMockIT {
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
     StudyPermissionEntity studyPermission = studyEntity.getStudyPermissions().get(0);
-    studyPermission.setAppInfo(null);
+    studyPermission.setApp(null);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
     mockMvc
         .perform(
@@ -201,8 +204,15 @@ public class StudyControllerTest extends BaseMockIT {
     HttpHeaders headers = newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
     locationEntity = testDataHelper.createLocation();
+    studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
-    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    siteEntity.setTargetEnrollment(0);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(ENROLLED_STATUS);
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
     mockMvc
         .perform(
@@ -219,7 +229,13 @@ public class StudyControllerTest extends BaseMockIT {
                 .value(siteEntity.getId()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
-                .value(locationEntity.getName()));
+                .value(locationEntity.getName()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
+                .value(participantStudyEntity.getStatus()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.targetEnrollment")
+                .value(siteEntity.getTargetEnrollment()));
   }
 
   @Test
@@ -282,8 +298,9 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReturnNotFoundForUpdateTargetEnrollment() throws Exception {
     // Step 1:Set studyId to invalid
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
-
-    StudyEntity study = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
+    StudyEntity study = testDataHelper.newStudyEntity();
+    study.setCustomId("CovidStudy1");
+    study.setApp(appEntity);
     siteEntity.setStudy(study);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
@@ -306,7 +323,7 @@ public class StudyControllerTest extends BaseMockIT {
     // Step 1:Set permission to READ_VIEW
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEdit(Permission.READ_VIEW.value());
+    studyPermissionEntity.setEdit(Permission.VIEW);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     // Step 2: Call API and expect STUDY_PERMISSION_ACCESS_DENIED error
@@ -371,7 +388,9 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE.getDescription())));
+                is(
+                    ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE
+                        .getDescription())));
   }
 
   @AfterEach

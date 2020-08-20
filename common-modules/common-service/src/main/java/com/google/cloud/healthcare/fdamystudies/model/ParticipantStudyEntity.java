@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.model;
 import java.beans.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,14 +19,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
+import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
 
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
@@ -36,7 +39,13 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "participant_study_info")
+@Table(
+    name = "participant_study_info",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"user_details_id", "study_info_id"},
+          name = "participant_study_info_user_details_id_study_info_id__uidx")
+    })
 public class ParticipantStudyEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -48,7 +57,7 @@ public class ParticipantStudyEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "participant_id", unique = true)
+  @Column(name = "participant_id", unique = true, length = XS_LENGTH)
   private String participantId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -68,38 +77,28 @@ public class ParticipantStudyEntity implements Serializable {
   private UserDetailsEntity userDetails;
 
   @Column(name = "consent_status")
-  private Boolean consentStatus;
+  private Boolean consentStatus = false;
 
-  @Column(name = "status")
+  @Column(length = SMALL_LENGTH)
   private String status;
 
-  @Column(name = "bookmark")
   private Boolean bookmark;
 
-  @Column(name = "eligibility")
   private Boolean eligibility;
 
-  @Column(
-      name = "enrolled_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "enrolled_time")
+  @CreationTimestamp
   private Timestamp enrolledDate;
 
-  @Column(name = "sharing")
-  private String sharing;
+  @Type(type = "java.lang.Boolean")
+  private Boolean sharing;
 
-  @Column(name = "completion")
   private Integer completion;
 
-  @Column(name = "adherence")
   private Integer adherence;
 
-  @Column(
-      name = "withdrawal_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "withdrawal_time")
+  @CreationTimestamp
   private Timestamp withdrawalDate;
 
   @Transient

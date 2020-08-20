@@ -68,4 +68,10 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${update.user.body}")
   private String updateUserBody;
+
+  @Value("${auth.server.register.url}")
+  private String authRegisterUrl;
+
+  @Value("${auth.server.updateStatusUrl}")
+  private String authServerUpdateStatusUrl;
 }

@@ -14,9 +14,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AppConfig extends BaseAppConfig {
-	@Bean
-	  public Storage storageService() {
-	    return StorageOptions.getDefaultInstance().getService();
-	  }
+public class AppConfig extends CommonModuleConfiguration {
+  @Bean
+  public Storage storageService() {
+    return StorageOptions.getDefaultInstance().getService();
+  }
 }

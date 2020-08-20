@@ -8,12 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import org.apache.commons.lang3.StringUtils;
-
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
 
 public final class ConsentMapper {
 
@@ -28,7 +28,8 @@ public final class ConsentMapper {
     String consentDate = DateTimeUtils.format(studyConsent.getParticipantStudy().getEnrolledDate());
     consentHistory.setConsentedDate(StringUtils.defaultIfEmpty(consentDate, NOT_APPLICABLE));
 
-    consentHistory.setDataSharingPermissions(studyConsent.getParticipantStudy().getSharing());
+    consentHistory.setDataSharingPermissions(
+        studyConsent.getParticipantStudy().getSharing().toString());
     return consentHistory;
   }
 }
