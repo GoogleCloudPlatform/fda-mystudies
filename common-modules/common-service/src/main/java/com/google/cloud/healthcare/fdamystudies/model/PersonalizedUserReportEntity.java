@@ -5,43 +5,44 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import java.io.Serializable;
 import java.sql.Timestamp;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 
+@AllArgsConstructor
+@Builder
 @Setter
 @Getter
-@ToString
 @Entity
-@Table(name = "study_permissions")
+@NoArgsConstructor
+@Table(name = "personalized_user_report")
 @ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
+    value = "participant.datastore.entities.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public class StudyPermissionEntity implements Serializable {
+public class PersonalizedUserReportEntity implements Serializable {
 
-  private static final long serialVersionUID = -9223143734827095684L;
+  private static final long serialVersionUID = -3019529323339411129L;
 
   @ToString.Exclude
   @Id
@@ -50,25 +51,22 @@ public class StudyPermissionEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "app_info_id")
-  private AppEntity app;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private UserDetailsEntity userDetails;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "study_id")
-  private StudyEntity study;
+  @ManyToOne
+  @JoinColumn(name = "study_info_id")
+  private StudyEntity studyInfo;
 
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "ur_admin_user_id")
-  private UserRegAdminEntity urAdminUser;
+  @Column(name = "report_title", length = MEDIUM_LENGTH)
+  private String reportTitle;
 
-  @Enumerated(EnumType.ORDINAL)
-  private Permission edit;
+  @Column(name = "report_content")
+  @Type(type = "text")
+  private String reportContent;
 
-  @Column(name = "created_time")
+  @Column(name = "activity_date_time")
   @CreationTimestamp
-  private Timestamp created;
-
-  @Column(name = "created_by", length = LARGE_LENGTH)
-  private String createdBy;
+  private Timestamp creationTime;
 }

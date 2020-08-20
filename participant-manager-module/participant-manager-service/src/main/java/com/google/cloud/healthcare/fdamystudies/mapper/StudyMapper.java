@@ -65,16 +65,16 @@ public final class StudyMapper {
     studyDetail.setCustomId(study.getCustomId());
     studyDetail.setName(study.getName());
     studyDetail.setType(study.getType());
-    studyDetail.setAppId(study.getAppInfo().getAppId());
-    studyDetail.setAppInfoId(study.getAppInfo().getId());
+    studyDetail.setAppId(study.getApp().getAppId());
+    studyDetail.setAppInfoId(study.getApp().getId());
 
     if (studyPermissionsByStudyInfoId.get(study.getId()) != null) {
       Integer studyEditPermission =
-          studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
+          studyPermissionsByStudyInfoId.get(study.getId()).getEdit().value();
       studyDetail.setStudyPermission(
           studyEditPermission == Permission.NO_PERMISSION.value()
-              ? Permission.READ_VIEW.value()
-              : Permission.READ_EDIT.value());
+              ? Permission.VIEW.value()
+              : Permission.EDIT.value());
       studyDetail.setStudyPermission(studyEditPermission);
     }
     return studyDetail;
