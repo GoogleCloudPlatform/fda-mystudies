@@ -260,7 +260,7 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations[0].path").value("userId"))
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
   }
-  
+
   public void shouldReturnInvalidAppsFieldsValues() throws Exception {
     // Step 1: set app and study
     studyEntity.setAppInfo(appEntity);
@@ -285,14 +285,7 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @AfterEach
-  public void cleanUp() {
-    testDataHelper.getParticipantStudyRepository().deleteAll();
-    testDataHelper.getParticipantRegistrySiteRepository().deleteAll();
-    testDataHelper.getUserDetailsRepository().deleteAll();
-    testDataHelper.getSiteRepository().deleteAll();
-    testDataHelper.getLocationRepository().deleteAll();
-    testDataHelper.getStudyRepository().deleteAll();
-    testDataHelper.getAppRepository().deleteAll();
-    testDataHelper.getUserRegAdminRepository().deleteAll();
+  public void clean() {
+    testDataHelper.cleanUp();
   }
 }

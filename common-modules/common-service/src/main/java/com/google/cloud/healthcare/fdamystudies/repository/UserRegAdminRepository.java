@@ -26,4 +26,10 @@ public interface UserRegAdminRepository extends JpaRepository<UserRegAdminEntity
   Optional<UserRegAdminEntity> findByUserRegAdminId(String userId);
 
   public Optional<UserRegAdminEntity> findByEmail(String email);
+
+  @Query("SELECT user from UserRegAdminEntity user where user.urAdminAuthId=:urAdminAuthId")
+  public Optional<UserRegAdminEntity> findByUrAdminAuthId(String urAdminAuthId);
+
+  @Query("SELECT user from UserRegAdminEntity user where user.securityCode=:securityCode")
+  public Optional<UserRegAdminEntity> findBySecurityCode(String securityCode);
 }

@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
 
 public interface UserAppDetailsService {
 

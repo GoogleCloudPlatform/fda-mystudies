@@ -1,9 +1,9 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
-import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
 import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserInstitution;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

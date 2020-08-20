@@ -1,6 +1,6 @@
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.UserInstitution;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserInstitution;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
