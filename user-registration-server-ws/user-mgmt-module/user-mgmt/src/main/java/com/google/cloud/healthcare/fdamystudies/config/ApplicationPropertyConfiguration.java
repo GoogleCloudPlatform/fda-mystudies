@@ -125,4 +125,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${auth.server.deactivateurl}")
   private String authServerDeactivateUrl;
+
+  @Value("${org.name}")
+  private String orgName;
 }

@@ -28,7 +28,7 @@ public final class Constants {
 
   public static final String INVALID_USER_ID = "invalid userId";
   public static final String EMAIL_ID = "abc@gmail.com";
-  public static final String PASSWORD = "pass@12";
+  public static final String PASSWORD = "Kantharaj#1123";
   public static final String SUCCESS = "success";
   public static final String CLIENT_ID_HEADER = "clientId";
   public static final String SECRET_KEY_HEADER = "secretkey";
@@ -51,7 +51,7 @@ public final class Constants {
   public static final String INVALID_CODE = "12";
   public static final String INVALID_INPUT = "Invalid input.";
   public static final String EMAIL_NOT_EXIST = "Email Doesn't Exists";
-  public static final String INVALID_PASSWORD = "Invalid Password";
-  public static final String EMAIL = "cdash93@gmail.com";
+  public static final String INVALID_PASSWORD = "AuthServerBadRequest@b0ston";
+  public static final String EMAIL = "mockito@gmail.com";
   public static final Object INVALID_EMAIL_CODE = "Invalid email code";
 }

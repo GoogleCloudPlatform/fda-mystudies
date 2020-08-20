@@ -8,12 +8,20 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
+
 import java.time.LocalDateTime;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Setter
 @Getter
@@ -24,8 +32,18 @@ public class UserRegistrationForm {
   private String userId;
   private String firstName;
   private String lastName;
-  @NotNull private String emailId;
+
+  @ToString.Exclude
+  @NotBlank
+  @Size(max = 320)
+  @Email
+  private String emailId;
+
+  @ToString.Exclude
+  @NotBlank
+  @Pattern(regexp = PASSWORD_REGEX, message = PASSWORD_REGEX_MESSAGE)
   private String password;
+
   private boolean usePassCode;
   private boolean touchId;
   private boolean localNotification;
@@ -35,6 +53,8 @@ public class UserRegistrationForm {
   private int status;
   private boolean tempPassword;
   private LocalDateTime tempPasswordDate;
+  private String appId;
+  private String orgId;
 
   public UserRegistrationForm(String userId, String emailId, String password) {
     super();

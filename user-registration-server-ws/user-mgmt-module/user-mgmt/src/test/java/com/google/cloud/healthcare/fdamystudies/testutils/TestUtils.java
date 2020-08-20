@@ -8,11 +8,8 @@ public class TestUtils {
   public static HttpHeaders getCommonHeaders(String... addOptionalHeaderNames) {
 
     HttpHeaders headers = new HttpHeaders();
-    headers.add(Constants.CLIENT_TOKEN_HEADER, Constants.CLIENT_TOKEN_VALUE);
-    headers.add(Constants.ACCESS_TOKEN_HEADER, Constants.ACCESS_TOKEN_VALUE);
     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
-
     if (ArrayUtils.contains(addOptionalHeaderNames, Constants.USER_ID_HEADER)) {
       headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
     }
@@ -23,14 +20,6 @@ public class TestUtils {
 
     if (ArrayUtils.contains(addOptionalHeaderNames, Constants.ORG_ID_HEADER)) {
       headers.add(Constants.ORG_ID_HEADER, Constants.ORG_ID_VALUE);
-    }
-
-    if (ArrayUtils.contains(addOptionalHeaderNames, Constants.CLIENT_ID_HEADER)) {
-      headers.add(Constants.CLIENT_ID_HEADER, Constants.CLIENT_ID_VALUE);
-    }
-
-    if (ArrayUtils.contains(addOptionalHeaderNames, Constants.SECRET_KEY_HEADER)) {
-      headers.add(Constants.SECRET_KEY_HEADER, Constants.SECRET_KEY_VALUE);
     }
 
     return headers;

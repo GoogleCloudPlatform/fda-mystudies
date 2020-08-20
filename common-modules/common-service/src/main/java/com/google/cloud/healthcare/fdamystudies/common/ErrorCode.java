@@ -79,9 +79,15 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This email has already been used. Please try with a different email address."),
 
+  USER_ALREADY_EXISTS(
+      409,
+      "EC-101",
+      HttpStatus.CONFLICT.toString(),
+      "There is already a user with this email address. Please log in."),
+
   EMAIL_SEND_FAILED_EXCEPTION(
       500,
-      "EC-500",
+      "EC-5001",
       "Email Server Error",
       "Your email was unable to send because the connection to mail server was interrupted. Please check your inbox for mail delivery failure notice."),
 
@@ -207,7 +213,10 @@ public enum ErrorCode {
   CONSENT_DATA_NOT_AVAILABLE(400, "EC_885", Constants.BAD_REQUEST, "error getting consent data"),
 
   INVALID_APPS_FIELDS_VALUES(
-      400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
+      400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites"),
+
+  DOMAIN_NOT_WHITELISTED(
+      400, "EC-871", Constants.BAD_REQUEST, "Email does not belong to a whitelisted domain.");
 
   private final int status;
   private final String code;

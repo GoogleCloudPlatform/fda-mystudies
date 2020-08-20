@@ -3,9 +3,12 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -17,21 +20,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.jayway.jsonpath.JsonPath;
-import org.junit.jupiter.api.Disabled;
+import java.util.Optional;
+import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 @TestMethodOrder(OrderAnnotation.class)
@@ -46,6 +50,10 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Autowired private CommonService service;
 
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private JavaMailSender emailSender;
+
+  @Autowired private UserDetailsBORepository userDetailsRepository;
 
   @Value("${register.url}")
   private String authRegisterUrl;
@@ -62,87 +70,41 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     mockMvc.perform(get("/healthCheck")).andDo(print()).andExpect(status().isOk());
   }
 
-  @Order(1)
   @Test
-  public void shouldReturnBadRequestForInvalidUserDetails() throws Exception {
+  public void shouldReturnBadRequestForInvalidPassword() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER);
-
-    // password is equalTo emailId
-    String requestJson = getRegisterUser(Constants.EMAIL_ID, Constants.EMAIL_ID);
-    mockMvc
-        .perform(
-            post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
-        .andExpect(jsonPath("$.message", is(Constants.INVALID_PASSWORD)));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/AuthServer/register"))
-            .withRequestBody(new ContainsPattern(Constants.EMAIL_ID)));
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     // invalid  password
-    requestJson = getRegisterUser(Constants.EMAIL_ID, Constants.INVALID_PASSWORD);
+    UserRegistrationForm userRegistrationForm = new UserRegistrationForm();
     mockMvc
         .perform(
-            post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
+            post(REGISTER_PATH)
+                .content(asJsonString(userRegistrationForm))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
-        .andExpect(jsonPath("$.message", is(Constants.INVALID_PASSWORD)));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/AuthServer/register"))
-            .withRequestBody(new ContainsPattern(Constants.INVALID_PASSWORD)));
+        .andExpect(status().isBadRequest());
   }
 
-  @Order(2)
   @Test
-  // TODO(#668) Remove @Disabled when Github test case failed issue fix
-  @Disabled
-  public void shouldReturnUnauthorized() throws Exception {
-
+  public void shouldReturnBadRequestForEmailExists() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
-    // empty appId
-    headers.set(Constants.APP_ID_HEADER, "");
+    // user exists
     String requestJson = getRegisterUser(Constants.EMAIL_ID, Constants.PASSWORD);
-
     mockMvc
         .perform(
             post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isUnauthorized())
-        .andExpect(jsonPath("$.code", is(HttpStatus.UNAUTHORIZED.value())))
-        .andExpect(jsonPath("$.message", is("Unauthorized")));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/AuthServer/register"))
-            .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
+        .andExpect(status().isConflict());
   }
 
-  @Order(3)
   @Test
   public void shouldRegisterUser() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
 
@@ -154,19 +116,22 @@ public class UserRegistrationControllerTest extends BaseMockIT {
                     .headers(headers)
                     .contextPath(getContextPath()))
             .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.verified").value(Boolean.FALSE))
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.userId").isNotEmpty())
             .andReturn();
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
     // find userDetails by userId and assert email
-    UserDetailsBO daoResp = userDetailsService.loadUserDetailsByUserId(userId);
-    assertEquals(Constants.EMAIL, daoResp.getEmail());
+    Optional<UserDetailsBO> optUserDetails =
+        userDetailsRepository.findByUserDetailsId(Integer.valueOf(userId));
+
+    assertEquals(Constants.EMAIL, optUserDetails.get().getEmail());
+
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/AuthServer/register"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
             .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
   }
 
