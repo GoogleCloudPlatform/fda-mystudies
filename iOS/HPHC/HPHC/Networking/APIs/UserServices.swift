@@ -135,9 +135,11 @@ class UserServices: NSObject {
   ///   - emailId: Email Id of the`User ` to verify
   ///   - verificationCode: Code which is to be verified
   ///   - delegate: Class object to receive response
-  func verifyEmail(emailId: String,
-                   verificationCode: String,
-                   delegate: NMWebServiceDelegate) {
+  func verifyEmail(
+    emailId: String,
+    verificationCode: String,
+    delegate: NMWebServiceDelegate
+  ) {
 
     self.delegate = delegate
     let param = [
