@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.utils;
 
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
+import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil.ErrorCodes;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,9 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.service.CommonServiceImpl;
-import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil.ErrorCodes;
 
 @Component
 public class AuthenticationFilter implements Filter {
@@ -73,7 +73,7 @@ public class AuthenticationFilter implements Filter {
               && !StringUtils.isEmpty(clientToken)) {
             CommonServiceImpl commonService = BeanUtil.getBean(CommonServiceImpl.class);
             value = commonService.validateAccessToken(userId, accessToken, clientToken);
-            if (value == 1) {
+            if (1 == value) {
               setCommonHeaders(httpServletResponse);
               chain.doFilter(request, response);
             } else {
