@@ -57,6 +57,25 @@ public enum ApiEndpoint {
   GET_PARTICIPANT_DETAILS(
       "http://localhost:8080/participant-manager-service/sites/{participantRegistrySite}/participant"),
 
+  INVITE_PARTICIPANTS(
+      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/invite"),
+
+  IMPORT_PARTICIPANT(
+      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/import"),
+
+  UPDATE_ONBOARDING_STATUS(
+      "http://localhost:8003/participant-manager-service/sites/{siteId}/participants/status"),
+
+  GET_SITES("http://localhost:8080/participant-manager-service/sites"),
+
+  UPDATE_USER_PROFILE("http://localhost:8080/participant-manager-service/users/{userId}/profile"),
+
+  UPDATE_TARGET_ENROLLMENT(
+      "http://localhost:8080/participant-manager-service/studies/{studyId}/targetEnrollment"),
+
+  GET_CONSENT_DOCUMENT(
+      "http://localhost:8080/participant-manager-service/consents/{consentId}/consentDocument"),
+
   GET_USER_DETAILS_BY_SECURITY_CODE(
       "http://localhost:8080/participant-manager-service/users/securitycodes/{securityCode}");
 

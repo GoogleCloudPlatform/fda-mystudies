@@ -563,10 +563,7 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @AfterEach
-  public void cleanUp() throws JsonParseException, JsonMappingException, IOException {
-    testDataHelper.getSiteRepository().deleteAll();
-    testDataHelper.getStudyRepository().deleteAll();
-    testDataHelper.getAppRepository().deleteAll();
-    testDataHelper.getUserRegAdminRepository().deleteAll();
+  public void clean() {
+    testDataHelper.cleanUp();
   }
 }
