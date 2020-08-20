@@ -83,7 +83,7 @@ public class EnrollmentTokenController {
           return null;
         } else if (!StringUtils.isEmpty(enrollmentBean.getToken())) {
           if (enrollmentTokenfService.hasParticipant(
-              enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
+              enrollmentBean.getStudyId(), enrollmentBean.getToken().trim())) {
             ErrorResponseUtil.getFailureResponse(
                 ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -98,7 +98,7 @@ public class EnrollmentTokenController {
                 response);
             return null;
           } else if (!enrollmentTokenfService.isValidStudyToken(
-              enrollmentBean.getToken(), enrollmentBean.getStudyId(),userId)) {
+              enrollmentBean.getToken().trim(), enrollmentBean.getStudyId(),userId)) {
             ErrorResponseUtil.getFailureResponse(
                 ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -158,14 +158,14 @@ public class EnrollmentTokenController {
             if (enrollmentTokenfService.enrollmentTokenRequired(enrollmentBean.getStudyId())) {
               if (!StringUtils.isEmpty(enrollmentBean.getToken())) {
                 if (!enrollmentTokenfService.hasParticipant(
-                    enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
+                    enrollmentBean.getStudyId(), enrollmentBean.getToken().trim())) {
                   if (enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
                     if (enrollmentTokenfService.isValidStudyToken(
-                        enrollmentBean.getToken(), enrollmentBean.getStudyId(),userId)) {
+                        enrollmentBean.getToken().trim(), enrollmentBean.getStudyId(),userId)) {
                       respBean =
                           enrollmentTokenfService.enrollParticipant(
                               enrollmentBean.getStudyId(),
-                              enrollmentBean.getToken(),
+                              enrollmentBean.getToken().trim(),
                               userId,
                               enrollmentBean.getFirstName(),
                               enrollmentBean.getLastName());
