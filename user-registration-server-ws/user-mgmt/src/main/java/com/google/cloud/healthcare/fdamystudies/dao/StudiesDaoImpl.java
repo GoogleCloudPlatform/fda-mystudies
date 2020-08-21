@@ -15,8 +15,8 @@ import com.google.cloud.healthcare.fdamystudies.model.LocationBo;
 import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
 import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
 import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
@@ -31,15 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.LocationBo;
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfo;
-import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 
 @Repository
 public class StudiesDaoImpl implements StudiesDao {
@@ -166,10 +157,9 @@ public class StudiesDaoImpl implements StudiesDao {
           SiteBo siteBO = new SiteBo();
           siteBO.setStudyInfo(studyInfoCreated);
           siteBO.setLocations(defaultLocation);
-          siteBO.setCreatedBy(0);
-          siteBO.setStatus(1);
+          siteBO.setStatus(SiteStatus.ACTIVE.value());
           siteBO.setTargetEnrollment(0);
-          session.save(siteBO);
+          session.save(siteBO); 
         }
       }
       errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
