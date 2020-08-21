@@ -28,22 +28,22 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
   @Query("SELECT study from StudyEntity study where study.id=:studyId")
   public Optional<StudyEntity> findByStudyId(String studyId);
 
-  @Query("SELECT study from StudyEntity study where study.appInfo.id in (:appIds)")
+  @Query("SELECT study from StudyEntity study where study.app.id in (:appIds)")
   public List<StudyEntity> findByAppIds(@Param("appIds") List<String> appIds);
 
   @Query(
       value =
-          "SELECT s.location_id AS locationId, GROUP_CONCAT(DISTINCT si.name SEPARATOR ',') AS studyNames from sites s, study_info si where s.study_id=si.study_id AND s.location_id in (:locationIds) GROUP BY s.location_id",
+          "SELECT s.location_id AS locationId, GROUP_CONCAT(DISTINCT si.name SEPARATOR ',') AS studyNames from sites s, study_info si where s.study_id=si.id AND s.location_id in (:locationIds) GROUP BY s.location_id",
       nativeQuery = true)
   public List<LocationIdStudyNamesPair> getStudyNameLocationIdPairs(List<String> locationIds);
 
   @Query(
       value =
           "SELECT GROUP_CONCAT(DISTINCT si.name SEPARATOR ',') from sites s, study_info si "
-              + "where s.study_id=si.study_id AND s.location_id = :locationId",
+              + "where s.study_id=si.id AND s.location_id = :locationId",
       nativeQuery = true)
   public String getStudyNamesByLocationId(String locationId);
 
-  @Query("SELECT study FROM StudyEntity study where study.appInfo.id = :appInfoId")
+  @Query("SELECT study FROM StudyEntity study where study.app.id = :appInfoId")
   public List<StudyEntity> findByAppId(String appInfoId);
 }

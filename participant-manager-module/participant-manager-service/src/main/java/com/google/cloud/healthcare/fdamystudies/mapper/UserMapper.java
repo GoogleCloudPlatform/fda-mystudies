@@ -75,12 +75,12 @@ public final class UserMapper {
       UserRegAdminEntity superAdminDetails,
       SiteEntity siteDetails) {
     SitePermissionEntity sitePermission = new SitePermissionEntity();
-    sitePermission.setAppInfo(siteDetails.getStudy().getAppInfo());
+    sitePermission.setApp(siteDetails.getStudy().getApp());
     sitePermission.setStudy(siteDetails.getStudy());
     sitePermission.setSite(siteDetails);
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
-    int edit = site != null && site.getPermission() == 1 ? 0 : 1;
-    sitePermission.setEditPermission(edit);
+    Permission edit = site != null && site.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    sitePermission.setCanEdit(edit);
     sitePermission.setUrAdminUser(superAdminDetails);
     return sitePermission;
   }
@@ -92,13 +92,11 @@ public final class UserMapper {
       StudyEntity studyDetails,
       SiteEntity site) {
     SitePermissionEntity sitePermission = new SitePermissionEntity();
-    sitePermission.setAppInfo(studyDetails.getAppInfo());
+    sitePermission.setApp(studyDetails.getApp());
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
-    int edit =
-        study.getPermission() == CommonConstants.READ_PERMISSION
-            ? Permission.READ_VIEW.value()
-            : Permission.READ_EDIT.value();
-    sitePermission.setEditPermission(edit);
+    Permission edit =
+        study != null && study.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    sitePermission.setCanEdit(edit);
     sitePermission.setStudy(studyDetails);
     sitePermission.setSite(site);
     sitePermission.setUrAdminUser(superAdminDetails);
@@ -115,20 +113,17 @@ public final class UserMapper {
     if (CollectionUtils.isNotEmpty(sites)) {
       for (SiteEntity siteEntity : sites) {
         SitePermissionEntity sitePermission = new SitePermissionEntity();
-        sitePermission.setAppInfo(appDetails);
+        sitePermission.setApp(appDetails);
         sitePermission.setCreatedBy(user.getSuperAdminUserId());
-        int edit =
-            app != null && app.getPermission() == CommonConstants.READ_PERMISSION
-                ? Permission.READ_VIEW.value()
-                : Permission.READ_EDIT.value();
-        sitePermission.setEditPermission(edit);
+        Permission edit =
+            app != null && app.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+        sitePermission.setCanEdit(edit);
         sitePermission.setStudy(siteEntity.getStudy());
         sitePermission.setSite(siteEntity);
         sitePermission.setUrAdminUser(superAdminDetails);
         sitePermissions.add(sitePermission);
       }
     }
-
     return sitePermissions;
   }
 
@@ -138,14 +133,12 @@ public final class UserMapper {
       UserStudyPermissionRequest study,
       StudyEntity studyDetails) {
     StudyPermissionEntity studyPermission = new StudyPermissionEntity();
-    studyPermission.setAppInfo(studyDetails.getAppInfo());
+    studyPermission.setApp(studyDetails.getApp());
     studyPermission.setStudy(studyDetails);
     studyPermission.setCreatedBy(user.getSuperAdminUserId());
-    int edit =
-        study != null && study.getPermission() == CommonConstants.READ_PERMISSION
-            ? Permission.READ_VIEW.value()
-            : Permission.READ_EDIT.value();
-    studyPermission.setEditPermission(edit);
+    Permission edit =
+        study != null && study.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    studyPermission.setEdit(edit);
     studyPermission.setUrAdminUser(superAdminDetails);
     return studyPermission;
   }
@@ -160,13 +153,13 @@ public final class UserMapper {
     if (CollectionUtils.isNotEmpty(studies)) {
       for (StudyEntity studyEntity : studies) {
         StudyPermissionEntity studyPermission = new StudyPermissionEntity();
-        studyPermission.setAppInfo(appDetails);
+        studyPermission.setApp(appDetails);
         studyPermission.setCreatedBy(userRequest.getSuperAdminUserId());
-        int edit =
-            appRequest != null && appRequest.getPermission() == CommonConstants.READ_PERMISSION
-                ? Permission.READ_VIEW.value()
-                : Permission.READ_EDIT.value();
-        studyPermission.setEditPermission(edit);
+        Permission edit =
+            appRequest != null && appRequest.getPermission() == 1
+                ? Permission.VIEW
+                : Permission.EDIT;
+        studyPermission.setEdit(edit);
         studyPermission.setStudy(studyEntity);
         studyPermission.setUrAdminUser(superAdminDetails);
         studyPermissions.add(studyPermission);
@@ -178,9 +171,9 @@ public final class UserMapper {
   public static AppPermissionEntity newAppPermissionEntity(
       UserRequest user, UserRegAdminEntity superAdminDetails, AppEntity app) {
     AppPermissionEntity appPermission = new AppPermissionEntity();
-    appPermission.setAppInfo(app);
+    appPermission.setApp(app);
     appPermission.setCreatedBy(user.getSuperAdminUserId());
-    appPermission.setEditPermission(Permission.READ_EDIT.value());
+    appPermission.setEdit(Permission.EDIT);
     appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
   }
@@ -191,13 +184,10 @@ public final class UserMapper {
       UserAppPermissionRequest app,
       AppEntity appDetails) {
     AppPermissionEntity appPermission = new AppPermissionEntity();
-    appPermission.setAppInfo(appDetails);
+    appPermission.setApp(appDetails);
     appPermission.setCreatedBy(userRequest.getSuperAdminUserId());
-    int edit =
-        app != null && app.getPermission() == CommonConstants.READ_PERMISSION
-            ? Permission.READ_VIEW.value()
-            : Permission.READ_EDIT.value();
-    appPermission.setEditPermission(edit);
+    Permission edit = app != null && app.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    appPermission.setEdit(edit);
     appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
   }

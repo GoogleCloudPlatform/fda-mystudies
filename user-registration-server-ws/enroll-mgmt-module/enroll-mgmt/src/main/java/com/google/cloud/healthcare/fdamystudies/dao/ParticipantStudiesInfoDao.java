@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import java.util.List;
 
 public interface ParticipantStudiesInfoDao {
 

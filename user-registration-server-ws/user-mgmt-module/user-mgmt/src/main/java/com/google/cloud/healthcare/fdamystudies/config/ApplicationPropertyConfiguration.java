@@ -60,7 +60,7 @@ public class ApplicationPropertyConfiguration {
   @Value("${auth.server.url}")
   private String authServerUrl;
 
-  @Value("${auth.server.updateStatusUrl}")
+  @Value("${auth.server.updateStatus.url}")
   private String authServerUpdateStatusUrl;
 
   @Value("${auth.server.deleteStatusUrl}")

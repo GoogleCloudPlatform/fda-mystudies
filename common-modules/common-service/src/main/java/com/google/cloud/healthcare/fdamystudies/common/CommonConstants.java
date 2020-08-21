@@ -59,6 +59,9 @@ public final class CommonConstants {
 
   public static final String MESSAGE_CODE_LOG = "message code=%s";
 
+  public static final String EMAIL_REGEX =
+      "^[A-Za-z0-9_+]+([\\.-]?[A-Za-z0-9_+]+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
+
   public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
       "application/x-www-form-urlencoded;charset=UTF-8";
 
