@@ -8,8 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -20,6 +22,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class BeanConfig extends CommonModuleConfiguration {
 
+  @Autowired ApplicationPropertyConfiguration appConfig;
+
   @Bean
   public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
@@ -28,5 +32,16 @@ public class BeanConfig extends CommonModuleConfiguration {
         registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("*");
       }
     };
+  }
+
+  @Bean
+  public JavaMailSenderImpl mailSender() {
+    JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+
+    javaMailSender.setProtocol("SMTP");
+    javaMailSender.setHost(appConfig.getSmtpHostName());
+    javaMailSender.setPort(Integer.parseInt(appConfig.getSmtpPortValue()));
+
+    return javaMailSender;
   }
 }

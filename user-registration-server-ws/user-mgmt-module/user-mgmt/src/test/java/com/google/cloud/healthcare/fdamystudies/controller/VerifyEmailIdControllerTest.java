@@ -57,8 +57,9 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(
             Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
+    headers.set(Constants.USER_ID_HEADER, Constants.USER_ID_FOR_VERIFY_EMAIL_ID);
     // invalid code
-    String requestJson = getEmailIdVerificationForm(Constants.INVALID_CODE, Constants.EMAIL);
+    String requestJson = getEmailIdVerificationForm(Constants.INVALID_CODE, "abc1234@gmail.com");
     mockMvc
         .perform(
             post(VERIFY_EMAIL_ID_PATH)
@@ -94,7 +95,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         TestUtils.getCommonHeaders(
             Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
 
-    String requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.EMAIL_ID);
+    String requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.EMAIL);
 
     mockMvc
         .perform(
@@ -107,7 +108,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.verified").value(Boolean.TRUE));
 
     // get list of userDetails by emailId
-    List<UserDetailsBO> userDetailsList = repository.findByEmail(Constants.EMAIL_ID);
+    List<UserDetailsBO> userDetailsList = repository.findByEmail(Constants.EMAIL);
     UserDetailsBO userDetailsBO =
         userDetailsList
             .stream()
@@ -115,7 +116,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
                 user -> {
                   AppInfoDetailsBO appDetail =
                       userProfileDao.getAppPropertiesDetailsByAppId(user.getAppInfoId());
-                  return StringUtils.equals(user.getEmail(), Constants.EMAIL_ID)
+                  return StringUtils.equals(user.getEmail(), Constants.EMAIL)
                       && StringUtils.equals(appDetail.getAppId(), Constants.APP_ID_VALUE);
                 })
             .findAny()
@@ -123,8 +124,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     assertNotNull(userDetailsBO);
     assertTrue(VERIFIED_STATUS == userDetailsBO.getStatus());
 
-    verify(
-        1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + userDetailsBO.getUserId())));
+    verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
 
     verifyTokenIntrospectRequest(1);
   }
