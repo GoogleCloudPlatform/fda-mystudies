@@ -42,7 +42,7 @@ class StudyDashboardStudyPercentageTableViewCell: UITableViewCell {
     studyPercentagePie?.clockwise = true
     studyPercentagePie?.gradientRotateSpeed = 2
     studyPercentagePie?.roundedCorners = false
-    studyPercentagePie?.glowMode = .forward
+    studyPercentagePie?.glowMode = KDCircularProgressGlowMode.forward.rawValue
     studyPercentagePie?.glowAmount = 0.1
     studyPercentagePie?.set(colors: blueColor)
 
@@ -53,7 +53,7 @@ class StudyDashboardStudyPercentageTableViewCell: UITableViewCell {
     completedPercentagePie?.clockwise = true
     completedPercentagePie?.gradientRotateSpeed = 2
     completedPercentagePie?.roundedCorners = false
-    completedPercentagePie?.glowMode = .forward
+    completedPercentagePie?.glowMode = KDCircularProgressGlowMode.forward.rawValue
     completedPercentagePie?.glowAmount = 0.1
     completedPercentagePie?.set(colors: blueColor)
 
