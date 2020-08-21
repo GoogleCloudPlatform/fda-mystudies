@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
@@ -19,6 +18,7 @@ import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import java.util.List;
 
 public interface StudyStateService {
 

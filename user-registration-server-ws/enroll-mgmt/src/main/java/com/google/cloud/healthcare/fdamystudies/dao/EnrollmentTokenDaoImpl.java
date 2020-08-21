@@ -8,24 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
-
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySite;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
@@ -34,6 +16,22 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantStudyStateStatus;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.validation.constraints.NotNull;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
@@ -120,13 +118,18 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     List<Object[]> participantList = null;
     boolean hasParticipant = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+      List studyStateStatus = new ArrayList();
+      studyStateStatus.add(ParticipantStudyStateStatus.ENROLLED.getValue());
+      studyStateStatus.add(ParticipantStudyStateStatus.WITHDRAWN.getValue());
+      studyStateStatus.add(ParticipantStudyStateStatus.INPROGRESS.getValue());
       participantList =
           session
               .createQuery(
                   "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR"
                       + " where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id"
-                      + " and PS.status in ('Enrolled','Withdrawn','inProgress') "
+                      + " and PS.status in (:studyStateStatus) "
                       + "and PR.enrollmentToken=:token and SB.customId=:studyId")
+              .setParameter("studyStateStatus", studyStateStatus)
               .setParameter("token", tokenValue)
               .setParameter("studyId", studyId)
               .getResultList();

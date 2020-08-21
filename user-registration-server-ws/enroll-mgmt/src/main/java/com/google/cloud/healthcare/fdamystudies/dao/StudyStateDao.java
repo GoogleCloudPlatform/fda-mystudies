@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import java.util.List;
 
 public interface StudyStateDao {
 
