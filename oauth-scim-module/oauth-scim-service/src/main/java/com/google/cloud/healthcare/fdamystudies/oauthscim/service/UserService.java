@@ -39,4 +39,13 @@ public interface UserService {
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException;
+
+  public void resetTempRegId(String userId);
+
+  public void removeExpiredTempRegIds();
+
+  public UserResponse logout(String userId) throws JsonProcessingException;
+
+  public UserResponse revokeAndReplaceRefreshToken(String userId, String refreshToken)
+      throws JsonProcessingException;
 }

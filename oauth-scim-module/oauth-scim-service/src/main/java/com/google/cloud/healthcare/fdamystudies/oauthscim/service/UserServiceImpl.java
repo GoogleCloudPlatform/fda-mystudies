@@ -22,8 +22,10 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.OTP_USED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCESS;
 
@@ -48,6 +50,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
@@ -55,7 +58,10 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.EmailService;
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -63,9 +69,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -80,14 +91,18 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private AuthScimAuditLogHelper auditHelper;
 
+  @Autowired private OAuthService oauthService;
+
+  @Autowired private TextEncryptor encryptor;
+
   @Override
+  @Transactional
   public UserResponse createUser(UserRequest userRequest) {
     logger.entry("begin createUser()");
 
     // check if the email already been used
     Optional<UserEntity> user =
-        repository.findByAppIdAndOrgIdAndEmail(
-            userRequest.getAppId(), userRequest.getOrgId(), userRequest.getEmail());
+        repository.findByAppIdAndEmail(userRequest.getAppId(), userRequest.getEmail());
 
     if (user.isPresent()) {
       UserResponse userResponse = new UserResponse(ErrorCode.EMAIL_EXISTS);
@@ -159,10 +174,8 @@ public class UserServiceImpl implements UserService {
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
     Optional<UserEntity> entity =
-        repository.findByAppIdAndOrgIdAndEmail(
-            resetPasswordRequest.getAppId(),
-            resetPasswordRequest.getOrgId(),
-            resetPasswordRequest.getEmail());
+        repository.findByAppIdAndEmail(
+            resetPasswordRequest.getAppId(), resetPasswordRequest.getEmail());
 
     if (!entity.isPresent()) {
       logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
@@ -193,7 +206,6 @@ public class UserServiceImpl implements UserService {
   private EmailResponse sendPasswordResetEmail(
       ResetPasswordRequest resetPasswordRequest, String tempPassword) {
     Map<String, String> templateArgs = new HashMap<>();
-    templateArgs.put("orgId", resetPasswordRequest.getOrgId());
     templateArgs.put("appId", resetPasswordRequest.getAppId());
     templateArgs.put("contactEmail", appConfig.getContactEmail());
     templateArgs.put("tempPassword", tempPassword);
@@ -268,15 +280,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Optional<UserEntity> findUserByTempRegId(String tempRegId) {
-    logger.entry("begin findUserByTempRegId()");
     return repository.findByTempRegId(tempRegId);
   }
 
+  @Override
+  @Transactional
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
     // check if the email present in the database
     Optional<UserEntity> optUserEntity =
-        repository.findByAppIdAndOrgIdAndEmail(user.getAppId(), user.getOrgId(), user.getEmail());
+        repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
 
     if (!optUserEntity.isPresent()) {
       return new AuthenticationResponse(ErrorCode.USER_NOT_FOUND);
@@ -292,7 +305,7 @@ public class UserServiceImpl implements UserService {
     // check the account status and password expiry condition
     ErrorCode errorCode = validatePasswordExpiryAndAccountStatus(userEntity, userInfo);
     if (errorCode != null) {
-      return new AuthenticationResponse(errorCode);
+      return new AuthenticationResponse(errorCode, userEntity.getUserId(), userEntity.getStatus());
     }
 
     String passwordHash = hash(encrypt(user.getPassword(), salt));
@@ -407,6 +420,20 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public void resetTempRegId(String userId) {
+    repository.removeTempRegIDForUser(userId);
+  }
+
+  @Override
+  @Transactional
+  public void removeExpiredTempRegIds() {
+    long timeInMillis =
+        Instant.now()
+            .minus(appConfig.getTempRegIdExpiryMinutes(), ChronoUnit.MINUTES)
+            .toEpochMilli();
+    repository.removeTempRegIdBeforeTime(new Timestamp(timeInMillis));
+  }
+
   @Transactional
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException {
@@ -430,5 +457,60 @@ public class UserServiceImpl implements UserService {
     repository.updateEmailStatusAndTempRegId(email, status, tempRegId, userEntity.getUserId());
     logger.exit(MessageCode.UPDATE_USER_DETAILS_SUCCESS);
     return new UpdateEmailStatusResponse(MessageCode.UPDATE_USER_DETAILS_SUCCESS, tempRegId);
+  }
+
+  @Override
+  public UserResponse logout(String userId) throws JsonProcessingException {
+    Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
+
+    if (!optUserEntity.isPresent()) {
+      return new UserResponse(ErrorCode.USER_NOT_FOUND);
+    }
+
+    return revokeAndReplaceRefreshToken(userId, null);
+  }
+
+  @Override
+  public UserResponse revokeAndReplaceRefreshToken(String userId, String refreshToken)
+      throws JsonProcessingException {
+    logger.entry("revokeAndReplaceRefreshToken(userId, refreshToken)");
+    Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
+    if (!optUserEntity.isPresent()) {
+      return new UserResponse(ErrorCode.USER_NOT_FOUND);
+    }
+    UserEntity userEntity = optUserEntity.get();
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
+
+    if (userInfo.hasNonNull(REFRESH_TOKEN)) {
+      String prevRefreshToken = getTextValue(userInfo, REFRESH_TOKEN);
+      prevRefreshToken = encryptor.decrypt(prevRefreshToken);
+      HttpHeaders headers = new HttpHeaders();
+      headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+      MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+      requestParams.add(TOKEN, prevRefreshToken);
+      ResponseEntity<JsonNode> response = oauthService.revokeToken(requestParams, headers);
+      if (!response.getStatusCode().is2xxSuccessful()) {
+        logger.error(
+            String.format(
+                "revoke token failed with status=%d and response=%s",
+                response.getStatusCodeValue(), response.getBody()));
+        return new UserResponse(ErrorCode.APPLICATION_ERROR);
+      }
+    }
+
+    if (StringUtils.isEmpty(refreshToken)) {
+      userInfo.remove(REFRESH_TOKEN);
+    } else {
+      userInfo.put(REFRESH_TOKEN, encryptor.encrypt(refreshToken));
+    }
+
+    userEntity.setUserInfo(userInfo);
+    repository.saveAndFlush(userEntity);
+
+    UserResponse userResponse = new UserResponse();
+    userResponse.setHttpStatusCode(HttpStatus.OK.value());
+    logger.exit(
+        "previous refresh token revoked and replaced with new refresh token for the given user");
+    return userResponse;
   }
 }

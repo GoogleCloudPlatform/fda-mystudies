@@ -83,7 +83,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -101,27 +101,8 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(INVALID_TOKEN)));
-  }
-
-  @Test
-  public void shouldReturnNotFoundForRestClientErrorException() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    String token = UUID.randomUUID().toString();
-    headers.add("Authorization", "Bearer " + token);
-
-    performPost(
-        ApiEndpoint.EVENTS.getPath(),
-        asJsonString(createAuditLogEventRequest()),
-        headers,
-        "Not Found",
-        NOT_FOUND);
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(token)));
   }
 
   @Test
@@ -151,7 +132,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/v1/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 

@@ -11,6 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
 
+import com.google.cloud.healthcare.fdamystudies.beans.LocationDetails;
+import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -19,13 +21,19 @@ import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import com.google.cloud.healthcare.fdamystudies.model.LocationIdStudyNamesPair;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -45,6 +53,8 @@ public class LocationServiceImpl implements LocationService {
 
   @Autowired private SiteRepository siteRepository;
 
+  @Autowired private StudyRepository studyRepository;
+
   @Override
   @Transactional
   public LocationEntity addNewLocation(LocationEntity location, String userId)
@@ -61,9 +71,9 @@ public class LocationServiceImpl implements LocationService {
       logger.exit(
           String.format(
               "Add location failed with error code=%s", ErrorCode.LOCATION_ACCESS_DENIED));
+
       throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
-
     location.setCreatedBy(adminUser.getId());
     LocationEntity created = locationRepository.saveAndFlush(location);
 
@@ -73,7 +83,7 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationResponse updateLocation(UpdateLocationRequest locationRequest) {
+  public LocationDetailsResponse updateLocation(UpdateLocationRequest locationRequest) {
     logger.entry("begin updateLocation()");
 
     Optional<LocationEntity> optLocation =
@@ -82,7 +92,7 @@ public class LocationServiceImpl implements LocationService {
     ErrorCode errorCode = validateUpdateLocationRequest(locationRequest, optLocation);
     if (errorCode != null) {
       logger.exit(errorCode);
-      return new LocationResponse(errorCode);
+      return new LocationDetailsResponse(errorCode);
     }
 
     LocationEntity locationEntity = optLocation.get();
@@ -98,8 +108,8 @@ public class LocationServiceImpl implements LocationService {
     locationEntity = locationRepository.saveAndFlush(locationEntity);
 
     MessageCode messageCode = getMessageCodeByLocationStatus(locationRequest.getStatus());
-    LocationResponse locationResponse =
-        LocationMapper.toLocationResponse(locationEntity, messageCode);
+    LocationDetailsResponse locationResponse =
+        LocationMapper.toLocationDetailsResponse(locationEntity, messageCode);
 
     logger.exit(String.format("locationId=%s", locationEntity.getId()));
     return locationResponse;
@@ -153,5 +163,106 @@ public class LocationServiceImpl implements LocationService {
     }
 
     return null;
+  }
+
+  @Override
+  @Transactional
+  public LocationResponse getLocations(String userId) {
+    logger.entry("begin getLocations()");
+
+    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
+    UserRegAdminEntity adminUser = optUserRegAdminUser.get();
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
+      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
+      return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
+
+    List<LocationEntity> locations =
+        (List<LocationEntity>) CollectionUtils.emptyIfNull(locationRepository.findAll());
+    List<String> locationIds =
+        locations.stream().map(LocationEntity::getId).distinct().collect(Collectors.toList());
+    Map<String, List<String>> locationStudies = getStudiesAndGroupByLocationId(locationIds);
+
+    List<LocationDetails> locationDetailsList =
+        locations.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
+    for (LocationDetails locationDetails : locationDetailsList) {
+      List<String> studies = locationStudies.get(locationDetails.getLocationId());
+      locationDetails.getStudyNames().addAll(studies);
+      locationDetails.setStudiesCount(locationDetails.getStudyNames().size());
+    }
+    LocationResponse locationResponse =
+        new LocationResponse(MessageCode.GET_LOCATION_SUCCESS, locationDetailsList);
+    logger.exit(String.format("locations size=%d", locationResponse.getLocations().size()));
+    return locationResponse;
+  }
+
+  private Map<String, List<String>> getStudiesAndGroupByLocationId(List<String> locationIds) {
+    List<LocationIdStudyNamesPair> studyNames =
+        (List<LocationIdStudyNamesPair>)
+            CollectionUtils.emptyIfNull(studyRepository.getStudyNameLocationIdPairs(locationIds));
+
+    Map<String, List<String>> locationStudies = new HashMap<>();
+    for (LocationIdStudyNamesPair locationIdStudyNames : studyNames) {
+      String locationId = locationIdStudyNames.getLocationId();
+      String studiesString = locationIdStudyNames.getStudyNames();
+      if (StringUtils.isNotBlank(studiesString)) {
+        List<String> studies = Arrays.asList(studiesString.split(","));
+        locationStudies.put(locationId, studies);
+      }
+    }
+
+    return locationStudies;
+  }
+
+  @Override
+  @Transactional
+  public LocationDetailsResponse getLocationById(String userId, String locationId) {
+    logger.entry("begin getLocationById()");
+
+    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
+    UserRegAdminEntity adminUser = optUserRegAdminUser.get();
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
+      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
+      return new LocationDetailsResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
+
+    Optional<LocationEntity> optOfEntity = locationRepository.findById(locationId);
+    if (!optOfEntity.isPresent()) {
+      logger.exit(ErrorCode.LOCATION_NOT_FOUND);
+      return new LocationDetailsResponse(ErrorCode.LOCATION_NOT_FOUND);
+    }
+
+    LocationEntity locationEntity = optOfEntity.get();
+    String studyNames = studyRepository.getStudyNamesByLocationId(locationId);
+
+    LocationDetailsResponse locationResponse =
+        LocationMapper.toLocationDetailsResponse(locationEntity, MessageCode.GET_LOCATION_SUCCESS);
+    if (!StringUtils.isEmpty(studyNames)) {
+      locationResponse.getStudies().addAll(Arrays.asList(studyNames.split(",")));
+    }
+
+    logger.exit(String.format("locationId=%s", locationEntity.getId()));
+    return locationResponse;
+  }
+
+  @Override
+  @Transactional
+  public LocationResponse getLocationsForSite(
+      String userId, Integer status, String excludeStudyId) {
+    Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
+
+    UserRegAdminEntity adminUser = optUserRegAdminUser.get();
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
+      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
+      return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+    }
+    List<LocationEntity> listOfLocation =
+        (List<LocationEntity>)
+            CollectionUtils.emptyIfNull(
+                locationRepository.findByStatusAndExcludeStudyId(status, excludeStudyId));
+    List<LocationDetails> locationDetails =
+        listOfLocation.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
+    logger.exit(String.format("locations size=%d", locationDetails.size()));
+    return new LocationResponse(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS, locationDetails);
   }
 }
