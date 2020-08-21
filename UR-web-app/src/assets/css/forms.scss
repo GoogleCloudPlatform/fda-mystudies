@@ -16,25 +16,25 @@
   button:focus {
     box-shadow: none;
   }
-  .row {
+  &.row {
     margin-left: 0;
     margin-right: 0;
   }
-  .bg__white label {
+  &.bg__white label {
     margin-bottom: 0;
     font-size: 68.8%;
     line-height: 87.5%;
     color: var(--light-blue);
     text-transform: capitalize;
   }
-  .bg__white .label {
+  &.bg__white .label {
     margin-bottom: 0;
     font-size: 68.8%;
     line-height: 87.5%;
     color: var(--light-blue);
     text-transform: capitalize;
   }
-  .bg__white input {
+  &.bg__white input {
     background: transparent;
     font-size: 100%;
     padding: 0px;
@@ -42,12 +42,12 @@
     height: auto;
     font-weight: 700;
   }
-  .select__form-control {
+  &.select__form-control {
     padding: 0;
     text-indent: 0px;
     height: auto;
   }
-  .select__form-control__parent {
+  &.select__form-control__parent {
     border: 1px solid var(--periwinkle-gray);
     padding: 20px;
     border-radius: 7px;
