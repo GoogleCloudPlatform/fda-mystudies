@@ -512,10 +512,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     userAppBean.setTotalStudies(userStudies.size());
 
     int selectedSitesCountPerApp =
-        userStudies
-            .stream()
-            .mapToInt(appStudyResponse -> appStudyResponse.getSelectedSitesCount())
-            .sum();
+        userStudies.stream().mapToInt(UserStudyDetails::getSelectedSitesCount).sum();
     userAppBean.setSelectedSitesCount(selectedSitesCountPerApp);
 
     int totalSitesCount =

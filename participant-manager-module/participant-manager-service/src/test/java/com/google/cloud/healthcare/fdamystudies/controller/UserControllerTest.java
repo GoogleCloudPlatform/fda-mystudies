@@ -533,7 +533,6 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.user.apps[0].selectedStudiesCount", is(0)))
         .andExpect(jsonPath("$.user.apps[0].totalSites", is(1)))
         .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(0)))
-        .andExpect(jsonPath("$.user.apps").isNotEmpty())
         .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
   }
 
@@ -564,7 +563,6 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.user.apps[0].selectedStudiesCount", is(1)))
         .andExpect(jsonPath("$.user.apps[0].totalSites", is(1)))
         .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(1)))
-        .andExpect(jsonPath("$.user.apps").isNotEmpty())
         .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
   }
 
@@ -592,6 +590,7 @@ public class UserControllerTest extends BaseMockIT {
     // Step 1: Set a super admin and a non super admin
     UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
     UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+
     // Step 1: Call API and expect NOT_SUPER_ADMIN_ACCESS error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, nonSuperAdmin.getId());
