@@ -14,6 +14,7 @@ import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMA
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -628,6 +629,57 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.ADMIN_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnAdminsForGetAdmins() throws Exception {
+    // Step 1: Set few admins
+    testDataHelper.createSuperAdmin();
+    testDataHelper.createNonSuperAdmin();
+
+    // Step 2: Call API and expect GET_ADMINS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.users").isArray())
+        .andExpect(jsonPath("$.users", hasSize(3)))
+        .andExpect(jsonPath("$.users[0].apps").isArray())
+        .andExpect(jsonPath("$.users[0].apps").isEmpty())
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_USERS_SUCCESS.getMessage())));
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundErrorForGetAdmins() throws Exception {
+    // Step 1: Call API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminAccessForGetAdmins() throws Exception {
+    UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+    // Step 1: Call API and expect NOT_SUPER_ADMIN_ACCESS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, nonSuperAdmin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
   }
 
   private UserRequest newUserRequestForUpdate() {
