@@ -20,6 +20,8 @@ class EnrollServices: NSObject {
     static let lastName = "lastName"
   }
 
+  private(set) var isOfflineSyncRequest = false
+
   // MARK: - Requests
 
   /// Creates a request to withdraw from `Study`
@@ -157,6 +159,23 @@ class EnrollServices: NSObject {
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
 
+  /// Creattes a request to sync offline data
+  /// - Parameters:
+  ///   - method: Instance of `Method`
+  ///   - params:  Request Params
+  ///   - headers: Request headers
+  ///   - delegate: Class object to receive response
+  func syncOfflineSavedData(
+    method: Method,
+    params: [String: Any]?,
+    headers: [String: String]?,
+    delegate: NMWebServiceDelegate
+  ) {
+    isOfflineSyncRequest.toggle()
+    self.delegate = delegate
+    self.sendRequestWith(method: method, params: params, headers: headers)
+  }
+
   // MARK: Parsers
 
   func handleUpdateTokenResponse(response: [String: Any]) {
@@ -272,13 +291,13 @@ extension EnrollServices: NMWebServiceDelegate {
 
       // handle failed request due to network connectivity
       if requestName as String == EnrollmentMethods.updateStudyState.description {
-        if error.code == kNoNetworkErrorCode {
+        if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
           // save in database
           DBHandler.saveRequestInformation(
             params: self.requestParams,
             headers: self.headerParams,
             method: requestName as String,
-            server: "registration"
+            server: SyncUpdate.ServerType.enrollment.rawValue
           )
         }
       }
