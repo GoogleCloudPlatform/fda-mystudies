@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
-import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
@@ -60,36 +59,6 @@ public class UserManagementUtil {
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired private OAuthService oauthService;
-
-  public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
-    logger.info("UserManagementUtil validateAccessToken() - starts ");
-    Integer value = null;
-    HttpHeaders headers = null;
-    HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
-      headers.set(AppConstants.USER_ID, userId);
-      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
-
-      requestBody = new HttpEntity<>(null, headers);
-
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerAccessTokenValidationUrl(),
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
-
-      value = (Integer) responseEntity.getBody();
-    } catch (Exception e) {
-      logger.error("UserManagementUtil validateAccessToken() - error ", e);
-    }
-    logger.info("UserManagementUtil validateAccessToken() - ends ");
-    return value;
-  }
 
   public String changePassword(
       String userId, String clientToken, String oldPassword, String newPassword) {
