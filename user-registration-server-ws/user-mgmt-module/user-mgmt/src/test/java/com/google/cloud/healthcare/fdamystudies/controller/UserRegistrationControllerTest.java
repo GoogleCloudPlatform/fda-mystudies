@@ -3,7 +3,10 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_ALREADY_EXISTS;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.isA;
@@ -32,6 +35,8 @@ import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -76,14 +81,21 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     UserRegistrationForm userRegistrationForm = new UserRegistrationForm();
-    mockMvc
-        .perform(
-            post(REGISTER_PATH)
-                .content(asJsonString(userRegistrationForm))
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(REGISTER_PATH)
+                    .content(asJsonString(userRegistrationForm))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.violations").isArray())
+            .andReturn();
+
+    String actualResponse = result.getResponse().getContentAsString();
+    String expectedResponse = readJsonFile("/responses/register_account_bad_request.json");
+    JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
   @Test
@@ -92,7 +104,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     // invalid  password
-    String requestJson = getRegisterUser(Constants.EMAIL, Constants.INVALID_PASSWORD);
+    String requestJson = getRegisterUser("mockito123@gmail.com", Constants.INVALID_PASSWORD);
     mockMvc
         .perform(
             post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
@@ -116,7 +128,8 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         .perform(
             post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isConflict());
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.error_description", is(USER_ALREADY_EXISTS.getDescription())));
   }
 
   @Test
