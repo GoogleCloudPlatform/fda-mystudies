@@ -34,5 +34,7 @@ public class AppDetails {
 
   private Integer appPermission;
 
+  private int totalSitesCount;
+
   private List<AppStudyResponse> studies = new ArrayList<>();
 }

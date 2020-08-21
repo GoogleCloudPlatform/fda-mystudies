@@ -1,39 +1,50 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MvcResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
+import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.controller.StudyStateController;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.jayway.jsonpath.JsonPath;
-import net.minidev.json.JSONArray;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class StudyStateControllerTest extends BaseMockIT {
 
-  private static final String WITHDRAW_FROM_STUDY_PATH = "/withdrawfromstudy";
-  private static final String STUDY_STATE_PATH = "/studyState";
-  private static final String UPDATE_STUDY_STATE_PATH = "/updateStudyState";
   @Autowired private StudyStateController controller;
+
   @Autowired private StudyStateService studyStateService;
+
+  @Autowired private ObjectMapper objectMapper;
+
+  @Autowired protected MockMvc mockMvc;
+
+  protected ObjectMapper getObjectMapper() {
+    return objectMapper;
+  }
 
   @Test
   public void contextLoads() {
@@ -42,7 +53,6 @@ public class StudyStateControllerTest extends BaseMockIT {
     assertNotNull(studyStateService);
   }
 
-  @SuppressWarnings("rawtypes")
   @Test
   public void updateStudyStateSuccess() throws Exception {
 
@@ -60,21 +70,46 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    mockMvc
+        .perform(
+            post(ApiEndpoint.UPDATE_STUDY_STATE_PATH.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk());
 
-    performPost(UPDATE_STUDY_STATE_PATH, requestJson, headers, Constants.SUCCESS, OK);
+    verifyTokenIntrospectRequest();
 
-    MvcResult result = performGet(STUDY_STATE_PATH, headers, Constants.SUCCESS.toUpperCase(), OK);
-    
-    StudyStateResponse response = getObjectMapper().readValue(result.getResponse().getContentAsString(),
-            StudyStateResponse.class);
-        Optional<StudyStateBean> study = response.getStudies().stream()
+    MvcResult result =
+        mockMvc
+            .perform(
+                get(ApiEndpoint.STUDY_STATE_PATH.getPath())
+                    .content(JsonUtils.asJsonString(requestJson))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verifyTokenIntrospectRequest(2);
+
+    StudyStateResponse response =
+        getObjectMapper()
+            .readValue(result.getResponse().getContentAsString(), StudyStateResponse.class);
+
+    Optional<StudyStateBean> study =
+        response
+            .getStudies()
+            .stream()
             .filter(s -> s.getStudyId().equals(Constants.STUDYOF_HEALTH))
             .findFirst();
 
-        assertTrue(study.isPresent());
-        assertTrue(study.get().getBookmarked());
-        assertEquals(Constants.COMPLETION, study.get().getCompletion());
-        assertEquals(Constants.ADHERENCE, study.get().getAdherence());
+    assertTrue(study.isPresent());
+    assertTrue(study.get().getBookmarked());
+    assertEquals(Constants.COMPLETION, study.get().getCompletion());
+    assertEquals(Constants.ADHERENCE, study.get().getAdherence());
   }
 
   @Test
@@ -93,16 +128,37 @@ public class StudyStateControllerTest extends BaseMockIT {
     String requestJson = getStudyStateJson(listStudies);
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     // not valid user id
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
-    performPost(UPDATE_STUDY_STATE_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.UPDATE_STUDY_STATE_PATH.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest();
 
     // empty studylist
     listStudies = new ArrayList<StudiesBean>();
     requestJson = getStudyStateJson(listStudies);
     headers.set(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
-    performPost(UPDATE_STUDY_STATE_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.UPDATE_STUDY_STATE_PATH.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
@@ -110,8 +166,17 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
-    performGet(STUDY_STATE_PATH, headers, Constants.SUCCESS.toUpperCase(), OK);
+    mockMvc
+        .perform(
+            get(ApiEndpoint.STUDY_STATE_PATH.getPath())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -119,7 +184,17 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
-    performGet(STUDY_STATE_PATH, headers, "", UNAUTHORIZED);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.STUDY_STATE_PATH.getPath())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isUnauthorized());
+
+    verifyTokenIntrospectRequest();
   }
 
   @SuppressWarnings("rawtypes")
@@ -128,23 +203,47 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     String requestJson =
         getWithDrawJson(
             Constants.PARTICIPANT_ID, Constants.STUDY_ID_OF_PARTICIPANT, Constants.DELETE);
-    performPost(
-        WITHDRAW_FROM_STUDY_PATH, requestJson, headers, Constants.SUCCESS.toUpperCase(), OK);
 
-    MvcResult result = performGet(STUDY_STATE_PATH, headers, Constants.SUCCESS.toUpperCase(), OK);
+    mockMvc
+        .perform(
+            post(ApiEndpoint.WITHDRAW_FROM_STUDY_PATH.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk());
 
-    StudyStateResponse response = getObjectMapper().readValue(result.getResponse().getContentAsString(),
-            StudyStateResponse.class);
-        Optional<StudyStateBean> study = response.getStudies().stream()
+    verifyTokenIntrospectRequest();
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                get(ApiEndpoint.STUDY_STATE_PATH.getPath())
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    verifyTokenIntrospectRequest(2);
+
+    StudyStateResponse response =
+        getObjectMapper()
+            .readValue(result.getResponse().getContentAsString(), StudyStateResponse.class);
+    Optional<StudyStateBean> study =
+        response
+            .getStudies()
+            .stream()
             .filter(s -> s.getParticipantId().equals(Constants.PARTICIPANT_ID))
             .findFirst();
 
-        assertTrue(study.isPresent());
-        assertEquals(AppConstants.WITHDRAWN, study.get().getStatus());
+    assertTrue(study.isPresent());
+    assertEquals(AppConstants.WITHDRAWN, study.get().getStatus());
   }
 
   @Test
@@ -153,18 +252,49 @@ public class StudyStateControllerTest extends BaseMockIT {
     // empty participant Id
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     String requestJson = getWithDrawJson("", Constants.STUDY_ID_OF_PARTICIPANT, Constants.DELETE);
-    performPost(WITHDRAW_FROM_STUDY_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.WITHDRAW_FROM_STUDY_PATH.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest();
 
     // empty study Id
     requestJson = getWithDrawJson(Constants.PARTICIPANT_ID, "", Constants.DELETE);
-    performPost(WITHDRAW_FROM_STUDY_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.WITHDRAW_FROM_STUDY_PATH.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
 
     // study Id not exists
     requestJson =
         getWithDrawJson(Constants.PARTICIPANT_ID, Constants.STUDYID_NOT_EXIST, Constants.DELETE);
-    performPost(WITHDRAW_FROM_STUDY_PATH, requestJson, headers, "", BAD_REQUEST);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.WITHDRAW_FROM_STUDY_PATH.getPath())
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(3);
   }
 
   private String getWithDrawJson(String participatId, String studyId, boolean delete)

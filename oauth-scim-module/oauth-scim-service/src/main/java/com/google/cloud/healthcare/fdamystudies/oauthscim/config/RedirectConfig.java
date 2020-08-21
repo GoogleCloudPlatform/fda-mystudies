@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 
-import static com.google.cloud.healthcare.fdamystudies.common.DevicePlatform.ANDROID;
-import static com.google.cloud.healthcare.fdamystudies.common.DevicePlatform.IOS;
+import static com.google.cloud.healthcare.fdamystudies.common.MobilePlatform.ANDROID;
+import static com.google.cloud.healthcare.fdamystudies.common.MobilePlatform.IOS;
 
-import com.google.cloud.healthcare.fdamystudies.common.DevicePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import java.io.Serializable;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,15 +47,6 @@ public class RedirectConfig implements Serializable {
   @Value("${mystudies.android.app.signup-url}")
   private String myStudiesAndroidAppSignupUrl;
 
-  @Value("${mystudies.ios.app.error-url}")
-  private String myStudiesIosAppErrorUrl;
-
-  @Value("${mystudies.android.app.error-url}")
-  private String myStudiesAndroidAppErrorUrl;
-
-  @Value("${participant.manager.error-url}")
-  private String participantManagerErrorUrl;
-
   @Value("${mystudies.ios.app.account-activation-url}")
   private String myStudiesIosAppAccountActivationUrl;
 
@@ -83,78 +74,65 @@ public class RedirectConfig implements Serializable {
   @Value("${participant.manager.about-url}")
   private String participantManagerAboutUrl;
 
-  public String getCallbackUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+  public String getCallbackUrl(String mobilePlatform) {
+    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return myStudiesAndroidAppCallbackUrl;
-    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return myStudiesIosAppCallbackUrl;
     }
     return participantManagerCallbackUrl;
   }
 
-  public String getForgotPasswordUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+  public String getForgotPasswordUrl(String mobilePlatform) {
+    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return myStudiesAndroidAppForgotPasswordUrl;
-    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return myStudiesIosAppForgotPasswordUrl;
     }
     return participantManagerForgotPasswordUrl;
   }
 
-  public String getSignupUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+  public String getSignupUrl(String mobilePlatform) {
+    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return myStudiesAndroidAppSignupUrl;
-    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return myStudiesIosAppSignupUrl;
     }
     return null;
   }
 
-  public String getErrorUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
-      return myStudiesAndroidAppErrorUrl;
-    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
-      return myStudiesIosAppErrorUrl;
-    }
-    return participantManagerErrorUrl;
-  }
-
-  public String getAccountActivationUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+  public String getAccountActivationUrl(String mobilePlatform) {
+    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return myStudiesAndroidAppAccountActivationUrl;
-    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return myStudiesIosAppAccountActivationUrl;
     }
     return participantManagerAccountActivationUrl;
   }
 
-  public String getTermsUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+  public String getTermsUrl(String mobilePlatform) {
+    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return myStudiesAndroidAppTermsUrl;
-    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return myStudiesIosAppTermsUrl;
     }
     return participantManagerTermsUrl;
   }
 
-  public String getPrivacyPolicyUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID) {
+  public String getPrivacyPolicyUrl(String mobilePlatform) {
+    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return myStudiesAndroidAppPrivacyPolicyUrl;
-    } else if (DevicePlatform.fromString(devicePlatform) == IOS) {
+    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return myStudiesIosAppPrivacyPolicyUrl;
     }
     return null;
   }
 
-  public String getAboutUrl(String devicePlatform) {
-    if (DevicePlatform.fromString(devicePlatform) == ANDROID
-        || DevicePlatform.fromString(devicePlatform) == IOS) {
+  public String getAboutUrl(String mobilePlatform) {
+    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID
+        || MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return null;
     }
     return participantManagerAboutUrl;
-  }
-
-  public String getDefaultErrorUrl() {
-    return getErrorUrl(null);
   }
 }
