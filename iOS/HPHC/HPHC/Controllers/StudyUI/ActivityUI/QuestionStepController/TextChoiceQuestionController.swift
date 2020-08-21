@@ -306,7 +306,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     let newHeaderView = UIView()
     let questionLbl = UILabel()
 
-    UI:do {
+    UI: do {
       questionLbl.font = questionFont
       questionLbl.text = self.questionStep?.question
       questionLbl.textColor = .black
@@ -318,7 +318,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
       newHeaderView.clipsToBounds = true
     }
 
-    layout:do {
+    layout: do {
 
       newHeaderView.addSubview(questionLbl)
       questionLbl.translatesAutoresizingMaskIntoConstraints = false
@@ -391,7 +391,7 @@ class TextChoiceQuestionController: ORKQuestionStepViewController {
     searchBar.returnKeyType = .done
     searchBar.enablesReturnKeyAutomatically = false
 
-    layout:do {
+    layout: do {
 
       newHeaderView.addSubview(searchBar)
       searchBar.translatesAutoresizingMaskIntoConstraints = false
