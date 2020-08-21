@@ -8,9 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,6 +16,9 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
 
 @Getter
 @Setter

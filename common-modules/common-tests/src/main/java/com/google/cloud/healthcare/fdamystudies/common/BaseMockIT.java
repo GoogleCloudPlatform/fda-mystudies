@@ -9,14 +9,18 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 import java.util.Base64;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
+import org.mockito.ArgumentCaptor;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +40,10 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -80,6 +88,8 @@ public class BaseMockIT {
   @Autowired protected MockMvc mockMvc;
 
   @Autowired protected ServletContext servletContext;
+
+  @Autowired AuditEventService mockAuditService;
 
   protected WireMockServer getWireMockServer() {
     return wireMockServer;
@@ -152,6 +162,40 @@ public class BaseMockIT {
   @AfterEach
   void tearDown(TestInfo testInfo) {
     logger.exit(String.format("TEST FINISHED: %s", testInfo.getDisplayName()));
+  }
+
+  protected void verifyAuditEventCall(AuditLogEvent auditEvent) {
+    ArgumentCaptor<AuditLogEventRequest> argument =
+        ArgumentCaptor.forClass(AuditLogEventRequest.class);
+    verify(mockAuditService).postAuditLogEvent(argument.capture());
+
+    AuditLogEventRequest auditRequest = argument.getValue();
+
+    logger.debug(auditRequest.toString());
+
+    assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());
+    assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
+    assertEquals(auditEvent.getSource().getValue(), auditRequest.getSource());
+
+    if (auditEvent.getResourceServer().isPresent()) {
+      assertEquals(
+          auditEvent.getResourceServer().get().getValue(), auditRequest.getResourceServer());
+    }
+
+    if (auditEvent.getUserAccessLevel().isPresent()) {
+      assertEquals(
+          auditEvent.getUserAccessLevel().get().getValue(), auditRequest.getUserAccessLevel());
+    }
+
+    assertFalse(
+        StringUtils.contains(auditRequest.getDescription(), "{")
+            && StringUtils.contains(auditRequest.getDescription(), "}"));
+    assertNotNull(auditRequest.getCorrelationId());
+    assertNotNull(auditRequest.getOccured());
+    assertNotNull(auditRequest.getPlatformVersion());
+    assertNotNull(auditRequest.getAppId());
+    assertNotNull(auditRequest.getAppVersion());
+    assertNotNull(auditRequest.getMobilePlatform());
   }
 
   @TestConfiguration

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent;
 import com.google.cloud.healthcare.fdamystudies.controller.EnrollmentTokenController;
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -113,6 +114,8 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyAuditEventCall(EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID);
   }
 
   @Test
