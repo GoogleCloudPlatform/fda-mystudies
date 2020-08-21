@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
+import java.util.List;
 
 public interface ParticipantActivitiesDao {
 

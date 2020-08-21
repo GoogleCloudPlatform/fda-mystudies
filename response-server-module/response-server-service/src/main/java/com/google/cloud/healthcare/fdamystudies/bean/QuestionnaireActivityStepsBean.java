@@ -8,11 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

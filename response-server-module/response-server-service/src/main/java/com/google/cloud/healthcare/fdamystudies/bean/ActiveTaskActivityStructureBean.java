@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.bean;
 
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

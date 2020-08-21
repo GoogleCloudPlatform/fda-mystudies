@@ -8,6 +8,19 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.bean.ActivityMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ActivityValueGroupBean;
+import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStepsBean;
+import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
+import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
+import com.google.cloud.healthcare.fdamystudies.dao.ResponsesDao;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
+import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
@@ -25,19 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import com.google.cloud.healthcare.fdamystudies.bean.ActivityMetadataBean;
-import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
-import com.google.cloud.healthcare.fdamystudies.bean.ActivityValueGroupBean;
-import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStepsBean;
-import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
-import com.google.cloud.healthcare.fdamystudies.dao.ResponsesDao;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @Service
 public class ActivityResponseProcessorServiceImpl implements ActivityResponseProcessorService {

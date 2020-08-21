@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.Map;
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import java.util.Map;
 
 public interface ResponsesDao {
   void saveStudyMetadata(

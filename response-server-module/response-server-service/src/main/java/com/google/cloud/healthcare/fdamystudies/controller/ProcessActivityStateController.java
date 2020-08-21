@@ -8,6 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.bean.ActivitiesBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
+import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -25,15 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.bean.ActivitiesBean;
-import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
-import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 
 @RestController
 public class ProcessActivityStateController {
