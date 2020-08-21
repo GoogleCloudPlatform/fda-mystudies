@@ -86,12 +86,6 @@ public class CommonDaoImpl implements CommonDao {
       }
       appOrgInfoBean.setAppInfoId(appInfoId);
       appOrgInfoBean.setOrgInfoId(orgInfoId);
-
-    } catch (Exception e) {
-      appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
-      logger.error("CommonDaoImpl getUserAppDetailsByAllApi() - error ", e);
-      throw e;
     }
     logger.info("CommonDaoImpl getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
@@ -124,10 +118,6 @@ public class CommonDaoImpl implements CommonDao {
           userDetailsId = userDetailsBO.getUserDetailsId();
         }
       }
-    } catch (Exception e) {
-      userDetailsId = 0;
-      logger.error("CommonDaoImpl getUserDetailsId() - error ", e);
-      throw e;
     }
 
     logger.info("CommonDaoImpl getUserDetailsId() - Ends ");

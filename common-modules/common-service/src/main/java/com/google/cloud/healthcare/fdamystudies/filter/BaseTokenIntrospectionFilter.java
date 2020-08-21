@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.filter;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;

@@ -101,9 +101,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
           }
         }
       }
-    } catch (Exception e) {
-      logger.error("UserConsentManagementDaoImpl getParticipantStudies() - error ", e);
-      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getParticipantStudies() - Ends ");
     return participantStudiesBO;
@@ -213,9 +210,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       if (!studyConsentBoList.isEmpty()) {
         studyConsent = studyConsentBoList.get(0);
       }
-    } catch (Exception e) {
-      logger.error("UserConsentManagementDaoImpl getStudyConsent() - error ", e);
-      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getStudyConsent() - Ends ");
     return studyConsent;
@@ -310,11 +304,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       }
       appOrgInfoBean.setAppInfoId(appInfoId);
       appOrgInfoBean.setOrgInfoId(orgInfoId);
-    } catch (Exception e) {
-      appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
-      logger.error("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - error ", e);
-      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
@@ -348,10 +337,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
           studyInfoBean.setStudyInfoId(studyInfoId);
         }
       }
-    } catch (Exception e) {
-      studyInfoBean.setStudyInfoId(studyInfoId);
-      logger.error("UserConsentManagementDaoImpl getStudyInfoId() - error ", e);
-      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Ends ");
     return studyInfoBean;
@@ -381,10 +366,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
           userDetailsId = userDetailsBO.getUserDetailsId();
         }
       }
-    } catch (Exception e) {
-      userDetailsId = 0;
-      logger.error("UserProfileManagementDaoImpl getUserDetailsId() - error ", e);
-      throw e;
     }
     logger.info("UserConsentManagementDaoImpl getUserDetailsId() - Ends ");
     return userDetailsId;

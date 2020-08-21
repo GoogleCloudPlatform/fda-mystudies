@@ -17,13 +17,9 @@ public interface TransactionRollback {
 
   Logger logger = LoggerFactory.getLogger(TransactionRollback.class);
 
-  static void rollback(Transaction transaction) {
+  static void rollback(Transaction transaction) throws RollbackException {
     if (transaction != null) {
-      try {
-        transaction.rollback();
-      } catch (RollbackException e) {
-        logger.error("rollback failed", e);
-      }
+      transaction.rollback();
     }
   }
 }
