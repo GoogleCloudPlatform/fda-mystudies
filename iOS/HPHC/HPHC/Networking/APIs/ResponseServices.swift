@@ -34,6 +34,8 @@ class ResponseServices: NSObject {
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
 
+  private(set) var isOfflineSyncRequest = false
+
   private enum JSONKey {
     static let applicationId = "applicationId"
     static let studyVersion = "studyVersion"
@@ -188,7 +190,7 @@ class ResponseServices: NSObject {
     headers: [String: String]?,
     delegate: NMWebServiceDelegate
   ) {
-
+    self.isOfflineSyncRequest.toggle()
     self.delegate = delegate
     self.sendRequestWith(method: method, params: params!, headers: headers)
   }
@@ -447,13 +449,13 @@ extension ResponseServices: NMWebServiceDelegate {
       || requestName as String == ResponseMethods.updateActivityState.description
     {
 
-      if error.code == kNoNetworkErrorCode {
+      if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
         // save in database
         DBHandler.saveRequestInformation(
           params: self.requestParams,
           headers: self.headerParams,
           method: requestName as String,
-          server: "response"
+          server: SyncUpdate.ServerType.response.rawValue
         )
       }
     }
