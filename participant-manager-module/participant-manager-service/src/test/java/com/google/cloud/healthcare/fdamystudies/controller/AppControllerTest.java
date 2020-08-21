@@ -119,7 +119,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAppsWithOptionalStudiesAndSites() throws Exception {
     // Step 1: set app,study and location
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
@@ -143,13 +143,15 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].studies").isArray())
         .andExpect(jsonPath("$.apps[0].studies[0].sites").isArray())
         .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
-        .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()));
+        .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
+        .andExpect(jsonPath("$.apps[0].totalSitesCount").value(1))
+        .andExpect(jsonPath("$.apps[0].studies[0].totalSitesCount").value(1));
   }
 
   @Test
   public void shouldReturnAppsWithOptionalStudies() throws Exception {
     // Step 1: set app and study
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     testDataHelper.getStudyRepository().save(studyEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -201,7 +203,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnGetAppParticipants() throws Exception {
     // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
     siteEntity.setLocation(locationEntity);
@@ -263,7 +265,7 @@ public class AppControllerTest extends BaseMockIT {
 
   public void shouldReturnInvalidAppsFieldsValues() throws Exception {
     // Step 1: set app and study
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setApp(appEntity);
     testDataHelper.getStudyRepository().save(studyEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();

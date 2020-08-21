@@ -10,9 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppParticipantsResponse;
@@ -22,6 +19,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
@@ -150,9 +148,8 @@ public class AppServiceImpl implements AppService {
       appDetails.setAppUsersCount(appIdbyUsersCount.get(app.getId()));
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
-        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEditPermission();
-        appDetails.setAppPermission(
-            appEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
+        Permission appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit();
+        appDetails.setAppPermission(appEditPermission.value());
       }
 
       calculateEnrollmentPercentage(
@@ -235,7 +232,7 @@ public class AppServiceImpl implements AppService {
         .stream()
         .collect(
             Collectors.groupingBy(
-                SitePermissionEntity::getAppInfo,
+                SitePermissionEntity::getApp,
                 Collectors.groupingBy(SitePermissionEntity::getStudy)));
   }
 
@@ -250,7 +247,7 @@ public class AppServiceImpl implements AppService {
       appPermissionsByAppInfoId =
           appPermissions
               .stream()
-              .collect(Collectors.toMap(e -> e.getAppInfo().getId(), Function.identity()));
+              .collect(Collectors.toMap(e -> e.getApp().getId(), Function.identity()));
     }
     return appPermissionsByAppInfoId;
   }
@@ -258,7 +255,7 @@ public class AppServiceImpl implements AppService {
   private List<String> getAppIds(List<SitePermissionEntity> sitePermissions) {
     return sitePermissions
         .stream()
-        .map(appInfoDetailsbo -> appInfoDetailsbo.getAppInfo().getId())
+        .map(appInfoDetailsbo -> appInfoDetailsbo.getApp().getId())
         .distinct()
         .collect(Collectors.toList());
   }
@@ -303,7 +300,7 @@ public class AppServiceImpl implements AppService {
       if (ArrayUtils.contains(fields, "studies")) {
         List<StudyEntity> appStudies = groupByAppIdStudyMap.get(app.getId());
         List<AppStudyResponse> appStudyResponses =
-            appStudies
+            CollectionUtils.emptyIfNull(appStudies)
                 .stream()
                 .map(
                     study ->
@@ -313,6 +310,14 @@ public class AppServiceImpl implements AppService {
 
         appDetails.getStudies().addAll(appStudyResponses);
       }
+      int totalSitesCount =
+          appDetails
+              .getStudies()
+              .stream()
+              .map(study -> study.getSites().size())
+              .reduce(0, Integer::sum);
+      appDetails.setTotalSitesCount(totalSitesCount);
+
       appsList.add(appDetails);
     }
 
@@ -333,7 +338,7 @@ public class AppServiceImpl implements AppService {
 
     AppPermissionEntity appPermission = optAppPermissionEntity.get();
 
-    AppEntity app = appPermission.getAppInfo();
+    AppEntity app = appPermission.getApp();
 
     List<UserDetailsEntity> userDetails = userDetailsRepository.findByAppId(app.getId());
     List<StudyEntity> studyEntity = studyRepository.findByAppId(app.getId());

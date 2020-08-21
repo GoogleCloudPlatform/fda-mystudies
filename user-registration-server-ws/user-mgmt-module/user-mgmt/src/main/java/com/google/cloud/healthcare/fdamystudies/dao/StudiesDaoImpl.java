@@ -11,12 +11,16 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppPermission;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LocationBo;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.OrgInfo;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.SiteBo;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyPermission;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserRegAdminUser;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.Permission;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
@@ -61,6 +65,8 @@ public class StudiesDaoImpl implements StudiesDao {
     AppInfoDetailsBO appInfo = null;
     OrgInfo orgInfo = null;
 
+    UserRegAdminUser superAdminUser;
+
     ErrorBean errorBean = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       transaction = session.beginTransaction();
@@ -82,6 +88,14 @@ public class StudiesDaoImpl implements StudiesDao {
       orgPredicate[0] = builder.equal(orgRoot.get("orgId"), studyMetadataBean.getOrgId());
       orgCriteria.select(orgRoot).where(orgPredicate);
       orgInfo = session.createQuery(orgCriteria).uniqueResult();
+
+      CriteriaQuery<UserRegAdminUser> urAdminUserCriteria =
+          builder.createQuery(UserRegAdminUser.class);
+      Root<UserRegAdminUser> urAdminUserRoot = urAdminUserCriteria.from(UserRegAdminUser.class);
+      Predicate[] urAdminUserPredicate = new Predicate[1];
+      urAdminUserPredicate[0] = builder.equal(urAdminUserRoot.get("superAdmin"), true);
+      urAdminUserCriteria.select(urAdminUserRoot).where(urAdminUserPredicate);
+      superAdminUser = session.createQuery(urAdminUserCriteria).uniqueResult();
 
       if (studyInfo != null) {
         appInfo = studyInfo.getAppInfo();
@@ -133,6 +147,14 @@ public class StudiesDaoImpl implements StudiesDao {
           appInfo.setCreatedOn(UserManagementUtil.getCurrentUtilDateTime());
           appInfo.setOrgInfo(orgInfo);
           session.save(appInfo);
+
+          AppPermission appPermission = new AppPermission();
+          appPermission.setAppInfo(appInfo);
+          appPermission.setUrAdminUser(superAdminUser);
+          appPermission.setEdit(Permission.READ_EDIT.value());
+          appPermission.setCreated(UserManagementUtil.getCurrentUtilDateTime());
+          appPermission.setCreatedBy(superAdminUser.getId());
+          session.save(appPermission);
         }
 
         studyInfo = new StudyInfoBO();
@@ -149,6 +171,15 @@ public class StudiesDaoImpl implements StudiesDao {
         studyInfo.setCreatedBy(0);
         studyInfo.setCreatedOn(UserManagementUtil.getCurrentUtilDateTime());
         int generatedStudyid = (int) session.save(studyInfo);
+
+        StudyPermission studyPermission = new StudyPermission();
+        studyPermission.setAppInfo(appInfo);
+        studyPermission.setStudyInfo(studyInfo);
+        studyPermission.setUrAdminUser(superAdminUser);
+        studyPermission.setEdit(Permission.READ_EDIT.value());
+        studyPermission.setCreated(UserManagementUtil.getCurrentUtilDateTime());
+        studyPermission.setCreatedBy(superAdminUser.getId());
+        session.save(studyPermission);
 
         if (!StringUtils.isBlank(studyMetadataBean.getStudyType())
             && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {

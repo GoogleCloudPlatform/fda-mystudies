@@ -478,14 +478,14 @@ public class ManageUserServiceImpl implements ManageUserService {
     for (AppEntity app : apps) {
       UserAppDetails userAppBean = UserMapper.toUserAppDetails(app);
       AppPermissionEntity appPermission = appPermissionMap.get(app.getId());
-      if (appPermission != null && appPermission.getEditPermission() != null) {
-        Permission permission = Permission.fromValue(appPermission.getEditPermission());
+      if (appPermission != null && appPermission.getEdit() != null) {
+        Permission permission = appPermission.getEdit();
         userAppBean.setPermission(permission.value());
         if (Permission.NO_PERMISSION != permission) {
           userAppBean.setSelected(true);
         }
       } else if (adminDetails.isSuperAdmin()) {
-        userAppBean.setPermission(Permission.READ_EDIT.value());
+        userAppBean.setPermission(Permission.EDIT.value());
         userAppBean.setSelected(true);
       }
 
@@ -559,7 +559,7 @@ public class ManageUserServiceImpl implements ManageUserService {
             siteId, admin.getId(), appId, studyId);
     if (optSitePermission.isPresent()) {
       SitePermissionEntity studyPermission = optSitePermission.get();
-      Permission permission = Permission.fromValue(studyPermission.getEditPermission());
+      Permission permission = studyPermission.getCanEdit();
       siteResponse.setPermission(permission.value());
       if (Permission.NO_PERMISSION != permission) {
         siteResponse.setSelected(true);
@@ -577,7 +577,7 @@ public class ManageUserServiceImpl implements ManageUserService {
             admin.getId(), appId, studyResponse.getStudyId());
     if (optStudyPermission.isPresent()) {
       StudyPermissionEntity studyPermission = optStudyPermission.get();
-      Permission permission = Permission.fromValue(studyPermission.getEditPermission());
+      Permission permission = studyPermission.getEdit();
       studyResponse.setPermission(permission.value());
       if (Permission.NO_PERMISSION != permission) {
         studyResponse.setSelected(true);

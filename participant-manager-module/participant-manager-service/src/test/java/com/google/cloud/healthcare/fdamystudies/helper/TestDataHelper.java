@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.helper;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EDIT_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
@@ -50,6 +49,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import lombok.Getter;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -111,7 +111,7 @@ public class TestDataHelper {
     userRegAdminEntity.setEmail(EMAIL_VALUE);
     userRegAdminEntity.setFirstName(ADMIN_FIRST_NAME);
     userRegAdminEntity.setLastName(ADMIN_LAST_NAME);
-    userRegAdminEntity.setEditPermission(Permission.READ_EDIT.value());
+    userRegAdminEntity.setEditPermission(Permission.EDIT.value());
     userRegAdminEntity.setStatus(CommonConstants.ACTIVE_STATUS);
     userRegAdminEntity.setUrAdminAuthId(ADMIN_AUTH_ID_VALUE);
     userRegAdminEntity.setSuperAdmin(true);
@@ -200,7 +200,7 @@ public class TestDataHelper {
   public AppEntity createAppEntity(UserRegAdminEntity userEntity) {
     AppEntity appEntity = newAppEntity();
     AppPermissionEntity appPermissionEntity = new AppPermissionEntity();
-    appPermissionEntity.setEditPermission(EDIT_VALUE);
+    appPermissionEntity.setEdit(Permission.EDIT);
     appPermissionEntity.setUrAdminUser(userEntity);
     appEntity.addAppPermissionEntity(appPermissionEntity);
     return appRepository.saveAndFlush(appEntity);
@@ -210,12 +210,12 @@ public class TestDataHelper {
     StudyEntity studyEntity = newStudyEntity();
     studyEntity.setType("CLOSE");
     studyEntity.setName("COVID Study");
-    studyEntity.setCustomId("COVID Custom StudyId");
-    studyEntity.setAppInfo(appEntity);
+    studyEntity.setCustomId("CovidStudy");
+    studyEntity.setApp(appEntity);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
-    studyPermissionEntity.setEditPermission(EDIT_VALUE);
-    studyPermissionEntity.setAppInfo(appEntity);
+    studyPermissionEntity.setEdit(Permission.EDIT);
+    studyPermissionEntity.setApp(appEntity);
     studyEntity.addStudyPermissionEntity(studyPermissionEntity);
     return studyRepository.saveAndFlush(studyEntity);
   }
@@ -232,10 +232,10 @@ public class TestDataHelper {
     SiteEntity siteEntity = newSiteEntity();
     siteEntity.setStudy(studyEntity);
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setEditPermission(Permission.READ_EDIT.value());
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
-    sitePermissionEntity.setAppInfo(appEntity);
+    sitePermissionEntity.setApp(appEntity);
     siteEntity.addSitePermissionEntity(sitePermissionEntity);
     return siteRepository.saveAndFlush(siteEntity);
   }
@@ -244,7 +244,7 @@ public class TestDataHelper {
       SiteEntity siteEntity, StudyEntity studyEntity) {
     ParticipantRegistrySiteEntity participantRegistrySiteEntity =
         new ParticipantRegistrySiteEntity();
-    participantRegistrySiteEntity.setEnrollmentToken("BSEEMNH6");
+    participantRegistrySiteEntity.setEnrollmentToken(RandomStringUtils.randomAlphanumeric(8));
     participantRegistrySiteEntity.setInvitationCount(2L);
     participantRegistrySiteEntity.setSite(siteEntity);
     participantRegistrySiteEntity.setStudy(studyEntity);
@@ -259,6 +259,7 @@ public class TestDataHelper {
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    participantStudyEntity.setSharing(true);
     return participantStudyRepository.saveAndFlush(participantStudyEntity);
   }
 
@@ -277,7 +278,7 @@ public class TestDataHelper {
 
   public UserDetailsEntity createUserDetails(AppEntity appEntity) {
     UserDetailsEntity userDetailsEntity = newUserDetails();
-    userDetailsEntity.setAppInfo(appEntity);
+    userDetailsEntity.setApp(appEntity);
     return userDetailsRepository.saveAndFlush(userDetailsEntity);
   }
 
@@ -293,6 +294,7 @@ public class TestDataHelper {
   public OrgInfoEntity createOrgInfo() {
     OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
     orgInfoEntity.setName("OrgName");
+    orgInfoEntity.setOrgId("OrgName");
     return orgInfoRepository.saveAndFlush(orgInfoEntity);
   }
 
@@ -303,10 +305,10 @@ public class TestDataHelper {
     LocationEntity location = createLocationEntity();
     siteEntity.setLocation(location);
     SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
-    sitePermissionEntity.setEditPermission(Permission.READ_EDIT.value());
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
     sitePermissionEntity.setStudy(studyEntity);
     sitePermissionEntity.setUrAdminUser(urAdminUser);
-    sitePermissionEntity.setAppInfo(appEntity);
+    sitePermissionEntity.setApp(appEntity);
     siteEntity.addSitePermissionEntity(sitePermissionEntity);
     return siteRepository.saveAndFlush(siteEntity);
   }
@@ -319,9 +321,9 @@ public class TestDataHelper {
   public void createAppPermission(
       UserRegAdminEntity superAdmin, AppEntity appEntity, String adminId) {
     AppPermissionEntity appPermission = new AppPermissionEntity();
-    appPermission.setAppInfo(appEntity);
+    appPermission.setApp(appEntity);
     appPermission.setCreatedBy(adminId);
-    appPermission.setEditPermission(Permission.READ_EDIT.value());
+    appPermission.setEdit(Permission.EDIT);
     appPermission.setUrAdminUser(superAdmin);
     appPermissionRepository.saveAndFlush(appPermission);
   }
@@ -332,10 +334,10 @@ public class TestDataHelper {
       StudyEntity studyDetails,
       String adminId) {
     StudyPermissionEntity studyPermission = new StudyPermissionEntity();
-    studyPermission.setAppInfo(studyDetails.getAppInfo());
+    studyPermission.setApp(studyDetails.getApp());
     studyPermission.setStudy(studyDetails);
     studyPermission.setCreatedBy(adminId);
-    studyPermission.setEditPermission(Permission.READ_EDIT.value());
+    studyPermission.setEdit(Permission.EDIT);
     studyPermission.setUrAdminUser(superAdmin);
     studyPermissionRepository.saveAndFlush(studyPermission);
   }
@@ -347,9 +349,9 @@ public class TestDataHelper {
       SiteEntity siteEntity,
       String adminId) {
     SitePermissionEntity sitePermission = new SitePermissionEntity();
-    sitePermission.setAppInfo(appDetails);
+    sitePermission.setApp(appDetails);
     sitePermission.setCreatedBy(adminId);
-    sitePermission.setEditPermission(Permission.READ_EDIT.value());
+    sitePermission.setCanEdit(Permission.EDIT);
     sitePermission.setStudy(siteEntity.getStudy());
     sitePermission.setSite(siteEntity);
     sitePermission.setUrAdminUser(superAdmin);
@@ -357,6 +359,9 @@ public class TestDataHelper {
   }
 
   public void cleanUp() {
+    getAppPermissionRepository().deleteAll();
+    getStudyPermissionRepository().deleteAll();
+    getSitePermissionRepository().deleteAll();
     getStudyConsentRepository().deleteAll();
     getParticipantStudyRepository().deleteAll();
     getParticipantRegistrySiteRepository().deleteAll();
@@ -366,5 +371,6 @@ public class TestDataHelper {
     getUserRegAdminRepository().deleteAll();
     getLocationRepository().deleteAll();
     getUserDetailsRepository().deleteAll();
+    getOrgInfoRepository().deleteAll();
   }
 }

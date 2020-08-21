@@ -168,7 +168,7 @@ public class StudyControllerTest extends BaseMockIT {
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
     StudyPermissionEntity studyPermission = studyEntity.getStudyPermissions().get(0);
-    studyPermission.setAppInfo(null);
+    studyPermission.setApp(null);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
     mockMvc
         .perform(
@@ -298,8 +298,9 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReturnNotFoundForUpdateTargetEnrollment() throws Exception {
     // Step 1:Set studyId to invalid
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
-
-    StudyEntity study = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
+    StudyEntity study = testDataHelper.newStudyEntity();
+    study.setCustomId("CovidStudy1");
+    study.setApp(appEntity);
     siteEntity.setStudy(study);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
@@ -322,7 +323,7 @@ public class StudyControllerTest extends BaseMockIT {
     // Step 1:Set permission to READ_VIEW
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
-    studyPermissionEntity.setEditPermission(Permission.READ_VIEW.value());
+    studyPermissionEntity.setEdit(Permission.VIEW);
     studyEntity = testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     // Step 2: Call API and expect STUDY_PERMISSION_ACCESS_DENIED error
