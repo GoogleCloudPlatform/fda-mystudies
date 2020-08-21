@@ -71,10 +71,5 @@ export const expectedSendInvitation = {ids: ['1']} as InviteSend;
 
 export const expectedSendInviteResponse = {
   invitedParticipantIds: ['1'],
-  failedParticipantIds: [],
-  code: 'MSG_0002',
-  message: '1 Invitations sent successfully',
-  /* eslint-disable @typescript-eslint/naming-convention */
-  /* eslint-disable camelcase */
-  error_code: 'ER_001',
+  failedParticipantIds: [''],
 } as UpdateInviteResponse;
