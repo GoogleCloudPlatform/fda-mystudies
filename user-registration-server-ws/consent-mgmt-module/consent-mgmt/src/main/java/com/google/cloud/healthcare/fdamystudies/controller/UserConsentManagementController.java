@@ -29,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import com.google.cloud.storage.StorageException;
@@ -307,7 +306,7 @@ public class UserConsentManagementController {
           MyStudiesUserRegUtil.ErrorCodes.INVALID_AUTH_CODE.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.SESSION_EXPIRED_MSG.getValue(),
           response);
-      errorBean = AppUtil.dynamicResponse(ErrorCode.EC_109.code(), ErrorCode.EC_109.errorMessage());
+      errorBean = new ErrorBean(ErrorCode.EC_109.code(), ErrorCode.EC_109.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.NOT_FOUND);
     }
 

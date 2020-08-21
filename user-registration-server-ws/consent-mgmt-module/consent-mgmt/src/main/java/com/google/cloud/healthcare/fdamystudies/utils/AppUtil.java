@@ -35,19 +35,12 @@ public class AppUtil {
 
   public static ResponseEntity<Object> httpResponseForInternalServerError() {
     logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: starts");
-    ErrorBean errorBean = null;
 
-    errorBean =
+    return new ResponseEntity<>(
         new ErrorBean()
             .setCode(ErrorCode.EC_500.code())
-            .setMessage(ErrorCode.EC_500.errorMessage());
-
-    logger.info("INFO: AppUtil - httpResponseForInternalServerError() :: ends");
-    return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
-  public static ErrorBean dynamicResponse(int code, String message) {
-    return new ErrorBean(code, message);
+            .setMessage(ErrorCode.EC_500.errorMessage()),
+        HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   public static long isValidSession(String sesionExpiryTime) {
