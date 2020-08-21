@@ -74,4 +74,7 @@ export const expectedSendInviteResponse = {
   failedParticipantIds: [],
   code: 'MSG_0002',
   message: '1 Invitations sent successfully',
+  /* eslint-disable @typescript-eslint/naming-convention */
+  /* eslint-disable camelcase */
+  error_code: 'ER_001',
 } as UpdateInviteResponse;
