@@ -126,17 +126,13 @@ public class UserProfileController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deactivateAccount(
       @RequestHeader("userId") String userId,
-      @RequestHeader("accessToken") String accessToken,
-      @RequestHeader("clientToken") String clientToken,
       @RequestBody DeactivateAcctBean deactivateAcctBean,
       @Context HttpServletResponse response) {
     logger.info("UserProfileController deactivateAccount() - Starts ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
     try {
-      message =
-          userManagementProfService.deActivateAcct(
-              userId, deactivateAcctBean, accessToken, clientToken);
+      message = userManagementProfService.deActivateAcct(userId, deactivateAcctBean);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
         commonService.createActivityLog(
             userId,

@@ -19,10 +19,6 @@ public final class Constants {
   public static final String APP_DESCRIPTION = "appDescription";
   public static final String CUSTOM_STUDY_ID = "StudyID001";
 
-  public static final String ACCESS_TOKEN_VALUE = "access Token value";
-  public static final String CLIENT_TOKEN_VALUE = "client token value";
-  public static final String ACCESS_TOKEN_HEADER = "accessToken";
-  public static final String CLIENT_TOKEN_HEADER = "clientToken";
   public static final String USER_ID_HEADER = "userId";
   public static final String VALID_USER_ID = "kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg";
 
@@ -53,5 +49,6 @@ public final class Constants {
   public static final String EMAIL_NOT_EXIST = "Email Doesn't Exists";
   public static final String INVALID_PASSWORD = "AuthServerBadRequest@b0ston";
   public static final String EMAIL = "mockito@gmail.com";
+  public static final String VERIFY_CODE_EMAIL = "cdash93@gmail.com";
   public static final Object INVALID_EMAIL_CODE = "Invalid email code";
 }

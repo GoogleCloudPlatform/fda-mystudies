@@ -226,7 +226,7 @@ public class UserManagementUtil {
     }
   }
 
-  public String deactivateAcct(String userId, String accessToken, String clientToken) {
+  public String deactivateAcct(String userId) {
     logger.info("UserManagementUtil deactivateAcct() - starts ");
     Integer value = null;
     HttpHeaders headers = null;
@@ -237,9 +237,7 @@ public class UserManagementUtil {
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
       headers.set(AppConstants.USER_ID, userId);
-      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
 
       requestBody = new HttpEntity<>(null, headers);
       responseEntity =

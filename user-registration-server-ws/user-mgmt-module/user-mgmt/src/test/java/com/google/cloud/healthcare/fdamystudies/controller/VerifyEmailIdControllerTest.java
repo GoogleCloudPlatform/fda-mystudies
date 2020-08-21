@@ -58,7 +58,8 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         TestUtils.getCommonHeaders(
             Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
     // invalid code
-    String requestJson = getEmailIdVerificationForm(Constants.INVALID_CODE, Constants.EMAIL);
+    String requestJson =
+        getEmailIdVerificationForm(Constants.INVALID_CODE, Constants.VERIFY_CODE_EMAIL);
     mockMvc
         .perform(post(VERIFY_EMAIL_ID_PATH).content(requestJson).headers(headers))
         .andDo(print())

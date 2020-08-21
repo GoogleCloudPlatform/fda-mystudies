@@ -38,7 +38,7 @@ public class RestResponseErrorHandler implements ResponseErrorHandler {
         String code = JsonPath.read(responseBody, "$.error_code");
         String description = JsonPath.read(responseBody, "$.error_description");
         errorCode = ErrorCode.fromCodeAndDescription(code, description);
-      } else if (HttpStatus.UNAUTHORIZED == response.getStatusCode().UNAUTHORIZED) {
+      } else if (HttpStatus.UNAUTHORIZED == response.getStatusCode()) {
         errorCode = ErrorCode.UNAUTHORIZED;
       }
     }

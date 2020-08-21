@@ -71,11 +71,10 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnBadRequestForInvalidPassword() throws Exception {
+  public void shouldReturnBadRequestForRegisterUser() throws Exception {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
-    // invalid  password
     UserRegistrationForm userRegistrationForm = new UserRegistrationForm();
     mockMvc
         .perform(
@@ -85,6 +84,25 @@ public class UserRegistrationControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void shouldReturnBadRequestForInvalidPassword() throws Exception {
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+
+    // invalid  password
+    String requestJson = getRegisterUser(Constants.EMAIL, Constants.INVALID_PASSWORD);
+    mockMvc
+        .perform(
+            post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verify(
+        1,
+        postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
+            .withRequestBody(new ContainsPattern(Constants.INVALID_PASSWORD)));
   }
 
   @Test

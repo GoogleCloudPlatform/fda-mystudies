@@ -75,7 +75,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     if (optUserDetails.isPresent()) {
       userDetailsBO = optUserDetails.get();
       if (StringUtils.isNotEmpty(userDetailsBO.getUserId())) {
-        if (UserAccountStatus.PENDING_CONFIRMATION.getStatus() == userDetailsBO.getStatus()) {
+        if (generateVerificationCode(userDetailsBO)) {
           generateAndSaveVerificationCode(userDetailsBO);
         }
 
@@ -111,6 +111,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         String.valueOf(userDetailsBO.getUserDetailsId()),
         authUserResponse.getTempRegId(),
         authUserResponse.getUserId());
+  }
+
+  private boolean generateVerificationCode(UserDetailsBO userDetailsBO) {
+    return UserAccountStatus.PENDING_CONFIRMATION.getStatus() == userDetailsBO.getStatus()
+        && (StringUtils.isEmpty(userDetailsBO.getEmailCode())
+            || LocalDateTime.now().isAfter(userDetailsBO.getCodeExpireDate()));
   }
 
   private UserDetailsBO generateAndSaveVerificationCode(UserDetailsBO userDetailsBO) {
