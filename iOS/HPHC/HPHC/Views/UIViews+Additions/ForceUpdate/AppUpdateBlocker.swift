@@ -31,8 +31,9 @@ class AppUpdateBlocker: UIView {
       let iconFiles = primaryIconsDictionary["CFBundleIconFiles"] as? NSArray,
       // First will be smallest for the device class, last will be the largest for device class
       let lastIcon = iconFiles.lastObject as? String,
-      let icon = UIImage(named: lastIcon) else {
-        return nil
+      let icon = UIImage(named: lastIcon)
+    else {
+      return nil
     }
     return icon
   }
@@ -48,9 +49,12 @@ class AppUpdateBlocker: UIView {
   /// - Parameters:
   ///   - frame: Rect for the view
   /// - Returns: New object of `AppUpdateBlocker` Type
-  class func instanceFromNib(frame: CGRect,
-                             detail: JSONDictionary) -> AppUpdateBlocker {
-    let view = UINib(nibName: "AppUpdateBlocker", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! AppUpdateBlocker
+  class func instanceFromNib(
+    frame: CGRect,
+    detail: JSONDictionary
+  ) -> AppUpdateBlocker {
+    let view =
+      UINib(nibName: "AppUpdateBlocker", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! AppUpdateBlocker
     view.frame = frame
     view.layoutIfNeeded()
     return view
@@ -63,8 +67,8 @@ class AppUpdateBlocker: UIView {
   }
 
   // MARK: - Actions
-  
-  @IBAction func buttonUpgradeAction(){
+
+  @IBAction func buttonUpgradeAction() {
     guard let appleID = Branding.appleID, !appleID.isEmpty else {
       // Ask user to update from AppStore.
       self.makeToast(LocalizableString.appStoreUpdateText.localizedString)

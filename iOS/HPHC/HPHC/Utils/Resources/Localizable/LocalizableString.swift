@@ -25,6 +25,6 @@ enum LocalizableString: String {
   // MARK: - Force Upgrade
   case blockerScreenLabelText = "Please update to the latest version of the app to continue."
   case appStoreUpdateText = "Please go to AppStore to update to the latest version of the app."
-  
+
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }
