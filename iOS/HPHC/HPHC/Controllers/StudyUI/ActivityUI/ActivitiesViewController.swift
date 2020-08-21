@@ -141,7 +141,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   // MARK: - Helper Methods
-  
+
   private func setupStandaloneNotifications() {
     if Utilities.isStandaloneApp() {
       // Set notifications for standalone app here.
