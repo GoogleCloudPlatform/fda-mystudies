@@ -18,8 +18,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 
 import Foundation
-import UIKit
 import Reachability
+import UIKit
 
 protocol NMWebServiceDelegate: class {
 
