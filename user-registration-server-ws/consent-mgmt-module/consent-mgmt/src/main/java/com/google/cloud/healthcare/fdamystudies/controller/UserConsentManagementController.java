@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
+import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
@@ -72,6 +73,9 @@ public class UserConsentManagementController {
 
   @Autowired private ConsentAuditHelper consentAuditHelper;
 
+  @Autowired
+  private UserConsentManagementDao userConsentManagementDao;
+
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementController.class);
 
@@ -107,9 +111,9 @@ public class UserConsentManagementController {
         auditRequest.setUserId(userId);
         auditRequest.setStudyId(consentStatusBean.getStudyId());
 
-        studyInfoBean = userConsentManagementService.getStudyInfoId(consentStatusBean.getStudyId());
+        studyInfoBean = userConsentManagementDao.getStudyInfoId(consentStatusBean.getStudyId());
         ParticipantStudiesBO participantStudies =
-            userConsentManagementService.getParticipantStudies(
+            userConsentManagementDao.getParticipantStudies(
                 studyInfoBean.getStudyInfoId(), userId);
         if (participantStudies != null) {
           if (consentStatusBean.getEligibility() != null) {
@@ -121,16 +125,16 @@ public class UserConsentManagementController {
           List<ParticipantStudiesBO> participantStudiesList = new ArrayList<ParticipantStudiesBO>();
           participantStudiesList.add(participantStudies);
           String message =
-              userConsentManagementService.saveParticipantStudies(participantStudiesList);
+              userConsentManagementDao.saveParticipantStudies(participantStudiesList);
 
           StudyConsentBO studyConsent = null;
           if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
             studyConsent =
-                userConsentManagementService.getStudyConsent(
+                userConsentManagementDao.getStudyConsent(
                     userId,
                     studyInfoBean.getStudyInfoId(),
                     consentStatusBean.getConsent().getVersion());
-            userDetailId = userConsentManagementService.getUserDetailsId(userId);
+            userDetailId = userConsentManagementDao.getUserDetailsId(userId);
             if (studyConsent != null) {
               if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
                 studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
@@ -178,7 +182,7 @@ public class UserConsentManagementController {
               }
             }
             String addOrUpdateConsentMessage =
-                userConsentManagementService.saveStudyConsent(studyConsent);
+                userConsentManagementDao.saveStudyConsent(studyConsent);
             if ((addOrUpdateConsentMessage.equalsIgnoreCase(
                     MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
                 && message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
@@ -279,7 +283,7 @@ public class UserConsentManagementController {
     StudyInfoBean studyInfoBean = null;
 
     if (!StringUtils.isEmpty(studyId) && !StringUtils.isEmpty(userId)) {
-      studyInfoBean = userConsentManagementService.getStudyInfoId(studyId);
+      studyInfoBean = userConsentManagementDao.getStudyInfoId(studyId);
       consentStudyResponseBean =
           userConsentManagementService.getStudyConsentDetails(
               userId, studyInfoBean.getStudyInfoId(), consentVersion);

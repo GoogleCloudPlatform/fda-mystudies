@@ -32,48 +32,6 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       LoggerFactory.getLogger(UserConsentManagementServiceImpl.class);
 
   @Override
-  public ParticipantStudiesBO getParticipantStudies(Integer studyId, String userId) {
-    logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
-    ParticipantStudiesBO participantStudiesBO = null;
-
-    participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
-
-    return participantStudiesBO;
-  }
-
-  @Override
-  public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
-    logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
-    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-
-    message = userConsentManagementDao.saveParticipantStudies(participantStudiesList);
-
-    return message;
-  }
-
-  @Override
-  public StudyConsentBO getStudyConsent(String userId, Integer studyId, String consentVersion) {
-    logger.info("UserConsentManagementServiceImpl getStudyConsent() - Started ");
-    StudyConsentBO studyConsent = null;
-
-    studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
-
-    logger.info("UserConsentManagementServiceImpl getStudyConsent() - Ends ");
-    return studyConsent;
-  }
-
-  @Override
-  public String saveStudyConsent(StudyConsentBO studyConsent) {
-    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
-    String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-
-    addOrUpdateConsentMessage = userConsentManagementDao.saveStudyConsent(studyConsent);
-
-    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Ends ");
-    return addOrUpdateConsentMessage;
-  }
-
-  @Override
   public ConsentStudyResponseBean getStudyConsentDetails(
       String userId, Integer studyId, String consentVersion) {
 
@@ -110,26 +68,5 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Ends ");
     return consentStudyResponseBean;
-  }
-
-  @Override
-  public StudyInfoBean getStudyInfoId(String customStudyId) {
-    logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Starts ");
-    StudyInfoBean studyInfoBean = null;
-    studyInfoBean = userConsentManagementDao.getStudyInfoId(customStudyId);
-
-    logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Ends ");
-    return studyInfoBean;
-  }
-
-  @Override
-  public Integer getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
-    Integer userDetailId = null;
-
-    userDetailId = userConsentManagementDao.getUserDetailsId(userId);
-
-    logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Ends ");
-    return userDetailId;
   }
 }
