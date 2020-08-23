@@ -8,6 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySite;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
+import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
+import com.google.cloud.healthcare.fdamystudies.util.ParticipantStudyStateStatus;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
@@ -23,14 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySite;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.SiteBo;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 
 @Repository
 public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
@@ -72,7 +73,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
   @SuppressWarnings("unchecked")
   @Override
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
+  public boolean isEnrollmentTokenValid(
+      @NotNull String token, @NotNull String studyId, @NotNull String email) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyInfoBO> studyInfoBoCriteria = null;
@@ -89,9 +91,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           session
               .createQuery(
                   "from ParticipantRegistrySite PS where studyInfo.customId =:studyId and"
-                      + " enrollmentToken=:token")
+                      + " enrollmentToken=:token and email=:email")
               .setParameter("studyId", studyId)
               .setParameter("token", token)
+              .setParameter("email", email)
               .getResultList();
 
       if (!participantRegistrySite.isEmpty()) {
@@ -115,12 +118,18 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     List<Object[]> participantList = null;
     boolean hasParticipant = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+      List studyStateStatus = new ArrayList();
+      studyStateStatus.add(ParticipantStudyStateStatus.ENROLLED.getValue());
+      studyStateStatus.add(ParticipantStudyStateStatus.WITHDRAWN.getValue());
+      studyStateStatus.add(ParticipantStudyStateStatus.INPROGRESS.getValue());
       participantList =
           session
               .createQuery(
                   "from ParticipantStudiesBO PS,StudyInfoBO SB, ParticipantRegistrySite PR"
                       + " where SB.id =PS.studyInfo.id and PS.participantRegistrySite.id=PR.id"
-                      + " and PS.status='Enrolled' and PR.enrollmentToken=:token and SB.customId=:studyId")
+                      + " and PS.status in (:studyStateStatus) "
+                      + "and PR.enrollmentToken=:token and SB.customId=:studyId")
+              .setParameter("studyStateStatus", studyStateStatus)
               .setParameter("token", tokenValue)
               .setParameter("studyId", studyId)
               .getResultList();
