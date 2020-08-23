@@ -55,7 +55,7 @@ public class SiteBo implements Serializable {
   @Column(name = "created", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Date created;
 
-  @Column(name = "created_by", columnDefinition = "INT(20) default 0")
+  @Column(name = "created_by", columnDefinition = "INT(20)")
   private Integer createdBy;
 
   @Column(
