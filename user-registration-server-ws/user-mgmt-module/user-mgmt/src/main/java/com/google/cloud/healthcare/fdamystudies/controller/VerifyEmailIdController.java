@@ -110,7 +110,7 @@ public class VerifyEmailIdController {
       if (!verificationForm.getCode().trim().equals(participantDetails.getEmailCode())) {
         userMgmntAuditHelper.logEvent(
             ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE, auditRequest);
-      } else if (LocalDateTime.now().isBefore(participantDetails.getCodeExpireDate())) {
+      } else if (LocalDateTime.now().isAfter(participantDetails.getCodeExpireDate())) {
         userMgmntAuditHelper.logEvent(
             ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE, auditRequest);
       }

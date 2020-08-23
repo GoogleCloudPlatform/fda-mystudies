@@ -24,6 +24,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
@@ -37,12 +38,11 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -280,12 +280,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
                     auditRequest);
 
             if (Boolean.valueOf(studyReqBean.getDelete())) {
+
               Map<String, String> map =
-                  Stream.of(
-                          new String[][] {
-                            {"delete_or_retain", "delete"},
-                          })
-                      .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+                  Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
 
               userMgmntAuditHelper.logEvent(
                   DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
@@ -297,12 +294,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
               userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
 
             } else {
+
               Map<String, String> map =
-                  Stream.of(
-                          new String[][] {
-                            {"delete_or_retain", "retain"},
-                          })
-                      .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+                  Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
 
               userMgmntAuditHelper.logEvent(
                   DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);

@@ -19,10 +19,9 @@ import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +53,8 @@ public class UserSupportServiceImpl implements UserSupportService {
               feedbackSubject, dynamicContent, appConfig.getFeedbackToEmail(), null, null);
 
       Map<String, String> map =
-          Stream.of(
-                  new String[][] {
-                    {"feedback_destination_email_address", appConfig.getFeedbackToEmail()},
-                  })
-              .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+          Collections.singletonMap(
+              "feedback_destination_email_address", appConfig.getFeedbackToEmail());
 
       AuditLogEvent auditEvent =
           isEmailSent ? FEEDBACK_CONTENT_EMAILED : FEEDBACK_CONTENT_EMAIL_FAILED;
@@ -94,11 +90,8 @@ public class UserSupportServiceImpl implements UserSupportService {
               contactUsSubject, dynamicContent, appConfig.getContactusToEmail(), null, null);
 
       Map<String, String> map =
-          Stream.of(
-                  new String[][] {
-                    {"contactus_destination_email_address", appConfig.getContactusToEmail()},
-                  })
-              .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+          Collections.singletonMap(
+              "contactus_destination_email_address", appConfig.getContactusToEmail());
 
       AuditLogEvent auditEvent =
           isEmailSent ? CONTACT_US_CONTENT_EMAILED : CONTACT_US_CONTENT_EMAIL_FAILED;

@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -36,13 +37,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -421,23 +421,16 @@ public class UserManagementUtil {
         message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
       } else {
         if (Boolean.valueOf(delete)) {
+
           Map<String, String> map =
-              Stream.of(
-                      new String[][] {
-                        {"delete_or_retain", "delete"},
-                      })
-                  .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+              Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
 
           userMgmntAuditHelper.logEvent(
               UserMgmntEvent.WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED, auditRequest, map);
 
         } else {
           Map<String, String> map =
-              Stream.of(
-                      new String[][] {
-                        {"delete_or_retain", "retain"},
-                      })
-                  .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+              Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
 
           userMgmntAuditHelper.logEvent(
               WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED, auditRequest, map);

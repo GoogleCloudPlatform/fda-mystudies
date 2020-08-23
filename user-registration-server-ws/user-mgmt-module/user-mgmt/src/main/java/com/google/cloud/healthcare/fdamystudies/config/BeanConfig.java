@@ -44,9 +44,4 @@ public class BeanConfig implements WebMvcConfigurer {
 
     return authenticationBean;
   }
-
-  /* @Bean
-  public RestTemplate restTemplate() {
-    return new RestTemplate();
-  }*/
 }
