@@ -6,7 +6,8 @@ import {LocationModule} from './location/location.module';
 import {UserModule} from './user/user.module';
 import {DashboardHeaderComponent} from './dashboard-header/dashboard-header.component';
 import {StudiesModule} from './studies/studies.module';
-import {AppsModule} from './apps/apps.module';
+import {ParticipantDetailsComponent} from './participant-details/participant-details.component';
+import {AppsModule} from '../site-coordinator/apps/apps.module';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
         path: 'users',
         loadChildren: async (): Promise<UserModule> =>
           import('./user/user.module').then((m) => m.UserModule),
+      },
+      {
+        path: 'participant/:participantId',
+        component: ParticipantDetailsComponent,
       },
       {
         path: '',
