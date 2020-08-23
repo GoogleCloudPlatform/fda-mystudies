@@ -1,7 +1,11 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.INFORMED_CONSENT_PROVIDED_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVE_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.USER_ENROLLED_INTO_STUDY;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -86,6 +90,11 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
 
+    verifyAuditEventCall(
+        USER_ENROLLED_INTO_STUDY,
+        INFORMED_CONSENT_PROVIDED_FOR_STUDY,
+        SIGNED_CONSENT_DOCUMENT_SAVE_FAILED);
+
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_0);
 
@@ -143,6 +152,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
+
+    verifyAuditEventCall(READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
   }
 
   @Test
@@ -187,6 +198,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
 
+    verifyAuditEventCall(READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
+
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(
         cloudStorageService, Constants.CONTENT_1_0_UPDATED);
@@ -204,6 +217,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
 
+    verifyAuditEventCall(READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
+
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
 
@@ -217,6 +232,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
+
+    verifyAuditEventCall(READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
   }
 
   @Test
