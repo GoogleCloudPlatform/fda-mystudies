@@ -33,13 +33,13 @@ public class RestResponseErrorHandler implements ResponseErrorHandler {
     } else if (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR
         && StringUtils.containsIgnoreCase(headers.getFirst("Content-Type"), "json")) {
       // handle 4xx errors
-      if (StringUtils.contains(responseBody, "error_code")
+      if (HttpStatus.UNAUTHORIZED == response.getStatusCode()) {
+        errorCode = ErrorCode.UNAUTHORIZED;
+      } else if (StringUtils.contains(responseBody, "error_code")
           && StringUtils.contains(responseBody, "error_description")) {
         String code = JsonPath.read(responseBody, "$.error_code");
         String description = JsonPath.read(responseBody, "$.error_description");
         errorCode = ErrorCode.fromCodeAndDescription(code, description);
-      } else if (HttpStatus.UNAUTHORIZED == response.getStatusCode()) {
-        errorCode = ErrorCode.UNAUTHORIZED;
       }
     }
 

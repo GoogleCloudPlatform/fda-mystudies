@@ -37,6 +37,8 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService {
 
+  private static final int VERIFICATION_CODE_LENGTH = 6;
+
   private XLogger logger = XLoggerFactory.getXLogger(UserRegistrationServiceImpl.class.getName());
 
   @Autowired private UserDetailsBORepository userDetailsRepository;
@@ -71,21 +73,21 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             user.getEmailId(), appOrgInfoBean.getAppInfoId());
 
     // Return USER_ALREADY_EXISTS error code if user account already exists for the given email
-    UserDetailsBO userDetailsBO = new UserDetailsBO();
+    UserDetailsBO existingUserDetails = new UserDetailsBO();
     if (optUserDetails.isPresent()) {
-      userDetailsBO = optUserDetails.get();
-      if (StringUtils.isNotEmpty(userDetailsBO.getUserId())) {
-        if (generateVerificationCode(userDetailsBO)) {
-          generateAndSaveVerificationCode(userDetailsBO);
+      existingUserDetails = optUserDetails.get();
+      if (StringUtils.isNotEmpty(existingUserDetails.getUserId())) {
+        if (generateVerificationCode(existingUserDetails)) {
+          generateAndSaveVerificationCode(existingUserDetails);
         }
 
-        logger.warn(USER_ALREADY_EXISTS.toString());
         throw new ErrorCodeException(USER_ALREADY_EXISTS);
       }
     }
 
     // save user details
-    userDetailsBO = toUserDetailsBO(user, userDetailsBO);
+    UserDetailsBO userDetailsBO = fromUserRegistrationForm(user);
+    userDetailsBO.setUserDetailsId(existingUserDetails.getUserDetailsId());
     userDetailsBO.setAppInfoId(appOrgInfoBean.getAppInfoId());
     userDetailsBO = userDetailsRepository.saveAndFlush(userDetailsBO);
 
@@ -101,7 +103,6 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     // verification code is empty if send email is failed
     if (StringUtils.isEmpty(userDetailsBO.getEmailCode())) {
-      logger.warn(EMAIL_SEND_FAILED_EXCEPTION.toString());
       throw new ErrorCodeException(EMAIL_SEND_FAILED_EXCEPTION);
     }
 
@@ -120,7 +121,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   }
 
   private UserDetailsBO generateAndSaveVerificationCode(UserDetailsBO userDetailsBO) {
-    String verificationCode = RandomStringUtils.randomAlphanumeric(6);
+    String verificationCode = RandomStringUtils.randomAlphanumeric(VERIFICATION_CODE_LENGTH);
     EmailResponse emailResponse = sendConfirmationEmail(userDetailsBO, verificationCode);
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
       userDetailsBO.setEmailCode(verificationCode);
@@ -130,7 +131,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     return userDetailsBO;
   }
 
-  private UserDetailsBO toUserDetailsBO(UserRegistrationForm user, UserDetailsBO userDetailsBO) {
+  private UserDetailsBO fromUserRegistrationForm(UserRegistrationForm user) {
+    UserDetailsBO userDetailsBO = new UserDetailsBO();
     userDetailsBO.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     userDetailsBO.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
     userDetailsBO.setUserId(user.getUserId());

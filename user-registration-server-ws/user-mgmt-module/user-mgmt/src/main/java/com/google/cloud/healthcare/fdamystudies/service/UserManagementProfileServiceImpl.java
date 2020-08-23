@@ -224,7 +224,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public String deActivateAcct(String userId, DeactivateAcctBean deactivateAcctBean) {
+  public String deactivateAccount(String userId, DeactivateAcctBean deactivateAcctBean) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     Integer userDetailsId = 0;
