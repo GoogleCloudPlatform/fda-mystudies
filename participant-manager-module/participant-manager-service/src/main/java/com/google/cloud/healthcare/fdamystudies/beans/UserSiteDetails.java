@@ -27,7 +27,7 @@ public class UserSiteDetails {
 
   private boolean selected;
 
-  private int permission;
+  private Integer permission;
 
   private String locationDescription;
 }
