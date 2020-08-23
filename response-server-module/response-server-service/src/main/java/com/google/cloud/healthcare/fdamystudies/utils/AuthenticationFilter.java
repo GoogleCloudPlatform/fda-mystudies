@@ -155,7 +155,8 @@ public class AuthenticationFilter implements Filter {
               }
             }
           } else {
-            logger.warn("AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
+            logger.warn(
+                "AuthenticationFilter doFilter failed : missing userId, accessToken or clientToken");
             setCommonHeaders(httpServletResponse);
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
           }

@@ -52,7 +52,7 @@ public class ProcessActivityStateController {
   public ResponseEntity<?> getActivityState(
       @RequestParam(name = "studyId") String studyId,
       @RequestParam("participantId") String participantId) {
-    
+
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
@@ -60,7 +60,8 @@ public class ProcessActivityStateController {
               ErrorCode.EC_701.errorMessage(),
               AppConstants.ERROR_STR,
               ErrorCode.EC_701.errorMessage());
-      logger.warn("ProcessActivityStateController getActivityState() failed. studyId or participantId missing.");
+      logger.warn(
+          "ProcessActivityStateController getActivityState() failed. studyId or participantId missing.");
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
       try {
