@@ -29,11 +29,11 @@ public class UserAppDetails {
 
   private int permission;
 
-  private int totalStudies;
+  private int totalStudiesCount;
 
   private int selectedStudiesCount;
 
-  private int totalSites;
+  private int totalSitesCount;
 
   private int selectedSitesCount;
 
