@@ -27,7 +27,7 @@ public class UserStudyDetails {
 
   private boolean selected;
 
-  private int permission;
+  private Integer permission;
 
   private int totalSitesCount;
 

@@ -29,7 +29,7 @@ public class User {
 
   private boolean superAdmin;
 
-  private int manageLocations;
+  private Integer manageLocations;
 
   private String status;
 
