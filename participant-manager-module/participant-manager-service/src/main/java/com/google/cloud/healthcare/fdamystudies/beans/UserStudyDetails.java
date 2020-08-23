@@ -29,7 +29,7 @@ public class UserStudyDetails {
 
   private int permission;
 
-  private int totalSites;
+  private int totalSitesCount;
 
   private int selectedSitesCount;
 
