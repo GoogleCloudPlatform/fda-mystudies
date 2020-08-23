@@ -8,20 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.Context;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
@@ -36,6 +22,20 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorResponseUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.TokenUtil;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class EnrollmentTokenController {
@@ -95,8 +95,8 @@ public class EnrollmentTokenController {
                 ErrorResponseUtil.ErrorCodes.INVALID_TOKEN.getValue(),
                 response);
             return null;
-          } else if (!enrollmentTokenfService.isValidStudyToken(
-              enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
+          } else if (!enrollmentTokenfService.isEnrollmentTokenValid(
+              enrollmentBean.getToken(), enrollmentBean.getStudyId(), userId)) {
             ErrorResponseUtil.getFailureResponse(
                 ErrorResponseUtil.ErrorCodes.STATUS_102.getValue(),
                 ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -158,8 +158,8 @@ public class EnrollmentTokenController {
                 if (!enrollmentTokenfService.hasParticipant(
                     enrollmentBean.getStudyId(), enrollmentBean.getToken())) {
                   if (enrollManagementUtil.isChecksumValid(enrollmentBean.getToken())) {
-                    if (enrollmentTokenfService.isValidStudyToken(
-                        enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
+                    if (enrollmentTokenfService.isEnrollmentTokenValid(
+                        enrollmentBean.getToken(), enrollmentBean.getStudyId(), userId)) {
                       respBean =
                           enrollmentTokenfService.enrollParticipant(
                               enrollmentBean.getStudyId(), enrollmentBean.getToken(), userId);
