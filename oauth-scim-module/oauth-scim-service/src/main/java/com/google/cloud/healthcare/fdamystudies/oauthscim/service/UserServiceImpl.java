@@ -8,27 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCK_EMAIL_TIMESTAMP;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_ATTEMPTS;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_TIMESTAMP;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.OTP_USED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCESS;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -77,6 +56,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
+import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCK_EMAIL_TIMESTAMP;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_ATTEMPTS;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_TIMESTAMP;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.OTP_USED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -192,10 +190,10 @@ public class UserServiceImpl implements UserService {
       userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
       logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
-      auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
+      // auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
       return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
     } else {
-      auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
+      // auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
     }
     logger.exit(
         String.format(

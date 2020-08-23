@@ -149,6 +149,8 @@ public class StudyStateController {
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
             response);
+        auditRequest.setUserId(userId);
+        enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
         logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_USER_ID");
         return null;
       } catch (Exception e) {
@@ -167,9 +169,6 @@ public class StudyStateController {
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
           response);
-
-      auditRequest.setUserId(userId);
-      enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
 
       logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
       return null;
@@ -226,7 +225,6 @@ public class StudyStateController {
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
               response);
-
           return null;
         }
       } else {

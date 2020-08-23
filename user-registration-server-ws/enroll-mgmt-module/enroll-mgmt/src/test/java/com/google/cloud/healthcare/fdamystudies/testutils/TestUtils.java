@@ -18,4 +18,14 @@ public class TestUtils {
     headers.add("appId", "GCPMS001");
     return headers;
   }
+
+  public static HttpHeaders getCommonHeaderValues() {
+
+    HttpHeaders headers = new HttpHeaders();
+
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "GCPMS001");
+    return headers;
+  }
 }

@@ -189,7 +189,8 @@ public class EnrollmentTokenController {
                     if (enrollmentTokenfService.isValidStudyToken(
                         enrollmentBean.getToken(), enrollmentBean.getStudyId())) {
 
-                      enrollAuditEventHelper.logEvent(USER_FOUND_ELIGIBLE_FOR_STUDY, auditRequest);
+                      // enrollAuditEventHelper.logEvent(USER_FOUND_ELIGIBLE_FOR_STUDY,
+                      // auditRequest);
 
                       respBean =
                           enrollmentTokenfService.enrollParticipant(
@@ -215,7 +216,6 @@ public class EnrollmentTokenController {
                       enrollAuditEventHelper.logEvent(
                           USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
 
-                      enrollAuditEventHelper.logEvent(STUDY_ENROLLMENT_FAILED, auditRequest);
                       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
                     }
                   } else {
@@ -265,6 +265,7 @@ public class EnrollmentTokenController {
                 respBean.setCode(ErrorCode.EC_200.code());
                 respBean.setMessage(
                     MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+                enrollAuditEventHelper.logEvent(USER_FOUND_ELIGIBLE_FOR_STUDY, auditRequest);
               }
             }
           } else {
@@ -288,7 +289,7 @@ public class EnrollmentTokenController {
               ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
               ErrorResponseUtil.ErrorCodes.ERROR_REQUIRED.getValue(),
               response);
-
+          enrollAuditEventHelper.logEvent(USER_FOUND_INELIGIBLE_FOR_STUDY, auditRequest);
           return null;
         }
       } else {
@@ -314,6 +315,7 @@ public class EnrollmentTokenController {
           ErrorResponseUtil.ErrorCodes.INVALID_INPUT.getValue(),
           ErrorResponseUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
           response);
+      enrollAuditEventHelper.logEvent(STUDY_ENROLLMENT_FAILED, auditRequest);
       return null;
     } catch (UnAuthorizedRequestException e) {
       logger.error("EnrollmentTokenController enrollParticipant() - error ", e);

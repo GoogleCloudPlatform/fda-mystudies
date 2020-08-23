@@ -45,6 +45,8 @@ public final class Constants {
 
   public static final String PARTICIPANT_ID = "4";
 
+  public static final String PARTICIPANT_ID_NEW = "1";
+
   public static final String PARTICIPANT_ID_NOT_EXISTS = "5";
 
   public static final String STUDY_ID_OF_PARTICIPANT = "OpenStudy02";
