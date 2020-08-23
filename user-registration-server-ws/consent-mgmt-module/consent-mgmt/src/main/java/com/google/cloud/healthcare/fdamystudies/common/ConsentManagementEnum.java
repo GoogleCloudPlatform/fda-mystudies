@@ -20,7 +20,8 @@ public enum ConsentManagementEnum implements AuditLogEvent {
       MOBILE_APPS,
       PARTICIPANT_DATASTORE,
       null,
-      "Informed consent provided by app user for the study (consent version: ${consent_version}, data-sharing consent: ${data_sharing_consent}).",
+      "Informed consent provided by app user for the study (consent version: ${consent_version}, "
+          + "data-sharing consent: ${data_sharing_consent}).",
       "INFORMED_CONSENT_PROVIDED_FOR_STUDY"),
 
   USER_ENROLLED_INTO_STUDY(

@@ -12,7 +12,8 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +26,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +34,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +99,8 @@ public class BaseMockIT {
   @Autowired protected ServletContext servletContext;
 
   @Autowired protected AuditEventService mockAuditService;
+
+  protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   protected WireMockServer getWireMockServer() {
     return wireMockServer;
@@ -159,16 +165,6 @@ public class BaseMockIT {
         .andReturn();
   }
 
-  protected AuditLogEventRequest newAuditLogEventRequest(
-      String userId, String participantId, String studyId, String studyVersion) {
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userId);
-    auditRequest.setParticipantId(participantId);
-    auditRequest.setStudyId(studyId);
-    auditRequest.setStudyVersion(studyVersion);
-    return auditRequest;
-  }
-
   /**
    * @param assertOptionalFieldsForEvent is a {@link Map} collection that contains {@link eventCode}
    *     as key and {@link AuditLogEventRequest} with optional field values as value.
@@ -177,28 +173,29 @@ public class BaseMockIT {
   protected void verifyAuditEventCall(
       Map<String, AuditLogEventRequest> assertOptionalFieldsForEvent,
       AuditLogEvent... auditEvents) {
-    Map<String, AuditLogEventRequest> auditRequestByEventCode = verifyAuditEventCall(auditEvents);
+
+    verifyAuditEventCall(auditEvents);
+
+    Map<String, AuditLogEventRequest> auditRequestByEventCode =
+        auditRequests
+            .stream()
+            .collect(Collectors.toMap(AuditLogEventRequest::getEventCode, Function.identity()));
 
     assertOptionalFieldsForEvent.forEach(
-        (eventCode, auditRequestWithOptionalFieldValues) -> {
+        (eventCode, expectedAuditRequest) -> {
           AuditLogEventRequest auditRequest = auditRequestByEventCode.get(eventCode);
-          assertEquals(auditRequestWithOptionalFieldValues.getUserId(), auditRequest.getUserId());
-          assertEquals(
-              auditRequestWithOptionalFieldValues.getParticipantId(),
-              auditRequest.getParticipantId());
-          assertEquals(auditRequestWithOptionalFieldValues.getStudyId(), auditRequest.getStudyId());
-          assertEquals(
-              auditRequestWithOptionalFieldValues.getStudyVersion(),
-              auditRequest.getStudyVersion());
+          assertEquals(expectedAuditRequest.getUserId(), auditRequest.getUserId());
+          assertEquals(expectedAuditRequest.getParticipantId(), auditRequest.getParticipantId());
+          assertEquals(expectedAuditRequest.getStudyId(), auditRequest.getStudyId());
+          assertEquals(expectedAuditRequest.getStudyVersion(), auditRequest.getStudyVersion());
         });
   }
 
-  protected Map<String, AuditLogEventRequest> verifyAuditEventCall(AuditLogEvent... auditEvents) {
+  protected void verifyAuditEventCall(AuditLogEvent... auditEvents) {
     ArgumentCaptor<AuditLogEventRequest> argument =
         ArgumentCaptor.forClass(AuditLogEventRequest.class);
-    verify(mockAuditService, times(auditEvents.length)).postAuditLogEvent(argument.capture());
+    verify(mockAuditService, atLeastOnce()).postAuditLogEvent(argument.capture());
 
-    List<AuditLogEventRequest> auditRequests = argument.getAllValues();
     Map<String, AuditLogEventRequest> auditRequestByEventCode =
         auditRequests
             .stream()
@@ -232,13 +229,24 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getAppVersion());
       assertNotNull(auditRequest.getMobilePlatform());
     }
+  }
 
-    return auditRequestByEventCode;
+  protected void clearAuditRequests() {
+    auditRequests.clear();
   }
 
   @BeforeEach
   void setUp(TestInfo testInfo) {
     logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
+
+    Mockito.reset(mockAuditService);
+    auditRequests.clear();
+    doAnswer(
+            invocation ->
+                auditRequests.add(
+                    SerializationUtils.clone((AuditLogEventRequest) invocation.getArguments()[0])))
+        .when(mockAuditService)
+        .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
   }
 
   @AfterEach
