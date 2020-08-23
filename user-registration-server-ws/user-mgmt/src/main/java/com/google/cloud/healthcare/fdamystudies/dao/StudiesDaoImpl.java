@@ -159,7 +159,7 @@ public class StudiesDaoImpl implements StudiesDao {
           siteBO.setLocations(defaultLocation);
           siteBO.setStatus(SiteStatus.ACTIVE.value());
           siteBO.setTargetEnrollment(0);
-          session.save(siteBO); 
+          session.save(siteBO);
         }
       }
       errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
