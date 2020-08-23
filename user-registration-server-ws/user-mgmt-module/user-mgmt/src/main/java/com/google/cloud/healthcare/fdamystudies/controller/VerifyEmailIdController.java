@@ -81,8 +81,6 @@ public class VerifyEmailIdController {
               "", verificationForm.getEmailId(), appId, orgId);
 
       if (!StringUtils.isNotEmpty(isValidAppMsg)) {
-        userMgmntAuditHelper.logEvent(
-            ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED, auditRequest);
 
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),

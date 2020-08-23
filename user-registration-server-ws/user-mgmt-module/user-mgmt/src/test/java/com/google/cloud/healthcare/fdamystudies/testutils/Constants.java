@@ -54,4 +54,5 @@ public final class Constants {
   public static final String INVALID_PASSWORD = "Invalid Password";
   public static final String EMAIL = "cdash93@gmail.com";
   public static final Object INVALID_EMAIL_CODE = "Invalid email code";
+  public static final String USER_ID = "gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk";
 }

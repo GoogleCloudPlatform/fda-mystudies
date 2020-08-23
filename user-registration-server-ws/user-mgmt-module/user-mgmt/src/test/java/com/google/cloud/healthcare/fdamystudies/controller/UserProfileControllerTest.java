@@ -3,6 +3,10 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.InfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
@@ -35,6 +40,8 @@ import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,6 +102,14 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(content().string(containsString("cdash93@gmail.com")))
         .andExpect(status().isOk());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE);
   }
 
   @Test
@@ -107,6 +122,14 @@ public class UserProfileControllerTest extends BaseMockIT {
         .perform(get(USER_PROFILE_PATH).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.INVALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(READ_OPERATION_FAILED_FOR_USER_PROFILE.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_FAILED_FOR_USER_PROFILE);
   }
 
   @Test
@@ -125,6 +148,14 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(String.valueOf(HttpStatus.OK.value()))));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_PROFILE_UPDATED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_PROFILE_UPDATED);
 
     MvcResult result =
         mockMvc
@@ -262,6 +293,15 @@ public class UserProfileControllerTest extends BaseMockIT {
             eq(Constants.VALID_EMAIL),
             Mockito.any(),
             Mockito.any());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.USER_ID);
+    auditRequest.setAppId(Constants.APP_ID_VALUE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED);
   }
 
   private String getLoginBean(String emailId, String password) throws JsonProcessingException {
