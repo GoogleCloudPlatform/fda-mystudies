@@ -29,7 +29,5 @@ public class UserSitePermissionRequest {
 
   private boolean selected;
 
-  private boolean disabled;
-
   private int permission;
 }
