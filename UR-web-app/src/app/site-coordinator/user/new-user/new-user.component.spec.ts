@@ -25,6 +25,7 @@ import {AppDetails} from '../shared/app-details';
 import {DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {Permission} from 'src/app/shared/permission-enums';
+import {AppsService} from '../../apps/shared/apps.service';
 describe('AddNewUserComponent', () => {
   let component: AddNewUserComponent;
   let fixture: ComponentFixture<AddNewUserComponent>;
@@ -36,8 +37,10 @@ describe('AddNewUserComponent', () => {
 
   beforeEach(async(async () => {
     const userServiceSpy = jasmine.createSpyObj<UserService>('UserService', {
-      getAllApps: of(expectedAppDetails),
       add: of(addUserResponse),
+    });
+    const appServiceSpy = jasmine.createSpyObj<AppsService>('AppsService', {
+      getAllApps: of(expectedAppDetails),
     });
     await TestBed.configureTestingModule({
       declarations: [AddNewUserComponent],
@@ -53,7 +56,10 @@ describe('AddNewUserComponent', () => {
           enableHtml: true,
         }),
       ],
-      providers: [{provide: UserService, useValue: userServiceSpy}],
+      providers: [
+        {provide: UserService, useValue: userServiceSpy},
+        {provide: AppsService, useValue: appServiceSpy},
+      ],
     })
       .compileComponents()
       .then(() => {

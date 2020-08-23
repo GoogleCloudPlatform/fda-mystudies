@@ -7,6 +7,7 @@ import {User} from 'src/app/entity/user';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {Permission} from 'src/app/shared/permission-enums';
+import {AppsService} from '../../apps/shared/apps.service';
 
 @Component({
   selector: 'user-new',
@@ -14,11 +15,6 @@ import {Permission} from 'src/app/shared/permission-enums';
   styleUrls: ['./new-user.component.scss'],
 })
 export class AddNewUserComponent implements OnInit {
-  constructor(
-    private readonly router: Router,
-    private readonly userService: UserService,
-    private readonly toastr: ToastrService,
-  ) {}
   appDetails = {} as AppDetails;
   selectedApps: App[] = [];
   user = {} as User;
@@ -28,12 +24,19 @@ export class AddNewUserComponent implements OnInit {
     '=1': '1 Site',
     'other': '# Sites',
   };
+  constructor(
+    private readonly router: Router,
+    private readonly userService: UserService,
+    private readonly appsService: AppsService,
+    private readonly toastr: ToastrService,
+  ) {}
+
   ngOnInit(): void {
     this.getAllApps();
   }
 
   getAllApps(): void {
-    this.userService.getAllApps().subscribe((data) => {
+    this.appsService.getAllApps().subscribe((data) => {
       this.appDetails = data;
     });
   }
