@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
+import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
+import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
+import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.List;
@@ -15,12 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
-import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyConsentBO;
-import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 
 @Service
 public class UserConsentManagementServiceImpl implements UserConsentManagementService {

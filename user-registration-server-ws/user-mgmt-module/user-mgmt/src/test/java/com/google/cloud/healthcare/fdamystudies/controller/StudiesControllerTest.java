@@ -18,11 +18,18 @@ import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
+import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminUserRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppPermission;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyPermission;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserRegAdminUser;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.Permission;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,6 +51,12 @@ public class StudiesControllerTest extends BaseMockIT {
   @Autowired private StudiesServices studiesServices;
 
   @Autowired private CommonDaoImpl commonDao;
+
+  @Autowired private AppPermissionRepository appPermissionRepository;
+
+  @Autowired private StudyPermissionRepository studyPermissionRepository;
+
+  @Autowired private UserRegAdminUserRepository userRegAdminUserRepository;
 
   @Autowired private ObjectMapper objectMapper;
 
@@ -100,6 +113,53 @@ public class StudiesControllerTest extends BaseMockIT {
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
 
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void addUpdateStudyMetadataSuccessForPermissions() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    StudyMetadataBean studyMetaDataBean = createStudyMetadataBean();
+    studyMetaDataBean.setStudyId(Constants.NEW_STUDY_ID);
+    studyMetaDataBean.setAppId(Constants.NEW_APP_ID_VALUE);
+    String requestJson = getObjectMapper().writeValueAsString(studyMetaDataBean);
+    performPost(
+        STUDY_METADATA_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
+
+    List<AppPermission> appPermissionList = appPermissionRepository.findAll();
+    List<StudyPermission> studyPermissionList = studyPermissionRepository.findAll();
+    List<UserRegAdminUser> userRegAdminUserList = userRegAdminUserRepository.findAll();
+
+    AppPermission appPermission =
+        appPermissionList
+            .stream()
+            .filter(x -> x.getAppInfo().getAppId().equals(Constants.NEW_APP_ID_VALUE))
+            .findFirst()
+            .orElse(null);
+    StudyPermission studyPermission =
+        studyPermissionList
+            .stream()
+            .filter(x -> x.getStudyInfo().getCustomId().equals(Constants.NEW_STUDY_ID))
+            .findFirst()
+            .orElse(null);
+    UserRegAdminUser userRegAdminUser =
+        userRegAdminUserList
+            .stream()
+            .filter(x -> x.getSuperAdmin().equals(true))
+            .findFirst()
+            .orElse(null);
+
+    assertNotNull(userRegAdminUser);
+    assertNotNull(appPermission);
+    assertNotNull(appPermission.getUrAdminUser());
+    assertEquals(Constants.NEW_APP_ID_VALUE, appPermission.getAppInfo().getAppId());
+    assertEquals(Permission.READ_EDIT.value(), appPermission.getEdit());
+    assertEquals(appPermission.getCreatedBy(), userRegAdminUser.getId());
+
+    assertNotNull(studyPermission);
+    assertNotNull(studyPermission.getUrAdminUser());
+    assertEquals(Constants.NEW_STUDY_ID, studyPermission.getStudyInfo().getCustomId());
+    assertEquals(Permission.READ_EDIT.value(), studyPermission.getEdit());
+    assertEquals(studyPermission.getCreatedBy(), userRegAdminUser.getId());
   }
 
   @Test

@@ -8,11 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLogBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ActivityLogBO;
 
 public interface CommonService {
-
-  public Integer validateAccessToken(String userId, String accessToken, String clientToken);
 
   public Integer getUserDetailsId(String userId);
 

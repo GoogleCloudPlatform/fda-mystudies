@@ -164,10 +164,6 @@ public class BaseMockIT {
   @Import(CommonModuleConfiguration.class)
   static class BaseMockITConfiguration {}
 
-  protected void verifyTokenIntrospectRequest() {
-    verifyTokenIntrospectRequest(1);
-  }
-
   protected void verifyTokenIntrospectRequest(int times) {
     verify(
         times,
