@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ParticipantInformationControllerTest extends BaseMockIT {
 
   @Autowired private ParticipantInformationController controller;
+
   @Autowired private ParticipantInformationService participantInfoService;
 
   @Test
@@ -35,6 +36,8 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
   @Test
   public void getParticipantDetailsSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaderValues();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     mockMvc
         .perform(
             get(ApiEndpoint.PARTICIPANT_INFO.getPath())
@@ -53,31 +56,39 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
     auditEventMap.put(READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_ENROLLMENT_STATUS);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void getParticipantDetailsFailure() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     // participant id null
     mockMvc
         .perform(
             get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .headers(headers)
                 .param("participantId", "")
                 .param("studyId", Constants.STUDY_ID_OF_PARTICIPANT)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
-    HttpHeaders headers = TestUtils.getCommonHeaderValues();
+
+    verifyTokenIntrospectRequest();
 
     // study id null
     mockMvc
         .perform(
             get(ApiEndpoint.PARTICIPANT_INFO.getPath())
+                .headers(headers)
                 .param("participantId", Constants.PARTICIPANT_ID)
                 .param("studyId", "")
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
 
     // participant id not exists
     mockMvc
@@ -97,5 +108,6 @@ public class ParticipantInformationControllerTest extends BaseMockIT {
     auditEventMap.put(READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS.getEventCode(), auditRequest);
 
     verifyAuditEventCall(READ_OPERATION_FAILED_FOR_ENROLLMENT_STATUS);
+    verifyTokenIntrospectRequest(3);
   }
 }

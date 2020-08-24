@@ -5,9 +5,9 @@
 	},
 	"response": {
 		"status": 200,
+		"body": "i4ts7dsf50c6me154sfsdfdv",
 		"headers": {
 			"Content-Type": "application/json;charset=UTF-8"
-		},
-		"bodyFileName": "enroll-service/add_Participant_Id_response.json"
+		}
 	}
 }

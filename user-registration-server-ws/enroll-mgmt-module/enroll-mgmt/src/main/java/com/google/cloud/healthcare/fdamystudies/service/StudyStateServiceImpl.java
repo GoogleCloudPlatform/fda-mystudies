@@ -58,8 +58,6 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Autowired private ParticipantStudiesInfoDao participantStudiesInfoDao;
 
-  @Autowired private CommonService commonService;
-
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   @Override

@@ -42,6 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class StudyStateControllerTest extends BaseMockIT {
 
   @Autowired private StudyStateController controller;
+
   @Autowired private StudyStateService studyStateService;
 
   @Autowired private ObjectMapper objectMapper;
@@ -59,7 +60,6 @@ public class StudyStateControllerTest extends BaseMockIT {
     assertNotNull(studyStateService);
   }
 
-  @SuppressWarnings("rawtypes")
   @Test
   public void updateStudyStateSuccess() throws Exception {
 
@@ -77,7 +77,7 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
-
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     mockMvc
         .perform(
             post(ApiEndpoint.UPDATE_STUDY_STATE_PATH.getPath())
@@ -86,6 +86,8 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
+
+    verifyTokenIntrospectRequest();
 
     MvcResult result =
         mockMvc
@@ -97,6 +99,8 @@ public class StudyStateControllerTest extends BaseMockIT {
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
+
+    verifyTokenIntrospectRequest(2);
 
     StudyStateResponse response =
         getObjectMapper()
@@ -131,6 +135,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     String requestJson = getStudyStateJson(listStudies);
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     // not valid user id
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
@@ -143,6 +148,8 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest();
 
     // empty studylist
     listStudies = new ArrayList<StudiesBean>();
@@ -157,6 +164,8 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
@@ -164,6 +173,7 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     mockMvc
         .perform(
@@ -180,6 +190,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     auditEventMap.put(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -187,6 +198,8 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     mockMvc
         .perform(
             get(ApiEndpoint.STUDY_STATE_PATH.getPath())
@@ -196,6 +209,7 @@ public class StudyStateControllerTest extends BaseMockIT {
         .andExpect(status().isUnauthorized());
 
     verifyAuditEventCall(READ_OPERATION_FAILED_FOR_STUDY_INFO);
+    verifyTokenIntrospectRequest();
   }
 
   @SuppressWarnings("rawtypes")
@@ -204,6 +218,7 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     String requestJson =
         getWithDrawJson(
@@ -227,6 +242,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     auditEventMap.put(WITHDRAWAL_FROM_STUDY_SUCCEEDED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, WITHDRAWAL_FROM_STUDY_SUCCEEDED);
+    verifyTokenIntrospectRequest();
 
     MvcResult result =
         mockMvc
@@ -237,6 +253,8 @@ public class StudyStateControllerTest extends BaseMockIT {
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
+
+    verifyTokenIntrospectRequest(2);
 
     StudyStateResponse response =
         getObjectMapper()
@@ -258,6 +276,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     // empty participant Id
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     String requestJson = getWithDrawJson("", Constants.STUDY_ID_OF_PARTICIPANT, Constants.DELETE);
 
@@ -270,6 +289,8 @@ public class StudyStateControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest();
+
     // empty study Id
     requestJson = getWithDrawJson(Constants.PARTICIPANT_ID, "", Constants.DELETE);
 
@@ -281,6 +302,8 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
 
     // study Id not exists
     requestJson =
@@ -303,6 +326,7 @@ public class StudyStateControllerTest extends BaseMockIT {
     auditEventMap.put(WITHDRAWAL_FROM_STUDY_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(WITHDRAWAL_FROM_STUDY_FAILED);
+    verifyTokenIntrospectRequest(3);
   }
 
   private String getWithDrawJson(String participatId, String studyId, boolean delete)

@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -54,6 +55,7 @@ public class EnrollmentManagementUtil {
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
+  @Autowired private OAuthService oAuthService;
 
   public boolean isChecksumValid(@NotNull String token) {
     try {
@@ -143,7 +145,7 @@ public class EnrollmentManagementUtil {
       String studyId,
       AuditLogEventRequest auditRequest)
       throws InvalidRequestException, UnAuthorizedRequestException, SystemException {
-    logger.info("EnrollmentManagementUtil deactivateAcct() - starts ");
+    logger.info("EnrollmentManagementUtil getParticipantId() - starts ");
     HttpHeaders headers = null;
     EnrollmentBodyProvider bodyProvider = null;
     HttpEntity<EnrollmentBodyProvider> requestBody = null;
@@ -153,8 +155,7 @@ public class EnrollmentManagementUtil {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set("applicationId", applicationId);
-      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
+      headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
       bodyProvider = new EnrollmentBodyProvider();
       bodyProvider.setTokenIdentifier(hashedTokenValue);
       bodyProvider.setCustomStudyId(studyId);
@@ -179,10 +180,10 @@ public class EnrollmentManagementUtil {
         throw new SystemException();
       }
     } catch (Exception e) {
-      logger.error("EnrollmentManagementUtil deactivateAcct() - Ends ", e);
+      logger.error("EnrollmentManagementUtil getParticipantId() - Ends ", e);
       throw new SystemException();
     }
-    logger.info("EnrollmentManagementUtil deactivateAcct() - Ends ");
+    logger.info("EnrollmentManagementUtil getParticipantId() - Ends ");
     return participantId;
   }
 
@@ -196,8 +197,7 @@ public class EnrollmentManagementUtil {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       headers.set(AppConstants.APPLICATION_ID, null);
-      headers.set(AppConstants.CLIENT_ID, appConfig.getClientId());
-      headers.set(AppConstants.SECRET_KEY, getHashedValue(appConfig.getSecretKey()));
+      headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
 
       request = new HttpEntity<>(null, headers);
 

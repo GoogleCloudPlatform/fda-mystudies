@@ -20,36 +20,6 @@ import org.springframework.context.annotation.Configuration;
 @ToString
 public class ApplicationPropertyConfiguration {
 
-  @Value("${authServerAccessTokenValidationUrl}")
-  private String authServerAccessTokenValidationUrl;
-
-  @Value("${clientId}")
-  private String clientId;
-
-  @Value("${secretKey}")
-  private String secretKey;
-
-  @Value("${auth.server.url}")
-  private String authServerUrl;
-
-  @Value("${authServerClientValidationUrl}")
-  private String authServerClientValidationUrl;
-
-  @Value("${auth.server.updateStatusUrl}")
-  private String authServerUpdateStatusUrl;
-
-  @Value("${auth.server.deleteStatusUrl}")
-  private String authServerDeleteStatusUrl;
-
-  @Value("${register.url}")
-  private String authServerRegisterStatusUrl;
-
-  @Value("${interceptor}")
-  private String interceptorUrls;
-
-  @Value("${serverApiUrls}")
-  private String serverApiUrls;
-
   @Value("${response.server.url}")
   private String responseServerUrl;
 
