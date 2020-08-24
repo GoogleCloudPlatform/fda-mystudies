@@ -99,7 +99,7 @@ public class StudiesControllerTest extends BaseMockIT {
     assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
 
-    verifyTokenIntrospectRequest();
+    verifyTokenIntrospectRequest(1);
   }
 
   @Test
