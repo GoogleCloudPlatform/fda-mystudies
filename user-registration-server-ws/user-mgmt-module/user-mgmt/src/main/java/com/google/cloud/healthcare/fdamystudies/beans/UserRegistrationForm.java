@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
 
@@ -35,7 +36,7 @@ public class UserRegistrationForm {
 
   @ToString.Exclude
   @NotBlank
-  @Size(max = 320)
+  @Size(max = EMAIL_LENGTH)
   @Email
   private String emailId;
 

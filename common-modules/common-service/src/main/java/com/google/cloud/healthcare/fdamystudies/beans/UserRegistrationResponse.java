@@ -20,11 +20,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserRegistrationResponse extends BaseResponse {
 
-  @ToString.Exclude private String userId;
+  private String userId;
 
-  @ToString.Exclude private String tempRegId;
+  private String tempRegId;
 
-  @ToString.Exclude private String authUserId;
+  private String authUserId;
 
   public UserRegistrationResponse(ErrorCode errorCode) {
     super(errorCode);

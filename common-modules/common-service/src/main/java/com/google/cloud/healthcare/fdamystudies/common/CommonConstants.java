@@ -70,4 +70,6 @@ public final class CommonConstants {
 
   public static final String PASSWORD_REGEX_MESSAGE =
       "Your password does not meet the required criteria.";
+  
+  public static final int EMAIL_LENGTH = 320;
 }
