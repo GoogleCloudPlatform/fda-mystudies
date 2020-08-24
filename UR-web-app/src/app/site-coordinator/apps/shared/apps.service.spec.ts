@@ -40,7 +40,7 @@ describe('StudiesService', () => {
     appsService = new AppsService(entityServicespy, httpServiceSpyObj);
 
     appsService
-      .getApps()
+      .getAppsOfUser()
       .subscribe(
         (app) => expect(app).toEqual(expectedAppList, 'expected AppsList'),
         fail,
@@ -59,7 +59,7 @@ describe('StudiesService', () => {
     appsService = new AppsService(entityServicespy, httpServiceSpyObj);
 
     tick(40);
-    appsService.getApps().subscribe(
+    appsService.getAppsOfUser().subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');
@@ -77,7 +77,7 @@ describe('StudiesService', () => {
     appsService = new AppsService(entityServicespy, httpServiceSpyObj);
 
     appsService
-      .getAllApps()
+      .getAllAppsWithStudiesAndSites()
       .subscribe(
         (appDetails) =>
           expect(appDetails).toEqual(
@@ -100,7 +100,7 @@ describe('StudiesService', () => {
       get: throwError(errorResponse),
     });
     appsService = new AppsService(entityServicespy, httpServiceSpyObj);
-    appsService.getAllApps().subscribe(
+    appsService.getAllAppsWithStudiesAndSites().subscribe(
       () => fail('expected an error, not app details'),
       (error: ApiResponse) => {
         expect(error.message).toContain(errorResponse.message);

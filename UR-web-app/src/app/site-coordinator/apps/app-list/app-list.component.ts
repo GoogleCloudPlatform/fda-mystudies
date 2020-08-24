@@ -30,7 +30,10 @@ export class AppListComponent implements OnInit {
   }
 
   getApps(): void {
-    this.app$ = combineLatest(this.appService.getApps(), this.query$).pipe(
+    this.app$ = combineLatest(
+      this.appService.getAppsOfUser(),
+      this.query$,
+    ).pipe(
       map(([apps, query]) => {
         return apps.filter(
           (app: App) =>

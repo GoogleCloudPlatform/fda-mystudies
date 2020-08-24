@@ -40,7 +40,7 @@ describe('AddNewUserComponent', () => {
       add: of(addUserResponse),
     });
     const appServiceSpy = jasmine.createSpyObj<AppsService>('AppsService', {
-      getAllApps: of(expectedAppDetails),
+      getAllAppsWithStudiesAndSites: of(expectedAppDetails),
     });
     await TestBed.configureTestingModule({
       declarations: [AddNewUserComponent],

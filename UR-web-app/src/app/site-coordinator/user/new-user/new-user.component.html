@@ -166,7 +166,7 @@
                   [ngModelOptions]="{standalone: true}"
                   (change)="locationsCheckBoxChange()"
                 />
-                <label for="location">Locations</label>
+                <label for="location">Allow access to locations</label>
               </div>
               <div class="pl-xl pt-xs">
                 <span>
@@ -206,13 +206,10 @@
       </section>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="form-group">
-          <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
-          <div
-            class="select__form-control__parent"
-            style="padding-bottom: 10px;"
-          >
+          <div class="user__card__title pb-xlg">Sites, Studies and Apps</div>
+          <div class="select__form-control__parent">
             <label class="wrap">
-              Select and Add App
+              Add an app
               <ng-select
                 [items]="appDetails.apps"
                 [clearable]="false"
@@ -462,9 +459,9 @@
         [disabled]="!addUserForm.form.valid"
         type="submit"
         name="add"
-        class="btn bt__add bt__add__auto mr-sm"
+        class="btn bt__add bt__add__auto mr-lg"
       >
-        Create User and Invite
+        Add user and Invite
       </button>
       <button
         type="button"

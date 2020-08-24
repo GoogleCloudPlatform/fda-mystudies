@@ -14,12 +14,12 @@ export class AppsService {
     private readonly entityService: EntityService<App>,
     private readonly http: HttpClient,
   ) {}
-  getApps(): Observable<App[]> {
+  getAppsOfUser(): Observable<App[]> {
     return this.entityService.getCollection('apps');
   }
-  getAllApps(): Observable<AppDetails> {
-    return this.http.get<AppDetails>(
-      `${environment.baseUrl}/apps?fields=studies,sites`,
-    );
+  getAllAppsWithStudiesAndSites(): Observable<AppDetails> {
+    return this.http.get<AppDetails>(`${environment.baseUrl}/apps`, {
+      params: {fields: 'studies,sites'},
+    });
   }
 }

@@ -36,7 +36,7 @@ export class AddNewUserComponent implements OnInit {
   }
 
   getAllApps(): void {
-    this.appsService.getAllApps().subscribe((data) => {
+    this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
       this.appDetails = data;
     });
   }
