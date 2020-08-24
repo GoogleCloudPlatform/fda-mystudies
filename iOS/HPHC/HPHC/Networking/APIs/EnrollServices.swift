@@ -160,7 +160,7 @@ class EnrollServices: NSObject {
     headers: [String: String]?,
     delegate: NMWebServiceDelegate
   ) {
-    isOfflineSyncRequest.toggle()
+    isOfflineSyncRequest = true
     self.delegate = delegate
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
@@ -278,10 +278,11 @@ extension EnrollServices: NMWebServiceDelegate {
 
       delegate?.failedRequest(manager, requestName: requestName, error: localError)
 
-      // handle failed request due to network connectivity
+      // Handle failed request due to network connectivity
+      // Save in database if fails due to network
+      // Ignore save for Sync request as the object already avaiable in the DB.
       if requestName as String == EnrollmentMethods.updateStudyState.description {
         if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
-          // save in database
           DBHandler.saveRequestInformation(
             params: self.requestParams,
             headers: self.headerParams,

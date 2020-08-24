@@ -189,7 +189,7 @@ class ResponseServices: NSObject {
     headers: [String: String]?,
     delegate: NMWebServiceDelegate
   ) {
-    self.isOfflineSyncRequest.toggle()
+    self.isOfflineSyncRequest = true
     self.delegate = delegate
     self.sendRequestWith(method: method, params: params!, headers: headers)
   }
@@ -447,9 +447,9 @@ extension ResponseServices: NMWebServiceDelegate {
     if requestName as String == ResponseMethods.processResponse.description
       || requestName as String == ResponseMethods.updateActivityState.description
     {
-
+      // Save in database if fails due to network
+      // Ignore save for Sync request as the object already avaiable in the DB.
       if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
-        // save in database
         DBHandler.saveRequestInformation(
           params: self.requestParams,
           headers: self.headerParams,
