@@ -21,6 +21,6 @@ enum LocalizableString: String {
 
   // MARK: - Consent
   case learnMore = "Learn more"
-  
+
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }
