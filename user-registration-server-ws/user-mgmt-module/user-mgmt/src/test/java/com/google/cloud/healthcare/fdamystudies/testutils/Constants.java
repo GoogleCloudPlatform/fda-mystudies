@@ -52,4 +52,7 @@ public final class Constants {
   public static final String INVALID_PASSWORD = "Invalid Password";
   public static final String EMAIL = "cdash93@gmail.com";
   public static final Object INVALID_EMAIL_CODE = "Invalid email code";
+
+  public static final String NEW_APP_ID_VALUE = "app";
+  public static final String NEW_STUDY_ID = "study";
 }

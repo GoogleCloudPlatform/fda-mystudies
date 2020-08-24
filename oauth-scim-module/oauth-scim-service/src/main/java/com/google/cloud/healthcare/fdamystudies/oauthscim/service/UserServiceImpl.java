@@ -218,7 +218,7 @@ public class UserServiceImpl implements UserService {
             appConfig.getMailResetPasswordSubject(),
             appConfig.getMailResetPasswordBody(),
             templateArgs);
-    return emailService.sendSimpleMail(emailRequest);
+    return emailService.sendMimeMail(emailRequest);
   }
 
   public ChangePasswordResponse changePassword(ChangePasswordRequest userRequest)
@@ -333,7 +333,7 @@ public class UserServiceImpl implements UserService {
             appConfig.getMailAccountLockedSubject(),
             appConfig.getMailAccountLockedBody(),
             templateArgs);
-    EmailResponse emailResponse = emailService.sendSimpleMail(emailRequest);
+    EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
     logger.exit(
         String.format("send account locked email status=%d", emailResponse.getHttpStatusCode()));
     return emailResponse;

@@ -8,23 +8,27 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
 
 @ToString
 @Setter
@@ -52,18 +56,16 @@ public class AppPermissionEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
+  private AppEntity app;
 
-  @Column(name = "edit_permission", nullable = true, length = 1)
-  private Integer editPermission;
+  @Enumerated(EnumType.ORDINAL)
+  @Column(name = "edit")
+  private Permission edit;
 
-  @Column(
-      name = "created",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
-  @Column(name = "created_by", length = 64)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 }

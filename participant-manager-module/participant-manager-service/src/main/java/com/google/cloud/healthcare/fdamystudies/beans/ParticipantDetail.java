@@ -43,6 +43,20 @@ public class ParticipantDetail {
 
   private String customLocationId;
 
+  private String participantRegistrySiteid;
+
+  private String customStudyId;
+
+  private String studyName;
+
+  private String customAppId;
+
+  private String appName;
+
+  private String onboardringStatus;
+
+  private String invitationDate;
+
   private String userDetailsId;
 
   private String registrationStatus;
@@ -53,5 +67,10 @@ public class ParticipantDetail {
 
   private List<AppStudyDetails> enrolledStudies = new ArrayList<>();
 
+  private List<Enrollment> enrollments = new ArrayList<>();
+
+  private List<ConsentHistory> consentHistory = new ArrayList<>();
+
   private Boolean newlyCreatedUser = Boolean.FALSE;
+
 }

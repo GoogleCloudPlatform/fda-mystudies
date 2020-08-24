@@ -30,6 +30,11 @@ module.exports = {
     'require-jsdoc': 'off',
     'no-unused-vars': 'off',
     'eqeqeq': 'error',
+    'operator-linebreak': [
+      'error',
+      'after',
+      {overrides: {'?': 'before', ':': 'before'}},
+    ],
     'new-cap': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-explicit-any': ['error', {fixToUnknown: true}],

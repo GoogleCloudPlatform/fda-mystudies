@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import org.springframework.http.HttpStatus;
 
 public class EmailResponse extends BaseResponse {
 
