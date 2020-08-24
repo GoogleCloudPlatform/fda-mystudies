@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public interface AuditLogEvent {
 
-  default PlatformComponent getSource() {
+  default Optional<PlatformComponent> getSource() {
     return null;
   }
 

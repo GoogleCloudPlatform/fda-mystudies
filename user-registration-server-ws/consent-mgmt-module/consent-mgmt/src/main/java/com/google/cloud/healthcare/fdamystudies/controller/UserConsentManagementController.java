@@ -39,12 +39,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,13 +186,9 @@ public class UserConsentManagementController {
                       MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
                 if (AppConstants.STATUS_COMPLETED.equals(
                     consentStatusBean.getConsent().getStatus())) {
-                  Map<String, String> map =
-                      Stream.of(
-                              new String[][] {
-                                {"consent_version", consentStatusBean.getConsent().getVersion()},
-                                {"data_sharing_consent", consentStatusBean.getSharing()}
-                              })
-                          .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+                  Map<String, String> map = new HashedMap<>();
+                  map.put("consent_version", consentStatusBean.getConsent().getVersion());
+                  map.put("data_sharing_consent", consentStatusBean.getSharing());
                   consentAuditHelper.logEvent(
                       INFORMED_CONSENT_PROVIDED_FOR_STUDY, auditRequest, map);
                 }
@@ -253,13 +248,9 @@ public class UserConsentManagementController {
       String fileName,
       ConsentStatusBean consentStatusBean,
       StudyConsentBO studyConsent) {
-    Map<String, String> map =
-        Stream.of(
-                new String[][] {
-                  {"file_name", fileName},
-                  {"consent_version", consentStatusBean.getConsent().getVersion()}
-                })
-            .collect(Collectors.toMap(data -> data[0], data -> data[1]));
+    Map<String, String> map = new HashedMap<>();
+    map.put("file_name", fileName);
+    map.put("consent_version", consentStatusBean.getConsent().getVersion());
     try {
       String path =
           cloudStorageService.saveFile(
@@ -293,7 +284,7 @@ public class UserConsentManagementController {
         auditRequest.setUserId(userId);
         auditRequest.setStudyId(studyId);
 
-        if (consentStudyResponseBean != null) {
+        if (consentStudyResponseBean.getConsent().getContent() != null) {
           consentAuditHelper.logEvent(
               READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest);
           consentStudyResponseBean.setMessage(

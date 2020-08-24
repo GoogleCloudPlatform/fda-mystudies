@@ -1,6 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.INFORMED_CONSENT_PROVIDED_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVED;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.STUDY_ENROLLMENT_FAILED;
@@ -540,5 +541,32 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     auditEventMap.put(STUDY_ENROLLMENT_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, STUDY_ENROLLMENT_FAILED);
+  }
+
+  @Test
+  public void shouldReturnReadOperationFailedForConsent() throws Exception {
+
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    TestUtils.addContentTypeAcceptHeaders(headers);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .param("studyId", Constants.INVALID_STUDY_ID)
+                .param("consentVersion", Constants.VERSION_1_0))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.INVALID_STUDY_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(
+        READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT);
   }
 }
