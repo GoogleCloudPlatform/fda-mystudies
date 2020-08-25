@@ -43,6 +43,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION;
 
 @Service
@@ -144,12 +146,16 @@ public class UserProfileServiceImpl implements UserProfileService {
 
   @Override
   @Transactional
-  public SetUpAccountResponse saveUser(SetUpAccountRequest setUpAccountRequest) {
+  public SetUpAccountResponse saveUser(
+      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest) {
     logger.entry("saveUser");
 
     Optional<UserRegAdminEntity> optUsers =
         userRegAdminRepository.findByEmail(setUpAccountRequest.getEmail());
+
+    auditRequest.setAppId("PARTICIPANT MANAGER");
     if (!optUsers.isPresent()) {
+      participantManagerHelper.logEvent(USER_ACCOUNT_ACTIVATION_FAILED, auditRequest);
       return new SetUpAccountResponse(ErrorCode.USER_NOT_INVITED);
     }
 
@@ -169,6 +175,9 @@ public class UserProfileServiceImpl implements UserProfileService {
             authRegistrationResponse.getTempRegId(),
             authRegistrationResponse.getUserId(),
             MessageCode.SET_UP_ACCOUNT_SUCCESS);
+
+    auditRequest.setUserId(userRegAdminUser.getId());
+    participantManagerHelper.logEvent(USER_ACCOUNT_ACTIVATED, auditRequest);
 
     logger.exit(MessageCode.SET_UP_ACCOUNT_SUCCESS);
     return setUpAccountResponse;

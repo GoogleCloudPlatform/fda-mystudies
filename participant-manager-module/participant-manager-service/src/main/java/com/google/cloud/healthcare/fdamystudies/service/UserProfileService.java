@@ -24,7 +24,8 @@ public interface UserProfileService {
 
   public UserProfileResponse updateUserProfile(UserProfileRequest userProfileRequest);
 
-  public SetUpAccountResponse saveUser(SetUpAccountRequest setUpAccountRequest);
+  public SetUpAccountResponse saveUser(
+      SetUpAccountRequest setUpAccountRequest, AuditLogEventRequest auditRequest);
 
   public DeactivateAccountResponse deactivateAccount(String userId);
 }

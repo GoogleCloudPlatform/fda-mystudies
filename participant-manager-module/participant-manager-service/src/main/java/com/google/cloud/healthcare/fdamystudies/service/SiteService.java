@@ -36,16 +36,17 @@ public interface SiteService {
   public ParticipantResponse addNewParticipant(
       ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest);
 
-  public SiteStatusResponse toggleSiteStatus(String userId, String siteId);
+  public SiteStatusResponse toggleSiteStatus(
+      String userId, String siteId, AuditLogEventRequest auditRequest);
 
   public ParticipantDetailResponse getParticipantDetails(
       String participantRegistrySiteId, String userId);
 
   public InviteParticipantResponse inviteParticipants(
-      InviteParticipantRequest inviteparticipantBean);
+      InviteParticipantRequest inviteparticipantBean, AuditLogEventRequest auditRequest);
 
   public ImportParticipantResponse importParticipants(
-      String userId, String siteId, MultipartFile multipartFile);
+      String userId, String siteId, MultipartFile multipartFile, AuditLogEventRequest auditRequest);
 
   public ParticipantStatusResponse updateOnboardingStatus(
       ParticipantStatusRequest request, AuditLogEventRequest auditRequest);
@@ -53,5 +54,5 @@ public interface SiteService {
   public SiteDetailsResponse getSites(String userId);
 
   public UpdateTargetEnrollmentResponse updateTargetEnrollment(
-      UpdateTargetEnrollmentRequest enrollmentRequest);
+      UpdateTargetEnrollmentRequest enrollmentRequest, AuditLogEventRequest auditRequest);
 }

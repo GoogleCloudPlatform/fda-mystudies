@@ -8,8 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
@@ -32,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
 @RestController
 @RequestMapping("/studies")
@@ -83,11 +83,12 @@ public class StudyController {
       @Valid @RequestBody UpdateTargetEnrollmentRequest targetEnrollmentRequest,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     targetEnrollmentRequest.setUserId(userId);
     targetEnrollmentRequest.setStudyId(studyId);
     UpdateTargetEnrollmentResponse updateTargetEnrollmentResponse =
-        siteService.updateTargetEnrollment(targetEnrollmentRequest);
+        siteService.updateTargetEnrollment(targetEnrollmentRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, updateTargetEnrollmentResponse.getHttpStatusCode()));
     return ResponseEntity.status(updateTargetEnrollmentResponse.getHttpStatusCode())
