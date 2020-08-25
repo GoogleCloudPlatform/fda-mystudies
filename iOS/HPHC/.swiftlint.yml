@@ -19,7 +19,6 @@ disabled_rules:
   - legacy_constructor
   - for_where
   - multiple_closures_with_trailing_closure
-  - valid_ibinspectable
   - identifier_name
   - leading_whitespace
   - colon

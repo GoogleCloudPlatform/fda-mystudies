@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.CascadeType;
@@ -21,17 +24,19 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 @Setter
 @Getter
 @Entity
 @Table(name = "study_consent")
+@ConditionalOnProperty(
+    value = "participant.manager.entities.enabled",
+    havingValue = "true",
+    matchIfMissing = false)
 public class StudyConsentEntity implements Serializable {
 
   private static final long serialVersionUID = 6218229749598633153L;
@@ -40,25 +45,27 @@ public class StudyConsentEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "study_consent_id", updatable = false, nullable = false)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "study_info_id")
-  private String studyInfoId;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "study_info_id")
+  private StudyEntity study;
 
-  @Column(name = "user_details_id")
-  private String userId;
+  @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "user_details_id")
+  private UserDetailsEntity userDetails;
 
-  @Column(name = "status")
+  @Column(length = SMALL_LENGTH)
   private String status;
 
-  @Column(name = "version")
+  @Column(length = SMALL_LENGTH)
   private String version;
 
-  @Column(name = "pdf")
+  @Type(type = "text")
   private String pdf;
 
-  @Column(name = "pdfpath")
+  @Column(length = LARGE_LENGTH)
   private String pdfPath;
 
   @ManyToOne(cascade = CascadeType.MERGE)
@@ -66,13 +73,10 @@ public class StudyConsentEntity implements Serializable {
   private ParticipantStudyEntity participantStudy;
 
   // represents whether pdf content is stored in db=0 or gcp=1
-  @Column(name = "pdfStorage", nullable = false)
+  @Column(nullable = false)
   private int pdfStorage;
 
-  @Column(
-      name = "created",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 }

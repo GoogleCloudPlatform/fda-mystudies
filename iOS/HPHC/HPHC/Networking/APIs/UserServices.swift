@@ -135,9 +135,11 @@ class UserServices: NSObject {
   ///   - emailId: Email Id of the`User ` to verify
   ///   - verificationCode: Code which is to be verified
   ///   - delegate: Class object to receive response
-  func verifyEmail(emailId: String,
-                   verificationCode: String,
-                   delegate: NMWebServiceDelegate) {
+  func verifyEmail(
+    emailId: String,
+    verificationCode: String,
+    delegate: NMWebServiceDelegate
+  ) {
 
     self.delegate = delegate
     let param = [
@@ -317,23 +319,6 @@ class UserServices: NSObject {
   /// - Parameter delegate: Class object to receive response
   func updateUserActivityState(_ delegate: NMWebServiceDelegate) {
     self.delegate = delegate
-  }
-
-  /// Creattes a request to sync offline data
-  /// - Parameters:
-  ///   - method: Instance of `Method`
-  ///   - params:  Request Params
-  ///   - headers: Request headers
-  ///   - delegate: Class object to receive response
-  func syncOfflineSavedData(
-    method: Method,
-    params: [String: Any]?,
-    headers: [String: String]?,
-    delegate: NMWebServiceDelegate
-  ) {
-
-    self.delegate = delegate
-    self.sendRequestWith(method: method, params: params, headers: headers)
   }
 
   // MARK: Parsers
@@ -599,7 +584,7 @@ extension UserServices: NMWebServiceDelegate {
             params: self.requestParams,
             headers: self.headerParams,
             method: requestName as String,
-            server: "registration"
+            server: SyncUpdate.ServerType.response.rawValue
           )
         }
       }
