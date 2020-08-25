@@ -8,13 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
+import com.google.cloud.healthcare.fdamystudies.beans.User;
+import com.google.cloud.healthcare.fdamystudies.beans.UserAppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UserSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserSitePermissionRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -189,5 +194,44 @@ public final class UserMapper {
     appPermission.setEdit(edit);
     appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
+  }
+
+  public static User prepareUserInfo(UserRegAdminEntity admin) {
+    User user = new User();
+    user.setId(admin.getId());
+    user.setEmail(admin.getEmail());
+    user.setFirstName(admin.getFirstName());
+    user.setLastName(admin.getLastName());
+    user.setSuperAdmin(admin.isSuperAdmin());
+    user.setManageLocations(admin.getEditPermission());
+    UserStatus userStatus = UserStatus.fromValue(admin.getStatus());
+    user.setStatus(userStatus.getDescription());
+    return user;
+  }
+
+  public static UserAppDetails toUserAppDetails(AppEntity app) {
+    UserAppDetails userApp = new UserAppDetails();
+    userApp.setId(app.getId());
+    userApp.setCustomId(app.getAppId());
+    userApp.setName(app.getAppName());
+    return userApp;
+  }
+
+  public static UserStudyDetails toUserStudyDetails(StudyEntity existingStudy) {
+    UserStudyDetails studyResponse = new UserStudyDetails();
+    studyResponse.setStudyId(existingStudy.getId());
+    studyResponse.setCustomStudyId(existingStudy.getCustomId());
+    studyResponse.setStudyName(existingStudy.getName());
+    return studyResponse;
+  }
+
+  public static UserSiteDetails toUserSiteDetails(SiteEntity site) {
+    UserSiteDetails siteResponse = new UserSiteDetails();
+    siteResponse.setSiteId(site.getId());
+    siteResponse.setLocationId(site.getLocation().getId());
+    siteResponse.setCustomLocationId(site.getLocation().getCustomId());
+    siteResponse.setLocationName(site.getLocation().getName());
+    siteResponse.setLocationDescription(site.getLocation().getDescription());
+    return siteResponse;
   }
 }

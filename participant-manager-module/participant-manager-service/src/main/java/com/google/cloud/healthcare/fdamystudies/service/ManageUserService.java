@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 
 public interface ManageUserService {
@@ -16,4 +17,6 @@ public interface ManageUserService {
   public AdminUserResponse createUser(UserRequest user);
 
   public AdminUserResponse updateUser(UserRequest user, String loggedInAdminUserId);
+
+  public GetAdminDetailsResponse getAdminDetails(String userId, String adminId);
 }

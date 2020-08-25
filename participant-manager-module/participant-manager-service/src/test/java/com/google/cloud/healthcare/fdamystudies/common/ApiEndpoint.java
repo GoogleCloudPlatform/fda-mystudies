@@ -77,7 +77,10 @@ public enum ApiEndpoint {
       "http://localhost:8080/participant-manager-service/consents/{consentId}/consentDocument"),
 
   GET_USER_DETAILS_BY_SECURITY_CODE(
-      "http://localhost:8080/participant-manager-service/users/securitycodes/{securityCode}");
+      "http://localhost:8080/participant-manager-service/users/securitycodes/{securityCode}"),
+
+  GET_ADMIN_DETAILS_AND_APPS(
+      "http://localhost:8080/participant-manager-service/users/admin/{adminId}");
 
   private String url;
 
