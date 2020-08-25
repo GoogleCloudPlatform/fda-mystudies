@@ -20,6 +20,10 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_EMAIL_ADDED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_PARTICIPANT_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
@@ -78,8 +83,10 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -366,6 +373,18 @@ public class SiteControllerTest extends BaseMockIT {
     assertNotNull(optParticipantRegistrySite.get().getSite());
     assertEquals(siteEntity.getId(), optParticipantRegistrySite.get().getSite().getId());
     assertEquals(participantRequest.getEmail(), optParticipantRegistrySite.get().getEmail());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setParticipantId(participantId);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_EMAIL_ADDED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PARTICIPANT_EMAIL_ADDED);
   }
 
   @Test
@@ -464,6 +483,17 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(1)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_PARTICIPANT_REGISTRY_VIEWED);
   }
 
   @Test
@@ -1068,6 +1098,58 @@ public class SiteControllerTest extends BaseMockIT {
     assertNotNull(participantRegistrySiteEntity);
     assertEquals(
         participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_INVITATION_ENABLED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PARTICIPANT_INVITATION_ENABLED);
+  }
+
+  @Test
+  public void shouldUpdateParticipantStatusToDisabled() throws Exception {
+    // Step 1:set request body
+    ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
+    participantStatusRequest.setStatus("D");
+
+    // Step 2: Call API to UPDATE_ONBOARDING_STATUS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(participantStatusRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message", is(MessageCode.UPDATE_STATUS_SUCCESS.getMessage())));
+
+    // Step 3: verify updated values
+    List<ParticipantRegistrySiteEntity> optParticipantRegistrySiteEntity =
+        participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
+    ParticipantRegistrySiteEntity participantRegistrySiteEntity =
+        optParticipantRegistrySiteEntity.get(0);
+    assertNotNull(participantRegistrySiteEntity);
+    assertEquals(
+        participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_INVITATION_DISABLED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PARTICIPANT_INVITATION_DISABLED);
   }
 
   @Test

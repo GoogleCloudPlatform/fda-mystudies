@@ -8,10 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.CONSENT_DOCUMENT_DOWNLOADED;
+
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocumentResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
@@ -21,7 +26,9 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.Map;
 import java.util.Optional;
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -43,9 +50,12 @@ public class ConsentServiceImpl implements ConsentService {
 
   @Autowired AppPropertyConfig appConfig;
 
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
   @Override
   @Transactional(readOnly = true)
-  public ConsentDocumentResponse getConsentDocument(String consentId, String userId) {
+  public ConsentDocumentResponse getConsentDocument(
+      String consentId, String userId, AuditLogEventRequest auditRequest) {
     logger.entry("begin getConsentDocument(consentId,userId)");
 
     Optional<StudyConsentEntity> optStudyConsent = studyConsentRepository.findById(consentId);
@@ -65,6 +75,18 @@ public class ConsentServiceImpl implements ConsentService {
       logger.exit(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
       return new ConsentDocumentResponse(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
+
+    SiteEntity site = studyConsentEntity.getParticipantStudy().getSite();
+    auditRequest.setSiteId(site.getId());
+    auditRequest.setParticipantId(studyConsentEntity.getParticipantStudy().getId());
+    auditRequest.setAppId(site.getStudy().getAppId());
+    auditRequest.setStudyId(site.getStudyId());
+    auditRequest.setUserId(userId);
+    Map<String, String> map = new HashedMap<>();
+    map.put("site_id", site.getId());
+    map.put("participant_id", studyConsentEntity.getParticipantStudy().getId());
+    map.put("consent_version", studyConsentEntity.getVersion());
+    participantManagerHelper.logEvent(CONSENT_DOCUMENT_DOWNLOADED, auditRequest, map);
 
     String document = null;
     if (StringUtils.isNotBlank(studyConsentEntity.getPdfPath())) {

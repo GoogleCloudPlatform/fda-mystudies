@@ -14,6 +14,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.STUDY_PARTICIPANT_REGISTRY_VIEWED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -46,14 +48,14 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyService;
 import com.jayway.jsonpath.JsonPath;
-import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class StudyControllerTest extends BaseMockIT {
@@ -104,8 +106,8 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnStudies() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
-    headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -121,7 +123,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForGetStudies() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
 
     mockMvc
         .perform(
@@ -135,7 +137,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnStudyNotFound() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, IdGenerator.id());
 
     mockMvc
@@ -149,7 +151,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnStudyNotFoundForStudyParticipants() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
@@ -164,7 +166,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAppNotFoundForStudyParticipants() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
     StudyPermissionEntity studyPermission = studyEntity.getStudyPermissions().get(0);
@@ -182,7 +184,7 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAccessDeniedForStudyParticipants() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
     StudyEntity study = testDataHelper.newStudyEntity();
@@ -201,8 +203,8 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnStudyParticipants() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
-    headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
@@ -236,11 +238,21 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.participantRegistryDetail.targetEnrollment")
                 .value(siteEntity.getTargetEnrollment()));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_PARTICIPANT_REGISTRY_VIEWED);
   }
 
   @Test
   public void shouldReturnUserNotFound() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
 
     mockMvc
         .perform(
@@ -252,13 +264,6 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations").isArray())
         .andExpect(jsonPath("$.violations[0].path").value("userId"))
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
-  }
-
-  public HttpHeaders newCommonHeaders() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    return headers;
   }
 
   @Test

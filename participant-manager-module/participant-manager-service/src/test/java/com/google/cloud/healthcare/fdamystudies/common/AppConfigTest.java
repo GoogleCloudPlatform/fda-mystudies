@@ -11,6 +11,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventServiceImpl;
 import com.google.cloud.storage.Storage;
 import javax.mail.internet.MimeMessage;
 import org.springframework.cloud.gcp.storage.GoogleStorageProtocolResolver;
@@ -46,5 +48,11 @@ public class AppConfigTest {
     when(javaMailSender.createMimeMessage()).thenReturn(mimeMessage);
     doNothing().when(javaMailSender).send(mimeMessage);
     return javaMailSender;
+  }
+
+  @Bean
+  @Primary
+  public AuditEventService auditService() {
+    return mock(AuditEventServiceImpl.class);
   }
 }

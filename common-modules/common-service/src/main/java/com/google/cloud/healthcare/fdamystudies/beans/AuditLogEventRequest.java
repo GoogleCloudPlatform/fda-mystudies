@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
@@ -19,7 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AuditLogEventRequest {
+public class AuditLogEventRequest implements Serializable {
 
   @NotBlank
   @Size(max = 36)
@@ -89,4 +90,7 @@ public class AuditLogEventRequest {
 
   @Size(max = 20)
   private String studyVersion;
+
+  @Size(max = 64)
+  private String siteId;
 }

@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ImportParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
@@ -30,9 +31,10 @@ public interface SiteService {
   public SiteResponse addSite(SiteRequest siteRequest);
 
   public ParticipantRegistryResponse getParticipants(
-      String userId, String siteId, String onboardingStatus);
+      String userId, String siteId, String onboardingStatus, AuditLogEventRequest auditRequest);
 
-  public ParticipantResponse addNewParticipant(ParticipantDetailRequest participant, String userId);
+  public ParticipantResponse addNewParticipant(
+      ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest);
 
   public SiteStatusResponse toggleSiteStatus(String userId, String siteId);
 
@@ -45,7 +47,8 @@ public interface SiteService {
   public ImportParticipantResponse importParticipants(
       String userId, String siteId, MultipartFile multipartFile);
 
-  public ParticipantStatusResponse updateOnboardingStatus(ParticipantStatusRequest request);
+  public ParticipantStatusResponse updateOnboardingStatus(
+      ParticipantStatusRequest request, AuditLogEventRequest auditRequest);
 
   public SiteDetailsResponse getSites(String userId);
 

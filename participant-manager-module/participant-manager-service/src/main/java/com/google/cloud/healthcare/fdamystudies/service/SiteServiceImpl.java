@@ -17,7 +17,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_EMAIL_ADDED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_PARTICIPANT_REGISTRY_VIEWED;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentHistory;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
@@ -44,6 +49,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResp
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
@@ -77,6 +83,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -131,6 +138,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private AppPropertyConfig appPropertyConfig;
 
   @Autowired private EmailService emailService;
+
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Override
   @Transactional
@@ -240,7 +249,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional
   public ParticipantResponse addNewParticipant(
-      ParticipantDetailRequest participant, String userId) {
+      ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest) {
     logger.entry("begin addNewParticipant()");
 
     Optional<SiteEntity> optSite = siteRepository.findById(participant.getSiteId());
@@ -265,6 +274,15 @@ public class SiteServiceImpl implements SiteService {
     ParticipantResponse response =
         new ParticipantResponse(
             MessageCode.ADD_PARTICIPANT_SUCCESS, participantRegistrySite.getId());
+
+    auditRequest.setAppId(site.getStudy().getAppId());
+    auditRequest.setStudyId(site.getStudyId());
+    auditRequest.setUserId(userId);
+    auditRequest.setSiteId(site.getId());
+    auditRequest.setParticipantId(participantRegistrySite.getId());
+
+    Map<String, String> map = Collections.singletonMap("site_id", site.getId());
+    participantManagerHelper.logEvent(PARTICIPANT_EMAIL_ADDED, auditRequest, map);
 
     logger.exit(String.format("participantRegistrySiteId=%s", participantRegistrySite.getId()));
     return response;
@@ -307,7 +325,7 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   public ParticipantRegistryResponse getParticipants(
-      String userId, String siteId, String onboardingStatus) {
+      String userId, String siteId, String onboardingStatus, AuditLogEventRequest auditRequest) {
     logger.info("getParticipants()");
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
 
@@ -345,6 +363,14 @@ public class SiteServiceImpl implements SiteService {
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
+
+    auditRequest.setSiteId(siteId);
+    auditRequest.setStudyId(optSite.get().getStudyId());
+    auditRequest.setAppId(optSite.get().getStudy().getAppId());
+    auditRequest.setUserId(userId);
+
+    Map<String, String> map = Collections.singletonMap("site_id", siteId);
+    participantManagerHelper.logEvent(SITE_PARTICIPANT_REGISTRY_VIEWED, auditRequest, map);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
     return participantRegistryResponse;
@@ -833,7 +859,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional
   public ParticipantStatusResponse updateOnboardingStatus(
-      ParticipantStatusRequest participantStatusRequest) {
+      ParticipantStatusRequest participantStatusRequest, AuditLogEventRequest auditRequest) {
     logger.entry("begin updateOnboardingStatus()");
 
     Optional<SiteEntity> optSite = siteRepository.findById(participantStatusRequest.getSiteId());
@@ -861,7 +887,18 @@ public class SiteServiceImpl implements SiteService {
 
     participantRegistrySiteRepository.updateOnboardingStatus(
         participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    SiteEntity site = optSite.get();
+    auditRequest.setSiteId(site.getId());
+    auditRequest.setUserId(participantStatusRequest.getUserId());
+    auditRequest.setStudyId(site.getStudyId());
+    auditRequest.setAppId(site.getStudy().getAppId());
 
+    Map<String, String> map = Collections.singletonMap("site_id", optSite.get().getId());
+    if (participantStatusRequest.getStatus().equals(OnboardingStatus.DISABLED.getCode())) {
+      participantManagerHelper.logEvent(PARTICIPANT_INVITATION_DISABLED, auditRequest, map);
+    } else if (participantStatusRequest.getStatus().equals(OnboardingStatus.NEW.getCode())) {
+      participantManagerHelper.logEvent(PARTICIPANT_INVITATION_ENABLED, auditRequest, map);
+    }
     logger.exit(
         String.format(
             "Onboarding status changed to %s for %d participants in Site %s",

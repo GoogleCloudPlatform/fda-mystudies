@@ -16,6 +16,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCA
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -103,6 +104,10 @@ public class TestDataHelper {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "GCPMS001");
+    headers.add("source", "IntegrationTests");
     return headers;
   }
 
