@@ -23,6 +23,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJson
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_EMAIL_ADDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ACTIVATED_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_DECOMMISSIONED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_PARTICIPANT_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
@@ -540,6 +542,16 @@ public class SiteControllerTest extends BaseMockIT {
     SiteEntity siteEntity = optSiteEntity.get();
     assertNotNull(siteEntity);
     assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteId);
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(siteEntity.getStudyId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_ACTIVATED_FOR_STUDY.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_ACTIVATED_FOR_STUDY);
   }
 
   @Test
@@ -571,6 +583,16 @@ public class SiteControllerTest extends BaseMockIT {
     SiteEntity siteEntity = optSiteEntity.get();
     assertNotNull(siteEntity);
     assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteId);
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(siteEntity.getStudyId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_DECOMMISSIONED_FOR_STUDY.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_DECOMMISSIONED_FOR_STUDY);
   }
 
   @Test

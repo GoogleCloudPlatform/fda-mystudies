@@ -128,8 +128,10 @@ public class SiteController {
       @PathVariable String siteId,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    SiteStatusResponse decomissionSiteResponse = siteService.toggleSiteStatus(userId, siteId);
+    SiteStatusResponse decomissionSiteResponse =
+        siteService.toggleSiteStatus(userId, siteId, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, decomissionSiteResponse.getHttpStatusCode()));
     return ResponseEntity.status(decomissionSiteResponse.getHttpStatusCode())

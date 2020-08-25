@@ -36,7 +36,8 @@ public interface SiteService {
   public ParticipantResponse addNewParticipant(
       ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest);
 
-  public SiteStatusResponse toggleSiteStatus(String userId, String siteId);
+  public SiteStatusResponse toggleSiteStatus(
+      String userId, String siteId, AuditLogEventRequest auditRequest);
 
   public ParticipantDetailResponse getParticipantDetails(
       String participantRegistrySiteId, String userId);
@@ -53,5 +54,5 @@ public interface SiteService {
   public SiteDetailsResponse getSites(String userId);
 
   public UpdateTargetEnrollmentResponse updateTargetEnrollment(
-      UpdateTargetEnrollmentRequest enrollmentRequest);
+      UpdateTargetEnrollmentRequest enrollmentRequest, AuditLogEventRequest auditRequest);
 }

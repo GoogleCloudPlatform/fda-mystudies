@@ -8,11 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -21,8 +23,8 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -89,8 +91,10 @@ public class UserProfileController {
   public ResponseEntity<SetUpAccountResponse> setUpAccount(
       @Valid @RequestBody SetUpAccountRequest setUpAccountRequest, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    SetUpAccountResponse setUpAccountResponse = userProfileService.saveUser(setUpAccountRequest);
+    SetUpAccountResponse setUpAccountResponse =
+        userProfileService.saveUser(setUpAccountRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, setUpAccountResponse.getHttpStatusCode()));
     return ResponseEntity.status(setUpAccountResponse.getHttpStatusCode())

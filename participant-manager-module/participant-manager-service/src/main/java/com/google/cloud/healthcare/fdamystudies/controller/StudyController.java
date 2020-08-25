@@ -83,11 +83,12 @@ public class StudyController {
       @Valid @RequestBody UpdateTargetEnrollmentRequest targetEnrollmentRequest,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     targetEnrollmentRequest.setUserId(userId);
     targetEnrollmentRequest.setStudyId(studyId);
     UpdateTargetEnrollmentResponse updateTargetEnrollmentResponse =
-        siteService.updateTargetEnrollment(targetEnrollmentRequest);
+        siteService.updateTargetEnrollment(targetEnrollmentRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, updateTargetEnrollmentResponse.getHttpStatusCode()));
     return ResponseEntity.status(updateTargetEnrollmentResponse.getHttpStatusCode())

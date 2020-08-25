@@ -17,9 +17,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ENROLLMENT_TARGET_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_EMAIL_ADDED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_DISABLED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANT_INVITATION_ENABLED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_ACTIVATED_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_DECOMMISSIONED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.SITE_PARTICIPANT_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -443,7 +446,8 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   @Transactional
-  public SiteStatusResponse toggleSiteStatus(String userId, String siteId) {
+  public SiteStatusResponse toggleSiteStatus(
+      String userId, String siteId, AuditLogEventRequest auditRequest) {
     logger.entry("toggleSiteStatus()");
 
     ErrorCode errorCode = validateDecommissionSiteRequest(userId, siteId);
@@ -453,11 +457,18 @@ public class SiteServiceImpl implements SiteService {
     }
 
     Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
+    auditRequest.setUserId(userId);
+    auditRequest.setSiteId(siteId);
+    auditRequest.setStudyId(optSiteEntity.get().getStudyId());
+
+    Map<String, String> map = Collections.singletonMap("site_id", siteId);
 
     SiteEntity site = optSiteEntity.get();
     if (SiteStatus.DEACTIVE == SiteStatus.fromValue(site.getStatus())) {
       site.setStatus(SiteStatus.ACTIVE.value());
       site = siteRepository.saveAndFlush(site);
+
+      participantManagerHelper.logEvent(SITE_ACTIVATED_FOR_STUDY, auditRequest, map);
 
       logger.exit(String.format(" Site status changed to ACTIVE for siteId=%s", site.getId()));
       return new SiteStatusResponse(
@@ -467,6 +478,8 @@ public class SiteServiceImpl implements SiteService {
     site.setStatus(SiteStatus.DEACTIVE.value());
     siteRepository.saveAndFlush(site);
     updateSitePermissions(siteId);
+
+    participantManagerHelper.logEvent(SITE_DECOMMISSIONED_FOR_STUDY, auditRequest, map);
 
     logger.exit(String.format("Site status changed to DEACTIVE for siteId=%s", site.getId()));
     return new SiteStatusResponse(
@@ -1029,7 +1042,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional
   public UpdateTargetEnrollmentResponse updateTargetEnrollment(
-      UpdateTargetEnrollmentRequest enrollmentRequest) {
+      UpdateTargetEnrollmentRequest enrollmentRequest, AuditLogEventRequest auditRequest) {
     logger.entry("updateTargetEnrollment()");
 
     Optional<StudyPermissionEntity> optStudyPermission =
@@ -1060,6 +1073,13 @@ public class SiteServiceImpl implements SiteService {
 
     site.setTargetEnrollment(enrollmentRequest.getTargetEnrollment());
     siteRepository.saveAndFlush(site);
+
+    auditRequest.setUserId(enrollmentRequest.getUserId());
+    auditRequest.setStudyId(enrollmentRequest.getStudyId());
+    auditRequest.setSiteId(site.getId());
+
+    Map<String, String> map = Collections.singletonMap("site_id", site.getId());
+    participantManagerHelper.logEvent(ENROLLMENT_TARGET_UPDATED, auditRequest, map);
 
     logger.exit(
         String.format(
