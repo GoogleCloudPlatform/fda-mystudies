@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.BaseResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAccountResponse;
@@ -20,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
@@ -41,6 +43,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION;
+
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 
@@ -53,6 +57,8 @@ public class UserProfileServiceImpl implements UserProfileService {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private OAuthService oauthService;
+
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Override
   @Transactional(readOnly = true)
@@ -81,7 +87,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserProfileResponse findUserProfileBySecurityCode(String securityCode) {
+  public UserProfileResponse findUserProfileBySecurityCode(
+      String securityCode, AuditLogEventRequest auditRequest) {
     logger.entry("begin getUserProfileBySecurityCode()");
 
     Optional<UserRegAdminEntity> optUserRegAdminUser =
@@ -96,6 +103,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     Timestamp now = new Timestamp(Instant.now().toEpochMilli());
 
     if (now.after(user.getSecurityCodeExpireDate())) {
+      participantManagerHelper.logEvent(
+          USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION, auditRequest);
       logger.exit(ErrorCode.SECURITY_CODE_EXPIRED);
       return new UserProfileResponse(ErrorCode.SECURITY_CODE_EXPIRED);
     }

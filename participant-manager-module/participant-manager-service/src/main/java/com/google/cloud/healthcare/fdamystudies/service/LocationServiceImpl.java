@@ -8,15 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
-
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
@@ -29,6 +28,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +41,13 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.LOCATION_ACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.LOCATION_DECOMMISSIONED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.LOCATION_EDITED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_LOCATION_ADDED;
 
 @Service
 public class LocationServiceImpl implements LocationService {
@@ -55,9 +62,12 @@ public class LocationServiceImpl implements LocationService {
 
   @Autowired private StudyRepository studyRepository;
 
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
   @Override
   @Transactional
-  public LocationEntity addNewLocation(LocationEntity location, String userId)
+  public LocationEntity addNewLocation(
+      LocationEntity location, String userId, AuditLogEventRequest auditRequest)
       throws ErrorCodeException {
     logger.entry("begin addNewLocation()");
 
@@ -77,13 +87,19 @@ public class LocationServiceImpl implements LocationService {
     location.setCreatedBy(adminUser.getId());
     LocationEntity created = locationRepository.saveAndFlush(location);
 
+    auditRequest.setUserId(adminUser.getId());
+    Map<String, String> map = Collections.singletonMap("location_id", created.getId());
+
+    participantManagerHelper.logEvent(NEW_LOCATION_ADDED, auditRequest, map);
+
     logger.exit(String.format("locationId=%s", created.getId()));
     return created;
   }
 
   @Override
   @Transactional
-  public LocationDetailsResponse updateLocation(UpdateLocationRequest locationRequest) {
+  public LocationDetailsResponse updateLocation(
+      UpdateLocationRequest locationRequest, AuditLogEventRequest auditRequest) {
     logger.entry("begin updateLocation()");
 
     Optional<LocationEntity> optLocation =
@@ -110,6 +126,17 @@ public class LocationServiceImpl implements LocationService {
     MessageCode messageCode = getMessageCodeByLocationStatus(locationRequest.getStatus());
     LocationDetailsResponse locationResponse =
         LocationMapper.toLocationDetailsResponse(locationEntity, messageCode);
+
+    auditRequest.setUserId(locationRequest.getUserId());
+    Map<String, String> map = Collections.singletonMap("location_id", locationEntity.getId());
+
+    if (messageCode == MessageCode.REACTIVE_SUCCESS) {
+      participantManagerHelper.logEvent(LOCATION_ACTIVATED, auditRequest, map);
+    } else if (messageCode == MessageCode.DECOMMISSION_SUCCESS) {
+      participantManagerHelper.logEvent(LOCATION_DECOMMISSIONED, auditRequest, map);
+    } else {
+      participantManagerHelper.logEvent(LOCATION_EDITED, auditRequest, map);
+    }
 
     logger.exit(String.format("locationId=%s", locationEntity.getId()));
     return locationResponse;
