@@ -18,7 +18,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -72,7 +71,6 @@ public class AppEntity implements Serializable {
   @ToString.Exclude
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "org_info_id")
-  @Index(name = "participant_registry_site_site_idx")
   private OrgInfoEntity orgInfo;
 
   @ToString.Exclude
