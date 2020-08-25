@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -49,7 +50,7 @@ public class StudyConsentBO {
 
   @ManyToOne
   @JoinColumn(name = "participant_study_id", insertable = false, updatable = true)
-  @Index(name="study_consent_participant_study_idx")
+  @Index(name = "study_consent_participant_study_idx")
   private ParticipantStudiesBO participantStudiesBO;
 
   // represents whether pdf content is stored in db=0 or gcp=1

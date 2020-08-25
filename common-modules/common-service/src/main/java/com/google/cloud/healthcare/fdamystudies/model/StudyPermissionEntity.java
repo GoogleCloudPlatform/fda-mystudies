@@ -18,6 +18,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -52,17 +53,17 @@ public class StudyPermissionEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "app_info_id")
-  @Index(name="study_permissions_app_info_idx")
+  @Index(name = "study_permissions_app_info_idx")
   private AppEntity app;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "study_id")
-  @Index(name="study_permissions_study_idx")
+  @Index(name = "study_permissions_study_idx")
   private StudyEntity study;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "ur_admin_user_id")
-  @Index(name="study_permissions_ur_admin_user_idx")
+  @Index(name = "study_permissions_ur_admin_user_idx")
   private UserRegAdminEntity urAdminUser;
 
   @Enumerated(EnumType.ORDINAL)

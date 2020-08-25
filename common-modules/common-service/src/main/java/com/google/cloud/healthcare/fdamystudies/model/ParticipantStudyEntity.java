@@ -16,6 +16,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -62,22 +63,22 @@ public class ParticipantStudyEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "study_info_id")
-  @Index(name="participant_study_info_study_info_idx")
+  @Index(name = "participant_study_info_study_info_idx")
   private StudyEntity study;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "participant_registry_site_id")
-  @Index(name="participant_study_info_participant_registry_site_idx")
+  @Index(name = "participant_study_info_participant_registry_site_idx")
   private ParticipantRegistrySiteEntity participantRegistrySite;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "site_id")
-  @Index(name="participant_study_info_site_idx")
+  @Index(name = "participant_study_info_site_idx")
   private SiteEntity site;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_details_id")
-  @Index(name="participant_study_info_user_details_idx")
+  @Index(name = "participant_study_info_user_details_idx")
   private UserDetailsEntity userDetails;
 
   @Column(name = "consent_status")

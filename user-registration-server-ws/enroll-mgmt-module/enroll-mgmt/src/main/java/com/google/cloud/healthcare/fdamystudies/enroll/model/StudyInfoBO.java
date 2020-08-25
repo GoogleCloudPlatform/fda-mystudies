@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -40,7 +41,7 @@ public class StudyInfoBO implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "app_info_id", insertable = true, updatable = true)
-  @Index(name="study_info_app_info_idx")
+  @Index(name = "study_info_app_info_idx")
   private AppInfoDetailsBO appInfo;
 
   @Column(name = "name", columnDefinition = "VARCHAR(255)")

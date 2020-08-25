@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -37,22 +38,22 @@ public class ParticipantStudiesBO {
 
   @ManyToOne
   @JoinColumn(name = "study_info_id", insertable = true, updatable = false)
-  @Index(name="participant_study_info_study_info_idx")
+  @Index(name = "participant_study_info_study_info_idx")
   private StudyInfoBO studyInfo;
 
   @ManyToOne
   @JoinColumn(name = "participant_registry_site_id", insertable = true, updatable = true)
-  @Index(name="participant_study_info_participant_registry_site_idx")
+  @Index(name = "participant_study_info_participant_registry_site_idx")
   private ParticipantRegistrySite participantRegistrySite;
 
   @ManyToOne
   @JoinColumn(name = "site_id", insertable = true, updatable = true)
-  @Index(name="participant_study_info_site_idx")
+  @Index(name = "participant_study_info_site_idx")
   private SiteBo siteBo;
 
   @ManyToOne
   @JoinColumn(name = "user_details_id", insertable = true, updatable = false)
-  @Index(name="participant_study_info_study_details_idx")
+  @Index(name = "participant_study_info_study_details_idx")
   private UserDetailsBO userDetails;
 
   @Column(name = "consent_status", columnDefinition = "TINYINT(1)")

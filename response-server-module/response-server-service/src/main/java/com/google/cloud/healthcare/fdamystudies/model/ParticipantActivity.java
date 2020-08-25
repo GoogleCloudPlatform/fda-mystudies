@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
@@ -32,7 +33,7 @@ public class ParticipantActivity {
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "participant_id", insertable = false, updatable = false)
-  @Index(name="participant_activity_participant_idx")
+  @Index(name = "participant_activity_participant_idx")
   private ParticipantBo participantInfo;
 
   @Column(name = "study_id")

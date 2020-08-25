@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -33,22 +34,22 @@ public class SitePermission {
 
   @ManyToOne
   @JoinColumn(name = "ur_admin_user_id", insertable = false, updatable = false)
-  @Index(name="sites_permissions_ur_admin_user_idx")
+  @Index(name = "sites_permissions_ur_admin_user_idx")
   private UserRegAdminUser urAdminUser;
 
   @ManyToOne
   @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  @Index(name="sites_permissions_ur_admin_user_idx")
+  @Index(name = "sites_permissions_ur_admin_user_idx")
   private StudyInfoBO studyInfo;
 
   @ManyToOne
   @JoinColumn(name = "site_id", insertable = true, updatable = true)
-  @Index(name="sites_permissions_site_idx")
+  @Index(name = "sites_permissions_site_idx")
   private SiteBo siteBo;
 
   @ManyToOne
   @JoinColumn(name = "app_info_id", insertable = true, updatable = true)
-  @Index(name="sites_permissions_app_info_idx")
+  @Index(name = "sites_permissions_app_info_idx")
   private AppInfoDetailsBO appInfo;
 
   @Column(name = "edit", columnDefinition = "TINYINT(1) default 0")

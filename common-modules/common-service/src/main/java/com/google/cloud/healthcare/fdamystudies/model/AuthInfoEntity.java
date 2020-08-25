@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -50,12 +51,12 @@ public class AuthInfoEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "app_info_id", nullable = false)
-  @Index(name="auth_info_app_info_idx")
+  @Index(name = "auth_info_app_info_idx")
   private AppEntity app;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_details_id", nullable = false)
-  @Index(name="auth_info_user_details_idx")
+  @Index(name = "auth_info_user_details_idx")
   private UserDetailsEntity userDetails;
 
   @Column(name = "auth_key", length = SMALL_LENGTH)

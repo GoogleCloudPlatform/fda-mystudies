@@ -16,6 +16,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -37,12 +38,12 @@ public class SiteBo implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "location_id", insertable = true, updatable = true)
-  @Index(name="sites_location_idx")
+  @Index(name = "sites_location_idx")
   private LocationBo locations;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "study_id", insertable = true, updatable = true)
-  @Index(name="sites_study_idx")
+  @Index(name = "sites_study_idx")
   private StudyInfoBO studyInfo;
 
   @Column(name = "status", columnDefinition = "TINYINT(1)")

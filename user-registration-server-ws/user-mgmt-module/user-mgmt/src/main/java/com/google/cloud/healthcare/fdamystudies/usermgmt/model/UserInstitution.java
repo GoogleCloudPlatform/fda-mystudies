@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -34,7 +35,7 @@ public class UserInstitution {
   @NotNull
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_details_id")
-  @Index(name="user_institution_user_details_idx")
+  @Index(name = "user_institution_user_details_idx")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private UserDetailsBO user;
 

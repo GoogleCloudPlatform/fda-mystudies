@@ -18,6 +18,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -93,7 +94,7 @@ public class UserDetailsEntity implements Serializable {
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
   @JoinColumn(name = "app_info_id")
-  @Index(name="user_details_app_info_idx")
+  @Index(name = "user_details_app_info_idx")
   private AppEntity app;
 
   @Column(length = MEDIUM_LENGTH)

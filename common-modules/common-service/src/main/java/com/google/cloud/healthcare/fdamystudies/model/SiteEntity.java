@@ -19,6 +19,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -56,12 +57,12 @@ public class SiteEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "location_id")
-  @Index(name="sites_location_idx")
+  @Index(name = "sites_location_idx")
   private LocationEntity location;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "study_id")
-  @Index(name="sites_study_idx")
+  @Index(name = "sites_study_idx")
   private StudyEntity study;
 
   private Integer status;

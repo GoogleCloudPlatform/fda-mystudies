@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -53,12 +54,12 @@ public class PersonalizedUserReportEntity implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
-  @Index(name="personalized_user_report_user_idx")
+  @Index(name = "personalized_user_report_user_idx")
   private UserDetailsEntity userDetails;
 
   @ManyToOne
   @JoinColumn(name = "study_info_id")
-  @Index(name="personalized_user_report_study_info_idx")
+  @Index(name = "personalized_user_report_study_info_idx")
   private StudyEntity studyInfo;
 
   @Column(name = "report_title", length = MEDIUM_LENGTH)
