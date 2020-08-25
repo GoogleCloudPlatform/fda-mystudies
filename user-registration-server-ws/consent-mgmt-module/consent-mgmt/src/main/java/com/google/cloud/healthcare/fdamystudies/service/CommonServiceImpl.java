@@ -8,9 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.consent.model.ActivityLogBO;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
