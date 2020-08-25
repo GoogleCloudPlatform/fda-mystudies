@@ -70,6 +70,7 @@ public class AppEntity implements Serializable {
 
   @ToString.Exclude
   @ManyToOne(cascade = CascadeType.MERGE)
+  @JoinColumn(name = "org_info_id")
   @Index(name="participant_registry_site_site_idx")
   private OrgInfoEntity orgInfo;
 
