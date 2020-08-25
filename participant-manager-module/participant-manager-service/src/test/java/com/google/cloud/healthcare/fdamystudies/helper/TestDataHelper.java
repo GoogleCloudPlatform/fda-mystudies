@@ -298,7 +298,70 @@ public class TestDataHelper {
     return orgInfoRepository.saveAndFlush(orgInfoEntity);
   }
 
+  public SiteEntity createSiteEntityForManageUsers(
+      StudyEntity studyEntity, UserRegAdminEntity urAdminUser, AppEntity appEntity) {
+    SiteEntity siteEntity = newSiteEntity();
+    siteEntity.setStudy(studyEntity);
+    LocationEntity location = createLocationEntity();
+    siteEntity.setLocation(location);
+    SitePermissionEntity sitePermissionEntity = new SitePermissionEntity();
+    sitePermissionEntity.setCanEdit(Permission.EDIT);
+    sitePermissionEntity.setStudy(studyEntity);
+    sitePermissionEntity.setUrAdminUser(urAdminUser);
+    sitePermissionEntity.setApp(appEntity);
+    siteEntity.addSitePermissionEntity(sitePermissionEntity);
+    return siteRepository.saveAndFlush(siteEntity);
+  }
+
+  public LocationEntity createLocationEntity() {
+    LocationEntity locationEntity = newLocationEntity();
+    return locationRepository.saveAndFlush(locationEntity);
+  }
+
+  public void createAppPermission(
+      UserRegAdminEntity superAdmin, AppEntity appEntity, String adminId) {
+    AppPermissionEntity appPermission = new AppPermissionEntity();
+    appPermission.setApp(appEntity);
+    appPermission.setCreatedBy(adminId);
+    appPermission.setEdit(Permission.EDIT);
+    appPermission.setUrAdminUser(superAdmin);
+    appPermissionRepository.saveAndFlush(appPermission);
+  }
+
+  public void createStudyPermission(
+      UserRegAdminEntity superAdmin,
+      AppEntity appEntity,
+      StudyEntity studyDetails,
+      String adminId) {
+    StudyPermissionEntity studyPermission = new StudyPermissionEntity();
+    studyPermission.setApp(studyDetails.getApp());
+    studyPermission.setStudy(studyDetails);
+    studyPermission.setCreatedBy(adminId);
+    studyPermission.setEdit(Permission.EDIT);
+    studyPermission.setUrAdminUser(superAdmin);
+    studyPermissionRepository.saveAndFlush(studyPermission);
+  }
+
+  public void createSitePermission(
+      UserRegAdminEntity superAdmin,
+      AppEntity appDetails,
+      StudyEntity studyEntity,
+      SiteEntity siteEntity,
+      String adminId) {
+    SitePermissionEntity sitePermission = new SitePermissionEntity();
+    sitePermission.setApp(appDetails);
+    sitePermission.setCreatedBy(adminId);
+    sitePermission.setCanEdit(Permission.EDIT);
+    sitePermission.setStudy(siteEntity.getStudy());
+    sitePermission.setSite(siteEntity);
+    sitePermission.setUrAdminUser(superAdmin);
+    sitePermissionRepository.saveAndFlush(sitePermission);
+  }
+
   public void cleanUp() {
+    getAppPermissionRepository().deleteAll();
+    getStudyPermissionRepository().deleteAll();
+    getSitePermissionRepository().deleteAll();
     getStudyConsentRepository().deleteAll();
     getParticipantStudyRepository().deleteAll();
     getParticipantRegistrySiteRepository().deleteAll();
