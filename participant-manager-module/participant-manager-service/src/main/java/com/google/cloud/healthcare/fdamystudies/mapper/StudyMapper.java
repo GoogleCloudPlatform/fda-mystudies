@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StudyMapper {
@@ -36,9 +37,14 @@ public final class StudyMapper {
     appStudyResponse.setStudyName(study.getName());
     if (ArrayUtils.contains(fields, "sites")) {
       List<AppSiteResponse> appSiteResponsesList =
-          sites.stream().map(SiteMapper::toAppSiteResponse).collect(Collectors.toList());
+          CollectionUtils.emptyIfNull(sites)
+              .stream()
+              .map(SiteMapper::toAppSiteResponse)
+              .collect(Collectors.toList());
       appStudyResponse.getSites().addAll(appSiteResponsesList);
     }
+    int totalSiteCountPerStudy = appStudyResponse.getSites().size();
+    appStudyResponse.setTotalSitesCount(totalSiteCountPerStudy);
     return appStudyResponse;
   }
 
@@ -65,16 +71,16 @@ public final class StudyMapper {
     studyDetail.setCustomId(study.getCustomId());
     studyDetail.setName(study.getName());
     studyDetail.setType(study.getType());
-    studyDetail.setAppId(study.getAppInfo().getAppId());
-    studyDetail.setAppInfoId(study.getAppInfo().getId());
+    studyDetail.setAppId(study.getApp().getAppId());
+    studyDetail.setAppInfoId(study.getApp().getId());
 
     if (studyPermissionsByStudyInfoId.get(study.getId()) != null) {
       Integer studyEditPermission =
-          studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
+          studyPermissionsByStudyInfoId.get(study.getId()).getEdit().value();
       studyDetail.setStudyPermission(
           studyEditPermission == Permission.NO_PERMISSION.value()
-              ? Permission.READ_VIEW.value()
-              : Permission.READ_EDIT.value());
+              ? Permission.VIEW.value()
+              : Permission.EDIT.value());
       studyDetail.setStudyPermission(studyEditPermission);
     }
     return studyDetail;

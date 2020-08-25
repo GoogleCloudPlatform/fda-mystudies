@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminUser;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserRegAdminUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

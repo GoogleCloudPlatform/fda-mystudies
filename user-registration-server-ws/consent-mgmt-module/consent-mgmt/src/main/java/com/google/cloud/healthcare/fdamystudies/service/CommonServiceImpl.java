@@ -10,58 +10,19 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.bean.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ActivityLogBO;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class CommonServiceImpl implements CommonService {
 
-  @Autowired private RestTemplate restTemplate;
-
-  @Autowired private ApplicationPropertyConfiguration appConfig;
-
   @Autowired CommonDao commonDao;
 
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
-
-  @Override
-  public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
-    logger.info("CommonServiceImpl validateAccessToken() - starts ");
-    Integer value = null;
-    HttpHeaders headers = null;
-    BodyForProvider providerBody = null;
-    HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<Integer> responseEntity = null;
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientToken", clientToken);
-      headers.set("userId", userId);
-      headers.set("accessToken", accessToken);
-
-      requestBody = new HttpEntity<BodyForProvider>(null, headers);
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerAccessTokenValidationUrl(),
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
-      value = responseEntity.getBody();
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl validateAccessToken() - error ", e);
-    }
-    logger.info("CommonServiceImpl validateAccessToken() - ends ");
-    return value;
-  }
 
   @Override
   public Integer getUserDetailsId(String userId) {

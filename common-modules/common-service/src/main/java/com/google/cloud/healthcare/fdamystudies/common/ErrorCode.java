@@ -195,8 +195,21 @@ public enum ErrorCode {
       HttpStatus.INTERNAL_SERVER_ERROR.toString(),
       "Unable to import the participants"),
 
+  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY(
+      400, "EC-95", Constants.BAD_REQUEST, " Cannot update enrollment target for closed study"),
+
+  CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE(
+      400,
+      "EC-95",
+      Constants.BAD_REQUEST,
+      " Cannot update enrollment target for decommissionned site"),
+
+  CONSENT_DATA_NOT_AVAILABLE(400, "EC_885", Constants.BAD_REQUEST, "error getting consent data"),
+
   INVALID_APPS_FIELDS_VALUES(
-      400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites");
+      400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites"),
+
+  ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found");
 
   private final int status;
   private final String code;
