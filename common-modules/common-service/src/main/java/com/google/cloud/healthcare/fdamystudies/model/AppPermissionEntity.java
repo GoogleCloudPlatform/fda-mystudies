@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -21,14 +23,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
 
 @ToString
 @Setter
@@ -68,4 +70,9 @@ public class AppPermissionEntity implements Serializable {
 
   @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
+
+  @Transient
+  public String getAppId() {
+    return app == null ? StringUtils.EMPTY : app.getId();
+  }
 }
