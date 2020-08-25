@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.CONSENT_DOCUMENT_DOWNLOADED;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocumentResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
@@ -34,8 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.CONSENT_DOCUMENT_DOWNLOADED;
 
 @Service
 public class ConsentServiceImpl implements ConsentService {
@@ -76,6 +76,15 @@ public class ConsentServiceImpl implements ConsentService {
       return new ConsentDocumentResponse(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
+    String document = null;
+    if (StringUtils.isNotBlank(studyConsentEntity.getPdfPath())) {
+      Blob blob =
+          storageService.get(BlobId.of(appConfig.getBucketName(), studyConsentEntity.getPdfPath()));
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      blob.downloadTo(outputStream);
+      document = new String(Base64.getEncoder().encode(blob.getContent()));
+    }
+
     SiteEntity site = studyConsentEntity.getParticipantStudy().getSite();
     auditRequest.setSiteId(site.getId());
     auditRequest.setParticipantId(studyConsentEntity.getParticipantStudy().getId());
@@ -87,15 +96,6 @@ public class ConsentServiceImpl implements ConsentService {
     map.put("participant_id", studyConsentEntity.getParticipantStudy().getId());
     map.put("consent_version", studyConsentEntity.getVersion());
     participantManagerHelper.logEvent(CONSENT_DOCUMENT_DOWNLOADED, auditRequest, map);
-
-    String document = null;
-    if (StringUtils.isNotBlank(studyConsentEntity.getPdfPath())) {
-      Blob blob =
-          storageService.get(BlobId.of(appConfig.getBucketName(), studyConsentEntity.getPdfPath()));
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-      blob.downloadTo(outputStream);
-      document = new String(Base64.getEncoder().encode(blob.getContent()));
-    }
 
     return new ConsentDocumentResponse(
         MessageCode.GET_CONSENT_DOCUMENT_SUCCESS,

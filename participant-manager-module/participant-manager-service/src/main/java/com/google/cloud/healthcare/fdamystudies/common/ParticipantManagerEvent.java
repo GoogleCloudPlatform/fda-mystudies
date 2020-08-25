@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_DATASTORE;
+
 import java.util.Optional;
 import lombok.Getter;
-
-import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_DATASTORE;
 
 @Getter
 public enum ParticipantManagerEvent implements AuditLogEvent {
