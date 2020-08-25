@@ -3,10 +3,15 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -173,7 +178,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void deactivateAccountSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
-    StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.DELETE);
+    StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.TRUE);
     List<StudyReqBean> list = new ArrayList<StudyReqBean>();
     list.add(studyReqBean);
     DeactivateAcctBean acctBean = new DeactivateAcctBean(list);
@@ -197,7 +202,25 @@ public class UserProfileControllerTest extends BaseMockIT {
         1,
         postRequestedFor(
             urlEqualTo(
-                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=1&deleteResponses=delete")));
+                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=1&deleteResponses=true")));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDY_ID);
+    auditRequest.setParticipantId("1");
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_ACCOUNT_DEACTIVATED.getEventCode(), auditRequest);
+    auditEventMap.put(PARTICIPANT_DATA_DELETED.getEventCode(), auditRequest);
+    auditEventMap.put(DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL.getEventCode(), auditRequest);
+    auditEventMap.put(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        USER_ACCOUNT_DEACTIVATED,
+        PARTICIPANT_DATA_DELETED,
+        DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL,
+        WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE);
   }
 
   @Test
@@ -216,6 +239,14 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.INVALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_ACCOUNT_DEACTIVATION_FAILED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_ACCOUNT_DEACTIVATION_FAILED);
   }
 
   @Test

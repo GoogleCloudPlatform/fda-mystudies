@@ -158,7 +158,6 @@ public class UserProfileController {
       HttpServletRequest request) {
     logger.info("UserProfileController deactivateAccount() - Starts ");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    auditRequest.setUserId(userId);
 
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();

@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATION_FAILED;
 
@@ -271,6 +270,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
             auditRequest.setStudyId(studyBean.getStudyId());
             auditRequest.setParticipantId(studyBean.getParticipantId());
+            auditRequest.setUserId(userId);
 
             retVal =
                 userManagementUtil.withdrawParticipantFromStudy(
@@ -287,11 +287,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
               userMgmntAuditHelper.logEvent(
                   DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
 
-              AuditLogEvent auditEvent =
-                  retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
-                      ? PARTICIPANT_DATA_DELETED
-                      : PARTICIPANT_DATA_DELETION_FAILED;
-              userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
+              if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+                userMgmntAuditHelper.logEvent(PARTICIPANT_DATA_DELETED, auditRequest);
+              }
 
             } else {
 
@@ -308,20 +306,18 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         if (retVal != null
             && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
           returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
-          if (retVal != null
-              && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-            returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
-            if (returnVal) {
-              message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-            } else {
-              message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-            }
+
+          if (returnVal) {
+            message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+          } else {
+            message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
           }
-          AuditLogEvent auditEvent =
-              returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
-          userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
         }
+        AuditLogEvent auditEvent =
+            returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
+        userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
       }
+
     } catch (Exception e) {
       message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       logger.error("UserManagementProfileServiceImpl - deActivateAcct() - error() ", e);

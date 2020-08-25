@@ -233,7 +233,7 @@ public enum UserMgmntEvent implements AuditLogEvent {
       "Content submitted by app user via 'Contact Us' form in mobile app, could not be emailed to ${contactus_destination_email_address}.",
       "CONTACT_US_CONTENT_EMAIL_FAILED");
 
-  private final PlatformComponent source;
+  private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;
   private final Optional<PlatformComponent> resourceServer;
   private final String description;
@@ -245,7 +245,7 @@ public enum UserMgmntEvent implements AuditLogEvent {
       PlatformComponent resourceServer,
       String description,
       String eventCode) {
-    this.source = source;
+    this.source = Optional.ofNullable(resourceServer);
     this.destination = destination;
     this.resourceServer = Optional.ofNullable(resourceServer);
     this.description = description;

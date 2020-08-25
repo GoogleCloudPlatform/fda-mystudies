@@ -4,6 +4,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_ACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION;
@@ -83,6 +84,22 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(
         auditEventMap, ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE);
+
+    // expired code
+    requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.INVALID_EMAIL_ID);
+    mockMvc
+        .perform(post(VERIFY_EMAIL_ID_PATH).content(requestJson).headers(headers))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
+        .andExpect(jsonPath("$.message", is(Constants.INVALID_EMAIL_CODE)));
+
+    auditEventMap.put(
+        ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE.getEventCode(),
+        auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap, ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE);
 
     // invalid emailId
     requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.INVALID_EMAIL);

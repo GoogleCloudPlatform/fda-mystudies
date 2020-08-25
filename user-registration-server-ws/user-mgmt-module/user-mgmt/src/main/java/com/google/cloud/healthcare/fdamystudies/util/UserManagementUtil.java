@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -25,9 +24,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
-import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
@@ -37,7 +34,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -419,22 +415,6 @@ public class UserManagementUtil {
       if (response.getStatusCode() == HttpStatus.OK) {
         userMgmntAuditHelper.logEvent(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE, auditRequest);
         message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-      } else {
-        if (Boolean.valueOf(delete)) {
-
-          Map<String, String> map =
-              Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
-
-          userMgmntAuditHelper.logEvent(
-              UserMgmntEvent.WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED, auditRequest, map);
-
-        } else {
-          Map<String, String> map =
-              Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
-
-          userMgmntAuditHelper.logEvent(
-              WITHDRAWAL_INTIMATION_TO_RESPONSE_DATASTORE_FAILED, auditRequest, map);
-        }
       }
 
     } catch (RestClientResponseException e) {
