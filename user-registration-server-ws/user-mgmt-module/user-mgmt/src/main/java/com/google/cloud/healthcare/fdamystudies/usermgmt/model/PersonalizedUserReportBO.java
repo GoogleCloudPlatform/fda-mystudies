@@ -42,10 +42,12 @@ public class PersonalizedUserReportBO implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
+  @Index(name="personalized_user_reportuser_idx")
   private UserDetailsBO userDetails;
 
   @ManyToOne
   @JoinColumn(name = "study_info_id")
+  @Index(name="personalized_user_report_study_info_idx")
   private StudyInfoBO studyInfo;
 
   @Column(name = "report_title")

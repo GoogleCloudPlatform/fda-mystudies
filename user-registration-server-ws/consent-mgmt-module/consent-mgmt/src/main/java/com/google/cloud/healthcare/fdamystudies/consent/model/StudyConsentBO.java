@@ -49,6 +49,7 @@ public class StudyConsentBO {
 
   @ManyToOne
   @JoinColumn(name = "participant_study_id", insertable = false, updatable = true)
+  @Index(name="study_consent_participant_study_idx")
   private ParticipantStudiesBO participantStudiesBO;
 
   // represents whether pdf content is stored in db=0 or gcp=1

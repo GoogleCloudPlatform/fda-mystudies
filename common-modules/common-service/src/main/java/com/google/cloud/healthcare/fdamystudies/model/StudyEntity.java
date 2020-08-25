@@ -69,6 +69,7 @@ public class StudyEntity implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "app_info_id")
+  @Index(name="study_info_app_info_idx")
   private AppEntity app;
 
   @Column(length = SMALL_LENGTH)

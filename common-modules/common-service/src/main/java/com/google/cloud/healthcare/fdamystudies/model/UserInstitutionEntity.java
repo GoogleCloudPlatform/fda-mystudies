@@ -43,6 +43,7 @@ public class UserInstitutionEntity {
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_details_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
+  @Index(name="user_institution_user_details_idx")
   private UserDetailsEntity userDetails;
 
   @Column(name = "institution_id", length = MEDIUM_LENGTH)

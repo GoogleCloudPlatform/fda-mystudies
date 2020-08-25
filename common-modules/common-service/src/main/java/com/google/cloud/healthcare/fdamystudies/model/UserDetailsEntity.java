@@ -93,6 +93,7 @@ public class UserDetailsEntity implements Serializable {
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
   @JoinColumn(name = "app_info_id")
+  @Index(name="user_details_app_info_idx")
   private AppEntity app;
 
   @Column(length = MEDIUM_LENGTH)

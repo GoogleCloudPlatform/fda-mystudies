@@ -56,10 +56,12 @@ public class SiteEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "location_id")
+  @Index(name="sites_location_idx")
   private LocationEntity location;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "study_id")
+  @Index(name="sites_study_idx")
   private StudyEntity study;
 
   private Integer status;

@@ -34,6 +34,7 @@ public class UserInstitution {
   @NotNull
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_details_id")
+  @Index(name="user_institution_user_details_idx")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private UserDetailsBO user;
 

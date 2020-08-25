@@ -50,10 +50,12 @@ public class StudyConsentEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "study_info_id")
+  @Index(name="study_consent_study_info_idx")
   private StudyEntity study;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "user_details_id")
+  @Index(name="study_consent_user_details_idx")
   private UserDetailsEntity userDetails;
 
   @Column(length = SMALL_LENGTH)
@@ -70,6 +72,7 @@ public class StudyConsentEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "participant_study_id")
+  @Index(name="study_consent_participant_study_idx")
   private ParticipantStudyEntity participantStudy;
 
   // represents whether pdf content is stored in db=0 or gcp=1

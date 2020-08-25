@@ -20,8 +20,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-// @Entity
-// @Table(name = "participant_activities")
 public class ParticipantActivity {
 
   @Id
@@ -34,6 +32,7 @@ public class ParticipantActivity {
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "participant_id", insertable = false, updatable = false)
+  @Index(name="participant_activity_participant_idx")
   private ParticipantBo participantInfo;
 
   @Column(name = "study_id")

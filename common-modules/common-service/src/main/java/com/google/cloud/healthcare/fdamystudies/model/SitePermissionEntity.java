@@ -56,18 +56,22 @@ public class SitePermissionEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "ur_admin_user_id")
+  @Index(name="sites_permissions_ur_admin_user_idx")
   private UserRegAdminEntity urAdminUser;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "study_id")
+  @Index(name="sites_permissions_study_idx")
   private StudyEntity study;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "site_id")
+  @Index(name="sites_permissions_site_idx")
   private SiteEntity site;
 
   @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
   @JoinColumn(name = "app_info_id")
+  @Index(name="sites_permissions_app_info_idx")
   private AppEntity app;
 
   @Enumerated(EnumType.ORDINAL)

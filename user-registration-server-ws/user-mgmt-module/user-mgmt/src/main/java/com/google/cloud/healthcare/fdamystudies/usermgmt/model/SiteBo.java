@@ -37,10 +37,12 @@ public class SiteBo implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "location_id", insertable = true, updatable = true)
+  @Index(name="sites_location_idx")
   private LocationBo locations;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "study_id", insertable = true, updatable = true)
+  @Index(name="sites_study_idx")
   private StudyInfoBO studyInfo;
 
   @Column(name = "status", columnDefinition = "TINYINT(1)")

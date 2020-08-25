@@ -35,10 +35,12 @@ public class ParticipantRegistrySite implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "site_id", insertable = true, updatable = false)
+  @Index(name="participant_registry_site_site_idx")
   private SiteBo sites;
 
   @ManyToOne
   @JoinColumn(name = "study_info_id", insertable = true, updatable = true)
+  @Index(name="participant_registry_site_study_info_idx")
   private StudyInfoBO studyInfo;
 
   @Column(name = "email", columnDefinition = "VARCHAR(255)")

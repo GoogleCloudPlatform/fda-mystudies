@@ -107,6 +107,7 @@ public class UserBO implements Serializable {
       name = "user_permission_mapping",
       joinColumns = {@JoinColumn(name = "user_id", nullable = false)},
       inverseJoinColumns = {@JoinColumn(name = "permission_id", nullable = false)})
+  @Index(name="users_permission_idx")
   private Set<UserPermissions> permissionList = new HashSet<>(0);
 
   @Column(name = "phone_number")

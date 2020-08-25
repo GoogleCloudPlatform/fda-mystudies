@@ -62,10 +62,12 @@ public class ParticipantRegistrySiteEntity implements Serializable {
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "site_id", updatable = false)
+  @Index(name="participant_registry_site_site_idx")
   private SiteEntity site;
 
   @ManyToOne(cascade = CascadeType.MERGE)
   @JoinColumn(name = "study_info_id")
+  @Index(name="participant_registry_site_study_info_idx")
   private StudyEntity study;
 
   @ToString.Exclude

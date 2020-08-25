@@ -46,6 +46,7 @@ public class StudyInfoBO implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "app_info_id", insertable = true, updatable = true)
+  @Index(name="study_info_app_info_idx")
   private AppInfoDetailsBO appInfo;
 
   @Column(name = "name", columnDefinition = "VARCHAR(255)")
