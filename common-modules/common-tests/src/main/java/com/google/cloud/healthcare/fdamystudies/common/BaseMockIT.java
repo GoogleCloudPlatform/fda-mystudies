@@ -208,7 +208,6 @@ public class BaseMockIT {
 
     for (AuditLogEvent auditEvent : auditEvents) {
       AuditLogEventRequest auditRequest = auditRequestByEventCode.get(auditEvent.getEventCode());
-      logger.debug(auditRequest.toString());
 
       assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());
       assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
@@ -236,7 +235,6 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getCorrelationId());
       assertNotNull(auditRequest.getOccured());
       assertNotNull(auditRequest.getPlatformVersion());
-      assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getAppVersion());
       assertNotNull(auditRequest.getMobilePlatform());
     }

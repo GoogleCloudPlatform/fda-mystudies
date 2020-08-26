@@ -113,6 +113,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                 if (studiesBean.getStatus() != null
                     && !StringUtils.isEmpty(studiesBean.getStatus())) {
                   participantStudies.setStatus(studiesBean.getStatus());
+
                   if (studiesBean
                       .getStatus()
                       .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
@@ -133,6 +134,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                     && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
                   participantStudies.setParticipantId(studiesBean.getParticipantId());
                 }
+                placeHolder.put("study_state_value", participantStudies.getStatus());
                 addParticipantStudiesList.add(participantStudies);
               }
             }
@@ -170,6 +172,7 @@ public class StudyStateServiceImpl implements StudyStateService {
               && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
             participantStudyBo.setParticipantId(studiesBean.getParticipantId());
           }
+          placeHolder.put("study_state_value", participantStudyBo.getStatus());
           addParticipantStudiesList.add(participantStudyBo);
           customStudyIdList.add(studiesBean.getStudyId());
         }
@@ -179,7 +182,7 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateRespBean = new StudyStateRespBean();
         studyStateRespBean.setMessage(
             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-        placeHolder.put("study_state_value", addParticipantStudiesList.get(0).getStatus());
+
         enrollAuditEventHelper.logEvent(
             STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, placeHolder);
       }

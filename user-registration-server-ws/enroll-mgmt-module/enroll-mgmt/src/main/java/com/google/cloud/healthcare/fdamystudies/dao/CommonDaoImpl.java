@@ -49,7 +49,7 @@ public class CommonDaoImpl implements CommonDao {
       userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
       userDetailsBoRoot = userDetailsCriteriaQuery.from(UserDetailsBO.class);
       userDetailspredicates[0] =
-          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
+          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.USER_ID), userId);
       userDetailsCriteriaQuery.select(userDetailsBoRoot).where(userDetailspredicates);
       userDetailsBoList = session.createQuery(userDetailsCriteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {

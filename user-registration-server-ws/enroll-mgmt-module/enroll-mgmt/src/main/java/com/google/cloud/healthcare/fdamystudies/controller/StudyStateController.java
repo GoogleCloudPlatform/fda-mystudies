@@ -50,6 +50,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.R
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.USER_ID;
 
 @RestController
 public class StudyStateController {
@@ -67,7 +68,7 @@ public class StudyStateController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> updateStudyState(
-      @RequestHeader("userId") String userId,
+      @RequestHeader(USER_ID) String userId,
       @RequestBody StudyStateReqBean studyStateReqBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
@@ -124,7 +125,7 @@ public class StudyStateController {
 
   @GetMapping(value = "/studyState", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getStudyState(
-      @RequestHeader("userId") String userId,
+      @RequestHeader(USER_ID) String userId,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);

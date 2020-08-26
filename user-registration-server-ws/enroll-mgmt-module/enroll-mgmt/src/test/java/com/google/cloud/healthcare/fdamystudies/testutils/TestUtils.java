@@ -13,7 +13,6 @@ public class TestUtils {
     headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
-    headers.add("appId", "GCPMS001");
     return headers;
   }
 }
