@@ -125,17 +125,13 @@ describe('AddLocationComponent', () => {
   });
 
   it('should set the form value before submit and expect same', fakeAsync(async () => {
-    const expectedResponse: Location = {
+    const expectedResponse = {
       id: 0,
       customId: 'customid3',
       name: 'Location Name',
       description: `A location description includes the location details and related information so that the user is able to understand more about the location. The description gives the user an idea of the location or explain the location details.`,
       status: '1',
-      studiesCount: 0,
-      message: 'New location added successfully',
-      code: 'MSG_001',
-      studies: [],
-    };
+    } as Location;
     locationsServiceSpy.addLocation.and.returnValue(of(expectedResponse));
     fixture.componentInstance.location.customId = 'customid3';
     fixture.componentInstance.location.name = 'Location Name';

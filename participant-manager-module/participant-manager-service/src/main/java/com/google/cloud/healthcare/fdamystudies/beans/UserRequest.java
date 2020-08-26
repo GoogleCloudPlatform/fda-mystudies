@@ -40,9 +40,8 @@ public class UserRequest {
   @ToString.Exclude
   private String lastName;
 
-  @NotNull
   @Min(0)
-  @Max(2)
+  @Max(1)
   private Integer manageLocations;
 
   @NotNull private boolean superAdmin;

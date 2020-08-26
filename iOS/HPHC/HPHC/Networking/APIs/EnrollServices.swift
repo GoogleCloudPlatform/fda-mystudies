@@ -15,6 +15,8 @@ class EnrollServices: NSObject {
   var method: Method!
   var failedRequestServices = FailedUserServices()
 
+  private(set) var isOfflineSyncRequest = false
+
   // MARK: - Requests
 
   /// Creates a request to withdraw from `Study`
@@ -146,6 +148,23 @@ class EnrollServices: NSObject {
     self.sendRequestWith(method: method, params: params, headers: headers)
   }
 
+  /// Creattes a request to sync offline data
+  /// - Parameters:
+  ///   - method: Instance of `Method`
+  ///   - params:  Request Params
+  ///   - headers: Request headers
+  ///   - delegate: Class object to receive response
+  func syncOfflineSavedData(
+    method: Method,
+    params: [String: Any]?,
+    headers: [String: String]?,
+    delegate: NMWebServiceDelegate
+  ) {
+    isOfflineSyncRequest = true
+    self.delegate = delegate
+    self.sendRequestWith(method: method, params: params, headers: headers)
+  }
+
   // MARK: Parsers
 
   func handleUpdateTokenResponse(response: [String: Any]) {
@@ -259,15 +278,16 @@ extension EnrollServices: NMWebServiceDelegate {
 
       delegate?.failedRequest(manager, requestName: requestName, error: localError)
 
-      // handle failed request due to network connectivity
+      // Handle failed request due to network connectivity
+      // Save in database if fails due to network
+      // Ignore save for Sync request as the object already avaiable in the DB.
       if requestName as String == EnrollmentMethods.updateStudyState.description {
-        if error.code == kNoNetworkErrorCode {
-          // save in database
+        if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
           DBHandler.saveRequestInformation(
             params: self.requestParams,
             headers: self.headerParams,
             method: requestName as String,
-            server: "registration"
+            server: SyncUpdate.ServerType.enrollment.rawValue
           )
         }
       }

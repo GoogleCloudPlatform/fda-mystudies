@@ -8,11 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import java.util.List;
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyConsentBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
+import java.util.List;
 
 public interface UserConsentManagementDao {
 

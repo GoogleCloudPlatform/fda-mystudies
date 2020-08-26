@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.testutils;
 
 import javax.ws.rs.core.MediaType;
@@ -11,8 +19,6 @@ public class TestUtils {
 
   public static HttpHeaders getCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
-    headers.add(Constants.CLIENT_TOKEN_HEADER, Constants.CLIENT_TOKEN_VALUE);
-    headers.add(Constants.ACCESS_TOKEN_HEADER, Constants.ACCESS_TOKEN_VALUE);
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
     return headers;
   }
