@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -136,5 +137,14 @@ public class UserController {
 
     logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+  }
+
+  @DeleteMapping(value = "/users/{userId}")
+  public void deleteUserAccount(@PathVariable String userId, HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+
+    userService.deleteUserAccount(userId);
+
+    logger.exit("user account deleted.");
   }
 }
