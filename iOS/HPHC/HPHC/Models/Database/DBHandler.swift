@@ -1059,7 +1059,7 @@ class DBHandler: NSObject {
         with: dbActivity.frequencyRunsData!,
         options: []
       ) as? JSONDictionary
-    activity.frequencyRuns = frequencyRuns?["data"] as? [JSONDictionary]
+    activity.frequencyRuns = frequencyRuns?["data"] as? [JSONDictionary] ?? []
 
     let anchorRuns =
       try? JSONSerialization.jsonObject(

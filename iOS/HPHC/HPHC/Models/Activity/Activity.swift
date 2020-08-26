@@ -246,7 +246,7 @@ class Activity {
         if Utilities.isValidObject(
           someObject: frequencyDict[kActivityFrequencyRuns] as AnyObject
         ) {
-          self.frequencyRuns = frequencyDict[kActivityFrequencyRuns] as? [[String: Any]]
+          self.frequencyRuns = frequencyDict[kActivityFrequencyRuns] as? [[String: Any]] ?? []
         }
         if Utilities.isValidObject(
           someObject: frequencyDict[kActivityManualAnchorRuns] as AnyObject

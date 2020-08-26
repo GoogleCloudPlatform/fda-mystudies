@@ -149,9 +149,10 @@ class Schedule {
   /// Sets one time activity run
   func setOneTimeRun() {
 
-    let offset = UserDefaults.standard.value(forKey: "offset") as? Int
-    let updatedStartTime = startTime.addingTimeInterval(TimeInterval(offset!))
-    let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset!))
+    guard let offset = UserDefaults.standard.value(forKey: "offset") as? Int
+    else { return }
+    let updatedStartTime = startTime.addingTimeInterval(TimeInterval(offset))
+    let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset))
 
     let activityRun = ActivityRun()
     activityRun.runId = 1
@@ -185,9 +186,10 @@ class Schedule {
   /// Sets Activity Weekly Run
   func setWeeklyRuns() {
 
-    let offset = UserDefaults.standard.value(forKey: "offset") as? Int
-    let updatedStartTime = startTime.addingTimeInterval(TimeInterval(offset!))
-    let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset!))
+    guard let offset = UserDefaults.standard.value(forKey: "offset") as? Int
+    else { return }
+    let updatedStartTime = startTime.addingTimeInterval(TimeInterval(offset))
+    let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset))
 
     let dayOfWeek = self.getCurrentWeekDay(date: updatedStartTime)
     let calendar = Calendar.currentUTC()
@@ -228,9 +230,10 @@ class Schedule {
   func setMonthlyRuns() {
 
     let calendar = Calendar.currentUTC()
-    let offset = UserDefaults.standard.value(forKey: "offset") as? Int
-    let updatedStartTime = startTime.addingTimeInterval(TimeInterval(offset!))
-    let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset!))
+    guard let offset = UserDefaults.standard.value(forKey: "offset") as? Int
+    else { return }
+    let updatedStartTime = startTime.addingTimeInterval(TimeInterval(offset))
+    let updatedEndTime = endTime?.addingTimeInterval(TimeInterval(offset))
     var runStartDate = updatedStartTime
     var runId = 1
     while runStartDate.compare(updatedEndTime!) == .orderedAscending {
@@ -260,8 +263,10 @@ class Schedule {
   /// Sets Daily Frequency Run
   func setDailyFrequenyRuns() {
 
-    guard let endTime = endTime else { return }
-    dailyFrequencyTimings = activity.frequencyRuns!
+    guard let endTime = endTime,
+      let frequencyRuns = activity.frequencyRuns
+    else { return }
+    dailyFrequencyTimings = frequencyRuns
 
     var numberOfDays = self.getNumberOfDaysBetween(startDate: startTime, endDate: endTime)
     let calendar = Calendar.currentUTC()
@@ -327,15 +332,16 @@ class Schedule {
   /// Sets Schedule Runs
   func setScheduledRuns() {
 
-    let offset = UserDefaults.standard.value(forKey: "offset") as? Int
-    let activityEndTime = endTime?.addingTimeInterval(TimeInterval(offset!))
+    guard let offset = UserDefaults.standard.value(forKey: "offset") as? Int
+    else { return }
+    let activityEndTime = endTime?.addingTimeInterval(TimeInterval(offset))
     var runId = 1
 
     let schedulingType = activity.schedulingType
     if schedulingType == .anchorDate {
-      scheduledTimings = activity.anchorRuns!
+      scheduledTimings = activity.anchorRuns ?? []
     } else {
-      scheduledTimings = activity.frequencyRuns!
+      scheduledTimings = activity.frequencyRuns ?? []
     }
 
     for timing in scheduledTimings {
