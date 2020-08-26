@@ -263,6 +263,7 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
   }
 
+  @Test
   public void shouldReturnInvalidAppsFieldsValues() throws Exception {
     // Step 1: set app and study
     studyEntity.setApp(appEntity);
