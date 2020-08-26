@@ -48,4 +48,6 @@ public interface UserService {
 
   public UserResponse revokeAndReplaceRefreshToken(String userId, String refreshToken)
       throws JsonProcessingException;
+
+  public void deleteUserAccount(String userId);
 }

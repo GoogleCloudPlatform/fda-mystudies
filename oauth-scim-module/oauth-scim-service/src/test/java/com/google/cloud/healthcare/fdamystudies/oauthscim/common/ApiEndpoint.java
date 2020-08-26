@@ -34,7 +34,9 @@ public enum ApiEndpoint {
 
   CHANGE_PASSWORD("http://localhost:8002/oauth-scim-service/users/{userId}/change_password"),
 
-  UPDATE_EMAIL_STATUS("http://localhost:8002/oauth-scim-service/users/{userId}");
+  UPDATE_EMAIL_STATUS("http://localhost:8002/oauth-scim-service/users/{userId}"),
+
+  DELETE_USER("http://localhost:8002/oauth-scim-service/users/{userId}");
 
   private String url;
 
