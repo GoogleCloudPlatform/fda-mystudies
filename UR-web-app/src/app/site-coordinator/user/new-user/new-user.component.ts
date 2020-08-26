@@ -8,13 +8,14 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {Permission} from 'src/app/shared/permission-enums';
 import {AppsService} from '../../apps/shared/apps.service';
+import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 
 @Component({
   selector: 'user-new',
   templateUrl: './new-user.component.html',
-  styleUrls: ['./new-user.component.scss'],
 })
-export class AddNewUserComponent implements OnInit {
+export class AddNewUserComponent extends UnsubscribeOnDestroyAdapter
+  implements OnInit {
   appDetails = {} as AppDetails;
   selectedApps: App[] = [];
   user = {} as User;
@@ -29,16 +30,20 @@ export class AddNewUserComponent implements OnInit {
     private readonly userService: UserService,
     private readonly appsService: AppsService,
     private readonly toastr: ToastrService,
-  ) {}
+  ) {
+    super();
+  }
 
   ngOnInit(): void {
     this.getAllApps();
   }
 
   getAllApps(): void {
-    this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
-      this.appDetails = data;
-    });
+    this.subs.add(
+      this.appsService.getAllAppsWithStudiesAndSites().subscribe((data) => {
+        this.appDetails = data;
+      }),
+    );
   }
 
   deleteAppFromList(appId: string): void {
@@ -132,12 +137,12 @@ export class AddNewUserComponent implements OnInit {
   }
 
   add(): void {
-    const checkedBoxes = document.querySelectorAll(
-      'input[name=checkbox2]:checked',
+    const permissionsSelected = this.selectedApps.filter(
+      (app) => app.selectedSitesCount > 0,
     );
     if (
       this.user.superAdmin ||
-      (this.selectedApps.length > 0 && checkedBoxes.length > 0)
+      (this.selectedApps.length > 0 && permissionsSelected.length > 0)
     ) {
       if (this.user.superAdmin) {
         this.user.apps = [];

@@ -235,7 +235,6 @@
                         <div class="custom__labels">
                           <input
                             type="checkbox"
-                            name="checkbox2"
                             id="appCheckBox{{ app.id }}"
                             [(ngModel)]="app.selected"
                             [ngModelOptions]="{standalone: true}"
@@ -313,7 +312,6 @@
                                     (change)="studyCheckBoxChange(study, app)"
                                     [disabled]="app.selected"
                                     type="checkbox"
-                                    name="checkbox2"
                                     id="studyCheckBox{{ study.studyId }}"
                                     [(ngModel)]="study.selected"
                                     [ngModelOptions]="{standalone: true}"
@@ -394,7 +392,6 @@
                                     "
                                     [disabled]="study.selected"
                                     type="checkbox"
-                                    name="checkbox2"
                                     id="siteCheckBox{{ site.siteId }}"
                                     [ngModelOptions]="{standalone: true}"
                                     [(ngModel)]="site.selected"
@@ -461,7 +458,7 @@
         name="add"
         class="btn bt__add bt__add__auto mr-lg"
       >
-        Add user and Invite
+        Add user and invite
       </button>
       <button
         type="button"

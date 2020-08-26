@@ -14,9 +14,11 @@ export class AppsService {
     private readonly entityService: EntityService<App>,
     private readonly http: HttpClient,
   ) {}
-  getAppsOfUser(): Observable<App[]> {
+
+  getUserApps(): Observable<App[]> {
     return this.entityService.getCollection('apps');
   }
+
   getAllAppsWithStudiesAndSites(): Observable<AppDetails> {
     return this.http.get<AppDetails>(`${environment.baseUrl}/apps`, {
       params: {fields: 'studies,sites'},

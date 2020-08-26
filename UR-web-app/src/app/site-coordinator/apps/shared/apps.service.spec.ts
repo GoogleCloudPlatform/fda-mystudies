@@ -40,7 +40,7 @@ describe('StudiesService', () => {
     appsService = new AppsService(entityServicespy, httpServiceSpyObj);
 
     appsService
-      .getAppsOfUser()
+      .getUserApps()
       .subscribe(
         (app) => expect(app).toEqual(expectedAppList, 'expected AppsList'),
         fail,
@@ -59,13 +59,14 @@ describe('StudiesService', () => {
     appsService = new AppsService(entityServicespy, httpServiceSpyObj);
 
     tick(40);
-    appsService.getAppsOfUser().subscribe(
+    appsService.getUserApps().subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');
       },
     );
   }));
+
   it('should return apps list for the user creation', () => {
     const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
       'EntityService',
@@ -88,6 +89,7 @@ describe('StudiesService', () => {
       );
     expect(httpServiceSpyObj.get).toHaveBeenCalledTimes(1);
   });
+
   it('should return an error when the server returns a error status code', fakeAsync(() => {
     const errorResponse = {
       message: 'User does not exist',
