@@ -18,7 +18,6 @@ public class PingController {
 
   @GetMapping("/ping")
   public String ping() {
-    logger.info(" Response PingController - ping()");
     return "MyStudies Response Server is up!";
   }
 }

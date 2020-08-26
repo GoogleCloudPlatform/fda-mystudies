@@ -47,6 +47,7 @@ public class AppConstants {
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String STUDY_ID_PARAM = "studyId";
   public static final String ACTIVITY_ID_KEY = "activityId";
+  public static final String ACTIVITY_RUN_ID_KEY = "activityRunId";
   public static final String ACTIVITY_VERSION_PARAM = "activityVersion";
   public static final String ERROR_STR = "Error";
   public static final String OPTIONS_METHOD = "OPTIONS";
