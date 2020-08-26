@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.addTextFields;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Base64;
 import javax.annotation.PostConstruct;
@@ -23,10 +27,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.addTextFields;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 
 @Service
 @ConditionalOnProperty(
