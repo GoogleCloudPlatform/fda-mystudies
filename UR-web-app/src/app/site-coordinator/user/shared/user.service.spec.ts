@@ -1,11 +1,13 @@
-import {TestBed} from '@angular/core/testing';
+import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {UserService} from './user.service';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {addUserResponse, addUserRequest} from 'src/app/entity/mock-app-details';
-import {of} from 'rxjs';
+import {of, throwError} from 'rxjs';
 import {ApiResponse} from 'src/app/entity/api.response.model';
+import {expectedManageUsers} from 'src/app/entity/mock-users-data';
+
 describe('UserService', () => {
   let service: UserService;
   beforeEach(() => {
@@ -19,6 +21,44 @@ describe('UserService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should return expected manage user details', fakeAsync(() => {
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedManageUsers),
+    });
+    service = new UserService(httpServiceSpyObj);
+
+    service
+      .getUsers()
+      .subscribe(
+        (manageUser) =>
+          expect(manageUser).toEqual(
+            expectedManageUsers,
+            'expected user`s List',
+          ),
+        fail,
+      );
+    expect(httpServiceSpyObj.get).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should return an error when the server returns a 400', fakeAsync(() => {
+    const errorResponses: ApiResponse = {
+      message: 'Bad Request',
+    } as ApiResponse;
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: throwError(errorResponses),
+    });
+
+    service = new UserService(httpServiceSpyObj);
+
+    tick(40);
+    service.getUsers().subscribe(
+      () => fail('expected an error'),
+      (error: ApiResponse) => {
+        expect(error.message).toBe('Bad Request');
+      },
+    );
+  }));
 
   it('should post the expected new user data', () => {
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
