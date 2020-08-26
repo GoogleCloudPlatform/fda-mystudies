@@ -8,12 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -29,8 +34,8 @@ import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
-import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -87,7 +92,8 @@ public class UserControllerTest extends BaseMockIT {
     userRegAdminEntity = testDataHelper.createUserRegAdmin();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
     studyEntity = testDataHelper.createStudyEntity(userRegAdminEntity, appEntity);
-    siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
+    siteEntity =
+        testDataHelper.createSiteEntityForManageUsers(studyEntity, userRegAdminEntity, appEntity);
     adminUserRequestJson = JsonUtils.readJsonFile(TestConstants.ADMIN_USER_REQUEST_JSON_FILE);
     updateAdminUserRequestJson =
         JsonUtils.readJsonFile(TestConstants.UPDATE_USER_REQUEST_JSON_FILE);
@@ -506,12 +512,186 @@ public class UserControllerTest extends BaseMockIT {
             jsonPath("$.error_description").value(ErrorCode.PERMISSION_MISSING.getDescription()));
   }
 
+  @Test
+  public void shouldReturnAdminRecordsWithoutAppStudySitePermissionForGetAdminDetailsAndApps()
+      throws Exception {
+    // Step 1: Set few admins
+    UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
+
+    // Step 2: Call API and expect MANAGE_USERS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), superAdmin.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.user.id", is(superAdmin.getId())))
+        .andExpect(jsonPath("$.user.apps").isArray())
+        .andExpect(jsonPath("$.user.apps").isNotEmpty())
+        .andExpect(jsonPath("$.user.apps[0].totalStudiesCount", is(1)))
+        .andExpect(jsonPath("$.user.apps[0].selectedStudiesCount", is(0)))
+        .andExpect(jsonPath("$.user.apps[0].totalSitesCount", is(1)))
+        .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(0)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
+  }
+
+  @Test
+  public void shouldReturnAdminRecordsWithAppStudySiteForGetAdminDetailsAndApps() throws Exception {
+    // Step 1: Set one admin
+    UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
+    testDataHelper.createAppPermission(superAdmin, appEntity, userRegAdminEntity.getId());
+    testDataHelper.createStudyPermission(
+        superAdmin, appEntity, studyEntity, userRegAdminEntity.getId());
+    testDataHelper.createSitePermission(
+        superAdmin, appEntity, studyEntity, siteEntity, userRegAdminEntity.getId());
+
+    // Step 2: Call API and expect MANAGE_USERS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), superAdmin.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.user.id", is(superAdmin.getId())))
+        .andExpect(jsonPath("$.user.apps").isArray())
+        .andExpect(jsonPath("$.user.apps").isNotEmpty())
+        .andExpect(jsonPath("$.user.apps[0].totalStudiesCount", is(1)))
+        .andExpect(jsonPath("$.user.apps[0].selectedStudiesCount", is(1)))
+        .andExpect(jsonPath("$.user.apps[0].totalSitesCount", is(1)))
+        .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(1)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundErrorForGetAdminDetailsAndApps() throws Exception {
+    // Step 1: Set a super admin
+    UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
+
+    // Step 2: Call API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), superAdmin.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminAccessForGetAdminDetailsAndApps() throws Exception {
+    // Step 1: Set a super admin and a non super admin
+    UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
+    UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+
+    // Step 1: Call API and expect NOT_SUPER_ADMIN_ACCESS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, nonSuperAdmin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), superAdmin.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnAdminNotFoundErrorForGetAdminDetailsAndApps() throws Exception {
+    // Step 1: Set one admin
+    UserRegAdminEntity superAdmin = testDataHelper.createSuperAdmin();
+    testDataHelper.createAppPermission(superAdmin, appEntity, userRegAdminEntity.getId());
+    testDataHelper.createStudyPermission(
+        superAdmin, appEntity, studyEntity, userRegAdminEntity.getId());
+    testDataHelper.createSitePermission(
+        superAdmin, appEntity, studyEntity, siteEntity, userRegAdminEntity.getId());
+
+    // Step 2: Call API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_ADMIN_DETAILS_AND_APPS.getPath(), IdGenerator.id())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.ADMIN_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnAdminsForGetAdmins() throws Exception {
+    // Step 1: Set few admins
+    testDataHelper.createSuperAdmin();
+    testDataHelper.createNonSuperAdmin();
+
+    // Step 2: Call API and expect GET_ADMINS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.users").isArray())
+        .andExpect(jsonPath("$.users", hasSize(3)))
+        .andExpect(jsonPath("$.users[0].apps").isArray())
+        .andExpect(jsonPath("$.users[0].apps").isEmpty())
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_USERS_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.SUPER_ADMIN_EMAIL_ID)))
+        .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID)))
+        .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.EMAIL_VALUE)));
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundErrorForGetAdmins() throws Exception {
+    // Step 1: Call API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminAccessForGetAdmins() throws Exception {
+    UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+    // Step 1: Call API and expect NOT_SUPER_ADMIN_ACCESS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, nonSuperAdmin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+  }
+
   private UserRequest newUserRequestForUpdate() {
     UserRequest userRequest = new UserRequest();
     userRequest.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
     userRequest.setFirstName(TestConstants.UPDATED_FIRST_NAME);
     userRequest.setLastName(TestConstants.UPDATED_LAST_NAME);
-    userRequest.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRequest.setManageLocations(Permission.EDIT.value());
     userRequest.setSuperAdmin(true);
     return userRequest;
   }
@@ -521,7 +701,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setEmail(TestConstants.USER_EMAIL_VALUE);
     userRequest.setFirstName(TestConstants.FIRST_NAME);
     userRequest.setLastName(TestConstants.LAST_NAME);
-    userRequest.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRequest.setManageLocations(Permission.EDIT.value());
     userRequest.setSuperAdmin(true);
     return userRequest;
   }
