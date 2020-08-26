@@ -253,7 +253,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     verify(
         1,
         postRequestedFor(urlEqualTo("/AuthServer/register"))
-            .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
+            .withRequestBody(new ContainsPattern(Constants.VALID_PASSWORD)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);

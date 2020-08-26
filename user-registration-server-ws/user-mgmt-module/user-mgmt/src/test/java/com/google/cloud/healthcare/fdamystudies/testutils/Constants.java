@@ -70,5 +70,4 @@ public final class Constants {
 
   public static final String NEW_APP_ID_VALUE = "app";
   public static final String NEW_STUDY_ID = "study";
-
 }
