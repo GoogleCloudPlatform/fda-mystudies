@@ -8,13 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PUSH_NOTIFICATION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PUSH_NOTIFICATION_SENT;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.PushNotificationResponse;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
@@ -61,6 +66,8 @@ public class StudiesServicesImpl implements StudiesServices {
 
   @Autowired ApplicationPropertyConfiguration applicationPropertyConfiguration;
 
+  @Autowired UserMgmntAuditHelper userMgmntAuditLogHelper;
+
   @Override
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
     logger.info("StudiesServicesImpl - saveStudyMetadata() : starts");
@@ -76,7 +83,8 @@ public class StudiesServicesImpl implements StudiesServices {
   }
 
   @Override
-  public ErrorBean SendNotificationAction(NotificationForm notificationForm) {
+  public ErrorBean SendNotificationAction(
+      NotificationForm notificationForm, AuditLogEventRequest auditRequest) {
     HashSet<String> studySet = new HashSet<>();
     HashSet<String> appSet = new HashSet<>();
     Map<Integer, Map<String, JSONArray>> studiesMap = null;
@@ -121,12 +129,23 @@ public class StudiesServicesImpl implements StudiesServices {
         if ((allDeviceTokens != null && !allDeviceTokens.isEmpty())
             || (studiesMap != null && !studiesMap.isEmpty())) {
           for (NotificationBean notificationBean : notificationForm.getNotifications()) {
+            auditRequest.setStudyId(notificationBean.getStudyId());
+            auditRequest.setAppId(notificationBean.getAppId());
+
             if (notificationBean.getNotificationType().equalsIgnoreCase(AppConstants.GATEWAY_LEVEL)
                 && appInfobyAppCustomId != null) {
 
               fcmNotificationResponse =
                   sendGatewaylevelNotification(
                       allDeviceTokens, appInfobyAppCustomId, notificationBean);
+
+              auditRequest.setStudyId(notificationBean.getStudyId());
+
+              if (fcmNotificationResponse.getStatus() == HttpStatus.OK.value()) {
+                userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_SENT, auditRequest);
+              } else {
+                userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
+              }
 
               logger.debug(
                   String.format(
@@ -149,6 +168,14 @@ public class StudiesServicesImpl implements StudiesServices {
               fcmNotificationResponse =
                   sendStudyLevelNotification(
                       studiesMap, studyInfobyStudyCustomId, appInfobyAppCustomId, notificationBean);
+
+              auditRequest.setStudyId(notificationBean.getStudyId());
+
+              if (fcmNotificationResponse.getStatus() == HttpStatus.OK.value()) {
+                userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_SENT, auditRequest);
+              } else {
+                userMgmntAuditLogHelper.logEvent(PUSH_NOTIFICATION_FAILED, auditRequest);
+              }
 
               logger.debug(
                   String.format(
@@ -270,6 +297,7 @@ public class StudiesServicesImpl implements StudiesServices {
         return fcmNotificationResponse;
       }
     } catch (Exception e) {
+
       logger.error("StudiesServicesImpl - pushFCMNotification() : error", e);
       return new PushNotificationResponse(
           null, HttpStatus.INTERNAL_SERVER_ERROR.value(), "Push FCM Notification failed");

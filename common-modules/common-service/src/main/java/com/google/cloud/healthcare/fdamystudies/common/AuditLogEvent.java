@@ -8,18 +8,20 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import java.util.Optional;
+
 public interface AuditLogEvent {
 
-  default PlatformComponent getSource() {
-    return null;
+  default Optional<PlatformComponent> getSource() {
+    return Optional.empty();
   }
 
   default PlatformComponent getDestination() {
     return null;
   }
 
-  default PlatformComponent getResourceServer() {
-    return null;
+  default Optional<PlatformComponent> getResourceServer() {
+    return Optional.empty();
   }
 
   default String getEventName() {
@@ -30,8 +32,8 @@ public interface AuditLogEvent {
     return null;
   }
 
-  default UserAccessLevel getUserAccessLevel() {
-    return null;
+  default Optional<UserAccessLevel> getUserAccessLevel() {
+    return Optional.empty();
   }
 
   default String getEventCode() {
