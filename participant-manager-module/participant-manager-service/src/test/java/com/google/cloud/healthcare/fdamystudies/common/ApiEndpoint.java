@@ -21,7 +21,7 @@ public enum ApiEndpoint {
   SET_UP_ACCOUNT("http://localhost:8080/participant-manager-service/users/"),
 
   DEACTIVATE_ACCOUNT("http://localhost:8080/participant-manager-service/users/{userId}/deactivate"),
-  
+
   GET_APPS("http://localhost:8080/participant-manager-service/apps"),
 
   GET_STUDIES("http://localhost:8080/participant-manager-service/studies"),
@@ -80,7 +80,9 @@ public enum ApiEndpoint {
       "http://localhost:8080/participant-manager-service/users/securitycodes/{securityCode}"),
 
   GET_ADMIN_DETAILS_AND_APPS(
-      "http://localhost:8080/participant-manager-service/users/admin/{adminId}");
+      "http://localhost:8080/participant-manager-service/users/admin/{adminId}"),
+
+  GET_USERS("http://localhost:8080/participant-manager-service/users");
 
   private String url;
 

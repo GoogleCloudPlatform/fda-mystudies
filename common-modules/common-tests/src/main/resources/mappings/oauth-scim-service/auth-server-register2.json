@@ -1,0 +1,18 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/AuthServer/register",
+		"bodyPatterns": [
+			{
+				"contains": "Passs@*1234"
+			}
+		]
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "oauth-scim-service/auth-server-register-response2.json"
+	}
+}

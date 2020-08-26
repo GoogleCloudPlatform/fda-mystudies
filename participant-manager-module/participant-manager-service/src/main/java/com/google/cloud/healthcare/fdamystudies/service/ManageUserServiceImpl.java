@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.User;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserAppPermissionRequest;
@@ -654,5 +655,25 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     return null;
+  }
+
+  @Override
+  public GetUsersResponse getUsers(String superAdminUserId) {
+    logger.entry("getUsers()");
+    ErrorCode errorCode = validateUserRequest(superAdminUserId);
+    if (errorCode != null) {
+      logger.error(errorCode.toString());
+      return new GetUsersResponse(errorCode);
+    }
+
+    List<User> users = new ArrayList<>();
+    List<UserRegAdminEntity> adminList = userAdminRepository.findAll();
+    adminList
+        .stream()
+        .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
+        .collect(Collectors.toList());
+
+    logger.exit(String.format("total users=%d", adminList.size()));
+    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users);
   }
 }

@@ -52,10 +52,8 @@ public final class UserMapper {
     admin.setSecurityCodeExpireDate(
         new Timestamp(
             Instant.now().plus(securityCodeExpireTime, ChronoUnit.MINUTES).toEpochMilli()));
-    int manageLocation =
-        userRequest.isSuperAdmin()
-            ? CommonConstants.READ_AND_EDIT_PERMISSION
-            : userRequest.getManageLocations();
+    Integer manageLocation =
+        userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
     admin.setEditPermission(manageLocation);
     return admin;
   }
@@ -65,10 +63,8 @@ public final class UserMapper {
     adminDetails.setFirstName(userRequest.getFirstName());
     adminDetails.setLastName(userRequest.getLastName());
     adminDetails.setSuperAdmin(userRequest.isSuperAdmin());
-    int manageLocation =
-        userRequest.isSuperAdmin()
-            ? CommonConstants.READ_AND_EDIT_PERMISSION
-            : userRequest.getManageLocations();
+    Integer manageLocation =
+        userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
     adminDetails.setEditPermission(manageLocation);
     return adminDetails;
   }
