@@ -8,14 +8,27 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_REGISTRATION_REQUEST_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_CREATION_FAILED_ON_PARTICIPANT_DATA_STORE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_SENT;
+
 import com.google.cloud.healthcare.fdamystudies.bean.UserRegistrationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
+import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
@@ -30,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
@@ -65,6 +79,8 @@ public class UserRegistrationController {
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
+  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
+
   @Value("${email.code.expire_time}")
   private long expireTime;
 
@@ -78,12 +94,19 @@ public class UserRegistrationController {
       @Valid @RequestBody UserRegistrationForm userForm,
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
-      @Context HttpServletResponse response) {
+      @Context HttpServletResponse response,
+      HttpServletRequest request) {
 
     logger.info("UserRegistrationController registerUser() - starts");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setAppId(appId);
+    userMgmntAuditHelper.logEvent(ACCOUNT_REGISTRATION_REQUEST_RECEIVED, auditRequest);
+
     AuthRegistrationResponseBean authServerResponse = null;
 
     if (!userDomainWhitelist.isValidDomain(userForm.getEmailId())) {
+      userMgmntAuditHelper.logEvent(USER_REGISTRATION_ATTEMPT_FAILED, auditRequest);
+
       return makeServerError(
           401,
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -95,18 +118,16 @@ public class UserRegistrationController {
       authServerResponse = userManagementUtil.registerUserInAuthServer(userForm, appId, orgId);
 
       if (authServerResponse == null || !"OK".equals(authServerResponse.getMessage())) {
-        commonService.createActivityLog(
-            null,
-            AppConstants.USER_REGD_FAILURE,
-            AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+        userMgmntAuditHelper.logEvent(
+            USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER, auditRequest);
+
         return makeAuthServerErrorResponse(authServerResponse, response);
       }
       UserDetailsBO userDetailsUsingUserId = prepareUserDetails(authServerResponse.getUserId());
       if (userDetailsUsingUserId != null) {
-        commonService.createActivityLog(
-            null,
-            AppConstants.USER_REGD_FAILURE,
-            AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+        userMgmntAuditHelper.logEvent(
+            USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME, auditRequest);
+
         return makeServerError(
             400,
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
@@ -117,10 +138,8 @@ public class UserRegistrationController {
       UserDetailsBO userDetailsBO = null;
       AppOrgInfoBean appInfo = profiledao.getUserAppDetailsByAllApi(null, appId, orgId);
       if (appInfo == null || appInfo.getAppInfoId() == 0) {
-        commonService.createActivityLog(
-            null,
-            AppConstants.USER_REGD_FAILURE,
-            AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
+        userMgmntAuditHelper.logEvent(USER_REGISTRATION_ATTEMPT_FAILED, auditRequest);
+
         logger.info(
             "(URS)...DELETING record in Auth Server STARTED. Though appId and orgId are not valid in UserRegistration server");
         deleteUserFromAuthServer(authServerResponse, userForm.getEmailId());
@@ -136,23 +155,25 @@ public class UserRegistrationController {
         userDetailsBO = getUserDetails(userForm);
         userDetailsBO.setAppInfoId(appInfo.getAppInfoId());
         userDetailsBO.setEmailCode(RandomStringUtils.randomAlphanumeric(6));
-
         userDetailsBO.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
         UserDetailsBO serviceResp = service.saveUser(userDetailsBO);
 
         if (serviceResp == null) {
+          userMgmntAuditHelper.logEvent(
+              USER_CREATION_FAILED_ON_PARTICIPANT_DATA_STORE, auditRequest);
           throw new SystemException();
         }
+        auditRequest.setUserId(serviceResp.getUserId());
+        userMgmntAuditHelper.logEvent(USER_CREATED, auditRequest);
 
-        commonService.createActivityLog(
-            authServerResponse.getUserId(),
-            "User Registration Success",
-            "User Registration Successful for email" + serviceResp.getEmail() + ".");
         List<String> emailContent = prepareEmailContent(serviceResp.getEmailCode());
 
         if (emailContent != null && !emailContent.isEmpty()) {
-          emailNotification.sendEmailNotification(
-              emailContent.get(0), emailContent.get(1), serviceResp.getEmail(), null, null);
+          boolean sent =
+              emailNotification.sendEmailNotification(
+                  emailContent.get(0), emailContent.get(1), serviceResp.getEmail(), null, null);
+          AuditLogEvent auditEvent = sent ? VERIFICATION_EMAIL_SENT : VERIFICATION_EMAIL_FAILED;
+          userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
         }
 
         MyStudiesUserRegUtil.getFailureResponse(
@@ -172,10 +193,6 @@ public class UserRegistrationController {
       }
     } catch (Exception e) {
       logger.error("UserRegistrationController.registerUser(): ", e);
-      commonService.createActivityLog(
-          null,
-          AppConstants.USER_REGD_FAILURE,
-          AppConstants.USER_REGD_FAILURE_DESC + userForm.getEmailId() + " .");
       if (authServerResponse != null) {
         deleteUserFromAuthServer(authServerResponse, userForm.getEmailId());
       }

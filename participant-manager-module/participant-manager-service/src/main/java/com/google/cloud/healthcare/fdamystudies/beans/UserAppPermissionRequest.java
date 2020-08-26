@@ -26,9 +26,21 @@ public class UserAppPermissionRequest {
 
   private boolean selected;
 
-  private boolean disabled;
-
   private Integer permission;
+
+  private Integer invitedCount;
+
+  private Integer enrolledCount;
+
+  private Integer enrollmentPercentage;
+
+  private Integer studiesCount;
+
+  private Integer appUsersCount;
+
+  private Integer totalSitesCount;
+
+  private Integer selectedSitesCount;
 
   private List<UserStudyPermissionRequest> studies;
 }

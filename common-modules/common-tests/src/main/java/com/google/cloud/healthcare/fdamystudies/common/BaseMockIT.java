@@ -12,6 +12,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -19,16 +26,28 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
+import org.apache.commons.lang3.SerializationUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +104,10 @@ public class BaseMockIT {
   @Autowired protected MockMvc mockMvc;
 
   @Autowired protected ServletContext servletContext;
+
+  @Autowired protected AuditEventService mockAuditService;
+
+  protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   protected WireMockServer getWireMockServer() {
     return wireMockServer;
@@ -149,10 +172,98 @@ public class BaseMockIT {
         .andReturn();
   }
 
+  /**
+   * @param assertOptionalFieldsForEvent is a {@link Map} collection that contains {@link eventCode}
+   *     as key and {@link AuditLogEventRequest} with optional field values as value.
+   * @param auditEvents audit event enums
+   */
+  protected void verifyAuditEventCall(
+      Map<String, AuditLogEventRequest> assertOptionalFieldsForEvent,
+      AuditLogEvent... auditEvents) {
+
+    verifyAuditEventCall(auditEvents);
+
+    Map<String, AuditLogEventRequest> auditRequestByEventCode =
+        auditRequests
+            .stream()
+            .collect(Collectors.toMap(AuditLogEventRequest::getEventCode, Function.identity()));
+
+    assertOptionalFieldsForEvent.forEach(
+        (eventCode, expectedAuditRequest) -> {
+          AuditLogEventRequest auditRequest = auditRequestByEventCode.get(eventCode);
+          assertEquals(expectedAuditRequest.getUserId(), auditRequest.getUserId());
+          assertEquals(expectedAuditRequest.getParticipantId(), auditRequest.getParticipantId());
+          assertEquals(expectedAuditRequest.getStudyId(), auditRequest.getStudyId());
+          assertEquals(expectedAuditRequest.getStudyVersion(), auditRequest.getStudyVersion());
+        });
+  }
+
+  protected void verifyAuditEventCall(AuditLogEvent... auditEvents) {
+    ArgumentCaptor<AuditLogEventRequest> argument =
+        ArgumentCaptor.forClass(AuditLogEventRequest.class);
+    verify(mockAuditService, atLeastOnce()).postAuditLogEvent(argument.capture());
+
+    Map<String, AuditLogEventRequest> auditRequestByEventCode =
+        auditRequests
+            .stream()
+            .collect(Collectors.toMap(AuditLogEventRequest::getEventCode, Function.identity()));
+
+    for (AuditLogEvent auditEvent : auditEvents) {
+      AuditLogEventRequest auditRequest = auditRequestByEventCode.get(auditEvent.getEventCode());
+      logger.debug(auditRequest.toString());
+
+      assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());
+      assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
+
+      // Use enum value where specified, otherwise, use 'source' header value.
+      if (auditEvent.getSource().isPresent()) {
+        assertEquals(auditEvent.getSource().get().getValue(), auditRequest.getSource());
+      } else {
+        assertEquals("IntegrationTests", auditRequest.getSource());
+      }
+
+      if (auditEvent.getResourceServer().isPresent()) {
+        assertEquals(
+            auditEvent.getResourceServer().get().getValue(), auditRequest.getResourceServer());
+      }
+
+      if (auditEvent.getUserAccessLevel().isPresent()) {
+        assertEquals(
+            auditEvent.getUserAccessLevel().get().getValue(), auditRequest.getUserAccessLevel());
+      }
+
+      assertFalse(
+          StringUtils.contains(auditRequest.getDescription(), "{")
+              && StringUtils.contains(auditRequest.getDescription(), "}"));
+      assertNotNull(auditRequest.getCorrelationId());
+      assertNotNull(auditRequest.getOccured());
+      assertNotNull(auditRequest.getPlatformVersion());
+      assertNotNull(auditRequest.getAppId());
+      assertNotNull(auditRequest.getAppVersion());
+      assertNotNull(auditRequest.getMobilePlatform());
+    }
+  }
+
+  protected void clearAuditRequests() {
+    auditRequests.clear();
+  }
+
   @BeforeEach
   void setUp(TestInfo testInfo) {
     logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
+
+    Mockito.reset(mockAuditService);
+    auditRequests.clear();
+    
+    doAnswer(
+            invocation ->
+                auditRequests.add(
+                    SerializationUtils.clone((AuditLogEventRequest) invocation.getArguments()[0])))
+        .when(mockAuditService)
+        .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
+
     WireMock.resetAllRequests();
+
   }
 
   @AfterEach

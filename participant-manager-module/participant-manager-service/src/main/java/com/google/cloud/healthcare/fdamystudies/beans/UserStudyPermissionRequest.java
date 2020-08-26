@@ -25,9 +25,11 @@ public class UserStudyPermissionRequest {
 
   private boolean selected;
 
-  private boolean disabled;
-
   private Integer permission;
+
+  private Integer totalSitesCount;
+
+  private Integer selectedSitesCount;
 
   private List<UserSitePermissionRequest> sites;
 }

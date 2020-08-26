@@ -14,6 +14,10 @@ import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.ActivityLog;
 import java.time.LocalDateTime;
+import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +32,6 @@ public class CommonServiceImpl implements CommonService {
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired private CommonDao commonDao;
-
-  @Autowired private ActivityLogRepository activityLogRepository;
 
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
