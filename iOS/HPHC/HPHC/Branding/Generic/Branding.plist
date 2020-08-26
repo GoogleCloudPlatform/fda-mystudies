@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>appleId</key>
+	<string>1520229784</string>
 	<key>ProductTitleName</key>
 	<string>ValidCare Study</string>
 	<key>StandaloneStudyId</key>

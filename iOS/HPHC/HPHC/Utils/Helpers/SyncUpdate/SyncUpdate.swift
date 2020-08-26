@@ -105,7 +105,8 @@ class SyncUpdate {
       let syncObj = lastSyncedObject
     else {
       completion()
-      return }
+      return
+    }
     // Delete Synced object from DB
     try? realm.write {
       realm.delete(syncObj)

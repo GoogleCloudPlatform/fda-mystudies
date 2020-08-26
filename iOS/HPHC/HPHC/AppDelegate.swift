@@ -1144,31 +1144,26 @@ extension AppDelegate {
       let latestVersion = iosDict["latestVersion"] as? String,
       let isForceUpdate = iosDict["forceUpdate"] as? String
     {
-
       let appVersion = Utilities.getAppVersion()
       guard let isForceUpdate = Bool(isForceUpdate) else { return }
 
-      // latestVersion = "2.0" make it mutable to test and uncomment
       if appVersion != latestVersion,
         latestVersion.compare(appVersion, options: .numeric, range: nil, locale: nil)
           == ComparisonResult.orderedDescending, isForceUpdate
       {
-
-        // load and Update blockerScreen
-        self.shouldAddForceUpgradeScreen = true
-        self.blockerScreen = AppUpdateBlocker.instanceFromNib(
-          frame: (UIApplication.shared.keyWindow?.bounds)!
-        )
-        self.blockerScreen?.labelVersionNumber.text = "V- " + latestVersion
-        self.blockerScreen?.labelMessage.text = kBlockerScreenLabelText
-
-        if User.currentUser.userType == .loggedInUser {
-          // FDA user
-          if User.currentUser.settings?.passcode! == false {
-            UIApplication.shared.keyWindow?.addSubview(self.blockerScreen!)
+        if let windowBounds = UIApplication.shared.keyWindow?.bounds {
+          // load and Update blockerScreen
+          self.shouldAddForceUpgradeScreen = true
+          let blockerView = AppUpdateBlocker.instanceFromNib(frame: windowBounds, detail: [:])
+          self.blockerScreen = blockerView
+          self.blockerScreen?.configureView(with: latestVersion)
+          if User.currentUser.userType == .loggedInUser {
+            if User.currentUser.settings?.passcode == false {
+              UIApplication.shared.keyWindow?.addSubview(blockerView)
+            }
+          } else {
+            UIApplication.shared.keyWindow?.addSubview(blockerView)
           }
-        } else {
-          UIApplication.shared.keyWindow?.addSubview(self.blockerScreen!)
         }
       }
     }
