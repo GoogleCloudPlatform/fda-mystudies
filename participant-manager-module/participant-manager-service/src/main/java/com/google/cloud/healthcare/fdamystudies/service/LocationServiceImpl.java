@@ -187,7 +187,9 @@ public class LocationServiceImpl implements LocationService {
         locations.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
     for (LocationDetails locationDetails : locationDetailsList) {
       List<String> studies = locationStudies.get(locationDetails.getLocationId());
-      locationDetails.getStudyNames().addAll(studies);
+      if (CollectionUtils.isNotEmpty(studies)) {
+        locationDetails.getStudyNames().addAll(studies);
+      }
       locationDetails.setStudiesCount(locationDetails.getStudyNames().size());
     }
     LocationResponse locationResponse =
