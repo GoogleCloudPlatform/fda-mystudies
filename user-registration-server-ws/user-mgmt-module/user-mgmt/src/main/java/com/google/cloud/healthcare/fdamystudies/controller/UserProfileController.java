@@ -8,14 +8,23 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATE_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
@@ -23,6 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.core.Context;
@@ -56,6 +66,8 @@ public class UserProfileController {
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
+  @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
+
   @Value("${email.code.expire_time}")
   private long expireTime;
 
@@ -67,16 +79,25 @@ public class UserProfileController {
 
   @GetMapping(value = "/userProfile", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserProfile(
-      @RequestHeader("userId") String userId, @Context HttpServletResponse response) {
+      @RequestHeader("userId") String userId,
+      @Context HttpServletResponse response,
+      HttpServletRequest request) {
     logger.info("UserProfileController getUserProfile() - starts ");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(userId);
+
     UserProfileRespBean userPrlofileRespBean = null;
     try {
       userPrlofileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0, 0);
       if (userPrlofileRespBean != null) {
+        userMgmntAuditHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE, auditRequest);
+
         userPrlofileRespBean.setMessage(
             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
       } else {
+        userMgmntAuditHelper.logEvent(READ_OPERATION_FAILED_FOR_USER_PROFILE, auditRequest);
+
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
@@ -98,18 +119,22 @@ public class UserProfileController {
   public ResponseEntity<?> updateUserProfile(
       @RequestHeader("userId") String userId,
       @RequestBody UserRequestBean user,
-      @Context HttpServletResponse response) {
+      @Context HttpServletResponse response,
+      HttpServletRequest request) {
     logger.info("UserProfileController updateUserProfile() - Starts ");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(userId);
+
     ErrorBean errorBean = null;
     try {
       errorBean = userManagementProfService.updateUserProfile(userId, user);
       if (errorBean.getCode() == ErrorCode.EC_200.code()) {
-        commonService.createActivityLog(
-            userId,
-            "PROFILE UPDATE",
-            "User " + userId + " Profile/Preferences updated successfully.");
+        userMgmntAuditHelper.logEvent(USER_PROFILE_UPDATED, auditRequest);
+
         errorBean = new ErrorBean(HttpStatus.OK.value(), ErrorCode.EC_30.errorMessage());
       } else {
+        userMgmntAuditHelper.logEvent(USER_PROFILE_UPDATE_FAILED, auditRequest);
+
         return new ResponseEntity<>(errorBean, HttpStatus.CONFLICT);
       }
     } catch (Exception e) {
@@ -129,19 +154,18 @@ public class UserProfileController {
       @RequestHeader("accessToken") String accessToken,
       @RequestHeader("clientToken") String clientToken,
       @RequestBody DeactivateAcctBean deactivateAcctBean,
-      @Context HttpServletResponse response) {
+      @Context HttpServletResponse response,
+      HttpServletRequest request) {
     logger.info("UserProfileController deactivateAccount() - Starts ");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
     try {
       message =
           userManagementProfService.deActivateAcct(
-              userId, deactivateAcctBean, accessToken, clientToken);
+              userId, deactivateAcctBean, accessToken, clientToken, auditRequest);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-        commonService.createActivityLog(
-            userId,
-            "ACCOUNT DELETE(Deactivation of an user)",
-            "Account deactivated for user " + userId + ".");
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
         MyStudiesUserRegUtil.getFailureResponse(
@@ -166,8 +190,12 @@ public class UserProfileController {
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
       @Valid @RequestBody LoginBean loginBean,
-      @Context HttpServletResponse response) {
+      @Context HttpServletResponse response,
+      HttpServletRequest request) {
     logger.info("UserProfileController resendConfirmation() - Starts ");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setAppId(appId);
+
     UserDetailsBO participantDetails = null;
     ResponseBean responseBean = new ResponseBean();
     try {
@@ -196,10 +224,9 @@ public class UserProfileController {
                   userManagementProfService.resendConfirmationthroughEmail(
                       appId, participantDetails.getEmailCode(), participantDetails.getEmail());
               if (isSent == 2) {
-                commonService.createActivityLog(
-                    null,
-                    "Requested Confirmation mail",
-                    "Confirmation mail sent to email " + loginBean.getEmailId() + ".");
+                auditRequest.setUserId(updParticipantDetails.getUserId());
+                userMgmntAuditHelper.logEvent(
+                    VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
                 responseBean.setMessage(
                     MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
               }

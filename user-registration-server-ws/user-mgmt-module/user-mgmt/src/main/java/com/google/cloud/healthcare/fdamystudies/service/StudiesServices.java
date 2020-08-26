@@ -8,11 +8,13 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 
 public interface StudiesServices {
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean);
 
-  public ErrorBean SendNotificationAction(NotificationForm notificationForm);
+  public ErrorBean SendNotificationAction(
+      NotificationForm notificationForm, AuditLogEventRequest auditRequest);
 }

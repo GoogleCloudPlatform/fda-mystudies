@@ -1,3 +1,6 @@
+import {App} from '../site-coordinator/user/shared/app-details';
+import {Permission} from '../shared/permission-enums';
+
 export interface User {
   id: number;
 
@@ -15,7 +18,9 @@ export interface User {
 
   manageUsers: number;
 
-  manageLocations: number;
+  manageLocations: Permission | null;
+
+  superAdmin: boolean;
 
   urAdminAuthId: string;
 
@@ -28,4 +33,8 @@ export interface User {
   password: string;
 
   confirmPassword: string;
+
+  apps: App[];
+
+  manageLocationsSelected: boolean;
 }
