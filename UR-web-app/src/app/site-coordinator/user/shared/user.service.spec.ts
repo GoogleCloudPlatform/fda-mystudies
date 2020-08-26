@@ -22,7 +22,7 @@ describe('UserService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return expected manage user details', fakeAsync(() => {
+  it('should return expected user list', fakeAsync(() => {
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: of(expectedManageUsers),
     });
