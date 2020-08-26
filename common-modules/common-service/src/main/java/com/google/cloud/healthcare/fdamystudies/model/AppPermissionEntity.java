@@ -20,7 +20,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -31,6 +30,7 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Index;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @ToString
