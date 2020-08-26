@@ -72,4 +72,9 @@ public final class CommonConstants {
       "Your password does not meet the required criteria.";
   
   public static final int EMAIL_LENGTH = 320;
+
+  public static final String DELETE = "delete";
+
+  public static final String RETAIN = "retain";
+
 }

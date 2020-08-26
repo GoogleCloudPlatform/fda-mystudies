@@ -215,8 +215,7 @@ public enum ErrorCode {
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites"),
 
-  DOMAIN_NOT_WHITELISTED(
-      400, "EC-871", Constants.BAD_REQUEST, "Email does not belong to a whitelisted domain.");
+  ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found");
 
   private final int status;
   private final String code;

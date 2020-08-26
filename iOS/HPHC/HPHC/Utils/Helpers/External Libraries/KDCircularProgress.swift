@@ -9,7 +9,10 @@
 import UIKit
 
 @objc public enum KDCircularProgressGlowMode: Int {
-  case forward, reverse, constant, noGlow
+  case forward = 1
+  case reverse = 2
+  case constant = 3
+  case noGlow = 4
 }
 
 // @IBDesignable
@@ -139,9 +142,9 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
     }
   }
 
-  @IBInspectable public var glowMode: KDCircularProgressGlowMode = .forward {
+  @IBInspectable var glowMode: Int = KDCircularProgressGlowMode.forward.rawValue {
     didSet {
-      progressLayer.glowMode = glowMode
+      progressLayer.glowMode = KDCircularProgressGlowMode(rawValue: glowMode) ?? .forward
     }
   }
 
@@ -237,7 +240,7 @@ public class KDCircularProgress: UIView, CAAnimationDelegate {
     progressLayer.lerpColorMode = lerpColorMode
     progressLayer.gradientRotateSpeed = gradientRotateSpeed
     progressLayer.glowAmount = glowAmount
-    progressLayer.glowMode = glowMode
+    progressLayer.glowMode = KDCircularProgressGlowMode(rawValue: glowMode) ?? .forward
     progressLayer.progressThickness = progressThickness / 2
     progressLayer.trackColor = trackColor
     progressLayer.trackThickness = trackThickness / 2

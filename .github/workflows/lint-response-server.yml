@@ -3,14 +3,14 @@ name: response-server-checkstyle
 on:
   pull_request:
     paths:
-    - 'response-server-ws/**'
+    - 'response-server-module/response-server-service/**'
     - '.github/workflows/lint-response-server.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /response-server-ws
+        working-directory: /response-server-module/response-server-service
     name: Checkstyle job
     steps:
     - name: Checkout
@@ -19,7 +19,7 @@ jobs:
       uses: nikitasavinov/checkstyle-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: 'github-pr-check'
-        level: warning
-        workdir: ./response-server-ws
+        reporter: 'github-pr-review'
+        level: error
+        workdir: ./response-server-module/response-server-service
         tool_name: response-server Checks

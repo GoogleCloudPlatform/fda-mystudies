@@ -300,7 +300,7 @@ public class AppServiceImpl implements AppService {
       if (ArrayUtils.contains(fields, "studies")) {
         List<StudyEntity> appStudies = groupByAppIdStudyMap.get(app.getId());
         List<AppStudyResponse> appStudyResponses =
-            appStudies
+            CollectionUtils.emptyIfNull(appStudies)
                 .stream()
                 .map(
                     study ->
@@ -310,6 +310,14 @@ public class AppServiceImpl implements AppService {
 
         appDetails.getStudies().addAll(appStudyResponses);
       }
+      int totalSitesCount =
+          appDetails
+              .getStudies()
+              .stream()
+              .map(study -> study.getSites().size())
+              .reduce(0, Integer::sum);
+      appDetails.setTotalSitesCount(totalSitesCount);
+
       appsList.add(appDetails);
     }
 

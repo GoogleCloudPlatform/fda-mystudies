@@ -8,9 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
+
 import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
@@ -18,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
@@ -54,6 +62,8 @@ public class UserManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
   public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
     logger.info("UserManagementUtil validateAccessToken() - starts ");
@@ -283,7 +293,8 @@ public class UserManagementUtil {
     return generatedHash;
   }
 
-  public String withdrawParticipantFromStudy(String participantId, String studyId, String delete)
+  public String withdrawParticipantFromStudy(
+      String participantId, String studyId, String delete, AuditLogEventRequest auditRequest)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
     logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
@@ -311,6 +322,7 @@ public class UserManagementUtil {
       ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 
       if (response.getStatusCode() == HttpStatus.OK) {
+        userMgmntAuditHelper.logEvent(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE, auditRequest);
         message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
       }
 

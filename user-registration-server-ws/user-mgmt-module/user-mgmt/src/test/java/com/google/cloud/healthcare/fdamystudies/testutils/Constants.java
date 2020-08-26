@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.testutils;
 
 public final class Constants {
@@ -51,4 +59,12 @@ public final class Constants {
   public static final String EMAIL = "mockito@gmail.com";
   public static final String VERIFY_CODE_EMAIL = "cdash93@gmail.com";
   public static final Object INVALID_EMAIL_CODE = "Invalid email code";
+
+  public static final String USER_ID = "gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk";
+  public static final String INVALID_EMAIL_ID = "abc@xy";
+  public static final String TRUE = "true";
+  public static final String VALID_PASSWORD = "Passs@*1234";
+
+  public static final String NEW_APP_ID_VALUE = "app";
+  public static final String NEW_STUDY_ID = "study";
 }
