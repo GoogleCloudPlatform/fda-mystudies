@@ -6,7 +6,6 @@ FROM ${DOCKER_ID}/commonmodule:latest AS maven_builder
 COPY response-server-service /app/response-server-module/response-server-service
 COPY pom.xml /app/response-server-module/
 WORKDIR /app/response-server-module/
-# skipping tests until #815 is fixed
 RUN mvn clean package -Pqa -Dmaven.test.skip=true
 
 # to run
