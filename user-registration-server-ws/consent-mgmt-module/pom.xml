@@ -16,7 +16,7 @@
 
   <modules>
     <module>consent-mgmt</module>
-    <module>../../common-modules</module>
+    <module>../common-modules</module>
   </modules>
 
 </project>
