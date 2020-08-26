@@ -24,8 +24,6 @@ public class UserRegistrationResponse extends BaseResponse {
 
   private String tempRegId;
 
-  private String authUserId;
-
   public UserRegistrationResponse(ErrorCode errorCode) {
     super(errorCode);
   }

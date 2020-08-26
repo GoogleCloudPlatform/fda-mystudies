@@ -109,9 +109,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     logger.exit("user account successfully created and email sent with verification code");
 
     return new UserRegistrationResponse(
-        String.valueOf(userDetailsBO.getUserDetailsId()),
-        authUserResponse.getTempRegId(),
-        authUserResponse.getUserId());
+        authUserResponse.getUserId(), authUserResponse.getTempRegId());
   }
 
   private boolean generateVerificationCode(UserDetailsBO userDetailsBO) {
