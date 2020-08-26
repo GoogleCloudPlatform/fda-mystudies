@@ -168,10 +168,10 @@ resource "google_cloudbuild_trigger" "validate" {
   ]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
+    owner = "stalluri30"
+    name  = "fda-mystudies"
     pull_request {
-      branch = "^master$"
+      branch = "^early-access$"
     }
   }
 
@@ -196,10 +196,10 @@ resource "google_cloudbuild_trigger" "plan" {
   ]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
+    owner = "stalluri30"
+    name  = "fda-mystudies"
     pull_request {
-      branch = "^master$"
+      branch = "^early-access$"
     }
   }
 
@@ -224,10 +224,10 @@ resource "google_cloudbuild_trigger" "apply" {
   ]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
-    push {
-      branch = "^master$"
+    owner = "stalluri30"
+    name  = "fda-mystudies"
+    pull_request {
+      branch = "^early-access$"
     }
   }
 
