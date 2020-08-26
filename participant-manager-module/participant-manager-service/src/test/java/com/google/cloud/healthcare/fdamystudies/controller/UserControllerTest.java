@@ -34,8 +34,8 @@ import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
-import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -691,7 +691,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
     userRequest.setFirstName(TestConstants.UPDATED_FIRST_NAME);
     userRequest.setLastName(TestConstants.UPDATED_LAST_NAME);
-    userRequest.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRequest.setManageLocations(Permission.EDIT.value());
     userRequest.setSuperAdmin(true);
     return userRequest;
   }
@@ -701,7 +701,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setEmail(TestConstants.USER_EMAIL_VALUE);
     userRequest.setFirstName(TestConstants.FIRST_NAME);
     userRequest.setLastName(TestConstants.LAST_NAME);
-    userRequest.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRequest.setManageLocations(Permission.EDIT.value());
     userRequest.setSuperAdmin(true);
     return userRequest;
   }
