@@ -102,11 +102,17 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     // expired code
     requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.INVALID_EMAIL_ID);
     mockMvc
-        .perform(post(VERIFY_EMAIL_ID_PATH).content(requestJson).headers(headers))
+        .perform(
+            post(VERIFY_EMAIL_ID_PATH)
+                .content(requestJson)
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.INVALID_EMAIL_CODE)));
+
+    verifyTokenIntrospectRequest(2);
 
     auditEventMap.put(
         ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE.getEventCode(),
@@ -128,13 +134,12 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.EMAIL_NOT_EXIST)));
 
-    verifyTokenIntrospectRequest(2);
+    verifyTokenIntrospectRequest(3);
 
     auditEventMap.put(
         ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED);
-
   }
 
   @Test
@@ -186,7 +191,6 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(
         auditEventMap, USER_ACCOUNT_ACTIVATED, USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION);
-
   }
 
   private String getEmailIdVerificationForm(String code, String emailId)

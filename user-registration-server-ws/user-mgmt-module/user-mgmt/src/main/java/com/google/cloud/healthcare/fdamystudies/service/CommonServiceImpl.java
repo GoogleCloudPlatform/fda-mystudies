@@ -11,13 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.ActivityLog;
-import java.time.LocalDateTime;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,22 +60,5 @@ public class CommonServiceImpl implements CommonService {
 
     logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - ends");
     return appOrgInfoBean;
-  }
-
-  @Override
-  public ActivityLog createActivityLog(String userId, String activityName, String activtyDesc) {
-    logger.info("CommonServiceImpl createActivityLog() - starts");
-    ActivityLog activityLog = new ActivityLog();
-    try {
-      activityLog.setAuthUserId(userId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activtyDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
-      activityLogRepository.save(activityLog);
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl createActivityLog() - error ", e);
-    }
-    logger.info("CommonServiceImpl createActivityLog() - ends");
-    return activityLog;
   }
 }

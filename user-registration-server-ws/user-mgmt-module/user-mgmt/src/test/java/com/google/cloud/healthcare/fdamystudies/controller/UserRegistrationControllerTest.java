@@ -207,11 +207,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Test
   public void shouldRegisterUserAndVerified() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getRegisterUser("mockito@grr.la", Constants.VALID_PASSWORD);
 
@@ -261,11 +257,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Test
   public void shouldNotRegisterUser() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
 

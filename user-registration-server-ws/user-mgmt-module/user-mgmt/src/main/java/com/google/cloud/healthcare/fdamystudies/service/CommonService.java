@@ -9,10 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.ActivityLog;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
 
 public interface CommonService {
 
@@ -21,7 +17,4 @@ public interface CommonService {
 
   public AppOrgInfoBean getUserAppDetailsByAllApi(
       String userId, String emailId, String appId, String orgId);
-  
-  public ActivityLog createActivityLog(String userId, String activityName, String activtyDesc);
-
 }
