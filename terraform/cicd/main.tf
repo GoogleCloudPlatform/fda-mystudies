@@ -30,7 +30,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
+    bucket = "fdav1-dev-terraform-state"
     prefix = "cicd"
   }
 }
@@ -137,7 +137,7 @@ resource "google_storage_bucket_iam_member" "cloudbuild_state_iam" {
 # Grant Cloud Build Service Account access to the folder.
 resource "google_folder_iam_member" "cloudbuild_sa_folder_iam" {
   for_each = toset(local.cloudbuild_sa_editor_roles)
-  folder   = 0000000000
+  folder   = 701269119189
   role     = each.value
   member   = local.cloud_build_sa
   depends_on = [

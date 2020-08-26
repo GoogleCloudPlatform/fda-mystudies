@@ -1,16 +1,16 @@
-# {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
-# {{$ref := "ref=templates-v0.2.0"}}
+ {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
+ {{$ref := "ref=templates-v0.2.0"}}
 
-# {{$prefix := "example"}}
-# {{$env := "dev"}}
-# {{$domain := "example.com"}}
-# {{$default_location := "us-central1"}}
-# {{$default_zone := "a"}}
+ {{$prefix := "fdav1"}}
+ {{$env := "dev"}}
+ {{$domain := "phinms.com"}}
+ {{$default_location := "us-central1"}}
+ {{$default_zone := "a"}}
 
 data = {
   parent_type     = "folder"
-  parent_id       = "0000000000"
-  billing_account = "XXXXXX-XXXXXX-XXXXXX"
+  parent_id       = "701269119189"
+  billing_account = "01BF92-0D3888-EEBAA6"
   state_bucket    = "{{$prefix}}-{{$env}}-terraform-state"
 
   # Default locations for resources. Can be overridden in individual templates.
@@ -32,7 +32,7 @@ template "devops" {
   data = {
     # During Step 1, set to `true` and re-run the engine after generated devops module has been deployed.
     # Run `terraform init` in the devops module to backup its state to GCS.
-    enable_gcs_backend = false
+    enable_gcs_backend = true
 
     admins_group = "{{$prefix}}-{{$env}}-folder-admins@{{$domain}}"
 
