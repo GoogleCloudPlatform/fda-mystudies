@@ -30,6 +30,4 @@ public interface UserDetailsBORepository extends JpaRepository<UserDetailsBO, In
   List<UserDetailsBO> findByEmail(String emailId);
 
   Optional<UserDetailsBO> findByEmailAndAppInfoId(String email, Integer appInfoId);
-
-  Optional<UserDetailsBO> findByUserDetailsId(Integer userDetailsId);
 }

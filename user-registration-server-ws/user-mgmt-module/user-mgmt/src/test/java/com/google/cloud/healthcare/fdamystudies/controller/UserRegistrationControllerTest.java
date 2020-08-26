@@ -1,30 +1,5 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.matching.ContainsPattern;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
-import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
-import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
-import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.jayway.jsonpath.JsonPath;
-import java.util.Optional;
-import javax.mail.internet.MimeMessage;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.web.servlet.MvcResult;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
@@ -42,6 +17,30 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.matching.ContainsPattern;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
+import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
+import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
+import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.jayway.jsonpath.JsonPath;
+import javax.mail.internet.MimeMessage;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.web.servlet.MvcResult;
 
 @TestMethodOrder(OrderAnnotation.class)
 public class UserRegistrationControllerTest extends BaseMockIT {
@@ -153,10 +152,9 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
     // find userDetails by userId and assert email
-    Optional<UserDetailsBO> optUserDetails =
-        userDetailsRepository.findByUserDetailsId(Integer.valueOf(userId));
+    UserDetailsBO userDetails = userDetailsRepository.findByUserId(userId);
 
-    assertEquals(Constants.EMAIL, optUserDetails.get().getEmail());
+    assertEquals(Constants.EMAIL, userDetails.getEmail());
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
