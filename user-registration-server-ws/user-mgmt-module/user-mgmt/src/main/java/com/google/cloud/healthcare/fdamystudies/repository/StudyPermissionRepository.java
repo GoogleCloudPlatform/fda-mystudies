@@ -10,5 +10,4 @@ package com.google.cloud.healthcare.fdamystudies.repository;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StudyPermissionRepository extends JpaRepository<StudyPermission, Integer> {
-}
+public interface StudyPermissionRepository extends JpaRepository<StudyPermission, Integer> {}
