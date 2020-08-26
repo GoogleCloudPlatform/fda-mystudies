@@ -27,9 +27,9 @@ export class UserListComponent implements OnInit {
       map(([manageUser, query]) => {
         manageUser.users = manageUser.users.filter(
           (user: User) =>
-            user.firstName.toLowerCase().includes(query.toLowerCase()) ||
-            user.lastName.toLowerCase().includes(query.toLowerCase()) ||
-            user.email.toLowerCase().includes(query.toLowerCase()),
+            user.firstName.toLowerCase().includes(query) ||
+            user.lastName.toLowerCase().includes(query) ||
+            user.email.toLowerCase().includes(query),
         );
         return manageUser;
       }),
@@ -37,6 +37,6 @@ export class UserListComponent implements OnInit {
   }
 
   search(query: string): void {
-    this.query$.next(query.trim());
+    this.query$.next(query.trim().toLowerCase());
   }
 }

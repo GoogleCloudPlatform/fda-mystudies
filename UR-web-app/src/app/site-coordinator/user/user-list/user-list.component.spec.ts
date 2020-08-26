@@ -15,7 +15,6 @@ import {UserModule} from '../user.module';
 import {UserService} from '../shared/user.service';
 import {UserListComponent} from './user-list.component';
 import {RouterTestingModule} from '@angular/router/testing';
-import {ManageUsers} from '../shared/manage-user';
 import {expectedManageUsers} from 'src/app/entity/mock-users-data';
 
 describe('ManageUserListComponent', () => {
@@ -48,15 +47,6 @@ describe('ManageUserListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should NOT have user`s list before ngOnInit', () => {
-    component.manageUser$.pipe().subscribe((manageUser: ManageUsers) => {
-      expect(manageUser.users.length).toBe(
-        0,
-        'should NOT have user`s participant list before ngOnInit',
-      );
-    });
-  });
-
   describe('after get users', () => {
     beforeEach(async(() => {
       fixture.detectChanges();
@@ -67,9 +57,7 @@ describe('ManageUserListComponent', () => {
 
     it('should get the list of users via refresh function', fakeAsync(() => {
       component.manageUser$.subscribe((manageUser) => {
-        expect(manageUser.users.length).toEqual(
-          expectedManageUsers.users.length,
-        );
+        expect(manageUser).toEqual(expectedManageUsers);
       });
     }));
   });
