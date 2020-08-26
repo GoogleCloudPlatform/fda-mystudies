@@ -34,6 +34,8 @@ class ResponseServices: NSObject {
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
 
+  private(set) var isOfflineSyncRequest = false
+
   private enum JSONKey {
     static let applicationId = "applicationId"
     static let studyVersion = "studyVersion"
@@ -187,7 +189,7 @@ class ResponseServices: NSObject {
     headers: [String: String]?,
     delegate: NMWebServiceDelegate
   ) {
-
+    self.isOfflineSyncRequest = true
     self.delegate = delegate
     self.sendRequestWith(method: method, params: params!, headers: headers)
   }
@@ -445,14 +447,14 @@ extension ResponseServices: NMWebServiceDelegate {
     if requestName as String == ResponseMethods.processResponse.description
       || requestName as String == ResponseMethods.updateActivityState.description
     {
-
-      if error.code == kNoNetworkErrorCode {
-        // save in database
+      // Save in database if fails due to network
+      // Ignore save for Sync request as the object already avaiable in the DB.
+      if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
         DBHandler.saveRequestInformation(
           params: self.requestParams,
           headers: self.headerParams,
           method: requestName as String,
-          server: "response"
+          server: SyncUpdate.ServerType.response.rawValue
         )
       }
     }
