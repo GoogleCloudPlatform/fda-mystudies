@@ -59,6 +59,22 @@ public final class CommonConstants {
 
   public static final String MESSAGE_CODE_LOG = "message code=%s";
 
+  public static final String EMAIL_REGEX =
+      "^[A-Za-z0-9_+]+([\\.-]?[A-Za-z0-9_+]+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
+
   public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
       "application/x-www-form-urlencoded;charset=UTF-8";
+
+  public static final String PASSWORD_REGEX =
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$";
+
+  public static final String PASSWORD_REGEX_MESSAGE =
+      "Your password does not meet the required criteria.";
+  
+  public static final int EMAIL_LENGTH = 320;
+
+  public static final String DELETE = "delete";
+
+  public static final String RETAIN = "retain";
+
 }

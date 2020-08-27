@@ -119,7 +119,7 @@ public class StudyServiceImpl implements StudyService {
   private Map<String, StudyPermissionEntity> getStudyPermissionsByStudyInfoId(
       String userId, List<String> usersStudyIds) {
     List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findStudyPermissionsOfUserByStudyIds(usersStudyIds, userId);
+        studyPermissionRepository.findByStudyIds(usersStudyIds, userId);
 
     Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId = new HashMap<>();
     if (CollectionUtils.isNotEmpty(studyPermissions)) {
@@ -143,6 +143,10 @@ public class StudyServiceImpl implements StudyService {
       StudyEntity study = entry.getKey();
       String studyId = study.getId();
       studyDetail.setId(studyId);
+      studyDetail.setCustomId(entry.getKey().getCustomId());
+      studyDetail.setName(entry.getKey().getName());
+      studyDetail.setType(entry.getKey().getType());
+      studyDetail.setSitesCount((long) entry.getValue().size());
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
@@ -151,7 +155,7 @@ public class StudyServiceImpl implements StudyService {
 
       if (studyPermissionsByStudyInfoId.get(studyId) != null) {
         Integer studyEditPermission =
-            studyPermissionsByStudyInfoId.get(study.getId()).getEditPermission();
+            studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit().value();
         studyDetail.setStudyPermission(
             studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
         studyDetail.setStudyPermission(studyEditPermission);
@@ -255,13 +259,12 @@ public class StudyServiceImpl implements StudyService {
 
     StudyPermissionEntity studyPermission = optStudyPermission.get();
 
-    if (studyPermission.getAppInfo() == null) {
+    if (studyPermission.getApp() == null) {
       logger.exit(ErrorCode.APP_NOT_FOUND);
       return new ParticipantRegistryResponse(ErrorCode.APP_NOT_FOUND);
     }
 
-    Optional<AppEntity> optApp =
-        appRepository.findById(optStudyPermission.get().getAppInfo().getId());
+    Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
     return prepareRegistryParticipantResponse(optStudy.get(), optApp.get());
   }

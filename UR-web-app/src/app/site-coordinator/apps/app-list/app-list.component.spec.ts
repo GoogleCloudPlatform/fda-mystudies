@@ -29,7 +29,7 @@ describe('AppListComponent', () => {
 
   beforeEach(async(async () => {
     const appsServiceSpy = jasmine.createSpyObj<AppsService>('AppsService', {
-      getApps: of(expectedAppList),
+      getUserApps: of(expectedAppList),
     });
     await TestBed.configureTestingModule({
       declarations: [AppListComponent],

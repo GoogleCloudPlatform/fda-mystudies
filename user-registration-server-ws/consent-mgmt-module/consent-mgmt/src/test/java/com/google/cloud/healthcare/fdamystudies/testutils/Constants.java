@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.testutils;
 
 public class Constants {
@@ -23,8 +31,8 @@ public class Constants {
   public static final String ENCODED_CONTENT_1_0_UPDATED = "dGV4dCBwZGYgY29udGVudCB1cGRhdGVk";
   public static final String ENCODED_CONTENT_1_2 = "dGV4dCBwZGYgY29udGVudCAxLjI=";
 
-  public static final String ACCESS_TOKEN_VALUE = "access Token value";
-  public static final String CLIENT_TOKEN_VALUE = "client token value";
+  public static final String ACCESS_TOKEN_VALUE = "1";
+  public static final String CLIENT_TOKEN_VALUE = "1";
   public static final String ACCESS_TOKEN_HEADER = "accessToken";
   public static final String CLIENT_TOKEN_HEADER = "clientToken";
   public static final String USER_ID_HEADER = "userId";

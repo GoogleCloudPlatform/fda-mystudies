@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,12 +26,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.data.annotation.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.annotation.Transient;
@@ -48,57 +51,53 @@ public class UserRegAdminEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "ur_admin_user_id", updatable = false, nullable = false)
+  @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
   @ToString.Exclude
-  @Column(name = "email", length = 320)
+  @Column(nullable = false, unique = true, length = LARGE_LENGTH)
   private String email;
 
   @ToString.Exclude
-  @Column(name = "ur_admin_auth_id", length = 255)
+  @Column(name = "ur_admin_auth_id", unique = true, length = LARGE_LENGTH)
   private String urAdminAuthId;
 
   @ToString.Exclude
-  @Column(name = "first_name", length = 100)
+  @Column(name = "first_name", length = MEDIUM_LENGTH)
   private String firstName;
 
   @ToString.Exclude
-  @Column(name = "last_name", length = 100)
+  @Column(name = "last_name", length = MEDIUM_LENGTH)
   private String lastName;
 
   @ToString.Exclude
-  @Column(name = "phone_number", length = 20)
+  @Column(name = "phone_number", length = XS_LENGTH)
   private String phoneNumber;
 
   @Column(name = "email_changed")
   private Boolean emailChanged;
 
-  @Column(name = "status", length = 1)
   private Integer status;
 
-  @Column(name = "super_admin", length = 1)
+  @Column(name = "super_admin")
   private boolean superAdmin;
 
-  @Column(name = "edit_permission", length = 1)
+  @Column(name = "edit_permission")
   private Integer editPermission;
 
-  @Column(
-      name = "created",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
   @ToString.Exclude
-  @Column(name = "created_by", length = 64)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 
   @Column(name = "security_code_expire_date", columnDefinition = "TIMESTAMP")
   private Timestamp securityCodeExpireDate;
 
   @ToString.Exclude
-  @Column(name = "security_code", length = 64)
+  @Column(name = "security_code", length = SMALL_LENGTH)
   private String securityCode;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "urAdminUser")

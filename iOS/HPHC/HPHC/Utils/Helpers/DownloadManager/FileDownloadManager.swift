@@ -91,7 +91,7 @@ class FileDownloadManager: NSObject, URLSessionDelegate, URLSessionDownloadDeleg
     downloadTask: URLSessionDownloadTask,
     didFinishDownloadingTo location: URL
   ) {
-    for (_, downloadModel) in downloadingArray.enumerated() {
+    for downloadModel in downloadingArray {
       if downloadTask.isEqual(downloadModel.task) {
         let fileName = downloadModel.fileName as NSString
         let basePath =

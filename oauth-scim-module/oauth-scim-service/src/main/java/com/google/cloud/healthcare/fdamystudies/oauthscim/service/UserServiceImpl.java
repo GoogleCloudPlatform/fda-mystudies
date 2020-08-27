@@ -52,6 +52,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
@@ -218,7 +219,7 @@ public class UserServiceImpl implements UserService {
             appConfig.getMailResetPasswordSubject(),
             appConfig.getMailResetPasswordBody(),
             templateArgs);
-    return emailService.sendSimpleMail(emailRequest);
+    return emailService.sendMimeMail(emailRequest);
   }
 
   public ChangePasswordResponse changePassword(ChangePasswordRequest userRequest)
@@ -333,7 +334,7 @@ public class UserServiceImpl implements UserService {
             appConfig.getMailAccountLockedSubject(),
             appConfig.getMailAccountLockedBody(),
             templateArgs);
-    EmailResponse emailResponse = emailService.sendSimpleMail(emailRequest);
+    EmailResponse emailResponse = emailService.sendMimeMail(emailRequest);
     logger.exit(
         String.format("send account locked email status=%d", emailResponse.getHttpStatusCode()));
     return emailResponse;
@@ -512,5 +513,19 @@ public class UserServiceImpl implements UserService {
     logger.exit(
         "previous refresh token revoked and replaced with new refresh token for the given user");
     return userResponse;
+  }
+
+  @Override
+  public void deleteUserAccount(String userId) {
+    logger.entry("deleteUserAccount");
+    Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
+
+    if (!optUserEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    repository.delete(optUserEntity.get());
+
+    logger.exit("user account deleted");
   }
 }

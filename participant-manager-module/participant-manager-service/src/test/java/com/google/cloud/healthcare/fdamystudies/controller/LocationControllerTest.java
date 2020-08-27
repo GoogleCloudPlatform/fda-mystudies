@@ -128,12 +128,14 @@ public class LocationControllerTest extends BaseMockIT {
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/responses/add_location_bad_request.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnForbiddenForLocationAccessDenied() throws Exception {
 
-    userRegAdminEntity.setEditPermission(Permission.READ_VIEW.value());
+    userRegAdminEntity.setEditPermission(Permission.VIEW.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -148,6 +150,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())))
         .andReturn();
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -177,6 +181,8 @@ public class LocationControllerTest extends BaseMockIT {
     assertEquals(CUSTOM_ID_VALUE, locationEntity.getCustomId());
     assertEquals(LOCATION_NAME_VALUE, locationEntity.getName());
     assertEquals(LOCATION_DESCRIPTION_VALUE, locationEntity.getDescription());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -198,6 +204,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(DEFAULT_SITE_MODIFY_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -216,6 +224,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(CANNOT_REACTIVATE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -238,6 +248,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(ALREADY_DECOMMISSIONED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -253,6 +265,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(LOCATION_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -281,6 +295,8 @@ public class LocationControllerTest extends BaseMockIT {
     assertNotNull(locationEntity);
     assertEquals(UPDATE_LOCATION_NAME_VALUE, locationEntity.getName());
     assertEquals(UPDATE_LOCATION_DESCRIPTION_VALUE, locationEntity.getDescription());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -314,6 +330,8 @@ public class LocationControllerTest extends BaseMockIT {
     LocationEntity locationEntity = optLocationEntity.get();
     assertNotNull(locationEntity);
     assertEquals(ACTIVE_STATUS, locationEntity.getStatus());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -331,6 +349,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -357,6 +377,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
         .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -379,6 +401,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -406,6 +430,8 @@ public class LocationControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations", hasSize(0)));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -435,6 +461,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations", hasSize(1)))
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
         .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -449,6 +477,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(LOCATION_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -468,6 +498,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -494,15 +526,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies", hasSize(1)))
         .andExpect(jsonPath("$.studies[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
-  }
 
-  @AfterEach
-  public void cleanUp() {
-    testDataHelper.getSiteRepository().deleteAll();
-    testDataHelper.getStudyRepository().deleteAll();
-    testDataHelper.getAppRepository().deleteAll();
-    testDataHelper.getLocationRepository().deleteAll();
-    testDataHelper.getUserRegAdminRepository().deleteAll();
+    verifyTokenIntrospectRequest();
   }
 
   private LocationRequest getLocationRequest() throws JsonProcessingException {
@@ -514,5 +539,10 @@ public class LocationControllerTest extends BaseMockIT {
     updateLocationRequest.setName(UPDATE_LOCATION_NAME_VALUE);
     updateLocationRequest.setDescription(UPDATE_LOCATION_DESCRIPTION_VALUE);
     return updateLocationRequest;
+  }
+
+  @AfterEach
+  public void clean() {
+    testDataHelper.cleanUp();
   }
 }

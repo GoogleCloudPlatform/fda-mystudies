@@ -8,6 +8,25 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
+import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
+import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
+import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
+import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
+import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
+import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
+import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
+import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
+import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,25 +37,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
-import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
-import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
-import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
-import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
-import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
-import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @Service
 public class StudyStateServiceImpl implements StudyStateService {

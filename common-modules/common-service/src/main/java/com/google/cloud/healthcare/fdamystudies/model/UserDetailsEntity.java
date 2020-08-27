@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -21,10 +26,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
@@ -36,7 +45,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @Getter
 @ToString
 @Entity
-@Table(name = "user_details")
+@Table(
+    name = "user_details",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"user_id", "app_info_id"},
+          name = "user_details_user_id_app_info_id_uidx")
+    })
 public class UserDetailsEntity implements Serializable {
 
   private static final long serialVersionUID = -6971868842609206885L;
@@ -49,15 +64,15 @@ public class UserDetailsEntity implements Serializable {
   private String id;
 
   @ToString.Exclude
-  @Column(name = "first_name")
+  @Column(name = "first_name", length = MEDIUM_LENGTH)
   private String firstName;
 
   @ToString.Exclude
-  @Column(name = "last_name")
+  @Column(name = "last_name", length = MEDIUM_LENGTH)
   private String lastName;
 
   @ToString.Exclude
-  @Column(name = "email")
+  @Column(name = "email", length = LARGE_LENGTH)
   private String email;
 
   @ToString.Exclude
@@ -73,63 +88,43 @@ public class UserDetailsEntity implements Serializable {
   @Column(name = "remote_notification_flag")
   private Boolean remoteNotificationFlag;
 
-  @Column(name = "status", nullable = false)
+  @Column(nullable = false)
   private Integer status;
-
-  @ToString.Exclude
-  @Column(name = "password")
-  private String password;
 
   @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
   @JoinColumn(name = "app_info_id")
-  private AppEntity appInfo;
+  private AppEntity app;
 
-  @ToString.Exclude
-  @Column(name = "temp_password")
-  private Boolean tempPassword = false;
-
-  @Column(name = "locale")
+  @Column(length = MEDIUM_LENGTH)
   private String locale;
 
-  @ToString.Exclude
-  @Column(name = "reset_password")
-  private String resetPassword;
-
-  @Column(
-      name = "verification_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "verification_time")
+  @CreationTimestamp
   private Timestamp verificationDate;
 
-  @Column(
-      name = "temp_password_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp tempPasswordDate;
+  @Column(name = "code_expire_time")
+  @CreationTimestamp
+  private Timestamp codeExpireDate;
 
-  @Column(
-      name = "password_updated_date",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-  private Timestamp passwordUpdatedDate;
-
-  @Column(name = "reminder_lead_time")
+  @Column(name = "reminder_lead_time", length = SMALL_LENGTH)
   private String reminderLeadTime;
 
   @ToString.Exclude
-  @Column(name = "security_token")
+  @Column(name = "security_token", length = MEDIUM_LENGTH)
   private String securityToken;
 
   @ToString.Exclude
-  @Column(name = "email_code")
+  @Column(name = "email_code", length = XS_LENGTH)
   private String emailCode;
 
   @ToString.Exclude
-  @Column(name = "user_id")
+  @Column(name = "user_id", length = SMALL_LENGTH)
   private String userId;
+
+  // Use UserInstitution class to access institution.
+  @Getter(AccessLevel.NONE)
+  @OneToOne(mappedBy = "userDetails", fetch = FetchType.LAZY)
+  private UserInstitutionEntity userInstitutionEntity;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userDetails")
   private List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
@@ -137,5 +132,21 @@ public class UserDetailsEntity implements Serializable {
   public void addParticipantStudiesEntity(ParticipantStudyEntity participantStudiesEntity) {
     participantStudies.add(participantStudiesEntity);
     participantStudiesEntity.setUserDetails(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userDetails")
+  private List<AuthInfoEntity> authInfo = new ArrayList<>();
+
+  public void addAuthInfoEntity(AuthInfoEntity authInfoEntity) {
+    authInfo.add(authInfoEntity);
+    authInfoEntity.setUserDetails(this);
+  }
+
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userDetails")
+  private List<UserAppDetailsEntity> userAppDetails = new ArrayList<>();
+
+  public void addUserAppDetailsEntity(UserAppDetailsEntity userAppDetailsEntity) {
+    userAppDetails.add(userAppDetailsEntity);
+    userAppDetailsEntity.setUserDetails(this);
   }
 }

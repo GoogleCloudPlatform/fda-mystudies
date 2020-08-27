@@ -32,7 +32,9 @@ public class AppDetails {
 
   private Long appUsersCount;
 
-  private Integer appPermission;
+  private Integer permission;
+
+  private int totalSitesCount;
 
   private List<AppStudyResponse> studies = new ArrayList<>();
 }

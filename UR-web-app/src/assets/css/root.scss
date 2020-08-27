@@ -75,7 +75,6 @@ html {
     background: var(--white);
     box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
     border-bottom: none;
-    padding: 23px 0px;
     box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
   }
   .nav-tabs.subheader__menu {
@@ -359,6 +358,9 @@ html {
   .table thead tr th .fa:before {
     color: var(--periwinkle-gray);
     margin-left: 5px;
+  }
+  .subheader {
+    min-height: 67px;
   }
 }
 
@@ -1008,32 +1010,15 @@ pre {
   transition: all 0.65s cubic-bezier(0.84, -0.18, 0.31, 1.26);
 }
 
-.subheader {
-  height: 67px;
-  line-height: 59px;
-  padding: 0;
+.study-participant-registry.subheader {
+  line-height: inherit;
+  height: inherit;
 }
 
 .dashboard-card__title {
   font-weight: 700;
 }
 
-.subheader {
-  min-height: 67px;
-  line-height: 59px;
-  padding: 0;
-}
-
-.study-participant-registry.subheader {
-  line-height: inherit;
-  height: inherit;
-}
-
-.enrollment-label {
-  color: var(--tunder-gray);
-  font-size: 80%;
-  font-weight: 700;
-}
 .select__form-control__parent .wrap {
   overflow: initial;
 }
@@ -1041,4 +1026,8 @@ pre {
 .select__form-control__parent .ng-dropdown-panel {
   position: absolute;
   border-radius: 5px;
+}
+
+.subheader {
+  min-height: 67px;
 }

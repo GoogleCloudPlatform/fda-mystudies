@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
@@ -33,7 +34,8 @@ public interface UserManagementProfileService {
 
   public UserDetailsBO saveParticipant(UserDetailsBO participant);
 
-  public String deactivateAcct(String userId, DeactivateAcctBean deactivateBean);
+  public String deactivateAccount(
+      String userId, DeactivateAcctBean deactivateBean, AuditLogEventRequest auditRequest);
 
   public int resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId);

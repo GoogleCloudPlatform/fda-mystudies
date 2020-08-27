@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.beans.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -23,21 +28,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "study_info")
+@Table(
+    name = "study_info",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"custom_id", "app_info_id"},
+          name = "study_info_custom_id_app_info_id_uidx")
+    })
 @ConditionalOnProperty(
     value = "participant.manager.entities.enabled",
     havingValue = "true",
@@ -50,62 +61,54 @@ public class StudyEntity implements Serializable {
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
-  @Column(name = "study_id", updatable = false, nullable = false)
+  @Column(name = "id")
   private String id;
 
-  @Column(name = "custom_id", length = 100)
+  @Column(name = "custom_id", nullable = false, length = XS_LENGTH)
   private String customId;
 
   @ManyToOne
-  @JoinColumn(name = "app_info_id", insertable = true, updatable = true)
-  private AppEntity appInfo;
+  @JoinColumn(name = "app_info_id")
+  private AppEntity app;
 
-  @Column(name = "name", length = 100)
+  @Column(length = SMALL_LENGTH)
   private String name;
 
-  @Column(name = "description", length = 100)
   @Type(type = "text")
   private String description;
 
-  @Column(name = "type", length = 100)
+  @Column(length = XS_LENGTH)
   private String type;
 
-  @Column(
-      name = "created",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "created_time")
+  @CreationTimestamp
   private Timestamp created;
 
-  @Column(name = "created_by", length = 64)
+  @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 
-  @Column(
-      name = "modified",
-      insertable = false,
-      updatable = false,
-      columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+  @Column(name = "updated_time")
+  @UpdateTimestamp
   private Timestamp modified;
 
-  @Column(name = "modified_by", length = 64)
+  @Column(name = "modified_by", length = LARGE_LENGTH)
   private String modifiedBy;
 
-  @Column(name = "version", length = 100)
   private Float version;
 
-  @Column(name = "status", length = 100)
+  @Column(length = XS_LENGTH)
   private String status;
 
-  @Column(name = "category", length = 100)
+  @Column(length = SMALL_LENGTH)
   private String category;
 
-  @Column(name = "tagline", length = 100)
+  @Column(length = SMALL_LENGTH)
   private String tagline;
 
-  @Column(name = "sponsor", length = 100)
+  @Column(length = XS_LENGTH)
   private String sponsor;
 
-  @Column(name = "enrolling", length = 100)
+  @Column(length = TINY_LENGTH)
   private String enrolling;
 
   @OneToMany(
@@ -163,6 +166,6 @@ public class StudyEntity implements Serializable {
 
   @Transient
   public String getAppId() {
-    return appInfo != null ? appInfo.getId() : StringUtils.EMPTY;
+    return app != null ? app.getId() : StringUtils.EMPTY;
   }
 }

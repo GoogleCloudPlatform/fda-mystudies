@@ -8,8 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
 
 public interface UserRegAdminUserDao {
 

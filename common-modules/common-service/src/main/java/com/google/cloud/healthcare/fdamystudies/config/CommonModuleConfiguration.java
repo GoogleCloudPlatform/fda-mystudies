@@ -19,6 +19,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -34,10 +35,21 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
   public RestTemplate restTemplate() {
     RestTemplate restTemplate = new RestTemplate();
 
+    restTemplate.setErrorHandler(new RestResponseErrorHandler());
     addInterceptors(restTemplate);
 
     restTemplate.setErrorHandler(new RestResponseErrorHandler());
     return restTemplate;
+  }
+
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("*");
+      }
+    };
   }
 
   protected void addInterceptors(RestTemplate restTemplate) {
