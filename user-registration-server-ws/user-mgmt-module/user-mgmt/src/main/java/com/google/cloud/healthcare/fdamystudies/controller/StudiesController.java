@@ -8,11 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.NOTIFICATION_METADATA_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.STUDY_METADATA_RECEIVED;
+
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +40,21 @@ public class StudiesController {
 
   @Autowired private StudiesServices studiesServices;
 
+  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
+
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
-      @Valid @RequestBody StudyMetadataBean studyMetadataBean) {
+      @Valid @RequestBody StudyMetadataBean studyMetadataBean, HttpServletRequest request) {
     logger.info("StudiesController - addUpdateStudyMetadata() : starts");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setStudyId(studyMetadataBean.getStudyId());
+    auditRequest.setStudyVersion(studyMetadataBean.getStudyVersion());
+    auditRequest.setAppId(studyMetadataBean.getAppId());
+
     ErrorBean errorBean;
     try {
       errorBean = studiesServices.saveStudyMetadata(studyMetadataBean);
+
       if (errorBean.getCode() != ErrorCode.EC_200.code()) {
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
@@ -49,16 +64,25 @@ public class StudiesController {
       errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
+
+    userMgmntAuditHelper.logEvent(STUDY_METADATA_RECEIVED, auditRequest);
+
     logger.info("StudiesController - getStudyParticipants() : ends");
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
   @PostMapping("/sendNotification")
-  public ResponseEntity<?> SendNotification(@Valid @RequestBody NotificationForm notificationForm) {
+  public ResponseEntity<?> SendNotification(
+      @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request) {
     logger.info("StudiesController - SendNotification() : starts");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
+    userMgmntAuditHelper.logEvent(NOTIFICATION_METADATA_RECEIVED, auditRequest);
+
     ErrorBean errorBean = null;
     try {
-      errorBean = studiesServices.SendNotificationAction(notificationForm);
+      errorBean = studiesServices.SendNotificationAction(notificationForm, auditRequest);
+
       if (errorBean.getCode() != ErrorCode.EC_200.code()) {
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }

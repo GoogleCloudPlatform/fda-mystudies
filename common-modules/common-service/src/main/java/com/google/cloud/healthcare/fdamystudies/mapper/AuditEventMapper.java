@@ -23,12 +23,18 @@ public final class AuditEventMapper {
 
   private static final String USER_ID = "userId";
 
+  private static final String APP_VERSION = "appVersion";
+
+  private static final String SOURCE = "source";
+
   public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request) {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(getValue(request, APP_ID));
+    auditRequest.setAppVersion(getValue(request, APP_VERSION));
     auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
     auditRequest.setUserId(getValue(request, USER_ID));
     auditRequest.setUserIp(getUserIP(request));
+    auditRequest.setSource(getValue(request, SOURCE));
 
     MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
     auditRequest.setMobilePlatform(mobilePlatform.getValue());
@@ -64,10 +70,23 @@ public final class AuditEventMapper {
       CommonApplicationPropertyConfig commonPropConfig,
       AuditLogEventRequest auditRequest) {
     auditRequest.setEventCode(eventEnum.getEventCode());
-    auditRequest.setSource(eventEnum.getSource().getValue());
+
+    // Use enum value where specified, otherwise, use 'source' header value.
+    if (eventEnum.getSource().isPresent()) {
+      auditRequest.setSource(eventEnum.getSource().get().getValue());
+    }
+
+
     auditRequest.setDestination(eventEnum.getDestination().getValue());
-    auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().getValue());
-    auditRequest.setResourceServer(eventEnum.getResourceServer().getValue());
+
+    if (eventEnum.getUserAccessLevel().isPresent()) {
+      auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().get().getValue());
+    }
+
+    if (eventEnum.getResourceServer().isPresent()) {
+      auditRequest.setResourceServer(eventEnum.getResourceServer().get().getValue());
+    }
+
     auditRequest.setSourceApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setDestinationApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setPlatformVersion(commonPropConfig.getApplicationVersion());
