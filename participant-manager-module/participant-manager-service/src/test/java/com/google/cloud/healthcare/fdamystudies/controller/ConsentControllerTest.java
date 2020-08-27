@@ -125,6 +125,8 @@ public class ConsentControllerTest extends BaseMockIT {
     String sampleContent = JsonPath.read(result.getResponse().getContentAsString(), "$.content");
 
     assertThat(Base64.getDecoder().decode(sampleContent.getBytes()), is(encodedContent));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -149,6 +151,8 @@ public class ConsentControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -172,6 +176,8 @@ public class ConsentControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -194,6 +200,8 @@ public class ConsentControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @AfterEach
