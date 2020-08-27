@@ -76,7 +76,7 @@ public final class AuditEventMapper {
       auditRequest.setSource(eventEnum.getSource().get().getValue());
     }
 
-    auditRequest.setDestination(eventEnum.getDestination().getValue());
+
     auditRequest.setDestination(eventEnum.getDestination().getValue());
 
     if (eventEnum.getUserAccessLevel().isPresent()) {

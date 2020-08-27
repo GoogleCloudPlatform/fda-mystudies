@@ -8,6 +8,20 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
@@ -209,6 +223,7 @@ public class BaseMockIT {
     for (AuditLogEvent auditEvent : auditEvents) {
       AuditLogEventRequest auditRequest = auditRequestByEventCode.get(auditEvent.getEventCode());
 
+
       assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());
       assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
 
@@ -233,9 +248,11 @@ public class BaseMockIT {
           StringUtils.contains(auditRequest.getDescription(), "{")
               && StringUtils.contains(auditRequest.getDescription(), "}"));
       assertNotNull(auditRequest.getCorrelationId());
-      assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getOccured());
       assertNotNull(auditRequest.getPlatformVersion());
+      assertNotNull(auditRequest.getOccured());
+      assertNotNull(auditRequest.getPlatformVersion());
+      assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getAppVersion());
       assertNotNull(auditRequest.getMobilePlatform());
     }
@@ -251,6 +268,7 @@ public class BaseMockIT {
 
     Mockito.reset(mockAuditService);
     auditRequests.clear();
+
     doAnswer(
             invocation ->
                 auditRequests.add(
@@ -259,6 +277,7 @@ public class BaseMockIT {
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
 
     WireMock.resetAllRequests();
+
   }
 
   @AfterEach
