@@ -14,15 +14,12 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
 import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -232,90 +229,6 @@ public class UserManagementUtil {
       }
 
       return authResponse;
-    }
-  }
-
-  public AuthRegistrationResponseBean registerUserInAuthServer(
-      UserRegistrationForm userForm, String appId, String orgId) {
-    logger.info("UserManagementUtil.registerUserInAuthServer......Starts");
-    AuthRegistrationResponseBean authServerResponse = null;
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.APP_ID, appId);
-    headers.set(AppConstants.ORGANIZATION_ID, orgId);
-
-    AuthServerRegistrationBody providerBody = new AuthServerRegistrationBody();
-    providerBody.setEmailId(userForm.getEmailId());
-    providerBody.setPassword(userForm.getPassword());
-
-    HttpEntity<AuthServerRegistrationBody> request = new HttpEntity<>(providerBody, headers);
-    ObjectMapper objectMapper = null;
-    try {
-      RestTemplate template = new RestTemplate();
-
-      ResponseEntity<?> responseEntity =
-          template.exchange(
-              appConfig.getAuthServerRegisterStatusUrl(), HttpMethod.POST, request, String.class);
-
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        String body = (String) responseEntity.getBody();
-        objectMapper = new ObjectMapper();
-        try {
-          authServerResponse = objectMapper.readValue(body, AuthRegistrationResponseBean.class);
-          return authServerResponse;
-        } catch (JsonParseException e) {
-          return authServerResponse;
-        } catch (JsonMappingException e) {
-          return authServerResponse;
-        } catch (IOException e) {
-          return authServerResponse;
-        }
-      } else {
-        return authServerResponse;
-      }
-    } catch (RestClientResponseException e) {
-      if (e.getRawStatusCode() == 401) {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authServerResponse = new AuthRegistrationResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authServerResponse.setCode(entry.getValue().get(0));
-          }
-
-          if (AppConstants.TITLE.equals(entry.getKey())) {
-            authServerResponse.setTitle(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authServerResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authServerResponse.setHttpStatusCode(401 + "");
-
-      } else if (e.getRawStatusCode() == 500) {
-        authServerResponse = new AuthRegistrationResponseBean();
-        authServerResponse.setHttpStatusCode(500 + "");
-
-      } else {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authServerResponse = new AuthRegistrationResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authServerResponse.setCode(entry.getValue().get(0));
-          }
-
-          if (AppConstants.TITLE.equals(entry.getKey())) {
-            authServerResponse.setTitle(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authServerResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authServerResponse.setHttpStatusCode(400 + "");
-      }
-      return authServerResponse;
     }
   }
 
