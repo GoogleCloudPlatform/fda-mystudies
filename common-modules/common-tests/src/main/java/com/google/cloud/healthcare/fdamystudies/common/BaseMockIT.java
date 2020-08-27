@@ -8,7 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -277,7 +279,6 @@ public class BaseMockIT {
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
 
     WireMock.resetAllRequests();
-
   }
 
   @AfterEach
