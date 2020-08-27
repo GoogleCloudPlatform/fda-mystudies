@@ -91,6 +91,8 @@ public class UserSupportControllerTest extends BaseMockIT {
             Mockito.any(),
             Mockito.any());
 
+    verifyTokenIntrospectRequest(1);
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -98,6 +100,7 @@ public class UserSupportControllerTest extends BaseMockIT {
     auditEventMap.put(FEEDBACK_CONTENT_EMAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, FEEDBACK_CONTENT_EMAILED);
+
   }
 
   @Test
@@ -114,11 +117,7 @@ public class UserSupportControllerTest extends BaseMockIT {
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER,
-            Constants.USER_ID_HEADER);
+            Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
 
     String requestJson =
         getContactUsRequest(
@@ -141,6 +140,8 @@ public class UserSupportControllerTest extends BaseMockIT {
             eq(appConfig.getContactusToEmail()),
             Mockito.any(),
             Mockito.any());
+
+    verifyTokenIntrospectRequest(1);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);

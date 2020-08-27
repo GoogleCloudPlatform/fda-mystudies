@@ -170,7 +170,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
-
     MvcResult result =
         mockMvc
             .perform(

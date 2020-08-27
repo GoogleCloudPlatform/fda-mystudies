@@ -14,11 +14,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.HttpHeaders;
 
 public class TestUtils {
+  private static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
+
   public static HttpHeaders getCommonHeaders(String... addOptionalHeaderNames) {
 
     HttpHeaders headers = new HttpHeaders();
     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add(Constants.APP_ID_HEADER, Constants.APP_ID_VALUE);

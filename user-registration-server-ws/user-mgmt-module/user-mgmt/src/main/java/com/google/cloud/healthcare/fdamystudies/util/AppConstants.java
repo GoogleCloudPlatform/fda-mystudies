@@ -16,8 +16,6 @@ public class AppConstants {
   public static final String USER_EMAILID = "userEmail";
   public static final String APPLICATION_ID = "appInfoId";
   public static final String APP_ID = "appId";
-  public static final String CLIENT_ID = "clientId";
-  public static final String SECRET_KEY = "secretKey";
   public static final String TITLE = "title";
 
   public static final String ORGANIZATION_ID = "orgId";

@@ -9,24 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -72,78 +60,5 @@ public class CommonServiceImpl implements CommonService {
 
     logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - ends");
     return appOrgInfoBean;
-  }
-
-  @Override
-  public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
-    logger.info("CommonServiceImpl validateAccessToken() - starts");
-    Integer value = null;
-    HttpHeaders headers = null;
-    HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
-      headers.set(AppConstants.USER_ID, userId);
-      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
-
-      requestBody = new HttpEntity<>(null, headers);
-      logger.info("CommonServiceImpl validateAccessToken() " + restTemplate.hashCode());
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerAccessTokenValidationUrl(),
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
-      value = (Integer) responseEntity.getBody();
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl validateAccessToken() - error ", e);
-    }
-    logger.info("CommonServiceImpl validateAccessToken() - ends");
-    return value;
-  }
-
-  @Override
-  public boolean validateServerClientCredentials(String clientId, String clientSecret)
-      throws SystemException, UnAuthorizedRequestException, InvalidRequestException {
-
-    HttpHeaders headers = null;
-    HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.CLIENT_ID, clientId);
-      headers.set(AppConstants.SECRET_KEY, clientSecret);
-      requestBody = new HttpEntity<>(null, headers);
-      logger.debug("CommonServiceImpl validateServerClientCredentials() Begin");
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerClientValidationUrl(),
-              HttpMethod.POST,
-              requestBody,
-              String.class);
-      HttpStatus status = responseEntity.getStatusCode();
-      if (status == HttpStatus.OK) {
-        return true;
-      }
-    } catch (RestClientResponseException e) {
-
-      if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret.", e);
-        throw new UnAuthorizedRequestException();
-      } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request", e);
-        throw new InvalidRequestException();
-      } else {
-        throw new SystemException();
-      }
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl validateServerClientCredentials - error ", e);
-      throw new SystemException();
-    }
-
-    return false;
   }
 }
