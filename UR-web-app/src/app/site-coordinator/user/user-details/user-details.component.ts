@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {UserService} from '../shared/user.service';
 import {User} from 'src/app/entity/user';
 import {ManageUserDetails} from '../shared/manage-user-details';
@@ -23,7 +23,6 @@ export class UserDetailsComponent extends UnsubscribeOnDestroyAdapter
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly router: Router,
     private readonly userService: UserService,
   ) {
     super();
