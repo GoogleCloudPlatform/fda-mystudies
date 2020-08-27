@@ -79,15 +79,9 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This email has already been used. Please try with a different email address."),
 
-  USER_ALREADY_EXISTS(
-      409,
-      "EC-101",
-      HttpStatus.CONFLICT.toString(),
-      "There is already a user with this email address. Please log in."),
-
   EMAIL_SEND_FAILED_EXCEPTION(
       500,
-      "EC-5001",
+      "EC-500",
       "Email Server Error",
       "Your email was unable to send because the connection to mail server was interrupted. Please check your inbox for mail delivery failure notice."),
 

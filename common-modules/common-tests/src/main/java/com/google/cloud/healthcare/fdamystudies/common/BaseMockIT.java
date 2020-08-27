@@ -250,17 +250,16 @@ public class BaseMockIT {
   void setUp(TestInfo testInfo) {
     logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
 
+    WireMock.resetAllRequests();
+
     Mockito.reset(mockAuditService);
     auditRequests.clear();
-
     doAnswer(
             invocation ->
                 auditRequests.add(
                     SerializationUtils.clone((AuditLogEventRequest) invocation.getArguments()[0])))
         .when(mockAuditService)
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
-
-    WireMock.resetAllRequests();
   }
 
   @AfterEach

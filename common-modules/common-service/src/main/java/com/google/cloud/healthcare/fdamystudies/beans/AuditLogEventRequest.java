@@ -22,8 +22,6 @@ import lombok.ToString;
 @ToString
 public class AuditLogEventRequest implements Serializable {
 
-  private static final long serialVersionUID = -2284303463534623314L;
-
   @NotBlank
   @Size(max = 36)
   private String correlationId;
@@ -92,4 +90,7 @@ public class AuditLogEventRequest implements Serializable {
 
   @Size(max = 20)
   private String studyVersion;
+
+  @Size(max = 64)
+  private String siteId;
 }

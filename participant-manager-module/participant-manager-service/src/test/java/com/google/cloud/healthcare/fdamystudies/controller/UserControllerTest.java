@@ -10,6 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID;
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -30,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -56,12 +62,13 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -234,10 +241,15 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
 
-    ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor = ArgumentCaptor.forClass(MimeMessage.class);
-    verify(emailSender, atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
-    MimeMessage capturedMimeMessage = mimeMessageArgumentCaptor.getValue();
-    assertEquals(capturedMimeMessage.getAllRecipients()[0].toString(), TestConstants.USER_EMAIL_VALUE);
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
+    auditEventMap.put(NEW_USER_INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED, NEW_USER_INVITATION_EMAIL_SENT);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
@@ -277,6 +289,14 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
+    auditEventMap.put(NEW_USER_INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED, NEW_USER_INVITATION_EMAIL_SENT);
+
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
     // Step 3: verify saved values
@@ -313,6 +333,14 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
+    auditEventMap.put(NEW_USER_INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED, NEW_USER_INVITATION_EMAIL_SENT);
+
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
     // Step 3: verify saved values
@@ -348,6 +376,14 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(NEW_USER_CREATED.getEventCode(), auditRequest);
+    auditEventMap.put(NEW_USER_INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_USER_CREATED, NEW_USER_INVITATION_EMAIL_SENT);
+
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
     // Step 3: verify saved values
@@ -380,6 +416,14 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.userId", notNullValue()));
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_UPDATE_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED, ACCOUNT_UPDATE_EMAIL_SENT);
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), true);
@@ -416,6 +460,14 @@ public class UserControllerTest extends BaseMockIT {
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_UPDATE_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED, ACCOUNT_UPDATE_EMAIL_SENT);
+
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), false);
     assertSitePermissionDetails(adminforUpdate.getId());
@@ -448,6 +500,14 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.userId", notNullValue()));
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_UPDATE_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED, ACCOUNT_UPDATE_EMAIL_SENT);
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), false);
@@ -482,6 +542,14 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.userId", notNullValue()));
 
     verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_RECORD_UPDATED.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_UPDATE_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_RECORD_UPDATED, ACCOUNT_UPDATE_EMAIL_SENT);
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), false);
@@ -725,6 +793,13 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.SUPER_ADMIN_EMAIL_ID)))
         .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID)))
         .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.EMAIL_VALUE)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_REGISTRY_VIEWED);
 
     verifyTokenIntrospectRequest();
   }

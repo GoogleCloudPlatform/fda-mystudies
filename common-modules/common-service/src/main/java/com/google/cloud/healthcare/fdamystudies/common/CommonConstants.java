@@ -70,11 +70,12 @@ public final class CommonConstants {
 
   public static final String PASSWORD_REGEX_MESSAGE =
       "Your password does not meet the required criteria.";
-  
-  public static final int EMAIL_LENGTH = 320;
 
-  public static final String DELETE = "delete";
+  public static final String SUPER_ADMIN = "Super Admin";
 
-  public static final String RETAIN = "retain";
+  public static final String ADMIN = "Admin";
 
+  public static final String EDITED_USER_ID = "edited_user_id";
+
+  public static final String NEW_USER_ID = "new_user_id";
 }

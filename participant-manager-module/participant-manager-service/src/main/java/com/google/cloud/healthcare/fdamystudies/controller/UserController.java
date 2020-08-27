@@ -9,9 +9,11 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetUsersResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ManageUserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -48,8 +50,12 @@ public class UserController {
       @RequestHeader(name = "userId") String superAdminUserId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(superAdminUserId);
+
     user.setSuperAdminUserId(superAdminUserId);
-    AdminUserResponse userResponse = manageUserService.createUser(user);
+    AdminUserResponse userResponse = manageUserService.createUser(user, auditRequest);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
@@ -63,7 +69,12 @@ public class UserController {
       @PathVariable String superAdminUserId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    AdminUserResponse userResponse = manageUserService.updateUser(user, superAdminUserId);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(superAdminUserId);
+
+    AdminUserResponse userResponse =
+        manageUserService.updateUser(user, superAdminUserId, auditRequest);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
@@ -72,7 +83,7 @@ public class UserController {
       value = {"/users/admin/{adminId}"},
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getAdminDetailsAndApps(
+  public ResponseEntity<GetAdminDetailsResponse> getAdminDetailsAndApps(
       @RequestHeader("userId") String userId,
       @PathVariable(value = "adminId", required = false) String adminId,
       HttpServletRequest request) {
@@ -86,10 +97,14 @@ public class UserController {
       value = {"/users"},
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<?> getUsers(
+  public ResponseEntity<GetUsersResponse> getUsers(
       @RequestHeader("userId") String superAdminUserId, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    GetUsersResponse userResponse = manageUserService.getUsers(superAdminUserId);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(superAdminUserId);
+
+    GetUsersResponse userResponse = manageUserService.getUsers(superAdminUserId, auditRequest);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
