@@ -245,7 +245,7 @@ public enum UserMgmntEvent implements AuditLogEvent {
       PlatformComponent resourceServer,
       String description,
       String eventCode) {
-    this.source = Optional.ofNullable(resourceServer);
+    this.source = Optional.ofNullable(source);
     this.destination = destination;
     this.resourceServer = Optional.ofNullable(resourceServer);
     this.description = description;
