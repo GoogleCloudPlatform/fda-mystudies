@@ -34,12 +34,8 @@ public interface UserManagementProfileService {
 
   public UserDetailsBO saveParticipant(UserDetailsBO participant);
 
-  public String deActivateAcct(
-      String userId,
-      DeactivateAcctBean deactivateBean,
-      String accessToken,
-      String clientToken,
-      AuditLogEventRequest auditRequest);
+  public String deactivateAccount(
+      String userId, DeactivateAcctBean deactivateBean, AuditLogEventRequest auditRequest);
 
   public int resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId);
