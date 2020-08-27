@@ -51,5 +51,6 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
 
     // Writes the log entry asynchronously
     logging.write(Collections.singleton(entry));
+    logger.exit(String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }
 }
