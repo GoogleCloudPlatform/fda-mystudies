@@ -8,10 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
@@ -23,20 +25,23 @@ import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestExceptio
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
 
 @Service
 public class StudyStateServiceImpl implements StudyStateService {
@@ -55,6 +60,8 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Autowired private CommonService commonService;
 
+  @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
+
   @Override
   public List<ParticipantStudiesBO> getParticipantStudiesList(UserDetailsBO user) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
@@ -72,7 +79,8 @@ public class StudyStateServiceImpl implements StudyStateService {
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudiesBO> existParticipantStudies,
-      String userId) {
+      String userId,
+      AuditLogEventRequest auditRequest) {
     logger.info("StudyStateServiceImpl saveParticipantStudies() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -81,9 +89,15 @@ public class StudyStateServiceImpl implements StudyStateService {
     List<ParticipantStudiesBO> addParticipantStudiesList = new ArrayList<ParticipantStudiesBO>();
     List<String> customStudyIdList = new LinkedList<>();
     ParticipantStudiesBO participantStudyBo = new ParticipantStudiesBO();
+
+    Map<String, String> placeHolder = new HashMap<>();
+    auditRequest.setUserId(userId);
     try {
       for (int i = 0; i < studiesBeenList.size(); i++) {
         StudiesBean studiesBean = studiesBeenList.get(i);
+
+        auditRequest.setStudyId(studiesBean.getStudyId());
+        auditRequest.setParticipantId(studiesBean.getParticipantId());
         studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
         if (existParticipantStudies != null && !existParticipantStudies.isEmpty()) {
           for (ParticipantStudiesBO participantStudies : existParticipantStudies) {
@@ -99,6 +113,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                 if (studiesBean.getStatus() != null
                     && !StringUtils.isEmpty(studiesBean.getStatus())) {
                   participantStudies.setStatus(studiesBean.getStatus());
+
                   if (studiesBean
                       .getStatus()
                       .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
@@ -119,6 +134,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                     && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
                   participantStudies.setParticipantId(studiesBean.getParticipantId());
                 }
+                placeHolder.put("study_state_value", participantStudies.getStatus());
                 addParticipantStudiesList.add(participantStudies);
               }
             }
@@ -156,6 +172,7 @@ public class StudyStateServiceImpl implements StudyStateService {
               && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
             participantStudyBo.setParticipantId(studiesBean.getParticipantId());
           }
+          placeHolder.put("study_state_value", participantStudyBo.getStatus());
           addParticipantStudiesList.add(participantStudyBo);
           customStudyIdList.add(studiesBean.getStudyId());
         }
@@ -165,28 +182,12 @@ public class StudyStateServiceImpl implements StudyStateService {
         studyStateRespBean = new StudyStateRespBean();
         studyStateRespBean.setMessage(
             MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-        List<String> activityDescList =
-            customStudyIdList
-                .stream()
-                .map(
-                    studyId ->
-                        String.format(AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_DESC, studyId))
-                .collect(Collectors.toList());
-        commonService.createActivityLogList(
-            userId, AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_NAME, activityDescList);
-      } else {
-        List<String> activityDescList =
-            customStudyIdList
-                .stream()
-                .map(
-                    studyId ->
-                        String.format(
-                            AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_DESC, studyId))
-                .collect(Collectors.toList());
-        commonService.createActivityLogList(
-            userId, AppConstants.AUDIT_EVENT_UPDATE_STUDY_STATE_FAILED_NAME, activityDescList);
+
+        enrollAuditEventHelper.logEvent(
+            STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, placeHolder);
       }
     } catch (Exception e) {
+      enrollAuditEventHelper.logEvent(STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, placeHolder);
       logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);
     }
 
