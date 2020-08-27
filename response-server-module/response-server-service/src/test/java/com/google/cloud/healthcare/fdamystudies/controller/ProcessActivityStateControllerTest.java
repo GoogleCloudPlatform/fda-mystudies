@@ -43,49 +43,6 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
   @Autowired ParticipantActivityStateResponseService participantActivitiesResponseService;
 
   @Test
-  void shouldUpdateActivityState() throws Exception {
-
-    String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
-    // Step 1: Call API to update activity state
-    HttpHeaders headers = TestUtils.newHeadersUser();
-    mockMvc
-        .perform(
-            post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
-                .contextPath(getContextPath())
-                .content(inputJsonContent)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk());
-
-    ActivityStateRequestBean inputActivityStateBean =
-        getObjectMapper().readValue(inputJsonContent, ActivityStateRequestBean.class);
-    String studyId = inputActivityStateBean.getStudyId();
-    String participantId = inputActivityStateBean.getParticipantId();
-
-    // Step 2: verify updated values
-    List<ParticipantActivitiesBo> resultsList =
-        participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
-    assertNotNull(resultsList);
-    assertEquals(1, resultsList.size());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityId(),
-        resultsList.get(0).getActivityId());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityVersion(),
-        resultsList.get(0).getActivityVersion());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityState(),
-        resultsList.get(0).getActivityState());
-
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
-        resultsList.get(0).getTotal());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
-        resultsList.get(0).getCompleted());
-  }
-
-  @Test
   void shouldGetActivityStateValidParams() throws Exception {
     // Step 1: Save the activity first
     String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
@@ -115,70 +72,6 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/get_activity_state_runs_info_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
-  }
-
-  @Test
-  void shouldUpdateActivityStateMultiple() throws Exception {
-
-    String inputJsonContent =
-        readJsonFile("/update_activity_state_runs_info__multiple_request.json");
-    // Step 1: Call API to update activity state
-    HttpHeaders headers = TestUtils.newHeadersUser();
-    mockMvc
-        .perform(
-            post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
-                .contextPath(getContextPath())
-                .content(inputJsonContent)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk());
-
-    // Step 2: verify updated values
-    ActivityStateRequestBean inputActivityStateBean =
-        getObjectMapper().readValue(inputJsonContent, ActivityStateRequestBean.class);
-    String studyId = inputActivityStateBean.getStudyId();
-    String participantId = inputActivityStateBean.getParticipantId();
-
-    List<ParticipantActivitiesBo> resultsList =
-        participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
-    assertNotNull(resultsList);
-    assertEquals(2, resultsList.size());
-
-    // Validate 1st activity state
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityId(),
-        resultsList.get(0).getActivityId());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityVersion(),
-        resultsList.get(0).getActivityVersion());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityState(),
-        resultsList.get(0).getActivityState());
-
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
-        resultsList.get(0).getTotal());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
-        resultsList.get(0).getCompleted());
-
-    // Validate 2nd activity state
-    assertEquals(
-        inputActivityStateBean.getActivity().get(1).getActivityId(),
-        resultsList.get(1).getActivityId());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(1).getActivityVersion(),
-        resultsList.get(1).getActivityVersion());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(1).getActivityState(),
-        resultsList.get(1).getActivityState());
-
-    assertEquals(
-        inputActivityStateBean.getActivity().get(1).getActivityRun().getTotal(),
-        resultsList.get(1).getTotal());
-    assertEquals(
-        inputActivityStateBean.getActivity().get(1).getActivityRun().getCompleted(),
-        resultsList.get(1).getCompleted());
   }
 
   @ParameterizedTest
@@ -247,8 +140,115 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
   }
 
+  @Test
+  void shouldUpdateActivityState() throws Exception {
+
+    String inputJsonContent = readJsonFile("/update_activity_state_runs_info_request.json");
+    // Step 1: Call API to update activity state
+    HttpHeaders headers = TestUtils.newHeadersUser();
+    mockMvc
+        .perform(
+            post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
+                .contextPath(getContextPath())
+                .content(inputJsonContent)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    ActivityStateRequestBean inputActivityStateBean =
+        getObjectMapper().readValue(inputJsonContent, ActivityStateRequestBean.class);
+    String studyId = inputActivityStateBean.getStudyId();
+    String participantId = inputActivityStateBean.getParticipantId();
+
+    // Step 2: verify updated values
+    List<ParticipantActivitiesBo> resultsList =
+        participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
+    assertNotNull(resultsList);
+    assertEquals(1, resultsList.size());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityId(),
+        resultsList.get(0).getActivityId());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityVersion(),
+        resultsList.get(0).getActivityVersion());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityState(),
+        resultsList.get(0).getActivityState());
+
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
+        resultsList.get(0).getTotal());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
+        resultsList.get(0).getCompleted());
+  }
+
+  @Test
+  void shouldUpdateActivityStateMultiple() throws Exception {
+
+    String inputJsonContent =
+        readJsonFile("/update_activity_state_runs_info__multiple_request.json");
+    // Step 1: Call API to update activity state
+    HttpHeaders headers = TestUtils.newHeadersUser();
+    mockMvc
+        .perform(
+            post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
+                .contextPath(getContextPath())
+                .content(inputJsonContent)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    // Step 2: verify updated values
+    ActivityStateRequestBean inputActivityStateBean =
+        getObjectMapper().readValue(inputJsonContent, ActivityStateRequestBean.class);
+    String studyId = inputActivityStateBean.getStudyId();
+    String participantId = inputActivityStateBean.getParticipantId();
+
+    List<ParticipantActivitiesBo> resultsList =
+        participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
+    assertNotNull(resultsList);
+    assertEquals(2, resultsList.size());
+
+    // Validate 1st activity state
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityId(),
+        resultsList.get(0).getActivityId());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityVersion(),
+        resultsList.get(0).getActivityVersion());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityState(),
+        resultsList.get(0).getActivityState());
+
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
+        resultsList.get(0).getTotal());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
+        resultsList.get(0).getCompleted());
+
+    // Validate 2nd activity state
+    assertEquals(
+        inputActivityStateBean.getActivity().get(1).getActivityId(),
+        resultsList.get(1).getActivityId());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(1).getActivityVersion(),
+        resultsList.get(1).getActivityVersion());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(1).getActivityState(),
+        resultsList.get(1).getActivityState());
+
+    assertEquals(
+        inputActivityStateBean.getActivity().get(1).getActivityRun().getTotal(),
+        resultsList.get(1).getTotal());
+    assertEquals(
+        inputActivityStateBean.getActivity().get(1).getActivityRun().getCompleted(),
+        resultsList.get(1).getCompleted());
+  }
+
   @AfterEach
-  void cleaUp() {
+  void cleanUp() {
     participantActivitiesRepository.deleteAll();
   }
 }
