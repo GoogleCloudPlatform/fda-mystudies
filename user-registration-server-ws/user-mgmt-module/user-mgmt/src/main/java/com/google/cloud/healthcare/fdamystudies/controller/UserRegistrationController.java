@@ -94,8 +94,6 @@ public class UserRegistrationController {
       @Valid @RequestBody UserRegistrationForm userForm,
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
-      @RequestHeader("clientId") String clientId,
-      @RequestHeader("secretKey") String secretKey,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
 
@@ -117,8 +115,7 @@ public class UserRegistrationController {
     }
 
     try {
-      authServerResponse =
-          userManagementUtil.registerUserInAuthServer(userForm, appId, orgId, clientId, secretKey);
+      authServerResponse = userManagementUtil.registerUserInAuthServer(userForm, appId, orgId);
 
       if (authServerResponse == null || !"OK".equals(authServerResponse.getMessage())) {
         userMgmntAuditHelper.logEvent(

@@ -116,6 +116,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(content().string(containsString("cdash93@gmail.com")))
         .andExpect(status().isOk());
 
+    verifyTokenIntrospectRequest(1);
+    
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -136,6 +138,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest(1);
+    
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.INVALID_USER_ID);
 
@@ -162,6 +166,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(String.valueOf(HttpStatus.OK.value()))));
 
+    verifyTokenIntrospectRequest(1);
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -180,6 +186,8 @@ public class UserProfileControllerTest extends BaseMockIT {
     boolean remote =
         JsonPath.read(result.getResponse().getContentAsString(), "$.settings.remoteNotifications");
     assertTrue(remote);
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
@@ -201,6 +209,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.SUCCESS)));
+
+    verifyTokenIntrospectRequest(1);
 
     UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
     assertEquals(3, daoResp.getStatus());
@@ -247,6 +257,8 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(1);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.INVALID_USER_ID);
