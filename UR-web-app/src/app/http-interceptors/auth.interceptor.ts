@@ -41,7 +41,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     }
-    if (req.url === `${environment.baseUrl}/users`) {
+    if (req.url === `${environment.baseUrl}/users` && req.method === 'GET') {
       return of(
         new HttpResponse({
           status: 200,

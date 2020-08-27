@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -61,6 +62,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.Optional;
 import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -655,6 +657,45 @@ public class UserControllerTest extends BaseMockIT {
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     userInfo = (ObjectNode) userEntity.getUserInfo();
     assertFalse(userInfo.hasNonNull(REFRESH_TOKEN));
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForDeleteUserAccount()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), IdGenerator.id())
+                .contextPath(getContextPath())
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldDeleteUserAccount()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    // Step-1 call delete api
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+
+    mockMvc
+        .perform(
+            delete(ApiEndpoint.DELETE_USER.getPath(), userEntity.getUserId())
+                .contextPath(getContextPath())
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    // Step-2 find the user by userId and assert for null
+    Optional<UserEntity> optUserEntity = repository.findByUserId(userEntity.getUserId());
+    assertFalse(optUserEntity.isPresent());
   }
 
   @AfterEach

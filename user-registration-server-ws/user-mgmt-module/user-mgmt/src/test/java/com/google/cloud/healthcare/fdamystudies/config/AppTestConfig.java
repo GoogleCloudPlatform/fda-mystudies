@@ -10,6 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.config;
 
 import static org.mockito.Mockito.mock;
 
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,5 +26,11 @@ public class AppTestConfig {
   @Primary
   public EmailNotification emailNotification() throws Exception {
     return mock(EmailNotification.class);
+  }
+
+  @Bean
+  @Primary
+  public AuditEventService auditService() {
+    return mock(AuditEventServiceImpl.class);
   }
 }
