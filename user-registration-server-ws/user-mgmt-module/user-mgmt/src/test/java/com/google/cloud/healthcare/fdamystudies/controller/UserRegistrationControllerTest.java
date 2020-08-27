@@ -23,10 +23,10 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VER
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -47,20 +47,15 @@ import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
-import javax.mail.internet.MimeMessage;
 import java.util.Map;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.Disabled;
-
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-
+import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import org.mockito.Mockito;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -85,7 +80,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Autowired private UserDetailsBORepository userDetailsRepository;
 
   @Autowired private EmailNotification emailNotification;
-
 
   @Value("${register.url}")
   private String authRegisterUrl;
@@ -127,21 +121,10 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForInvalidPassword() throws Exception {
+
+    // invalid  password
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId(Constants.APP_ID_VALUE);
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(
-        USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER.getEventCode(), auditRequest);
-    auditEventMap.put(ACCOUNT_REGISTRATION_REQUEST_RECEIVED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(
-        auditEventMap,
-        USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER,
-        ACCOUNT_REGISTRATION_REQUEST_RECEIVED);
 
     // invalid  password
     String requestJson = getRegisterUser("mockito123@gmail.com", Constants.INVALID_PASSWORD);
@@ -155,6 +138,19 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
             .withRequestBody(new ContainsPattern(Constants.INVALID_PASSWORD)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(Constants.APP_ID_VALUE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(
+        USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_REGISTRATION_REQUEST_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER,
+        ACCOUNT_REGISTRATION_REQUEST_RECEIVED);
   }
 
   @Test
@@ -206,7 +202,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
-    auditRequest.setUserId(daoResp.getUserId());
+    auditRequest.setUserId(userDetails.getUserId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(USER_CREATED.getEventCode(), auditRequest);
@@ -215,15 +211,10 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     verifyAuditEventCall(auditEventMap, USER_CREATED, VERIFICATION_EMAIL_FAILED);
   }
 
-  @Order(4)
   @Test
   public void shouldRegisterUserAndVerified() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getRegisterUser("mockito@grr.la", Constants.VALID_PASSWORD);
 
@@ -253,9 +244,11 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     UserDetailsBO daoResp = userDetailsService.loadUserDetailsByUserId(userId);
     assertEquals("mockito@grr.la", daoResp.getEmail());
 
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+
     verify(
         1,
-        postRequestedFor(urlEqualTo("/AuthServer/register"))
+        postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
             .withRequestBody(new ContainsPattern(Constants.VALID_PASSWORD)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
@@ -269,15 +262,10 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     verifyAuditEventCall(auditEventMap, USER_CREATED, VERIFICATION_EMAIL_SENT);
   }
 
-  @Order(5)
   @Test
   public void shouldNotRegisterUser() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
 

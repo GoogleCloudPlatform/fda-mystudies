@@ -160,7 +160,8 @@ public class UserProfileController {
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
     try {
-      message = userManagementProfService.deactivateAccount(userId, deactivateAcctBean);
+      message =
+          userManagementProfService.deactivateAccount(userId, deactivateAcctBean, auditRequest);
 
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
