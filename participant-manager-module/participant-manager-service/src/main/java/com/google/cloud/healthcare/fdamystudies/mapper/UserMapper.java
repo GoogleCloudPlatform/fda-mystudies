@@ -16,7 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserSitePermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
@@ -46,7 +45,7 @@ public final class UserMapper {
     admin.setLastName(userRequest.getLastName());
     admin.setCreatedBy(userRequest.getSuperAdminUserId());
     admin.setEmailChanged(false);
-    admin.setStatus(CommonConstants.INVITED_STATUS); // 2-> Invited, 0-> Deactivated, 1-> Active
+    admin.setStatus(UserStatus.INVITED.getValue());
     admin.setSuperAdmin(userRequest.isSuperAdmin());
     admin.setSecurityCode(IdGenerator.id());
     admin.setSecurityCodeExpireDate(
