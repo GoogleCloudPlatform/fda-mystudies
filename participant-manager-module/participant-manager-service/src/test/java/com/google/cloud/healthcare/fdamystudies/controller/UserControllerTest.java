@@ -59,6 +59,7 @@ import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -221,7 +222,10 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+    verify(emailSender, atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
+    MimeMessage capturedMimeMessage = mimeMessageArgumentCaptor.getValue();
+    assertEquals(capturedMimeMessage.getAllRecipients()[0].toString(), TestConstants.USER_EMAIL_VALUE);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 
