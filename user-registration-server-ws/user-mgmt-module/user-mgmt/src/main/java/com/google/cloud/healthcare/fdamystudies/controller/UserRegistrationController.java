@@ -52,7 +52,6 @@ public class UserRegistrationController {
       @Valid @RequestBody UserRegistrationForm user,
       @RequestHeader("appId") String appId,
       @RequestHeader("orgId") String orgId,
-      @Context HttpServletResponse response,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);

@@ -13,11 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WIT
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthRegistrationResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.AuthServerRegistrationBody;
-
 import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
