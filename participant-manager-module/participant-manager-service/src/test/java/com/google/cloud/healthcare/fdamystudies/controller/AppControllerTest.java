@@ -281,6 +281,7 @@ public class AppControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
   }
 
+  @Test
   public void shouldReturnInvalidAppsFieldsValues() throws Exception {
     // Step 1: set app and study
     studyEntity.setApp(appEntity);
