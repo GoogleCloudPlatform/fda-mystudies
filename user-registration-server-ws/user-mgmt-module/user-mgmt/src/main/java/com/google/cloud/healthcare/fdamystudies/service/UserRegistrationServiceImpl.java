@@ -4,6 +4,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_SE
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_ALREADY_EXISTS;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
@@ -12,6 +13,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -53,6 +56,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   @Autowired private EmailService emailService;
 
+  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
+
   @Value("${register.url}")
   private String authRegisterUrl;
 
@@ -60,8 +65,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   private long expireTime;
 
   @Override
-  public UserRegistrationResponse register(UserRegistrationForm user) {
+  public UserRegistrationResponse register(
+      UserRegistrationForm user, AuditLogEventRequest auditRequest) {
     logger.entry("begin register()");
+    auditRequest.setAppId(user.getAppId());
+    userMgmntAuditHelper.logEvent(
+        UserMgmntEvent.ACCOUNT_REGISTRATION_REQUEST_RECEIVED, auditRequest);
 
     // find appInfoId using appId
     AppOrgInfoBean appOrgInfoBean =
@@ -80,7 +89,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         if (generateVerificationCode(existingUserDetails)) {
           generateAndSaveVerificationCode(existingUserDetails);
         }
-
+        userMgmntAuditHelper.logEvent(
+            UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME, auditRequest);
         throw new ErrorCodeException(USER_ALREADY_EXISTS);
       }
     }
@@ -98,12 +108,19 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     userDetailsBO.setUserId(authUserResponse.getUserId());
     userDetailsBO = userDetailsRepository.saveAndFlush(userDetailsBO);
 
+    auditRequest.setUserId(userDetailsBO.getUserId());
+    userMgmntAuditHelper.logEvent(UserMgmntEvent.USER_CREATED, auditRequest);
+
     // generate save and email the verification code
     userDetailsBO = generateAndSaveVerificationCode(userDetailsBO);
 
     // verification code is empty if send email is failed
     if (StringUtils.isEmpty(userDetailsBO.getEmailCode())) {
+      userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_FAILED, auditRequest);
+
       throw new ErrorCodeException(EMAIL_SEND_FAILED_EXCEPTION);
+    } else {
+      userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_SENT, auditRequest);
     }
 
     logger.exit("user account successfully created and email sent with verification code");

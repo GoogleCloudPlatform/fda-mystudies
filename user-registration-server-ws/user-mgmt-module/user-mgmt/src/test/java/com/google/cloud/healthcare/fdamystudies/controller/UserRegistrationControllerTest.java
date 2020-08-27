@@ -16,14 +16,11 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonSt
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_REGISTRATION_REQUEST_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_CREATED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_SENT;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -53,7 +50,6 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,19 +134,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
             .withRequestBody(new ContainsPattern(Constants.INVALID_PASSWORD)));
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId(Constants.APP_ID_VALUE);
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(
-        USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER.getEventCode(), auditRequest);
-    auditEventMap.put(ACCOUNT_REGISTRATION_REQUEST_RECEIVED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(
-        auditEventMap,
-        USER_NOT_CREATED_AFTER_REGISTRATION_FAILED_IN_AUTH_SERVER,
-        ACCOUNT_REGISTRATION_REQUEST_RECEIVED);
   }
 
   @Test
@@ -166,6 +149,19 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.error_description", is(USER_ALREADY_EXISTS.getDescription())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(Constants.APP_ID_VALUE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(
+        USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME.getEventCode(), auditRequest);
+    auditEventMap.put(ACCOUNT_REGISTRATION_REQUEST_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME,
+        ACCOUNT_REGISTRATION_REQUEST_RECEIVED);
   }
 
   @Test
@@ -206,83 +202,9 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(USER_CREATED.getEventCode(), auditRequest);
-    auditEventMap.put(VERIFICATION_EMAIL_FAILED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, USER_CREATED, VERIFICATION_EMAIL_FAILED);
-  }
-
-  @Test
-  public void shouldRegisterUserAndVerified() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
-
-    String requestJson = getRegisterUser("mockito@grr.la", Constants.VALID_PASSWORD);
-
-    Mockito.when(
-            emailNotification.sendEmailNotification(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                eq("mockito@grr.la"),
-                Mockito.any(),
-                Mockito.any()))
-        .thenReturn(true);
-
-    MvcResult result =
-        mockMvc
-            .perform(
-                post(REGISTER_PATH)
-                    .content(requestJson)
-                    .headers(headers)
-                    .contextPath(getContextPath()))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.userId").isNotEmpty())
-            .andReturn();
-
-    String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
-    // find userDetails by userId and assert email
-    UserDetailsBO daoResp = userDetailsService.loadUserDetailsByUserId(userId);
-    assertEquals("mockito@grr.la", daoResp.getEmail());
-
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
-            .withRequestBody(new ContainsPattern(Constants.VALID_PASSWORD)));
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId(Constants.APP_ID_VALUE);
-    auditRequest.setUserId(daoResp.getUserId());
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_CREATED.getEventCode(), auditRequest);
     auditEventMap.put(VERIFICATION_EMAIL_SENT.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, USER_CREATED, VERIFICATION_EMAIL_SENT);
-  }
-
-  @Test
-  public void shouldNotRegisterUser() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
-
-    String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
-
-    mockMvc
-        .perform(
-            post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId(Constants.APP_ID_VALUE);
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(
-        USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME);
   }
 
   private String getRegisterUser(String emailId, String password) throws JsonProcessingException {

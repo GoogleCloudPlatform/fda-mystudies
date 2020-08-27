@@ -8,10 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationResponse;
 
 public interface UserRegistrationService {
 
-  UserRegistrationResponse register(UserRegistrationForm user);
+  UserRegistrationResponse register(UserRegistrationForm user, AuditLogEventRequest auditRequest);
 }
