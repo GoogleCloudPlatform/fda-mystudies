@@ -347,12 +347,12 @@ public class LocationControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldUpdateToDeactiveLocation() throws Exception {
+  public void shouldUpdateToInactiveLocation() throws Exception {
     // Step 1: change the status to active
-    LocationEntity entityToDeactivateLocation = testDataHelper.newLocationEntity();
-    locationRepository.saveAndFlush(entityToDeactivateLocation);
-    entityToDeactivateLocation.setStatus(ACTIVE_STATUS);
-    locationRepository.saveAndFlush(entityToDeactivateLocation);
+    LocationEntity entityToInactiveLocation = testDataHelper.newLocationEntity();
+    locationRepository.saveAndFlush(entityToInactiveLocation);
+    entityToInactiveLocation.setStatus(ACTIVE_STATUS);
+    locationRepository.saveAndFlush(entityToInactiveLocation);
 
     // Step 2: Call API and expect DECOMMISSION_SUCCESS message
     UpdateLocationRequest updateLocationRequest = new UpdateLocationRequest();
@@ -362,7 +362,7 @@ public class LocationControllerTest extends BaseMockIT {
     result =
         mockMvc
             .perform(
-                put(ApiEndpoint.UPDATE_LOCATION.getPath(), entityToDeactivateLocation.getId())
+                put(ApiEndpoint.UPDATE_LOCATION.getPath(), entityToInactiveLocation.getId())
                     .content(asJsonString(updateLocationRequest))
                     .headers(headers)
                     .contextPath(getContextPath()))
