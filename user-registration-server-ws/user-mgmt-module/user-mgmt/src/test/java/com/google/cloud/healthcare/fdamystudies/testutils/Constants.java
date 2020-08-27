@@ -27,19 +27,13 @@ public final class Constants {
   public static final String APP_DESCRIPTION = "appDescription";
   public static final String CUSTOM_STUDY_ID = "StudyID001";
 
-  public static final String ACCESS_TOKEN_VALUE = "access Token value";
-  public static final String CLIENT_TOKEN_VALUE = "client token value";
-  public static final String ACCESS_TOKEN_HEADER = "accessToken";
-  public static final String CLIENT_TOKEN_HEADER = "clientToken";
   public static final String USER_ID_HEADER = "userId";
   public static final String VALID_USER_ID = "kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg";
 
   public static final String INVALID_USER_ID = "invalid userId";
   public static final String EMAIL_ID = "abc@gmail.com";
-  public static final String PASSWORD = "pass@12";
+  public static final String PASSWORD = "Kantharaj#1123";
   public static final String SUCCESS = "success";
-  public static final String CLIENT_ID_HEADER = "clientId";
-  public static final String SECRET_KEY_HEADER = "secretkey";
   public static final String CLIENT_ID_VALUE = "3a4e7944-0731-4471-82e0-81b9a28504af";
   public static final String SECRET_KEY_VALUE = "kKGzwDDW3PXoUjGIeNBHfJVJWb3X7cMOX8d6T09fQF";
   public static final String APP_ID_VALUE = "GCPMS001";
@@ -59,8 +53,9 @@ public final class Constants {
   public static final String INVALID_CODE = "12";
   public static final String INVALID_INPUT = "Invalid input.";
   public static final String EMAIL_NOT_EXIST = "Email Doesn't Exists";
-  public static final String INVALID_PASSWORD = "Invalid Password";
-  public static final String EMAIL = "cdash93@gmail.com";
+  public static final String INVALID_PASSWORD = "AuthServerBadRequest@b0ston";
+  public static final String EMAIL = "mockito@gmail.com";
+  public static final String VERIFY_CODE_EMAIL = "cdash93@gmail.com";
   public static final Object INVALID_EMAIL_CODE = "Invalid email code";
 
   public static final String USER_ID = "gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk";

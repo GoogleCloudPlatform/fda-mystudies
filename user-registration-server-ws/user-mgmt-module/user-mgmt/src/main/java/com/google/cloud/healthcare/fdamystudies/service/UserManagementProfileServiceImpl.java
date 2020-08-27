@@ -236,12 +236,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public String deActivateAcct(
-      String userId,
-      DeactivateAcctBean deactivateAcctBean,
-      String accessToken,
-      String clientToken,
-      AuditLogEventRequest auditRequest) {
+  public String deactivateAccount(
+      String userId, DeactivateAcctBean deactivateAcctBean, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     Integer userDetailsId = 0;
@@ -253,7 +249,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     List<String> deleteData = new ArrayList<String>();
     try {
       userDetailsId = commonDao.getUserInfoDetails(userId);
-      message = userManagementUtil.deactivateAcct(userId, accessToken, clientToken);
+      message = userManagementUtil.deactivateAcct(userId);
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
         if (deactivateAcctBean != null
             && deactivateAcctBean.getDeleteData() != null

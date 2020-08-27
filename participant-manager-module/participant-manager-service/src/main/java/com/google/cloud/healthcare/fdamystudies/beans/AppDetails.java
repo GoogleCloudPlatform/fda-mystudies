@@ -32,7 +32,7 @@ public class AppDetails {
 
   private Long appUsersCount;
 
-  private Integer appPermission;
+  private Integer permission;
 
   private int totalSitesCount;
 
