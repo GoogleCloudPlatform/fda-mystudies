@@ -98,7 +98,7 @@ public enum ErrorCode {
       "Sorry, an error has occurred and your request could not be processed. Please try again later."),
 
   SITE_PERMISSION_ACCESS_DENIED(
-      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have permission to add site"),
+      403, "EC-105", HttpStatus.FORBIDDEN.toString(), "Does not have permission to maintain site"),
 
   SITE_EXISTS(
       400, "EC-106", Constants.BAD_REQUEST, "Site exists with the given locationId and studyId"),
@@ -121,9 +121,9 @@ public enum ErrorCode {
 
   USER_NOT_INVITED(
       400, "EC-869", Constants.BAD_REQUEST, "Provided email not exists or user not invited"),
-  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found."),
+  APP_NOT_FOUND(404, "EC-817", HttpStatus.NOT_FOUND.toString(), "App not found."),
 
-  STUDY_NOT_FOUND(404, "EC-816", Constants.BAD_REQUEST, "Study not found"),
+  STUDY_NOT_FOUND(404, "EC-816", HttpStatus.NOT_FOUND.toString(), "Study not found"),
 
   LOCATION_NOT_FOUND(404, "EC_881", "Not Found", "No Locations Found"),
 
@@ -215,7 +215,12 @@ public enum ErrorCode {
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites"),
 
-  ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found");
+  ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found"),
+
+  CANNOT_ADD_SITE_FOR_OPEN_STUDY(
+      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
+
+  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required");
 
   private final int status;
   private final String code;
