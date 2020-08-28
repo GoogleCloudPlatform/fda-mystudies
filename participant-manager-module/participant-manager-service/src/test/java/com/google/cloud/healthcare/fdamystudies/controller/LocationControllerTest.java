@@ -135,7 +135,7 @@ public class LocationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnForbiddenForLocationAccessDenied() throws Exception {
 
-    userRegAdminEntity.setEditPermission(Permission.VIEW.value());
+    userRegAdminEntity.setLocationPermission(Permission.VIEW.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -337,7 +337,7 @@ public class LocationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnForbiddenForLocationAccessDeniedOfGetLocations() throws Exception {
     // Step 1: change editPermission to null
-    userRegAdminEntity.setEditPermission(Permission.NO_PERMISSION.value());
+    userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call API and expect error message LOCATION_ACCESS_DENIED
@@ -384,7 +384,7 @@ public class LocationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnForbiddenForLocationForSiteAccessDenied() throws Exception {
     // Step 1: change editPermission to null
-    userRegAdminEntity.setEditPermission(Permission.NO_PERMISSION.value());
+    userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call API and expect error message LOCATION_ACCESS_DENIED
@@ -484,7 +484,7 @@ public class LocationControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnForbiddenForLocationAccessDeniedById() throws Exception {
     // Step 1: change editPermission to null
-    userRegAdminEntity.setEditPermission(Permission.NO_PERMISSION.value());
+    userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call API and expect error message LOCATION_ACCESS_DENIED

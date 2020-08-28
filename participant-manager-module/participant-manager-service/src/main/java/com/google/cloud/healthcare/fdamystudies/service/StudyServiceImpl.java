@@ -9,9 +9,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
@@ -21,6 +18,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
@@ -157,7 +155,9 @@ public class StudyServiceImpl implements StudyService {
         Integer studyEditPermission =
             studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit().value();
         studyDetail.setStudyPermission(
-            studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
+            studyEditPermission == Permission.NO_PERMISSION.value()
+                ? Permission.VIEW.value()
+                : Permission.EDIT.value());
         studyDetail.setStudyPermission(studyEditPermission);
       }
 
@@ -187,8 +187,10 @@ public class StudyServiceImpl implements StudyService {
           getStudyInvitedCount(
               siteWithInvitedParticipantCountMap, entry, studyInvitedCount, sitePermission);
 
-      studyEnrolledCount +=
-          siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
+      if (siteWithEnrolledParticipantCountMap.containsKey(sitePermission.getSite().getId())) {
+        studyEnrolledCount +=
+            siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
+      }
     }
 
     studyDetail.setEnrolled(studyEnrolledCount);
@@ -229,7 +231,9 @@ public class StudyServiceImpl implements StudyService {
 
   private Map<String, Long> getSiteWithInvitedParticipantCountMap(List<String> usersSiteIds) {
     List<ParticipantRegistrySiteEntity> participantRegistry =
-        participantRegistrySiteRepository.findBySiteIds(usersSiteIds);
+        (List<ParticipantRegistrySiteEntity>)
+            CollectionUtils.emptyIfNull(
+                participantRegistrySiteRepository.findBySiteIds(usersSiteIds));
 
     return participantRegistry
         .stream()
@@ -266,11 +270,11 @@ public class StudyServiceImpl implements StudyService {
 
     Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
-    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get());
+    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get(), userId);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
-      StudyEntity study, AppEntity app) {
+      StudyEntity study, AppEntity app, String userId) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
 
@@ -279,6 +283,11 @@ public class StudyServiceImpl implements StudyService {
           siteRepository.findByStudyIdAndType(study.getId(), study.getType());
       if (optSiteEntity.isPresent()) {
         participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
+
+        Optional<SitePermissionEntity> optSitePermission =
+            sitePermissionRepository.findByUserIdAndSiteId(userId, optSiteEntity.get().getId());
+
+        participantRegistryDetail.setOpenStudySitePermission(optSitePermission.get().getCanEdit());
       }
     }
 
