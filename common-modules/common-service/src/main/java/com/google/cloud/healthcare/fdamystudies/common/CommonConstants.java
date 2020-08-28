@@ -31,8 +31,6 @@ public final class CommonConstants {
 
   public static final Integer READ_AND_EDIT_PERMISSION = 2;
 
-  public static final int ACTIVE = 1;
-
   public static final int VIEW_VALUE = 0;
 
   public static final int EDIT_VALUE = 1;
@@ -46,8 +44,6 @@ public final class CommonConstants {
   public static final String OPEN = "Open";
 
   public static final String STATUS_ACTIVE = "Active";
-
-  public static final int INVITED_STATUS = 2;
 
   public static final boolean SELECTED = true;
 
@@ -70,8 +66,11 @@ public final class CommonConstants {
 
   public static final String PASSWORD_REGEX_MESSAGE =
       "Your password does not meet the required criteria.";
+  
+  public static final int EMAIL_LENGTH = 320;
 
   public static final String DELETE = "delete";
 
   public static final String RETAIN = "retain";
+
 }
