@@ -6,7 +6,10 @@ import {HttpClient} from '@angular/common/http';
 import {addUserResponse, addUserRequest} from 'src/app/entity/mock-app-details';
 import {of, throwError} from 'rxjs';
 import {ApiResponse} from 'src/app/entity/api.response.model';
-import {expectedManageUsers} from 'src/app/entity/mock-users-data';
+import {
+  expectedManageUsers,
+  expectedManageUserDetails,
+} from 'src/app/entity/mock-users-data';
 
 describe('UserService', () => {
   let service: UserService;
@@ -27,7 +30,6 @@ describe('UserService', () => {
       get: of(expectedManageUsers),
     });
     service = new UserService(httpServiceSpyObj);
-
     service
       .getUsers()
       .subscribe(
@@ -48,9 +50,7 @@ describe('UserService', () => {
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: throwError(errorResponses),
     });
-
     service = new UserService(httpServiceSpyObj);
-
     tick(40);
     service.getUsers().subscribe(
       () => fail('expected an error'),
@@ -58,6 +58,25 @@ describe('UserService', () => {
         expect(error.message).toBe('Bad Request');
       },
     );
+  }));
+
+  it('should return expected user`s details', fakeAsync(() => {
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedManageUserDetails),
+    });
+    service = new UserService(httpServiceSpyObj);
+
+    service
+      .getUserDetails(expectedManageUserDetails.user.id)
+      .subscribe(
+        (userDetails) =>
+          expect(userDetails).toEqual(
+            expectedManageUserDetails,
+            'expected user`s details',
+          ),
+        fail,
+      );
+    expect(httpServiceSpyObj.get).toHaveBeenCalledTimes(1);
   }));
 
   it('should post the expected new user data', () => {
