@@ -117,7 +117,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk());
 
     verifyTokenIntrospectRequest(1);
-    
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -139,7 +139,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest(1);
-    
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.INVALID_USER_ID);
 

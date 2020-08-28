@@ -45,6 +45,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
 
@@ -57,6 +58,8 @@ public class UserProfileControllerTest extends BaseMockIT {
   private UserRegAdminEntity userRegAdminEntity;
 
   @Autowired UserRegAdminRepository userRegAdminRepository;
+
+  protected MvcResult result;
 
   @Test
   public void contextLoads() {
@@ -346,7 +349,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnAuthServerBadRequestError() throws Exception {
+  public void shouldReturnInternalServerError() throws Exception {
     // Step 1: Setting up the request for bad request
     SetUpAccountRequest request = setUpAccountRequest();
     userRegAdminEntity.setEmail(USER_EMAIL_VALUE);
@@ -363,7 +366,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isInternalServerError());
 
     verifyTokenIntrospectRequest();
   }
