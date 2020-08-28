@@ -84,12 +84,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${authServerClientValidationUrl}")
   private String authServerClientValidationUrl;
 
-  @Value("${clientId}")
-  private String clientId;
-
-  @Value("${secretKey}")
-  private String secretKey;
-
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
 
@@ -125,4 +119,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${auth.server.deactivateurl}")
   private String authServerDeactivateUrl;
+
+  @Value("${org.name}")
+  private String orgName;
 }

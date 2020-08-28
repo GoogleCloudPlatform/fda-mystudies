@@ -1,6 +1,7 @@
 on:
   pull_request:
     paths:
+    - 'common-modules/**'
     - 'response-server-module/**'
     - '.github/workflows/build-response-server-module.yml'
 name: Build-response-server-module

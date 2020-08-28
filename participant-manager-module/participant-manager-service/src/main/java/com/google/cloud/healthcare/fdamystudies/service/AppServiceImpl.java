@@ -148,8 +148,11 @@ public class AppServiceImpl implements AppService {
       appDetails.setAppUsersCount(appIdbyUsersCount.get(app.getId()));
 
       if (appPermissionsByAppInfoId.get(app.getId()) != null) {
-        Permission appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit();
-        appDetails.setAppPermission(appEditPermission.value());
+        Integer appEditPermission = appPermissionsByAppInfoId.get(app.getId()).getEdit().value();
+        appDetails.setPermission(
+            appEditPermission == Permission.NO_PERMISSION.value()
+                ? Permission.VIEW.value()
+                : Permission.EDIT.value());
       }
 
       calculateEnrollmentPercentage(

@@ -52,6 +52,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
@@ -232,6 +233,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optionalEntity.get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     ArrayNode passwordHistory =
         userInfo.hasNonNull(PASSWORD_HISTORY)
@@ -512,5 +514,19 @@ public class UserServiceImpl implements UserService {
     logger.exit(
         "previous refresh token revoked and replaced with new refresh token for the given user");
     return userResponse;
+  }
+
+  @Override
+  public void deleteUserAccount(String userId) {
+    logger.entry("deleteUserAccount");
+    Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
+
+    if (!optUserEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    repository.delete(optUserEntity.get());
+
+    logger.exit("user account deleted");
   }
 }

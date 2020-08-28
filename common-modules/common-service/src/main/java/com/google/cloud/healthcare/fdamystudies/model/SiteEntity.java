@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+
 import java.beans.Transient;
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -32,9 +35,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 
 @Setter
 @Getter

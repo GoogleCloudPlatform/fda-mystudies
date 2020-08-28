@@ -7,6 +7,8 @@
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
@@ -27,8 +29,6 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 
 @AllArgsConstructor
 @Builder
