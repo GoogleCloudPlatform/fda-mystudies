@@ -79,9 +79,15 @@ public enum ErrorCode {
       Constants.BAD_REQUEST,
       "This email has already been used. Please try with a different email address."),
 
+  USER_ALREADY_EXISTS(
+      409,
+      "EC-101",
+      HttpStatus.CONFLICT.toString(),
+      "There is already a user with this email address. Please log in."),
+
   EMAIL_SEND_FAILED_EXCEPTION(
       500,
-      "EC-500",
+      "EC-5001",
       "Email Server Error",
       "Your email was unable to send because the connection to mail server was interrupted. Please check your inbox for mail delivery failure notice."),
 
@@ -115,9 +121,9 @@ public enum ErrorCode {
 
   USER_NOT_INVITED(
       400, "EC-869", Constants.BAD_REQUEST, "Provided email not exists or user not invited"),
-  APP_NOT_FOUND(404, "EC-817", Constants.BAD_REQUEST, "App not found."),
+  APP_NOT_FOUND(404, "EC-817", HttpStatus.NOT_FOUND.toString(), "App not found."),
 
-  STUDY_NOT_FOUND(404, "EC-816", Constants.BAD_REQUEST, "Study not found"),
+  STUDY_NOT_FOUND(404, "EC-816", HttpStatus.NOT_FOUND.toString(), "Study not found"),
 
   LOCATION_NOT_FOUND(404, "EC_881", "Not Found", "No Locations Found"),
 

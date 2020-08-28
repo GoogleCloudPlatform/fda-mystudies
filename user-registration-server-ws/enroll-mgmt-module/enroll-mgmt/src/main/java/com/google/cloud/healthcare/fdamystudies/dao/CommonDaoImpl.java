@@ -9,13 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ActivityLogBO;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.repository.ActivityLogRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import java.time.LocalDateTime;
-import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -38,8 +34,6 @@ public class CommonDaoImpl implements CommonDao {
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
-  @Autowired private ActivityLogRepository activityLogRepository;
-
   @Override
   public UserDetailsBO getUserInfoDetails(String userId) {
     logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
@@ -55,7 +49,7 @@ public class CommonDaoImpl implements CommonDao {
       userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
       userDetailsBoRoot = userDetailsCriteriaQuery.from(UserDetailsBO.class);
       userDetailspredicates[0] =
-          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
+          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.USER_ID), userId);
       userDetailsCriteriaQuery.select(userDetailsBoRoot).where(userDetailspredicates);
       userDetailsBoList = session.createQuery(userDetailsCriteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
@@ -120,44 +114,5 @@ public class CommonDaoImpl implements CommonDao {
     }
     logger.info("CommonDaoImpl getStudyDetails() - Ends ");
     return studyInfo;
-  }
-
-  @Override
-  public List<ActivityLogBO> createActivityLogList(
-      String userId, String activityName, List<String> activityDescList) {
-    logger.info("CommonDaoImpl createActivityLogList() - starts ");
-    List<ActivityLogBO> activityLogList = new LinkedList<>();
-    try {
-      for (String activityDesc : activityDescList) {
-        ActivityLogBO activityLog = new ActivityLogBO();
-        activityLog.setAuthUserId(userId);
-        activityLog.setActivityName(activityName);
-        activityLog.setActivtyDesc(activityDesc);
-        activityLog.setActivityDateTime(LocalDateTime.now());
-        activityLogList.add(activityLog);
-      }
-      activityLogRepository.saveAll(activityLogList);
-    } catch (Exception e) {
-      logger.error("CommonDaoImpl createActivityLogList() - error ", e);
-    }
-    logger.info("CommonDaoImpl createActivityLogList() - ends ");
-    return activityLogList;
-  }
-
-  @Override
-  public ActivityLogBO createActivityLog(String userId, String activityName, String activityDesc) {
-    logger.info("CommonDaoImpl createActivityLog() - starts ");
-    ActivityLogBO activityLog = new ActivityLogBO();
-    try {
-      activityLog.setAuthUserId(userId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activityDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
-      activityLogRepository.save(activityLog);
-    } catch (Exception e) {
-      logger.error("CommonDaoImpl createActivityLog() - error ", e);
-    }
-    logger.info("CommonDaoImpl createActivityLog() - ends ");
-    return activityLog;
   }
 }
