@@ -72,5 +72,4 @@ public class ParticipantDetail {
   private List<ConsentHistory> consentHistory = new ArrayList<>();
 
   private Boolean newlyCreatedUser = Boolean.FALSE;
-
 }
