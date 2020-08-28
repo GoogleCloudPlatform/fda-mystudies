@@ -337,7 +337,10 @@ public class SiteServiceImpl implements SiteService {
       participantRegistrySites = participantRegistrySiteRepository.findBySiteId(siteId);
     } else {
       participantRegistrySites =
-          participantRegistrySiteRepository.findBySiteIdAndStatus(siteId, onboardingStatus);
+          (List<ParticipantRegistrySiteEntity>)
+              CollectionUtils.emptyIfNull(
+                  participantRegistrySiteRepository.findBySiteIdAndStatus(
+                      siteId, onboardingStatus));
     }
 
     addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
@@ -380,10 +383,15 @@ public class SiteServiceImpl implements SiteService {
             .map(ParticipantRegistrySiteEntity::getId)
             .collect(Collectors.toList());
 
-    List<ParticipantStudyEntity> participantStudies =
-        (List<ParticipantStudyEntity>)
-            CollectionUtils.emptyIfNull(
-                participantStudyRepository.findByParticipantRegistrySiteId(registryIds));
+    List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
+    // Check not empty for Ids to avoid SQLSyntaxErrorException
+    if (CollectionUtils.isNotEmpty(registryIds)) {
+      participantStudies =
+          (List<ParticipantStudyEntity>)
+              CollectionUtils.emptyIfNull(
+                  participantStudyRepository.findParticipantsByParticipantRegistrySite(
+                      registryIds));
+    }
 
     for (ParticipantRegistrySiteEntity participantRegistrySite : participantRegistrySites) {
       ParticipantDetail participant = new ParticipantDetail();
