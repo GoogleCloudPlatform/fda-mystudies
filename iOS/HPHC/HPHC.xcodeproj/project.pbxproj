@@ -2476,8 +2476,8 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
-				DEBUG_INFORMATION_FORMAT = dwarf-with-dsym;
+				CURRENT_PROJECT_VERSION = 103;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FV8LM93U7M;
 				INFOPLIST_FILE = HPHC/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
@@ -2505,7 +2505,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 103;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FV8LM93U7M;
 				INFOPLIST_FILE = HPHC/Info.plist;
