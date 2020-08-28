@@ -23,7 +23,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${securityCodeExpireDate}")
   private String securityCodeExpireDate;
-  
+
   @Value("${enrollmentTokenExpiryInHours}")
   private Integer enrollmentTokenExpiryInHours;
 
@@ -47,7 +47,7 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${smtpHostName}")
   private String smtpHostName;
-  
+
   @Value("${bucket.name}")
   private String bucketName;
 
