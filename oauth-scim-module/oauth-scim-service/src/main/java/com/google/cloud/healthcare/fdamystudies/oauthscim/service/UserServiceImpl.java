@@ -233,6 +233,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optionalEntity.get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     ArrayNode passwordHistory =
         userInfo.hasNonNull(PASSWORD_HISTORY)
