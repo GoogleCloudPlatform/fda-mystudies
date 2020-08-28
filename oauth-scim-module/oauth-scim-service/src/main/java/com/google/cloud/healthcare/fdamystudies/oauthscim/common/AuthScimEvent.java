@@ -13,19 +13,16 @@ import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.
 
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
-import com.google.cloud.healthcare.fdamystudies.common.UserAccessLevel;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
 public enum AuthScimEvent implements AuditLogEvent {
   PASSWORD_RESET_SUCCESS(
       PARTICIPANT_DATASTORE,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
       "Password reset successful.",
-      UserAccessLevel.APP_STUDY_ADMIN,
       "PASSWORD_RESET_SUCCESS"),
 
   PASSWORD_RESET_FAILED(
@@ -33,13 +30,24 @@ public enum AuthScimEvent implements AuditLogEvent {
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
       "Password reset failed.",
-      UserAccessLevel.APP_STUDY_ADMIN,
       "PASSWORD_RESET_FAILED");
 
-  private final PlatformComponent source;
+  private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;
-  private final PlatformComponent resourceServer;
+  private final Optional<PlatformComponent> resourceServer;
   private final String description;
-  private final UserAccessLevel userAccessLevel;
   private final String eventCode;
+
+  private AuthScimEvent(
+      PlatformComponent source,
+      PlatformComponent destination,
+      PlatformComponent resourceServer,
+      String description,
+      String eventCode) {
+    this.source = Optional.ofNullable(source);
+    this.destination = destination;
+    this.resourceServer = Optional.ofNullable(resourceServer);
+    this.description = description;
+    this.eventCode = eventCode;
+  }
 }

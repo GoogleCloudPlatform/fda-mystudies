@@ -1,5 +1,26 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_FIRST_NAME;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_LAST_NAME;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.USER_EMAIL_VALUE;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
@@ -24,27 +45,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_AUTH_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_FIRST_NAME;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.ADMIN_LAST_NAME;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.USER_EMAIL_VALUE;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserProfileControllerTest extends BaseMockIT {
 
@@ -73,10 +73,13 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnUserProfile() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     mockMvc
         .perform(
             get(ApiEndpoint.GET_USER_PROFILE.getPath(), TestDataHelper.ADMIN_AUTH_ID_VALUE)
-                .headers(new HttpHeaders())
+                .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -86,22 +89,32 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.email", is(TestDataHelper.EMAIL_VALUE)))
         .andExpect(jsonPath("$.superAdmin", is(true)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_USER_PROFILE_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnUserNotExistForUserProfile() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     mockMvc
         .perform(
             get(ApiEndpoint.GET_USER_PROFILE.getPath(), IdGenerator.id())
-                .headers(new HttpHeaders())
+                .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isUnauthorized())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_EXISTS.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnUserNotActiveForUserProfile() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     // Step 1: change the status to inactive
     userRegAdminEntity.setStatus(CommonConstants.INACTIVE_STATUS);
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
@@ -110,21 +123,26 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             get(ApiEndpoint.GET_USER_PROFILE.getPath(), TestDataHelper.ADMIN_AUTH_ID_VALUE)
-                .headers(new HttpHeaders())
+                .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_ACTIVE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnUserDetailsBySecurityCode() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     mockMvc
         .perform(
             get(
                     ApiEndpoint.GET_USER_DETAILS_BY_SECURITY_CODE.getPath(),
                     userRegAdminEntity.getSecurityCode())
-                .headers(new HttpHeaders())
+                .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -136,23 +154,33 @@ public class UserProfileControllerTest extends BaseMockIT {
             jsonPath(
                 "$.message",
                 is(MessageCode.GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnNotFoundForUserDetailsBySecurityCode() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     mockMvc
         .perform(
             get(ApiEndpoint.GET_USER_DETAILS_BY_SECURITY_CODE.getPath(), IdGenerator.id())
-                .headers(new HttpHeaders())
+                .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.INVALID_SECURITY_CODE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnUnauthorizedForUserDetailsBySecurityCode() throws Exception {
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
     // Step 1: change the security code expire date to before current date
     userRegAdminEntity.setSecurityCodeExpireDate(
         new Timestamp(Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli()));
@@ -164,12 +192,14 @@ public class UserProfileControllerTest extends BaseMockIT {
             get(
                     ApiEndpoint.GET_USER_DETAILS_BY_SECURITY_CODE.getPath(),
                     userRegAdminEntity.getSecurityCode())
-                .headers(new HttpHeaders())
+                .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isUnauthorized())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.SECURITY_CODE_EXPIRED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -193,6 +223,8 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertNotNull(userRegAdminEntity);
     assertEquals("mockito_updated", userRegAdminEntity.getFirstName());
     assertEquals("mockito_updated_last_name", userRegAdminEntity.getLastName());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -207,6 +239,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isUnauthorized())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_EXISTS.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -226,6 +260,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_ACTIVE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -257,6 +293,8 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertEquals(request.getLastName(), user.getLastName());
 
     verify(1, postRequestedFor(urlEqualTo("/oauth-scim-service/users")));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -278,6 +316,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.USER_NOT_INVITED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -301,6 +341,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isInternalServerError())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.APPLICATION_ERROR.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -322,6 +364,8 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -350,6 +394,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         1,
         putRequestedFor(
             urlEqualTo(String.format("/oauth-scim-service/users/%s", ADMIN_AUTH_ID_VALUE))));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -364,6 +410,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -384,6 +432,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isInternalServerError())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.APPLICATION_ERROR.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @AfterEach

@@ -16,7 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserSiteDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserSitePermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest;
-import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
@@ -46,17 +45,15 @@ public final class UserMapper {
     admin.setLastName(userRequest.getLastName());
     admin.setCreatedBy(userRequest.getSuperAdminUserId());
     admin.setEmailChanged(false);
-    admin.setStatus(CommonConstants.INVITED_STATUS); // 2-> Invited, 0-> Deactivated, 1-> Active
+    admin.setStatus(UserStatus.INVITED.getValue());
     admin.setSuperAdmin(userRequest.isSuperAdmin());
     admin.setSecurityCode(IdGenerator.id());
     admin.setSecurityCodeExpireDate(
         new Timestamp(
             Instant.now().plus(securityCodeExpireTime, ChronoUnit.MINUTES).toEpochMilli()));
-    int manageLocation =
-        userRequest.isSuperAdmin()
-            ? CommonConstants.READ_AND_EDIT_PERMISSION
-            : userRequest.getManageLocations();
-    admin.setEditPermission(manageLocation);
+    Integer manageLocation =
+        userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
+    admin.setLocationPermission(manageLocation);
     return admin;
   }
 
@@ -66,11 +63,9 @@ public final class UserMapper {
     adminDetails.setFirstName(userRequest.getFirstName());
     adminDetails.setLastName(userRequest.getLastName());
     adminDetails.setSuperAdmin(userRequest.isSuperAdmin());
-    int manageLocation =
-        userRequest.isSuperAdmin()
-            ? CommonConstants.READ_AND_EDIT_PERMISSION
-            : userRequest.getManageLocations();
-    adminDetails.setEditPermission(manageLocation);
+    Integer manageLocation =
+        userRequest.isSuperAdmin() ? Permission.EDIT.value() : userRequest.getManageLocations();
+    adminDetails.setLocationPermission(manageLocation);
     return adminDetails;
   }
 
@@ -84,7 +79,10 @@ public final class UserMapper {
     sitePermission.setStudy(siteDetails.getStudy());
     sitePermission.setSite(siteDetails);
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
-    Permission edit = site != null && site.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    Permission edit =
+        site != null && site.getPermission() == Permission.VIEW.value()
+            ? Permission.VIEW
+            : Permission.EDIT;
     sitePermission.setCanEdit(edit);
     sitePermission.setUrAdminUser(superAdminDetails);
     return sitePermission;
@@ -100,7 +98,9 @@ public final class UserMapper {
     sitePermission.setApp(studyDetails.getApp());
     sitePermission.setCreatedBy(user.getSuperAdminUserId());
     Permission edit =
-        study != null && study.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+        study != null && study.getPermission() == Permission.VIEW.value()
+            ? Permission.VIEW
+            : Permission.EDIT;
     sitePermission.setCanEdit(edit);
     sitePermission.setStudy(studyDetails);
     sitePermission.setSite(site);
@@ -121,7 +121,9 @@ public final class UserMapper {
         sitePermission.setApp(appDetails);
         sitePermission.setCreatedBy(user.getSuperAdminUserId());
         Permission edit =
-            app != null && app.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+            app != null && app.getPermission() == Permission.VIEW.value()
+                ? Permission.VIEW
+                : Permission.EDIT;
         sitePermission.setCanEdit(edit);
         sitePermission.setStudy(siteEntity.getStudy());
         sitePermission.setSite(siteEntity);
@@ -142,7 +144,9 @@ public final class UserMapper {
     studyPermission.setStudy(studyDetails);
     studyPermission.setCreatedBy(user.getSuperAdminUserId());
     Permission edit =
-        study != null && study.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+        study != null && study.getPermission() == Permission.VIEW.value()
+            ? Permission.VIEW
+            : Permission.EDIT;
     studyPermission.setEdit(edit);
     studyPermission.setUrAdminUser(superAdminDetails);
     return studyPermission;
@@ -161,7 +165,7 @@ public final class UserMapper {
         studyPermission.setApp(appDetails);
         studyPermission.setCreatedBy(userRequest.getSuperAdminUserId());
         Permission edit =
-            appRequest != null && appRequest.getPermission() == 1
+            appRequest != null && appRequest.getPermission() == Permission.VIEW.value()
                 ? Permission.VIEW
                 : Permission.EDIT;
         studyPermission.setEdit(edit);
@@ -191,7 +195,10 @@ public final class UserMapper {
     AppPermissionEntity appPermission = new AppPermissionEntity();
     appPermission.setApp(appDetails);
     appPermission.setCreatedBy(userRequest.getSuperAdminUserId());
-    Permission edit = app != null && app.getPermission() == 1 ? Permission.VIEW : Permission.EDIT;
+    Permission edit =
+        app != null && app.getPermission() == Permission.VIEW.value()
+            ? Permission.VIEW
+            : Permission.EDIT;
     appPermission.setEdit(edit);
     appPermission.setUrAdminUser(superAdminDetails);
     return appPermission;
@@ -204,7 +211,7 @@ public final class UserMapper {
     user.setFirstName(admin.getFirstName());
     user.setLastName(admin.getLastName());
     user.setSuperAdmin(admin.isSuperAdmin());
-    user.setManageLocations(admin.getEditPermission());
+    user.setManageLocations(admin.getLocationPermission());
     UserStatus userStatus = UserStatus.fromValue(admin.getStatus());
     user.setStatus(userStatus.getDescription());
     return user;

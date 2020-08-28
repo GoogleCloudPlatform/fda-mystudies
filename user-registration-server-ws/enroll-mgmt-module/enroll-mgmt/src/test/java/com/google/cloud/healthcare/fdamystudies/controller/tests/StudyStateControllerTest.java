@@ -1,7 +1,24 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateReqBean;
@@ -17,13 +34,20 @@ import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -79,6 +103,15 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT);
 
     verifyTokenIntrospectRequest();
 
@@ -176,6 +209,14 @@ public class StudyStateControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk());
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO);
+
     verifyTokenIntrospectRequest();
   }
 
@@ -193,6 +234,8 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isUnauthorized());
+
+    verifyAuditEventCall(READ_OPERATION_FAILED_FOR_STUDY_INFO);
 
     verifyTokenIntrospectRequest();
   }
@@ -217,6 +260,16 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDY_ID_OF_PARTICIPANT);
+    auditRequest.setParticipantId(Constants.PARTICIPANT_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(WITHDRAWAL_FROM_STUDY_SUCCEEDED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, WITHDRAWAL_FROM_STUDY_SUCCEEDED);
 
     verifyTokenIntrospectRequest();
 
@@ -293,6 +346,15 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setParticipantId(Constants.PARTICIPANT_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(WITHDRAWAL_FROM_STUDY_FAILED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(WITHDRAWAL_FROM_STUDY_FAILED);
 
     verifyTokenIntrospectRequest(3);
   }

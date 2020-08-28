@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.INFORMED_CONSENT_PROVIDED_FOR_STUDY;
@@ -130,6 +138,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0)));
 
+    auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
 
@@ -201,6 +212,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
 
+    auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
 
@@ -269,6 +283,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
+    auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);

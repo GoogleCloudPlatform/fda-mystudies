@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.INFORMED_CONSENT_PROVIDED_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT;
-import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVED;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVE_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.STUDY_ENROLLMENT_FAILED;
@@ -251,6 +250,7 @@ public class UserConsentManagementController {
     Map<String, String> map = new HashedMap<>();
     map.put("file_name", fileName);
     map.put("consent_version", consentStatusBean.getConsent().getVersion());
+    map.put("directory_name", appConfig.getBucketName());
     try {
       String path =
           cloudStorageService.saveFile(
@@ -280,13 +280,11 @@ public class UserConsentManagementController {
         studyInfoBean = userConsentManagementService.getStudyInfoId(studyId);
         consentStudyResponseBean =
             userConsentManagementService.getStudyConsentDetails(
-                userId, studyInfoBean.getStudyInfoId(), consentVersion);
+                userId, studyInfoBean.getStudyInfoId(), consentVersion, auditRequest);
         auditRequest.setUserId(userId);
         auditRequest.setStudyId(studyId);
 
         if (consentStudyResponseBean.getConsent().getContent() != null) {
-          consentAuditHelper.logEvent(
-              READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest);
           consentStudyResponseBean.setMessage(
               MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
         } else {
