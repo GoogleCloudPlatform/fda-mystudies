@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "PUT",
-		"urlPathPattern": "/oauth-scim-service/users/([A-Za-z0-9-]+)"
+		"url": "/oauth-scim-service/users/kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg"
 	},
 	"response": {
 		"status": 200,

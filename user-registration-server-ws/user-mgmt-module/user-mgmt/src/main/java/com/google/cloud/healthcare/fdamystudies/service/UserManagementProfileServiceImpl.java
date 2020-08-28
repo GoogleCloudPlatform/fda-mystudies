@@ -24,9 +24,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
-import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
@@ -317,6 +317,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
           }
         }
+
         AuditLogEvent auditEvent =
             returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
         userMgmntAuditHelper.logEvent(auditEvent, auditRequest);

@@ -17,7 +17,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PAR
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
@@ -257,14 +256,6 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest(1);
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.INVALID_USER_ID);
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_ACCOUNT_DEACTIVATION_FAILED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, USER_ACCOUNT_DEACTIVATION_FAILED);
   }
 
   @Test

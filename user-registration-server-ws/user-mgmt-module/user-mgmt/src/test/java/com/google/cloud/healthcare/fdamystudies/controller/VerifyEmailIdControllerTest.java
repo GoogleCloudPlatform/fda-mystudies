@@ -69,7 +69,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnBadRequestForInvalidContent() throws Exception {
+  public void shouldReturnBadRequestForInvalidCode() throws Exception {
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
     // invalid code
@@ -96,9 +96,15 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(
         auditEventMap, ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE);
+  }
 
+  @Test
+  public void shouldReturnBadRequestForInvalidEmailId() throws Exception {
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
     // expired code
-    requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.INVALID_EMAIL_ID);
+    String requestJson =
+        getEmailIdVerificationForm(Constants.VALID_CODE, Constants.INVALID_EMAIL_ID);
     mockMvc
         .perform(
             post(VERIFY_EMAIL_ID_PATH)
@@ -110,17 +116,26 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.INVALID_EMAIL_CODE)));
 
-    verifyTokenIntrospectRequest(2);
+    verifyTokenIntrospectRequest(1);
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(Constants.APP_ID_VALUE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
         ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE.getEventCode(),
         auditRequest);
 
     verifyAuditEventCall(
         auditEventMap, ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE);
+  }
 
+  @Test
+  public void shouldReturnBadRequestForEmailNotExists() throws Exception {
+    HttpHeaders headers =
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
     // invalid emailId
-    requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.INVALID_EMAIL);
+    String requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.INVALID_EMAIL);
     mockMvc
         .perform(
             post(VERIFY_EMAIL_ID_PATH)
@@ -132,8 +147,12 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.EMAIL_NOT_EXIST)));
 
-    verifyTokenIntrospectRequest(3);
+    verifyTokenIntrospectRequest(1);
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId(Constants.APP_ID_VALUE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
         ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED.getEventCode(), auditRequest);
 
@@ -143,10 +162,9 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
   @Test
   public void shouldUpdateEmailStatusToVerified() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
-    String requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.EMAIL);
+    String requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.VERIFY_CODE_EMAIL);
 
     mockMvc
         .perform(
@@ -159,7 +177,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.verified").value(Boolean.TRUE));
 
     // get list of userDetails by emailId
-    List<UserDetailsBO> userDetailsList = repository.findByEmail(Constants.EMAIL);
+    List<UserDetailsBO> userDetailsList = repository.findByEmail(Constants.VERIFY_CODE_EMAIL);
     UserDetailsBO userDetailsBO =
         userDetailsList
             .stream()
@@ -167,7 +185,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
                 user -> {
                   AppInfoDetailsBO appDetail =
                       userProfileDao.getAppPropertiesDetailsByAppId(user.getAppInfoId());
-                  return StringUtils.equals(user.getEmail(), Constants.EMAIL)
+                  return StringUtils.equals(user.getEmail(), Constants.VERIFY_CODE_EMAIL)
                       && StringUtils.equals(appDetail.getAppId(), Constants.APP_ID_VALUE);
                 })
             .findAny()
@@ -180,7 +198,6 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest(1);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setAppId(Constants.APP_ID_VALUE);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
