@@ -8,37 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantStatusRequest;
@@ -92,6 +61,37 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.ResourceUtils;
+
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SiteControllerTest extends BaseMockIT {
 
@@ -197,6 +197,33 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnCannotAddSiteForOpenStudyError() throws Exception {
+    // Step 1: Set study type to open
+    SiteRequest siteRequest = newSiteRequest();
+    studyEntity.setType(OPEN);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 2: Call API and expect CANNOT_ADD_SITE_FOR_OPEN_STUDY error
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ADD_NEW_SITE.getPath())
+                .content(asJsonString(siteRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.CANNOT_ADD_SITE_FOR_OPEN_STUDY.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
