@@ -49,14 +49,15 @@ public class ConsentServiceImpl implements ConsentService {
     logger.entry("begin getConsentDocument(consentId,userId)");
 
     Optional<StudyConsentEntity> optStudyConsent = studyConsentRepository.findById(consentId);
-    StudyConsentEntity studyConsentEntity = optStudyConsent.get();
 
     if (!optStudyConsent.isPresent()
-        || studyConsentEntity.getParticipantStudy() == null
-        || studyConsentEntity.getParticipantStudy().getSite() == null) {
+        || optStudyConsent.get().getParticipantStudy() == null
+        || optStudyConsent.get().getParticipantStudy().getSite() == null) {
       logger.exit(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
       return new ConsentDocumentResponse(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
     }
+
+    StudyConsentEntity studyConsentEntity = optStudyConsent.get();
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(
             userId, studyConsentEntity.getParticipantStudy().getSite().getId());

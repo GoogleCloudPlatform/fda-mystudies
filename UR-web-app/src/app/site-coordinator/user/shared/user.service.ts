@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {environment} from '@environment';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {User} from 'src/app/entity/user';
+import {ManageUsers} from './manage-user';
 
 @Injectable({
   providedIn: 'root',
@@ -13,5 +14,8 @@ export class UserService {
 
   add(user: User): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(`${environment.baseUrl}/users`, user);
+  }
+  getUsers(): Observable<ManageUsers> {
+    return this.http.get<ManageUsers>(`${environment.baseUrl}/users`);
   }
 }
