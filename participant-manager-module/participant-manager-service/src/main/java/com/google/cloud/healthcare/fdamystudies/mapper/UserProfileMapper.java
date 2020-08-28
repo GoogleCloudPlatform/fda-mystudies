@@ -23,7 +23,7 @@ public final class UserProfileMapper {
     profileResponse.setLastName(userRegAdminEntity.getLastName());
     profileResponse.setEmail(userRegAdminEntity.getEmail());
     profileResponse.setUserId(userRegAdminEntity.getId());
-    profileResponse.setManageLocations(userRegAdminEntity.getEditPermission());
+    profileResponse.setManageLocations(userRegAdminEntity.getLocationPermission());
     profileResponse.setSuperAdmin(userRegAdminEntity.isSuperAdmin());
     return profileResponse;
   }
