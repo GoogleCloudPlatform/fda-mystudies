@@ -17,7 +17,6 @@ disabled_rules:
   - unneeded_break_in_switch
   - weak_delegate
   - legacy_constructor
-  - for_where
   - multiple_closures_with_trailing_closure
   - identifier_name
   - leading_whitespace
