@@ -16,8 +16,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementE
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.USER_ENROLLED_INTO_STUDY;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertNotNull;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
