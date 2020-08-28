@@ -528,7 +528,7 @@ public class SiteControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.siteId", notNullValue()))
             .andExpect(
                 jsonPath("$.message", is(MessageCode.RECOMMISSION_SITE_SUCCESS.getMessage())))
-            .andExpect(jsonPath("$.status", is(SiteStatus.ACTIVE.value())))
+            .andExpect(jsonPath("$.siteStatus", is(SiteStatus.ACTIVE.value())))
             .andReturn();
 
     String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
@@ -559,7 +559,7 @@ public class SiteControllerTest extends BaseMockIT {
                     .contextPath(getContextPath()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.siteId", notNullValue()))
-            .andExpect(jsonPath("$.status", is(SiteStatus.DEACTIVE.value())))
+            .andExpect(jsonPath("$.siteStatus", is(SiteStatus.DEACTIVE.value())))
             .andExpect(
                 jsonPath("$.message", is(MessageCode.DECOMMISSION_SITE_SUCCESS.getMessage())))
             .andReturn();
