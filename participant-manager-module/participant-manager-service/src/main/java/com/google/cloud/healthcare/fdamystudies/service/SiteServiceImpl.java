@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEFAULT_PERCENTAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
@@ -983,15 +984,22 @@ public class SiteServiceImpl implements SiteService {
 
       Double percentage;
       String studyType = study.getType();
-      if (studyType.equals(OPEN_STUDY)) {
+      if (studyType.equals(OPEN_STUDY) && siteEntity.getTargetEnrollment() != null) {
         site.setInvited(Long.valueOf(siteEntity.getTargetEnrollment()));
       } else if (studyType.equals(CLOSE_STUDY)) {
         site.setInvited(invitedCount);
       }
 
-      if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
-        percentage = (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
-        site.setEnrollmentPercentage(percentage);
+      if (site.getInvited() != null && site.getEnrolled() != null) {
+        if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
+          percentage =
+              (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
+          site.setEnrollmentPercentage(percentage);
+        } else if (site.getInvited() != 0
+            && site.getEnrolled() >= site.getInvited()
+            && studyType.equals(OPEN_STUDY)) {
+          site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
+        }
       }
       studyDetail.getSites().add(site);
     }
