@@ -49,14 +49,16 @@ public enum ConsentManagementEnum implements AuditLogEvent {
       MOBILE_APPS,
       CLOUD_STORAGE,
       PARTICIPANT_DATASTORE,
-      "Consent document (${file_name}) for consent version ${consent_version} saved in directory ${directory_name}.",
+      "Consent document (${file_name}) for consent version ${consent_version}"
+          + "saved in directory ${directory_name}.",
       "SIGNED_CONSENT_DOCUMENT_SAVED"),
 
   SIGNED_CONSENT_DOCUMENT_SAVE_FAILED(
       MOBILE_APPS,
       CLOUD_STORAGE,
       PARTICIPANT_DATASTORE,
-      "Consent document (${file_name}) for consent version ${consent_version} could not be saved in directory ${directory_name}.",
+      "Consent document (${file_name}) for consent version ${consent_version}"
+          + "could not be saved in directory ${directory_name}.",
       "SIGNED_CONSENT_DOCUMENT_SAVE_FAILED");
 
   private final Optional<PlatformComponent> source;
