@@ -2,7 +2,7 @@ import {App} from '../site-coordinator/user/shared/app-details';
 import {Permission} from '../shared/permission-enums';
 
 export interface User {
-  id: string;
+  id: number;
 
   email: string;
 
@@ -14,7 +14,7 @@ export interface User {
 
   emailChanged: number;
 
-  status: string;
+  status: number;
 
   manageUsers: number;
 
