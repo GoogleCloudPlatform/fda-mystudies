@@ -105,6 +105,9 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
     uriTemplateAndMethods.put(
         String.format("%s/users/{userId}/deactivate", context.getContextPath()),
         new String[] {HttpMethod.PATCH.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/users/{userId}/status", context.getContextPath()),
+        new String[] {HttpMethod.PATCH.name()});
   }
 
   @Override

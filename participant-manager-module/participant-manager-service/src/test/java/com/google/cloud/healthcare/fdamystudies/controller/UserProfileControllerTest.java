@@ -24,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UserStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -370,12 +371,19 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void shouldDeactivateUserAccount() throws Exception {
-    // Step 1: Call the API and expect DEACTIVATE_USER_SUCCESS message
+    // Step 1: Setting up the request for deactivate account
+    UserStatusRequest statusRequest = new UserStatusRequest();
+    statusRequest.setStatus(UserStatus.DEACTIVATED.getValue());
+
+    // Step 2: Call the API and expect DEACTIVATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
 
     mockMvc
         .perform(
-            patch(ApiEndpoint.DEACTIVATE_ACCOUNT.getPath(), userRegAdminEntity.getId())
+            patch(
+                    ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(),
+                    userRegAdminEntity.getId())
+                .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -399,12 +407,53 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReactivateUserAccount() throws Exception {
+    // Step 1: Setting up the request for reactivate account
+    UserStatusRequest statusRequest = new UserStatusRequest();
+    statusRequest.setStatus(UserStatus.ACTIVE.getValue());
+
+    // Step 2: Call the API and expect REACTIVATE_USER_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+
+    mockMvc
+        .perform(
+            patch(
+                    ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(),
+                    userRegAdminEntity.getId())
+                .content(asJsonString(statusRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value(MessageCode.REACTIVATE_USER_SUCCESS.getMessage()))
+        .andReturn();
+
+    // Step 3: verify updated values
+    Optional<UserRegAdminEntity> optUser =
+        userRegAdminRepository.findById(userRegAdminEntity.getId());
+    UserRegAdminEntity user = optUser.get();
+    assertEquals(UserStatus.ACTIVE.getValue(), user.getStatus());
+
+    // verify external API call
+    verify(
+        1,
+        putRequestedFor(
+            urlEqualTo(String.format("/oauth-scim-service/users/%s", ADMIN_AUTH_ID_VALUE))));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnUserNotFoundForDeactivateUser() throws Exception {
     // Step 2: Call the API and expect USER_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    UserStatusRequest statusRequest = new UserStatusRequest();
+    statusRequest.setStatus(UserStatus.ACTIVE.getValue());
+
     mockMvc
         .perform(
-            patch(ApiEndpoint.DEACTIVATE_ACCOUNT.getPath(), IdGenerator.id())
+            patch(ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(), IdGenerator.id())
+                .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -415,7 +464,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnAuthServerApplicationErrorForDeactivateUser() throws Exception {
+  public void shouldReturnBadRequestForDeactivateUser() throws Exception {
     // Step 1: set invalid urAdminAuthId
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     userRegAdminEntity.setUrAdminAuthId(IdGenerator.id());
@@ -424,14 +473,14 @@ public class UserProfileControllerTest extends BaseMockIT {
     // Step 2: Call the API and expect APPLICATION_ERROR error
     mockMvc
         .perform(
-            patch(ApiEndpoint.DEACTIVATE_ACCOUNT.getPath(), userRegAdminEntity.getId())
+            patch(
+                    ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(),
+                    userRegAdminEntity.getId())
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andDo(print())
-        .andExpect(status().isInternalServerError())
-        .andExpect(
-            jsonPath("$.error_description", is(ErrorCode.APPLICATION_ERROR.getDescription())));
+        .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest();
   }

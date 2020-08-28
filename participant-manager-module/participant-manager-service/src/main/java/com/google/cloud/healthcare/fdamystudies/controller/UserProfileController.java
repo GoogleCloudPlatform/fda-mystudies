@@ -8,11 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UserAccountStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.UserStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -98,15 +99,18 @@ public class UserProfileController {
   }
 
   @PatchMapping(
-      value = "/users/{userId}/deactivate",
+      value = "/users/{userId}/status",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<DeactivateAccountResponse> deactivateAccount(
-      @PathVariable String userId, HttpServletRequest request) {
-
+  public ResponseEntity<UserAccountStatusResponse> updateUserAccountStatus(
+      @PathVariable String userId,
+      @Valid @RequestBody UserStatusRequest statusRequest,
+      HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
 
-    DeactivateAccountResponse deactivateResponse = userProfileService.deactivateAccount(userId);
+    statusRequest.setUserId(userId);
+    UserAccountStatusResponse deactivateResponse =
+        userProfileService.updateUserAccountStatus(statusRequest);
 
     logger.exit(String.format(STATUS_LOG, deactivateResponse.getHttpStatusCode()));
     return ResponseEntity.status(deactivateResponse.getHttpStatusCode()).body(deactivateResponse);
