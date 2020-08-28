@@ -82,10 +82,6 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
   }
 
   @Override
-  @Retryable(
-      value = {Exception.class},
-      maxAttempts = 3,
-      backoff = @Backoff(delay = 500))
   public void saveActivityResponseData(
       String studyId,
       String studyCollectionName,
@@ -94,7 +90,19 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
       throws ProcessResponseException {
     try {
       initializeFirestore();
-
+      // Check if data already exists before updating it. This is to account for discrepancies
+      // created on loss of
+      // connectivity where there is a potential of data getting created twice
+      String participantId =
+          (String) dataToStoreActivityResults.get(AppConstants.PARTICIPANT_ID_KEY);
+      String activityId = (String) dataToStoreActivityResults.get(AppConstants.ACTIVITY_ID_KEY);
+      String activityRunId =
+          (String) dataToStoreActivityResults.get(AppConstants.ACTIVITY_RUN_ID_KEY);
+      if (isResponseExists(
+          studyCollectionName, studyId, participantId, activityId, activityRunId)) {
+        logger.info("Response exists. Returning without saving. Study ID " + studyId);
+        return;
+      }
       Map<String, Object> studyVersionMap = new HashMap<>();
       studyVersionMap.put("studyVersion", dataToStoreActivityResults.get("studyVersion"));
       ApiFuture<WriteResult> futuresStudyColl =
@@ -398,7 +406,36 @@ public class CloudFirestoreResponsesDaoImpl implements ResponsesDao {
     }
     return storedResponseBean;
   }
-
+  
+  private boolean isResponseExists(
+	      String studyCollectionName,
+	      String studyId,
+	      String participantId,
+	      String activityId,
+	      String activityRunId) {
+    initializeFirestore();
+    // 1. Check if the
+    try {
+      final Query queryByActivityRuns =
+          this.responsesDb
+              .collection(studyCollectionName)
+              .document(studyId)
+              .collection(AppConstants.ACTIVITIES_COLLECTION_NAME)
+              .whereEqualTo(AppConstants.PARTICIPANT_ID_KEY, participantId)
+              .whereEqualTo(AppConstants.ACTIVITY_ID_KEY, activityId)
+              .whereEqualTo(AppConstants.ACTIVITY_RUN_ID_KEY, activityRunId);
+      final ApiFuture<QuerySnapshot> querySnapshot = queryByActivityRuns.get();
+      List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+      if (!documents.isEmpty()) {
+        return true;
+      }
+      // if
+    } catch (Exception e) {
+      logger.error("isResponseExists() method. Exception is: " + e.getMessage(), e);
+      return false;
+    }
+    return false;
+  }
   private void addResponsesToMap(ResponseRows responsesRow, List<Object> results) {
     if (results != null) {
       for (Object result : results) {
