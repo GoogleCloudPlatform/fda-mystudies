@@ -79,11 +79,11 @@ public class StudyQuestionnaireController {
   @Autowired private StudyQuestionnaireService studyQuestionnaireService;
 
   @Autowired private StudyService studyService;
-  
-  @InitBinder
+
+  /*@InitBinder
   public void bindPropertyCleaner(WebDataBinder webDataBinder) {
     webDataBinder.registerCustomEditor(String.class, new CustomPropertyEditor());
-  }
+  }*/
 
   @RequestMapping("/adminStudies/copyQuestionnaire.do")
   public ModelAndView copyStudyQuestionnaire(

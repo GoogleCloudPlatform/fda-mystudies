@@ -59,7 +59,7 @@ public class InstructionsBo implements Serializable {
   @Column(name = "id")
   private Integer id;
 
-  @Column(name = "instruction_text", length = 2500)
+  @Column(name = "instruction_text")
   private String instructionText;
 
   @Column(name = "instruction_title", length = 250)
