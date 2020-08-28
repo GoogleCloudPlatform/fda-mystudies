@@ -67,7 +67,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.EDIT != Permission.fromValue(adminUser.getEditPermission())) {
+    if (Permission.EDIT != Permission.fromValue(adminUser.getLocationPermission())) {
       logger.exit(
           String.format(
               "Add location failed with error code=%s", ErrorCode.LOCATION_ACCESS_DENIED));
@@ -131,7 +131,7 @@ public class LocationServiceImpl implements LocationService {
 
     if (optUserRegAdminUser.isPresent()) {
       UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-      if (Permission.EDIT != Permission.fromValue(adminUser.getEditPermission())) {
+      if (Permission.EDIT != Permission.fromValue(adminUser.getLocationPermission())) {
         return ErrorCode.LOCATION_UPDATE_DENIED;
       }
     }
@@ -172,7 +172,7 @@ public class LocationServiceImpl implements LocationService {
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
       logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
       return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
     }
@@ -221,7 +221,7 @@ public class LocationServiceImpl implements LocationService {
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
       logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
       return new LocationDetailsResponse(ErrorCode.LOCATION_ACCESS_DENIED);
     }
@@ -252,7 +252,7 @@ public class LocationServiceImpl implements LocationService {
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
       logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
       return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
     }
