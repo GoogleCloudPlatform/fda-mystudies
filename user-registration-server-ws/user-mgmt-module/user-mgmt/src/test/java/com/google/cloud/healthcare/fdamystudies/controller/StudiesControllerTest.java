@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.STUDY_METADATA_RECEIVED;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.greaterThan;
@@ -22,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -41,6 +43,8 @@ import com.google.cloud.healthcare.fdamystudies.util.Permission;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,6 +123,18 @@ public class StudiesControllerTest extends BaseMockIT {
     assertNotNull(studyInfoBo);
     assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
+
+    verifyTokenIntrospectRequest(1);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(Constants.STUDY_ID);
+    auditRequest.setStudyVersion(Constants.STUDY_VERSION);
+    auditRequest.setAppId(Constants.APP_ID_VALUE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_METADATA_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_METADATA_RECEIVED);
   }
 
   @Test
@@ -186,6 +202,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest(1);
+
     // without studyVersion
     metadataBean = createStudyMetadataBean();
     metadataBean.setStudyVersion("");
@@ -198,6 +216,8 @@ public class StudiesControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(2);
 
     // without appId
     metadataBean = createStudyMetadataBean();
@@ -212,6 +232,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest(3);
+
     // without orgId
     metadataBean = createStudyMetadataBean();
     metadataBean.setOrgId("");
@@ -224,13 +246,14 @@ public class StudiesControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(4);
   }
 
   @Test
   public void sendNotificationBadRequest() throws Exception {
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
 
     // null body
     NotificationForm notificationForm = null;
@@ -244,6 +267,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    verifyTokenIntrospectRequest(1);
+
     // empty notificationType
     requestJson =
         getNotificationForm(
@@ -256,14 +281,14 @@ public class StudiesControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
   @Disabled
   // TODO(#668) Remove @Disabled when Github test case failed issue fix
   public void sendNotificationSuccess() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.CLIENT_ID_HEADER, Constants.SECRET_KEY_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
 
     // StudyLevel notificationType
     String requestJson =
@@ -287,6 +312,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
+    verifyTokenIntrospectRequest(1);
+
     // GatewayLevel notificationType
     requestJson =
         getNotificationForm(
@@ -309,6 +336,8 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.response.results[0].message_id", is("0:1491324495516461%31bd1c9631bd1c96")));
+
+    verifyTokenIntrospectRequest(2);
   }
 
   private String getNotificationForm(
