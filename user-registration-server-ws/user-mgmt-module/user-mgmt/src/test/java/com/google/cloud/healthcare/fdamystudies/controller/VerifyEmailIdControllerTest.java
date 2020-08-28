@@ -71,9 +71,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnBadRequestForInvalidContent() throws Exception {
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
-    headers.set(Constants.USER_ID_HEADER, Constants.USER_ID_FOR_VERIFY_EMAIL_ID);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
     // invalid code
     String requestJson = getEmailIdVerificationForm(Constants.INVALID_CODE, "abc1234@gmail.com");
     mockMvc
@@ -90,7 +88,6 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest(1);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setAppId(Constants.APP_ID_VALUE);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();

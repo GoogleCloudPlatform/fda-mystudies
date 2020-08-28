@@ -57,8 +57,6 @@ public final class Constants {
   public static final String EMAIL = "mockito@gmail.com";
   public static final String VERIFY_CODE_EMAIL = "cdash93@gmail.com";
   public static final Object INVALID_EMAIL_CODE = "Invalid email code";
-  public static final String USER_ID_FOR_VERIFY_EMAIL_ID =
-      "gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk";
 
   public static final String USER_ID = "gnDoLZHKy0j27Eo-ap8cnZnvQvp7kBN-qylvroBJV7IssDk";
   public static final String INVALID_EMAIL_ID = "abc@xy";

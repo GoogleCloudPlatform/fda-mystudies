@@ -241,7 +241,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void deactivateAccountBadRequest() throws Exception {
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.INVALID_USER_ID);
 
     // invalid userId
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
