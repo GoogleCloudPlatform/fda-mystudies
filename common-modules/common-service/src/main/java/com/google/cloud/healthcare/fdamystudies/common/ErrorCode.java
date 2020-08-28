@@ -215,7 +215,12 @@ public enum ErrorCode {
   INVALID_APPS_FIELDS_VALUES(
       400, "EC-869", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites"),
 
-  ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found");
+  ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found"),
+
+  CANNOT_ADD_SITE_FOR_OPEN_STUDY(
+      403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
+
+  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required");
 
   private final int status;
   private final String code;
