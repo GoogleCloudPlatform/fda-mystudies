@@ -150,7 +150,7 @@ public class UserConsentManagementController {
                           + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
                           + ".pdf";
 
-                  saveToCloudAndLogAudit(
+                  saveDocumentToCloudStorage(
                       auditRequest, underDirectory, fileName, consentStatusBean, studyConsent);
                 }
                 studyConsent.setUserId(userDetailId);
@@ -173,7 +173,7 @@ public class UserConsentManagementController {
                           + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
                           + ".pdf";
 
-                  saveToCloudAndLogAudit(
+                  saveDocumentToCloudStorage(
                       auditRequest, underDirectory, fileName, consentStatusBean, studyConsent);
                 }
               }
@@ -241,7 +241,7 @@ public class UserConsentManagementController {
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 
-  private void saveToCloudAndLogAudit(
+  private void saveDocumentToCloudStorage(
       AuditLogEventRequest auditRequest,
       String underDirectory,
       String fileName,
