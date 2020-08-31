@@ -14,8 +14,9 @@ public class SiteStatusResponse extends BaseResponse {
 
   private Integer siteStatus;
 
-  public SiteStatusResponse(String siteId, Integer status, MessageCode messageCode) {
+  public SiteStatusResponse(String siteId, Integer siteStatus, MessageCode messageCode) {
     super(messageCode);
+    this.siteStatus = siteStatus;
     this.siteId = siteId;
   }
 }
