@@ -224,7 +224,7 @@ public class BaseMockIT {
 
     for (AuditLogEvent auditEvent : auditEvents) {
       AuditLogEventRequest auditRequest = auditRequestByEventCode.get(auditEvent.getEventCode());
-
+      logger.debug(auditRequest.toString());
 
       assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());
       assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
@@ -252,8 +252,6 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getCorrelationId());
       assertNotNull(auditRequest.getOccured());
       assertNotNull(auditRequest.getPlatformVersion());
-      assertNotNull(auditRequest.getOccured());
-      assertNotNull(auditRequest.getPlatformVersion());
       assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getAppVersion());
       assertNotNull(auditRequest.getMobilePlatform());
@@ -268,17 +266,16 @@ public class BaseMockIT {
   void setUp(TestInfo testInfo) {
     logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
 
+    WireMock.resetAllRequests();
+
     Mockito.reset(mockAuditService);
     auditRequests.clear();
-
     doAnswer(
             invocation ->
                 auditRequests.add(
                     SerializationUtils.clone((AuditLogEventRequest) invocation.getArguments()[0])))
         .when(mockAuditService)
         .postAuditLogEvent(Mockito.any(AuditLogEventRequest.class));
-
-    WireMock.resetAllRequests();
   }
 
   @AfterEach
