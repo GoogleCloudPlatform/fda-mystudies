@@ -1,4 +1,5 @@
 {
-	"code": "200",
-	"message": "SUCCESS"
+  "status": 200,
+  "code": "MSG-0004",
+  "message": "User details successfully updated."
 }

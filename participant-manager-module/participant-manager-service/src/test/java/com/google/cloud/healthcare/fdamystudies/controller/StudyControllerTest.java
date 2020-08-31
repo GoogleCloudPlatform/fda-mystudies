@@ -109,6 +109,7 @@ public class StudyControllerTest extends BaseMockIT {
   public void shouldReturnStudies() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -120,6 +121,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].type").value(studyEntity.getType()))
         .andExpect(jsonPath("$.sitePermissionCount").value(1));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -134,6 +137,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations").isArray())
         .andExpect(jsonPath("$.violations[0].path").value("userId"))
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -148,6 +153,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.STUDY_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -163,6 +170,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.STUDY_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -181,6 +190,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description").value(ErrorCode.APP_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -200,12 +211,15 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description")
                 .value(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnStudyParticipants() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
     locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
@@ -249,6 +263,7 @@ public class StudyControllerTest extends BaseMockIT {
     auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, STUDY_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -265,6 +280,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations").isArray())
         .andExpect(jsonPath("$.violations[0].path").value("userId"))
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -308,6 +325,7 @@ public class StudyControllerTest extends BaseMockIT {
     auditEventMap.put(ENROLLMENT_TARGET_UPDATED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, ENROLLMENT_TARGET_UPDATED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -332,6 +350,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.SITE_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -357,6 +377,8 @@ public class StudyControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -381,6 +403,8 @@ public class StudyControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -407,6 +431,8 @@ public class StudyControllerTest extends BaseMockIT {
                 is(
                     ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE
                         .getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @AfterEach

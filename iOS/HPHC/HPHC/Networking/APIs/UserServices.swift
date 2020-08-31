@@ -321,23 +321,6 @@ class UserServices: NSObject {
     self.delegate = delegate
   }
 
-  /// Creattes a request to sync offline data
-  /// - Parameters:
-  ///   - method: Instance of `Method`
-  ///   - params:  Request Params
-  ///   - headers: Request headers
-  ///   - delegate: Class object to receive response
-  func syncOfflineSavedData(
-    method: Method,
-    params: [String: Any]?,
-    headers: [String: String]?,
-    delegate: NMWebServiceDelegate
-  ) {
-
-    self.delegate = delegate
-    self.sendRequestWith(method: method, params: params, headers: headers)
-  }
-
   // MARK: Parsers
 
   /// Handles registration response
@@ -601,7 +584,7 @@ extension UserServices: NMWebServiceDelegate {
             params: self.requestParams,
             headers: self.headerParams,
             method: requestName as String,
-            server: "registration"
+            server: SyncUpdate.ServerType.response.rawValue
           )
         }
       }

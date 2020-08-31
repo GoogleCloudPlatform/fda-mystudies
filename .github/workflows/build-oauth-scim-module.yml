@@ -1,6 +1,7 @@
 on:
   pull_request:
     paths:
+    - 'common-modules/**'
     - 'oauth-scim-module/**'
     - '.github/workflows/build-oauth-scim-module.yml'
 name: Build-oauth-scim-module

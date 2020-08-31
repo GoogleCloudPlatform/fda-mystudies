@@ -135,12 +135,14 @@ public class LocationControllerTest extends BaseMockIT {
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/responses/add_location_bad_request.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnForbiddenForLocationAccessDenied() throws Exception {
 
-    userRegAdminEntity.setEditPermission(Permission.VIEW.value());
+    userRegAdminEntity.setLocationPermission(Permission.VIEW.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -155,6 +157,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())))
         .andReturn();
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -191,6 +195,7 @@ public class LocationControllerTest extends BaseMockIT {
     auditEventMap.put(NEW_LOCATION_ADDED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, NEW_LOCATION_ADDED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -212,6 +217,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(DEFAULT_SITE_MODIFY_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -230,6 +237,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(CANNOT_REACTIVATE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -252,6 +261,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(ALREADY_DECOMMISSIONED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -267,6 +278,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(LOCATION_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -303,6 +316,7 @@ public class LocationControllerTest extends BaseMockIT {
     auditEventMap.put(LOCATION_EDITED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, LOCATION_EDITED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -387,12 +401,13 @@ public class LocationControllerTest extends BaseMockIT {
     auditEventMap.put(LOCATION_DECOMMISSIONED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, LOCATION_DECOMMISSIONED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnForbiddenForLocationAccessDeniedOfGetLocations() throws Exception {
     // Step 1: change editPermission to null
-    userRegAdminEntity.setEditPermission(Permission.NO_PERMISSION.value());
+    userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call API and expect error message LOCATION_ACCESS_DENIED
@@ -404,6 +419,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -430,12 +447,14 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
         .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnForbiddenForLocationForSiteAccessDenied() throws Exception {
     // Step 1: change editPermission to null
-    userRegAdminEntity.setEditPermission(Permission.NO_PERMISSION.value());
+    userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call API and expect error message LOCATION_ACCESS_DENIED
@@ -452,6 +471,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -479,6 +500,8 @@ public class LocationControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_LOCATION_FOR_SITE_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations", hasSize(0)));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -508,6 +531,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations", hasSize(1)))
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
         .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -522,12 +547,14 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(LOCATION_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnForbiddenForLocationAccessDeniedById() throws Exception {
     // Step 1: change editPermission to null
-    userRegAdminEntity.setEditPermission(Permission.NO_PERMISSION.value());
+    userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
     userRegAdminRepository.saveAndFlush(userRegAdminEntity);
 
     // Step 2: Call API and expect error message LOCATION_ACCESS_DENIED
@@ -541,6 +568,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -567,6 +596,8 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies", hasSize(1)))
         .andExpect(jsonPath("$.studies[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   private LocationRequest getLocationRequest() throws JsonProcessingException {

@@ -1,5 +1,15 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.CONTACT_US_CONTENT_EMAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.FEEDBACK_CONTENT_EMAILED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
@@ -12,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -20,6 +31,8 @@ import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
+import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +90,17 @@ public class UserSupportControllerTest extends BaseMockIT {
             eq(appConfig.getFeedbackToEmail()),
             Mockito.any(),
             Mockito.any());
+
+    verifyTokenIntrospectRequest(1);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(FEEDBACK_CONTENT_EMAILED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, FEEDBACK_CONTENT_EMAILED);
+
   }
 
   @Test
@@ -93,11 +117,7 @@ public class UserSupportControllerTest extends BaseMockIT {
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER,
-            Constants.ORG_ID_HEADER,
-            Constants.CLIENT_ID_HEADER,
-            Constants.SECRET_KEY_HEADER,
-            Constants.USER_ID_HEADER);
+            Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
 
     String requestJson =
         getContactUsRequest(
@@ -120,6 +140,16 @@ public class UserSupportControllerTest extends BaseMockIT {
             eq(appConfig.getContactusToEmail()),
             Mockito.any(),
             Mockito.any());
+
+    verifyTokenIntrospectRequest(1);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(CONTACT_US_CONTENT_EMAILED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, CONTACT_US_CONTENT_EMAILED);
   }
 
   private String getContactUsRequest(String subject, String body, String firstName, String email)

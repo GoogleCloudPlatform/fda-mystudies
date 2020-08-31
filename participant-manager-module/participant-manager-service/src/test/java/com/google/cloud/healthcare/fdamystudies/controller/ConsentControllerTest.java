@@ -141,6 +141,7 @@ public class ConsentControllerTest extends BaseMockIT {
     auditEventMap.put(CONSENT_DOCUMENT_DOWNLOADED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, CONSENT_DOCUMENT_DOWNLOADED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -165,6 +166,8 @@ public class ConsentControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -188,6 +191,8 @@ public class ConsentControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -210,6 +215,8 @@ public class ConsentControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @AfterEach

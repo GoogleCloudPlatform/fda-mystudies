@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEFAULT_PERCENTAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
@@ -154,7 +155,7 @@ public class SiteServiceImpl implements SiteService {
   @Transactional
   public SiteResponse addSite(SiteRequest siteRequest) {
     logger.entry("begin addSite()");
-    boolean canEdit = isEditPermissionAllowed(siteRequest);
+    boolean canEdit = isEditPermissionAllowed(siteRequest.getStudyId(), siteRequest.getUserId());
 
     if (!canEdit) {
       logger.exit(
@@ -166,16 +167,22 @@ public class SiteServiceImpl implements SiteService {
       return new SiteResponse(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
-    Optional<SiteEntity> optSiteEntity =
+    List<SiteEntity> sitesList =
         siteRepository.findByLocationIdAndStudyId(
             siteRequest.getLocationId(), siteRequest.getStudyId());
-
-    if (optSiteEntity.isPresent()) {
+    if (CollectionUtils.isNotEmpty(sitesList)) {
+      sitesList.get(0);
       logger.warn(
           String.format(
               "Add site for locationId=%s and studyId=%s failed with error code=%s",
               siteRequest.getLocationId(), siteRequest.getStudyId(), ErrorCode.SITE_EXISTS));
       return new SiteResponse(ErrorCode.SITE_EXISTS);
+    }
+
+    Optional<StudyEntity> optStudyEntity = studyRepository.findById(siteRequest.getStudyId());
+    if (OPEN_STUDY.equalsIgnoreCase(optStudyEntity.get().getType())) {
+      logger.exit(ErrorCode.CANNOT_ADD_SITE_FOR_OPEN_STUDY);
+      return new SiteResponse(ErrorCode.CANNOT_ADD_SITE_FOR_OPEN_STUDY);
     }
 
     SiteResponse siteResponse =
@@ -186,28 +193,6 @@ public class SiteServiceImpl implements SiteService {
             "Site %s added to locationId=%s and studyId=%s",
             siteResponse.getSiteId(), siteRequest.getLocationId(), siteRequest.getStudyId()));
     return new SiteResponse(siteResponse.getSiteId(), MessageCode.ADD_SITE_SUCCESS);
-  }
-
-  private boolean isEditPermissionAllowed(SiteRequest siteRequest) {
-    logger.entry("isEditPermissionAllowed(siteRequest)");
-    Optional<StudyPermissionEntity> optStudyPermissionEntity =
-        studyPermissionRepository.findByStudyIdAndUserId(
-            siteRequest.getStudyId(), siteRequest.getUserId());
-
-    if (optStudyPermissionEntity.isPresent()) {
-      StudyPermissionEntity studyPermission = optStudyPermissionEntity.get();
-      String appInfoId = studyPermission.getApp().getId();
-      Optional<AppPermissionEntity> optAppPermissionEntity =
-          appPermissionRepository.findByUserIdAndAppId(siteRequest.getUserId(), appInfoId);
-      if (optAppPermissionEntity.isPresent()) {
-        AppPermissionEntity appPermission = optAppPermissionEntity.get();
-        logger.exit(String.format("editValue=%d", Permission.EDIT.value()));
-        return studyPermission.getEdit() == Permission.EDIT
-            || appPermission.getEdit() == Permission.EDIT;
-      }
-    }
-    logger.exit("default permission is edit, return true");
-    return true;
   }
 
   private SiteResponse saveSiteWithSitePermissions(
@@ -364,7 +349,10 @@ public class SiteServiceImpl implements SiteService {
       participantRegistrySites = participantRegistrySiteRepository.findBySiteId(siteId);
     } else {
       participantRegistrySites =
-          participantRegistrySiteRepository.findBySiteIdAndStatus(siteId, onboardingStatus);
+          (List<ParticipantRegistrySiteEntity>)
+              CollectionUtils.emptyIfNull(
+                  participantRegistrySiteRepository.findBySiteIdAndStatus(
+                      siteId, onboardingStatus));
     }
 
     addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
@@ -415,10 +403,15 @@ public class SiteServiceImpl implements SiteService {
             .map(ParticipantRegistrySiteEntity::getId)
             .collect(Collectors.toList());
 
-    List<ParticipantStudyEntity> participantStudies =
-        (List<ParticipantStudyEntity>)
-            CollectionUtils.emptyIfNull(
-                participantStudyRepository.findByParticipantRegistrySiteId(registryIds));
+    List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
+    // Check not empty for Ids to avoid SQLSyntaxErrorException
+    if (CollectionUtils.isNotEmpty(registryIds)) {
+      participantStudies =
+          (List<ParticipantStudyEntity>)
+              CollectionUtils.emptyIfNull(
+                  participantStudyRepository.findParticipantsByParticipantRegistrySite(
+                      registryIds));
+    }
 
     for (ParticipantRegistrySiteEntity participantRegistrySite : participantRegistrySites) {
       ParticipantDetail participant = new ParticipantDetail();
@@ -430,10 +423,9 @@ public class SiteServiceImpl implements SiteService {
   }
 
   private boolean isEditPermissionAllowed(String studyId, String userId) {
-    logger.entry("isEditPermissionAllowed(siteRequest)");
+    logger.entry("isEditPermissionAllowed()");
     Optional<StudyPermissionEntity> optStudyPermissionEntity =
         studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
-
     if (optStudyPermissionEntity.isPresent()) {
       StudyPermissionEntity studyPermission = optStudyPermissionEntity.get();
       String appInfoId = studyPermission.getApp().getId();
@@ -442,12 +434,14 @@ public class SiteServiceImpl implements SiteService {
       if (optAppPermissionEntity.isPresent()) {
         AppPermissionEntity appPermission = optAppPermissionEntity.get();
         logger.exit(String.format("editValue=%d", Permission.EDIT.value()));
-        return studyPermission.getEdit() == Permission.EDIT
-            || appPermission.getEdit() == Permission.EDIT;
+        if (studyPermission.getEdit() == Permission.EDIT
+            || appPermission.getEdit() == Permission.EDIT) {
+          return true;
+        }
       }
     }
-    logger.exit("default permission is edit, return true");
-    return true;
+    logger.exit("default permission is view, return false");
+    return false;
   }
 
   @Override
@@ -579,7 +573,7 @@ public class SiteServiceImpl implements SiteService {
             .collect(Collectors.toList());
 
     List<ParticipantRegistrySiteEntity> participantRegistrySites =
-        participantRegistrySiteRepository.findByIds(participantRegistrySiteIds);
+        participantRegistrySiteRepository.findAllById(participantRegistrySiteIds);
 
     for (ParticipantRegistrySiteEntity participantRegistrySite :
         CollectionUtils.emptyIfNull(participantRegistrySites)) {
@@ -1072,15 +1066,22 @@ public class SiteServiceImpl implements SiteService {
 
       Double percentage;
       String studyType = study.getType();
-      if (studyType.equals(OPEN_STUDY)) {
+      if (studyType.equals(OPEN_STUDY) && siteEntity.getTargetEnrollment() != null) {
         site.setInvited(Long.valueOf(siteEntity.getTargetEnrollment()));
       } else if (studyType.equals(CLOSE_STUDY)) {
         site.setInvited(invitedCount);
       }
 
-      if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
-        percentage = (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
-        site.setEnrollmentPercentage(percentage);
+      if (site.getInvited() != null && site.getEnrolled() != null) {
+        if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
+          percentage =
+              (Double.valueOf(site.getEnrolled()) * 100) / Double.valueOf(site.getInvited());
+          site.setEnrollmentPercentage(percentage);
+        } else if (site.getInvited() != 0
+            && site.getEnrolled() >= site.getInvited()
+            && studyType.equals(OPEN_STUDY)) {
+          site.setEnrollmentPercentage(DEFAULT_PERCENTAGE);
+        }
       }
       studyDetail.getSites().add(site);
     }

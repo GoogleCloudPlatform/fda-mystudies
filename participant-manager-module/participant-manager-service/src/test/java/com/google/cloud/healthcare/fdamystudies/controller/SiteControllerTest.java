@@ -107,6 +107,37 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.ResourceUtils;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 public class SiteControllerTest extends BaseMockIT {
 
   private static String siteId;
@@ -180,6 +211,8 @@ public class SiteControllerTest extends BaseMockIT {
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/responses/add_site_bad_request.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -209,6 +242,35 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnCannotAddSiteForOpenStudyError() throws Exception {
+    // Step 1: Set study type to open
+    SiteRequest siteRequest = newSiteRequest();
+    studyEntity.setType(OPEN);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 2: Call API and expect CANNOT_ADD_SITE_FOR_OPEN_STUDY error
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ADD_NEW_SITE.getPath())
+                .content(asJsonString(siteRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.CANNOT_ADD_SITE_FOR_OPEN_STUDY.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -236,6 +298,8 @@ public class SiteControllerTest extends BaseMockIT {
     assertNotNull(siteEntity);
     assertEquals(locationEntity.getId(), siteEntity.getLocation().getId());
     assertEquals(sitePermissionEntity.getCreatedBy(), userRegAdminEntity.getId());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -253,6 +317,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -276,6 +342,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(ENROLLED_PARTICIPANT.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -298,6 +366,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.error_description", is(EMAIL_EXISTS.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -322,6 +392,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -345,6 +417,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.OPEN_STUDY.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -392,6 +466,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANT_EMAIL_ADDED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANT_EMAIL_ADDED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -407,6 +482,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(SITE_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -430,6 +507,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -454,6 +533,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(INVALID_ONBOARDING_STATUS.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -501,6 +582,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, SITE_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -516,6 +598,8 @@ public class SiteControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.SITE_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -537,7 +621,7 @@ public class SiteControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.siteId", notNullValue()))
             .andExpect(
                 jsonPath("$.message", is(MessageCode.RECOMMISSION_SITE_SUCCESS.getMessage())))
-            .andExpect(jsonPath("$.status", is(SiteStatus.ACTIVE.value())))
+            .andExpect(jsonPath("$.siteStatus", is(SiteStatus.ACTIVE.value())))
             .andReturn();
 
     String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
@@ -557,6 +641,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(SITE_ACTIVATED_FOR_STUDY.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, SITE_ACTIVATED_FOR_STUDY);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -576,7 +661,7 @@ public class SiteControllerTest extends BaseMockIT {
                     .contextPath(getContextPath()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.siteId", notNullValue()))
-            .andExpect(jsonPath("$.status", is(SiteStatus.DEACTIVE.value())))
+            .andExpect(jsonPath("$.siteStatus", is(SiteStatus.DEACTIVE.value())))
             .andExpect(
                 jsonPath("$.message", is(MessageCode.DECOMMISSION_SITE_SUCCESS.getMessage())))
             .andReturn();
@@ -598,6 +683,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(SITE_DECOMMISSIONED_FOR_STUDY.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, SITE_DECOMMISSIONED_FOR_STUDY);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -620,6 +706,8 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -644,6 +732,8 @@ public class SiteControllerTest extends BaseMockIT {
                 is(
                     ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS
                         .getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -670,6 +760,8 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -708,6 +800,8 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -727,6 +821,8 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.PARTICIPANT_REGISTRY_SITE_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -749,6 +845,8 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -769,6 +867,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -837,6 +937,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANT_INVITATION_EMAIL_RESENT.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANT_INVITATION_EMAIL_RESENT);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -895,6 +996,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(INVITATION_EMAIL_SENT.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, INVITATION_EMAIL_SENT);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -920,6 +1022,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -954,6 +1058,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -972,6 +1077,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1002,6 +1109,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1049,6 +1157,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORT_PARTIAL_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANTS_EMAIL_LIST_IMPORT_PARTIAL_FAILED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1094,6 +1203,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANTS_EMAIL_LIST_IMPORTED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANTS_EMAIL_LIST_IMPORTED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1111,6 +1221,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1135,6 +1247,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1156,6 +1270,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.error_description", is(INVALID_ONBOARDING_STATUS.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1237,6 +1353,7 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANT_INVITATION_DISABLED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANT_INVITATION_DISABLED);
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1262,6 +1379,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].sites").isArray())
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -1277,6 +1396,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.SITE_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @AfterEach
@@ -1289,6 +1410,7 @@ public class SiteControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     return headers;
   }
 

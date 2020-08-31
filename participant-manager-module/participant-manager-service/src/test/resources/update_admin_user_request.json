@@ -11,16 +11,14 @@
 			"customId": "App001",
 			"name": "AppName1",
 			"selected": "false",
-			"disabled": "false",
-			"permission": 2,
+			"permission": 1,
 			"studies": [
 				{
 					"studyId": "8528e381737a4b6901737a5e73d90064",
 					"customStudyId": "Study001",
 					"studyName": "StudyName1",
 					"selected": "false",
-					"disabled": "false",
-					"permission": 2,
+					"permission": 1,
 					"sites": [
 						{
 							"siteId": "9868e381737a4b6901737a5e73d90257",
@@ -29,8 +27,7 @@
 							"locationName": "LocationName1",
 							"locationDescription": "LocationDesc1",
 							"selected": "false",
-							"disabled": "false",
-							"permission": 2
+							"permission": 1
 						}
 					]
 				}

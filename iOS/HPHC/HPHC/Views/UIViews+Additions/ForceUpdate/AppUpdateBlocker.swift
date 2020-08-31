@@ -23,6 +23,20 @@ class AppUpdateBlocker: UIView {
   @IBOutlet var buttonUpgrade: UIButton!
   @IBOutlet var labelMessage: UILabel!
   @IBOutlet var labelVersionNumber: UILabel!
+  @IBOutlet var appIconView: UIImageView!
+
+  var appIcon: UIImage? {
+    guard let iconsDictionary = Bundle.main.infoDictionary?["CFBundleIcons"] as? NSDictionary,
+      let primaryIconsDictionary = iconsDictionary["CFBundlePrimaryIcon"] as? NSDictionary,
+      let iconFiles = primaryIconsDictionary["CFBundleIconFiles"] as? NSArray,
+      // First will be smallest for the device class, last will be the largest for device class
+      let lastIcon = iconFiles.lastObject as? String,
+      let icon = UIImage(named: lastIcon)
+    else {
+      return nil
+    }
+    return icon
+  }
 
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
@@ -35,28 +49,34 @@ class AppUpdateBlocker: UIView {
   /// - Parameters:
   ///   - frame: Rect for the view
   /// - Returns: New object of `AppUpdateBlocker` Type
-  class func instanceFromNib(frame: CGRect) -> AppUpdateBlocker {
-
+  class func instanceFromNib(
+    frame: CGRect,
+    detail: JSONDictionary
+  ) -> AppUpdateBlocker {
     let view =
-      UINib(nibName: "AppUpdateBlocker", bundle: nil).instantiate(
-        withOwner: nil,
-        options: nil
-      )[0] as! AppUpdateBlocker
+      UINib(nibName: "AppUpdateBlocker", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! AppUpdateBlocker
     view.frame = frame
     view.layoutIfNeeded()
     return view
-
   }
 
-  // MARK: - Action
+  func configureView(with latestVersion: String) {
+    self.buttonUpgrade.layer.borderColor = #colorLiteral(red: 0, green: 0.4862745098, blue: 0.7294117647, alpha: 1)
+    self.labelMessage.text = LocalizableString.blockerScreenLabelText.localizedString
+    self.appIconView.image = self.appIcon
+  }
+
+  // MARK: - Actions
 
   @IBAction func buttonUpgradeAction() {
-    guard
-      let url = URL(
-        string: "https://itunes.apple.com/us/app/fda-my-studies/id1242835330?ls=1&mt=8"
-      )
-    else { return }
-    if UIApplication.shared.canOpenURL(url) {
+    guard let appleID = Branding.appleID, !appleID.isEmpty else {
+      // Ask user to update from AppStore.
+      self.makeToast(LocalizableString.appStoreUpdateText.localizedString)
+      return
+    }
+    let appStoreLink = "https://apps.apple.com/app/apple-store"
+    let appLink = appStoreLink + "/id" + appleID
+    if let url = URL(string: appLink), UIApplication.shared.canOpenURL(url) {
       UIApplication.shared.open(url, options: [:], completionHandler: nil)
     }
   }

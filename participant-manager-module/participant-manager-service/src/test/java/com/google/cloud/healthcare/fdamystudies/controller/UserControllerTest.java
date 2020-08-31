@@ -12,8 +12,10 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.US
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.EMAIL_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,8 +34,8 @@ import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
-import com.google.cloud.healthcare.fdamystudies.common.ManageLocation;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -111,6 +113,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.PERMISSION_MISSING.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -128,6 +132,8 @@ public class UserControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isConflict())
         .andExpect(jsonPath("$.error_description").value(ErrorCode.EMAIL_EXISTS.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -147,6 +153,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -170,6 +178,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description")
                 .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -191,6 +201,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.violations").isArray())
         .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -221,6 +233,8 @@ public class UserControllerTest extends BaseMockIT {
     assertAppPermissionDetails(userId);
     assertStudyPermissionDetails(userId);
     assertSitePermissionDetails(userId);
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -253,6 +267,8 @@ public class UserControllerTest extends BaseMockIT {
     // Step 3: verify saved values
     assertAdminUser(userId, false);
     assertSitePermissionDetails(userId);
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -286,6 +302,8 @@ public class UserControllerTest extends BaseMockIT {
     assertAdminUser(userId, false);
     assertStudyPermissionDetails(userId);
     assertSitePermissionDetails(userId);
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -318,6 +336,8 @@ public class UserControllerTest extends BaseMockIT {
     assertAppPermissionDetails(userId);
     assertStudyPermissionDetails(userId);
     assertSitePermissionDetails(userId);
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -345,6 +365,8 @@ public class UserControllerTest extends BaseMockIT {
     assertAppPermissionDetails(adminforUpdate.getId());
     assertStudyPermissionDetails(adminforUpdate.getId());
     assertSitePermissionDetails(adminforUpdate.getId());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -374,6 +396,8 @@ public class UserControllerTest extends BaseMockIT {
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), false);
     assertSitePermissionDetails(adminforUpdate.getId());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -404,6 +428,8 @@ public class UserControllerTest extends BaseMockIT {
     assertAdminDetails(adminforUpdate.getId(), false);
     assertSitePermissionDetails(adminforUpdate.getId());
     assertStudyPermissionDetails(adminforUpdate.getId());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -435,6 +461,8 @@ public class UserControllerTest extends BaseMockIT {
     assertSitePermissionDetails(adminforUpdate.getId());
     assertStudyPermissionDetails(adminforUpdate.getId());
     assertAppPermissionDetails(adminforUpdate.getId());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -452,6 +480,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -472,6 +502,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description")
                 .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -492,6 +524,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.violations").isArray())
         .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -508,6 +542,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.PERMISSION_MISSING.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -534,6 +570,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.user.apps[0].totalSitesCount", is(1)))
         .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(0)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -564,6 +602,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.user.apps[0].totalSitesCount", is(1)))
         .andExpect(jsonPath("$.user.apps[0].selectedSitesCount", is(1)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_ADMIN_DETAILS_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -583,6 +623,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -604,6 +646,8 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.error_description")
                 .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -628,6 +672,68 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.ADMIN_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnAdminsForGetAdmins() throws Exception {
+    // Step 1: Set few admins
+    testDataHelper.createSuperAdmin();
+    testDataHelper.createNonSuperAdmin();
+
+    // Step 2: Call API and expect GET_ADMINS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.users").isArray())
+        .andExpect(jsonPath("$.users", hasSize(3)))
+        .andExpect(jsonPath("$.users[0].apps").isArray())
+        .andExpect(jsonPath("$.users[0].apps").isEmpty())
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_USERS_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.SUPER_ADMIN_EMAIL_ID)))
+        .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.NON_SUPER_ADMIN_EMAIL_ID)))
+        .andExpect(jsonPath("$.users..email", hasItem(TestDataHelper.EMAIL_VALUE)));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundErrorForGetAdmins() throws Exception {
+    // Step 1: Call API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminAccessForGetAdmins() throws Exception {
+    UserRegAdminEntity nonSuperAdmin = testDataHelper.createNonSuperAdmin();
+    // Step 1: Call API and expect NOT_SUPER_ADMIN_ACCESS error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, nonSuperAdmin.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+
+    verifyTokenIntrospectRequest();
   }
 
   private UserRequest newUserRequestForUpdate() {
@@ -635,7 +741,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setEmail(NON_SUPER_ADMIN_EMAIL_ID);
     userRequest.setFirstName(TestConstants.UPDATED_FIRST_NAME);
     userRequest.setLastName(TestConstants.UPDATED_LAST_NAME);
-    userRequest.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRequest.setManageLocations(Permission.EDIT.value());
     userRequest.setSuperAdmin(true);
     return userRequest;
   }
@@ -645,7 +751,7 @@ public class UserControllerTest extends BaseMockIT {
     userRequest.setEmail(TestConstants.USER_EMAIL_VALUE);
     userRequest.setFirstName(TestConstants.FIRST_NAME);
     userRequest.setLastName(TestConstants.LAST_NAME);
-    userRequest.setManageLocations(ManageLocation.ALLOW.getValue());
+    userRequest.setManageLocations(Permission.EDIT.value());
     userRequest.setSuperAdmin(true);
     return userRequest;
   }

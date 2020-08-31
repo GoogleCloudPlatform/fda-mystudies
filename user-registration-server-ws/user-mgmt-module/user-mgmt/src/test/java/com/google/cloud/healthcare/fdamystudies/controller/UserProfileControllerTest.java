@@ -1,8 +1,25 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.InfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
@@ -35,6 +53,8 @@ import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,9 +85,6 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired private ObjectMapper objectMapper;
 
-  @Value("${auth.server.deactivateUrl}")
-  private String deactivateUrl;
-
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;
 
@@ -95,6 +112,16 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(content().string(containsString("cdash93@gmail.com")))
         .andExpect(status().isOk());
+
+    verifyTokenIntrospectRequest(1);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE);
   }
 
   @Test
@@ -107,6 +134,16 @@ public class UserProfileControllerTest extends BaseMockIT {
         .perform(get(USER_PROFILE_PATH).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(1);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.INVALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(READ_OPERATION_FAILED_FOR_USER_PROFILE.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_FAILED_FOR_USER_PROFILE);
   }
 
   @Test
@@ -126,6 +163,16 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(String.valueOf(HttpStatus.OK.value()))));
 
+    verifyTokenIntrospectRequest(1);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_PROFILE_UPDATED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_PROFILE_UPDATED);
+
     MvcResult result =
         mockMvc
             .perform(get(USER_PROFILE_PATH).headers(headers).contextPath(getContextPath()))
@@ -136,13 +183,15 @@ public class UserProfileControllerTest extends BaseMockIT {
     boolean remote =
         JsonPath.read(result.getResponse().getContentAsString(), "$.settings.remoteNotifications");
     assertTrue(remote);
+
+    verifyTokenIntrospectRequest(2);
   }
 
   @Test
   public void deactivateAccountSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
-    StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.DELETE);
+    StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.TRUE);
     List<StudyReqBean> list = new ArrayList<StudyReqBean>();
     list.add(studyReqBean);
     DeactivateAcctBean acctBean = new DeactivateAcctBean(list);
@@ -158,20 +207,40 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.SUCCESS)));
 
+    verifyTokenIntrospectRequest(1);
+
     UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
     assertEquals(3, daoResp.getStatus());
 
-    verify(1, postRequestedFor(urlEqualTo("/AuthServer/deactivate")));
+    verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
     verify(
         1,
         postRequestedFor(
             urlEqualTo(
-                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=1&deleteResponses=delete")));
+                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=1&deleteResponses=true")));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDY_ID);
+    auditRequest.setParticipantId("1");
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_ACCOUNT_DEACTIVATED.getEventCode(), auditRequest);
+    auditEventMap.put(PARTICIPANT_DATA_DELETED.getEventCode(), auditRequest);
+    auditEventMap.put(DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL.getEventCode(), auditRequest);
+    auditEventMap.put(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        USER_ACCOUNT_DEACTIVATED,
+        PARTICIPANT_DATA_DELETED,
+        DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL,
+        WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE);
   }
 
   @Test
   public void deactivateAccountBadRequest() throws Exception {
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.INVALID_USER_ID);
 
     // invalid userId
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
@@ -185,6 +254,8 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest(1);
   }
 
   @Test
@@ -262,6 +333,15 @@ public class UserProfileControllerTest extends BaseMockIT {
             eq(Constants.VALID_EMAIL),
             Mockito.any(),
             Mockito.any());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.USER_ID);
+    auditRequest.setAppId(Constants.APP_ID_VALUE);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED);
   }
 
   private String getLoginBean(String emailId, String password) throws JsonProcessingException {
