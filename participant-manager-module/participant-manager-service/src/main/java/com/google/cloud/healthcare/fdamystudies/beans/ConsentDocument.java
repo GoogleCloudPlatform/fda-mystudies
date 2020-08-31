@@ -28,9 +28,8 @@ public class ConsentDocument extends BaseResponse {
   public ConsentDocument(MessageCode messageCode) {
     super(messageCode);
   }
-  
-  public ConsentDocument(
-      MessageCode messageCode, String version, String type, String content) {
+
+  public ConsentDocument(MessageCode messageCode, String version, String type, String content) {
     super(messageCode);
     this.version = version;
     this.type = type;
