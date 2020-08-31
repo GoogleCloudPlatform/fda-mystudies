@@ -92,4 +92,7 @@ public class AuditLogEventRequest implements Serializable {
 
   @Size(max = 20)
   private String studyVersion;
+
+  @Size(max = 64)
+  private String siteId;
 }
