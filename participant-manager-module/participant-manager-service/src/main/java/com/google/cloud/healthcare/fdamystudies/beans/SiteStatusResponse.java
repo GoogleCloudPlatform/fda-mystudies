@@ -12,11 +12,10 @@ public class SiteStatusResponse extends BaseResponse {
 
   private String siteId;
 
-  private Integer status;
+  private Integer siteStatus;
 
   public SiteStatusResponse(String siteId, Integer status, MessageCode messageCode) {
     super(messageCode);
-    this.status = status;
     this.siteId = siteId;
   }
 }
