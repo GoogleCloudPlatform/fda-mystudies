@@ -100,7 +100,6 @@ public class UserSupportControllerTest extends BaseMockIT {
     auditEventMap.put(FEEDBACK_CONTENT_EMAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, FEEDBACK_CONTENT_EMAILED);
-
   }
 
   @Test

@@ -22,8 +22,5 @@ public class AppConstants {
   public static final String EMAIL = "email";
   public static final String SDF_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-  public static final String AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_NAME =
-      "Update eligibility consent status";
-  public static final String AUDIT_EVENT_UPDATE_ELIGIBILITY_CONSENT_DESC =
-      "Eligibility consent has been updated for study %s";
+  public static final String STATUS_COMPLETED = "complete";
 }

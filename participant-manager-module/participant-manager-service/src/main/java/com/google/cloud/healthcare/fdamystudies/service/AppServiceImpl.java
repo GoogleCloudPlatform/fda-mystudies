@@ -10,15 +10,18 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.APP_PARTICIPANT_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppParticipantsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.AppStudyResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
@@ -75,6 +78,8 @@ public class AppServiceImpl implements AppService {
   @Autowired private AppRepository appRepository;
 
   @Autowired private StudyRepository studyRepository;
+
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Override
   @Transactional(readOnly = true)
@@ -325,7 +330,8 @@ public class AppServiceImpl implements AppService {
 
   @Override
   @Transactional(readOnly = true)
-  public AppParticipantsResponse getAppParticipants(String appId, String adminId) {
+  public AppParticipantsResponse getAppParticipants(
+      String appId, String adminId, AuditLogEventRequest auditRequest) {
     logger.entry("getAppParticipants(appId, adminId)");
     Optional<AppPermissionEntity> optAppPermissionEntity =
         appPermissionRepository.findByUserIdAndAppId(adminId, appId);
@@ -355,6 +361,11 @@ public class AppServiceImpl implements AppService {
             app.getAppId(),
             app.getAppName());
     appParticipantsResponse.getParticipants().addAll(participants);
+
+    auditRequest.setAppId(appId);
+    auditRequest.setUserId(adminId);
+    participantManagerHelper.logEvent(APP_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
+
     logger.exit(String.format("%d participant found for appId=%s", participants.size(), appId));
     return appParticipantsResponse;
   }
