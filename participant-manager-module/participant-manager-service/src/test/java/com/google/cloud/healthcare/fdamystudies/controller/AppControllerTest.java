@@ -82,7 +82,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAppsRegisteredByUser() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
@@ -115,7 +115,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldNotReturnApp() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, IdGenerator.id());
+    headers.add(USER_ID_HEADER, IdGenerator.id());
 
     mockMvc
         .perform(get(ApiEndpoint.GET_APPS.getPath()).headers(headers).contextPath(getContextPath()))
@@ -136,7 +136,7 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getSiteRepository().save(siteEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     String[] fields = {"studies", "sites"};
 
     // Step 2: Call API and expect success message
@@ -167,7 +167,7 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getStudyRepository().save(studyEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     String[] fields = {"studies"};
 
     // Step 2: Call API and expect success message
@@ -197,7 +197,7 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     String[] fields = {"studies", "sites"};
 
     // Step 2: Call API and expect USER_ADMIN_ACCESS_DENIED
@@ -228,7 +228,7 @@ public class AppControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return GET_APPS_PARTICIPANTS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -261,7 +261,7 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldNotReturnAppsForGetAppParticipants() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, IdGenerator.id());
+    headers.add(USER_ID_HEADER, IdGenerator.id());
 
     mockMvc
         .perform(
@@ -300,7 +300,7 @@ public class AppControllerTest extends BaseMockIT {
     testDataHelper.getStudyRepository().save(studyEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     String[] fields = {"apps"};
 
     // Step 2: Call API

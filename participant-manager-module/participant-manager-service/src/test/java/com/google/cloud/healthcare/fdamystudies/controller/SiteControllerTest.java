@@ -88,7 +88,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -101,42 +100,10 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.ResourceUtils;
-
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_EXIST_OR_INACTIVE;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.SITE_NOT_FOUND;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CONSENT_VERSION;
-import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.DECOMMISSION_SITE_NAME;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SiteControllerTest extends BaseMockIT {
 
@@ -194,7 +161,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForAddNewSite() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     SiteRequest siteRequest = new SiteRequest();
     MvcResult result =
         mockMvc
@@ -227,7 +195,8 @@ public class SiteControllerTest extends BaseMockIT {
     AppPermissionEntity appPermissionEntity = appEntity.getAppPermissions().get(0);
     appPermissionEntity.setEdit(Permission.VIEW);
     appEntity = testDataHelper.getAppRepository().saveAndFlush(appEntity);
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     SiteRequest siteRequest = newSiteRequest();
 
     mockMvc
@@ -254,7 +223,7 @@ public class SiteControllerTest extends BaseMockIT {
     testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     // Step 2: Call API and expect CANNOT_ADD_SITE_FOR_OPEN_STUDY error
     mockMvc
@@ -275,7 +244,8 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldAddNewSite() throws Exception {
-    HttpHeaders headers = newCommonHeaders();
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     SiteRequest siteRequest = newSiteRequest();
     MvcResult result =
         mockMvc
@@ -305,7 +275,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteNotExistForAddNewParticipant() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -331,7 +301,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return ENROLLED_PARTICIPANT error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -355,7 +325,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return EMAIL_EXISTS error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -379,7 +349,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -406,7 +376,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return OPEN_STUDY error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -430,7 +400,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to get ADD_PARTICIPANT_SUCCESS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     MvcResult result =
         mockMvc
@@ -472,7 +442,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteNotFoundError() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -495,7 +465,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect MANAGE_SITE_PERMISSION_ACCESS_DENIED error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -522,7 +492,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect INVALID_ONBOARDING_STATUS error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -551,7 +521,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -588,7 +558,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnNotFoundForDecomissionSite() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     // Call API and expect SITE_NOT_FOUND error
     mockMvc
@@ -610,7 +580,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: call API and expect RECOMMISSION_SITE_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     result =
         mockMvc
             .perform(
@@ -652,7 +622,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect DECOMMISSION_SITE_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     result =
         mockMvc
             .perform(
@@ -694,7 +664,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: call API and expect CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -718,7 +688,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: call API and expect CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -749,7 +719,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: call API and expect SITE_PERMISSION_ACCESS_DENIED error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
@@ -777,7 +747,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect GET_PARTICIPANT_DETAILS_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             get(
@@ -808,7 +778,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnParticipantRegistryNotFoundError() throws Exception {
     // Call API and expect PARTICIPANT_REGISTRY_SITE_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -829,7 +799,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnAccessDeniedForGetParticipantDetails() throws Exception {
     // Step 1: Set userId to invalid
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, IdGenerator.id());
+    headers.add(USER_ID_HEADER, IdGenerator.id());
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
     mockMvc
@@ -852,7 +822,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteNotFoundForInviteParticipant() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
     inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
@@ -898,7 +868,7 @@ public class SiteControllerTest extends BaseMockIT {
             participantRegistrySiteEntity.getId(), participantRegistrySiteEntity1.getId()));
     // Step 3: call the API and assert the error description
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     result =
         mockMvc
             .perform(
@@ -954,7 +924,7 @@ public class SiteControllerTest extends BaseMockIT {
     participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);
 
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
     inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
@@ -1008,7 +978,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
     mockMvc
@@ -1036,7 +1006,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return OPEN_STUDY error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
     mockMvc
@@ -1064,7 +1034,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteNotExistForImportNewParticipant() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
     mockMvc
@@ -1084,7 +1054,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnWithBadHeaders() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template_bad_header.xlsx");
     mockMvc
@@ -1115,7 +1085,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnImportNewParticipantAndInvalidEmail() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     // Step 1: Call API to import new participants
     MockMultipartFile file =
@@ -1163,7 +1133,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnImportNewParticipant() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     // Step 1: Call API to import new participants
     MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
@@ -1209,7 +1179,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteNotExistOrInactiveError() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -1234,7 +1204,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -1259,7 +1229,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to INVALID_ONBOARDING_STATUS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -1281,7 +1251,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to UPDATE_STATUS_SUCCESS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -1322,7 +1292,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: Call API to UPDATE_ONBOARDING_STATUS
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -1367,7 +1337,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     // Step 2: call API and expect GET_SITES_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             get(ApiEndpoint.GET_SITES.getPath()).headers(headers).contextPath(getContextPath()))
@@ -1387,7 +1357,7 @@ public class SiteControllerTest extends BaseMockIT {
   public void shouldReturnNotFoundForGetSites() throws Exception {
     // Step 1: set the userId to invalid
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, IdGenerator.id());
+    headers.add(USER_ID_HEADER, IdGenerator.id());
 
     // Step 2: Call API and expect SITE_NOT_FOUND error
     mockMvc
@@ -1403,15 +1373,6 @@ public class SiteControllerTest extends BaseMockIT {
   @AfterEach
   public void clean() {
     testDataHelper.cleanUp();
-  }
-
-  private HttpHeaders newCommonHeaders() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.add("Authorization", VALID_BEARER_TOKEN);
-    return headers;
   }
 
   private SiteRequest newSiteRequest() {

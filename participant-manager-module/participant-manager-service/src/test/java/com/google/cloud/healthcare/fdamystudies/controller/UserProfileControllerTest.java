@@ -34,7 +34,6 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
-import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -184,8 +183,6 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnUnauthorizedForUserDetailsBySecurityCode() throws Exception {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     // Step 1: change the security code expire date to before current date
     userRegAdminEntity.setSecurityCodeExpireDate(

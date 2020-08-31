@@ -9,9 +9,6 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.STUDY_PARTICIPANT_REGISTRY_VIEWED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -279,11 +276,11 @@ public class StudyServiceImpl implements StudyService {
 
     Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
-    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get(), userId);
+    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get(), userId, auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
-      StudyEntity study, AppEntity app, String userId) {
+      StudyEntity study, AppEntity app, String userId, AuditLogEventRequest auditRequest) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
 

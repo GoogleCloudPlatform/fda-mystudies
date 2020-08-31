@@ -108,8 +108,7 @@ public class StudyControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnStudies() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-    headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -144,7 +143,7 @@ public class StudyControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnStudyNotFound() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(TestConstants.USER_ID_HEADER, IdGenerator.id());
+    headers.add(USER_ID_HEADER, IdGenerator.id());
 
     mockMvc
         .perform(
@@ -218,8 +217,8 @@ public class StudyControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnStudyParticipants() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
-    headers.add(TestConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
     locationEntity = testDataHelper.createLocation();
     studyEntity.setType(OPEN_STUDY);
     siteEntity.setLocation(locationEntity);
@@ -291,7 +290,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect TARGET_ENROLLMENT_UPDATE_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     result =
         mockMvc
             .perform(
@@ -340,7 +339,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect SITE_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
@@ -364,7 +363,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect STUDY_PERMISSION_ACCESS_DENIED error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
@@ -390,7 +389,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
@@ -416,7 +415,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     // Step 2: Call API and expect CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DEACTIVE_SITE error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
