@@ -8,11 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -56,9 +58,9 @@ public class UserProfileController {
   public ResponseEntity<UserProfileResponse> getUserDetails(
       @PathVariable String securityCode, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     UserProfileResponse userProfileResponse =
-        userProfileService.findUserProfileBySecurityCode(securityCode);
+        userProfileService.findUserProfileBySecurityCode(securityCode, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, userProfileResponse.getHttpStatusCode()));
     return ResponseEntity.status(userProfileResponse.getHttpStatusCode()).body(userProfileResponse);
@@ -89,8 +91,10 @@ public class UserProfileController {
   public ResponseEntity<SetUpAccountResponse> setUpAccount(
       @Valid @RequestBody SetUpAccountRequest setUpAccountRequest, HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    SetUpAccountResponse setUpAccountResponse = userProfileService.saveUser(setUpAccountRequest);
+    SetUpAccountResponse setUpAccountResponse =
+        userProfileService.saveUser(setUpAccountRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, setUpAccountResponse.getHttpStatusCode()));
     return ResponseEntity.status(setUpAccountResponse.getHttpStatusCode())
