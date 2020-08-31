@@ -15,6 +15,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonSt
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -23,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.auditlog.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.auditlog.config.AppPropConfig;
 import com.google.cloud.healthcare.fdamystudies.auditlog.model.AuditLogEventEntity;
 import com.google.cloud.healthcare.fdamystudies.auditlog.repository.AuditLogEventRepository;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -39,6 +42,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +54,12 @@ public class AuditLogEventControllerTest extends BaseMockIT {
 
   @Autowired private AuditLogEventRepository repository;
 
+  @Autowired private AppPropConfig appPropConfig;
+
   @BeforeEach
   public void setUp() {
     WireMock.resetAllRequests();
+    appPropConfig.setAuditStorage("database");
   }
 
   @Test
@@ -81,10 +88,34 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     assertNotNull(aleEntity);
     assertEquals(request.getCorrelationId(), aleEntity.getCorrelationId());
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldPostAuditEventToStackDriver() throws Exception {
+    // Step-1 call API to post the audit event to stackdriver
+    appPropConfig.setAuditStorage("stackdriver");
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    AuditLogEventRequest auditRequest = createAuditLogEventRequest();
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.EVENTS.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(auditRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    ArgumentCaptor<AuditLogEventRequest> argument =
+        ArgumentCaptor.forClass(AuditLogEventRequest.class);
+    verify(mockAuditService, times(1)).postAuditLogEvent(argument.capture());
+    assertEquals(auditRequest.getEventCode(), argument.getValue().getEventCode());
+
+    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -130,10 +161,7 @@ public class AuditLogEventControllerTest extends BaseMockIT {
     String expectedResponse = readJsonFile("/expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+    verifyTokenIntrospectRequest();
   }
 
   @AfterEach

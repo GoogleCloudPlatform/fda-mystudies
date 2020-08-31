@@ -8,11 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.auditlog.controller;
 
+import com.google.cloud.healthcare.fdamystudies.auditlog.config.AppPropConfig;
 import com.google.cloud.healthcare.fdamystudies.auditlog.service.AuditLogEventService;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +31,34 @@ public class AuditLogEventController {
 
   private XLogger logger = XLoggerFactory.getXLogger(AuditLogEventController.class.getName());
 
-  @Autowired private AuditLogEventService aleService;
+  @Autowired private AuditLogEventService auditService;
+
+  @Autowired private AuditEventService commonAuditService;
+
+  @Autowired private AppPropConfig appPropConfig;
 
   @PostMapping(
       value = "/events",
       produces = {MediaType.APPLICATION_JSON_VALUE},
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<AuditLogEventResponse> logEvent(
+  public ResponseEntity<?> logEvent(
       @Valid @RequestBody AuditLogEventRequest auditRequest, HttpServletRequest request) {
     logger.entry(String.format("begin %s request", request.getRequestURI()));
 
-    AuditLogEventResponse response = aleService.saveAuditLogEvent(auditRequest);
-
-    logger.exit(String.format("eventId=%s", response.getEventId()));
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    if (StringUtils.equalsIgnoreCase(appPropConfig.getAuditStorage(), "stackdriver")) {
+      commonAuditService.postAuditLogEvent(auditRequest);
+      logger.exit(
+          String.format(
+              "%s event posted to %s ",
+              auditRequest.getEventCode(), appPropConfig.getAuditStorage()));
+      return ResponseEntity.status(HttpStatus.OK).build();
+    } else {
+      AuditLogEventResponse auditResponse = auditService.saveAuditLogEvent(auditRequest);
+      logger.exit(
+          String.format(
+              "%s event saved, eventId=%s",
+              auditRequest.getEventCode(), auditResponse.getEventId()));
+      return ResponseEntity.status(HttpStatus.CREATED).body(auditResponse);
+    }
   }
 }
