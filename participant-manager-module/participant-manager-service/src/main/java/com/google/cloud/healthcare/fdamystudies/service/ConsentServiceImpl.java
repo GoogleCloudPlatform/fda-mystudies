@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocumentResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
@@ -53,8 +54,7 @@ public class ConsentServiceImpl implements ConsentService {
     if (!optStudyConsent.isPresent()
         || optStudyConsent.get().getParticipantStudy() == null
         || optStudyConsent.get().getParticipantStudy().getSite() == null) {
-      logger.exit(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
-      return new ConsentDocumentResponse(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
+      throw new ErrorCodeException(ErrorCode.CONSENT_DATA_NOT_AVAILABLE);
     }
 
     StudyConsentEntity studyConsentEntity = optStudyConsent.get();
@@ -63,8 +63,7 @@ public class ConsentServiceImpl implements ConsentService {
             userId, studyConsentEntity.getParticipantStudy().getSite().getId());
 
     if (!optSitePermission.isPresent()) {
-      logger.exit(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
-      return new ConsentDocumentResponse(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
     String document = null;

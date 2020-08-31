@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.US
 import com.google.cloud.healthcare.fdamystudies.beans.AppParticipantsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.AppResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.service.AppService;
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,7 +22,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,9 +59,7 @@ public class AppController {
     } else if (Arrays.asList(allowedFields).containsAll(Arrays.asList(fields))) {
       appResponse = appService.getAppsWithOptionalFields(userId, fields);
     } else {
-      logger.exit(ErrorCode.INVALID_APPS_FIELDS_VALUES);
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new AppResponse(ErrorCode.INVALID_APPS_FIELDS_VALUES));
+      throw new ErrorCodeException(ErrorCode.INVALID_APPS_FIELDS_VALUES);
     }
 
     logger.exit(String.format(STATUS_LOG, appResponse.getHttpStatusCode()));

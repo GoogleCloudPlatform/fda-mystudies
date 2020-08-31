@@ -23,6 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserProfileMapper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -63,14 +64,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findByUrAdminAuthId(userId);
 
     if (!optUserRegAdminUser.isPresent()) {
-      logger.exit(ErrorCode.USER_NOT_EXISTS);
-      return new UserProfileResponse(ErrorCode.USER_NOT_EXISTS);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_EXISTS);
     }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (!adminUser.isActive()) {
-      logger.exit(ErrorCode.USER_NOT_ACTIVE);
-      return new UserProfileResponse(ErrorCode.USER_NOT_ACTIVE);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_ACTIVE);
     }
 
     UserProfileResponse userProfileResponse =
@@ -88,16 +87,14 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findBySecurityCode(securityCode);
 
     if (!optUserRegAdminUser.isPresent()) {
-      logger.exit(ErrorCode.INVALID_SECURITY_CODE);
-      return new UserProfileResponse(ErrorCode.INVALID_SECURITY_CODE);
+      throw new ErrorCodeException(ErrorCode.INVALID_SECURITY_CODE);
     }
 
     UserRegAdminEntity user = optUserRegAdminUser.get();
     Timestamp now = new Timestamp(Instant.now().toEpochMilli());
 
     if (now.after(user.getSecurityCodeExpireDate())) {
-      logger.exit(ErrorCode.SECURITY_CODE_EXPIRED);
-      return new UserProfileResponse(ErrorCode.SECURITY_CODE_EXPIRED);
+      throw new ErrorCodeException(ErrorCode.SECURITY_CODE_EXPIRED);
     }
 
     UserProfileResponse userProfileResponse =
@@ -116,14 +113,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findById(userProfileRequest.getUserId());
 
     if (!optUserRegAdminUser.isPresent()) {
-      logger.exit(ErrorCode.USER_NOT_EXISTS);
-      return new UserProfileResponse(ErrorCode.USER_NOT_EXISTS);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_EXISTS);
     }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (!adminUser.isActive()) {
-      logger.exit(ErrorCode.USER_NOT_ACTIVE);
-      return new UserProfileResponse(ErrorCode.USER_NOT_ACTIVE);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_ACTIVE);
     }
     adminUser.setFirstName(userProfileRequest.getFirstName());
     adminUser.setLastName(userProfileRequest.getLastName());
@@ -141,7 +136,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     Optional<UserRegAdminEntity> optUsers =
         userRegAdminRepository.findByEmail(setUpAccountRequest.getEmail());
     if (!optUsers.isPresent()) {
-      return new SetUpAccountResponse(ErrorCode.USER_NOT_INVITED);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_INVITED);
     }
 
     // Bad request and errors handled in RestResponseErrorHandler class
@@ -194,7 +189,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     Optional<UserRegAdminEntity> optUserRegAdmin = userRegAdminRepository.findById(userId);
     if (!optUserRegAdmin.isPresent()) {
-      return new DeactivateAccountResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     UserRegAdminEntity userRegAdmin = optUserRegAdmin.get();

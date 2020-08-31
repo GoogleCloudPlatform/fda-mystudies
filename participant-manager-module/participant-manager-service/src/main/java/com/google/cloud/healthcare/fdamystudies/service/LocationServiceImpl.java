@@ -91,8 +91,7 @@ public class LocationServiceImpl implements LocationService {
 
     ErrorCode errorCode = validateUpdateLocationRequest(locationRequest, optLocation);
     if (errorCode != null) {
-      logger.exit(errorCode);
-      return new LocationDetailsResponse(errorCode);
+      throw new ErrorCodeException(errorCode);
     }
 
     LocationEntity locationEntity = optLocation.get();
@@ -173,8 +172,7 @@ public class LocationServiceImpl implements LocationService {
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
-      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
-      return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
 
     List<LocationEntity> locations =
@@ -222,14 +220,12 @@ public class LocationServiceImpl implements LocationService {
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
-      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
-      return new LocationDetailsResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
 
     Optional<LocationEntity> optOfEntity = locationRepository.findById(locationId);
     if (!optOfEntity.isPresent()) {
-      logger.exit(ErrorCode.LOCATION_NOT_FOUND);
-      return new LocationDetailsResponse(ErrorCode.LOCATION_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.LOCATION_NOT_FOUND);
     }
 
     LocationEntity locationEntity = optOfEntity.get();
@@ -253,8 +249,7 @@ public class LocationServiceImpl implements LocationService {
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
-      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
-      return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
     List<LocationEntity> listOfLocation =
         (List<LocationEntity>)

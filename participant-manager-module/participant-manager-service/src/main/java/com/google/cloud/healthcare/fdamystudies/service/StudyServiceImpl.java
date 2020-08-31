@@ -21,6 +21,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
@@ -78,8 +79,7 @@ public class StudyServiceImpl implements StudyService {
         sitePermissionRepository.findSitePermissionByUserId(userId);
 
     if (CollectionUtils.isEmpty(sitePermissions)) {
-      logger.exit(ErrorCode.STUDY_NOT_FOUND);
-      return new StudyResponse(ErrorCode.STUDY_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
     }
 
     Map<StudyEntity, List<SitePermissionEntity>> studyPermissionMap =
@@ -249,23 +249,20 @@ public class StudyServiceImpl implements StudyService {
     // validations
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
     if (!optStudy.isPresent()) {
-      logger.exit(ErrorCode.STUDY_NOT_FOUND);
-      return new ParticipantRegistryResponse(ErrorCode.STUDY_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
     }
 
     Optional<StudyPermissionEntity> optStudyPermission =
         studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
 
     if (!optStudyPermission.isPresent()) {
-      logger.exit(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
-      return new ParticipantRegistryResponse(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
     }
 
     StudyPermissionEntity studyPermission = optStudyPermission.get();
 
     if (studyPermission.getApp() == null) {
-      logger.exit(ErrorCode.APP_NOT_FOUND);
-      return new ParticipantRegistryResponse(ErrorCode.APP_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
     }
 
     Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
