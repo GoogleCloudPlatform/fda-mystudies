@@ -92,4 +92,7 @@ private static final long serialVersionUID = -2284303463534623314L;
 
   @Size(max = 20)
   private String studyVersion;
+
+  @Size(max = 64)
+  private String siteId;
 }

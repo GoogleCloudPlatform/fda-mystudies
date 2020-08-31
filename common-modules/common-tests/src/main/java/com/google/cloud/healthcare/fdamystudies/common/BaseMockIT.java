@@ -249,6 +249,8 @@ public class BaseMockIT {
   void setUp(TestInfo testInfo) {
     logger.entry(String.format("TEST STARTED: %s", testInfo.getDisplayName()));
 
+    WireMock.resetAllRequests();
+
     Mockito.reset(mockAuditService);
     auditRequests.clear();
     doAnswer(

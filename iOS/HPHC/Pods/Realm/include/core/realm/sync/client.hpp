@@ -150,8 +150,8 @@ public:
         /// The default changeset cooker to be used by new sessions. Can be
         /// overridden by Session::Config::changeset_cooker.
         ///
-        /// \sa make_client_history(), TrivialChangesetCooker.
-        std::shared_ptr<ClientHistory::ChangesetCooker> changeset_cooker;
+        /// \sa make_client_replication(), TrivialChangesetCooker.
+        std::shared_ptr<ClientReplication::ChangesetCooker> changeset_cooker;
 
         /// The maximum number of milliseconds to allow for a connection to
         /// become fully established. This includes the time to resolve the
@@ -557,10 +557,10 @@ public:
         /// destroyed. Please see "Callback semantics" section under Client for
         /// more on this.
         ///
-        /// \sa make_client_history(), TrivialChangesetCooker.
-        std::shared_ptr<ClientHistory::ChangesetCooker> changeset_cooker;
+        /// \sa make_client_replication(), TrivialChangesetCooker.
+        std::shared_ptr<ClientReplication::ChangesetCooker> changeset_cooker;
 
-        /// The encryption key the SharedGroup will be opened with.
+        /// The encryption key the DB will be opened with.
         util::Optional<std::array<char, 64>> encryption_key;
 
         /// ClientReset is used for both async open and client reset. If

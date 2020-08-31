@@ -71,20 +71,11 @@ public final class AuditEventMapper {
       CommonApplicationPropertyConfig commonPropConfig,
       AuditLogEventRequest auditRequest) {
     auditRequest.setEventCode(eventEnum.getEventCode());
-
     // Use enum value where specified, otherwise, use 'source' header value.
     if (eventEnum.getSource().isPresent()) {
       auditRequest.setSource(eventEnum.getSource().get().getValue());
     }
-    auditRequest.setDestination(eventEnum.getDestination().getValue());
-    if (eventEnum.getUserAccessLevel().isPresent()) {
-      auditRequest.setUserAccessLevel(eventEnum.getUserAccessLevel().get().getValue());
-    }
-    if (eventEnum.getResourceServer().isPresent()) {
-      auditRequest.setResourceServer(eventEnum.getResourceServer().get().getValue());
-    }
-
-
+    
     auditRequest.setDestination(eventEnum.getDestination().getValue());
 
     if (eventEnum.getUserAccessLevel().isPresent()) {
@@ -94,7 +85,6 @@ public final class AuditEventMapper {
     if (eventEnum.getResourceServer().isPresent()) {
       auditRequest.setResourceServer(eventEnum.getResourceServer().get().getValue());
     }
-
     auditRequest.setSourceApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setDestinationApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setPlatformVersion(commonPropConfig.getApplicationVersion());
