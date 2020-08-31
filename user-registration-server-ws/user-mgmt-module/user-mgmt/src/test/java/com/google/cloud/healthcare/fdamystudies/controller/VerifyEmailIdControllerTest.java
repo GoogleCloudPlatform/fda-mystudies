@@ -85,8 +85,6 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.INVALID_EMAIL_CODE)));
 
-    verifyTokenIntrospectRequest(1);
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
 
@@ -115,8 +113,6 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.INVALID_EMAIL_CODE)));
-
-    verifyTokenIntrospectRequest(1);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
@@ -147,8 +143,6 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.code", is(HttpStatus.BAD_REQUEST.value())))
         .andExpect(jsonPath("$.message", is(Constants.EMAIL_NOT_EXIST)));
 
-    verifyTokenIntrospectRequest(1);
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
 
@@ -174,7 +168,8 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.verified").value(Boolean.TRUE));
+        .andExpect(jsonPath("$.verified").value(Boolean.TRUE))
+        .andExpect(jsonPath("$.tempRegId").isNotEmpty());
 
     // get list of userDetails by emailId
     List<UserDetailsBO> userDetailsList = repository.findByEmail(Constants.VERIFY_CODE_EMAIL);
@@ -194,8 +189,6 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
     assertTrue(VERIFIED_STATUS == userDetailsBO.getStatus());
 
     verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
-
-    verifyTokenIntrospectRequest(1);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);
