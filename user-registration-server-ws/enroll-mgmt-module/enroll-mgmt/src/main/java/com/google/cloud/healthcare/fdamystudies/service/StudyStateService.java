@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
@@ -27,7 +28,8 @@ public interface StudyStateService {
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudiesBO> existParticipantStudies,
-      String userId);
+      String userId,
+      AuditLogEventRequest auditRequest);
 
   public List<StudyStateBean> getStudiesState(String userId)
       throws SystemException, InvalidUserIdException /*, NoStudyEnrolledException*/;

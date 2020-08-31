@@ -151,8 +151,6 @@ public class UserProfileController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> deactivateAccount(
       @RequestHeader("userId") String userId,
-      @RequestHeader("accessToken") String accessToken,
-      @RequestHeader("clientToken") String clientToken,
       @RequestBody DeactivateAcctBean deactivateAcctBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
@@ -162,9 +160,10 @@ public class UserProfileController {
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
     try {
+
       message =
-          userManagementProfService.deActivateAcct(
-              userId, deactivateAcctBean, accessToken, clientToken, auditRequest);
+          userManagementProfService.deactivateAccount(userId, deactivateAcctBean, auditRequest);
+
       if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {

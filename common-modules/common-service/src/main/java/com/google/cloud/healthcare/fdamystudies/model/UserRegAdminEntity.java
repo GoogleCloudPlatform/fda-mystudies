@@ -82,8 +82,8 @@ public class UserRegAdminEntity implements Serializable {
   @Column(name = "super_admin")
   private boolean superAdmin;
 
-  @Column(name = "edit_permission")
-  private Integer editPermission;
+  @Column(name = "location_permission")
+  private Integer locationPermission;
 
   @Column(name = "created_time")
   @CreationTimestamp

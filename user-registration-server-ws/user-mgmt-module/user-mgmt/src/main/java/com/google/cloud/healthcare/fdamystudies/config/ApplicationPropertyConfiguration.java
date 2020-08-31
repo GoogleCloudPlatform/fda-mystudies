@@ -54,17 +54,8 @@ public class ApplicationPropertyConfiguration {
   @Value("${confirmation.mail.content}")
   private String confirmationMail;
 
-  @Value("${authServerAccessTokenValidationUrl}")
-  private String authServerAccessTokenValidationUrl;
-
-  @Value("${auth.server.url}")
-  private String authServerUrl;
-
   @Value("${auth.server.updateStatus.url}")
   private String authServerUpdateStatusUrl;
-
-  @Value("${auth.server.deleteStatusUrl}")
-  private String authServerDeleteStatusUrl;
 
   @Value("${register.url}")
   private String authServerRegisterStatusUrl;
@@ -80,15 +71,6 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${serverApiUrls}")
   private String serverApiUrls;
-
-  @Value("${authServerClientValidationUrl}")
-  private String authServerClientValidationUrl;
-
-  @Value("${clientId}")
-  private String clientId;
-
-  @Value("${secretKey}")
-  private String secretKey;
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
@@ -123,6 +105,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${cloud.institution.bucket}")
   private String institutionBucketName;
 
-  @Value("${auth.server.deactivateurl}")
-  private String authServerDeactivateUrl;
+  @Value("${org.name}")
+  private String orgName;
 }
