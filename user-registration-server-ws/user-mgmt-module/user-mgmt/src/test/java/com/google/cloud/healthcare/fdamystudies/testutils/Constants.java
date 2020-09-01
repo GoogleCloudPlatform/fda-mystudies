@@ -30,7 +30,7 @@ public final class Constants {
   public static final String USER_ID_HEADER = "userId";
   public static final String VALID_USER_ID = "kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg";
 
-  public static final String INVALID_USER_ID = "invalid userId";
+  public static final String INVALID_USER_ID = "5bef76a5-8361-43a2-9634-c991e2eeecda";
   public static final String EMAIL_ID = "abc@gmail.com";
   public static final String PASSWORD = "Kantharaj#1123";
   public static final String SUCCESS = "success";
@@ -49,7 +49,7 @@ public final class Constants {
   public static final String SUBJECT = "How can I recommend this app to institutions?";
   public static final String BODY = "Wanted to know if other organizations can partner";
   public static final String FIRST_NAME = "fName";
-  public static final String CODE = "123code";
+  public static final String CODE = "1";
   public static final String INVALID_CODE = "12";
   public static final String INVALID_INPUT = "Invalid input.";
   public static final String EMAIL_NOT_EXIST = "Email Doesn't Exists";
@@ -65,4 +65,5 @@ public final class Constants {
 
   public static final String NEW_APP_ID_VALUE = "app";
   public static final String NEW_STUDY_ID = "study";
+  public static final String VALID_CODE = "123code";
 }

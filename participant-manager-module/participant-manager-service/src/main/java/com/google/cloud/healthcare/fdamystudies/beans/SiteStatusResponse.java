@@ -13,15 +13,15 @@ public class SiteStatusResponse extends BaseResponse {
 
   private String siteId;
 
-  private Integer status;
+  private Integer siteStatus;
 
   public SiteStatusResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public SiteStatusResponse(String siteId, Integer status, MessageCode messageCode) {
+  public SiteStatusResponse(String siteId, Integer siteStatus, MessageCode messageCode) {
     super(messageCode);
-    this.status = status;
+    this.siteStatus = siteStatus;
     this.siteId = siteId;
   }
 }

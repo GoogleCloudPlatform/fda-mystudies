@@ -1350,7 +1350,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                   date: Date()
                 )
 
-                break
               case .towerOfHanoi:
 
                 // Create Stats for TowersOfHonoi
@@ -1376,7 +1375,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                   date: Date()
                 )
 
-                break
               default: break
               }
             }
