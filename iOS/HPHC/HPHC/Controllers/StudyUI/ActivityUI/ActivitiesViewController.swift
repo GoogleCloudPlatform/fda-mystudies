@@ -251,7 +251,7 @@ class ActivitiesViewController: UIViewController {
 
   func fetchActivityAnchorDateResponse() {
     guard let currentStudy = Study.currentStudy else { return }
-    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { [weak self] (status) in
+    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { [weak self] (_) in
       self?.loadActivitiesFromDatabase()
     }
   }
@@ -1350,7 +1350,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                   date: Date()
                 )
 
-                break
               case .towerOfHanoi:
 
                 // Create Stats for TowersOfHonoi
@@ -1376,7 +1375,6 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                   date: Date()
                 )
 
-                break
               default: break
               }
             }

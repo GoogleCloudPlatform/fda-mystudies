@@ -1,4 +1,6 @@
 {
-	"code": "200",
-	"message": "SUCCESS"
+  "status": 200,
+  "code": "MSG-0004",
+  "message": "User details successfully updated.",
+  "tempRegId":"fe8c9e03-636f-4eab-889f-6926a9778808"
 }
