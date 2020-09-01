@@ -10,11 +10,13 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.service.LocationService;
@@ -55,9 +57,10 @@ public class LocationController {
       HttpServletRequest request)
       throws Exception {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     LocationEntity location = LocationMapper.fromLocationRequest(locationRequest);
-    LocationEntity created = locationService.addNewLocation(location, userId);
+    LocationEntity created = locationService.addNewLocation(location, userId, auditRequest);
 
     logger.exit(String.format("locationId=%s", created.getId()));
     // TODO(675): return created instead of response
@@ -71,10 +74,12 @@ public class LocationController {
       @PathVariable String locationId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     locationRequest.setLocationId(locationId);
     locationRequest.setUserId(userId);
-    LocationDetailsResponse locationResponse = locationService.updateLocation(locationRequest);
+    LocationDetailsResponse locationResponse =
+        locationService.updateLocation(locationRequest, auditRequest);
 
     logger.exit(
         String.format(

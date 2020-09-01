@@ -1,10 +1,11 @@
 PODS:
-  - ActionSheetPicker-3.0 (2.4.2)
-  - CryptoSwift (1.3.0)
+  - ActionSheetPicker-3.0 (2.5.0)
+  - Alamofire (5.2.2)
+  - CryptoSwift (1.3.1)
   - Embassy (4.1.1)
   - EnvoyAmbassador (4.0.5):
     - Embassy (~> 4.0)
-  - IQKeyboardManagerSwift (6.5.5)
+  - IQKeyboardManagerSwift (6.5.6)
   - Mockingjay (3.0.0-alpha.1):
     - Mockingjay/Core (= 3.0.0-alpha.1)
     - Mockingjay/XCTest (= 3.0.0-alpha.1)
@@ -13,20 +14,21 @@ PODS:
   - Mockingjay/XCTest (3.0.0-alpha.1):
     - Mockingjay/Core
   - ReachabilitySwift (5.0.0)
-  - Realm (4.3.2):
-    - Realm/Headers (= 4.3.2)
-  - Realm/Headers (4.3.2)
-  - RealmSwift (4.3.2):
-    - Realm (= 4.3.2)
-  - SDWebImage (5.6.0):
-    - SDWebImage/Core (= 5.6.0)
-  - SDWebImage/Core (5.6.0)
+  - Realm (5.3.5):
+    - Realm/Headers (= 5.3.5)
+  - Realm/Headers (5.3.5)
+  - RealmSwift (5.3.5):
+    - Realm (= 5.3.5)
+  - SDWebImage (5.9.0):
+    - SDWebImage/Core (= 5.9.0)
+  - SDWebImage/Core (5.9.0)
   - SlideMenuControllerSwift (5.0.0)
   - Toast-Swift (5.0.1)
   - URITemplate (3.0.0)
 
 DEPENDENCIES:
   - ActionSheetPicker-3.0
+  - Alamofire
   - CryptoSwift
   - Embassy
   - EnvoyAmbassador
@@ -41,6 +43,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - ActionSheetPicker-3.0
+    - Alamofire
     - CryptoSwift
     - Embassy
     - EnvoyAmbassador
@@ -64,20 +67,21 @@ CHECKOUT OPTIONS:
     :git: https://github.com/AtomicSLLC/SlideMenuControllerSwift.git
 
 SPEC CHECKSUMS:
-  ActionSheetPicker-3.0: 5b62e07b00bd970509cf5ece99cb7447eae5dd0d
-  CryptoSwift: 1283821600233bdbeb96d7b389c3288c3bf77211
+  ActionSheetPicker-3.0: 6d79f6f3b98e2b21d218dd65a39f634ff37a27e5
+  Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  CryptoSwift: f12f037f6d0fcd6d48c96db0071b653de64e6c4d
   Embassy: eb36dc783ea20b792426461bbaff8c3f256e0331
   EnvoyAmbassador: 21cef10e70d003801c68ba5281948684a4e25486
-  IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
+  IQKeyboardManagerSwift: c7df9d2deb356c04522f5c4b7b6e4ce4d8ed94fe
   Mockingjay: 0f7c5aa49c7f1b95621cee3c79b557141f5a225c
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
-  Realm: 5e92902e2875dff4bb0fd02f67bb737c3d5db2bc
-  RealmSwift: 9a360fc7bae04fc2e308a34fbd899d5faa2d6b22
-  SDWebImage: 21b19f56b4226cdfe3aefe4e6848dc43ed129a86
+  Realm: 2b52fcc86fc0ed3d75a56ac0eb1e73c4f1a60e16
+  RealmSwift: a6ea2ea561039fc3833c08dec81371a9a3bb5ca6
+  SDWebImage: 62ae4a18473520c67b79e9724c31a63599cc9423
   SlideMenuControllerSwift: d740ea24105a658fe6a8c256f2bf5832fee7c047
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
   URITemplate: 58e0d47f967006c5d59888af5356c4a8ed3b197d
 
-PODFILE CHECKSUM: 2dc0b4ec9bd27956cea5255e3388f437fa61298e
+PODFILE CHECKSUM: 5bc92e93cbf163ca083bd4391f1a383ad5209b9b
 
-COCOAPODS: 1.9.2
+COCOAPODS: 1.9.3
