@@ -16,7 +16,6 @@ disabled_rules:
   - class_delegate_protocol
   - weak_delegate
   - legacy_constructor
-  - for_where
   - multiple_closures_with_trailing_closure
   - identifier_name
   - leading_whitespace
