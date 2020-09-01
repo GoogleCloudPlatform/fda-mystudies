@@ -8,8 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.INFORMED_CONSENT_PROVIDED_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVED;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.STUDY_ENROLLMENT_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.USER_ENROLLED_INTO_STUDY;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentReqBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
@@ -30,6 +37,8 @@ import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementSer
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.MockUtils;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -95,10 +104,28 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_ENROLLED_INTO_STUDY.getEventCode(), auditRequest);
+    auditEventMap.put(INFORMED_CONSENT_PROVIDED_FOR_STUDY.getEventCode(), auditRequest);
+    auditEventMap.put(SIGNED_CONSENT_DOCUMENT_SAVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        USER_ENROLLED_INTO_STUDY,
+        INFORMED_CONSENT_PROVIDED_FOR_STUDY,
+        SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_0);
+
+    // Reset Audit Event calls
+    clearAuditRequests();
+    auditEventMap.clear();
 
     // Invoke /consentDocument to get consent and verify pdf content
     String path =
@@ -111,6 +138,13 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0)));
 
+    auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    auditEventMap.put(
+        READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(2);
   }
 
@@ -126,7 +160,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.STATUS_COMPLETE,
             Constants.ENCODED_CONTENT_1_0_UPDATED);
     ConsentStatusBean consentStatus =
-        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
 
     // Invoke http api endpoint to Update study consent pdf content value
@@ -143,11 +177,29 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_ENROLLED_INTO_STUDY.getEventCode(), auditRequest);
+    auditEventMap.put(INFORMED_CONSENT_PROVIDED_FOR_STUDY.getEventCode(), auditRequest);
+    auditEventMap.put(SIGNED_CONSENT_DOCUMENT_SAVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        USER_ENROLLED_INTO_STUDY,
+        INFORMED_CONSENT_PROVIDED_FOR_STUDY,
+        SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(
         cloudStorageService, Constants.CONTENT_1_0_UPDATED);
+
+    // Reset Audit Event calls
+    clearAuditRequests();
+    auditEventMap.clear();
 
     // Invoke /consentDocument to get consent and verify pdf content
     String path =
@@ -160,6 +212,13 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
 
+    auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    auditEventMap.put(
+        READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(2);
   }
 
@@ -173,7 +232,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(
             Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
     ConsentStatusBean consentStatus =
-        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
 
     // Invoke http api endpoint to Add new study consent pdf version
@@ -190,10 +249,28 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_ENROLLED_INTO_STUDY.getEventCode(), auditRequest);
+    auditEventMap.put(INFORMED_CONSENT_PROVIDED_FOR_STUDY.getEventCode(), auditRequest);
+    auditEventMap.put(SIGNED_CONSENT_DOCUMENT_SAVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        USER_ENROLLED_INTO_STUDY,
+        INFORMED_CONSENT_PROVIDED_FOR_STUDY,
+        SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
+
+    // Reset Audit Event calls
+    clearAuditRequests();
+    auditEventMap.clear();
 
     // Invoke http api endpoint to get consent and verify pdf content
     mockMvc
@@ -206,12 +283,22 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
+    auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
 
+    auditEventMap.put(
+        READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(2);
 
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(
         cloudStorageService, Constants.CONTENT_1_0_UPDATED);
+
+    // Reset Audit Event calls
+    clearAuditRequests();
+    auditEventMap.clear();
 
     // Invoke http api endpoint to get old consent and verify pdf content
 
@@ -226,10 +313,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
 
+    auditEventMap.put(
+        READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(3);
 
     // Set mockito expectations for downloading content from cloudStorage
     MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
+
+    // Reset Audit Event calls
+    clearAuditRequests();
+    auditEventMap.clear();
 
     // Invoke http api endpoint to get content without mentioning version
     mockMvc
@@ -242,6 +337,10 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
 
+    auditEventMap.put(
+        READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(4);
   }
 
@@ -440,7 +539,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     // Invoke http api endpoint to Add new study consent pdf version
     consent = new ConsentReqBean(Constants.VERSION_1_3, Constants.STATUS_COMPLETE, "");
-    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+    consentRequest =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     mockMvc
@@ -473,7 +573,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         new ConsentReqBean(
             Constants.VERSION_VERY_LONG, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
     ConsentStatusBean consentStatus =
-        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, null);
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, true, consent, Constants.SHARING_VALUE);
     String requestJson = getObjectMapper().writeValueAsString(consentStatus);
     mockMvc
         .perform(
@@ -484,6 +584,41 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk());
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_ENROLLMENT_FAILED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_ENROLLMENT_FAILED);
+  }
+
+  @Test
+  public void shouldReturnReadOperationFailedForConsent() throws Exception {
+
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    TestUtils.addContentTypeAcceptHeaders(headers);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                .headers(headers)
+                .contextPath(getContextPath())
+                .param("studyId", Constants.INVALID_STUDY_ID)
+                .param("consentVersion", Constants.VERSION_1_0))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(Constants.INVALID_STUDY_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(
+        READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest();
   }
 }

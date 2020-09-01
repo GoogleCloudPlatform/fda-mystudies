@@ -8,14 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.MonitoredResource;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.logging.*;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import java.util.Collections;
+import java.util.Map;
+
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 
 @Service
 @ConditionalOnProperty(
@@ -26,15 +29,27 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
 
   private XLogger logger = XLoggerFactory.getXLogger(AuditEventServiceImpl.class.getName());
 
+  private static final String AUDIT_LOG_NAME = "application-audit-log";
+
   @Override
   public void postAuditLogEvent(AuditLogEventRequest auditRequest) {
     logger.entry(
         String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
 
-    JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
+    Logging logging = LoggingOptions.getDefaultInstance().getService();
 
-    // TODO (#703) integration with GCP stackdriver. Please remove the requestBody from below logger
-    // statement during stackdriver integration as it may contain PII information.
-    logger.exit(String.format("audit request=%s", requestBody));
+    // The data to write to the log
+    Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
+
+    LogEntry entry = LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
+            .setTimestamp(auditRequest.getOccured().getTime())
+            .setSeverity(Severity.INFO)
+            .setLogName(AUDIT_LOG_NAME)
+            .setResource(MonitoredResource.newBuilder("global").build())
+            .build();
+
+    // Writes the log entry asynchronously
+    logging.write(Collections.singleton(entry));
+    logger.exit(String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }
 }

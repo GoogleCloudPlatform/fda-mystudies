@@ -25,8 +25,8 @@
 
 #include <realm/util/buffer.hpp>
 #include <realm/impl/cont_transact_hist.hpp>
+#include <realm/db.hpp>
 #include <realm/impl/transact_log.hpp>
-#include <realm/group_shared.hpp>
 #include <realm/chunked_binary.hpp>
 #include <realm/sync/instructions.hpp>
 #include <realm/sync/protocol.hpp>
