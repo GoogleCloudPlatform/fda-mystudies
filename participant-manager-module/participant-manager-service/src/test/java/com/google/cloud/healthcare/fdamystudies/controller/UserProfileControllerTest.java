@@ -464,6 +464,25 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnInvalidUserStatusError() throws Exception {
+    // Step 2: Call the API and expect USER_NOT_FOUND error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    UserStatusRequest statusRequest = new UserStatusRequest();
+    statusRequest.setStatus(null);
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(), IdGenerator.id())
+                .content(asJsonString(statusRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isBadRequest());
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnBadRequestForDeactivateUser() throws Exception {
     // Step 1: set invalid urAdminAuthId
     HttpHeaders headers = testDataHelper.newCommonHeaders();

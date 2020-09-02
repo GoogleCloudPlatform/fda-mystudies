@@ -24,6 +24,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserProfileMapper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -205,7 +206,15 @@ public class UserProfileServiceImpl implements UserProfileService {
       return new UserAccountStatusResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
     }
 
-    updateUserAccountStatusInAuthServer(userRegAdmin.getUrAdminAuthId(), statusRequest.getStatus());
+    UserStatus userStatus = UserStatus.fromValue(statusRequest.getStatus());
+    if (userStatus == null) {
+      throw new ErrorCodeException(ErrorCode.INVALID_USER_STATUS);
+    }
+
+    if (UserStatus.ACTIVE == userStatus || UserStatus.DEACTIVATED == userStatus) {
+      updateUserAccountStatusInAuthServer(
+          userRegAdmin.getUrAdminAuthId(), statusRequest.getStatus());
+    }
 
     userRegAdmin.setStatus(statusRequest.getStatus());
     userRegAdminRepository.saveAndFlush(userRegAdmin);
