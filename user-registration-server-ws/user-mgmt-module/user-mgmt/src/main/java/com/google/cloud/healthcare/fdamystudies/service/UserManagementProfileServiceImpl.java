@@ -31,20 +31,23 @@ import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +70,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
+  @Autowired private AppRepository appRepository;
+
   private static final Logger logger =
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
 
@@ -74,7 +79,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   public UserProfileRespBean getParticipantInfoDetails(
       String userId, Integer appInfoId, Integer orgInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
-    UserDetailsBO userDetailsBO = null;
+    UserDetailsEntity userDetailsBO = null;
     UserProfileRespBean userProfileRespBean = null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
@@ -103,8 +108,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   public ErrorBean updateUserProfile(String userId, UserRequestBean user) {
     logger.info("UserManagementProfileServiceImpl updateUserProfile() - Starts ");
     ErrorBean errorBean = null;
-    UserDetailsBO userDetailsBO = null;
-    AuthInfoBO authInfo = null;
+    UserDetailsEntity userDetailsBO = null;
+    AuthInfoEntity authInfo = null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
       if (user != null && userDetailsBO != null) {
@@ -112,7 +117,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
           if (user.getSettings().getRemoteNotifications() != null) {
             userDetailsBO.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
             try {
-              authInfo = userProfileManagementDao.getAuthInfo(userDetailsBO.getUserDetailsId());
+              authInfo = userProfileManagementDao.getAuthInfo(userDetailsBO.getId());
               if (authInfo != null) {
                 authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
 
@@ -133,7 +138,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
                   authInfo.setDeviceToken(user.getInfo().getDeviceToken());
                 }
 
-                authInfo.setModifiedOn(new Date());
+                authInfo.setModified(Timestamp.from(Instant.now()));
               }
             } catch (Exception e) {
               logger.error("UserManagementProfileServiceImpl - updateUserProfile() - Error", e);
@@ -169,13 +174,16 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public UserDetailsBO getParticipantDetailsByEmail(
-      String email, Integer appInfoId, Integer orgInfoId) {
+  public UserDetailsEntity getParticipantDetailsByEmail(
+      String email, String appInfoId, String orgInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
-    UserDetailsBO userDetailsBO = null;
+    UserDetailsEntity userDetailsBO = null;
     try {
-      userDetailsBO =
-          userProfileManagementDao.getParticipantDetailsByEmail(email, appInfoId, orgInfoId);
+      Optional<AppEntity> optApp = appRepository.findByCustomId(appInfoId);
+      if (optApp.isPresent()) {
+        userDetailsBO =
+            userProfileManagementDao.getParticipantDetailsByEmail(email, optApp.get(), orgInfoId);
+      }
     } catch (Exception e) {
       logger.error("UserManagementProfileServiceImpl - getParticipantDetailsByEmail() - Error", e);
     }
@@ -185,9 +193,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public LoginAttemptsBO getLoginAttempts(String email) {
+  public LoginAttemptsEntity getLoginAttempts(String email) {
     logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Starts ");
-    LoginAttemptsBO loginAttempts = null;
+    LoginAttemptsEntity loginAttempts = null;
     try {
       loginAttempts = userProfileManagementDao.getLoginAttempts(email);
     } catch (Exception e) {
@@ -211,9 +219,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public UserDetailsBO getParticipantDetails(String id) {
+  public UserDetailsEntity getParticipantDetails(String id) {
     logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Starts");
-    UserDetailsBO userDetailsBO = null;
+    UserDetailsEntity userDetailsBO = null;
     try {
       userDetailsBO = userProfileManagementDao.getParticipantDetails(id);
     } catch (Exception e) {
@@ -225,9 +233,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public UserDetailsBO saveParticipant(UserDetailsBO participant) {
+  public UserDetailsEntity saveParticipant(UserDetailsEntity participant) {
     logger.info("UserManagementProfileServiceImpl - saveParticipant() - Starts");
-    UserDetailsBO userDetailsBO = null;
+    UserDetailsEntity userDetailsBO = null;
 
     try {
       userDetailsBO = userProfileManagementDao.saveParticipant(participant);
@@ -244,7 +252,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       String userId, DeactivateAcctBean deactivateAcctBean, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    Integer userDetailsId = 0;
+    String userDetailsId = String.valueOf(0);
     boolean returnVal = false;
     WithdrawFromStudyBean studyBean = null;
     WithdrawFromStudyRespFromServer resp = null;
@@ -335,7 +343,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   public int resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId) {
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");
-    AppInfoDetailsBO appPropertiesDetails = null;
+    AppEntity appPropertiesDetails = null;
     String dynamicContent = "";
     String content = "";
     Map<String, String> emailMap = new HashMap<String, String>();

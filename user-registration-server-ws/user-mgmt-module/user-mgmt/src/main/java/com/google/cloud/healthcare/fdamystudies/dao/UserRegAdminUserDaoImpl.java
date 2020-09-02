@@ -9,8 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminUserRepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserRegAdminUser;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,12 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
 
   private static final Logger logger = LoggerFactory.getLogger(UserRegAdminUserDaoImpl.class);
 
-  @Autowired private UserRegAdminUserRepository adminUserRepository;
+  @Autowired private UserRegAdminRepository adminUserRepository;
 
   @Override
-  public UserRegAdminUser save(UserRegAdminUser adminUser) throws SystemException {
+  public UserRegAdminEntity save(UserRegAdminEntity adminUser) throws SystemException {
     logger.info("UserRegAdminUserDaoImpl save() - starts");
-    UserRegAdminUser userRegAdminUser = null;
+    UserRegAdminEntity userRegAdminUser = null;
     if (adminUser != null) {
       try {
         userRegAdminUser = adminUserRepository.save(adminUser);

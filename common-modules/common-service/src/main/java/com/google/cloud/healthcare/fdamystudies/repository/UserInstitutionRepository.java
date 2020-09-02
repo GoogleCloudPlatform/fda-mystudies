@@ -8,14 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserInstitution;
+import com.google.cloud.healthcare.fdamystudies.model.UserInstitutionEntity;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional
-public interface UserInstitutionRepository extends JpaRepository<UserInstitution, Long> {
-  Optional<UserInstitution> findByUserUserId(String userId);
+public interface UserInstitutionRepository extends JpaRepository<UserInstitutionEntity, String> {
+
+  @Query("SELECT ud FROM UserInstitutionEntity ud WHERE ud.id = :userId")
+  Optional<UserInstitutionEntity> findByUserUserId(String userId);
 }

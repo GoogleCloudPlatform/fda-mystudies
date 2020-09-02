@@ -9,10 +9,11 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
@@ -38,10 +39,10 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   @Transactional
-  public UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException {
     logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - starts");
     try {
-      UserDetailsBO userDetailsBO = null;
+      UserDetailsEntity userDetailsBO = null;
       if (userId != null) {
         userDetailsBO = repository.findByUserId(userId);
       }
@@ -54,10 +55,10 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   }
 
   @Override
-  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException {
+  public UserDetailsEntity saveUser(UserDetailsEntity userDetailsBO) throws SystemException {
     logger.info("FdaEaUserDetailsDaoImpl saveUser() - starts");
     try {
-      UserDetailsBO savedUserDetails = null;
+      UserDetailsEntity savedUserDetails = null;
       if (userDetailsBO != null) {
         savedUserDetails = repository.save(userDetailsBO);
       }
@@ -70,10 +71,10 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   }
 
   @Override
-  public UserDetailsBO loadEmailCodeByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadEmailCodeByUserId(String userId) throws SystemException {
     logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() - starts");
     try {
-      UserDetailsBO dbResponse = null;
+      UserDetailsEntity dbResponse = null;
       if (userId != null) {
         dbResponse = repository.findByUserId(userId);
         logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
@@ -90,7 +91,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   @Transactional
-  public boolean updateStatus(UserDetailsBO participantDetails) {
+  public boolean updateStatus(UserDetailsEntity participantDetails) {
 
     logger.info("FdaEaUserDetailsDaoImpl updateStatus() - starts");
     if (participantDetails == null) {
@@ -102,7 +103,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   public boolean saveAllRecords(
-      UserDetailsBO userDetailsBO, AuthInfoBO authInfo, UserAppDetailsBO userAppDetails)
+      UserDetailsEntity userDetailsBO, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails)
       throws SystemException {
 
     logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - starts");
@@ -111,10 +112,14 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
       try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
         transaction = session.beginTransaction();
 
-        Integer userDetailsId = (Integer) session.save(userDetailsBO);
-        authInfo.setUserId(userDetailsId);
+        String userDetailsId = (String) session.save(userDetailsBO);
+
+        Optional<UserDetailsEntity> optUserDetail = repository.findById(userDetailsId);
+        if (optUserDetail.isPresent()) {
+          authInfo.setUserDetails(optUserDetail.get());
+          userAppDetails.setUserDetails(optUserDetail.get());
+        }
         session.save(authInfo);
-        userAppDetails.setUserDetailsId(userDetailsId);
         session.save(userAppDetails);
 
         transaction.commit();

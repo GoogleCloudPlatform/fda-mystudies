@@ -13,13 +13,13 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.sql.Timestamp;
+import java.time.Instant;
 import javax.transaction.Transactional;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
@@ -43,21 +43,21 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   @Override
   @Transactional
-  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException {
+  public UserDetailsEntity saveUser(UserDetailsEntity userDetailsBO) throws SystemException {
     logger.info("FdaEaUserDetailsServiceImpl saveUser() - starts");
-    UserDetailsBO daoResp = null;
+    UserDetailsEntity daoResp = null;
     try {
       if (userDetailsBO != null) {
         daoResp = userDetailsDao.saveUser(userDetailsBO);
-        AuthInfoBO authInfo = new AuthInfoBO();
-        authInfo.setAppId(daoResp.getAppInfoId());
-        authInfo.setUserId(daoResp.getUserDetailsId());
-        authInfo.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
+        AuthInfoEntity authInfo = new AuthInfoEntity();
+        authInfo.setApp(daoResp.getApp());
+        authInfo.setUserDetails(daoResp);
+        authInfo.setCreated(Timestamp.from(Instant.now()));
         authInfoService.save(authInfo);
-        UserAppDetailsBO userAppDetails = new UserAppDetailsBO();
-        userAppDetails.setAppInfoId(daoResp.getAppInfoId());
-        userAppDetails.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
-        userAppDetails.setUserDetailsId(daoResp.getUserDetailsId());
+        UserAppDetailsEntity userAppDetails = new UserAppDetailsEntity();
+        userAppDetails.setApp(daoResp.getApp());
+        userAppDetails.setCreated(Timestamp.from(Instant.now()));
+        userAppDetails.setUserDetails(daoResp);
         userAppDetailsService.save(userAppDetails);
       }
       logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
@@ -69,10 +69,10 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-  public UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException {
     // call dao layer to get the user details using userId
     logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - starts");
-    UserDetailsBO daoResp = null;
+    UserDetailsEntity daoResp = null;
     if (userId != null) {
       daoResp = userDetailsDao.loadUserDetailsByUserId(userId);
     }
@@ -81,14 +81,14 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-  public boolean verifyCode(String code, UserDetailsBO participantDetails) {
+  public boolean verifyCode(String code, UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl verifyCode() - starts");
     boolean result = code == null || participantDetails == null;
     if (result) {
       throw new IllegalArgumentException();
     }
     if (code.equals(participantDetails.getEmailCode())
-        && LocalDateTime.now().isBefore(participantDetails.getCodeExpireDate())) {
+        && Timestamp.from(Instant.now()).before(participantDetails.getCodeExpireDate())) {
       return true;
     } else {
       logger.info("FdaEaUserDetailsServiceImpl verifyCode() - ends");
@@ -97,10 +97,9 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-  public boolean updateStatus(UserDetailsBO participantDetails) {
+  public boolean updateStatus(UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
-    UserDetailsBO userDetailsBO = SerializationUtils.clone(participantDetails);
-    userDetailsBO.setUserDetailsId(participantDetails.getUserDetailsId());
+    UserDetailsEntity userDetailsBO = SerializationUtils.clone(participantDetails);
     userDetailsBO.setEmailCode(null);
     userDetailsBO.setCodeExpireDate(null);
     userDetailsBO.setStatus(AppConstants.EMAILID_VERIFIED_STATUS);

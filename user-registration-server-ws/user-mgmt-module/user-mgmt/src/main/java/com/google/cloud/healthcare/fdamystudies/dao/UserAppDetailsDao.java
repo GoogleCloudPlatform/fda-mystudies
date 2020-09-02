@@ -9,9 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 
 public interface UserAppDetailsDao {
 
-  UserAppDetailsBO save(UserAppDetailsBO userAppDetails) throws SystemException;
+  UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) throws SystemException;
 }

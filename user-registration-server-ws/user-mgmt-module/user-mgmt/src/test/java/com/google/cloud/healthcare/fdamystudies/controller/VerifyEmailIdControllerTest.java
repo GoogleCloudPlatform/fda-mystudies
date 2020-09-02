@@ -30,12 +30,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailIdVerificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDaoImpl;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
@@ -177,14 +177,14 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.verified").value(Boolean.TRUE));
 
     // get list of userDetails by emailId
-    List<UserDetailsBO> userDetailsList = repository.findByEmail(Constants.VERIFY_CODE_EMAIL);
-    UserDetailsBO userDetailsBO =
+    List<UserDetailsEntity> userDetailsList = repository.findByEmail(Constants.VERIFY_CODE_EMAIL);
+    UserDetailsEntity userDetailsBO =
         userDetailsList
             .stream()
             .filter(
                 user -> {
-                  AppInfoDetailsBO appDetail =
-                      userProfileDao.getAppPropertiesDetailsByAppId(user.getAppInfoId());
+                  AppEntity appDetail =
+                      userProfileDao.getAppPropertiesDetailsByAppId(user.getApp().getId());
                   return StringUtils.equals(user.getEmail(), Constants.VERIFY_CODE_EMAIL)
                       && StringUtils.equals(appDetail.getAppId(), Constants.APP_ID_VALUE);
                 })

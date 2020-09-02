@@ -30,7 +30,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,7 +47,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @Setter
 @Getter
 @ToString
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(
     name = "user_details",
     uniqueConstraints = {
@@ -116,6 +122,9 @@ public class UserDetailsEntity implements Serializable {
   @ToString.Exclude
   @Column(name = "email_code", length = XS_LENGTH)
   private String emailCode;
+
+  @Column(name = "_ts")
+  private Timestamp _ts;
 
   @ToString.Exclude
   @Column(name = "user_id", length = SMALL_LENGTH)

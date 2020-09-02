@@ -29,7 +29,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +44,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(
     name = "study_info",
