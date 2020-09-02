@@ -18,7 +18,7 @@ import lombok.ToString;
 public class EnrollmentResponseBean {
 
   private String appToken;
-  private Integer siteId;
+  private String siteId;
   private String hashedToken;
   private String participantId;
   private Integer code;

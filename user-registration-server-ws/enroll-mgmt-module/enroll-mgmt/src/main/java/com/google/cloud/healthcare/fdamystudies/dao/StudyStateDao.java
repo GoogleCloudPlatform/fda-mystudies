@@ -8,17 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import java.util.List;
 
 public interface StudyStateDao {
 
-  public List<ParticipantStudiesBO> getParticipantStudiesList(UserDetailsBO user);
+  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user);
 
-  public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList);
+  public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList);
 
-  public String getEnrollTokenForParticipant(Integer participantRegistryId);
+  public String getEnrollTokenForParticipant(String participantRegistryId);
 
   public String withdrawFromStudy(String participantId, String studyId, boolean delete);
 }

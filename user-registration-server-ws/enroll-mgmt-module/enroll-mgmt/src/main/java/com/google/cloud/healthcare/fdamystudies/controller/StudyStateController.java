@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.USER_ID;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -17,12 +23,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -45,12 +51,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
-import static com.google.cloud.healthcare.fdamystudies.util.AppConstants.USER_ID;
 
 @RestController
 public class StudyStateController {
@@ -79,9 +79,9 @@ public class StudyStateController {
       if (studyStateReqBean != null && userId != null && !StringUtils.isEmpty(userId)) {
         if (studyStateReqBean.getStudies() != null && !studyStateReqBean.getStudies().isEmpty()) {
           List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
-          UserDetailsBO user = commonService.getUserInfoDetails(userId);
+          UserDetailsEntity user = commonService.getUserInfoDetails(userId);
           if (user != null) {
-            List<ParticipantStudiesBO> existParticipantStudies =
+            List<ParticipantStudyEntity> existParticipantStudies =
                 studyStateService.getParticipantStudiesList(user);
             studyStateRespBean =
                 studyStateService.saveParticipantStudies(

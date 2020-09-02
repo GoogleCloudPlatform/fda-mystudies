@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 public class ParticipantInfoRespBean {
 
-  private String sharing;
+  private Boolean sharing;
   private String enrollment;
   private String withdrawal;
   private String message;

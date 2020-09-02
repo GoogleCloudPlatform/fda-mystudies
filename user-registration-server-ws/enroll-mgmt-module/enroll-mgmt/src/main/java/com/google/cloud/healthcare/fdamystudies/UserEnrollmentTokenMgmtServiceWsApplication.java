@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan("com.google.cloud.healthcare.fdamystudies.enroll.model")
+@EntityScan("com.google.cloud.healthcare.fdamystudies.model")
 public class UserEnrollmentTokenMgmtServiceWsApplication {
 
   public static void main(String[] args) {

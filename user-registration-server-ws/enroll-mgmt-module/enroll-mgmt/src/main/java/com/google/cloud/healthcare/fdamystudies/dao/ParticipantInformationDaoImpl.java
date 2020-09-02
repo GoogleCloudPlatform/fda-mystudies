@@ -9,8 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -32,24 +32,24 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
   @Autowired private EntityManagerFactory entityManagerFactory;
 
   @Override
-  public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, Integer studyId) {
+  public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
     logger.info("ParticipantInformationDaoImpl getParticipantDetails() - starts ");
     CriteriaBuilder criteriaBuilder = null;
 
-    CriteriaQuery<ParticipantStudiesBO> participantBoCriteria = null;
-    Root<ParticipantStudiesBO> participantBoRoot = null;
+    CriteriaQuery<ParticipantStudyEntity> participantBoCriteria = null;
+    Root<ParticipantStudyEntity> participantBoRoot = null;
     Predicate[] predicates = new Predicate[2];
-    List<ParticipantStudiesBO> participantBoList = null;
-    ParticipantStudiesBO participantBo = null;
+    List<ParticipantStudyEntity> participantBoList = null;
+    ParticipantStudyEntity participantBo = null;
     ParticipantInfoRespBean participantRespBean = null;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      participantBoCriteria = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
-      participantBoRoot = participantBoCriteria.from(ParticipantStudiesBO.class);
-      StudyInfoBO studyInfo = session.get(StudyInfoBO.class, studyId);
+      participantBoCriteria = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
+      participantBoRoot = participantBoCriteria.from(ParticipantStudyEntity.class);
+      StudyEntity studyInfo = session.get(StudyEntity.class, studyId);
       predicates[0] = criteriaBuilder.equal(participantBoRoot.get("participantId"), particpinatId);
-      predicates[1] = criteriaBuilder.equal(participantBoRoot.get("studyInfo"), studyInfo);
+      predicates[1] = criteriaBuilder.equal(participantBoRoot.get("study"), studyInfo);
       participantBoCriteria.select(participantBoRoot).where(predicates);
       participantBoList = session.createQuery(participantBoCriteria).getResultList();
       if (!participantBoList.isEmpty()) {

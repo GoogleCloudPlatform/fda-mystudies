@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +24,9 @@ public class CommonServiceImpl implements CommonService {
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
-  public UserDetailsBO getUserInfoDetails(String userId) {
+  public UserDetailsEntity getUserInfoDetails(String userId) {
     logger.info("CommonServiceImpl getUserInfoDetails() - Starts ");
-    UserDetailsBO userDetailsBO = null;
+    UserDetailsEntity userDetailsBO = null;
     try {
       if (!StringUtils.isEmpty(userId)) {
         userDetailsBO = commonDao.getUserInfoDetails(userId);

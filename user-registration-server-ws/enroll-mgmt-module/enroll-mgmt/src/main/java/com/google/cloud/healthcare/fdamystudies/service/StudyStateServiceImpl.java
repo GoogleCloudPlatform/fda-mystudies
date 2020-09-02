@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -18,16 +21,18 @@ import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,9 +44,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
 
 @Service
 public class StudyStateServiceImpl implements StudyStateService {
@@ -63,9 +65,9 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   @Override
-  public List<ParticipantStudiesBO> getParticipantStudiesList(UserDetailsBO user) {
+  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
-    List<ParticipantStudiesBO> participantStudiesList = null;
+    List<ParticipantStudyEntity> participantStudiesList = null;
     try {
       participantStudiesList = studyStateDao.getParticipantStudiesList(user);
     } catch (Exception e) {
@@ -78,17 +80,18 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Override
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
-      List<ParticipantStudiesBO> existParticipantStudies,
+      List<ParticipantStudyEntity> existParticipantStudies,
       String userId,
       AuditLogEventRequest auditRequest) {
     logger.info("StudyStateServiceImpl saveParticipantStudies() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     boolean isExists = false;
-    StudyInfoBO studyInfo = null;
-    List<ParticipantStudiesBO> addParticipantStudiesList = new ArrayList<ParticipantStudiesBO>();
+    StudyEntity studyInfo = null;
+    List<ParticipantStudyEntity> addParticipantStudiesList =
+        new ArrayList<ParticipantStudyEntity>();
     List<String> customStudyIdList = new LinkedList<>();
-    ParticipantStudiesBO participantStudyBo = new ParticipantStudiesBO();
+    ParticipantStudyEntity participantStudyBo = new ParticipantStudyEntity();
 
     Map<String, String> placeHolder = new HashMap<>();
     auditRequest.setUserId(userId);
@@ -100,15 +103,15 @@ public class StudyStateServiceImpl implements StudyStateService {
         auditRequest.setParticipantId(studiesBean.getParticipantId());
         studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
         if (existParticipantStudies != null && !existParticipantStudies.isEmpty()) {
-          for (ParticipantStudiesBO participantStudies : existParticipantStudies) {
+          for (ParticipantStudyEntity participantStudies : existParticipantStudies) {
             if (studyInfo != null) {
-              if (studyInfo.getId().equals(participantStudies.getStudyInfo().getId())) {
+              if (studyInfo.getId().equals(participantStudies.getStudy().getId())) {
                 isExists = true;
                 if (participantStudies.getStatus() != null
                     && participantStudies
                         .getStatus()
                         .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue())) {
-                  participantStudies.setEnrolledDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+                  participantStudies.setEnrolledDate(Timestamp.from(Instant.now()));
                 }
                 if (studiesBean.getStatus() != null
                     && !StringUtils.isEmpty(studiesBean.getStatus())) {
@@ -117,8 +120,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                   if (studiesBean
                       .getStatus()
                       .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
-                    participantStudies.setEnrolledDate(
-                        MyStudiesUserRegUtil.getCurrentUtilDateTime());
+                    participantStudies.setEnrolledDate(Timestamp.from(Instant.now()));
                   }
                 }
                 if (studiesBean.getBookmarked() != null) {
@@ -144,14 +146,14 @@ public class StudyStateServiceImpl implements StudyStateService {
           if (studiesBean.getStudyId() != null
               && StringUtils.isNotEmpty(studiesBean.getStudyId())
               && studyInfo != null) {
-            participantStudyBo.setStudyInfo(studyInfo);
+            participantStudyBo.setStudy(studyInfo);
           }
           if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
             participantStudyBo.setStatus(studiesBean.getStatus());
             if (studiesBean
                 .getStatus()
                 .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
-              participantStudyBo.setEnrolledDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+              participantStudyBo.setEnrolledDate(Timestamp.from(Instant.now()));
             }
           } else {
             participantStudyBo.setStatus(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
@@ -204,13 +206,13 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     if (userId != null) {
       try {
-        UserDetailsBO userDetailsBO = userRegAdminUserDao.getRecord(userId);
+        UserDetailsEntity userDetailsBO = userRegAdminUserDao.getRecord(userId);
         if (userDetailsBO != null) {
 
-          List<ParticipantStudiesBO> participantStudiesList =
-              participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsBO.getUserDetailsId());
+          List<ParticipantStudyEntity> participantStudiesList =
+              participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsBO.getUserId());
           if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
-            for (ParticipantStudiesBO participantStudiesBO : participantStudiesList) {
+            for (ParticipantStudyEntity participantStudiesBO : participantStudiesList) {
               StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
               if (participantStudiesBO.getParticipantRegistrySite() != null) {
                 String enrolledTokenVal =
@@ -219,8 +221,8 @@ public class StudyStateServiceImpl implements StudyStateService {
                 studyStateBean.setHashedToken(
                     EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
               }
-              if (participantStudiesBO.getStudyInfo() != null) {
-                studyStateBean.setStudyId(participantStudiesBO.getStudyInfo().getCustomId());
+              if (participantStudiesBO.getStudy() != null) {
+                studyStateBean.setStudyId(participantStudiesBO.getStudy().getCustomId());
               }
               studyStateBean.setStatus(participantStudiesBO.getStatus());
               if (participantStudiesBO.getParticipantId() != null) {
@@ -233,8 +235,8 @@ public class StudyStateServiceImpl implements StudyStateService {
                 studyStateBean.setEnrolledDate(
                     MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
               }
-              if (participantStudiesBO.getSiteBo() != null) {
-                studyStateBean.setSiteId(participantStudiesBO.getSiteBo().getId().toString());
+              if (participantStudiesBO.getSite() != null) {
+                studyStateBean.setSiteId(participantStudiesBO.getSite().getId().toString());
               }
               serviceResponseList.add(studyStateBean);
             }
