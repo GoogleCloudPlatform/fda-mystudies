@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.consent.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,28 +22,22 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "org_info")
-public class OrgInfo {
+@Table(name = "login_attempts")
+public class LoginAttemptsEntity implements Serializable {
+
+  private static final long serialVersionUID = 4985607753888575491L;
+
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
   private Integer id;
 
-  @Column(name = "name")
-  private String name;
+  @Column(name = "email")
+  private String email;
 
-  @Column(name = "org_id")
-  private String orgId;
+  @Column(name = "last_modified")
+  private Date lastModified;
 
-  @Column(name = "created_on")
-  private Date createdOn;
-
-  @Column(name = "created_by", columnDefinition = "INT(20) default 0")
-  private Integer createdBy;
-
-  @Column(name = "modified_by", columnDefinition = "INT(20)")
-  private Integer modifiedBy;
-
-  @Column(name = "modified_date")
-  private Date modifiedDate;
+  @Column(name = "no_of_attempts")
+  private Integer attempts;
 }

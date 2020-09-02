@@ -22,9 +22,9 @@ public class CommonServiceImpl implements CommonService {
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
-  public Integer getUserDetailsId(String userId) {
+  public String getUserDetailsId(String userId) {
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
-    Integer userDetailId = null;
+    String userDetailId = null;
     try {
       userDetailId = commonDao.getUserDetailsId(userId);
     } catch (Exception e) {

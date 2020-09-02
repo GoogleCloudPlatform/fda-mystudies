@@ -23,5 +23,5 @@ import lombok.ToString;
 @NoArgsConstructor
 public class StudyInfoBean {
 
-  private int studyInfoId;
+  private String studyInfoId;
 }

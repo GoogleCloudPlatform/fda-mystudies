@@ -21,7 +21,7 @@ import javax.persistence.Table;
 value = {
   @NamedQuery(name = "AppVersionInfo.findAll", query = "FROM AppVersionInfo"),
 })*/
-public class AppVersionInfoBO implements Serializable {
+public class AppVersionInfoEntity implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;
 

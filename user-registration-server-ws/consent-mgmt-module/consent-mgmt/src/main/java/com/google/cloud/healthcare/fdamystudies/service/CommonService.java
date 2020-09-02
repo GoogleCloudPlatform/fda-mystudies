@@ -10,5 +10,5 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 public interface CommonService {
 
-  public Integer getUserDetailsId(String userId);
+  public String getUserDetailsId(String userId);
 }

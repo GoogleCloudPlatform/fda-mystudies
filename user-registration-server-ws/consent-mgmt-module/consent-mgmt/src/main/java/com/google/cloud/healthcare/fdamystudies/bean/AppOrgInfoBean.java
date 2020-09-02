@@ -9,22 +9,22 @@
 package com.google.cloud.healthcare.fdamystudies.bean;
 
 public class AppOrgInfoBean {
-  private int appInfoId;
-  private int orgInfoId;
+  private String appInfoId;
+  private String orgInfoId;
 
-  public int getAppInfoId() {
+  public String getAppInfoId() {
     return appInfoId;
   }
 
-  public void setAppInfoId(int appInfoId) {
+  public void setAppInfoId(String appInfoId) {
     this.appInfoId = appInfoId;
   }
 
-  public int getOrgInfoId() {
+  public String getOrgInfoId() {
     return orgInfoId;
   }
 
-  public void setOrgInfoId(int orgInfoId) {
+  public void setOrgInfoId(String orgInfoId) {
     this.orgInfoId = orgInfoId;
   }
 }

@@ -15,9 +15,9 @@ import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
-import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import com.google.cloud.storage.StorageException;
 import java.io.ByteArrayOutputStream;
@@ -42,9 +42,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       LoggerFactory.getLogger(UserConsentManagementServiceImpl.class);
 
   @Override
-  public ParticipantStudiesBO getParticipantStudies(Integer studyId, String userId) {
+  public ParticipantStudyEntity getParticipantStudies(String studyId, String userId) {
     logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
-    ParticipantStudiesBO participantStudiesBO = null;
+    ParticipantStudyEntity participantStudiesBO = null;
     try {
       participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
     } catch (Exception e) {
@@ -54,7 +54,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
-  public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
+  public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
     logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     try {
@@ -67,9 +67,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
-  public StudyConsentBO getStudyConsent(String userId, Integer studyId, String consentVersion) {
+  public StudyConsentEntity getStudyConsent(String userId, String studyId, String consentVersion) {
     logger.info("UserConsentManagementServiceImpl getStudyConsent() - Started ");
-    StudyConsentBO studyConsent = null;
+    StudyConsentEntity studyConsent = null;
     try {
       studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
     } catch (Exception e) {
@@ -80,7 +80,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
-  public String saveStudyConsent(StudyConsentBO studyConsent) {
+  public String saveStudyConsent(StudyConsentEntity studyConsent) {
     logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
     String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     try {
@@ -96,11 +96,11 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
   @Override
   public ConsentStudyResponseBean getStudyConsentDetails(
-      String userId, Integer studyId, String consentVersion, AuditLogEventRequest auditRequest) {
+      String userId, String studyId, String consentVersion, AuditLogEventRequest auditRequest) {
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Started ");
-    StudyConsentBO studyConsent = null;
-    ParticipantStudiesBO participantStudiesBO = null;
+    StudyConsentEntity studyConsent = null;
+    ParticipantStudyEntity participantStudiesBO = null;
     ConsentStudyResponseBean consentStudyResponseBean = new ConsentStudyResponseBean();
     try {
 
@@ -170,9 +170,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
-  public Integer getUserDetailsId(String userId) {
+  public String getUserDetailsId(String userId) {
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
-    Integer userDetailId = null;
+    String userDetailId = null;
     try {
       userDetailId = userConsentManagementDao.getUserDetailsId(userId);
     } catch (Exception e) {
