@@ -22,8 +22,14 @@ import RealmSwift
 
 class SyncUpdate {
 
+  enum ServerType: String {
+    case response, enrollment
+  }
+
   static var sharedInstance = SyncUpdate()
   private init() {}
+
+  private var lastSyncedObject: DBDataOfflineSync?
 
   @objc func updateData(isReachable: Bool) {
     if isReachable {
@@ -43,7 +49,7 @@ class SyncUpdate {
         ascending: true
       ).first
     else { return }
-
+    lastSyncedObject = toBeSyncedData
     // Request params
     var params: [String: Any]?
 
@@ -69,18 +75,18 @@ class SyncUpdate {
     let methodString = toBeSyncedData.method
     let server = toBeSyncedData.server
 
-    if server == "registration" {
+    if server == SyncUpdate.ServerType.enrollment.rawValue {
       let methodName = methodString?.components(separatedBy: ".").first ?? ""
-      let registrationMethod = RegistrationMethods(rawValue: methodName)
-      if let method = registrationMethod?.method {
-        UserServices().syncOfflineSavedData(
+      let enrollmentMethod = EnrollmentMethods(rawValue: methodName)
+      if let method = enrollmentMethod?.method {
+        EnrollServices().syncOfflineSavedData(
           method: method,
           params: params,
           headers: headers,
           delegate: self
         )
       }
-    } else if server == "response" {
+    } else if server == SyncUpdate.ServerType.response.rawValue {
       let methodName = methodString?.components(separatedBy: "/").last ?? ""
       let registrationMethod = ResponseMethods(rawValue: methodName)
       if let method = registrationMethod?.method {
@@ -92,10 +98,15 @@ class SyncUpdate {
         )
       }
     }
+  }
 
+  private func deleteSyncedObject() {
+    guard let realm = DBHandler.getRealmObject(),
+      let syncObj = lastSyncedObject
+    else { return }
     // Delete Synced object from DB
-    try! realm.write {
-      realm.delete(toBeSyncedData)
+    try? realm.write {
+      realm.delete(syncObj)
     }
   }
 }
@@ -106,7 +117,8 @@ extension SyncUpdate: NMWebServiceDelegate {
   func startedRequest(_ manager: NetworkManager, requestName: NSString) {}
 
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    self.syncDataToServer()
+    deleteSyncedObject()
+    syncDataToServer()
   }
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {}

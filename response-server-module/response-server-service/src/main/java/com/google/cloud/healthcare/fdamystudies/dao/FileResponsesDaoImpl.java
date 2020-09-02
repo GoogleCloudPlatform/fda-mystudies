@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,12 +24,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @Repository
 @Qualifier("fileResponsesDaoImpl")

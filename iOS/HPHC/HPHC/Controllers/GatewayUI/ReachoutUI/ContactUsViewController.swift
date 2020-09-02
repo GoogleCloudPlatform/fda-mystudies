@@ -241,8 +241,9 @@ extension ContactUsViewController: UITextFieldDelegate {
 
     let tag: ContactTextFieldTags = ContactTextFieldTags(rawValue: textField.tag)!
     let finalString = textField.text! + string
-
-    if string == " " {
+    if string == " "
+      && tag != .subject
+    {
       return false
     }
 
@@ -266,15 +267,12 @@ extension ContactUsViewController: UITextFieldDelegate {
 
     case .email:
       ContactUsFields.email = textField.text!
-      break
 
     case .firstName:
       ContactUsFields.firstName = textField.text!
-      break
 
     case .subject:
       ContactUsFields.subject = textField.text!
-      break
     }
   }
 }

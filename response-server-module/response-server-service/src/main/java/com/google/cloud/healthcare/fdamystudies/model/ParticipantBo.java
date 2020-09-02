@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -16,7 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 
 @Entity
 @Table(name = "participant_info")

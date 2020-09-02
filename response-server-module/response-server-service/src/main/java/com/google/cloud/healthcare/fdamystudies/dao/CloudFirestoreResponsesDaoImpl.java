@@ -8,6 +8,21 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.FirestoreOptions;
+import com.google.cloud.firestore.Query;
+import com.google.cloud.firestore.QueryDocumentSnapshot;
+import com.google.cloud.firestore.QuerySnapshot;
+import com.google.cloud.firestore.WriteBatch;
+import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.healthcare.fdamystudies.bean.ResponseRows;
+import com.google.cloud.healthcare.fdamystudies.bean.SavedActivityResponse;
+import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import com.google.gson.Gson;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,21 +40,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Repository;
-import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.FirestoreOptions;
-import com.google.cloud.firestore.Query;
-import com.google.cloud.firestore.QueryDocumentSnapshot;
-import com.google.cloud.firestore.QuerySnapshot;
-import com.google.cloud.firestore.WriteBatch;
-import com.google.cloud.firestore.WriteResult;
-import com.google.cloud.healthcare.fdamystudies.bean.ResponseRows;
-import com.google.cloud.healthcare.fdamystudies.bean.SavedActivityResponse;
-import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
-import com.google.gson.Gson;
 
 @Repository
 @Qualifier("cloudFirestoreResponsesDaoImpl")

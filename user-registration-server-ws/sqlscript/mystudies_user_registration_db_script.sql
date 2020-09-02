@@ -16,16 +16,7 @@
 CREATE DATABASE IF NOT EXISTS `mystudies_userregistration` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `mystudies_userregistration`;
 
--- Dumping structure for table mystudies_userregistration.activity_log
-CREATE TABLE IF NOT EXISTS `activity_log` (
-  `activity_log_id` int(11) NOT NULL,
-  `activity_date_time` datetime DEFAULT NULL,
-  `actvity_name` varchar(255) DEFAULT NULL,
-  `activity_description` varchar(255) DEFAULT NULL,
-  `auth_user_id` varchar(255) DEFAULT NULL,
-  `server_client_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`activity_log_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- Data exporting was unselected.
 
@@ -44,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `app_info` (
   `from_email_id` varchar(255) DEFAULT NULL,
   `from_email_password` varchar(255) DEFAULT NULL,
   `ios_bundle_id` varchar(255) DEFAULT NULL,
-  `ios_certificate` varchar(255) DEFAULT NULL,
+  `ios_certificate` text,
   `ios_certificate_password` varchar(255) DEFAULT NULL,
   `method_handler` tinyint(1) DEFAULT NULL,
   `modified_by` int(20) DEFAULT NULL,

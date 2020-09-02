@@ -1,19 +1,27 @@
 {
 	"violations": [
 		{
+			"path": "source",
+			"message": "must not be blank"
+		},
+		{
 			"path": "description",
 			"message": "must not be blank"
 		},
 		{
-			"path": "occured",
-			"message": "must not be null"
+			"path": "platformVersion",
+			"message": "must not be blank"
 		},
 		{
-			"path": "systemIp",
-			"message": "size must be between 7 and 39"
+			"path": "userId",
+			"message": "size must be between 0 and 64"
 		},
 		{
-			"path": "applicationVersion",
+			"path": "mobilePlatform",
+			"message": "must not be blank"
+		},
+		{
+			"path": "destinationApplicationVersion",
 			"message": "must not be blank"
 		},
 		{
@@ -21,28 +29,23 @@
 			"message": "must not be blank"
 		},
 		{
-			"path": "applicationComponentName",
+			"path": "userIp",
+			"message": "size must be between 7 and 39"
+		},
+		{
+			"path": "sourceApplicationVersion",
 			"message": "must not be blank"
 		},
 		{
-			"path": "alert",
-			"message": "must not be null"
-		},
-		{
-			"path": "eventName",
+			"path": "eventCode",
 			"message": "must not be blank"
 		},
 		{
-			"path": "eventDetail",
+			"path": "destination",
 			"message": "must not be blank"
-		},
-		{
-			"path": "systemId",
-			"message": "size must be between 0 and 30"
-		},
-		{
-			"path": "userId",
-			"message": "size must be between 0 and 100"
 		}
-	]
+	],
+	"error_description": "Invalid entries found in the submitted form. Please try again.",
+	"error_type": "BAD REQUEST",
+	"error_code": "EC-400"
 }

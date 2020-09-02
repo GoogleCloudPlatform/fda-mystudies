@@ -92,6 +92,7 @@ class DBOverviewSection: Object {
   @objc dynamic var link: String?
   @objc dynamic var studyId: String!
   @objc dynamic var sectionId: String!
+  @objc dynamic var sortOrder: Int = 0
 
   override static func primaryKey() -> String? {
     return "sectionId"

@@ -1,8 +1,6 @@
 included:
   - HPHC 
 disabled_rules:
-  - force_try
-  - shorthand_operator
   - type_body_length
   - function_body_length
   - trailing_whitespace
@@ -16,15 +14,11 @@ disabled_rules:
   - opening_brace
   - redundant_string_enum_value
   - class_delegate_protocol
-  - unneeded_break_in_switch
   - weak_delegate
   - legacy_constructor
-  - for_where
   - multiple_closures_with_trailing_closure
-  - valid_ibinspectable
   - identifier_name
   - leading_whitespace
-  - unused_enumerated
   - colon
   - closure_parameter_position
   - type_name

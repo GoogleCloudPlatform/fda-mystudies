@@ -8,14 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import java.util.Optional;
-
+import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
+import java.util.List;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 
 @Repository
 @ConditionalOnProperty(
@@ -23,6 +21,11 @@ import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
     havingValue = "true",
     matchIfMissing = false)
 public interface LocationRepository extends JpaRepository<LocationEntity, String> {
-  @Query("SELECT location from LocationEntity location where location.id=:locationId")
-  public Optional<LocationEntity> findByLocationId(String locationId);
+
+  @Query(
+      value =
+          "SELECT * FROM locations WHERE status = :status AND "
+              + "id NOT IN (SELECT DISTINCT location_id FROM sites WHERE study_id = :excludeStudyId)",
+      nativeQuery = true)
+  public List<LocationEntity> findByStatusAndExcludeStudyId(Integer status, String excludeStudyId);
 }

@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.utils;
 
+import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 
 public class AppUtil {
   private static final Logger logger = LogManager.getLogger(AppUtil.class);

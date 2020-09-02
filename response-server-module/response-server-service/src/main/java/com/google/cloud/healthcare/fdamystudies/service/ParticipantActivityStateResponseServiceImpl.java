@@ -8,13 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivitiesBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityRunBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
@@ -23,6 +16,13 @@ import com.google.cloud.healthcare.fdamystudies.dao.ParticipantActivitiesDao;
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ParticipantActivityStateResponseServiceImpl

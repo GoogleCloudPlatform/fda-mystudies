@@ -54,7 +54,10 @@ class ConsentResult {
   func initWithORKTaskResult(taskResult: ORKTaskResult) {
     for stepResult in taskResult.results! {
 
-      if ((stepResult as? ORKStepResult)!.results?.count)! > 0 {
+      if let stepResultObj = stepResult as? ORKStepResult,
+        let results = stepResultObj.results,
+        results.count > 0
+      {
 
         if stepResult.identifier == kConsentSharing,
           let stepResult = stepResult as? ORKStepResult,
@@ -91,7 +94,7 @@ class ConsentResult {
                 fullPath = path + "/" + fileName
 
                 if !FileManager.default.fileExists(atPath: path) {
-                  try! FileManager.default.createDirectory(
+                  try? FileManager.default.createDirectory(
                     atPath: path,
                     withIntermediateDirectories: true,
                     attributes: nil
@@ -147,7 +150,7 @@ class ConsentResult {
             fullPath = path + "/" + fileName
 
             if !FileManager.default.fileExists(atPath: path) {
-              try! FileManager.default.createDirectory(
+              try? FileManager.default.createDirectory(
                 atPath: path,
                 withIntermediateDirectories: true,
                 attributes: nil

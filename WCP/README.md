@@ -5,23 +5,23 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-1. Java 8
+1. Java 8 or later
 
-    Tomcat requires Java to be installed on the server so that any Java web application code can be executed. Below URL covers basic installation of the Java Development Kit package.
+    Tomcat 9 requires Java 8 or later to be installed on the server so that any Java web application code can be executed. Below URL covers basic installation of the Java Development Kit package.
         
-    [Java Install](https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04#step-1-install-java)
+    [Java Install](https://www.oracle.com/ca-en/java/technologies/javase-downloads.html)
 
-2. Tomcat 8
+2. Tomcat 9
 
     Tomcat is an open source implementation of the Java Servlet and Java Server Pages technologies, released by the Apache Software Foundation. Below URL covers the basic installation and some configuration of Tomcat 8 on your Ubuntu server.
     
-    [Tomcat Install](https://www.digitalocean.com/community/tutorials/how-to-install-apache-tomcat-8-on-ubuntu-16-04#step-3-install-tomcat)
+    [Tomcat Install](https://tomcat.apache.org/download-90.cgi)
 
 3. MySQL 5.7
-
+ 
     Below URL covers basic installation of MySQL server and securing MySQL
     
-    [MySQL Install](https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-16-04#step-2-install-mysql)
+    [MySQL Install](https://dev.mysql.com/doc/mysql-installation-excerpt/5.7/en/)
 4. Maven 
 
     Maven is open source build life cycle management tool by Apache Software Foundation. This tool is required to generate server deployable build (war) from the project. Below URL covers the basic installation and some configuration of Tomcat 8 on your Ubuntu server.
@@ -31,7 +31,7 @@ These instructions will get you a copy of the project up and running on your loc
 ### Installing
 
 #### Project settings configuration
-The `messageResource.properties` file can be find at `wcp\fdahpStudyDesigner\src\main\resources\messageResource.properties` path where following configuration can be customized. 
+The `messageResource.properties` file can be find at `wcp/fdahpStudyDesigner/src/main/resources/messageResource.properties` path where following configuration can be customized. 
 
 ```properties
 max.login.attempts=3                        
@@ -52,10 +52,8 @@ password.history.count=10
 user.lock.duration.in.minutes=30            
 #User lock duration in minutes after crossed Maximum continuous fail login attempts limit.
 ```
-#### Externalizing common configuration 
-An `application.properties` file will be stored into some physical path with following properties settings.
-
-E.g. `c:/fdahphc/application.properties`
+#### Changing common configuration 
+Override these values in `WCP/fdahpStudyDesigner/src/main/resources/application_local.properties` with following properties settings
 
 ```properties
 smtp.portvalue=25               
@@ -100,20 +98,9 @@ fda.smd.questionnaire.image=http://localhost/fdaResources/questionnaire/
 
 fda.registration.root.url = https://hphci-fdama-te-ur-01.labkey.com/fdahpUserRegWS
 #https://hphci-fdama-te-ur-01.labkey.com – Should be replaced with actual URL
-
-```
-#### Changes in Tomcat configuration
-Context file path will be : <tomcat installed path>/tomcat/conf/context.xml. Add below parameters in context.xml file inside `<context>` tag.
-
-```xml
-<Parameter name="property_file_location_prop" value="C://fdahphc/" override="1"/>
-<Parameter name="property_file_name" value="application" override="1"/>
-<Parameter name="property_file_location_config" value="file:/c:/fdahphc/application.properties" override="1"/>
-<Parameter name="property_file_location_path" value="C://fdahphc/application.properties" override="1"/>
-
 ```
 ### Database script execution
-`HPHC_My_Studies_DB_Create_Script.sql` file script should be executed in mysql database.
+`WCP/sqlscript/HPHC_My_Studies_DB_Create_Script.sql` file script should be executed in mysql database.
 
 ### Build
 
@@ -124,14 +111,18 @@ mvn clean install
 This command generate a deployable war file in `target` folder named as `fdahpStudyDesigner.war`.
 
 ### Deployment
-War file deployment
-`fdahpStudyDesigner.war` file will deploy to tomcat.
-Restart the tomcat
+
+   [Detailed instructions on War file deployment](https://www.baeldung.com/tomcat-deploy-war)
+
+Easiest way is to copy `fdahpStudyDesigner.war` file to the /webapps directory of where Tomcat is installed locally. Restart the Tomcat.
+
+You can also just run `mvn tomcat7:deploy`
+
 
 ### Test application
 After complete your deployment, to verify the application 
 Hit the below URL, you should see the landing page of the application for WCP application 
-`http://localhost/fdahpStudyDesigner`
+`http://localhost:8080/fdahpStudyDesigner`
 
 
 ## Built With

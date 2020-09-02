@@ -8,6 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityMetaDataBean;
+import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
+import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
+import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
+import com.google.cloud.healthcare.fdamystudies.dao.ResponsesDao;
+import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
+import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -30,15 +39,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityMetaDataBean;
-import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
-import com.google.cloud.healthcare.fdamystudies.dao.ResponsesDao;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 
 @Service
 public class StudyMetadataServiceImpl implements StudyMetadataService {

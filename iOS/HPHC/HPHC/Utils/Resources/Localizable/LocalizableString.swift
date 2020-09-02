@@ -17,6 +17,14 @@ enum LocalizableString: String {
   case resourceNotAvailable = "This resource is currently unavailable."
   case aboutStudy = "About the Study"
   case leaveSubtitle = "This will also delete your app account."
+  case newResourceMessage = "New Resource Available"
+
+  // MARK: - Consent
+  case learnMore = "Learn more"
+
+  // MARK: - Force Upgrade
+  case blockerScreenLabelText = "Please update to the latest version of the app to continue."
+  case appStoreUpdateText = "Please go to AppStore to update to the latest version of the app."
 
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }

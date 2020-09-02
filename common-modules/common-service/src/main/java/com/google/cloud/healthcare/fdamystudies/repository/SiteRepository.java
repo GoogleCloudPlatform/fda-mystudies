@@ -8,14 +8,14 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
+import java.util.List;
 import java.util.Optional;
-
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 
 @Repository
 @ConditionalOnProperty(
@@ -26,5 +26,18 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
 
   @Query(
       "SELECT site from SiteEntity site where site.location.id = :locationId and site.study.id= :studyId")
-  public Optional<SiteEntity> findByLocationIdAndStudyId(String locationId, String studyId);
+  public List<SiteEntity> findByLocationIdAndStudyId(String locationId, String studyId);
+
+  @Query(
+      "SELECT site from SiteEntity site where site.location.id = :locationId and site.status= :status")
+  public List<SiteEntity> findByLocationIdAndStatus(String locationId, Integer status);
+
+  @Query("SELECT site from SiteEntity site where site.study.id IN (:studyIds)")
+  public List<SiteEntity> findByStudyIds(@Param("studyIds") List<String> studyIds);
+
+  @Query("SELECT site from SiteEntity site where site.study.id= :studyId")
+  public Optional<SiteEntity> findByStudyId(String studyId);
+
+  @Query("SELECT site from SiteEntity site where site.study.id= :studyId and site.study.type=:type")
+  public Optional<SiteEntity> findByStudyIdAndType(String studyId, String type);
 }

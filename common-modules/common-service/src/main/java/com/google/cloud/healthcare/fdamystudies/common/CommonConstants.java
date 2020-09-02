@@ -20,4 +20,58 @@ public final class CommonConstants {
   public static final Integer ACTIVE_STATUS = 1;
 
   public static final Integer INACTIVE_STATUS = 0;
+
+  public static final String NOT_APPLICABLE = "NA";
+
+  public static final String OPEN_STUDY = "OPEN";
+
+  public static final String CLOSE_STUDY = "CLOSE";
+
+  public static final Integer READ_PERMISSION = 1;
+
+  public static final Integer READ_AND_EDIT_PERMISSION = 2;
+
+  public static final int VIEW_VALUE = 0;
+
+  public static final int EDIT_VALUE = 1;
+
+  public static final String ENROLLED_STATUS = "Enrolled";
+
+  public static final String YET_TO_ENROLL = "Yet to Enroll";
+
+  public static final String YET_TO_JOIN = "Yet to Join";
+
+  public static final String OPEN = "Open";
+
+  public static final String STATUS_ACTIVE = "Active";
+
+  public static final boolean SELECTED = true;
+
+  public static final boolean UNSELECTED = false;
+
+  public static final String STATUS_LOG = "status=%d";
+
+  public static final String ERROR_CODE_LOG = "error code=%s";
+
+  public static final String MESSAGE_CODE_LOG = "message code=%s";
+
+  public static final String EMAIL_REGEX =
+      "^[A-Za-z0-9_+]+([\\.-]?[A-Za-z0-9_+]+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
+
+  public static final String APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8 =
+      "application/x-www-form-urlencoded;charset=UTF-8";
+
+  public static final String PASSWORD_REGEX =
+      "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\\S+$).{8,64}$";
+
+  public static final String PASSWORD_REGEX_MESSAGE =
+      "Your password does not meet the required criteria.";
+
+  public static final int EMAIL_LENGTH = 320;
+
+  public static final String DELETE = "delete";
+
+  public static final String RETAIN = "retain";
+
+  public static final double DEFAULT_PERCENTAGE = 100.00;
 }

@@ -1,29 +1,43 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 import java.util.Map;
-
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventResponse;
-import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 
 @Component
 public class ParticipantManagerAuditLogHelper {
 
-  @Autowired AuditEventService aleService;
+  private XLogger logger =
+      XLoggerFactory.getXLogger(ParticipantManagerAuditLogHelper.class.getName());
 
-  public AuditLogEventResponse logEvent(AuditLogEvent eventEnum, AuditLogEventRequest aleRequest) {
-    return aleService.postAuditLogEvent(eventEnum, aleRequest);
+  @Autowired AuditEventService auditService;
+
+  @Autowired private CommonApplicationPropertyConfig commonPropConfig;
+
+  public void logEvent(AuditLogEvent eventEnum, AuditLogEventRequest auditRequest) {
+    logEvent(eventEnum, auditRequest, null);
   }
 
-  public AuditLogEventResponse logEvent(
-      AuditLogEvent eventEnum, AuditLogEventRequest aleRequest, Map<String, String> values) {
-    values.put("user_id", aleRequest.getUserId());
-    String description =
-        PlaceholderReplacer.replaceNamedPlaceholders(eventEnum.getDescription(), values);
-    aleRequest.setDescription(description);
-    return aleService.postAuditLogEvent(eventEnum, aleRequest);
+  public void logEvent(
+      AuditLogEvent eventEnum, AuditLogEventRequest auditRequest, Map<String, String> values) {
+    logger.entry(
+        String.format("call post audit log event for eventCode=%s", eventEnum.getEventCode()));
+
+    String description = eventEnum.getDescription();
+    if (values != null) {
+      description = PlaceholderReplacer.replaceNamedPlaceholders(description, values);
+    }
+    auditRequest.setDescription(description);
+    auditRequest =
+        AuditEventMapper.fromAuditLogEventEnumAndCommonPropConfig(
+            eventEnum, commonPropConfig, auditRequest);
+    auditService.postAuditLogEvent(auditRequest);
+
+    logger.exit(String.format("%s event successfully logged", eventEnum.getEventCode()));
   }
 }

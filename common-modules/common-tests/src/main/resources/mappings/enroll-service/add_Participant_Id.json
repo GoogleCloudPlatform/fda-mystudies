@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/mystudies-response-server/participant/add"
+	},
+	"response": {
+		"status": 200,
+		"body": "i4ts7dsf50c6me154sfsdfdv",
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		}
+	}
+}

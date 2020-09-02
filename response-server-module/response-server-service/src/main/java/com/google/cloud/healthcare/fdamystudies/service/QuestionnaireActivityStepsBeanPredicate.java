@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStepsBean;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStepsBean;
 
 public class QuestionnaireActivityStepsBeanPredicate {
 
