@@ -66,4 +66,21 @@ class ActivityInstructionStep: ActivityStep {
       return nil
     }
   }
+
+  /// Creates instruction step based on ActivityStep data and returns ORKInstructionStep
+  func getCustomInstructionStep() -> CustomInstructionStep? {
+
+    if let key = key,
+      let title = title,
+      let detailedText = text
+    {
+      let instructionStep = CustomInstructionStep(identifier: key)
+      instructionStep.title = NSLocalizedString(title, comment: "")
+      instructionStep.detailText = detailedText
+      return instructionStep
+    } else {
+      return nil
+    }
+  }
+
 }
