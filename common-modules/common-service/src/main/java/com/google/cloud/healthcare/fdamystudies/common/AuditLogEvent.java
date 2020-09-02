@@ -12,8 +12,8 @@ import java.util.Optional;
 
 public interface AuditLogEvent {
 
-  default PlatformComponent getSource() {
-    return null;
+  default Optional<PlatformComponent> getSource() {
+    return Optional.empty();
   }
 
   default PlatformComponent getDestination() {

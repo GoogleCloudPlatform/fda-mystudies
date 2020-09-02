@@ -16,7 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudies
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.exceptions.TransactionRollback;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import java.util.List;
@@ -28,7 +27,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +108,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
   public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
     logger.info("UserConsentManagementDaoImpl saveParticipantStudies() - Started ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaUpdate<ParticipantStudiesBO> criteriaUpdate = null;
     Root<ParticipantStudiesBO> participantStudiesBoRoot = null;
@@ -118,9 +115,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     int isUpdated = 0;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-
-      transaction = session.beginTransaction();
-
       for (ParticipantStudiesBO participantStudies : participantStudiesList) {
         if (participantStudies.getParticipantStudyInfoId() != null) {
           criteriaBuilder = session.getCriteriaBuilder();
@@ -144,11 +138,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       if ((isUpdated > 0) || (isSaved > 0)) {
         message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
       }
-      transaction.commit();
-    } catch (Exception e) {
-      logger.error("UserConsentManagementDaoImpl saveParticipantStudies() - error ", e);
-      TransactionRollback.rollback(transaction);
-      throw e;
     }
     logger.info("UserConsentManagementDaoImpl saveParticipantStudies() - Ends ");
     return message;
@@ -219,7 +208,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
   public String saveStudyConsent(StudyConsentBO studyConsent) {
     logger.info("UserConsentManagementDaoImpl saveStudyConsent() - Started ");
     String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaUpdate<StudyConsentBO> criteriaUpdate = null;
     Root<StudyConsentBO> studyConsentBoRoot = null;
@@ -227,7 +215,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     Integer isSaved = 0;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      transaction = session.beginTransaction();
+
       if (null != studyConsent) {
         if (studyConsent.getId() != null) {
           criteriaBuilder = session.getCriteriaBuilder();
@@ -249,10 +237,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       if ((isUpdated > 0) || (isSaved > 0)) {
         addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
       }
-      transaction.commit();
-    } catch (Exception e) {
-      logger.error("UserConsentManagementDaoImpl saveStudyConsent() - error ", e);
-      TransactionRollback.rollback(transaction);
     }
     logger.info("UserConsentManagementDaoImpl saveStudyConsent() - Ends ");
     return addOrUpdateConsentMessage;
@@ -320,6 +304,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     List<StudyInfoBO> studyInfoList = null;
     StudyInfoBO studyInfoBO = null;
     Integer studyInfoId = 0;
+
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       if (!StringUtils.isEmpty(customStudyId)) {
@@ -352,6 +337,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     Predicate[] userDetailspredicates = new Predicate[1];
     UserDetailsBO userDetailsBO = null;
     Integer userDetailsId = 0;
+
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       if (!StringUtils.isEmpty(userId)) {

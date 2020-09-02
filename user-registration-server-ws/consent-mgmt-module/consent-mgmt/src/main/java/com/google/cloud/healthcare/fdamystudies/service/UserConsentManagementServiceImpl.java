@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
-import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
@@ -21,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserConsentManagementServiceImpl implements UserConsentManagementService {
@@ -68,5 +68,28 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Ends ");
     return consentStudyResponseBean;
+  }
+
+  @Override
+  @Transactional
+  public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
+    logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
+    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+
+    message = userConsentManagementDao.saveParticipantStudies(participantStudiesList);
+
+    return message;
+  }
+
+  @Override
+  @Transactional
+  public String saveStudyConsent(StudyConsentBO studyConsent) {
+    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
+    String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+
+    addOrUpdateConsentMessage = userConsentManagementDao.saveStudyConsent(studyConsent);
+
+    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Ends ");
+    return addOrUpdateConsentMessage;
   }
 }

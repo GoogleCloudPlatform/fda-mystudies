@@ -73,8 +73,7 @@ public class UserConsentManagementController {
 
   @Autowired private ConsentAuditHelper consentAuditHelper;
 
-  @Autowired
-  private UserConsentManagementDao userConsentManagementDao;
+  @Autowired private UserConsentManagementDao userConsentManagementDao;
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementController.class);
@@ -113,8 +112,7 @@ public class UserConsentManagementController {
 
         studyInfoBean = userConsentManagementDao.getStudyInfoId(consentStatusBean.getStudyId());
         ParticipantStudiesBO participantStudies =
-            userConsentManagementDao.getParticipantStudies(
-                studyInfoBean.getStudyInfoId(), userId);
+            userConsentManagementDao.getParticipantStudies(studyInfoBean.getStudyInfoId(), userId);
         if (participantStudies != null) {
           if (consentStatusBean.getEligibility() != null) {
             participantStudies.setEligibility(consentStatusBean.getEligibility());
@@ -125,7 +123,7 @@ public class UserConsentManagementController {
           List<ParticipantStudiesBO> participantStudiesList = new ArrayList<ParticipantStudiesBO>();
           participantStudiesList.add(participantStudies);
           String message =
-              userConsentManagementDao.saveParticipantStudies(participantStudiesList);
+              userConsentManagementService.saveParticipantStudies(participantStudiesList);
 
           StudyConsentBO studyConsent = null;
           if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
@@ -182,7 +180,7 @@ public class UserConsentManagementController {
               }
             }
             String addOrUpdateConsentMessage =
-                userConsentManagementDao.saveStudyConsent(studyConsent);
+                userConsentManagementService.saveStudyConsent(studyConsent);
             if ((addOrUpdateConsentMessage.equalsIgnoreCase(
                     MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
                 && message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {

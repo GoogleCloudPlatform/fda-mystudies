@@ -57,7 +57,7 @@ public enum ConsentManagementEnum implements AuditLogEvent {
       "Attempt to retrieve participant's consent document failed.",
       "READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT");
 
-  private final PlatformComponent source;
+  private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;
   private final Optional<PlatformComponent> resourceServer;
   private final String description;
@@ -69,7 +69,7 @@ public enum ConsentManagementEnum implements AuditLogEvent {
       PlatformComponent resourceServer,
       String description,
       String eventCode) {
-    this.source = source;
+    this.source = Optional.ofNullable(source);
     this.destination = destination;
     this.resourceServer = Optional.ofNullable(resourceServer);
     this.description = description;

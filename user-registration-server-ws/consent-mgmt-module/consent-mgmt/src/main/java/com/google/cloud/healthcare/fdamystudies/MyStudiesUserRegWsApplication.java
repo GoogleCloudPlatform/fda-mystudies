@@ -11,8 +11,9 @@ package com.google.cloud.healthcare.fdamystudies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = HibernateJpaAutoConfiguration.class)
 @EntityScan("com.google.cloud.healthcare.fdamystudies.consent.model")
 public class MyStudiesUserRegWsApplication {
 
