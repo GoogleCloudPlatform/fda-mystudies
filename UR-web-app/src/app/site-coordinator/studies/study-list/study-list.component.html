@@ -32,9 +32,7 @@
                         {{ study.totalSitesCount }}
                         sites
                       </span>
-                      <span *ngIf="study.type == 'OPEN'">
-                        Open Study
-                      </span>
+                      <span *ngIf="study.type == 'OPEN'">Open Study</span>
                     </div>
                   </div>
                 </div>
@@ -59,9 +57,7 @@
                           {{ study.enrolledCount }} /
                           {{ study.invitedCount }}
                         </span>
-                        <span *ngIf="study.invitedCount == 0">
-                          N/A
-                        </span>
+                        <span *ngIf="study.invitedCount == 0">N/A</span>
                       </div>
                     </div>
                   </div>
@@ -71,17 +67,11 @@
                     <span *ngIf="study.invitedCount != 0">
                       {{ study.enrollmentPercentage | number: ".2-2" }}%
                     </span>
-                    <span *ngIf="study.invitedCount == 0">
-                      N/A
-                    </span>
+                    <span *ngIf="study.invitedCount == 0">N/A</span>
                   </div>
                   <div class="text-grey__sm">
-                    <span *ngIf="study.type != 'OPEN'">
-                      Enrolled / Invited
-                    </span>
-                    <span *ngIf="study.type == 'OPEN'">
-                      Enrolled / Target
-                    </span>
+                    <span *ngIf="study.type != 'OPEN'">Enrolled / Invited</span>
+                    <span *ngIf="study.type == 'OPEN'">Enrolled / Target</span>
                   </div>
                 </div>
               </div>

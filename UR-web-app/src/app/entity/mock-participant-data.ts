@@ -73,3 +73,7 @@ export const expectedSendInviteResponse = {
   invitedParticipantIds: ['1'],
   failedParticipantIds: [''],
 } as UpdateInviteResponse;
+
+export const expectedDecommissionResponse = {
+  message: 'Site decomissioned successfully',
+} as ApiResponse;

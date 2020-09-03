@@ -5,9 +5,18 @@ import {FormsModule} from '@angular/forms';
 import {SitesRoutingModule} from './sites-routing.module';
 import {SiteListComponent} from './site-list/site-list.component';
 import {AddSiteComponent} from './add-site/add-site.component';
-
+import {SiteDetailsComponent} from './site-details/site-details.component';
+import {AddEmailComponent} from './add-email/add-email.component';
+import {ImportEmailListComponent} from './import-email-list/import-email-list.component';
+import {NgxDataTableModule} from 'angular-9-datatable';
 @NgModule({
-  declarations: [SiteListComponent, AddSiteComponent],
-  imports: [CommonModule, SitesRoutingModule, FormsModule],
+  declarations: [
+    SiteListComponent,
+    AddSiteComponent,
+    SiteDetailsComponent,
+    AddEmailComponent,
+    ImportEmailListComponent,
+  ],
+  imports: [CommonModule, SitesRoutingModule, FormsModule, NgxDataTableModule],
 })
 export class SitesModule {}

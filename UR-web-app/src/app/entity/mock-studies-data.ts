@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {Study} from '../site-coordinator/studies/shared/study.model';
 import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
@@ -139,7 +140,15 @@ export const expectedStudiesDetails = {
         consentHistory: [],
       },
     ],
+    countByStatus: {
+      A: 34,
+      D: 0,
+      E: 1,
+      I: 12,
+      N: 21,
+    },
   },
+
   status: 200,
   message: 'Get participant registry successfully',
   code: 'MSG-0013',

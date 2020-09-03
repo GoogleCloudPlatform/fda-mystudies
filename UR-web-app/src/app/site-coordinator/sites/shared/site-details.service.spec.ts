@@ -1,17 +1,19 @@
-import {TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {TestBed, fakeAsync} from '@angular/core/testing';
+import {SiteDetailsService} from './site-details.service';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import {SiteCoordinatorModule} from '../site-coordinator.module';
+import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
-import {EntityService} from '../../service/entity.service';
-import {throwError, of} from 'rxjs';
-import {ParticipantDetailsService} from './participant-details.service';
+import {EntityService} from '../../../service/entity.service';
+import {of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Participant, UpdateInviteResponse} from './participant-details';
+import {UpdateInviteResponse} from '../../participant-details/participant-details';
+import {SiteParticipants} from '../shared/model/site-detail.model';
 import * as expectedResult from 'src/app/entity/mock-participant-data';
 import {ApiResponse} from 'src/app/entity/api.response.model';
-describe('ParticipantDetailsService', () => {
-  let participantDetailsService: ParticipantDetailsService;
+import {expectedSiteParticipantDetails} from 'src/app/entity/mock-sitedetail-data';
+describe('SiteDetailsService', () => {
+  let participantDetailsService: SiteDetailsService;
   let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,32 +23,30 @@ describe('ParticipantDetailsService', () => {
         RouterTestingModule.withRoutes([]),
       ],
       schemas: [NO_ERRORS_SCHEMA],
-      providers: [ParticipantDetailsService, EntityService],
+      providers: [SiteDetailsService, EntityService],
     });
   });
 
   it('should be created', () => {
-    const service: ParticipantDetailsService = TestBed.get(
-      ParticipantDetailsService,
-    ) as ParticipantDetailsService;
+    const service: SiteDetailsService = TestBed.get(
+      SiteDetailsService,
+    ) as SiteDetailsService;
     expect(service).toBeTruthy();
   });
-
-  it('should get the participant details for id', fakeAsync(() => {
-    const entityServiceSpy = jasmine.createSpyObj<EntityService<Participant>>(
-      'EntityService',
-      {get: of(expectedResult.expectedParticipantDetails)},
-    );
-    participantDetailsService = new ParticipantDetailsService(
+  it('should get the site participant details for site id', fakeAsync(() => {
+    const entityServiceSpy = jasmine.createSpyObj<
+      EntityService<SiteParticipants>
+    >('EntityService', {get: of(expectedSiteParticipantDetails)});
+    participantDetailsService = new SiteDetailsService(
       entityServiceSpy,
       httpServiceSpyObj,
     );
     participantDetailsService
-      .get(expectedResult.expectedParticipantId.id)
+      .get(expectedResult.expectedSiteId.siteId, 'all')
       .subscribe(
         (participant) =>
           expect(participant).toEqual(
-            expectedResult.expectedParticipantDetails,
+            expectedSiteParticipantDetails,
             'expected participant details',
           ),
         fail,
@@ -56,14 +56,14 @@ describe('ParticipantDetailsService', () => {
 
   it('should change the status Enable/Disable invitation', () => {
     const entityServiceSpyObj = jasmine.createSpyObj<
-      EntityService<Participant>
+      EntityService<SiteParticipants>
     >('EntityService', ['post']);
 
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       patch: of(expectedResult.expectedToggleResponse),
     });
 
-    participantDetailsService = new ParticipantDetailsService(
+    participantDetailsService = new SiteDetailsService(
       entityServiceSpyObj,
       httpServiceSpyObj,
     );
@@ -86,14 +86,14 @@ describe('ParticipantDetailsService', () => {
 
   it('should send the invitation', () => {
     const entityServiceSpyObj = jasmine.createSpyObj<
-      EntityService<Participant>
+      EntityService<SiteParticipants>
     >('EntityService', ['post']);
 
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       post: of(expectedResult.expectedSendInviteResponse),
     });
 
-    participantDetailsService = new ParticipantDetailsService(
+    participantDetailsService = new SiteDetailsService(
       entityServiceSpyObj,
       httpServiceSpyObj,
     );
@@ -113,28 +113,4 @@ describe('ParticipantDetailsService', () => {
       );
     expect(httpServiceSpyObj.post).toHaveBeenCalledTimes(1);
   });
-
-  it('should return an error when the server returns a 400', fakeAsync(() => {
-    const errorResponses: ApiResponse = {
-      message: 'Bad Request',
-    } as ApiResponse;
-    const entityServiceSpy = jasmine.createSpyObj<EntityService<Participant>>(
-      'EntityService',
-      {get: throwError(errorResponses)},
-    );
-    participantDetailsService = new ParticipantDetailsService(
-      entityServiceSpy,
-      httpServiceSpyObj,
-    );
-
-    tick(40);
-    participantDetailsService
-      .get(expectedResult.expectedParticipantId.id)
-      .subscribe(
-        () => fail('expected an error'),
-        (error: ApiResponse) => {
-          expect(error.message).toBe('Bad Request');
-        },
-      );
-  }));
 });
