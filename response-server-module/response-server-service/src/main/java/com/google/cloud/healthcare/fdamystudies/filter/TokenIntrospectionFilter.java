@@ -29,26 +29,26 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
   public void init() {
 
     uriTemplateAndMethods.put(
-        String.format("%s/studies/studymetadata", context.getContextPath()),
+        String.format("%s/participant/add", context.getContextPath()),
         new String[] {HttpMethod.POST.name()});
     uriTemplateAndMethods.put(
-        String.format("%s/studies/sendNotification", context.getContextPath()),
+        String.format("%s/participant/process-response", context.getContextPath()),
         new String[] {HttpMethod.POST.name()});
     uriTemplateAndMethods.put(
-        String.format("%s/deactivate", context.getContextPath()),
-        new String[] {HttpMethod.DELETE.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/updateUserProfile", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/feedback", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/contactUs", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/userProfile", context.getContextPath()),
+        String.format("%s/participant/getresponse", context.getContextPath()),
         new String[] {HttpMethod.GET.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/participant/withdraw", context.getContextPath()),
+        new String[] {HttpMethod.POST.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/participant/get-activity-state", context.getContextPath()),
+        new String[] {HttpMethod.GET.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/participant/update-activity-state", context.getContextPath()),
+        new String[] {HttpMethod.POST.name()});
+    uriTemplateAndMethods.put(
+        String.format("%s/studymetadata", context.getContextPath()),
+        new String[] {HttpMethod.POST.name()});
   }
 
   @Override
