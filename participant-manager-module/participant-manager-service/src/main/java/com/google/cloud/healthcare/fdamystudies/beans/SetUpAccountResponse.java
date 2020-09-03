@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,10 +27,6 @@ public class SetUpAccountResponse extends BaseResponse {
   private String tempRegId;
 
   private String authUserId;
-
-  public SetUpAccountResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public SetUpAccountResponse(
       String userId, String tempRegId, String authUserId, MessageCode messageCode) {
