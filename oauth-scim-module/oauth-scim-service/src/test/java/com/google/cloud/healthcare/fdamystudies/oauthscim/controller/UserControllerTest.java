@@ -389,6 +389,10 @@ public class UserControllerTest extends BaseMockIT {
   @Test
   public void shouldChangeThePassword()
       throws MalformedURLException, JsonProcessingException, Exception {
+    // set the status to PASSWORD_RESET(3)
+    userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
+    userEntity = repository.saveAndFlush(userEntity);
+
     // Step-1 Call PUT method to change the password
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
@@ -410,6 +414,7 @@ public class UserControllerTest extends BaseMockIT {
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     assertNotNull(userEntity);
+    assertTrue(userEntity.getStatus() == UserAccountStatus.ACTIVE.getStatus());
 
     // Step 2A- assert password hash value and password_history size
     JsonNode userInfoNode = userEntity.getUserInfo();
@@ -496,6 +501,55 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnAccountNotVerifiedForForgotPasswordAction()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.ACCOUNT_NOT_VERIFIED.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnDeactivatedForForgotPasswordAction()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    userEntity.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
+    userRepository.saveAndFlush(userEntity);
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.ACCOUNT_DEACTIVATED.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldSendPasswordResetEmailAndUpdateThePassword()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
@@ -505,6 +559,9 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    userRepository.saveAndFlush(userEntity);
 
     mockMvc
         .perform(

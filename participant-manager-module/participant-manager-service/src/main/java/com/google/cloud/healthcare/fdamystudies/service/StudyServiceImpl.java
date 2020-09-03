@@ -9,10 +9,9 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.STUDY_PARTICIPANT_REGISTRY_VIEWED;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
@@ -21,6 +20,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
@@ -68,6 +69,8 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private StudyRepository studyRepository;
 
   @Autowired private SiteRepository siteRepository;
+
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Override
   @Transactional(readOnly = true)
@@ -157,7 +160,9 @@ public class StudyServiceImpl implements StudyService {
         Integer studyEditPermission =
             studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit().value();
         studyDetail.setStudyPermission(
-            studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
+            studyEditPermission == Permission.NO_PERMISSION.value()
+                ? Permission.VIEW.value()
+                : Permission.EDIT.value());
         studyDetail.setStudyPermission(studyEditPermission);
       }
 
@@ -244,7 +249,8 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public ParticipantRegistryResponse getStudyParticipants(String userId, String studyId) {
+  public ParticipantRegistryResponse getStudyParticipants(
+      String userId, String studyId, AuditLogEventRequest auditRequest) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
@@ -270,11 +276,11 @@ public class StudyServiceImpl implements StudyService {
 
     Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
-    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get(), userId);
+    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get(), userId, auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
-      StudyEntity study, AppEntity app, String userId) {
+      StudyEntity study, AppEntity app, String userId, AuditLogEventRequest auditRequest) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
 
@@ -316,6 +322,11 @@ public class StudyServiceImpl implements StudyService {
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
+
+    auditRequest.setUserId(userId);
+    auditRequest.setStudyId(study.getId());
+    auditRequest.setAppId(app.getId());
+    participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
     return participantRegistryResponse;

@@ -183,11 +183,20 @@ public class UserServiceImpl implements UserService {
       return new ResetPasswordResponse(ErrorCode.USER_NOT_FOUND);
     }
 
+    UserEntity userEntity = entity.get();
+    if (userEntity.getStatus() == UserAccountStatus.PENDING_CONFIRMATION.getStatus()) {
+      throw new ErrorCodeException(ErrorCode.ACCOUNT_NOT_VERIFIED);
+    }
+
+    if (userEntity.getStatus() == UserAccountStatus.DEACTIVATED.getStatus()) {
+      throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
+    }
+
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-      UserEntity userEntity = entity.get();
+
       ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
       setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
       userEntity.setUserInfo(userInfo);
@@ -233,6 +242,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optionalEntity.get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     ArrayNode passwordHistory =
         userInfo.hasNonNull(PASSWORD_HISTORY)
