@@ -15,10 +15,10 @@
 # The services and deployments should be applied separately.
 #
 # Requires existence of files ./pod_security_policy{,-istio}.yaml.
-# Currently hardcoded to use projects "heroes-hat-dev-{apps,data}".
+# Currently hardcoded to use projects "fda-mystudies-dev-{apps,data}".
 #
 # Run like:
-# $ ./kubernetes/kubeapply.sh heroes-hat-cluster
+# $ ./kubernetes/kubeapply.sh fda-mystudies-cluster
 
 if [ "$#" -ne 1 ]; then
   echo 'Please provide exactly 1 argument in the order of <cluster>'
@@ -32,7 +32,7 @@ set -e
 
 echo "=== Switching kubectl to cluster ${cluster} ==="
 read -p "Press enter to continue"
-gcloud container clusters get-credentials "${cluster}" --region="us-east1" --project="heroes-hat-dev-apps"
+gcloud container clusters get-credentials "${cluster}" --region="us-east1" --project="fda-mystudies-dev-apps"
 
 for policy in $(find . -name "pod_security_policy*.yaml"); do
   echo "=== Applying ${policy} ==="

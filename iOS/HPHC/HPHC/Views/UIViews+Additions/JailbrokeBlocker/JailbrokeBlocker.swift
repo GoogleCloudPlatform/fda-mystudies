@@ -54,7 +54,7 @@ class JailbrokeBlocker: UIView {
 
     guard
       let url = URL(
-        string: "https://itunes.apple.com/us/app/fda-my-studies/id1242835330?ls=1&mt=8"
+        string: "https://itunes.apple.com/us/app/fda-mystudies/id1242835330?ls=1&mt=8"
       )
     else { return }
     if UIApplication.shared.canOpenURL(url) {

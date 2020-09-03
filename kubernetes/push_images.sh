@@ -12,7 +12,8 @@ Usage:
 ./push_images.sh <source_registry> <destination_registry>
 
 Example:
-./push_images.sh gcr.io/heroes-hat-dev gcr.io/heroes-hat-dev-apps
+./push_images.sh gcr.io/fda-mystudies-dev gcr.io/fda-mystudies-dev-apps
+
 EOF
   exit 1
 fi
@@ -21,7 +22,7 @@ src="${1}"
 dst="${2}"
 
 
-for image in $(gcloud container images list --repository=gcr.io/heroes-hat-dev | tail -n +2); do
+for image in $(gcloud container images list --repository=gcr.io/fda-mystudies-dev | tail -n +2); do
   new="$(echo "${image}" | sed "s|${src}|${dst}|")"
   echo "Migrating image ${image} -> ${new}"
   docker pull "${image}"

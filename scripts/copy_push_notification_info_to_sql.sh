@@ -7,7 +7,7 @@ ENV=dev
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 DATA_PROJECT=${PREFIX}-${ENV}-data
-SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-my-studies-sql-import
+SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
 
 TMPFILE=$(mktemp)
 
@@ -37,5 +37,5 @@ gsutil mv ${TMPFILE} ${GCS_FILE}
 
 # Import the GCS file to CloudSQL.
 echo "Importing ${GCS_FILE} to CloudSQL."
-gcloud sql import sql --project=${DATA_PROJECT} my-studies ${GCS_FILE}
+gcloud sql import sql --project=${DATA_PROJECT} mystudies ${GCS_FILE}
 gsutil rm ${GCS_FILE}

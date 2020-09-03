@@ -56,7 +56,7 @@ public class ApplicationPropertyConfiguration implements Serializable {
   private Boolean useIpWhitelist;
 
   // Domain to use with the IP whitelist relay.
-  // Must be in the form rocketturtle rather than rocketturtle.net.
+  // Must be in the form domain rather than domain.com.
   @Value("${from.email.domain}")
   private String fromDomain;
 
