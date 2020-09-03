@@ -200,12 +200,16 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       if ((consentVersion != null) && !StringUtils.isEmpty(consentVersion)) {
         predicates = new Predicate[3];
         predicates[0] = criteriaBuilder.equal(studyConsentBoRoot.get("userDetails"), userDetailsBO);
-        predicates[1] = criteriaBuilder.equal(studyConsentBoRoot.get("study"), optStudy.get());
+        if (optStudy.isPresent()) {
+          predicates[1] = criteriaBuilder.equal(studyConsentBoRoot.get("study"), optStudy.get());
+        }
         predicates[2] = criteriaBuilder.equal(studyConsentBoRoot.get("version"), consentVersion);
       } else {
         predicates = new Predicate[2];
         predicates[0] = criteriaBuilder.equal(studyConsentBoRoot.get("userDetails"), userDetailsBO);
-        predicates[1] = criteriaBuilder.equal(studyConsentBoRoot.get("study"), optStudy.get());
+        if (optStudy.isPresent()) {
+          predicates[1] = criteriaBuilder.equal(studyConsentBoRoot.get("study"), optStudy.get());
+        }
       }
       criteriaQuery.select(studyConsentBoRoot).where(predicates);
       if ((consentVersion != null) && !StringUtils.isEmpty(consentVersion)) {
@@ -235,7 +239,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     Predicate[] predicates = new Predicate[1];
     List<StudyConsentEntity> studyConsentBoList = null;
     Integer isUpdated = 0;
-    Integer isSaved = 0;
+    String isSaved = "";
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       transaction = session.beginTransaction();
@@ -254,15 +258,16 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
           isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
         } else {
           studyConsent.setCreated(Timestamp.from(Instant.now()));
-          isSaved = (Integer) session.save(studyConsent);
+          isSaved = (String) session.save(studyConsent);
         }
       }
-      if ((isUpdated > 0) || (isSaved > 0)) {
+      if ((isUpdated > 0) || (!StringUtils.isEmpty(isSaved))) {
         addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
       }
       transaction.commit();
     } catch (Exception e) {
       logger.error("UserConsentManagementDaoImpl saveStudyConsent() - error ", e);
+      addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
       if (transaction != null) {
         try {
           transaction.rollback();

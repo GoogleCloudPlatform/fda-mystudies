@@ -28,7 +28,3 @@ INSERT INTO `participant_registry_site` (`id`, `site_id`, `study_info_id`, `emai
 INSERT INTO `participant_study_info` (`id`, `participant_id`, `study_info_id`, `participant_registry_site_id`, `site_id`, `user_details_id`, `status`, `bookmark`, `enrolled_time`, `completion`, `adherence`, `withdrawal_time`, `consent_status`) VALUES
 	(101, 1, 1, 33, 1, 44, 'Withdrawn', 1, '2020-02-06 14:07:29', 45, 20, '2020-02-10 14:03:14',1),
 	(102, 2, 2, 34, 1, 45, 'Enrolled', 0, '2020-02-06 14:07:31', 50, 36, '2020-02-06 14:07:31',1);
-	
-INSERT INTO `study_consent` (`id`, `created_time`, `pdf_storage`, `version`, `participant_study_id`, `study_info_id`, `user_details_id`) VALUES 
-	(1, '2020-09-01 14:12:28', '1', '1.0', 101, 1, 44),
-	(2, '2020-09-01 14:12:28', '1', '1.2', 101, 1, 44);
