@@ -435,10 +435,7 @@ public class SiteServiceImpl implements SiteService {
       String userId, String siteId, AuditLogEventRequest auditRequest) {
     logger.entry("toggleSiteStatus()");
 
-    ErrorCode errorCode = validateDecommissionSiteRequest(userId, siteId);
-    if (errorCode != null) {
-      throw new ErrorCodeException(errorCode);
-    }
+    validateDecommissionSiteRequest(userId, siteId);
 
     Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
     auditRequest.setUserId(userId);
@@ -470,22 +467,22 @@ public class SiteServiceImpl implements SiteService {
         site.getId(), site.getStatus(), MessageCode.DECOMMISSION_SITE_SUCCESS);
   }
 
-  private ErrorCode validateDecommissionSiteRequest(String userId, String siteId) {
+  private void validateDecommissionSiteRequest(String userId, String siteId) {
     Optional<SitePermissionEntity> optSitePermission =
         sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
     if (!optSitePermission.isPresent()) {
-      return ErrorCode.SITE_NOT_FOUND;
+      throw new ErrorCodeException(ErrorCode.SITE_NOT_FOUND);
     }
 
     SitePermissionEntity sitePermission = optSitePermission.get();
     if (OPEN.equalsIgnoreCase(sitePermission.getStudy().getType())) {
-      return ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY;
+      throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY);
     }
 
     String studyId = sitePermission.getStudy().getId();
     boolean canEdit = isEditPermissionAllowed(studyId, userId);
     if (!canEdit) {
-      return ErrorCode.SITE_PERMISSION_ACCESS_DENIED;
+      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
     List<String> status = Arrays.asList(ENROLLED_STATUS, STATUS_ACTIVE);
@@ -493,10 +490,10 @@ public class SiteServiceImpl implements SiteService {
         participantStudyRepository.findByStudyIdAndStatus(status, studyId);
 
     if (optParticipantStudyCount.isPresent() && optParticipantStudyCount.get() > 0) {
-      return ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS;
+      throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS);
     }
 
-    return null;
+    return;
   }
 
   private void updateSitePermissions(String siteId) {

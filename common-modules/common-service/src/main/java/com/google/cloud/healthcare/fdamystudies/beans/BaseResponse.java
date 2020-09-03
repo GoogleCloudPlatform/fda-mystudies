@@ -26,20 +26,8 @@ public class BaseResponse {
   private Integer httpStatusCode;
 
   @JsonInclude(Include.NON_NULL)
-  @JsonProperty("error_code")
-  private String errorCode;
-
-  @JsonInclude(Include.NON_NULL)
   @JsonProperty("code")
   private String code;
-
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("error_type")
-  private String errorType;
-
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("error_description")
-  private String errorDescription;
 
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("message")

@@ -207,11 +207,6 @@ public class LoginController {
           ACCOUNT_STATUS_COOKIE,
           String.valueOf(authenticationResponse.getAccountStatus()));
     } else {
-      logger.error(
-          String.format(
-              "authentication failed with error %s", authenticationResponse.getErrorDescription()));
-
-      model.addAttribute(ERROR_DESCRIPTION, authenticationResponse.getErrorDescription());
       return LOGIN_VIEW_NAME;
     }
     return redirectToConsentPage(
