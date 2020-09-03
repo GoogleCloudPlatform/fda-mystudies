@@ -22,7 +22,7 @@ import lombok.ToString;
 public class ConsentStudyResponseBean {
   private String message;
   private ConsentResponseBean consent = new ConsentResponseBean();
-  private Boolean sharing;
+  private String sharing;
 
   public ConsentStudyResponseBean(String message) {
     this.message = message;
@@ -44,11 +44,11 @@ public class ConsentStudyResponseBean {
     this.consent = consent;
   }
 
-  public Boolean getSharing() {
+  public String getSharing() {
     return sharing;
   }
 
-  public void setSharing(Boolean sharing) {
+  public void setSharing(String sharing) {
     this.sharing = sharing;
   }
 }

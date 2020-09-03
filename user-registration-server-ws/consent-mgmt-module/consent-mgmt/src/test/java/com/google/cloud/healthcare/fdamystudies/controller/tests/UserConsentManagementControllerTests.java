@@ -493,7 +493,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     // with empty version
     consent = new ConsentReqBean("", Constants.STATUS_COMPLETE, Constants.CONTENT_1_0);
-    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, false, consent, null);
+    consentRequest =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, false, consent, Constants.SHARING_VALUE);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     headers.remove(Constants.USER_ID_HEADER);

@@ -21,7 +21,9 @@ import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
@@ -125,9 +127,15 @@ public class UserConsentManagementController {
             if (consentStatusBean.getEligibility() != null) {
               participantStudies.setEligibility(consentStatusBean.getEligibility());
             }
-            if ("sharing".equals(consentStatusBean.getSharing())) {
-              participantStudies.setSharing(true);
+            DataSharingStatus dataSharing =
+                DataSharingStatus.fromValue(consentStatusBean.getSharing());
+            if (dataSharing == null) {
+              throw new ErrorCodeException(
+                  com.google.cloud.healthcare.fdamystudies.common.ErrorCode
+                      .INVALID_DATA_SHARING_STATUS);
             }
+            participantStudies.setSharing(dataSharing.value());
+
             List<ParticipantStudyEntity> participantStudiesList =
                 new ArrayList<ParticipantStudyEntity>();
             participantStudiesList.add(participantStudies);

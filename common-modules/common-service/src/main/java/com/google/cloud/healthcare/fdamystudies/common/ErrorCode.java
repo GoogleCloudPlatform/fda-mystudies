@@ -220,7 +220,9 @@ public enum ErrorCode {
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
 
-  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required");
+  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required"),
+
+  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status.");
 
   private final int status;
   private final String code;

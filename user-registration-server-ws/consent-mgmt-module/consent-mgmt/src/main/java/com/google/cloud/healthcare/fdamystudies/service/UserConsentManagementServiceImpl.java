@@ -15,6 +15,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
@@ -25,6 +26,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +125,10 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
         consentStudyResponseBean.getConsent().setType("application/pdf");
         participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
         if (participantStudiesBO != null) {
-          consentStudyResponseBean.setSharing(participantStudiesBO.getSharing());
+          String dataSharingStatus =
+              StringUtils.defaultIfEmpty(
+                  participantStudiesBO.getSharing(), DataSharingStatus.UNDEFINED.value());
+          consentStudyResponseBean.setSharing(dataSharingStatus);
         }
       }
 
