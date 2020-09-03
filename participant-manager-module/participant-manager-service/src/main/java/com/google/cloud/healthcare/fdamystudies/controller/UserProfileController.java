@@ -10,10 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UserAccountStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UserStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.service.UserProfileService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -102,14 +102,14 @@ public class UserProfileController {
       value = "/users/{userId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<UserAccountStatusResponse> updateUserAccountStatus(
+  public ResponseEntity<PatchUserResponse> updateUserAccountStatus(
       @PathVariable String userId,
-      @Valid @RequestBody UserStatusRequest statusRequest,
+      @Valid @RequestBody PatchUserRequest statusRequest,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
 
     statusRequest.setUserId(userId);
-    UserAccountStatusResponse deactivateResponse =
+    PatchUserResponse deactivateResponse =
         userProfileService.updateUserAccountStatus(statusRequest);
 
     logger.exit(String.format(STATUS_LOG, deactivateResponse.getHttpStatusCode()));

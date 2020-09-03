@@ -8,7 +8,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UserStatusRequest {
+public class PatchUserRequest {
 
   @NotNull private Integer status;
 

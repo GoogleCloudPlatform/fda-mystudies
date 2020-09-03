@@ -10,10 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UserAccountStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UserStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 
 public interface UserProfileService {
 
@@ -25,5 +25,5 @@ public interface UserProfileService {
 
   public SetUpAccountResponse saveUser(SetUpAccountRequest setUpAccountRequest);
 
-  public UserAccountStatusResponse updateUserAccountStatus(UserStatusRequest statusRequest);
+  public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest);
 }

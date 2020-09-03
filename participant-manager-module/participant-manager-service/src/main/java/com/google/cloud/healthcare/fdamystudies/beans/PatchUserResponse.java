@@ -7,13 +7,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserAccountStatusResponse extends BaseResponse {
+public class PatchUserResponse extends BaseResponse {
 
-  public UserAccountStatusResponse(ErrorCode errorCode) {
+  public PatchUserResponse(ErrorCode errorCode) {
     super(errorCode);
   }
 
-  public UserAccountStatusResponse(MessageCode messageCode) {
+  public PatchUserResponse(MessageCode messageCode) {
     super(messageCode);
   }
 }

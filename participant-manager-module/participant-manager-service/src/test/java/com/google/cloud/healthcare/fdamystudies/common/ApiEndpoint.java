@@ -20,7 +20,7 @@ public enum ApiEndpoint {
 
   SET_UP_ACCOUNT("http://localhost:8080/participant-manager-service/users/"),
 
-  UPDATE_USER_STATUS("http://localhost:8080/participant-manager-service/users/{userId}"),
+  PATCH_USER("http://localhost:8080/participant-manager-service/users/{userId}"),
 
   GET_APPS("http://localhost:8080/participant-manager-service/apps"),
 

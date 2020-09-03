@@ -22,9 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UserStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -372,7 +372,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void shouldDeactivateUserAccount() throws Exception {
     // Step 1: Setting up the request for deactivate account
-    UserStatusRequest statusRequest = new UserStatusRequest();
+    PatchUserRequest statusRequest = new PatchUserRequest();
     statusRequest.setStatus(UserStatus.DEACTIVATED.getValue());
 
     // Step 2: Call the API and expect DEACTIVATE_USER_SUCCESS message
@@ -380,9 +380,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            patch(
-                    ApiEndpoint.UPDATE_USER_STATUS.getPath(),
-                    userRegAdminEntity.getId())
+            patch(ApiEndpoint.PATCH_USER.getPath(), userRegAdminEntity.getId())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -409,7 +407,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void shouldReactivateUserAccount() throws Exception {
     // Step 1: Setting up the request for reactivate account
-    UserStatusRequest statusRequest = new UserStatusRequest();
+    PatchUserRequest statusRequest = new PatchUserRequest();
     statusRequest.setStatus(UserStatus.ACTIVE.getValue());
 
     // Step 2: Call the API and expect REACTIVATE_USER_SUCCESS message
@@ -417,9 +415,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            patch(
-                    ApiEndpoint.UPDATE_USER_STATUS.getPath(),
-                    userRegAdminEntity.getId())
+            patch(ApiEndpoint.PATCH_USER.getPath(), userRegAdminEntity.getId())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -447,12 +443,12 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserNotFoundForDeactivateUser() throws Exception {
     // Step 2: Call the API and expect USER_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    UserStatusRequest statusRequest = new UserStatusRequest();
+    PatchUserRequest statusRequest = new PatchUserRequest();
     statusRequest.setStatus(UserStatus.ACTIVE.getValue());
 
     mockMvc
         .perform(
-            patch(ApiEndpoint.UPDATE_USER_STATUS.getPath(), IdGenerator.id())
+            patch(ApiEndpoint.PATCH_USER.getPath(), IdGenerator.id())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -467,12 +463,12 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnInvalidUserStatusError() throws Exception {
     // Step 2: Call the API and expect USER_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    UserStatusRequest statusRequest = new UserStatusRequest();
+    PatchUserRequest statusRequest = new PatchUserRequest();
     statusRequest.setStatus(null);
 
     mockMvc
         .perform(
-            patch(ApiEndpoint.UPDATE_USER_STATUS.getPath(), IdGenerator.id())
+            patch(ApiEndpoint.PATCH_USER.getPath(), IdGenerator.id())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -492,9 +488,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     // Step 2: Call the API and expect APPLICATION_ERROR error
     mockMvc
         .perform(
-            patch(
-                    ApiEndpoint.UPDATE_USER_STATUS.getPath(),
-                    userRegAdminEntity.getId())
+            patch(ApiEndpoint.PATCH_USER.getPath(), userRegAdminEntity.getId())
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())

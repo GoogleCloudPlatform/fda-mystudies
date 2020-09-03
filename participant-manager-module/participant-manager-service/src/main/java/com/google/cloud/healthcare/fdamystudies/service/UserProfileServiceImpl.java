@@ -14,11 +14,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UserAccountStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.UserStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
@@ -191,19 +191,19 @@ public class UserProfileServiceImpl implements UserProfileService {
   }
 
   @Override
-  public UserAccountStatusResponse updateUserAccountStatus(UserStatusRequest statusRequest) {
+  public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest) {
     logger.entry("updateUserAccountStatus()");
 
     Optional<UserRegAdminEntity> optUserRegAdmin =
         userRegAdminRepository.findById(statusRequest.getUserId());
     if (!optUserRegAdmin.isPresent()) {
-      return new UserAccountStatusResponse(ErrorCode.USER_NOT_FOUND);
+      return new PatchUserResponse(ErrorCode.USER_NOT_FOUND);
     }
 
     UserRegAdminEntity userRegAdmin = optUserRegAdmin.get();
 
     if (!userRegAdmin.isSuperAdmin()) {
-      return new UserAccountStatusResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+      return new PatchUserResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
     }
 
     UserStatus userStatus = UserStatus.fromValue(statusRequest.getStatus());
@@ -225,7 +225,7 @@ public class UserProfileServiceImpl implements UserProfileService {
             : MessageCode.DEACTIVATE_USER_SUCCESS);
 
     logger.exit(messageCode);
-    return new UserAccountStatusResponse(messageCode);
+    return new PatchUserResponse(messageCode);
   }
 
   private void updateUserAccountStatusInAuthServer(String authUserId, Integer status) {
