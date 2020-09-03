@@ -381,7 +381,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             patch(
-                    ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(),
+                    ApiEndpoint.UPDATE_USER_STATUS.getPath(),
                     userRegAdminEntity.getId())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
@@ -418,7 +418,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             patch(
-                    ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(),
+                    ApiEndpoint.UPDATE_USER_STATUS.getPath(),
                     userRegAdminEntity.getId())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
@@ -452,7 +452,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            patch(ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(), IdGenerator.id())
+            patch(ApiEndpoint.UPDATE_USER_STATUS.getPath(), IdGenerator.id())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -472,7 +472,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            patch(ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(), IdGenerator.id())
+            patch(ApiEndpoint.UPDATE_USER_STATUS.getPath(), IdGenerator.id())
                 .content(asJsonString(statusRequest))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -493,7 +493,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             patch(
-                    ApiEndpoint.DEACTIVATE_OR_REACTIVATE_ACCOUNT.getPath(),
+                    ApiEndpoint.UPDATE_USER_STATUS.getPath(),
                     userRegAdminEntity.getId())
                 .headers(headers)
                 .contextPath(getContextPath()))

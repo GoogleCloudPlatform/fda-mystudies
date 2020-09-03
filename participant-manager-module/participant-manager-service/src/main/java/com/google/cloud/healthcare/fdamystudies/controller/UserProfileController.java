@@ -99,7 +99,7 @@ public class UserProfileController {
   }
 
   @PatchMapping(
-      value = "/users/{userId}/status",
+      value = "/users/{userId}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<UserAccountStatusResponse> updateUserAccountStatus(
