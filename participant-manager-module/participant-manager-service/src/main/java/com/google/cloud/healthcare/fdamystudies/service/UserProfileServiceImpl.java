@@ -15,20 +15,22 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.BaseResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserProfileMapper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -207,33 +209,62 @@ public class UserProfileServiceImpl implements UserProfileService {
   }
 
   @Override
-  public DeactivateAccountResponse deactivateAccount(String userId) {
-    logger.entry("deactivateAccount()");
+  public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest) {
+    logger.entry("updateUserAccountStatus()");
 
-    Optional<UserRegAdminEntity> optUserRegAdmin = userRegAdminRepository.findById(userId);
+    Optional<UserRegAdminEntity> optUserRegAdmin =
+        userRegAdminRepository.findById(statusRequest.getUserId());
     if (!optUserRegAdmin.isPresent()) {
-      return new DeactivateAccountResponse(ErrorCode.USER_NOT_FOUND);
+      return new PatchUserResponse(ErrorCode.USER_NOT_FOUND);
     }
 
     UserRegAdminEntity userRegAdmin = optUserRegAdmin.get();
-    deactivateUserInAuthServer(userRegAdmin.getUrAdminAuthId());
 
-    userRegAdmin.setStatus(UserStatus.DEACTIVATED.getValue());
+    if (!userRegAdmin.isSuperAdmin()) {
+      return new PatchUserResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+    }
+
+    UserStatus userStatus = UserStatus.fromValue(statusRequest.getStatus());
+    if (userStatus == null) {
+      throw new ErrorCodeException(ErrorCode.INVALID_USER_STATUS);
+    }
+
+    if (UserStatus.ACTIVE == userStatus || UserStatus.DEACTIVATED == userStatus) {
+      updateUserAccountStatusInAuthServer(
+          userRegAdmin.getUrAdminAuthId(), statusRequest.getStatus());
+    }
+
+    userRegAdmin.setStatus(statusRequest.getStatus());
     userRegAdminRepository.saveAndFlush(userRegAdmin);
 
-    logger.exit(MessageCode.DEACTIVATE_USER_SUCCESS);
-    return new DeactivateAccountResponse(MessageCode.DEACTIVATE_USER_SUCCESS);
+    MessageCode messageCode =
+        (userRegAdmin.getStatus() == UserStatus.ACTIVE.getValue()
+            ? MessageCode.REACTIVATE_USER_SUCCESS
+            : MessageCode.DEACTIVATE_USER_SUCCESS);
+
+    logger.exit(messageCode);
+    return new PatchUserResponse(messageCode);
   }
 
-  private void deactivateUserInAuthServer(String authUserId) {
-    logger.entry("updateUserInfoInAuthServer()");
+  private void updateUserAccountStatusInAuthServer(String authUserId, Integer status) {
+    logger.entry("updateUserAccountStatusInAuthServer()");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
     UpdateEmailStatusRequest emailStatusRequest = new UpdateEmailStatusRequest();
-    emailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
+    UserStatus userStatus = UserStatus.fromValue(status);
+
+    switch (userStatus) {
+      case DEACTIVATED:
+        emailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
+        break;
+      case ACTIVE:
+        emailStatusRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
+        break;
+      default:
+    }
 
     HttpEntity<UpdateEmailStatusRequest> request = new HttpEntity<>(emailStatusRequest, headers);
 
