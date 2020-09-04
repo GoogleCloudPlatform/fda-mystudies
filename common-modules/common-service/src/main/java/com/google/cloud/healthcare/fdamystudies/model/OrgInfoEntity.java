@@ -54,8 +54,6 @@ public class OrgInfoEntity implements Serializable {
   @Column(name = "name", length = SMALL_LENGTH)
   private String name;
 
-  @Column(name = "org_id", nullable = false, unique = true, length = XS_LENGTH)
-  private String orgId;
 
   @Column(name = "created_time")
   @CreationTimestamp

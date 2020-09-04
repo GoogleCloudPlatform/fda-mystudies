@@ -31,9 +31,6 @@ public class OrgInfo {
   @Column(name = "name")
   private String name;
 
-  @Column(name = "org_id")
-  private String orgId;
-
   @Column(name = "created_on", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
   private Date createdOn;
 

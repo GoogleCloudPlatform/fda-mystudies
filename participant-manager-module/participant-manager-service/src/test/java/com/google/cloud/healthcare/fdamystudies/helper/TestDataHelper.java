@@ -299,7 +299,6 @@ public class TestDataHelper {
   public OrgInfoEntity createOrgInfo() {
     OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
     orgInfoEntity.setName("OrgName");
-    orgInfoEntity.setOrgId("OrgName");
     return orgInfoRepository.saveAndFlush(orgInfoEntity);
   }
 
