@@ -8,11 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.consent.model.ActivityLogBO;
-
 public interface CommonService {
 
   public Integer getUserDetailsId(String userId);
-
-  public ActivityLogBO createActivityLog(String userId, String activityName, String activtyDesc);
 }

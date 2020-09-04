@@ -128,7 +128,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         .perform(
             post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isInternalServerError());
 
     verify(
         1,

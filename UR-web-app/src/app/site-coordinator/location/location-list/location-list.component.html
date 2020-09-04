@@ -13,12 +13,12 @@
   </div>
 </div>
 <div class="max__w__1280 m-none">
-  <ng-container *ngIf="location$ | async as locations">
-    <div *ngIf="locations.length != 0">
+  <ng-container *ngIf="location$ | async as manageLocations">
+    <div *ngIf="manageLocations.locations.length != 0">
       <div class="cards1 m-none">
         <table
           class="table table-striped"
-          [mfData]="locations"
+          [mfData]="manageLocations.locations"
           #mf="mfDataTable"
           [mfRowsOnPage]="10"
         >
@@ -50,7 +50,7 @@
             <tr
               class="location_row"
               *ngFor="let location of mf.data"
-              (click)="locationDetails(location.id)"
+              (click)="locationDetails(location.locationId)"
             >
               <td>
                 <span class="tbl__td__label">Location ID:</span>
@@ -62,7 +62,7 @@
               </td>
               <td>
                 <span class="tbl__td__label">Associated Studies:</span>
-                {{ location.studiesCount }}
+                {{ location.studyNames?.length }}
               </td>
               <td>
                 <span class="tbl__td__label">Status:</span>

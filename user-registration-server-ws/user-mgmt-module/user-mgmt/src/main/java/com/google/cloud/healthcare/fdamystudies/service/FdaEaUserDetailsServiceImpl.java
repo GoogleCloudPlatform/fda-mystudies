@@ -25,7 +25,6 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -97,28 +96,23 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-  public boolean updateStatus(UserDetailsEntity participantDetails) {
+
+  public String updateStatus(UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
+
+    UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
+    updateEmailStatusRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    UpdateEmailStatusResponse updateStatusResponse =
+        userManagementUtil.updateUserInfoInAuthServer(
+            updateEmailStatusRequest, participantDetails.getUserId());
+
     UserDetailsEntity userDetails = SerializationUtils.clone(participantDetails);
+    userDetails.setUserDetailsId(participantDetails.getUserDetailsId());
     userDetails.setEmailCode(null);
     userDetails.setCodeExpireDate(null);
     userDetails.setStatus(AppConstants.EMAILID_VERIFIED_STATUS);
-    boolean status = userDetailsDao.updateStatus(userDetails);
+    userDetailsDao.updateStatus(userDetails);
 
-    if (status) {
-      UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
-      updateEmailStatusRequest.setStatus(UserAccountStatus.ACTIVE.getStatus());
-      UpdateEmailStatusResponse updateStatusResponse =
-          userManagementUtil.updateUserInfoInAuthServer(
-              updateEmailStatusRequest, participantDetails.getUserId());
-      if (updateStatusResponse.getHttpStatusCode() != HttpStatus.OK.value()) {
-        status = false; // rolling back in registration server and returning false.
-        boolean rollbackStatus = userDetailsDao.updateStatus(participantDetails);
-        if (!rollbackStatus) {
-          logger.error("Failed to rollback email status.");
-        }
-      }
-    }
-    return status;
+    return updateStatusResponse.getTempRegId();
   }
 }
