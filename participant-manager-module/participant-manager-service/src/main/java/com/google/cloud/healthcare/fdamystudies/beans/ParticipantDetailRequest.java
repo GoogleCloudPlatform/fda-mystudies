@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import javax.validation.constraints.Email;
@@ -28,7 +30,7 @@ import org.springframework.stereotype.Component;
 public class ParticipantDetailRequest {
 
   @ToString.Exclude
-  @Size(max = 320)
+  @Size(max = EMAIL_LENGTH)
   @Email
   @NotBlank
   private String email;
