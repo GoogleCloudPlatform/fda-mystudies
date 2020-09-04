@@ -24,8 +24,8 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -49,18 +49,18 @@ import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileSer
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
@@ -81,9 +81,9 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired private FdaEaUserDetailsServiceImpl service;
 
-  @Autowired private EmailNotification emailNotification;
-
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private JavaMailSender emailSender;
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;
@@ -301,16 +301,6 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void resendConfirmationSuccess() throws Exception {
-
-    Mockito.when(
-            emailNotification.sendEmailNotification(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                eq(Constants.VALID_EMAIL),
-                Mockito.any(),
-                Mockito.any()))
-        .thenReturn(true);
-
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
 
@@ -326,13 +316,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.SUCCESS)));
 
-    verify(emailNotification, times(1))
-        .sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            eq(Constants.VALID_EMAIL),
-            Mockito.any(),
-            Mockito.any());
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);

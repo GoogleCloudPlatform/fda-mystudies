@@ -12,8 +12,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.CON
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.FEEDBACK_CONTENT_EMAILED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,13 +30,13 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import java.util.Map;
+import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.mail.javamail.JavaMailSender;
 
 public class UserSupportControllerTest extends BaseMockIT {
 
@@ -48,11 +48,11 @@ public class UserSupportControllerTest extends BaseMockIT {
 
   @Autowired private UserSupportService service;
 
-  @Autowired private EmailNotification emailNotification;
-
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private JavaMailSender emailSender;
 
   @Test
   public void contextLoads() {
@@ -64,14 +64,6 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Test
   public void shouldSendFeedbackEmail() throws Exception {
     appConfig.setFeedbackToEmail("feedback_app_test@grr.la");
-    Mockito.when(
-            emailNotification.sendEmailNotification(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                eq(appConfig.getFeedbackToEmail()),
-                Mockito.any(),
-                Mockito.any()))
-        .thenReturn(true);
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
     String requestJson = getFeedBackDetails(Constants.SUBJECT, Constants.BODY);
@@ -83,13 +75,7 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
-    verify(emailNotification, times(1))
-        .sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            eq(appConfig.getFeedbackToEmail()),
-            Mockito.any(),
-            Mockito.any());
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
     verifyTokenIntrospectRequest(1);
 
@@ -105,14 +91,6 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Test
   public void shouldSendEmailForContactUs() throws Exception {
     appConfig.setContactusToEmail("contactus_app_test@grr.la");
-    Mockito.when(
-            emailNotification.sendEmailNotification(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                eq(appConfig.getContactusToEmail()),
-                Mockito.any(),
-                Mockito.any()))
-        .thenReturn(true);
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(
@@ -132,13 +110,7 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
-    verify(emailNotification, times(1))
-        .sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            eq(appConfig.getContactusToEmail()),
-            Mockito.any(),
-            Mockito.any());
+    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
     verifyTokenIntrospectRequest(1);
 

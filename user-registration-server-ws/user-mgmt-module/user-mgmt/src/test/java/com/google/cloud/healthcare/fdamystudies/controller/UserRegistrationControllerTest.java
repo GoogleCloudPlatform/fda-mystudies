@@ -42,7 +42,6 @@ import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceI
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.Map;
 import javax.mail.internet.MimeMessage;
@@ -74,8 +73,6 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Autowired private JavaMailSender emailSender;
 
   @Autowired private UserDetailsBORepository userDetailsRepository;
-
-  @Autowired private EmailNotification emailNotification;
 
   @Value("${register.url}")
   private String authRegisterUrl;

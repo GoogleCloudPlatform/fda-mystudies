@@ -17,11 +17,13 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VER
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
@@ -219,10 +221,12 @@ public class UserProfileController {
             UserDetailsBO updParticipantDetails =
                 userManagementProfService.saveParticipant(participantDetails);
             if (updParticipantDetails != null) {
-              int isSent =
+              EmailResponse emailResponse =
                   userManagementProfService.resendConfirmationthroughEmail(
                       appId, participantDetails.getEmailCode(), participantDetails.getEmail());
-              if (isSent == 2) {
+              if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+                  .getMessage()
+                  .equals(emailResponse.getMessage())) {
                 auditRequest.setUserId(updParticipantDetails.getUserId());
                 userMgmntAuditHelper.logEvent(
                     VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
