@@ -23,6 +23,17 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD_HISTORY;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -43,6 +54,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
@@ -62,8 +74,10 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,6 +94,8 @@ import org.springframework.test.web.servlet.MvcResult;
 public class UserControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "MyStudies";
+
+  protected static final String VALID_CORRELATION_ID = "8a56d20c-d755-4487-b80d-22d5fa383046";
 
   private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
 
@@ -200,6 +216,7 @@ public class UserControllerTest extends BaseMockIT {
     // Step-1 call API to create an user account in oauth scim database
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
 
     UserRequest request = newUserRequest();
 
@@ -238,6 +255,7 @@ public class UserControllerTest extends BaseMockIT {
     // Step-1 call API to create an user account in oauth scim database
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
 
     UserRequest request = newUserRequest();
 
@@ -337,6 +355,8 @@ public class UserControllerTest extends BaseMockIT {
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+
     ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword("CurrentM0ck!tPassword");
     request.setNewPassword("NewM0ck!tPassword");
@@ -357,6 +377,12 @@ public class UserControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_CHANGE_FAILED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, PASSWORD_CHANGE_FAILED);
   }
 
   @Test
@@ -364,6 +390,7 @@ public class UserControllerTest extends BaseMockIT {
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlation_id", VALID_CORRELATION_ID);
 
     ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(CURRENT_PASSWORD_VALUE);
@@ -396,6 +423,7 @@ public class UserControllerTest extends BaseMockIT {
     // Step-1 Call PUT method to change the password
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
 
     ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(CURRENT_PASSWORD_VALUE);
@@ -431,21 +459,31 @@ public class UserControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_CHANGE_SUCCEEDED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PASSWORD_CHANGE_SUCCEEDED);
   }
 
   @Test
   public void shouldReturnEnforcePasswordHistoryErrroCodeForChangePasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     // Step-0 change the password
     ChangePasswordRequest userRequest = new ChangePasswordRequest();
     userRequest.setCurrentPassword(CURRENT_PASSWORD_VALUE);
     userRequest.setNewPassword(NEW_PASSWORD_VALUE);
     userRequest.setUserId(userEntity.getUserId());
-    userService.changePassword(userRequest);
+    userService.changePassword(userRequest, auditRequest);
 
     // Step-1 call API to change the password
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
 
     ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(NEW_PASSWORD_VALUE);
@@ -467,6 +505,10 @@ public class UserControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_CHANGE_FAILED.getEventCode(), auditRequest);
+    // verifyAuditEventCall(auditEventMap, PASSWORD_CHANGE_FAILED);
   }
 
   @Test
@@ -509,6 +551,7 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setUserId(userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -534,6 +577,7 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setUserId(userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -559,8 +603,8 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-
-    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    userRequest.setUserId(userEntity.getUserId());
+    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
     userRepository.saveAndFlush(userEntity);
 
     mockMvc
@@ -595,6 +639,62 @@ public class UserControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
+    auditEventMap.put(PASSWORD_HELP_EMAIL_SENT.getEventCode(), auditRequest);
+    auditEventMap.put(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT.getEventCode(), auditRequest);
+    auditEventMap.put(PASSWORD_RESET_SUCCEEDED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        PASSWORD_HELP_REQUESTED,
+        PASSWORD_HELP_EMAIL_SENT,
+        PASSWORD_RESET_SUCCEEDED,
+        PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
+  }
+
+  @Test
+  public void testPasswordHelpRequestFailedBadReq()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", "CorrelationIdValue_For_5XX_failure");
+
+    // Password reset mail failed for locked account
+    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setAppId("Invalid");
+    userRequest.setUserId(userEntity.getUserId());
+    mockMvc
+        .perform(
+            post(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().is4xxClientError());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_RESET_FAILED.getEventCode(), auditRequest);
+    auditEventMap.put(PASSWORD_HELP_EMAIL_FAILED.getEventCode(), auditRequest);
+    auditEventMap.put(
+        PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME.getEventCode(), auditRequest);
+    auditEventMap.put(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT.getEventCode(), auditRequest);
+    verifyAuditEventCall(
+        auditEventMap,
+        PASSWORD_RESET_FAILED,
+        PASSWORD_HELP_EMAIL_FAILED,
+        PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME,
+        PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT);
   }
 
   @Test
@@ -714,6 +814,11 @@ public class UserControllerTest extends BaseMockIT {
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     userInfo = (ObjectNode) userEntity.getUserInfo();
     assertFalse(userInfo.hasNonNull(REFRESH_TOKEN));
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_SIGNOUT_SUCCEEDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_SIGNOUT_SUCCEEDED);
   }
 
   @Test
@@ -764,6 +869,11 @@ public class UserControllerTest extends BaseMockIT {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "GCPMS001");
+    headers.add("userId", userEntity.getUserId());
+    headers.add("studyId", "MyStudies");
+    headers.add("source", "IntegrationTests");
     return headers;
   }
 

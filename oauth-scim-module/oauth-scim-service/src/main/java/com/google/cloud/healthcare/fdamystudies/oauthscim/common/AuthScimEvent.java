@@ -18,19 +18,174 @@ import lombok.Getter;
 
 @Getter
 public enum AuthScimEvent implements AuditLogEvent {
-  PASSWORD_RESET_SUCCESS(
-      PARTICIPANT_DATASTORE,
+  SIGNIN_SUCCEEDED(null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_SUCCEEDED"),
+
+  SIGNIN_FAILED(null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_FAILED"),
+
+  SIGNIN_FAILED_UNREGISTERED_USER(
+      null,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
-      "Password reset successful.",
-      "PASSWORD_RESET_SUCCESS"),
+      "Sign-in failure due to unregistered username.",
+      "SIGNIN_FAILED_UNREGISTERED_USER"),
+
+  SIGNIN_FAILED_INVALID_PASSWORD(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_FAILED_INVALID_PASSWORD"),
+
+  SIGNIN_FAILED_EXPIRED_PASSWORD(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_FAILED_EXPIRED_PASSWORD"),
+
+  PASSWORD_HELP_REQUESTED(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "PASSWORD_HELP_REQUESTED"),
+
+  PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      null,
+      "PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME"),
+
+  PASSWORD_HELP_EMAIL_SENT(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "PASSWORD_HELP_EMAIL_SENT"),
+
+  PASSWORD_HELP_EMAIL_FAILED(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "PASSWORD_HELP_EMAIL_FAILED"),
+
+  SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "User signed in with temporary password.",
+      "SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED"),
+
+  SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Sign-in with temporary password failed.",
+      "SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED"),
+
+  SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Sign-in failure due to invalid temporary password.",
+      "SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD"),
+
+  SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Sign-in failure due to expired temporary password.",
+      "SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD"),
+
+  PASSWORD_RESET_SUCCEEDED(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "PASSWORD_RESET_SUCCEEDED"),
 
   PASSWORD_RESET_FAILED(
-      PARTICIPANT_DATASTORE,
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "PASSWORD_RESET_FAILED"),
+
+  ACCOUNT_LOCKED(
+      null,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
-      "Password reset failed.",
-      "PASSWORD_RESET_FAILED");
+      "User account locked for ${lock_time} due to ${failed_attempts} consecutive failed sign-in attempts.",
+      "ACCOUNT_LOCKED"),
+
+  PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      null,
+      "PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT"),
+
+  PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      null,
+      "PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT"),
+
+  PASSWORD_CHANGE_SUCCEEDED(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "PASSWORD_CHANGE_SUCCEEDED"),
+
+  PASSWORD_CHANGE_FAILED(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "PASSWORD_CHANGE_FAILED"),
+
+  USER_SIGNOUT_SUCCEEDED(
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "USER_SIGNOUT_SUCCEEDED"),
+
+  USER_SIGNOUT_FAILED(null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "USER_SIGNOUT_FAILED"),
+
+  CLIENT_USER_VALIDATED(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Access token, client credentials found valid for user ID ${user_id}.",
+      "CLIENT_USER_VALIDATED"),
+
+  ACCESS_TOKEN_INVALID_OR_EXPIRED(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Access token found invalid or expired for user ID ${user_id}.",
+      "ACCESS_TOKEN_INVALID_OR_EXPIRED"),
+
+  INVALID_CLIENT_APPLICATION_CREDENTIALS(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Client application credentials found invalid for user ID ${user_id}.",
+      "INVALID_CLIENT_APPLICATION_CREDENTIALS"),
+
+  CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Client credentials found valid for ${resource_requesting_entity_systemid}.",
+      "CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED"),
+
+  INVALID_CLIENT_ID_OR_SECRET(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Client credentials found invalid for ${resource_requesting_entity_systemid}.",
+      "INVALID_CLIENT_ID_OR_SECRET"),
+
+  NEW_ACCESS_TOKEN_GENERATED(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "New access token generated for user with grant type ${grant_type}.",
+      "NEW_ACCESS_TOKEN_GENERATED"),
+
+  NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Generation of new access token failed, due to invalid client credentials.",
+      "NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS"),
+
+  INVALID_REFRESH_TOKEN(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Generation of new access token failed, due to invalid refresh token.",
+      "INVALID_REFRESH_TOKEN"),
+
+  NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Generation of new access token failed for user with grant type ${grant_type}.",
+      "NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE"),
+
+  SERVICE_UNAVAILABLE_EXCEPTION(
+      null,
+      SCIM_AUTH_SERVER,
+      PARTICIPANT_DATASTORE,
+      "Failed to process request $(req_url).",
+      "SERVICE_UNAVAILABLE_EXCEPTION");
 
   private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;

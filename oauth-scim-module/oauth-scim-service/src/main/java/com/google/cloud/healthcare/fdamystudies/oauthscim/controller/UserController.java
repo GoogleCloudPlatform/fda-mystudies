@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SERVICE_UNAVAILABLE_EXCEPTION;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
@@ -21,7 +25,10 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import java.util.Collections;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.ext.XLogger;
@@ -48,6 +55,8 @@ public class UserController {
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
   @Autowired private UserService userService;
+
+  @Autowired private AuthScimAuditHelper auditHelper;
 
   @PostMapping(
       value = "/users",
@@ -89,9 +98,11 @@ public class UserController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format("begin %s request", request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     userRequest.setUserId(userId);
 
-    ChangePasswordResponse userResponse = userService.changePassword(userRequest);
+    ChangePasswordResponse userResponse = userService.changePassword(userRequest, auditRequest);
 
     logger.exit(String.format("status=%d", userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
@@ -107,9 +118,13 @@ public class UserController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     userRequest.setUserId(userId);
 
     if (!userRequest.hasAtleastOneRequiredValue()) {
+      Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
+      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       throw new ErrorCodeException(ErrorCode.INVALID_UPDATE_USER_REQUEST);
     }
 
@@ -126,9 +141,16 @@ public class UserController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    UserResponse userResponse = userService.logout(userId);
+    UserResponse userResponse = userService.logout(userId, auditRequest);
 
+    if (userResponse.is2xxSuccessful()) {
+      logger.info(String.format("user_id %s successfully logged out.", userId));
+      auditHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
+    } else {
+      auditHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
+    }
     logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }

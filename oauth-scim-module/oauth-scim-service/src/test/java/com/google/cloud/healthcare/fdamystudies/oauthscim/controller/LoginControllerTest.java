@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.APP_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTO_LOGIN_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EMAIL;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
@@ -24,8 +25,22 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_APPLICATION_CREDENTIALS;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_ID_OR_SECRET;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -37,11 +52,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
@@ -52,12 +70,18 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.net.MalformedURLException;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.Map;
 import javax.servlet.http.Cookie;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -83,6 +107,8 @@ public class LoginControllerTest extends BaseMockIT {
 
   private static final String EMAIL_VALUE = "mockit_oauth_scim_user@grr.la";
 
+  protected static final String VALID_CORRELATION_ID = "8a56d20c-d755-4487-b80d-22d5fa383046";
+
   @Autowired private RedirectConfig redirectConfig;
 
   @Autowired private UserRepository userRepository;
@@ -94,6 +120,9 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE);
 
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", IdGenerator.id());
+
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(MobilePlatform.UNKNOWN.getValue());
     String termsRedirectUrl = redirectConfig.getTermsUrl(MobilePlatform.UNKNOWN.getValue());
@@ -103,6 +132,7 @@ public class LoginControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
+                .headers(headers)
                 .queryParams(queryParams))
         .andDo(print())
         .andExpect(status().isOk())
@@ -119,6 +149,10 @@ public class LoginControllerTest extends BaseMockIT {
   public void shouldReturnLoginPageForAndroid() throws Exception {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE_FOR_ANDROID);
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.set("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
     String forgotPasswordRedirectUrl =
         redirectConfig.getForgotPasswordUrl(MobilePlatform.ANDROID.getValue());
     String signupRedirectUrl = redirectConfig.getSignupUrl(MobilePlatform.ANDROID.getValue());
@@ -129,7 +163,8 @@ public class LoginControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
-                .queryParams(queryParams))
+                .queryParams(queryParams)
+                .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(model().attribute(ABOUT_LINK, nullValue()))
@@ -158,6 +193,9 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add("code", AUTH_CODE_VALUE);
 
+    HttpHeaders headers = getCommonHeaders();
+    headers.set("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
@@ -172,12 +210,17 @@ public class LoginControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
+                .headers(headers)
                 .queryParams(queryParams)
                 .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(expectedRedirectUrl))
         .andReturn();
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_SUCCEEDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_SUCCEEDED);
   }
 
   @Test
@@ -250,6 +293,9 @@ public class LoginControllerTest extends BaseMockIT {
     userEntity.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
     userEntity = userRepository.saveAndFlush(userEntity);
 
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", VALID_CORRELATION_ID);
+
     // Step-2 call API with login credentials
     String activationUrl =
         redirectConfig.getAccountActivationUrl(MobilePlatform.UNKNOWN.getValue());
@@ -267,11 +313,90 @@ public class LoginControllerTest extends BaseMockIT {
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
+                .headers(headers)
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name(expectedViedName));
 
+    // Step-3 delete user account
+    userRepository.delete(userEntity);
+  }
+
+  @Test
+  public void shouldAuthenticateTempPassAndRedirectToActivationPage() throws Exception {
+    // Step-1 create a user account with PENDING_CONFIRMATION status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", VALID_CORRELATION_ID);
+
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers)
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+        .andDo(print())
+        .andExpect(status().is3xxRedirection());
+
+    // Step-3 delete user account
+    userRepository.delete(userEntity);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED);
+  }
+
+  @Test
+  public void validateTempPassFailureLog() throws Exception {
+    // Step-1 create a user account with ACCOUNT_LOCKED status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setAppId("GCPMS001");
+    auditRequest.setAppVersion("1.0");
+    auditRequest.setCorrelationId(IdGenerator.id());
+    auditRequest.setUserId(userEntity.getUserId());
+    auditRequest.setSource("IntegrationTests");
+    auditRequest.setMobilePlatform("Unknown");
+    JsonNode userInfo = userEntity.getUserInfo();
+
+    ObjectNode nameNode = (ObjectNode) userInfo.get(PASSWORD);
+    userInfo.get(PASSWORD);
+    nameNode.put("expire_timestamp", Instant.now().toEpochMilli());
+    nameNode.put("otp_used", false);
+    ErrorCode errorCode =
+        userService.validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
+    assertEquals(ErrorCode.TEMP_PASSWORD_EXPIRED.getCode(), errorCode.getCode());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD);
+
+    userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    ErrorCode errorCode1 =
+        userService.validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
+    assertEquals(ErrorCode.TEMP_PASSWORD_EXPIRED.getCode(), errorCode1.getCode());
+    Map<String, AuditLogEventRequest> auditEventMap1 = new HashedMap<>();
+    auditEventMap1.put(SIGNIN_FAILED_EXPIRED_PASSWORD.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_EXPIRED_PASSWORD);
     // Step-3 delete user account
     userRepository.delete(userEntity);
   }
@@ -283,6 +408,9 @@ public class LoginControllerTest extends BaseMockIT {
     UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
     userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     userRepository.saveAndFlush(userEntity);
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", IdGenerator.id());
 
     // Step-2 call API with login credentials
     MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
@@ -296,6 +424,7 @@ public class LoginControllerTest extends BaseMockIT {
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
+                .headers(headers)
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
@@ -344,6 +473,10 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
 
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("userId", userEntity.getUserId());
+
     ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
     for (int loginAttempts = 1; loginAttempts <= MAX_LOGIN_ATTEMPTS; loginAttempts++) {
       if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
@@ -354,15 +487,116 @@ public class LoginControllerTest extends BaseMockIT {
               post(ApiEndpoint.LOGIN_PAGE.getPath())
                   .contextPath(getContextPath())
                   .params(requestParams)
+                  .headers(headers)
                   .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
           .andDo(print())
           .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
+
+      AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+      auditRequest.setUserId(userEntity.getUserId());
+
+      Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+      auditEventMap.put(CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED.getEventCode(), auditRequest);
+      auditEventMap.put(SIGNIN_FAILED_INVALID_PASSWORD.getEventCode(), auditRequest);
+      auditEventMap.put(SIGNIN_FAILED.getEventCode(), auditRequest);
+
+      verifyAuditEventCall(
+          auditEventMap,
+          CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED,
+          SIGNIN_FAILED_INVALID_PASSWORD,
+          SIGNIN_FAILED);
+
+      if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
+        verifyAuditEventCall(ACCOUNT_LOCKED);
+      }
+      // Reset Audit Event calls
+      clearAuditRequests();
+      auditEventMap.clear();
     }
 
     // Step-3 expect account status changed to ACCOUNT_LOCKED
     userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
     assertTrue(
         UserAccountStatus.ACCOUNT_LOCKED.equals(UserAccountStatus.valueOf(userEntity.getStatus())));
+  }
+
+  @Test
+  public void checkLoginFailedInvalidCredentials() throws Exception {
+    // Step-1 create a user account with ACTIVE status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+    requestParams.set(PASSWORD, PASSWORD_VALUE + 1);
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("userId", userEntity.getUserId());
+
+    ErrorCode expectedErrorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers)
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+        .andDo(print())
+        .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED.getEventCode(), auditRequest);
+    auditEventMap.put(SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD.getEventCode(), auditRequest);
+    auditEventMap.put(INVALID_CLIENT_APPLICATION_CREDENTIALS.getEventCode(), auditRequest);
+    auditEventMap.put(INVALID_CLIENT_ID_OR_SECRET.getEventCode(), auditRequest);
+    verifyAuditEventCall(
+        auditEventMap,
+        SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED,
+        SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD,
+        INVALID_CLIENT_APPLICATION_CREDENTIALS,
+        INVALID_CLIENT_ID_OR_SECRET);
+  }
+
+  @Test
+  public void checkSigninFailureUnregisteredUser() throws Exception {
+
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+    requestParams.set(PASSWORD, PASSWORD_VALUE + 1);
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", IdGenerator.id());
+
+    ErrorCode expectedErrorCode = ErrorCode.USER_NOT_FOUND;
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers)
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+        .andDo(print())
+        .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_FAILED_UNREGISTERED_USER.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_UNREGISTERED_USER);
   }
 
   @AfterEach
@@ -384,5 +618,17 @@ public class LoginControllerTest extends BaseMockIT {
     requestParams.add(EMAIL, EMAIL_VALUE);
     requestParams.add(PASSWORD, PASSWORD_VALUE);
     return requestParams;
+  }
+
+  private HttpHeaders getCommonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "GCPMS001");
+    headers.add("studyId", "MyStudies");
+    headers.add("source", "IntegrationTests");
+    return headers;
   }
 }

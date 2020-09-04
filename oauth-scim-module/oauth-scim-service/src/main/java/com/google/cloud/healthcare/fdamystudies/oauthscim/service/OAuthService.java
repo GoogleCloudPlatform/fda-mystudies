@@ -10,13 +10,17 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 public interface OAuthService {
 
-  public ResponseEntity<?> getToken(MultiValueMap<String, String> paramMap, HttpHeaders headers)
+  public ResponseEntity<?> getToken(
+      MultiValueMap<String, String> paramMap,
+      HttpHeaders headers,
+      AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
 
   public ResponseEntity<JsonNode> revokeToken(

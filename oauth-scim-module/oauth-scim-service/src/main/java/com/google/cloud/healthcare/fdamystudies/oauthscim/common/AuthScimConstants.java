@@ -53,7 +53,7 @@ public final class AuthScimConstants {
 
   public static final String TOKEN = "token";
 
-  public static final String CORRELATION_ID = "correlation_id";
+  public static final String CORRELATION_ID = "correlationId";
 
   public static final String LOGIN_CHALLENGE = "login_challenge";
 

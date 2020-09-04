@@ -31,9 +31,12 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
@@ -42,7 +45,9 @@ import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
@@ -91,6 +96,8 @@ public class LoginController {
 
   @Autowired private AppPropertyConfig appConfig;
 
+  @Autowired private AuthScimAuditHelper auditHelper;
+
   /**
    * @param loginChallenge is optional. ORY Hydra sends this field as query param when login/consent
    *     flow is initiated.
@@ -110,6 +117,7 @@ public class LoginController {
       HttpServletResponse response,
       Model model) {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     model.addAttribute("loginRequest", new LoginRequest());
 
@@ -117,7 +125,7 @@ public class LoginController {
     if (StringUtils.isNotBlank(code)) {
       logger.exit(
           "login/consent flow completed, redirect to callbackUrl with auth code and userId");
-      return redirectToCallbackUrl(request, code, accountStatus, response);
+      return redirectToCallbackUrl(request, code, accountStatus, response, auditRequest);
     }
 
     // login/consent flow initiated
@@ -133,11 +141,12 @@ public class LoginController {
       JsonNode responseBody = loginResponse.getBody();
       if (skipLogin(responseBody)) {
         logger.exit("skip login, return to callback URL");
-        return redirectToCallbackUrl(request, code, accountStatus, response);
+        return redirectToCallbackUrl(request, code, accountStatus, response, auditRequest);
       }
       return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
     }
 
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
     return ERROR_VIEW_NAME;
   }
 
@@ -165,6 +174,7 @@ public class LoginController {
       HttpServletResponse response)
       throws JsonProcessingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
 
@@ -190,7 +200,7 @@ public class LoginController {
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
 
-    AuthenticationResponse authenticationResponse = userService.authenticate(user);
+    AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 
     if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
         == authenticationResponse.getAccountStatus()) {
@@ -293,7 +303,11 @@ public class LoginController {
   }
 
   private String redirectToCallbackUrl(
-      HttpServletRequest request, String code, String accountStatus, HttpServletResponse response) {
+      HttpServletRequest request,
+      String code,
+      String accountStatus,
+      HttpServletResponse response,
+      AuditLogEventRequest auditRequest) {
     String userId = WebUtils.getCookie(request, USER_ID_COOKIE).getValue();
     String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM_COOKIE).getValue();
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
@@ -303,6 +317,7 @@ public class LoginController {
             "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
 
     logger.exit(String.format("redirect to %s from /login", callbackUrl));
+    auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
     return redirect(response, redirectUrl);
   }
 

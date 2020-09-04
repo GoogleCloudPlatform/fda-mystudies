@@ -19,11 +19,22 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SCOPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.CLIENT_USER_VALIDATED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_REFRESH_TOKEN;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SERVICE_UNAVAILABLE_EXCEPTION;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
+import java.util.Collections;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -54,6 +65,8 @@ public class OAuthController {
 
   @Autowired private OAuthService oauthService;
 
+  @Autowired private AuthScimAuditHelper auditHelper;
+
   @PostMapping(
       value = "/oauth2/token",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -64,31 +77,40 @@ public class OAuthController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String grantType = StringUtils.defaultString(paramMap.getFirst(GRANT_TYPE));
 
+    Map<String, String> grantTypePH = Collections.singletonMap("grant_type", GRANT_TYPE);
     // validate required params
     ValidationErrorResponse errors = null;
     switch (grantType) {
       case REFRESH_TOKEN:
+        auditHelper.logEvent(INVALID_REFRESH_TOKEN, auditRequest);
         errors = validateRequiredParams(paramMap, REFRESH_TOKEN, REDIRECT_URI, CLIENT_ID, USER_ID);
         break;
       case AUTHORIZATION_CODE:
+        auditHelper.logEvent(
+            NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS, auditRequest);
         errors =
             validateRequiredParams(paramMap, CODE, REDIRECT_URI, SCOPE, USER_ID, CODE_VERIFIER);
         break;
       default:
+        auditHelper.logEvent(
+            NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE, auditRequest, grantTypePH);
         // client_credentials grant type
         errors = validateRequiredParams(paramMap, GRANT_TYPE, REDIRECT_URI, SCOPE);
     }
 
     if (errors.hasErrors()) {
+      Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
+      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     // get token from hydra
-    ResponseEntity<?> response = oauthService.getToken(paramMap, headers);
+    ResponseEntity<?> response = oauthService.getToken(paramMap, headers, auditRequest);
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
 
     return response;
@@ -103,10 +125,13 @@ public class OAuthController {
       HttpServletRequest request,
       @RequestHeader HttpHeaders headers) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     // validate required params
     ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
     if (errors.hasErrors()) {
+      Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
+      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
@@ -126,16 +151,26 @@ public class OAuthController {
       HttpServletRequest request,
       @RequestHeader HttpHeaders headers) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    Map<String, String> placeHolders =
+        Collections.singletonMap("user_id", auditRequest.getUserId());
 
     // validate required params
     ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
     if (errors.hasErrors()) {
+      auditHelper.logEvent(ACCESS_TOKEN_INVALID_OR_EXPIRED, auditRequest, placeHolders);
+      Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
+      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     // revoke tokens
     ResponseEntity<JsonNode> response = oauthService.introspectToken(paramMap, headers);
+
+    if (response.getStatusCode().is2xxSuccessful()) {
+      auditHelper.logEvent(CLIENT_USER_VALIDATED, auditRequest, placeHolders);
+    }
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
     return response;
   }
