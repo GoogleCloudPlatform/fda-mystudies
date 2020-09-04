@@ -125,15 +125,15 @@
           type="submit"
           name="status"
           [ngClass]="
-            statusUpdate.status === '1'
+            statusUpdate.status === 1
               ? 'banner__default__btn'
               : 'banner__primary__btn'
           "
           class="btn flex__row__reverse"
-          (click)="changeStatus()"
+          (click)="toggleStatus()"
         >
           {{
-            statusUpdate.status === "1"
+            statusUpdate.status === 1
               ? "Decommission Location"
               : "Reactivate Location"
           }}

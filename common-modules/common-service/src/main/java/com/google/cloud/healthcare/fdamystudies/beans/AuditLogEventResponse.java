@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,9 +21,5 @@ public class AuditLogEventResponse extends BaseResponse {
 
   public AuditLogEventResponse() {
     super();
-  }
-
-  public AuditLogEventResponse(ErrorCode errorCode) {
-    super(errorCode);
   }
 }
