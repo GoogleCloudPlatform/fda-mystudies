@@ -60,9 +60,9 @@ export class UpdateUserComponent extends UnsubscribeOnDestroyAdapter
         .getUserDetails(this.adminId)
         .subscribe((data: ManageUserDetails) => {
           this.user = data.user;
-          this.user.manageLocationsSelected = this.user.manageLocations
-            ? true
-            : false;
+          this.user.manageLocationsSelected =
+            this.user.manageLocations !== null;
+          this.selectedApps = this.user.apps;
           this.getAllApps();
         }),
     );

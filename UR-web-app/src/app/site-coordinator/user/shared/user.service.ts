@@ -18,8 +18,9 @@ export class UserService {
   }
 
   update(user: User, adminId: string): Observable<ApiResponse> {
+    delete user.status;
     return this.http.put<ApiResponse>(
-      `${environment.baseUrl}/users/${adminId}`,
+      `${environment.baseUrl}/users/${adminId}/`,
       user,
     );
   }
@@ -28,8 +29,8 @@ export class UserService {
     updateStatusRequest: UpdateStatusRequest,
     adminId: string,
   ): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(
-      `${environment.baseUrl}/users/${adminId}/status`,
+    return this.http.patch<ApiResponse>(
+      `${environment.baseUrl}/users/${adminId}/`,
       updateStatusRequest,
     );
   }
