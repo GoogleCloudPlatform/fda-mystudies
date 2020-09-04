@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {EntityService} from 'src/app/service/entity.service';
-import {App} from './app.model';
+import {ManageApps} from './app.model';
 import {Observable} from 'rxjs';
 import {AppDetails} from '../../user/shared/app-details';
 import {environment} from '@environment';
@@ -11,12 +11,12 @@ import {HttpClient} from '@angular/common/http';
 })
 export class AppsService {
   constructor(
-    private readonly entityService: EntityService<App>,
+    private readonly entityService: EntityService<ManageApps>,
     private readonly http: HttpClient,
   ) {}
 
-  getUserApps(): Observable<App[]> {
-    return this.entityService.getCollection('apps');
+  getUserApps(): Observable<ManageApps> {
+    return this.entityService.get('apps');
   }
 
   getAllAppsWithStudiesAndSites(): Observable<AppDetails> {
