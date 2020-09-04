@@ -223,18 +223,15 @@ class ConfirmationViewController: UIViewController {
   @IBAction func deleteAccountAction(_ sender: UIButton) {
 
     var found: Bool = false
-    for withdrawnStudy in studiesToWithdraw {
-      if withdrawnStudy.shouldDelete == nil {
-
-        UIUtilities.showAlertWithMessage(
-          alertMessage: NSLocalizedString(
-            kConfirmWithdrawlSelectOptionsAlert,
-            comment: ""
-          )
+    for withdrawnStudy in studiesToWithdraw where withdrawnStudy.shouldDelete == nil {
+      UIUtilities.showAlertWithMessage(
+        alertMessage: NSLocalizedString(
+          kConfirmWithdrawlSelectOptionsAlert,
+          comment: ""
         )
-        found = true
-        break
-      }
+      )
+      found = true
+      break
     }
     if !found {
       self.withdrawnFromNextStudy()

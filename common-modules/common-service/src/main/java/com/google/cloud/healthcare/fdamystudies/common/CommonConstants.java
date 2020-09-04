@@ -66,11 +66,12 @@ public final class CommonConstants {
 
   public static final String PASSWORD_REGEX_MESSAGE =
       "Your password does not meet the required criteria.";
-  
+
   public static final int EMAIL_LENGTH = 320;
 
   public static final String DELETE = "delete";
 
   public static final String RETAIN = "retain";
 
+  public static final double DEFAULT_PERCENTAGE = 100.00;
 }

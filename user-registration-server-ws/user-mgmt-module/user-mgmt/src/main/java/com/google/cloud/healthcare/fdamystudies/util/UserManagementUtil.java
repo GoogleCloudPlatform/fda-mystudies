@@ -10,32 +10,22 @@ package com.google.cloud.healthcare.fdamystudies.util;
 
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.BodyForProvider;
-import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordBean;
-import com.google.cloud.healthcare.fdamystudies.beans.DeleteAccountInfoResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfo;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateAccountInfoResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
-import java.io.IOException;
+import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,206 +49,34 @@ public class UserManagementUtil {
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
-  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
+  @Autowired private OAuthService oauthService;
 
-  public Integer validateAccessToken(String userId, String accessToken, String clientToken) {
-    logger.info("UserManagementUtil validateAccessToken() - starts ");
-    Integer value = null;
-    HttpHeaders headers = null;
-    HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
-      headers.set(AppConstants.USER_ID, userId);
-      headers.set(AppConstants.ACCESS_TOKEN, accessToken);
+  @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
 
-      requestBody = new HttpEntity<>(null, headers);
-
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerAccessTokenValidationUrl(),
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
-
-      value = (Integer) responseEntity.getBody();
-    } catch (Exception e) {
-      logger.error("UserManagementUtil validateAccessToken() - error ", e);
-    }
-    logger.info("UserManagementUtil validateAccessToken() - ends ");
-    return value;
-  }
-
-  public String changePassword(
-      String userId, String clientToken, String oldPassword, String newPassword) {
-    logger.info("UserManagementUtil changePassword() - starts ");
-    Integer value = null;
-    HttpHeaders headers = null;
-    ChangePasswordBean providerBody = null;
-    HttpEntity<ChangePasswordBean> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
-    String respMessage = "";
-    ResponseBean responseBean = new ResponseBean();
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.CLIENT_TOKEN, clientToken);
-      headers.set(AppConstants.USER_ID, userId);
-
-      providerBody = new ChangePasswordBean();
-      providerBody.setCurrentPassword(oldPassword);
-      providerBody.setNewPassword(newPassword);
-
-      requestBody = new HttpEntity<>(providerBody, headers);
-
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerUrl() + "/changePassword",
-              HttpMethod.POST,
-              requestBody,
-              Integer.class);
-      value = (Integer) responseEntity.getBody();
-
-      if (value == 1) {
-        responseBean.setMessage(AppConstants.SUCCESS);
-      } else {
-        responseBean.setMessage(AppConstants.FAILURE);
-      }
-    } catch (Exception e) {
-      logger.error("UserManagementUtil changePassword() - error ", e);
-    }
-    logger.info("UserManagementUtil changePassword() - ends ");
-    return respMessage;
-  }
-
-  public UpdateAccountInfoResponseBean updateUserInfoInAuthServer(
-      UpdateAccountInfo accountInfo, String userId) {
+  public UpdateEmailStatusResponse updateUserInfoInAuthServer(
+      UpdateEmailStatusRequest updateEmailStatusRequest, String userId) {
     logger.info("(Util)....UserManagementUtil.updateUserInfoInAuthServer()......STARTED");
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.USER_ID, userId);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
-    HttpEntity<UpdateAccountInfo> request = new HttpEntity<>(accountInfo, headers);
-    ResponseEntity<?> responseEntity = null;
+    HttpEntity<UpdateEmailStatusRequest> request =
+        new HttpEntity<>(updateEmailStatusRequest, headers);
+    ResponseEntity<UpdateEmailStatusResponse> responseEntity =
+        restTemplate.exchange(
+            appConfig.getAuthServerUpdateStatusUrl(),
+            HttpMethod.PUT,
+            request,
+            UpdateEmailStatusResponse.class,
+            userId);
+    UpdateEmailStatusResponse updateEmailResponse = responseEntity.getBody();
 
-    try {
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerUpdateStatusUrl(), HttpMethod.POST, request, String.class);
-      return new UpdateAccountInfoResponseBean(
-          responseEntity.getStatusCodeValue(), responseEntity.getStatusCode().getReasonPhrase());
-
-    } catch (RestClientResponseException e) {
-      logger.info("(Util)....UserRegistrationController.updateUserInfoInAuthServer()......ENDED");
-      return new UpdateAccountInfoResponseBean(
-          HttpStatus.INTERNAL_SERVER_ERROR.value(),
-          HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
-    }
-  }
-
-  public DeleteAccountInfoResponseBean deleteUserInfoInAuthServer(
-      String userId, String clientToken, String accessToken) {
-    logger.info("(Util)....UserRegistrationController.deleteUserInfoInAuthServer()......STARTED");
-
-    DeleteAccountInfoResponseBean authResponse = null;
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.CLIENT_TOKEN, clientToken);
-    headers.set(AppConstants.USER_ID, userId);
-    headers.set(AppConstants.ACCESS_TOKEN, accessToken);
-
-    HttpEntity<?> request = new HttpEntity<>(null, headers);
-    ObjectMapper objectMapper = null;
-
-    try {
-      ResponseEntity<?> responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerDeleteStatusUrl(), HttpMethod.DELETE, request, String.class);
-
-      if (responseEntity.getStatusCode() == HttpStatus.OK) {
-        String body = (String) responseEntity.getBody();
-        objectMapper = new ObjectMapper();
-        try {
-          authResponse = objectMapper.readValue(body, DeleteAccountInfoResponseBean.class);
-          return authResponse;
-        } catch (JsonParseException e) {
-          return authResponse;
-        } catch (JsonMappingException e) {
-          return authResponse;
-        } catch (IOException e) {
-          return authResponse;
-        }
-      } else {
-        return authResponse;
-      }
-
-    } catch (RestClientResponseException e) {
-      if (e.getRawStatusCode() == 401) {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authResponse = new DeleteAccountInfoResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authResponse.setCode(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authResponse.setHttpStatusCode(401 + "");
-
-      } else if (e.getRawStatusCode() == 500) {
-        authResponse = new DeleteAccountInfoResponseBean();
-        authResponse.setHttpStatusCode(500 + "");
-
-      } else {
-        Set<Entry<String, List<String>>> headerSet = e.getResponseHeaders().entrySet();
-        authResponse = new DeleteAccountInfoResponseBean();
-        for (Entry<String, List<String>> entry : headerSet) {
-          if (AppConstants.STATUS.equals(entry.getKey())) {
-            authResponse.setCode(entry.getValue().get(0));
-          }
-          if (AppConstants.STATUS_MESSAGE.equals(entry.getKey())) {
-            authResponse.setMessage(entry.getValue().get(0));
-          }
-        }
-        authResponse.setHttpStatusCode(400 + "");
-      }
-
-      return authResponse;
-    }
-  }
-
-  public String deactivateAcct(String userId) {
-    logger.info("UserManagementUtil deactivateAcct() - starts ");
-    Integer value = null;
-    HttpHeaders headers = null;
-    BodyForProvider bodyProvider = new BodyForProvider();
-    HttpEntity<BodyForProvider> requestBody = null;
-    ResponseEntity<?> responseEntity = null;
-    String respMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.USER_ID, userId);
-
-      requestBody = new HttpEntity<>(null, headers);
-      responseEntity =
-          restTemplate.exchange(
-              appConfig.getAuthServerDeactivateUrl(), HttpMethod.POST, requestBody, Integer.class);
-      value = (Integer) responseEntity.getBody();
-      if (value == 1) {
-        respMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-      }
-
-    } catch (Exception e) {
-      logger.error("UserManagementUtil deactivateAcct() - error ", e);
-    }
-    logger.info("UserManagementUtil deactivateAcct() - Ends ");
-    return respMessage;
+    logger.debug(
+        String.format(
+            "status =%d, message=%s",
+            updateEmailResponse.getHttpStatusCode(), updateEmailResponse.getMessage()));
+    return updateEmailResponse;
   }
 
   public static Date getCurrentUtilDateTime() {

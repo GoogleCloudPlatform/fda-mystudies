@@ -461,15 +461,12 @@ extension SignUpViewController: UITextFieldDelegate {
     switch tag {
     case .emailId:
       self.user.emailId = textField.text!
-      break
 
     case .password:
       self.user.password = textField.text!
-      break
 
     case .confirmPassword:
       confirmPassword = textField.text!
-      break
     }
   }
 }
