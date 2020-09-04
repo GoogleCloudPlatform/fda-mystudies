@@ -473,7 +473,6 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnBadRequestForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
-    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
 
@@ -499,7 +498,6 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnAccountNotVerifiedForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
-    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
@@ -521,7 +519,6 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnDeactivatedForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
-    headers.add("Authorization", VALID_BEARER_TOKEN);
     userEntity.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
     userRepository.saveAndFlush(userEntity);
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
@@ -544,7 +541,6 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldSendPasswordResetEmailAndUpdateThePassword()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
-    headers.add("Authorization", VALID_BEARER_TOKEN);
     headers.add("correlationId", "CorrelationIdValue_For_2XX_Success");
 
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
