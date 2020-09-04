@@ -96,7 +96,6 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
-
   public String updateStatus(UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
 
@@ -107,7 +106,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
             updateEmailStatusRequest, participantDetails.getUserId());
 
     UserDetailsEntity userDetails = SerializationUtils.clone(participantDetails);
-    userDetails.setUserDetailsId(participantDetails.getUserDetailsId());
+    userDetails.setId(participantDetails.getId());
     userDetails.setEmailCode(null);
     userDetails.setCodeExpireDate(null);
     userDetails.setStatus(AppConstants.EMAILID_VERIFIED_STATUS);
