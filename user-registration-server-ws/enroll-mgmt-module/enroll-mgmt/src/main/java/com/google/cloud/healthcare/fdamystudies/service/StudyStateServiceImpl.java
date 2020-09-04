@@ -60,8 +60,6 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Autowired private ParticipantStudiesInfoDao participantStudiesInfoDao;
 
-  @Autowired private CommonService commonService;
-
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   @Override
@@ -87,11 +85,11 @@ public class StudyStateServiceImpl implements StudyStateService {
     StudyStateRespBean studyStateRespBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     boolean isExists = false;
-    StudyEntity studyInfo = null;
+    StudyEntity studyEntity = null;
     List<ParticipantStudyEntity> addParticipantStudiesList =
         new ArrayList<ParticipantStudyEntity>();
     List<String> customStudyIdList = new LinkedList<>();
-    ParticipantStudyEntity participantStudyBo = new ParticipantStudyEntity();
+    ParticipantStudyEntity participantStudyEntity = new ParticipantStudyEntity();
 
     Map<String, String> placeHolder = new HashMap<>();
     auditRequest.setUserId(userId);
@@ -101,11 +99,11 @@ public class StudyStateServiceImpl implements StudyStateService {
 
         auditRequest.setStudyId(studiesBean.getStudyId());
         auditRequest.setParticipantId(studiesBean.getParticipantId());
-        studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
+        studyEntity = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
         if (existParticipantStudies != null && !existParticipantStudies.isEmpty()) {
           for (ParticipantStudyEntity participantStudies : existParticipantStudies) {
-            if (studyInfo != null) {
-              if (studyInfo.getId().equals(participantStudies.getStudy().getId())) {
+            if (studyEntity != null) {
+              if (studyEntity.getId().equals(participantStudies.getStudy().getId())) {
                 isExists = true;
                 if (participantStudies.getStatus() != null
                     && participantStudies
@@ -145,37 +143,38 @@ public class StudyStateServiceImpl implements StudyStateService {
         if (!isExists) {
           if (studiesBean.getStudyId() != null
               && StringUtils.isNotEmpty(studiesBean.getStudyId())
-              && studyInfo != null) {
-            participantStudyBo.setStudy(studyInfo);
+              && studyEntity != null) {
+            participantStudyEntity.setStudy(studyEntity);
           }
           if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
-            participantStudyBo.setStatus(studiesBean.getStatus());
+            participantStudyEntity.setStatus(studiesBean.getStatus());
             if (studiesBean
                 .getStatus()
                 .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
-              participantStudyBo.setEnrolledDate(Timestamp.from(Instant.now()));
+              participantStudyEntity.setEnrolledDate(Timestamp.from(Instant.now()));
             }
           } else {
-            participantStudyBo.setStatus(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
+            participantStudyEntity.setStatus(
+                MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
           }
           if (studiesBean.getBookmarked() != null) {
-            participantStudyBo.setBookmark(studiesBean.getBookmarked());
+            participantStudyEntity.setBookmark(studiesBean.getBookmarked());
           }
           if (userId != null && StringUtils.isNotEmpty(userId)) {
-            participantStudyBo.setUserDetails(commonDao.getUserInfoDetails(userId));
+            participantStudyEntity.setUserDetails(commonDao.getUserInfoDetails(userId));
           }
           if (studiesBean.getCompletion() != null) {
-            participantStudyBo.setCompletion(studiesBean.getCompletion());
+            participantStudyEntity.setCompletion(studiesBean.getCompletion());
           }
           if (studiesBean.getAdherence() != null) {
-            participantStudyBo.setAdherence(studiesBean.getAdherence());
+            participantStudyEntity.setAdherence(studiesBean.getAdherence());
           }
           if (studiesBean.getParticipantId() != null
               && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
-            participantStudyBo.setParticipantId(studiesBean.getParticipantId());
+            participantStudyEntity.setParticipantId(studiesBean.getParticipantId());
           }
-          placeHolder.put("study_state_value", participantStudyBo.getStatus());
-          addParticipantStudiesList.add(participantStudyBo);
+          placeHolder.put("study_state_value", participantStudyEntity.getStatus());
+          addParticipantStudiesList.add(participantStudyEntity);
           customStudyIdList.add(studiesBean.getStudyId());
         }
       }
@@ -206,11 +205,11 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     if (userId != null) {
       try {
-        UserDetailsEntity userDetailsBO = userRegAdminUserDao.getRecord(userId);
-        if (userDetailsBO != null) {
+        UserDetailsEntity userDetailsEntity = userRegAdminUserDao.getRecord(userId);
+        if (userDetailsEntity != null) {
 
           List<ParticipantStudyEntity> participantStudiesList =
-              participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsBO.getUserId());
+              participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsEntity.getUserId());
           if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
             for (ParticipantStudyEntity participantStudiesBO : participantStudiesList) {
               StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);

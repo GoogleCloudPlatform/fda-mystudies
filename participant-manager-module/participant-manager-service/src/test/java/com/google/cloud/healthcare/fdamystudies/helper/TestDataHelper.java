@@ -16,6 +16,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCA
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -259,7 +260,7 @@ public class TestDataHelper {
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
-    participantStudyEntity.setSharing(true);
+    participantStudyEntity.setSharing(DataSharingStatus.PERMITTED.value());
     return participantStudyRepository.saveAndFlush(participantStudyEntity);
   }
 

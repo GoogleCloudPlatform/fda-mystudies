@@ -126,14 +126,14 @@ public class StudyStateDaoImpl implements StudyStateDao {
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
 
-    CriteriaQuery<StudyEntity> studiesBoCriteria = null;
-    Root<StudyEntity> studiesBoRoot = null;
-    Predicate[] studiesBoPredicates = new Predicate[1];
+    CriteriaQuery<StudyEntity> studyEntityCriteria = null;
+    Root<StudyEntity> studyEntityRoot = null;
+    Predicate[] studyEntityPredicates = new Predicate[1];
     List<StudyEntity> studiesBoList = null;
-    StudyEntity studyInfo = null;
+    StudyEntity studyEntity = null;
 
     CriteriaUpdate<ParticipantStudyEntity> criteriaUpdate = null;
-    Root<ParticipantStudyEntity> participantStudiesBoRoot = null;
+    Root<ParticipantStudyEntity> participantStudyRoot = null;
     List<Predicate> predicates = new ArrayList<>();
     int isUpdated = 0;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
@@ -141,19 +141,19 @@ public class StudyStateDaoImpl implements StudyStateDao {
       transaction = session.beginTransaction();
       criteriaBuilder = session.getCriteriaBuilder();
 
-      studiesBoCriteria = criteriaBuilder.createQuery(StudyEntity.class);
-      studiesBoRoot = studiesBoCriteria.from(StudyEntity.class);
-      studiesBoPredicates[0] = criteriaBuilder.equal(studiesBoRoot.get("customId"), studyId);
-      studiesBoCriteria.select(studiesBoRoot).where(studiesBoPredicates);
-      studiesBoList = session.createQuery(studiesBoCriteria).getResultList();
+      studyEntityCriteria = criteriaBuilder.createQuery(StudyEntity.class);
+      studyEntityRoot = studyEntityCriteria.from(StudyEntity.class);
+      studyEntityPredicates[0] = criteriaBuilder.equal(studyEntityRoot.get("customId"), studyId);
+      studyEntityCriteria.select(studyEntityRoot).where(studyEntityPredicates);
+      studiesBoList = session.createQuery(studyEntityCriteria).getResultList();
       if (!studiesBoList.isEmpty()) {
-        studyInfo = studiesBoList.get(0);
+        studyEntity = studiesBoList.get(0);
         criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
-        participantStudiesBoRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
+        participantStudyRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
         criteriaUpdate.set("status", AppConstants.WITHDRAWN);
         predicates.add(
-            criteriaBuilder.equal(participantStudiesBoRoot.get("participantId"), participantId));
-        predicates.add(criteriaBuilder.equal(participantStudiesBoRoot.get("study"), studyInfo));
+            criteriaBuilder.equal(participantStudyRoot.get("participantId"), participantId));
+        predicates.add(criteriaBuilder.equal(participantStudyRoot.get("study"), studyEntity));
         criteriaUpdate.where(predicates.toArray(new Predicate[predicates.size()]));
         isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
         if (isUpdated > 0) {

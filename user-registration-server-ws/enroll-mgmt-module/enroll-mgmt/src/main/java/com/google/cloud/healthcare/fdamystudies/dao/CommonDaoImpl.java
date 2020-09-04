@@ -38,28 +38,27 @@ public class CommonDaoImpl implements CommonDao {
   public UserDetailsEntity getUserInfoDetails(String userId) {
     logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
     CriteriaBuilder criteriaBuilder = null;
-    Integer userDetailsId = null;
     CriteriaQuery<UserDetailsEntity> userDetailsCriteriaQuery = null;
-    Root<UserDetailsEntity> userDetailsBoRoot = null;
+    Root<UserDetailsEntity> userDetailsEntityRoot = null;
     Predicate[] userDetailspredicates = new Predicate[1];
-    List<UserDetailsEntity> userDetailsBoList = null;
-    UserDetailsEntity userDetailsBO = null;
+    List<UserDetailsEntity> userDetailsList = null;
+    UserDetailsEntity userDetailsEntity = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsEntity.class);
-      userDetailsBoRoot = userDetailsCriteriaQuery.from(UserDetailsEntity.class);
+      userDetailsEntityRoot = userDetailsCriteriaQuery.from(UserDetailsEntity.class);
       userDetailspredicates[0] =
-          criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.USER_ID), userId);
-      userDetailsCriteriaQuery.select(userDetailsBoRoot).where(userDetailspredicates);
-      userDetailsBoList = session.createQuery(userDetailsCriteriaQuery).getResultList();
-      if (!userDetailsBoList.isEmpty()) {
-        userDetailsBO = userDetailsBoList.get(0);
+          criteriaBuilder.equal(userDetailsEntityRoot.get(AppConstants.USER_ID), userId);
+      userDetailsCriteriaQuery.select(userDetailsEntityRoot).where(userDetailspredicates);
+      userDetailsList = session.createQuery(userDetailsCriteriaQuery).getResultList();
+      if (!userDetailsList.isEmpty()) {
+        userDetailsEntity = userDetailsList.get(0);
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getUserInfoDetails() - error ", e);
     }
     logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
-    return userDetailsBO;
+    return userDetailsEntity;
   }
 
   @Override

@@ -26,15 +26,15 @@ public class CommonServiceImpl implements CommonService {
   @Override
   public UserDetailsEntity getUserInfoDetails(String userId) {
     logger.info("CommonServiceImpl getUserInfoDetails() - Starts ");
-    UserDetailsEntity userDetailsBO = null;
+    UserDetailsEntity userDetailsEntity = null;
     try {
       if (!StringUtils.isEmpty(userId)) {
-        userDetailsBO = commonDao.getUserInfoDetails(userId);
+        userDetailsEntity = commonDao.getUserInfoDetails(userId);
       }
     } catch (Exception e) {
       logger.error("CommonServiceImpl getUserInfoDetails() - error ", e);
     }
     logger.info("CommonServiceImpl getUserInfoDetails() - Ends ");
-    return userDetailsBO;
+    return userDetailsEntity;
   }
 }

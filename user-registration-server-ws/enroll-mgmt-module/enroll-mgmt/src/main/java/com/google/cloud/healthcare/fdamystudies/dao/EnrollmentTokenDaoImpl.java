@@ -46,23 +46,23 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     logger.info("EnrollmentTokenDaoImpl studyExists() - Started ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
-    Root<StudyEntity> studyInfoBoRoot = null;
+    Root<StudyEntity> studyInfoRoot = null;
     Predicate[] predicates = new Predicate[1];
-    List<StudyEntity> studyInfoBoList = null;
-    StudyEntity studyInfoBO = null;
+    List<StudyEntity> studyInfoList = null;
+    StudyEntity studyEntity = null;
     boolean isStudyExist = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       studyInfoBoCriteria = criteriaBuilder.createQuery(StudyEntity.class);
-      studyInfoBoRoot = studyInfoBoCriteria.from(StudyEntity.class);
-      predicates[0] = criteriaBuilder.equal(studyInfoBoRoot.get("customId"), studyId);
-      studyInfoBoCriteria.select(studyInfoBoRoot).where(predicates);
-      studyInfoBoList = session.createQuery(studyInfoBoCriteria).getResultList();
+      studyInfoRoot = studyInfoBoCriteria.from(StudyEntity.class);
+      predicates[0] = criteriaBuilder.equal(studyInfoRoot.get("customId"), studyId);
+      studyInfoBoCriteria.select(studyInfoRoot).where(predicates);
+      studyInfoList = session.createQuery(studyInfoBoCriteria).getResultList();
 
-      if (!studyInfoBoList.isEmpty()) {
-        studyInfoBO = studyInfoBoList.get(0);
+      if (!studyInfoList.isEmpty()) {
+        studyEntity = studyInfoList.get(0);
       }
-      if (studyInfoBO != null) {
+      if (studyEntity != null) {
         isStudyExist = true;
       }
     } catch (Exception e) {
@@ -76,14 +76,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @Override
   public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
     logger.info("EnrollmentTokenDaoImpl isValidStudyToken() - Started ");
-    CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
-    Root<StudyEntity> studyInfoBoRoot = null;
-    Predicate[] predicates = new Predicate[1];
-    List<StudyEntity> studyInfoBoList = null;
-    StudyEntity studyInfoBO = null;
     List<ParticipantRegistrySiteEntity> participantRegistrySite = new ArrayList<>();
-    Integer siteId = 0;
     ParticipantRegistrySiteEntity participantRegistrySiteDetails = null;
     boolean isValidStudyToken = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
@@ -113,7 +106,6 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   @Override
   public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Started ");
-    ParticipantStudyEntity participants = null;
     List<Object[]> participantList = null;
     boolean hasParticipant = false;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
@@ -140,24 +132,24 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   public boolean enrollmentTokenRequired(@NotNull String studyId) {
     logger.info("EnrollmentTokenDaoImpl enrollmentTokenRequired() - Started ");
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
-    Root<StudyEntity> studyInfoBoRoot = null;
+    CriteriaQuery<StudyEntity> studyEntityCriteria = null;
+    Root<StudyEntity> studyEntityRoot = null;
     Predicate[] predicates = new Predicate[1];
-    List<StudyEntity> studyInfoBoList = null;
-    StudyEntity studyInfoBO = null;
+    List<StudyEntity> studyList = null;
+    StudyEntity studyEntity = null;
     boolean isTokenRequired = false;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      studyInfoBoCriteria = criteriaBuilder.createQuery(StudyEntity.class);
-      studyInfoBoRoot = studyInfoBoCriteria.from(StudyEntity.class);
-      predicates[0] = criteriaBuilder.equal(studyInfoBoRoot.get("customId"), studyId);
-      studyInfoBoCriteria.select(studyInfoBoRoot).where(predicates);
-      studyInfoBoList = session.createQuery(studyInfoBoCriteria).getResultList();
-      if (!studyInfoBoList.isEmpty()) {
-        studyInfoBO = studyInfoBoList.get(0);
+      studyEntityCriteria = criteriaBuilder.createQuery(StudyEntity.class);
+      studyEntityRoot = studyEntityCriteria.from(StudyEntity.class);
+      predicates[0] = criteriaBuilder.equal(studyEntityRoot.get("customId"), studyId);
+      studyEntityCriteria.select(studyEntityRoot).where(predicates);
+      studyList = session.createQuery(studyEntityCriteria).getResultList();
+      if (!studyList.isEmpty()) {
+        studyEntity = studyList.get(0);
       }
-      if (studyInfoBO != null && studyInfoBO.getType().equalsIgnoreCase(AppConstants.CLOSE_STUDY)) {
+      if (studyEntity != null && studyEntity.getType().equalsIgnoreCase(AppConstants.CLOSE_STUDY)) {
         isTokenRequired = true;
       }
     } catch (Exception e) {
@@ -178,11 +170,11 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     logger.info("EnrollmentTokenDaoImpl enrollParticipant() - Started ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<StudyEntity> studyInfoBoCriteria = null;
-    Root<StudyEntity> studyInfoBoRoot = null;
+    CriteriaQuery<StudyEntity> studyEntityCriteria = null;
+    Root<StudyEntity> studyEntityRoot = null;
     Predicate[] predicates = new Predicate[1];
-    List<StudyEntity> studyInfoBoList = null;
-    StudyEntity studyInfoBO = null;
+    List<StudyEntity> studyList = null;
+    StudyEntity studyEntity = null;
 
     CriteriaQuery<ParticipantRegistrySiteEntity> participantRegistryCriteria = null;
     Root<ParticipantRegistrySiteEntity> participantRegistryRoot = null;
@@ -190,8 +182,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     List<ParticipantRegistrySiteEntity> participantRegistryList = null;
     ParticipantRegistrySiteEntity participantRegistry = null;
 
-    List<SiteEntity> siteBoList = null;
-    SiteEntity siteBo = null;
+    List<SiteEntity> sitesList = null;
+    SiteEntity siteEntity = null;
     Integer countAddParticipant = 0;
 
     CriteriaQuery<ParticipantStudyEntity> criteriaQuery = null;
@@ -213,13 +205,13 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       transaction = session.beginTransaction();
       criteriaBuilder = session.getCriteriaBuilder();
-      studyInfoBoCriteria = criteriaBuilder.createQuery(StudyEntity.class);
-      studyInfoBoRoot = studyInfoBoCriteria.from(StudyEntity.class);
-      predicates[0] = criteriaBuilder.equal(studyInfoBoRoot.get("customId"), studyId);
-      studyInfoBoCriteria.select(studyInfoBoRoot).where(predicates);
-      studyInfoBoList = session.createQuery(studyInfoBoCriteria).getResultList();
-      if (!studyInfoBoList.isEmpty()) {
-        studyInfoBO = studyInfoBoList.get(0);
+      studyEntityCriteria = criteriaBuilder.createQuery(StudyEntity.class);
+      studyEntityRoot = studyEntityCriteria.from(StudyEntity.class);
+      predicates[0] = criteriaBuilder.equal(studyEntityRoot.get("customId"), studyId);
+      studyEntityCriteria.select(studyEntityRoot).where(predicates);
+      studyList = session.createQuery(studyEntityCriteria).getResultList();
+      if (!studyList.isEmpty()) {
+        studyEntity = studyList.get(0);
         if (isTokenRequired) {
           participantRegistryCriteria =
               criteriaBuilder.createQuery(ParticipantRegistrySiteEntity.class);
@@ -235,23 +227,23 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           if (!participantRegistryList.isEmpty()) {
             participantRegistry = participantRegistryList.get(0);
 
-            siteBoList =
+            siteList =
                 session
                     .createQuery("from Site where id =:Id")
                     .setParameter("Id", participantRegistry.getSite().getId())
                     .getResultList();
-            if (!siteBoList.isEmpty()) {
-              siteBo = siteBoList.get(0);
+            if (!siteList.isEmpty()) {
+              siteEntity = siteList.get(0);
               criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
               root = criteriaQuery.from(ParticipantStudyEntity.class);
               participantPredicates[0] = criteriaBuilder.equal(root.get("userDetails"), userDetail);
-              participantPredicates[1] = criteriaBuilder.equal(root.get("study"), studyInfoBO);
+              participantPredicates[1] = criteriaBuilder.equal(root.get("study"), studyEntity);
               criteriaQuery.select(root).where(participantPredicates);
               participantStudiesList = session.createQuery(criteriaQuery).getResultList();
               if (!participantStudiesList.isEmpty()) {
                 participants = participantStudiesList.get(0);
-                participants.setSite(siteBo);
-                participants.setStudy(studyInfoBO);
+                participants.setSite(siteEntity);
+                participants.setStudy(studyEntity);
                 participants.setParticipantId(participantid);
                 participants.setUserDetails(userDetail);
                 participants.setParticipantRegistrySite(participantRegistry);
@@ -261,8 +253,8 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
                 countAddParticipant = 1;
               } else {
                 participants = new ParticipantStudyEntity();
-                participants.setSite(siteBo);
-                participants.setStudy(studyInfoBO);
+                participants.setSite(siteEntity);
+                participants.setStudy(studyEntity);
                 participants.setParticipantId(participantid);
                 participants.setUserDetails(userDetail);
                 participants.setParticipantRegistrySite(participantRegistry);
@@ -285,7 +277,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
 
           siteCriteria = criteriaBuilder.createQuery(SiteEntity.class);
           siteRoot = siteCriteria.from(SiteEntity.class);
-          sitePredicates[0] = criteriaBuilder.equal(siteRoot.get("study"), studyInfoBO);
+          sitePredicates[0] = criteriaBuilder.equal(siteRoot.get("study"), studyEntity);
           siteCriteria.select(siteRoot).where(sitePredicates);
           siteList = session.createQuery(siteCriteria).getResultList();
 
@@ -295,19 +287,19 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           }
           participantregistrySite.setInvitationDate(Timestamp.from(Instant.now()));
           participantregistrySite.setOnboardingStatus("E");
-          participantregistrySite.setStudy(studyInfoBO);
+          participantregistrySite.setStudy(studyEntity);
           countAddregistry = (String) session.save(participantregistrySite);
 
           criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
           root = criteriaQuery.from(ParticipantStudyEntity.class);
           participantPredicates[0] = criteriaBuilder.equal(root.get("userDetails"), userDetail);
-          participantPredicates[1] = criteriaBuilder.equal(root.get("study"), studyInfoBO);
+          participantPredicates[1] = criteriaBuilder.equal(root.get("study"), studyEntity);
           criteriaQuery.select(root).where(participantPredicates);
           participantStudiesList = session.createQuery(criteriaQuery).getResultList();
 
           if (!participantStudiesList.isEmpty()) {
             participants = participantStudiesList.get(0);
-            participants.setStudy(studyInfoBO);
+            participants.setStudy(studyEntity);
             participants.setParticipantId(participantid);
             participants.setUserDetails(userDetail);
             participants.setParticipantRegistrySite(participantregistrySite);
@@ -319,7 +311,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           } else {
             participants = new ParticipantStudyEntity();
             participants.setSite(site);
-            participants.setStudy(studyInfoBO);
+            participants.setStudy(studyEntity);
             participants.setParticipantId(participantid);
             participants.setUserDetails(userDetail);
             participants.setParticipantRegistrySite(participantregistrySite);
