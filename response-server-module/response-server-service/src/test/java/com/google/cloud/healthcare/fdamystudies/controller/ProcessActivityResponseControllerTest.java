@@ -178,7 +178,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   @Test
   public void shouldGetActivityResponse() throws Exception {
     String inputJsonContent = readJsonFile("/get_activity_response_data_for_participant.json");
-    StoredResponseBean StoredResponseBean =
+    StoredResponseBean storedResponseBean =
         getObjectMapper().readValue(inputJsonContent, StoredResponseBean.class);
 
     // Step-1 getActivityResponseDataForParticipant
@@ -189,7 +189,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             participantBo.getParticipantIdentifier(),
             ACTIVITY_ID_VALUE,
             QUESTION_KEY_VALUE))
-        .thenReturn(StoredResponseBean);
+        .thenReturn(storedResponseBean);
 
     // Step-2 call API to details to Get process activity response
     HttpHeaders headers = TestUtils.newHeadersUser();
