@@ -8,14 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.utils;
 
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACCESS_TOKEN_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACCESS_TOKEN_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_SECRET_KEY_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_SECRET_KEY_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_TOKEN_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.CLIENT_TOKEN_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
 
@@ -24,19 +16,19 @@ import org.springframework.http.HttpHeaders;
 
 public class TestUtils {
 
+  protected static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
+
   public static HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
-    headers.add(CLIENT_ID_HEADER, CLIENT_ID_VALUE);
-    headers.add(CLIENT_SECRET_KEY_HEADER, CLIENT_SECRET_KEY_VALUE);
     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     return headers;
   }
 
   public static HttpHeaders newHeadersUser() {
     HttpHeaders headers = new HttpHeaders();
-    headers.add(CLIENT_TOKEN_HEADER, CLIENT_TOKEN_VALUE);
-    headers.add(ACCESS_TOKEN_HEADER, ACCESS_TOKEN_VALUE);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     headers.add(USER_ID_HEADER, VALID_USER_ID);
     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
