@@ -41,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Ignore
 public class UserDetailsRepositoryTest {
 
-  @Resource private UserDetailsBORepository userDetailsRepository;
+  @Resource private UserDetailsRepository userDetailsRepository;
 
   @Test
   public void FindsUsersWithLastName() {
@@ -51,7 +51,6 @@ public class UserDetailsRepositoryTest {
             .email("email1@example.com")
             .firstName("Given name")
             .lastName("Surname")
-            ._ts(new Timestamp((new GregorianCalendar(2000, 1, 1).getTime()).getTime()))
             .verificationDate(
                 new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
             .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
@@ -62,7 +61,6 @@ public class UserDetailsRepositoryTest {
             .email("email2@example.com")
             .firstName("Given name 2")
             .lastName("Surname")
-            ._ts(new Timestamp((new GregorianCalendar(2000, 1, 1).getTime()).getTime()))
             .verificationDate(
                 new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
             .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
@@ -73,7 +71,6 @@ public class UserDetailsRepositoryTest {
             .email("email2@example.com")
             .firstName("Given name 2")
             .lastName("NotSurname")
-            ._ts(new Timestamp((new GregorianCalendar(2000, 1, 1).getTime()).getTime()))
             .verificationDate(
                 new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
             .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))

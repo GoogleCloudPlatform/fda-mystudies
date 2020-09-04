@@ -15,7 +15,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface FdaEaUserDetailsDao {
 
-  UserDetailsEntity saveUser(UserDetailsEntity userDetailsBO) throws SystemException;
+  UserDetailsEntity saveUser(UserDetailsEntity userDetails) throws SystemException;
 
   UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException;
 
@@ -24,6 +24,6 @@ public interface FdaEaUserDetailsDao {
   boolean updateStatus(UserDetailsEntity participantDetails);
 
   boolean saveAllRecords(
-      UserDetailsEntity userDetailsBO, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails)
+      UserDetailsEntity userDetails, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails)
       throws SystemException;
 }

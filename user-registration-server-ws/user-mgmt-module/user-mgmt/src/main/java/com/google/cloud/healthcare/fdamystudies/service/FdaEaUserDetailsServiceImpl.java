@@ -43,12 +43,12 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   @Override
   @Transactional
-  public UserDetailsEntity saveUser(UserDetailsEntity userDetailsBO) throws SystemException {
+  public UserDetailsEntity saveUser(UserDetailsEntity userDetails) throws SystemException {
     logger.info("FdaEaUserDetailsServiceImpl saveUser() - starts");
     UserDetailsEntity daoResp = null;
     try {
-      if (userDetailsBO != null) {
-        daoResp = userDetailsDao.saveUser(userDetailsBO);
+      if (userDetails != null) {
+        daoResp = userDetailsDao.saveUser(userDetails);
         AuthInfoEntity authInfo = new AuthInfoEntity();
         authInfo.setApp(daoResp.getApp());
         authInfo.setUserDetails(daoResp);
@@ -99,11 +99,11 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   @Override
   public boolean updateStatus(UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
-    UserDetailsEntity userDetailsBO = SerializationUtils.clone(participantDetails);
-    userDetailsBO.setEmailCode(null);
-    userDetailsBO.setCodeExpireDate(null);
-    userDetailsBO.setStatus(AppConstants.EMAILID_VERIFIED_STATUS);
-    boolean status = userDetailsDao.updateStatus(userDetailsBO);
+    UserDetailsEntity userDetails = SerializationUtils.clone(participantDetails);
+    userDetails.setEmailCode(null);
+    userDetails.setCodeExpireDate(null);
+    userDetails.setStatus(AppConstants.EMAILID_VERIFIED_STATUS);
+    boolean status = userDetailsDao.updateStatus(userDetails);
 
     if (status) {
       UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();

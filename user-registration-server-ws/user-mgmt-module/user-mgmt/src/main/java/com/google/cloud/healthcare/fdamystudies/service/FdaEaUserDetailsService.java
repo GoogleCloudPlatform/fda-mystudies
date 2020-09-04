@@ -13,7 +13,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface FdaEaUserDetailsService {
 
-  UserDetailsEntity saveUser(UserDetailsEntity userDetailsBO) throws SystemException;
+  UserDetailsEntity saveUser(UserDetailsEntity userDetails) throws SystemException;
 
   UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException;
 

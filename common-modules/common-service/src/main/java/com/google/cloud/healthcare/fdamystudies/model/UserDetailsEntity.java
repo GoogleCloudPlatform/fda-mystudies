@@ -123,9 +123,6 @@ public class UserDetailsEntity implements Serializable {
   @Column(name = "email_code", length = XS_LENGTH)
   private String emailCode;
 
-  @Column(name = "_ts")
-  private Timestamp _ts;
-
   @ToString.Exclude
   @Column(name = "user_id", length = SMALL_LENGTH)
   private String userId;

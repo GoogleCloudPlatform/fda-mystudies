@@ -60,7 +60,7 @@ public class StudiesServicesImpl implements StudiesServices {
 
   @Autowired private StudiesDao studiesDao;
 
-  @Autowired private AuthInfoBODao authInfoBODao;
+  @Autowired private AuthInfoBODao authInfoBoDao;
 
   @Autowired private CommonDao commonDao;
 
@@ -108,7 +108,7 @@ public class StudiesServicesImpl implements StudiesServices {
         List<AppEntity> appInfos = commonDao.getAppInfoSet(appSet);
         logger.debug(String.format("hasAppInfos=%b", (appInfos != null && !appInfos.isEmpty())));
         if (appInfos != null && !appInfos.isEmpty()) {
-          allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfos);
+          allDeviceTokens = authInfoBoDao.getDeviceTokenOfAllUsers(appInfos);
           appInfobyAppCustomId =
               appInfos.stream().collect(Collectors.toMap(AppEntity::getAppId, Function.identity()));
         }

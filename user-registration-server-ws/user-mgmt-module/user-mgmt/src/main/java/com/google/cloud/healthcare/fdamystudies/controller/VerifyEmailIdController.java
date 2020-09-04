@@ -31,10 +31,8 @@ import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileSer
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ResponseUtil;
-
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;

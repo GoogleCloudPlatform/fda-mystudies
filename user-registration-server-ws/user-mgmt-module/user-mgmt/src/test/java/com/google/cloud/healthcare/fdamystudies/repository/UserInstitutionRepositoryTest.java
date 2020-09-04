@@ -33,7 +33,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Ignore
 public class UserInstitutionRepositoryTest {
   private static Logger logger = LoggerFactory.getLogger(UserInstitutionRepositoryTest.class);
-  @Autowired private UserDetailsBORepository userRepository;
+  @Autowired private UserDetailsRepository userRepository;
   @Autowired private UserInstitutionRepository institutionRepository;
 
   @Test

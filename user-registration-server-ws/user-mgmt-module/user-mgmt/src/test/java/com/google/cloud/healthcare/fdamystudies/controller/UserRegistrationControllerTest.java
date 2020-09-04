@@ -37,7 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -73,7 +73,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Autowired private JavaMailSender emailSender;
 
-  @Autowired private UserDetailsBORepository userDetailsRepository;
+  @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Autowired private EmailNotification emailNotification;
 

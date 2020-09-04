@@ -70,7 +70,6 @@ public class PersonalizedUserReportServiceTest {
             .email("email1@example.com")
             .firstName("First name1")
             .lastName("Last name1")
-            ._ts(new Timestamp((new GregorianCalendar(2000, 1, 1).getTime()).getTime()))
             .verificationDate(
                 new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
             .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
@@ -81,7 +80,6 @@ public class PersonalizedUserReportServiceTest {
             .email("email2@example.com")
             .firstName("First name2")
             .lastName("Last name2")
-            ._ts(new Timestamp((new GregorianCalendar(2000, 1, 1).getTime()).getTime()))
             .verificationDate(
                 new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
             .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))

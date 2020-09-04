@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 public interface AuthInfoRepository extends JpaRepository<AuthInfoEntity, String> {
 
   @Query(
-      "SELECT a FROM UserAppDetailsEntity u,AuthInfoEntity a where u.id = a.userDetails and u.app in (?1) and a.remoteNotificationFlag=1 and "
+      "SELECT a FROM UserAppDetailsEntity u,AuthInfoEntity a where u.userDetails = a.userDetails and u.app.id in (?1) and a.remoteNotificationFlag=1 and "
           + "(a.deviceToken is not NULL and a.deviceToken != '' and a.deviceType is not NULL and a.deviceType != '') ")
   public List<AuthInfoEntity> findDevicesTokens(List<String> appInfoIds);
 }

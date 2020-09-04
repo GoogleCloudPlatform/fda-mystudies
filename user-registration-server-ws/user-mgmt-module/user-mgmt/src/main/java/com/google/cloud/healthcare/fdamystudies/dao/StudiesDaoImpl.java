@@ -189,13 +189,13 @@ public class StudiesDaoImpl implements StudiesDao {
                   session.createQuery("from LocationBo where isdefault='Y'").getSingleResult();
           if (defaultLocation != null) {
             StudyEntity studyInfoCreated = session.get(StudyEntity.class, generatedStudyid);
-            SiteEntity siteBO = new SiteEntity();
-            siteBO.setStudy(studyInfoCreated);
-            siteBO.setLocation(defaultLocation);
-            siteBO.setCreatedBy(String.valueOf(0));
-            siteBO.setStatus(1);
-            siteBO.setTargetEnrollment(0);
-            session.save(siteBO);
+            SiteEntity site = new SiteEntity();
+            site.setStudy(studyInfoCreated);
+            site.setLocation(defaultLocation);
+            site.setCreatedBy(String.valueOf(0));
+            site.setStatus(1);
+            site.setTargetEnrollment(0);
+            session.save(site);
           }
         }
       }

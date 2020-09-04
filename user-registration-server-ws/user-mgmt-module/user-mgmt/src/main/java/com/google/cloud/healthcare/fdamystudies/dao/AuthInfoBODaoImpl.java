@@ -61,9 +61,9 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
         if (authInfos != null && !authInfos.isEmpty()) {
           androidJsonArray = new JSONArray();
           iosJsonArray = new JSONArray();
-          for (AuthInfoEntity authInfoBO : authInfos) {
-            String devicetoken = authInfoBO.getDeviceToken();
-            String devicetype = authInfoBO.getDeviceType();
+          for (AuthInfoEntity authInfo : authInfos) {
+            String devicetoken = authInfo.getDeviceToken();
+            String devicetype = authInfo.getDeviceType();
             if (devicetoken != null && devicetype != null) {
               if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_ANDROID)) {
                 androidJsonArray.put(devicetoken.trim());

@@ -12,7 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
-  @Autowired private UserDetailsBORepository repository;
+  @Autowired private UserDetailsRepository repository;
 
   @Autowired private EntityManagerFactory entityManagerFactory;
 
@@ -42,12 +42,12 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   public UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException {
     logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - starts");
     try {
-      UserDetailsEntity userDetailsBO = null;
+      UserDetailsEntity userDetails = null;
       if (userId != null) {
-        userDetailsBO = repository.findByUserId(userId);
+        userDetails = repository.findByUserId(userId);
       }
       logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
-      return userDetailsBO;
+      return userDetails;
     } catch (Exception e) {
       logger.error("FdaEaUserDetailsDaoImpl.loadUserDetailsByUserId(): ", e);
       throw new SystemException();
@@ -55,12 +55,12 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   }
 
   @Override
-  public UserDetailsEntity saveUser(UserDetailsEntity userDetailsBO) throws SystemException {
+  public UserDetailsEntity saveUser(UserDetailsEntity userDetails) throws SystemException {
     logger.info("FdaEaUserDetailsDaoImpl saveUser() - starts");
     try {
       UserDetailsEntity savedUserDetails = null;
-      if (userDetailsBO != null) {
-        savedUserDetails = repository.save(userDetailsBO);
+      if (userDetails != null) {
+        savedUserDetails = repository.save(userDetails);
       }
       logger.info("FdaEaUserDetailsDaoImpl saveUser() - ends");
       return savedUserDetails;
@@ -103,16 +103,16 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   public boolean saveAllRecords(
-      UserDetailsEntity userDetailsBO, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails)
+      UserDetailsEntity userDetails, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails)
       throws SystemException {
 
     logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - starts");
-    if (userDetailsBO != null && authInfo != null && userAppDetails != null) {
+    if (userDetails != null && authInfo != null && userAppDetails != null) {
       Transaction transaction = null;
       try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
         transaction = session.beginTransaction();
 
-        String userDetailsId = (String) session.save(userDetailsBO);
+        String userDetailsId = (String) session.save(userDetails);
 
         Optional<UserDetailsEntity> optUserDetail = repository.findById(userDetailsId);
         if (optUserDetail.isPresent()) {

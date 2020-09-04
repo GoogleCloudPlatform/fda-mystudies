@@ -32,7 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDaoImpl;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -55,7 +55,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
   @Autowired private CommonService commonService;
 
-  @Autowired private UserDetailsBORepository repository;
+  @Autowired private UserDetailsRepository repository;
 
   @Autowired private UserProfileManagementDaoImpl userProfileDao;
 
@@ -178,7 +178,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
     // get list of userDetails by emailId
     List<UserDetailsEntity> userDetailsList = repository.findByEmail(Constants.VERIFY_CODE_EMAIL);
-    UserDetailsEntity userDetailsBO =
+    UserDetailsEntity userDetails =
         userDetailsList
             .stream()
             .filter(
@@ -190,8 +190,8 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
                 })
             .findAny()
             .orElse(null);
-    assertNotNull(userDetailsBO);
-    assertTrue(VERIFIED_STATUS == userDetailsBO.getStatus());
+    assertNotNull(userDetails);
+    assertTrue(VERIFIED_STATUS == userDetails.getStatus());
 
     verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
 

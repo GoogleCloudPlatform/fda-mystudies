@@ -58,7 +58,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Root<UserDetailsEntity> userDetailsBoRoot = null;
     Predicate[] predicates = new Predicate[1];
     List<UserDetailsEntity> userDetailsBoList = null;
-    UserDetailsEntity userDetailsBO = null;
+    UserDetailsEntity userDetails = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       criteriaQuery = criteriaBuilder.createQuery(UserDetailsEntity.class);
@@ -67,13 +67,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaQuery.select(userDetailsBoRoot).where(predicates);
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
-        userDetailsBO = userDetailsBoList.get(0);
+        userDetails = userDetailsBoList.get(0);
       }
     } catch (Exception e) {
       logger.error("UserProfileManagementDaoImpl getParticipantInfoDetails() - error ", e);
     }
     logger.info("UserProfileManagementDaoImpl getParticipantInfoDetails() - Ends ");
-    return userDetailsBO;
+    return userDetails;
   }
 
   @Override
@@ -143,7 +143,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   public UserDetailsEntity getParticipantDetailsByEmail(
       String email, AppEntity app, String orgInfoId) {
     logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Starts ");
-    UserDetailsEntity userDetailsBO = null;
+    UserDetailsEntity userDetails = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> criteriaQuery = null;
     Root<UserDetailsEntity> userDetailsBoRoot = null;
@@ -165,13 +165,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
           .where(userDetailsPredicates.toArray(new Predicate[userDetailsPredicates.size()]));
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
-        userDetailsBO = userDetailsBoList.get(0);
+        userDetails = userDetailsBoList.get(0);
       }
     } catch (Exception e) {
       logger.error("UserProfileManagementDaoImpl getParticipantInfoDetails() - error ", e);
     }
     logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Ends ");
-    return userDetailsBO;
+    return userDetails;
   }
 
   @Override
@@ -211,7 +211,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Predicate[] predicates = new Predicate[1];
     Root<UserDetailsEntity> userDetailsRoot = null;
     List<UserDetailsEntity> userDetailsList = null;
-    UserDetailsEntity userDetailsBO = null;
+    UserDetailsEntity userDetails = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       transaction = session.beginTransaction();
@@ -223,10 +223,10 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaQuery.select(userDetailsRoot).where(predicates);
       userDetailsList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsList.isEmpty()) {
-        userDetailsBO = userDetailsList.get(0);
-        userDetailsBO.setEmailCode(participant.getEmailCode());
-        userDetailsBO.setCodeExpireDate(participant.getCodeExpireDate());
-        session.update(userDetailsBO);
+        userDetails = userDetailsList.get(0);
+        userDetails.setEmailCode(participant.getEmailCode());
+        userDetails.setCodeExpireDate(participant.getCodeExpireDate());
+        session.update(userDetails);
       }
       transaction.commit();
     } catch (Exception e) {
@@ -242,7 +242,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       }
     }
     logger.info("UserProfileManagementDaoImpl saveParticipant() - Ends ");
-    return userDetailsBO;
+    return userDetails;
   }
 
   @Override
@@ -277,7 +277,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Override
   public UserDetailsEntity getParticipantDetails(String userId) {
     logger.info("UserProfileManagementDaoImpl getParticipantDetails() - Starts ");
-    UserDetailsEntity userDetailsBO = null;
+    UserDetailsEntity userDetails = null;
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<UserDetailsEntity> criteriaQuery = null;
     Root<UserDetailsEntity> userDetailsBoRoot = null;
@@ -291,13 +291,13 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaQuery.select(userDetailsBoRoot).where(predicates);
       userDetailsBoList = session.createQuery(criteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
-        userDetailsBO = userDetailsBoList.get(0);
+        userDetails = userDetailsBoList.get(0);
       }
     } catch (Exception e) {
       logger.error("UserProfileManagementDaoImpl getParticipantDetails() - error ", e);
     }
     logger.info("UserProfileManagementDaoImpl getParticipantDetails() - Ends ");
-    return userDetailsBO;
+    return userDetails;
   }
 
   @Override
@@ -322,7 +322,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Predicate[] predicatesUserDetails = new Predicate[1];
     Predicate[] predicatesUserAppDetails = new Predicate[1];
     CriteriaQuery<StudyEntity> studyInfoQuery = null;
-    Root<StudyEntity> rootStudyBO = null;
+    Root<StudyEntity> rootStudy = null;
     List<StudyEntity> studyInfoBoList = null;
     List<String> studyInfoIdList = null;
     UserDetailsEntity userDetails = null;
@@ -334,10 +334,10 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaBuilder = session.getCriteriaBuilder();
       if (deleteData != null && !deleteData.isEmpty()) {
         studyInfoQuery = criteriaBuilder.createQuery(StudyEntity.class);
-        rootStudyBO = studyInfoQuery.from(StudyEntity.class);
-        studyIdExpression = rootStudyBO.get("customId");
+        rootStudy = studyInfoQuery.from(StudyEntity.class);
+        studyIdExpression = rootStudy.get("customId");
         studyInfoIdPredicates[0] = studyIdExpression.in(deleteData);
-        studyInfoQuery.select(rootStudyBO).where(studyInfoIdPredicates);
+        studyInfoQuery.select(rootStudy).where(studyInfoIdPredicates);
         studyInfoBoList = session.createQuery(studyInfoQuery).getResultList();
         studyInfoIdList =
             studyInfoBoList.stream().map(StudyEntity::getId).collect(Collectors.toList());
