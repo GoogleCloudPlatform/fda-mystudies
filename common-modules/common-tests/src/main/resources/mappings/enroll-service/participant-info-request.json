@@ -1,0 +1,21 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPathPattern": "/myStudiesEnrollmentMgmt/participantInfo",
+		"queryParameters": {
+			"studyId": {
+				"equalTo": "ASignature01"
+			},
+			"participantId": {
+				"matches": ".*"
+			}
+		}
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "enroll-service/participant-info-response.json"
+	}
+}

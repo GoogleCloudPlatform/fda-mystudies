@@ -38,4 +38,22 @@ public final class Constants {
   public static final String INVALID_CLIENT_ID_VALUE = "invalid clientId value";
 
   public static final String VALID_USER_ID = "kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg";
+
+  public static final String PARTICIPANT_ID_NOT_EXISTS_MESSAGE =
+      "Participant does not exist for the given participant ID and secure "
+          + "enrollment token combination";
+
+  public static final String QUESTION_KEY_VALUE = "questionKey";
+
+  public static final String ACTIVITY_ID_VALUE = "Activity";
+
+  public static final String SITE_ID_VALUE = "siteId";
+
+  public static final String STUDY_ID_VALUE = "ASignature01";
+
+  public static final String STUDY_COLLECTION_NAME_VALUE = "ASignature01-RESPONSES";
+
+  public static final String SUCCESS = "SUCCESS";
+
+  public static final String ACTIVITY_COLLECTION_NAME_VALUE = "Activities";
 }
