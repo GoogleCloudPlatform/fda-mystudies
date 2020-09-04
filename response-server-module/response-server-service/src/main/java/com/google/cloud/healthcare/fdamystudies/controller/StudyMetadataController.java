@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,7 +35,7 @@ public class StudyMetadataController {
 
   @PostMapping("/studymetadata")
   public ResponseEntity<?> addUpdateStudyMetadata(
-      @RequestBody StudyMetadataBean studyMetadataBean, @RequestHeader String clientId) {
+      @RequestBody StudyMetadataBean studyMetadataBean) {
     String studyIdToUpdate = null;
     try {
       studyIdToUpdate = studyMetadataBean.getStudyId();
@@ -56,15 +55,13 @@ public class StudyMetadataController {
       commonService.createActivityLog(
           null,
           "Study metadata updated successfully",
-          "Study metadata successful for study with id: " + studyIdToUpdate + " .",
-          clientId);
+          "Study metadata successful for study with id: " + studyIdToUpdate + " .");
       return new ResponseEntity<String>(HttpStatus.OK);
     } catch (Exception e) {
       commonService.createActivityLog(
           null,
           "Study metadata update failed",
-          "Study metadata update failed for study with id: " + studyIdToUpdate + " .",
-          clientId);
+          "Study metadata update failed for study with id: " + studyIdToUpdate + " .");
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_702.code(),

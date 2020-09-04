@@ -22,6 +22,7 @@ import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {expectedAppList} from 'src/app/entity/mock-apps-data';
 
 import {AppListComponent} from './app-list.component';
+import {ManageApps} from '../shared/app.model';
 
 describe('AppListComponent', () => {
   let component: AppListComponent;
@@ -65,8 +66,11 @@ describe('AppListComponent', () => {
   });
 
   it('should NOT have apps before ngOnInit', () => {
-    component.app$.subscribe((apps) => {
-      expect(apps.length).toBe(0, 'should not have apps before ngOnInit');
+    component.manageApp$.subscribe((manageApps: ManageApps) => {
+      expect(manageApps.apps.length).toBe(
+        0,
+        'should not have apps before ngOnInit',
+      );
     });
   });
 
@@ -77,17 +81,9 @@ describe('AppListComponent', () => {
     }));
 
     it('should get the apps List via refresh function', fakeAsync(() => {
-      component.app$.subscribe((apps) => {
-        expect(apps.length).toEqual(2);
+      component.manageApp$.subscribe((manageApps: ManageApps) => {
+        expect(manageApps.apps.length).toEqual(expectedAppList.apps.length);
       });
     }));
-    it('should display all apps', () => {
-      const compiled = fixture.nativeElement as HTMLElement;
-      fixture.detectChanges();
-      expect(compiled.querySelectorAll('.apps_row').length).toBe(
-        2,
-        'should display all apps list',
-      );
-    });
   });
 });

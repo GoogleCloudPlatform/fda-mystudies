@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,12 +22,7 @@ public class AuthenticationResponse extends BaseResponse {
 
   public AuthenticationResponse() {}
 
-  public AuthenticationResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
-
-  public AuthenticationResponse(ErrorCode errorCode, String userId, int accountStatus) {
-    super(errorCode);
+  public AuthenticationResponse(String userId, int accountStatus) {
     this.userId = userId;
     this.accountStatus = accountStatus;
   }
