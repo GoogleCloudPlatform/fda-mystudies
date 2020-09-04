@@ -493,11 +493,6 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse = readJsonFile("/response/forgot_password_bad_request.json");
 
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
@@ -520,8 +515,6 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isForbidden())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.ACCOUNT_NOT_VERIFIED.getDescription()));
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -545,8 +538,6 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isForbidden())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.ACCOUNT_DEACTIVATED.getDescription()));
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -590,11 +581,6 @@ public class UserControllerTest extends BaseMockIT {
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
 
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
   @Test
