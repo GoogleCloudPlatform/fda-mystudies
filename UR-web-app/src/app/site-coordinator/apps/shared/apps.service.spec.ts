@@ -6,12 +6,12 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
-import {App} from './app.model';
+import {ManageApps} from './app.model';
 import {expectedAppList} from 'src/app/entity/mock-apps-data';
 import {AppsService} from './apps.service';
 import {expectedAppDetails} from 'src/app/entity/mock-app-details';
 import {HttpClient} from '@angular/common/http';
-describe('StudiesService', () => {
+describe('AppsService', () => {
   let appsService: AppsService;
   let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
 
@@ -33,11 +33,11 @@ describe('StudiesService', () => {
   });
 
   it('should return expected Apps List', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
+    const entityServiceSpy = jasmine.createSpyObj<EntityService<ManageApps>>(
       'EntityService',
-      {getCollection: of(expectedAppList)},
+      {get: of(expectedAppList)},
     );
-    appsService = new AppsService(entityServicespy, httpServiceSpyObj);
+    appsService = new AppsService(entityServiceSpy, httpServiceSpyObj);
 
     appsService
       .getUserApps()
@@ -45,18 +45,18 @@ describe('StudiesService', () => {
         (app) => expect(app).toEqual(expectedAppList, 'expected AppsList'),
         fail,
       );
-    expect(entityServicespy.getCollection).toHaveBeenCalledTimes(1);
+    expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
   }));
 
   it('should return an error when the server returns a 400', fakeAsync(() => {
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
     } as ApiResponse;
-    const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
+    const entityServiceSpy = jasmine.createSpyObj<EntityService<ManageApps>>(
       'EntityService',
-      {getCollection: throwError(errorResponses)},
+      {get: throwError(errorResponses)},
     );
-    appsService = new AppsService(entityServicespy, httpServiceSpyObj);
+    appsService = new AppsService(entityServiceSpy, httpServiceSpyObj);
 
     tick(40);
     appsService.getUserApps().subscribe(
@@ -68,14 +68,14 @@ describe('StudiesService', () => {
   }));
 
   it('should return apps list for the user creation', () => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
+    const entityServiceSpy = jasmine.createSpyObj<EntityService<ManageApps>>(
       'EntityService',
-      {getCollection: of()},
+      {get: of()},
     );
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: of(expectedAppDetails),
     });
-    appsService = new AppsService(entityServicespy, httpServiceSpyObj);
+    appsService = new AppsService(entityServiceSpy, httpServiceSpyObj);
 
     appsService
       .getAllAppsWithStudiesAndSites()
@@ -94,14 +94,14 @@ describe('StudiesService', () => {
     const errorResponse = {
       message: 'User does not exist',
     } as ApiResponse;
-    const entityServicespy = jasmine.createSpyObj<EntityService<App>>(
+    const entityServiceSpy = jasmine.createSpyObj<EntityService<ManageApps>>(
       'EntityService',
-      {getCollection: of()},
+      {get: of()},
     );
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: throwError(errorResponse),
     });
-    appsService = new AppsService(entityServicespy, httpServiceSpyObj);
+    appsService = new AppsService(entityServiceSpy, httpServiceSpyObj);
     appsService.getAllAppsWithStudiesAndSites().subscribe(
       () => fail('expected an error, not app details'),
       (error: ApiResponse) => {

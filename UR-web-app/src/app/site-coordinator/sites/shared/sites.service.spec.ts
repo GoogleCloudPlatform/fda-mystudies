@@ -6,7 +6,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
-import {Study} from '../../studies/shared/study.model';
+import {StudyResponse} from '../../studies/shared/study.model';
 import {SitesService} from './sites.service';
 import {StudiesService} from '../../studies/shared/studies.service';
 import * as expectedResult from 'src/app/entity/mock-studies-data';
@@ -39,9 +39,9 @@ describe('SitesService', () => {
       message: 'Bad Request',
     } as ApiResponse;
 
-    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
+    const entityServicespy = jasmine.createSpyObj<EntityService<StudyResponse>>(
       'EntityService',
-      {getCollection: throwError(errorResponses)},
+      {get: throwError(errorResponses)},
     );
     studiesServices = new StudiesService(entityServicespy);
 
