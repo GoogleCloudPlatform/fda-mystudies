@@ -15,15 +15,15 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.BaseResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.PatchUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.PatchUserResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
-import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
@@ -73,14 +73,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findByUrAdminAuthId(userId);
 
     if (!optUserRegAdminUser.isPresent()) {
-      logger.exit(ErrorCode.USER_NOT_EXISTS);
-      return new UserProfileResponse(ErrorCode.USER_NOT_EXISTS);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_EXISTS);
     }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (!adminUser.isActive()) {
-      logger.exit(ErrorCode.USER_NOT_ACTIVE);
-      return new UserProfileResponse(ErrorCode.USER_NOT_ACTIVE);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_ACTIVE);
     }
 
     UserProfileResponse userProfileResponse =
@@ -99,8 +97,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findBySecurityCode(securityCode);
 
     if (!optUserRegAdminUser.isPresent()) {
-      logger.exit(ErrorCode.INVALID_SECURITY_CODE);
-      return new UserProfileResponse(ErrorCode.INVALID_SECURITY_CODE);
+      throw new ErrorCodeException(ErrorCode.INVALID_SECURITY_CODE);
     }
 
     UserRegAdminEntity user = optUserRegAdminUser.get();
@@ -109,8 +106,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     if (now.after(user.getSecurityCodeExpireDate())) {
       participantManagerHelper.logEvent(
           USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION, auditRequest);
-      logger.exit(ErrorCode.SECURITY_CODE_EXPIRED);
-      return new UserProfileResponse(ErrorCode.SECURITY_CODE_EXPIRED);
+      throw new ErrorCodeException(ErrorCode.SECURITY_CODE_EXPIRED);
     }
 
     UserProfileResponse userProfileResponse =
@@ -129,14 +125,12 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findById(userProfileRequest.getUserId());
 
     if (!optUserRegAdminUser.isPresent()) {
-      logger.exit(ErrorCode.USER_NOT_EXISTS);
-      return new UserProfileResponse(ErrorCode.USER_NOT_EXISTS);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_EXISTS);
     }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
     if (!adminUser.isActive()) {
-      logger.exit(ErrorCode.USER_NOT_ACTIVE);
-      return new UserProfileResponse(ErrorCode.USER_NOT_ACTIVE);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_ACTIVE);
     }
     adminUser.setFirstName(userProfileRequest.getFirstName());
     adminUser.setLastName(userProfileRequest.getLastName());
@@ -158,7 +152,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     auditRequest.setAppId("PARTICIPANT MANAGER");
     if (!optUsers.isPresent()) {
       participantManagerHelper.logEvent(USER_ACCOUNT_ACTIVATION_FAILED, auditRequest);
-      return new SetUpAccountResponse(ErrorCode.USER_NOT_INVITED);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_INVITED);
     }
 
     // Bad request and errors handled in RestResponseErrorHandler class
@@ -215,13 +209,13 @@ public class UserProfileServiceImpl implements UserProfileService {
     Optional<UserRegAdminEntity> optUserRegAdmin =
         userRegAdminRepository.findById(statusRequest.getUserId());
     if (!optUserRegAdmin.isPresent()) {
-      return new PatchUserResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     UserRegAdminEntity userRegAdmin = optUserRegAdmin.get();
 
     if (!userRegAdmin.isSuperAdmin()) {
-      return new PatchUserResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.USER_ADMIN_ACCESS_DENIED);
     }
 
     UserStatus userStatus = UserStatus.fromValue(statusRequest.getStatus());

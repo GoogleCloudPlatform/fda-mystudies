@@ -19,11 +19,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,13 +58,8 @@ public class UserController {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
     UserResponse userResponse = userService.createUser(userRequest);
 
-    int status =
-        StringUtils.isEmpty(userResponse.getErrorDescription())
-            ? HttpStatus.CREATED.value()
-            : userResponse.getHttpStatusCode();
-
-    logger.exit(String.format(STATUS_LOG, status));
-    return ResponseEntity.status(status).body(userResponse);
+    logger.exit(String.format(STATUS_LOG, HttpStatus.CREATED.value()));
+    return ResponseEntity.status(HttpStatus.CREATED.value()).body(userResponse);
   }
 
   @PostMapping(
@@ -115,8 +110,7 @@ public class UserController {
     userRequest.setUserId(userId);
 
     if (!userRequest.hasAtleastOneRequiredValue()) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new UpdateEmailStatusResponse(ErrorCode.INVALID_UPDATE_USER_REQUEST));
+      throw new ErrorCodeException(ErrorCode.INVALID_UPDATE_USER_REQUEST);
     }
 
     UpdateEmailStatusResponse userResponse = userService.updateEmailStatusAndTempRegId(userRequest);
