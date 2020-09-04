@@ -30,17 +30,8 @@ public class ApplicationConfiguration {
   @Value("${interceptor}")
   private String interceptorUrls;
 
-  @Value("${authServerAccessTokenValidationUrl}")
-  private String authServerAccessTokenValidationUrl;
-
-  @Value("${authServerClientValidationUrl}")
-  private String authServerClientValidationUrl;
-
   @Value("${serverApiUrls}")
   private String serverApiUrls;
-
-  @Value("${authServerUrl}")
-  private String authServerUrl;
 
   @Value("${wcpStudyActivityMetadataUrl}")
   private String wcpStudyActivityMetadataUrl;

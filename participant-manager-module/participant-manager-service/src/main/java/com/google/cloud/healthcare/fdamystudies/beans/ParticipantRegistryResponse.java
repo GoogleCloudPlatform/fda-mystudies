@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +16,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ParticipantRegistryResponse extends BaseResponse {
   private ParticipantRegistryDetail participantRegistryDetail;
-
-  public ParticipantRegistryResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public ParticipantRegistryResponse(
       MessageCode messageCode, ParticipantRegistryDetail participantRegistryDetail) {

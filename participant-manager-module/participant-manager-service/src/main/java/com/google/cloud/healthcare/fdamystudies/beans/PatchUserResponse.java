@@ -6,9 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DeactivateAccountResponse extends BaseResponse {
+public class PatchUserResponse extends BaseResponse {
 
-  public DeactivateAccountResponse(MessageCode messageCode) {
+  public PatchUserResponse(MessageCode messageCode) {
     super(messageCode);
   }
 }

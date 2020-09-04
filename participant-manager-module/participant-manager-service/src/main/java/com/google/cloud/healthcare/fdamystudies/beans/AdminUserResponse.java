@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +17,6 @@ import lombok.Setter;
 public class AdminUserResponse extends BaseResponse {
 
   private String userId;
-
-  public AdminUserResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public AdminUserResponse(MessageCode messageCode, String userId) {
     super(messageCode);
