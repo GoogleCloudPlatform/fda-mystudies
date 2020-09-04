@@ -15,8 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,10 +40,6 @@ public class AppInfoDetailsBO implements Serializable {
 
   @Column(name = "app_description", columnDefinition = "VARCHAR(255)")
   private String appDescription;
-
-  @ManyToOne
-  @JoinColumn(name = "org_info_id")
-  private OrgInfo orgInfo;
 
   @Column(name = "ios_bundle_id")
   private String iosBundleId;

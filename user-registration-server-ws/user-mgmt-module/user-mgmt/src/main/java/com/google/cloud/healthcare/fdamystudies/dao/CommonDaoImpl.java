@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.OrgInfo;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
@@ -49,7 +48,7 @@ public class CommonDaoImpl implements CommonDao {
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
-  public String validatedUserAppDetailsByAllApi(String userId, String email, int appId, int orgId) {
+  public String validatedUserAppDetailsByAllApi(String userId, String email, int appId) {
     logger.info("CommonDaoImpl validatedUserAppDetailsByAllApi() - Starts ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
@@ -125,7 +124,7 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId) {
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
     logger.info("CommonDaoImpl validatedUserAppDetailsByAllApi() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AppInfoDetailsBO> appDetailsBoCriteria = null;
@@ -134,14 +133,8 @@ public class CommonDaoImpl implements CommonDao {
     List<AppInfoDetailsBO> appDetailsList = null;
     AppInfoDetailsBO appDetailsBO = null;
 
-    CriteriaQuery<OrgInfo> orgDetailsBoCriteria = null;
-    Root<OrgInfo> orgDetailsBoRoot = null;
-    Predicate[] orgDetailsBoPredicates = new Predicate[1];
-    List<OrgInfo> orgDetailsBoList = null;
-    OrgInfo orgDetailsBo = null;
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     int appInfoId = 0;
-    int orgInfoId = 0;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
@@ -158,25 +151,10 @@ public class CommonDaoImpl implements CommonDao {
         }
       }
 
-      if (!StringUtils.isEmpty(orgId)) {
-
-        orgDetailsBoCriteria = criteriaBuilder.createQuery(OrgInfo.class);
-        orgDetailsBoRoot = orgDetailsBoCriteria.from(OrgInfo.class);
-        orgDetailsBoPredicates[0] = criteriaBuilder.equal(orgDetailsBoRoot.get("orgId"), orgId);
-        orgDetailsBoCriteria.select(orgDetailsBoRoot).where(orgDetailsBoPredicates);
-        orgDetailsBoList = session.createQuery(orgDetailsBoCriteria).getResultList();
-
-        if (!orgDetailsBoList.isEmpty()) {
-          orgDetailsBo = orgDetailsBoList.get(0);
-          orgInfoId = orgDetailsBo.getId();
-        }
-      }
       appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
 
     } catch (Exception e) {
       appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
       logger.error("CommonDaoImpl getUserAppDetailsByAllApi() - error ", e);
     }
     logger.info("CommonDaoImpl getUserAppDetailsByAllApi() - Ends ");

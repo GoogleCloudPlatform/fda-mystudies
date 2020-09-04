@@ -103,9 +103,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
 
   @Override
   public QuestionnaireActivityStructureBean getStudyActivityMetadata(
-      String orgId,
-      String applicationId,
-      StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
+      String applicationId, StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
       throws ProcessResponseException {
     logger.debug("getStudyActivityMetadata() - starts ");
     HttpHeaders headers = null;
@@ -114,7 +112,6 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.ORG_ID_HEADER, orgId);
       headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
       headers.set(AppConstants.AUTHORIZATION_HEADER, this.getWcpAuthorizationHeader());
 

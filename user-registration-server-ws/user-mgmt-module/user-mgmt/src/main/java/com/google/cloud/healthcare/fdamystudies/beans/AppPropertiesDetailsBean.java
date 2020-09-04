@@ -16,7 +16,6 @@ import lombok.Setter;
 public class AppPropertiesDetailsBean {
   private String appId;
   private String appType;
-  private String orgId;
   private String iosBundleId;
   private String androidBundleId;
   private String iosCertificate;

@@ -16,5 +16,4 @@ import lombok.Setter;
 public class AppOrgInfoBean {
 
   private int appInfoId;
-  private int orgInfoId;
 }

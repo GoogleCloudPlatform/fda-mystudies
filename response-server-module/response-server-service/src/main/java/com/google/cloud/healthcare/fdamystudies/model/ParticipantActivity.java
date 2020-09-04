@@ -7,7 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -75,8 +74,7 @@ public class ParticipantActivity {
   /*  @Column(name = "application_id")
   private String applicationId;
 
-  @Column(name = "org_id")
-  private String orgId;*/
+
 
   @Column(name = "activity_start_date")
   private LocalDateTime activityStartDate;

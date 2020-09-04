@@ -31,10 +31,6 @@ public class TestUtils {
       headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
     }
 
-    if (ArrayUtils.contains(addOptionalHeaderNames, Constants.ORG_ID_HEADER)) {
-      headers.add(Constants.ORG_ID_HEADER, Constants.ORG_ID_VALUE);
-    }
-
     return headers;
   }
 }

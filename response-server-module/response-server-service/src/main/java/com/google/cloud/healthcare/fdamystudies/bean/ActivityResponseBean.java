@@ -16,7 +16,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ActivityResponseBean {
-  private String orgId = AppConstants.EMPTY_STR;
   private String applicationId = AppConstants.EMPTY_STR;
   private String participantId;
   private String tokenIdentifier;

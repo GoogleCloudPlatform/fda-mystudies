@@ -29,16 +29,14 @@ public class CommonServiceImpl implements CommonService {
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
-  public String validatedUserAppDetailsByAllApi(
-      String userId, String email, String appId, String orgId) {
+  public String validatedUserAppDetailsByAllApi(String userId, String email, String appId) {
     logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - starts");
     String message = "";
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     try {
-      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId, orgId);
+      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId);
       message =
-          commonDao.validatedUserAppDetailsByAllApi(
-              userId, email, appOrgInfoBean.getAppInfoId(), appOrgInfoBean.getOrgInfoId());
+          commonDao.validatedUserAppDetailsByAllApi(userId, email, appOrgInfoBean.getAppInfoId());
     } catch (Exception e) {
       logger.error(
           "UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - error ", e);
@@ -48,12 +46,11 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
-  public AppOrgInfoBean getUserAppDetailsByAllApi(
-      String userId, String emailId, String appId, String orgId) {
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String emailId, String appId) {
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - starts");
     try {
-      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId, orgId);
+      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId);
     } catch (Exception e) {
       logger.error("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - error() ", e);
     }

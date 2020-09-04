@@ -18,9 +18,9 @@ import org.json.JSONArray;
 
 public interface CommonDao {
 
-  public String validatedUserAppDetailsByAllApi(String userId, String email, int appId, int orgId);
+  public String validatedUserAppDetailsByAllApi(String userId, String email, int appId);
 
-  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId);
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId);
 
   public Integer getUserInfoDetails(String userId);
 
