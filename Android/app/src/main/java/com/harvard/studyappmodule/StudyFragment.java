@@ -1450,6 +1450,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   @Override
   public void onDestroy() {
     dbServiceSubscriber.closeRealmObj(realm);
+    AppController.getHelperProgressDialog().dismissDialog();
     super.onDestroy();
   }
 
