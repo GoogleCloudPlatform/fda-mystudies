@@ -26,22 +26,22 @@ public enum MessageCode {
 
   ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
 
-  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get apps successfully"),
+  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Apps fetched successfully"),
 
-  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfully"),
+  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Study details fetched successfully"),
 
-  DECOMMISSION_SUCCESS(HttpStatus.OK, "MSG-0003", "Decommission successfully"),
+  DECOMMISSION_SUCCESS(HttpStatus.OK, "MSG-0005", "Site decommissioned successfully"),
 
-  REACTIVE_SUCCESS(HttpStatus.OK, "MSG-0004", "Reactivate successfully"),
+  REACTIVE_SUCCESS(HttpStatus.OK, "MSG-0006", "Site activated successfully"),
 
-  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully"),
+  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0007", "Location updated successfully"),
 
   GET_PARTICIPANT_REGISTRY_SUCCESS(
-      HttpStatus.OK, "MSG-0008", "Get participant registry successfully"),
+      HttpStatus.OK, "MSG-0008", "Participant registry fetched successfully"),
 
-  ADD_PARTICIPANT_SUCCESS(HttpStatus.CREATED, "MSG-0016", "Participant added successfully"),
+  ADD_PARTICIPANT_SUCCESS(HttpStatus.CREATED, "MSG-0009", "Email added successfully"),
 
-  GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0018", "Get App Details successfully"),
+  GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0010", "App details fetched successfully"),
 
   DECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0014", "Site Decommissioned successfully"),
 
