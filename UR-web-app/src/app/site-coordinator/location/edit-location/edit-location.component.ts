@@ -17,7 +17,7 @@ export class EditLocationComponent {
   @Input() location = {} as Location;
   @Input() locationId = '';
   @Output() closeModalEvent = new EventEmitter<Location>();
-  statusUpdate: StatusUpdateRequest = {status: '0'};
+  statusUpdate: StatusUpdateRequest = {status: 0};
   fieldUpdate: FieldUpdateRequest = {
     name: '',
     description: '',
@@ -39,8 +39,8 @@ export class EditLocationComponent {
   update(): void {
     this.updateLocation(this.fieldUpdate);
   }
-  changeStatus(): void {
-    this.statusUpdate.status = this.statusUpdate.status === '1' ? '0' : '1';
+  toggleStatus(): void {
+    this.statusUpdate.status = this.statusUpdate.status === 1 ? 0 : 1;
     this.updateLocation(this.statusUpdate);
   }
 
@@ -54,8 +54,9 @@ export class EditLocationComponent {
         } else {
           this.toastr.success('Success');
         }
-        this.location = {...this.location, ...updatedlocation};
-
+        this.location.name = updatedlocation.name;
+        this.location.description = updatedlocation.description;
+        this.location.status = updatedlocation.status;
         this.closeModal();
       },
       () => {

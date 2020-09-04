@@ -8,10 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.testutils;
 
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import javax.ws.rs.core.MediaType;
 import org.springframework.http.HttpHeaders;
 
 public class TestUtils {
+
+  public static final String VALID_BEARER_TOKEN = "Bearer 7fd50c2c-d618-493c-89d6-f1887e3e4bb8";
 
   public static void addUserIdHeader(HttpHeaders headers) {
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
@@ -20,6 +23,11 @@ public class TestUtils {
   public static HttpHeaders getCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
     headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "GCPMS001");
+    headers.add("source", "IntegrationTests");
+    headers.add("Authorization", VALID_BEARER_TOKEN);
     return headers;
   }
 

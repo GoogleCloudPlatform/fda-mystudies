@@ -8,15 +8,23 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
+
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
+import com.google.cloud.storage.StorageException;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +35,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Autowired UserConsentManagementDao userConsentManagementDao;
 
   @Autowired FileStorageService cloudStorageService;
+
+  @Autowired private ConsentAuditHelper consentAuditHelper;
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementServiceImpl.class);
@@ -86,7 +96,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
   @Override
   public ConsentStudyResponseBean getStudyConsentDetails(
-      String userId, Integer studyId, String consentVersion) {
+      String userId, Integer studyId, String consentVersion, AuditLogEventRequest auditRequest) {
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Started ");
     StudyConsentBO studyConsent = null;
@@ -108,10 +118,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
           String path = studyConsent.getPdfPath();
 
           ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          cloudStorageService.downloadFileTo(path, baos);
-          consentStudyResponseBean
-              .getConsent()
-              .setContent(new String(Base64.getEncoder().encode(baos.toByteArray())));
+          downloadConsentDocument(path, baos, consentStudyResponseBean, userId, auditRequest);
         }
         consentStudyResponseBean.getConsent().setType("application/pdf");
         participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
@@ -126,6 +133,26 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Ends ");
     return consentStudyResponseBean;
+  }
+
+  private void downloadConsentDocument(
+      String fileName,
+      ByteArrayOutputStream baos,
+      ConsentStudyResponseBean consentStudyResponseBean,
+      String userId,
+      AuditLogEventRequest auditRequest) {
+    try {
+      auditRequest.setUserId(userId);
+      Map<String, String> map = Collections.singletonMap("file_name", fileName);
+      cloudStorageService.downloadFileTo(fileName, baos);
+      consentStudyResponseBean
+          .getConsent()
+          .setContent(new String(Base64.getEncoder().encode(baos.toByteArray())));
+      consentAuditHelper.logEvent(
+          READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest, map);
+    } catch (StorageException e) {
+      consentAuditHelper.logEvent(READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest);
+    }
   }
 
   @Override

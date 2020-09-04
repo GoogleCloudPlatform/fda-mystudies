@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {LocationService} from '../shared/location.service';
-import {Location} from '../shared/location.model';
+import {Location, ManageLocations} from '../shared/location.model';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
@@ -14,7 +14,7 @@ import {of} from 'rxjs';
 })
 export class LocationListComponent implements OnInit {
   query$ = new BehaviorSubject('');
-  location$: Observable<Location[]> = of([]);
+  location$: Observable<ManageLocations> = of();
   constructor(
     private readonly locationService: LocationService,
     private readonly router: Router,
@@ -30,14 +30,15 @@ export class LocationListComponent implements OnInit {
       this.locationService.getLocations(),
       this.query$,
     ).pipe(
-      map(([locations, query]) => {
-        return locations.filter(
+      map(([manageLocations, query]) => {
+        manageLocations.locations = manageLocations.locations.filter(
           (location: Location) =>
             (location.name &&
               location.name.toLowerCase().includes(query.toLowerCase())) ||
             (location.customId &&
               location.customId.toLowerCase().includes(query.toLowerCase())),
         );
+        return manageLocations;
       }),
     );
   }
