@@ -14,6 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.interceptor.RestTemplateAuthToke
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +26,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @ComponentScan(basePackages = "com.google.cloud.healthcare.fdamystudies")
 public class CommonModuleConfiguration implements WebMvcConfigurer {
+
+  @Autowired
+  private RestTemplateAuthTokenModifierInterceptor restTemplateAuthTokenModifierInterceptor;
 
   @Bean
   public ObjectMapper objectMapper() {
@@ -57,7 +61,7 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
     if (CollectionUtils.isEmpty(interceptors)) {
       interceptors = new ArrayList<>();
     }
-    interceptors.add(new RestTemplateAuthTokenModifierInterceptor());
+    interceptors.add(restTemplateAuthTokenModifierInterceptor);
     restTemplate.setInterceptors(interceptors);
   }
 }
