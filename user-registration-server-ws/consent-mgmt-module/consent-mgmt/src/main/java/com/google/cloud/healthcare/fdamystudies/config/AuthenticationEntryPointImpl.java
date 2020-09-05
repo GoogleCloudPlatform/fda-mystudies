@@ -30,7 +30,7 @@ public class AuthenticationEntryPointImpl extends BasicAuthenticationEntryPoint 
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     setRealmName("myStudiesConsentMgmtWS");
     super.afterPropertiesSet();
   }

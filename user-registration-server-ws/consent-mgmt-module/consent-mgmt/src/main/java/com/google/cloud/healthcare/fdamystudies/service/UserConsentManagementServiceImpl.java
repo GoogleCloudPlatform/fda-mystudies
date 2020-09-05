@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserConsentManagementServiceImpl implements UserConsentManagementService {
@@ -42,6 +43,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       LoggerFactory.getLogger(UserConsentManagementServiceImpl.class);
 
   @Override
+  @Transactional(readOnly = true)
   public ParticipantStudiesBO getParticipantStudies(Integer studyId, String userId) {
     logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
     ParticipantStudiesBO participantStudiesBO = null;
@@ -54,6 +56,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional
   public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
     logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -67,6 +70,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public StudyConsentBO getStudyConsent(String userId, Integer studyId, String consentVersion) {
     logger.info("UserConsentManagementServiceImpl getStudyConsent() - Started ");
     StudyConsentBO studyConsent = null;
@@ -80,6 +84,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional
   public String saveStudyConsent(StudyConsentBO studyConsent) {
     logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
     String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -95,6 +100,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ConsentStudyResponseBean getStudyConsentDetails(
       String userId, Integer studyId, String consentVersion, AuditLogEventRequest auditRequest) {
 
@@ -156,6 +162,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public StudyInfoBean getStudyInfoId(String customStudyId) {
     logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Starts ");
     StudyInfoBean studyInfoBean = null;
@@ -170,6 +177,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Integer getUserDetailsId(String userId) {
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
     Integer userDetailId = null;
