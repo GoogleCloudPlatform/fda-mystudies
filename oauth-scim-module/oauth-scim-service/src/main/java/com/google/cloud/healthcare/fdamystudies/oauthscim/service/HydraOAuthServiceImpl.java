@@ -29,7 +29,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 import java.util.Collections;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -101,7 +100,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
     String grantType = paramMap.getFirst(GRANT_TYPE);
-    Map<String, String> userIdPH = Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
     if (REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType)) {
       headers.set(AUTHORIZATION, encodedAuthorization);
     }
