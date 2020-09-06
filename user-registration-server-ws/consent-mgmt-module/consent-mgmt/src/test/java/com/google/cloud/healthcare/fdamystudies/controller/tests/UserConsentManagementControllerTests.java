@@ -16,9 +16,9 @@ import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementE
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.USER_ENROLLED_INTO_STUDY;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,18 +31,22 @@ import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
-import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
-import com.google.cloud.healthcare.fdamystudies.testutils.MockUtils;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.BlobId;
+import com.google.cloud.storage.Storage;
+import java.text.SimpleDateFormat;
+import java.util.Base64;
+import java.util.Date;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -50,13 +54,15 @@ import org.springframework.http.HttpHeaders;
 @ExtendWith(MockitoExtension.class)
 public class UserConsentManagementControllerTests extends BaseMockIT {
 
-  @Mock private FileStorageService cloudStorageService;
-
   @InjectMocks @Autowired private UserConsentManagementServiceImpl userConsentManagementService;
 
   @InjectMocks @Autowired private UserConsentManagementController controller;
 
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private Storage mockStorage;
 
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
@@ -66,7 +72,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
   public void contextLoads() {
     assertNotNull(controller);
     assertNotNull(mockMvc);
-    assertNotNull(cloudStorageService);
     assertNotNull(userConsentManagementService);
   }
 
@@ -79,10 +84,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
   @Test
   public void updateEligibilityConsentStatus() throws Exception {
-
-    // Set mockito expectations for saving file into cloudStorageService
-    MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
-
     ConsentReqBean consent =
         new ConsentReqBean(
             Constants.VERSION_1_0, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_0);
@@ -121,11 +122,33 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     verifyTokenIntrospectRequest();
 
     // Set mockito expectations for downloading content from cloudStorage
-    MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_0);
+    // MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_0);
 
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
+
+    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
+    String fileName =
+        underDirectory
+            + "/"
+            + Constants.VALID_USER_ID
+            + "_"
+            + consentStatus.getStudyId()
+            + "_"
+            + consentStatus.getConsent().getVersion()
+            + "_"
+            + new SimpleDateFormat("MMddyyyy").format(new Date())
+            + ".pdf";
+
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    Blob mockedBlob = mock(Blob.class);
+
+    String content = "sample consent document content";
+    byte[] encodedContent = Base64.getEncoder().encode(content.getBytes());
+    when(mockedBlob.getContent()).thenReturn(encodedContent);
+
+    when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
 
     // Invoke /consentDocument to get consent and verify pdf content
     String path =
@@ -136,7 +159,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .perform(get(path).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0)));
+        .andExpect(content().string(containsString(content)));
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -150,9 +173,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
   @Test
   public void updateEligibilityConsentStatusUpdateExisting() throws Exception {
-
-    // Set mockito expectations for saving file into cloudStorageService
-    MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
 
     ConsentReqBean consent =
         new ConsentReqBean(
@@ -193,10 +213,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
-    // Set mockito expectations for downloading content from cloudStorage
-    MockUtils.setCloudStorageDownloadExpectations(
-        cloudStorageService, Constants.CONTENT_1_0_UPDATED);
-
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
@@ -224,10 +240,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
   @Test
   public void updateEligibilityConsentStatusAddNewVersion() throws Exception {
-
-    // Set mockito expectations for saving file into cloudStorageService
-    MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
-
     ConsentReqBean consent =
         new ConsentReqBean(
             Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
@@ -265,9 +277,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         SIGNED_CONSENT_DOCUMENT_SAVED);
     verifyTokenIntrospectRequest();
 
-    // Set mockito expectations for downloading content from cloudStorage
-    MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
-
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
@@ -292,10 +301,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(2);
 
-    // Set mockito expectations for downloading content from cloudStorage
-    MockUtils.setCloudStorageDownloadExpectations(
-        cloudStorageService, Constants.CONTENT_1_0_UPDATED);
-
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
@@ -318,9 +323,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(3);
-
-    // Set mockito expectations for downloading content from cloudStorage
-    MockUtils.setCloudStorageDownloadExpectations(cloudStorageService, Constants.CONTENT_1_2);
 
     // Reset Audit Event calls
     clearAuditRequests();
@@ -534,9 +536,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     verifyTokenIntrospectRequest();
 
-    // Verify that cloud storage wasn't called
-    verify(cloudStorageService, times(0)).saveFile(anyString(), anyString(), anyString());
-
     // Invoke http api endpoint to Add new study consent pdf version
     consent = new ConsentReqBean(Constants.VERSION_1_3, Constants.STATUS_COMPLETE, "");
     consentRequest =
@@ -553,17 +552,10 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         .andExpect(status().isOk());
 
     verifyTokenIntrospectRequest(2);
-
-    // Verify that cloud storage wasn't called
-    verify(cloudStorageService, times(0)).saveFile(anyString(), anyString(), anyString());
   }
 
   @Test
   public void testUpdateEligibilityConsentStatusSaveFailure() throws Exception {
-
-    // Set mockito expectations for saving file into cloudStorageService
-    MockUtils.setCloudStorageSaveFileExpectations(cloudStorageService);
-
     // Invoke http api endpoint to Add new study consent pdf version
     HttpHeaders headers = TestUtils.getCommonHeaders();
     TestUtils.addContentTypeAcceptHeaders(headers);

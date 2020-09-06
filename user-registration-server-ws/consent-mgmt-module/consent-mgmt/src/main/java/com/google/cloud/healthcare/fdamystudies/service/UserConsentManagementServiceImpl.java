@@ -20,8 +20,6 @@ import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import com.google.cloud.storage.StorageException;
-import java.io.ByteArrayOutputStream;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -123,8 +121,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
         if (studyConsent.getPdfStorage() == 1) {
           String path = studyConsent.getPdfPath();
 
-          ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          downloadConsentDocument(path, baos, consentStudyResponseBean, userId, auditRequest);
+          downloadConsentDocument(path, consentStudyResponseBean, userId, auditRequest);
         }
         consentStudyResponseBean.getConsent().setType("application/pdf");
         participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
@@ -142,18 +139,15 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   private void downloadConsentDocument(
-      String fileName,
-      ByteArrayOutputStream baos,
+      String filepath,
       ConsentStudyResponseBean consentStudyResponseBean,
       String userId,
       AuditLogEventRequest auditRequest) {
     try {
       auditRequest.setUserId(userId);
-      Map<String, String> map = Collections.singletonMap("file_name", fileName);
-      cloudStorageService.downloadFileTo(fileName, baos);
-      consentStudyResponseBean
-          .getConsent()
-          .setContent(new String(Base64.getEncoder().encode(baos.toByteArray())));
+      Map<String, String> map = Collections.singletonMap("file_name", filepath);
+      String documentContent = cloudStorageService.getDocumentContent(filepath);
+      consentStudyResponseBean.getConsent().setContent(documentContent);
       consentAuditHelper.logEvent(
           READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest, map);
     } catch (StorageException e) {

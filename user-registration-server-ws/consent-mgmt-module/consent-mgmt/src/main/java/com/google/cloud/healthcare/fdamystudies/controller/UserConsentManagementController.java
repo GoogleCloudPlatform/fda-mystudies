@@ -170,7 +170,7 @@ public class UserConsentManagementController {
                           + "_"
                           + consentStatusBean.getConsent().getVersion()
                           + "_"
-                          + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
+                          + new SimpleDateFormat("MMddyyyy").format(new Date())
                           + ".pdf";
 
                   saveDocumentToCloudStorage(
