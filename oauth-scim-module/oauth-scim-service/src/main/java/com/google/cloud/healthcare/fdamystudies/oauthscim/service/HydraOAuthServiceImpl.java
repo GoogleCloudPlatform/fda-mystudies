@@ -19,7 +19,8 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.CLIENT_USER_VALIDATED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_APPLICATION_CREDENTIALS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -101,16 +102,19 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     logger.entry(String.format("getToken() for grant_type=%s", paramMap.getFirst(GRANT_TYPE)));
 
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
-    Map<String, String> grantTypePH = Collections.singletonMap("grant_type", GRANT_TYPE);
     String grantType = paramMap.getFirst(GRANT_TYPE);
+    Map<String, String> placeHolders =
+        Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
     if (REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType)) {
+      auditHelper.logEvent(CLIENT_USER_VALIDATED, auditRequest, placeHolders);
       headers.set(AUTHORIZATION, encodedAuthorization);
     }
+    Map<String, String> userIdPH = Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
+    auditHelper.logEvent(INVALID_CLIENT_APPLICATION_CREDENTIALS, auditRequest, userIdPH);
 
     HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
     ResponseEntity<JsonNode> response =
         getRestTemplate().postForEntity(tokenEndpoint, requestEntity, JsonNode.class);
-    auditHelper.logEvent(NEW_ACCESS_TOKEN_GENERATED, auditRequest, grantTypePH);
 
     if ((REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType))
         && response.getBody().hasNonNull(REFRESH_TOKEN)) {

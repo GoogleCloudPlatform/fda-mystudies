@@ -26,9 +26,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_APPLICATION_CREDENTIALS;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_ID_OR_SECRET;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
@@ -496,15 +494,10 @@ public class LoginControllerTest extends BaseMockIT {
       auditRequest.setUserId(userEntity.getUserId());
 
       Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-      auditEventMap.put(CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED.getEventCode(), auditRequest);
       auditEventMap.put(SIGNIN_FAILED_INVALID_PASSWORD.getEventCode(), auditRequest);
       auditEventMap.put(SIGNIN_FAILED.getEventCode(), auditRequest);
 
-      verifyAuditEventCall(
-          auditEventMap,
-          CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED,
-          SIGNIN_FAILED_INVALID_PASSWORD,
-          SIGNIN_FAILED);
+      verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_INVALID_PASSWORD, SIGNIN_FAILED);
 
       if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
         verifyAuditEventCall(ACCOUNT_LOCKED);
@@ -558,13 +551,11 @@ public class LoginControllerTest extends BaseMockIT {
     auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED.getEventCode(), auditRequest);
     auditEventMap.put(SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD.getEventCode(), auditRequest);
     auditEventMap.put(INVALID_CLIENT_APPLICATION_CREDENTIALS.getEventCode(), auditRequest);
-    auditEventMap.put(INVALID_CLIENT_ID_OR_SECRET.getEventCode(), auditRequest);
     verifyAuditEventCall(
         auditEventMap,
         SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED,
         SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD,
-        INVALID_CLIENT_APPLICATION_CREDENTIALS,
-        INVALID_CLIENT_ID_OR_SECRET);
+        INVALID_CLIENT_APPLICATION_CREDENTIALS);
   }
 
   @Test

@@ -32,7 +32,10 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -143,7 +146,8 @@ public class LoginController {
         logger.exit("skip login, return to callback URL");
         return redirectToCallbackUrl(request, code, accountStatus, response, auditRequest);
       }
-      return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
+      return redirectToLoginOrAutoLoginPage(
+          response, responseBody, model, loginChallenge, auditRequest);
     }
 
     auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
@@ -260,7 +264,11 @@ public class LoginController {
   }
 
   private String redirectToLoginOrAutoLoginPage(
-      HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
+      HttpServletResponse response,
+      JsonNode responseBody,
+      Model model,
+      String loginChallenge,
+      AuditLogEventRequest auditRequest) {
 
     String requestUrl = responseBody.get("request_url").textValue();
     MultiValueMap<String, String> qsParams =
@@ -289,16 +297,19 @@ public class LoginController {
     if (StringUtils.isNotEmpty(tempRegId)) {
       Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
       if (optUser.isPresent()) {
+        // log TEMPORARY_PASSWORD_SUCCEEDED audit log event
+        auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED, auditRequest);
         UserEntity user = optUser.get();
         logger.exit("tempRegId is valid, return to auto login page");
         cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
         cookieHelper.addCookie(response, TEMP_REG_ID_COOKIE, tempRegId);
         return AUTO_LOGIN_VIEW_NAME;
       }
-
+      auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED, auditRequest);
       logger.exit("tempRegId is invalid, return to login page");
       return LOGIN_VIEW_NAME;
     }
+    auditHelper.logEvent(SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD, auditRequest);
     return LOGIN_VIEW_NAME;
   }
 

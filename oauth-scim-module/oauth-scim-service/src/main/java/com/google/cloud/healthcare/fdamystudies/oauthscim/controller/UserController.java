@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SERVICE_UNAVAILABLE_EXCEPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
@@ -80,6 +81,7 @@ public class UserController {
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
     ResetPasswordResponse resetPasswordResponse =
         userService.resetPassword(resetPasswordRequest, auditRequest);
 
@@ -145,7 +147,7 @@ public class UserController {
 
     UserResponse userResponse = userService.logout(userId, auditRequest);
 
-    if (userResponse.is2xxSuccessful()) {
+    if (HttpStatus.OK.value() == userResponse.getHttpStatusCode()) {
       logger.info(String.format("user_id %s successfully logged out.", userId));
       auditHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
     } else {

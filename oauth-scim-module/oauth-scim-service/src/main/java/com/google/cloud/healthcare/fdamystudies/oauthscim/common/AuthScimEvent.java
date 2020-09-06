@@ -138,20 +138,6 @@ public enum AuthScimEvent implements AuditLogEvent {
       "Client application credentials found invalid for user ID ${user_id}.",
       "INVALID_CLIENT_APPLICATION_CREDENTIALS"),
 
-  CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Client credentials found valid for ${resource_requesting_entity_systemid}.",
-      "CLIENT_CREDENTIAL_VALIDATION_SUCCEEDED"),
-
-  INVALID_CLIENT_ID_OR_SECRET(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Client credentials found invalid for ${resource_requesting_entity_systemid}.",
-      "INVALID_CLIENT_ID_OR_SECRET"),
-
   NEW_ACCESS_TOKEN_GENERATED(
       null,
       SCIM_AUTH_SERVER,
