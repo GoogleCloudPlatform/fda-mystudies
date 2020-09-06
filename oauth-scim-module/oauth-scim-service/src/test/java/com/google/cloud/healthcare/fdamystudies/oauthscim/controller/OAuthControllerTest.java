@@ -33,7 +33,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SERVICE_UNAVAILABLE_EXCEPTION;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -228,8 +227,7 @@ public class OAuthControllerTest extends BaseMockIT {
     auditRequest.setUserId(userEntity.getUserId());
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(INVALID_REFRESH_TOKEN.getEventCode(), auditRequest);
-    auditEventMap.put(SERVICE_UNAVAILABLE_EXCEPTION.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, INVALID_REFRESH_TOKEN, SERVICE_UNAVAILABLE_EXCEPTION);
+    verifyAuditEventCall(auditEventMap, INVALID_REFRESH_TOKEN);
   }
 
   @Test
@@ -417,9 +415,7 @@ public class OAuthControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ACCESS_TOKEN_INVALID_OR_EXPIRED.getEventCode(), auditRequest);
-    auditEventMap.put(SERVICE_UNAVAILABLE_EXCEPTION.getEventCode(), auditRequest);
-    verifyAuditEventCall(
-        auditEventMap, ACCESS_TOKEN_INVALID_OR_EXPIRED, SERVICE_UNAVAILABLE_EXCEPTION);
+    verifyAuditEventCall(auditEventMap, ACCESS_TOKEN_INVALID_OR_EXPIRED);
   }
 
   @Test
@@ -467,8 +463,7 @@ public class OAuthControllerTest extends BaseMockIT {
     auditRequest.setUserId(userEntity.getUserId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(SERVICE_UNAVAILABLE_EXCEPTION.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, SERVICE_UNAVAILABLE_EXCEPTION);
+    verifyAuditEventCall(auditEventMap);
   }
 
   @Test

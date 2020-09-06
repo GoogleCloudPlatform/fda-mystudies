@@ -19,7 +19,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.LOGIN_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_APPLICATION_CREDENTIALS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -106,8 +105,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
     if (REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType)) {
       headers.set(AUTHORIZATION, encodedAuthorization);
     }
-
-    auditHelper.logEvent(INVALID_CLIENT_APPLICATION_CREDENTIALS, auditRequest, userIdPH);
 
     HttpEntity<Object> requestEntity = new HttpEntity<>(paramMap, headers);
     ResponseEntity<JsonNode> response =

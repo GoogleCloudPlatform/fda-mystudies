@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SERVICE_UNAVAILABLE_EXCEPTION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
 
@@ -28,8 +27,6 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
-import java.util.Collections;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.ext.XLogger;
@@ -120,13 +117,9 @@ public class UserController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-
     userRequest.setUserId(userId);
 
     if (!userRequest.hasAtleastOneRequiredValue()) {
-      Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
-      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       throw new ErrorCodeException(ErrorCode.INVALID_UPDATE_USER_REQUEST);
     }
 

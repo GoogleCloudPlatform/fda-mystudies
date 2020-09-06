@@ -20,10 +20,10 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_APPLICATION_CREDENTIALS;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SERVICE_UNAVAILABLE_EXCEPTION;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -98,10 +98,8 @@ public class OAuthController {
 
     Map<String, String> placeHolders =
         Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
-    Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
     if (errors.hasErrors()) {
       auditHelper.logEvent(ACCESS_TOKEN_INVALID_OR_EXPIRED, auditRequest, placeHolders);
-      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
@@ -109,22 +107,27 @@ public class OAuthController {
     // get token from hydra
     ResponseEntity<?> response = oauthService.getToken(paramMap, headers, auditRequest);
 
-    logTokenAuditLogEvent(response, paramMap.getFirst(GRANT_TYPE), auditRequest);
+    logTokenAuditLogEvent(response, paramMap, auditRequest);
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
 
     return response;
   }
 
   private void logTokenAuditLogEvent(
-      ResponseEntity<?> response, String grantType, AuditLogEventRequest auditRequest) {
+      ResponseEntity<?> response,
+      MultiValueMap<String, String> paramMap,
+      AuditLogEventRequest auditRequest) {
+    String grantType = paramMap.getFirst(GRANT_TYPE);
     Map<String, String> grantTypePH = Collections.singletonMap("grant_type", grantType);
     if (response.getStatusCode().is2xxSuccessful()) {
       auditHelper.logEvent(NEW_ACCESS_TOKEN_GENERATED, auditRequest, grantTypePH);
     } else {
       auditHelper.logEvent(
           NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE, auditRequest, grantTypePH);
-      if (StringUtils.equalsIgnoreCase(REFRESH_TOKEN, grantType)) {
+      if (StringUtils.equalsIgnoreCase(REFRESH_TOKEN, paramMap.getFirst(GRANT_TYPE))) {
         auditHelper.logEvent(INVALID_REFRESH_TOKEN, auditRequest);
+      } else if (paramMap.getFirst(CLIENT_ID).isEmpty()) {
+        auditHelper.logEvent(INVALID_CLIENT_APPLICATION_CREDENTIALS, auditRequest);
       }
     }
   }
@@ -143,8 +146,6 @@ public class OAuthController {
     // validate required params
     ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
     if (errors.hasErrors()) {
-      Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
-      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
@@ -169,8 +170,6 @@ public class OAuthController {
     // validate required params
     ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
     if (errors.hasErrors()) {
-      Map<String, String> reqUrlPH = Collections.singletonMap("req_url", request.getRequestURI());
-      auditHelper.logEvent(SERVICE_UNAVAILABLE_EXCEPTION, auditRequest, reqUrlPH);
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }

@@ -164,14 +164,7 @@ public enum AuthScimEvent implements AuditLogEvent {
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
       "Generation of new access token failed for user with grant type ${grant_type}.",
-      "NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE"),
-
-  SERVICE_UNAVAILABLE_EXCEPTION(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Failed to process request $(req_url).",
-      "SERVICE_UNAVAILABLE_EXCEPTION");
+      "NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE");
 
   private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;
