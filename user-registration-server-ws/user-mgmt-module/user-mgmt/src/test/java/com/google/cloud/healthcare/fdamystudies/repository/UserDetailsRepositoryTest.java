@@ -7,10 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import static com.google.cloud.healthcare.fdamystudies.matchers.HasLastName.hasLastName;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.junit.Assert.assertThat;
-
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import java.time.LocalDateTime;
@@ -27,6 +23,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.google.cloud.healthcare.fdamystudies.matchers.HasLastName.hasLastName;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.assertThat;
 
 // TODO (#761) Added @Ignore to test classes written by UNC team, should be fixed later or next
 // track
