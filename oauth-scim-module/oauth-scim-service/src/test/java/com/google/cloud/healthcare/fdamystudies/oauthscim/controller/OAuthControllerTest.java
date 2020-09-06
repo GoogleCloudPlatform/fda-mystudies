@@ -28,7 +28,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.CLIENT_USER_VALIDATED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE;
@@ -105,6 +104,7 @@ public class OAuthControllerTest extends BaseMockIT {
     headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add(CLIENT_ID, clientId);
 
     MvcResult result =
         mockMvc
@@ -129,6 +129,7 @@ public class OAuthControllerTest extends BaseMockIT {
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
+    requestParams.add(CLIENT_ID, clientId);
 
     MvcResult result =
         mockMvc
@@ -230,34 +231,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnBadRequestForInvaliddAuthCode() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
-    headers.add("correlationId", IdGenerator.id());
-    headers.add(GRANT_TYPE, AUTHORIZATION_CODE);
-
-    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.add(GRANT_TYPE, AUTHORIZATION_CODE);
-    requestParams.add(SCOPE, "openid");
-    requestParams.add(REDIRECT_URI, redirectUri);
-    requestParams.add(USER_ID, userEntity.getUserId());
-    mockMvc
-        .perform(
-            post(ApiEndpoint.TOKEN.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userEntity.getUserId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(ACCESS_TOKEN_INVALID_OR_EXPIRED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, ACCESS_TOKEN_INVALID_OR_EXPIRED);
-  }
-
-  @Test
   public void shouldReturnBadRequestForInvalidGrantType() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
@@ -268,6 +241,7 @@ public class OAuthControllerTest extends BaseMockIT {
     requestParams.add(GRANT_TYPE, UUID.randomUUID().toString());
     requestParams.add(SCOPE, "openid");
     requestParams.add(REDIRECT_URI, redirectUri);
+    requestParams.add(CLIENT_ID, clientId);
 
     mockMvc
         .perform(
@@ -363,6 +337,7 @@ public class OAuthControllerTest extends BaseMockIT {
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(TOKEN, VALID_TOKEN);
+    requestParams.add(CLIENT_ID, clientId);
 
     mockMvc
         .perform(
@@ -378,14 +353,6 @@ public class OAuthControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userEntity.getUserId());
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(CLIENT_USER_VALIDATED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, CLIENT_USER_VALIDATED);
   }
 
   @Test
@@ -393,6 +360,8 @@ public class OAuthControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     headers.add("correlationId", IdGenerator.id());
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add(USER_ID, userEntity.getUserId());
+    requestParams.add(CLIENT_ID, clientId);
     String expectedResponseContains = ("must not be blank");
 
     mockMvc
@@ -444,6 +413,7 @@ public class OAuthControllerTest extends BaseMockIT {
     headers.add("userId", userEntity.getUserId());
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add(CLIENT_ID, clientId);
 
     mockMvc
         .perform(
