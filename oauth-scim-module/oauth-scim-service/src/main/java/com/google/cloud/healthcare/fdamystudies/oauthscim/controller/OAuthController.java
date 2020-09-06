@@ -99,7 +99,13 @@ public class OAuthController {
     Map<String, String> placeHolders =
         Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
     if (errors.hasErrors()) {
-      auditHelper.logEvent(ACCESS_TOKEN_INVALID_OR_EXPIRED, auditRequest, placeHolders);
+      if (StringUtils.equalsIgnoreCase(REFRESH_TOKEN, paramMap.getFirst(GRANT_TYPE))) {
+        auditHelper.logEvent(INVALID_REFRESH_TOKEN, auditRequest);
+      } else if (paramMap.getFirst(CLIENT_ID).isEmpty()) {
+        auditHelper.logEvent(INVALID_CLIENT_APPLICATION_CREDENTIALS, auditRequest);
+      } else {
+        auditHelper.logEvent(ACCESS_TOKEN_INVALID_OR_EXPIRED, auditRequest, placeHolders);
+      }
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
@@ -124,11 +130,6 @@ public class OAuthController {
     } else {
       auditHelper.logEvent(
           NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE, auditRequest, grantTypePH);
-      if (StringUtils.equalsIgnoreCase(REFRESH_TOKEN, paramMap.getFirst(GRANT_TYPE))) {
-        auditHelper.logEvent(INVALID_REFRESH_TOKEN, auditRequest);
-      } else if (paramMap.getFirst(CLIENT_ID).isEmpty()) {
-        auditHelper.logEvent(INVALID_CLIENT_APPLICATION_CREDENTIALS, auditRequest);
-      }
     }
   }
 

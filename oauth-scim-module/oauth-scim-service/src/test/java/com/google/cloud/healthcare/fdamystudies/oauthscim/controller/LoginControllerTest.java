@@ -26,19 +26,11 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_APPLICATION_CREDENTIALS;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,7 +42,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
@@ -68,7 +59,6 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.net.MalformedURLException;
-import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import javax.servlet.http.Cookie;
@@ -350,53 +340,6 @@ public class LoginControllerTest extends BaseMockIT {
 
     // Step-3 delete user account
     userRepository.delete(userEntity);
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED);
-  }
-
-  @Test
-  public void validateTempPassFailureLog() throws Exception {
-    // Step-1 create a user account with ACCOUNT_LOCKED status
-    UserResponse userResponse = userService.createUser(newUserRequest());
-    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
-    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
-    userEntity = userRepository.saveAndFlush(userEntity);
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId("GCPMS001");
-    auditRequest.setAppVersion("1.0");
-    auditRequest.setCorrelationId(IdGenerator.id());
-    auditRequest.setUserId(userEntity.getUserId());
-    auditRequest.setSource("IntegrationTests");
-    auditRequest.setMobilePlatform("Unknown");
-    JsonNode userInfo = userEntity.getUserInfo();
-
-    ObjectNode nameNode = (ObjectNode) userInfo.get(PASSWORD);
-    userInfo.get(PASSWORD);
-    nameNode.put("expire_timestamp", Instant.now().toEpochMilli());
-    nameNode.put("otp_used", false);
-    ErrorCode errorCode =
-        userService.validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
-    assertEquals(ErrorCode.TEMP_PASSWORD_EXPIRED.getCode(), errorCode.getCode());
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD);
-
-    userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
-    userEntity = userRepository.saveAndFlush(userEntity);
-
-    ErrorCode errorCode1 =
-        userService.validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
-    assertEquals(ErrorCode.TEMP_PASSWORD_EXPIRED.getCode(), errorCode1.getCode());
-    Map<String, AuditLogEventRequest> auditEventMap1 = new HashedMap<>();
-    auditEventMap1.put(SIGNIN_FAILED_EXPIRED_PASSWORD.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_EXPIRED_PASSWORD);
-    // Step-3 delete user account
-    userRepository.delete(userEntity);
   }
 
   @Test
@@ -495,9 +438,7 @@ public class LoginControllerTest extends BaseMockIT {
 
       Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
       auditEventMap.put(SIGNIN_FAILED_INVALID_PASSWORD.getEventCode(), auditRequest);
-      auditEventMap.put(SIGNIN_FAILED.getEventCode(), auditRequest);
-
-      verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_INVALID_PASSWORD, SIGNIN_FAILED);
+      verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_INVALID_PASSWORD);
 
       if (loginAttempts == MAX_LOGIN_ATTEMPTS) {
         verifyAuditEventCall(ACCOUNT_LOCKED);
@@ -548,14 +489,8 @@ public class LoginControllerTest extends BaseMockIT {
     auditRequest.setUserId(userEntity.getUserId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED.getEventCode(), auditRequest);
-    auditEventMap.put(SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD.getEventCode(), auditRequest);
-    auditEventMap.put(INVALID_CLIENT_APPLICATION_CREDENTIALS.getEventCode(), auditRequest);
-    verifyAuditEventCall(
-        auditEventMap,
-        SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED,
-        SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD,
-        INVALID_CLIENT_APPLICATION_CREDENTIALS);
+    auditEventMap.put(SIGNIN_FAILED_INVALID_PASSWORD.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_INVALID_PASSWORD);
   }
 
   @Test
