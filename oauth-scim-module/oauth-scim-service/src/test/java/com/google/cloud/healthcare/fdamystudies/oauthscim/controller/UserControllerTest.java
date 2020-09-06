@@ -25,13 +25,10 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_SUCCEEDED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_SENT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.junit.Assert.assertFalse;
@@ -658,15 +655,11 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void testPasswordHelpRequestFailedBadReq()
+  public void testPasswordHelpRequestFailedforUnregUser()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
     headers.add("correlationId", "CorrelationIdValue_For_5XX_failure");
-
-    // Password reset mail failed for locked account
-    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
-    userEntity = userRepository.saveAndFlush(userEntity);
 
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
@@ -684,17 +677,11 @@ public class UserControllerTest extends BaseMockIT {
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(PASSWORD_RESET_FAILED.getEventCode(), auditRequest);
-    auditEventMap.put(PASSWORD_HELP_EMAIL_FAILED.getEventCode(), auditRequest);
+    auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
     auditEventMap.put(
         PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME.getEventCode(), auditRequest);
-    auditEventMap.put(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT.getEventCode(), auditRequest);
     verifyAuditEventCall(
-        auditEventMap,
-        PASSWORD_RESET_FAILED,
-        PASSWORD_HELP_EMAIL_FAILED,
-        PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME,
-        PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT);
+        auditEventMap, PASSWORD_HELP_REQUESTED, PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME);
   }
 
   @Test

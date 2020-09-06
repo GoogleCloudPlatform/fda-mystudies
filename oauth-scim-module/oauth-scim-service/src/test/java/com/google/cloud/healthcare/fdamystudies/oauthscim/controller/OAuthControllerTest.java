@@ -30,7 +30,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -231,36 +230,6 @@ public class OAuthControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnBadRequestForInvalidGrantType() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    headers.set("Authorization", getEncodedAuthorization(clientId, clientSecret));
-    headers.add("correlationId", IdGenerator.id());
-    headers.add(GRANT_TYPE, UUID.randomUUID().toString());
-
-    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.add(GRANT_TYPE, UUID.randomUUID().toString());
-    requestParams.add(SCOPE, "openid");
-    requestParams.add(REDIRECT_URI, redirectUri);
-    requestParams.add(CLIENT_ID, clientId);
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.TOKEN.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().is5xxServerError());
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userEntity.getUserId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(
-        NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE);
-  }
-
-  @Test
   public void shouldReturnRefreshTokenForAuthorizationCodeGrant() throws Exception {
     // Step-1 call the API and expect access and refresh tokens in response
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
@@ -337,7 +306,6 @@ public class OAuthControllerTest extends BaseMockIT {
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(TOKEN, VALID_TOKEN);
-    requestParams.add(CLIENT_ID, clientId);
 
     mockMvc
         .perform(
@@ -413,7 +381,6 @@ public class OAuthControllerTest extends BaseMockIT {
     headers.add("userId", userEntity.getUserId());
 
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.add(CLIENT_ID, clientId);
 
     mockMvc
         .perform(
@@ -425,12 +392,6 @@ public class OAuthControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.violations[0].path").value("token"))
         .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userEntity.getUserId());
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    verifyAuditEventCall(auditEventMap);
   }
 
   @Test

@@ -139,7 +139,6 @@ public class OAuthController {
       HttpServletRequest request,
       @RequestHeader HttpHeaders headers) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     // validate required params
     ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
