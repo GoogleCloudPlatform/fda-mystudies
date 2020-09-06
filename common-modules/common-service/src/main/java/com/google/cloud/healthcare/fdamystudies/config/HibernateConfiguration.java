@@ -42,16 +42,16 @@ public class HibernateConfiguration {
   @Value("${spring.jpa.database-platform}")
   private String dialect;
 
-  @Value("${spring.jpa.show-sql}")
+  @Value("${spring.jpa.show-sql:false}")
   private String showSql;
 
-  @Value("${spring.jpa.hibernate.ddl-auto}")
+  @Value("${spring.jpa.hibernate.ddl-auto:none}")
   private String autoDdl;
 
   @Value("${entitymanager.packagesToScan}")
   private String scanPackages;
 
-  @Value("${spring.jpa.properties.hibernate.hbm2ddl.import_files}")
+  @Value("${spring.jpa.properties.hibernate.hbm2ddl.import_files:}")
   private String dataSqlFile;
 
   @Bean
