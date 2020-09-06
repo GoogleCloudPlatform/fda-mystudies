@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.oauthscim.model;
+package com.google.cloud.healthcare.fdamystudies.oauthscim.model.oauthscim;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonNodeConverter;
