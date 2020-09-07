@@ -23,6 +23,13 @@
 
 package com.fdahpstudydesigner.controller;
 
+import com.fdahpstudydesigner.bo.MasterDataBO;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.service.DashBoardAndProfileService;
+import com.fdahpstudydesigner.service.LoginServiceImpl;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -38,17 +45,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import com.fdahpstudydesigner.bo.MasterDataBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.service.DashBoardAndProfileService;
-import com.fdahpstudydesigner.service.LoginServiceImpl;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.SessionObject;
 
 @Controller
 public class LoginController {

@@ -23,9 +23,9 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.fdahpstudydesigner.bean.StudySessionBean;
 import java.io.Serializable;
 import java.util.List;
-import com.fdahpstudydesigner.bean.StudySessionBean;
 
 public class SessionObject implements Serializable {
 

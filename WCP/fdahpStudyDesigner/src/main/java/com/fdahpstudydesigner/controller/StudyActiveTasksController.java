@@ -23,6 +23,20 @@
 
 package com.fdahpstudydesigner.controller;
 
+import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
+import com.fdahpstudydesigner.bo.ActiveTaskBo;
+import com.fdahpstudydesigner.bo.ActiveTaskListBo;
+import com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo;
+import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
+import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
+import com.fdahpstudydesigner.bo.StatisticImageListBo;
+import com.fdahpstudydesigner.bo.StudyBo;
+import com.fdahpstudydesigner.service.StudyActiveTasksService;
+import com.fdahpstudydesigner.service.StudyQuestionnaireService;
+import com.fdahpstudydesigner.service.StudyService;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -44,20 +58,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
-import com.fdahpstudydesigner.bo.ActiveTaskBo;
-import com.fdahpstudydesigner.bo.ActiveTaskListBo;
-import com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo;
-import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
-import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
-import com.fdahpstudydesigner.bo.StatisticImageListBo;
-import com.fdahpstudydesigner.bo.StudyBo;
-import com.fdahpstudydesigner.service.StudyActiveTasksService;
-import com.fdahpstudydesigner.service.StudyQuestionnaireService;
-import com.fdahpstudydesigner.service.StudyService;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.SessionObject;
 
 @Controller
 public class StudyActiveTasksController {
