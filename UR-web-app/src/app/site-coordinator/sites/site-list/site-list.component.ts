@@ -6,6 +6,7 @@ import {Study} from '../../studies/shared/study.model';
 import {Site} from '../../studies/shared/site.model';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {StudiesService} from '../../studies/shared/studies.service';
+import {SharedService} from 'src/app/shared/shared.service';
 
 @Component({
   selector: 'app-site-list',
@@ -25,9 +26,13 @@ export class SiteListComponent implements OnInit {
     private readonly studiesService: StudiesService,
     private readonly modalService: BsModalService,
     private modalRef: BsModalRef,
+    private readonly sharedService: SharedService,
   ) {}
 
   ngOnInit(): void {
+    this.sharedService.updateSearchPlaceHolder(
+      'Search By Site or Study ID or Name',
+    );
     this.getStudies();
   }
   closeModal(): void {

@@ -6,6 +6,7 @@ import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Study} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
+import {SharedService} from 'src/app/shared/shared.service';
 @Component({
   selector: 'app-study-list',
   templateUrl: './study-list.component.html',
@@ -15,13 +16,16 @@ export class StudyListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   study$: Observable<Study[]> = of([]);
   studies: Study[] = [];
+
   constructor(
     private readonly studiesService: StudiesService,
     private readonly router: Router,
     private readonly toastr: ToastrService,
+    private readonly sharedService: SharedService,
   ) {}
 
   ngOnInit(): void {
+    this.sharedService.updateSearchPlaceHolder('Search By Study ID or Name');
     this.getStudies();
   }
 
