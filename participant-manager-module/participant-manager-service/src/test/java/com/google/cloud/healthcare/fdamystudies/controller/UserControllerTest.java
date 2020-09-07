@@ -234,10 +234,12 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
 
-    ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+    ArgumentCaptor<MimeMessage> mimeMessageArgumentCaptor =
+        ArgumentCaptor.forClass(MimeMessage.class);
     verify(emailSender, atLeastOnce()).send(mimeMessageArgumentCaptor.capture());
     MimeMessage capturedMimeMessage = mimeMessageArgumentCaptor.getValue();
-    assertEquals(capturedMimeMessage.getAllRecipients()[0].toString(), TestConstants.USER_EMAIL_VALUE);
+    assertEquals(
+        capturedMimeMessage.getAllRecipients()[0].toString(), TestConstants.USER_EMAIL_VALUE);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
 

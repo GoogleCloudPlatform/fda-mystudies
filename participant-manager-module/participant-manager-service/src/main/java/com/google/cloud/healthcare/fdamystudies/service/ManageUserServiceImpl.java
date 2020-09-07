@@ -101,10 +101,10 @@ public class ManageUserServiceImpl implements ManageUserService {
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
     templateArgs.put("FIRST_NAME", user.getFirstName());
     templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + securityCode);
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getFromEmailAddress());
+    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmailAddress(),
+            appConfig.getFromEmail(),
             new String[] {user.getEmail()},
             null,
             null,
@@ -438,10 +438,10 @@ public class ManageUserServiceImpl implements ManageUserService {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
     templateArgs.put("FIRST_NAME", user.getFirstName());
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getFromEmailAddress());
+    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmailAddress(),
+            appConfig.getFromEmail(),
             new String[] {user.getEmail()},
             null,
             null,
