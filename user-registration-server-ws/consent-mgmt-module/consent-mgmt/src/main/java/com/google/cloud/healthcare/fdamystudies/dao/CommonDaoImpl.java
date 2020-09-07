@@ -46,7 +46,7 @@ public class CommonDaoImpl implements CommonDao {
     Root<AppEntity> appDetailsBoRoot = null;
     Predicate[] appDetailsPredicates = new Predicate[1];
     List<AppEntity> appDetailsList = null;
-    AppEntity appDetailsBO = null;
+    AppEntity appEntity = null;
 
     CriteriaQuery<OrgInfoEntity> orgDetailsBoCriteria = null;
     Root<OrgInfoEntity> orgDetailsBoRoot = null;
@@ -68,8 +68,8 @@ public class CommonDaoImpl implements CommonDao {
         appDetailsBoCriteria.select(appDetailsBoRoot).where(appDetailsPredicates);
         appDetailsList = session.createQuery(appDetailsBoCriteria).getResultList();
         if (!appDetailsList.isEmpty()) {
-          appDetailsBO = appDetailsList.get(0);
-          appInfoId = appDetailsBO.getId();
+          appEntity = appDetailsList.get(0);
+          appInfoId = appEntity.getId();
         }
       }
 
@@ -107,7 +107,7 @@ public class CommonDaoImpl implements CommonDao {
     Root<UserDetailsEntity> userDetailsBoRoot = null;
     List<UserDetailsEntity> userDetailsBoList = null;
     Predicate[] userDetailspredicates = new Predicate[1];
-    UserDetailsEntity userDetailsBO = null;
+    UserDetailsEntity userDetailsEntity = null;
     String userDetailsId = String.valueOf(0);
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
@@ -121,8 +121,8 @@ public class CommonDaoImpl implements CommonDao {
         userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
 
         if (!userDetailsBoList.isEmpty()) {
-          userDetailsBO = userDetailsBoList.get(0);
-          userDetailsId = userDetailsBO.getId();
+          userDetailsEntity = userDetailsBoList.get(0);
+          userDetailsId = userDetailsEntity.getId();
         }
       }
     } catch (Exception e) {

@@ -46,13 +46,13 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Override
   public ParticipantStudyEntity getParticipantStudies(String studyId, String userId) {
     logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
-    ParticipantStudyEntity participantStudiesBO = null;
+    ParticipantStudyEntity participantStudiesEntity = null;
     try {
-      participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
+      participantStudiesEntity = userConsentManagementDao.getParticipantStudies(studyId, userId);
     } catch (Exception e) {
       logger.error("UserConsentManagementServiceImpl getParticipantStudies() - error ", e);
     }
-    return participantStudiesBO;
+    return participantStudiesEntity;
   }
 
   @Override
@@ -102,7 +102,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Started ");
     StudyConsentEntity studyConsent = null;
-    ParticipantStudyEntity participantStudiesBO = null;
+    ParticipantStudyEntity participantStudiesEntity = null;
     ConsentStudyResponseBean consentStudyResponseBean = new ConsentStudyResponseBean();
     try {
 
@@ -123,11 +123,11 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
           downloadConsentDocument(path, baos, consentStudyResponseBean, userId, auditRequest);
         }
         consentStudyResponseBean.getConsent().setType("application/pdf");
-        participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
-        if (participantStudiesBO != null) {
+        participantStudiesEntity = userConsentManagementDao.getParticipantStudies(studyId, userId);
+        if (participantStudiesEntity != null) {
           String dataSharingStatus =
               StringUtils.defaultIfEmpty(
-                  participantStudiesBO.getSharing(), DataSharingStatus.UNDEFINED.value());
+                  participantStudiesEntity.getSharing(), DataSharingStatus.UNDEFINED.value());
           consentStudyResponseBean.setSharing(dataSharingStatus);
         }
       }
