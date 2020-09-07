@@ -199,14 +199,16 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       studyConsentBoRoot = criteriaQuery.from(StudyConsentEntity.class);
       if ((consentVersion != null) && !StringUtils.isEmpty(consentVersion)) {
         predicates = new Predicate[3];
-        predicates[0] = criteriaBuilder.equal(studyConsentBoRoot.get("userDetails"), userDetailsEntity);
+        predicates[0] =
+            criteriaBuilder.equal(studyConsentBoRoot.get("userDetails"), userDetailsEntity);
         if (optStudy.isPresent()) {
           predicates[1] = criteriaBuilder.equal(studyConsentBoRoot.get("study"), optStudy.get());
         }
         predicates[2] = criteriaBuilder.equal(studyConsentBoRoot.get("version"), consentVersion);
       } else {
         predicates = new Predicate[2];
-        predicates[0] = criteriaBuilder.equal(studyConsentBoRoot.get("userDetails"), userDetailsEntity);
+        predicates[0] =
+            criteriaBuilder.equal(studyConsentBoRoot.get("userDetails"), userDetailsEntity);
         if (optStudy.isPresent()) {
           predicates[1] = criteriaBuilder.equal(studyConsentBoRoot.get("study"), optStudy.get());
         }
