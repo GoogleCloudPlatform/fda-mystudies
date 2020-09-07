@@ -8,11 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.utils;
 
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
-
 import javax.ws.rs.core.MediaType;
 import org.springframework.http.HttpHeaders;
+
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
 
 public class TestUtils {
 
