@@ -551,7 +551,13 @@
     </ng-template>
 
     <ng-template #template1>
-      <div class="modal-body modal__body"></div>
+      <div class="modal-body modal__body">
+        <app-import-email-list
+          [siteId]="siteId"
+          (successSubmit)="onSucceedFileImport()"
+          (cancelled)="modalRef.hide()"
+        ></app-import-email-list>
+      </div>
     </ng-template>
   </div>
 </ng-container>

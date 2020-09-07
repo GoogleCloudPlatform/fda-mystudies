@@ -65,10 +65,12 @@ export class AuthInterceptor implements HttpInterceptor {
     if (req.url.includes(`${environment.authServerUrl}`)) {
       const headers = req.headers
         .set('Content-Type', 'application/x-www-form-urlencoded')
-        .set('Accept', 'application/json')
         .set('correlationId', this.cookieService.get('correlationId'))
         .set('appId', 'PARTICIPANT-MANAGER')
         .set('mobilePlatform', 'DESKTOP');
+      if (!req.headers.has('Content-Type')) {
+        req.headers.set('Content-Type', 'application/json');
+      }
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
         this.handleError(),
@@ -78,10 +80,12 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     } else {
       const headers = req.headers
-        .set('Content-Type', 'application/json')
         .set('userId', user.id.toString())
         .set('authToken', this.authService.getUserAccessToken())
         .set('authUserId', user.urAdminAuthId);
+      if (!req.headers.has('Content-Type')) {
+        req.headers.set('Content-Type', 'application/json');
+      }
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
         this.handleError(),
