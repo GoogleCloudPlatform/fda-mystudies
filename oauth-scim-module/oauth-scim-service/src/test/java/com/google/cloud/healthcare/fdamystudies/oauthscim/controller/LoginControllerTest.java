@@ -518,13 +518,6 @@ public class LoginControllerTest extends BaseMockIT {
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userEntity.getUserId());
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(SIGNIN_FAILED_INVALID_PASSWORD.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_INVALID_PASSWORD);
   }
 
   @Test
