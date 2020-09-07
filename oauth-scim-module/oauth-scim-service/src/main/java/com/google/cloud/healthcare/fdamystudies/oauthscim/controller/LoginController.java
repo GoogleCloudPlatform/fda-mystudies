@@ -34,8 +34,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -52,7 +50,6 @@ import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
@@ -97,8 +94,6 @@ public class LoginController {
 
   @Autowired private CookieHelper cookieHelper;
 
-  @Autowired private AppPropertyConfig appConfig;
-
   @Autowired private AuthScimAuditHelper auditHelper;
 
   /**
@@ -133,6 +128,7 @@ public class LoginController {
 
     // login/consent flow initiated
     if (StringUtils.isEmpty(loginChallenge)) {
+      auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
       return ERROR_VIEW_NAME;
     }
 
@@ -298,14 +294,13 @@ public class LoginController {
       Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
       if (optUser.isPresent()) {
         // log TEMPORARY_PASSWORD_SUCCEEDED audit log event
-        auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED, auditRequest);
+
         UserEntity user = optUser.get();
         logger.exit("tempRegId is valid, return to auto login page");
         cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
         cookieHelper.addCookie(response, TEMP_REG_ID_COOKIE, tempRegId);
         return AUTO_LOGIN_VIEW_NAME;
       }
-      auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED, auditRequest);
       logger.exit("tempRegId is invalid, return to login page");
       return LOGIN_VIEW_NAME;
     }
@@ -343,6 +338,10 @@ public class LoginController {
     logger.error(String.format("Request %s failed with an exception", req.getRequestURL()), ex);
     ModelAndView modelView = new ModelAndView();
     modelView.setViewName(ERROR_VIEW_NAME);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return modelView;
   }
 
@@ -354,6 +353,10 @@ public class LoginController {
     modelView.addObject("loginRequest", new LoginRequest());
     modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
     modelView.setViewName(LOGIN_VIEW_NAME);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return modelView;
   }
 }

@@ -16,8 +16,12 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
@@ -51,6 +55,8 @@ public class ConsentController {
 
   @Autowired private CookieHelper cookieHelper;
 
+  @Autowired private AuthScimAuditHelper auditHelper;
+
   @GetMapping(value = "/consent")
   public String authorize(
       @RequestParam(name = CONSENT_CHALLENGE) String consentChallenge,
@@ -68,6 +74,9 @@ public class ConsentController {
       JsonNode responseBody = consentResponse.getBody();
       return skipConsent(responseBody) ? redirectToCallbackUrl(request, true, response) : "consent";
     }
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
 
     return ERROR_VIEW_NAME;
   }
@@ -113,6 +122,9 @@ public class ConsentController {
       return redirect(response, redirectUrl);
     }
 
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return ERROR_VIEW_NAME;
   }
 
@@ -121,6 +133,10 @@ public class ConsentController {
     logger.error(String.format("Request %s failed with an exception", req.getRequestURL()), ex);
     ModelAndView modelView = new ModelAndView();
     modelView.setViewName(ERROR_VIEW_NAME);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return modelView;
   }
 }

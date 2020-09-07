@@ -22,6 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
@@ -140,12 +141,12 @@ public class UserController {
 
     UserResponse userResponse = userService.logout(userId, auditRequest);
 
-    if (HttpStatus.OK.value() == userResponse.getHttpStatusCode()) {
-      logger.info(String.format("user_id %s successfully logged out.", userId));
-      auditHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
-    } else {
-      auditHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
-    }
+    AuditLogEvent auditEvent =
+        userResponse.getHttpStatusCode() == HttpStatus.OK.value()
+            ? USER_SIGNOUT_SUCCEEDED
+            : USER_SIGNOUT_FAILED;
+    auditHelper.logEvent(auditEvent, auditRequest);
+
     logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }

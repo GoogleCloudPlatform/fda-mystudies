@@ -20,12 +20,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.CLIENT_USER_VALIDATED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_CLIENT_APPLICATION_CREDENTIALS;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.INVALID_REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -98,44 +93,20 @@ public class OAuthController {
         errors = validateRequiredParams(paramMap, GRANT_TYPE, REDIRECT_URI, SCOPE);
     }
 
-    Map<String, String> userIdPH = Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
     if (errors.hasErrors()) {
-      if (StringUtils.equalsIgnoreCase(REFRESH_TOKEN, paramMap.getFirst(GRANT_TYPE))) {
-        auditHelper.logEvent(INVALID_REFRESH_TOKEN, auditRequest);
-      } else if (StringUtils.equalsIgnoreCase(REFRESH_TOKEN, paramMap.getFirst(GRANT_TYPE))
-          && null != paramMap.getFirst(CLIENT_ID)) {
-        auditHelper.logEvent(INVALID_CLIENT_APPLICATION_CREDENTIALS, auditRequest, userIdPH);
-      } else if (StringUtils.equalsIgnoreCase(AUTHORIZATION_CODE, paramMap.getFirst(GRANT_TYPE))) {
-        auditHelper.logEvent(
-            NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS, auditRequest);
-      }
-
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    auditHelper.logEvent(CLIENT_USER_VALIDATED, auditRequest, userIdPH);
     // get token from hydra
     ResponseEntity<?> response = oauthService.getToken(paramMap, headers, auditRequest);
 
-    logTokenAuditLogEvent(response, paramMap, auditRequest);
+    Map<String, String> values = Collections.singletonMap("grant_type", grantType);
+    auditHelper.logEvent(NEW_ACCESS_TOKEN_GENERATED, auditRequest, values);
+
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
 
     return response;
-  }
-
-  private void logTokenAuditLogEvent(
-      ResponseEntity<?> response,
-      MultiValueMap<String, String> paramMap,
-      AuditLogEventRequest auditRequest) {
-    String grantType = paramMap.getFirst(GRANT_TYPE);
-    Map<String, String> grantTypePH = Collections.singletonMap("grant_type", grantType);
-    if (response.getStatusCode().is2xxSuccessful()) {
-      auditHelper.logEvent(NEW_ACCESS_TOKEN_GENERATED, auditRequest, grantTypePH);
-    } else {
-      auditHelper.logEvent(
-          NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE, auditRequest, grantTypePH);
-    }
   }
 
   @PostMapping(
