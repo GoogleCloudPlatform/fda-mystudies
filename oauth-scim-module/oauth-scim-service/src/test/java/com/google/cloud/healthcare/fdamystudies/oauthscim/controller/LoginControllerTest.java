@@ -33,6 +33,8 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertTrue;
@@ -378,6 +380,11 @@ public class LoginControllerTest extends BaseMockIT {
 
     // Step-3 delete user account
     userRepository.delete(userEntity);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED);
   }
 
   @Test
@@ -522,6 +529,13 @@ public class LoginControllerTest extends BaseMockIT {
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED.getEventCode(), auditRequest);
+    auditEventMap.put(SIGNIN_FAILED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED, SIGNIN_FAILED);
   }
 
   @Test

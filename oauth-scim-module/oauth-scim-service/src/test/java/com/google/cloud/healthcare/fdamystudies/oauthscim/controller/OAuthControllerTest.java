@@ -236,6 +236,12 @@ public class OAuthControllerTest extends BaseMockIT {
     userEntity = userRepository.findByUserId(userEntity.getUserId()).get();
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     assertEquals(refreshToken, encryptor.decrypt(getTextValue(userInfo, REFRESH_TOKEN)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(NEW_ACCESS_TOKEN_GENERATED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_ACCESS_TOKEN_GENERATED);
   }
 
   @Test
@@ -261,6 +267,12 @@ public class OAuthControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.access_token").isNotEmpty())
         .andExpect(jsonPath("$.refresh_token").isNotEmpty());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(NEW_ACCESS_TOKEN_GENERATED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, NEW_ACCESS_TOKEN_GENERATED);
   }
 
   private UserEntity newUserEntity() {
@@ -324,7 +336,6 @@ public class OAuthControllerTest extends BaseMockIT {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
-
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(ACCESS_TOKEN_INVALID_OR_EXPIRED.getEventCode(), auditRequest);
     verifyAuditEventCall(auditEventMap, ACCESS_TOKEN_INVALID_OR_EXPIRED);
@@ -379,6 +390,7 @@ public class OAuthControllerTest extends BaseMockIT {
     headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
     headers.add(CORRELATION_ID, VALID_CORRELATION_ID);
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.set(USER_ID, userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -390,6 +402,12 @@ public class OAuthControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.violations[0].path").value("token"))
         .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(ACCESS_TOKEN_INVALID_OR_EXPIRED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, ACCESS_TOKEN_INVALID_OR_EXPIRED);
   }
 
   @AfterEach

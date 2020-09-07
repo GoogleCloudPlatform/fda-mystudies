@@ -17,6 +17,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.ha
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
@@ -470,6 +471,7 @@ public class UserControllerTest extends BaseMockIT {
       throws MalformedURLException, JsonProcessingException, Exception {
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
     // Step-0 change the password
     ChangePasswordRequest userRequest = new ChangePasswordRequest();
     userRequest.setCurrentPassword(CURRENT_PASSWORD_VALUE);
@@ -505,7 +507,7 @@ public class UserControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PASSWORD_CHANGE_FAILED.getEventCode(), auditRequest);
-    // verifyAuditEventCall(auditEventMap, PASSWORD_CHANGE_FAILED);
+    verifyAuditEventCall(auditEventMap, PASSWORD_CHANGE_FAILED);
   }
 
   @Test
@@ -562,6 +564,12 @@ public class UserControllerTest extends BaseMockIT {
             jsonPath("$.error_description").value(ErrorCode.ACCOUNT_NOT_VERIFIED.getDescription()));
 
     verifyTokenIntrospectRequest();
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, PASSWORD_HELP_REQUESTED);
   }
 
   @Test
@@ -588,6 +596,11 @@ public class UserControllerTest extends BaseMockIT {
             jsonPath("$.error_description").value(ErrorCode.ACCOUNT_DEACTIVATED.getDescription()));
 
     verifyTokenIntrospectRequest();
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, PASSWORD_HELP_REQUESTED);
   }
 
   @Test
@@ -856,6 +869,7 @@ public class UserControllerTest extends BaseMockIT {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.add(CORRELATION_ID, VALID_CORRELATION_ID);
     headers.add("appVersion", "1.0");
     headers.add("appId", "GCPMS001");
     headers.add("userId", userEntity.getUserId());
