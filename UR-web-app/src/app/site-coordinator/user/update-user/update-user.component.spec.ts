@@ -129,12 +129,6 @@ describe('UpdateUserComponent', () => {
       expect(errorMsg).toBeTruthy();
     });
 
-    it('should check form submit button is disabled when loaded', () => {
-      const submitButton = submit.nativeElement as HTMLInputElement;
-      fixture.detectChanges();
-      expect(submitButton.disabled).toBeTruthy();
-    });
-
     it('should set the form value before submit and expect same', fakeAsync(async () => {
       const updateSpy = spyOn(component, 'update');
       component.user = addUserRequest;

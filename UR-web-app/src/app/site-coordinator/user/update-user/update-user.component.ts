@@ -179,6 +179,9 @@ export class UpdateUserComponent extends UnsubscribeOnDestroyAdapter
         this.user.superAdmin = false;
         this.user.apps = this.selectedApps;
       }
+
+      this.removeUnwantedAttributes();
+
       this.userService
         .update(this.user, this.adminId)
         .subscribe((successResponse: ApiResponse) => {
@@ -209,5 +212,13 @@ export class UpdateUserComponent extends UnsubscribeOnDestroyAdapter
             ? this.userStatus.Active
             : this.userStatus.Deactivated;
       });
+  }
+  removeUnwantedAttributes(): void {
+    delete this.user.status;
+
+    this.user.apps.map((app) => {
+      delete app['selectedStudiesCount'];
+      delete app['totalStudiesCount'];
+    });
   }
 }

@@ -18,7 +18,6 @@ export class UserService {
   }
 
   update(user: User, adminId: string): Observable<ApiResponse> {
-    delete user.status;
     return this.http.put<ApiResponse>(
       `${environment.baseUrl}/users/${adminId}/`,
       user,
