@@ -50,7 +50,7 @@ public class UserSupportServiceImpl implements UserSupportService {
 
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmailAddress(),
+            appConfig.getFromEmail(),
             new String[] {appConfig.getFeedbackToEmail()},
             null,
             null,
@@ -92,7 +92,7 @@ public class UserSupportServiceImpl implements UserSupportService {
 
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmailAddress(),
+            appConfig.getFromEmail(),
             new String[] {appConfig.getContactusToEmail()},
             null,
             null,
