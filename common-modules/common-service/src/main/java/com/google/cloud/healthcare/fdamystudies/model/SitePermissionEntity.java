@@ -31,7 +31,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
@@ -39,10 +38,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "sites_permissions")
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class SitePermissionEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;

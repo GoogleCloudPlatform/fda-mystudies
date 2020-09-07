@@ -27,16 +27,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "auth_info")
-@ConditionalOnProperty(
-    value = "participant.datastore.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class AuthInfoEntity implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;

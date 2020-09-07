@@ -21,16 +21,11 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "audit_events")
-@ConditionalOnProperty(
-    value = "commonservice.auditlogevent.enabled",
-    havingValue = "true",
-    matchIfMissing = true)
 public class AuditEventEntity {
 
   @Id

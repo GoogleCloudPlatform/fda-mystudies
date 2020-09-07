@@ -27,7 +27,6 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @AllArgsConstructor
 @Builder
@@ -36,10 +35,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @Entity
 @NoArgsConstructor
 @Table(name = "personalized_user_report")
-@ConditionalOnProperty(
-    value = "participant.datastore.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class PersonalizedUserReportEntity implements Serializable {
 
   private static final long serialVersionUID = -3019529323339411129L;
