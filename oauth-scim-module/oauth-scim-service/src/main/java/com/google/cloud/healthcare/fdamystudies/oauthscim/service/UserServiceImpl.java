@@ -27,8 +27,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.CLIENT_USER_VALIDATED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_FAILED;
@@ -531,11 +529,9 @@ public class UserServiceImpl implements UserService {
     logger.entry("revokeAndReplaceRefreshToken(userId, refreshToken)");
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
     if (!optUserEntity.isPresent()) {
-      auditHelper.logEvent(
-          NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS, auditRequest);
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
-    auditHelper.logEvent(CLIENT_USER_VALIDATED, auditRequest);
+
     UserEntity userEntity = optUserEntity.get();
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
 
