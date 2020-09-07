@@ -1,15 +1,14 @@
 import {Injectable} from '@angular/core';
-import {SiteParticipants} from './model/site-detail.model';
+import {SiteParticipants} from './site-detail.model';
 import {EntityService} from '../../../service/entity.service';
 import {Observable} from 'rxjs';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {environment} from '@environment';
 import {
   InviteSend,
   StatusUpdate,
   UpdateInviteResponse,
 } from '../../participant-details/participant-details';
-import {AddEmail} from './model/add-email';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 
 @Injectable({
@@ -60,30 +59,6 @@ export class SiteDetailsService {
         siteId,
       )}/participants/invite`,
       invitationToSend,
-    );
-  }
-  addParticipants(
-    siteId: string,
-    modelEmail: AddEmail,
-  ): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/participants`,
-      modelEmail,
-    );
-  }
-  importParticipants(
-    siteId: string,
-    formData: FormData,
-  ): Observable<ApiResponse> {
-    const httpOptionsForUpload = {
-      headers: new HttpHeaders({}),
-    };
-    return this.http.post<ApiResponse>(
-      `${environment.baseUrl}/sites/${encodeURIComponent(
-        siteId,
-      )}/participants/import?file`,
-      formData,
-      httpOptionsForUpload,
     );
   }
 }

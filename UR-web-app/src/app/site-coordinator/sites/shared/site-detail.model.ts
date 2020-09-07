@@ -1,4 +1,4 @@
-import {ParticipantRegistryDetail} from '../../../../shared/participant-registry-detail';
+import {ParticipantRegistryDetail} from '../../../shared/participant-registry-detail';
 
 export interface SiteParticipants {
   participantRegistryDetail: ParticipantRegistryDetail;

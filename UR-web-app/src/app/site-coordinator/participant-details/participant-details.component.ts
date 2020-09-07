@@ -70,7 +70,7 @@ export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
       });
   }
 
-  sendInvitation(siteId: string): void {
+  sendInvitation(siteId: string) {
     const sendInvitations = {
       ids: [this.participantId],
     };

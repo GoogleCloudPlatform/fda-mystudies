@@ -23,12 +23,12 @@ import {
   expectedSendInviteResponse,
   expectedDecommissionResponse,
 } from 'src/app/entity/mock-participant-data';
-import {SiteParticipants} from '../shared/model/site-detail.model';
 import {SitesModule} from '../sites.module';
 
 describe('SiteDetailsComponent', () => {
   let component: SiteDetailsComponent;
   let fixture: ComponentFixture<SiteDetailsComponent>;
+
   beforeEach(async(async () => {
     const siteDetailServiceSpy = jasmine.createSpyObj<SiteDetailsService>(
       'SiteDetailsService',
@@ -68,18 +68,14 @@ describe('SiteDetailsComponent', () => {
       });
   }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SiteDetailsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should NOT have site participant list before ngOnInit', () => {
-    component.siteParticipants$
-      .pipe()
-      .subscribe((siteParticpant: SiteParticipants) => {
-        expect(
-          siteParticpant.participantRegistryDetail.registryParticipants.length,
-        ).toBe(0, 'should NOT have  site participant list before ngOnInit');
-      });
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
 
   describe('after get site participants', () => {
@@ -168,18 +164,13 @@ describe('SiteDetailsComponent', () => {
     }));
 
     it('should slide down up on click participant drop down', fakeAsync(async () => {
-      fixture.detectChanges();
-      const toogleButton = fixture.debugElement.query(
-        By.css('[name="btnToggleParticipant"]'),
-      ).nativeElement as HTMLInputElement;
+      spyOn(component, 'toggleParticipant').and.callThrough();
       component.toggleParticipant();
-      const changeTabSpy = spyOn(component, 'toggleParticipant');
       fixture.detectChanges();
-      tick();
-      toogleButton.click();
-      fixture.detectChanges();
+      tick(1000);
       await fixture.whenStable();
-      expect(changeTabSpy).toHaveBeenCalledTimes(1);
+      // eslint-disable-next-line @typescript-eslint/unbound-method
+      expect(component.toggleParticipant).toHaveBeenCalled();
     }));
   });
 });

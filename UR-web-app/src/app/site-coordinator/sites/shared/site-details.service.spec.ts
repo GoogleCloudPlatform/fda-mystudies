@@ -8,10 +8,11 @@ import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {UpdateInviteResponse} from '../../participant-details/participant-details';
-import {SiteParticipants} from '../shared/model/site-detail.model';
-import * as expectedResult from 'src/app/entity/mock-participant-data';
-import {ApiResponse} from 'src/app/entity/api.response.model';
-import {expectedSiteParticipantDetails} from 'src/app/entity/mock-sitedetail-data';
+import {SiteParticipants} from '../shared/site-detail.model';
+import * as expectedResult from '../../../entity/mock-participant-data';
+import {ApiResponse} from '../../../entity/api.response.model';
+import {expectedSiteParticipantDetails} from '../../../entity/mock-sitedetail-data';
+
 describe('SiteDetailsService', () => {
   let participantDetailsService: SiteDetailsService;
   let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;

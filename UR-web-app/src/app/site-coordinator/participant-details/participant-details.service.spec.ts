@@ -10,6 +10,7 @@ import {HttpClient} from '@angular/common/http';
 import {Participant, UpdateInviteResponse} from './participant-details';
 import * as expectedResult from 'src/app/entity/mock-participant-data';
 import {ApiResponse} from 'src/app/entity/api.response.model';
+
 describe('ParticipantDetailsService', () => {
   let participantDetailsService: ParticipantDetailsService;
   let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
@@ -41,6 +42,7 @@ describe('ParticipantDetailsService', () => {
       entityServiceSpy,
       httpServiceSpyObj,
     );
+
     participantDetailsService
       .get(expectedResult.expectedParticipantId.id)
       .subscribe(
@@ -51,6 +53,7 @@ describe('ParticipantDetailsService', () => {
           ),
         fail,
       );
+
     expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
   }));
 

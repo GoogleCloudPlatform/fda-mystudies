@@ -7,7 +7,7 @@ import {
 } from '../site-coordinator/participant-details/participant-details';
 import {ApiResponse} from './api.response.model';
 import {RegistryParticipant} from '../shared/participant';
-import {SiteParticipants} from '../site-coordinator/sites/shared/model/site-detail.model';
+import {SiteParticipants} from '../site-coordinator/sites/shared/site-detail.model';
 
 export const expectedSiteParticipantDetails = {
   participantRegistryDetail: {

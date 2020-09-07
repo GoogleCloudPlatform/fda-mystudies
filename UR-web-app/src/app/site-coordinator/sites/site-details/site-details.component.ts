@@ -1,5 +1,5 @@
 import {Component, OnInit, TemplateRef} from '@angular/core';
-import {SiteParticipants} from '../shared/model/site-detail.model';
+import {SiteParticipants} from '../shared/site-detail.model';
 import {Router, ActivatedRoute} from '@angular/router';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {ToastrService} from 'ngx-toastr';
@@ -62,6 +62,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.query$,
     ).pipe(
       map(([siteDetails, query]) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         siteDetails.participantRegistryDetail.registryParticipants = siteDetails.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),

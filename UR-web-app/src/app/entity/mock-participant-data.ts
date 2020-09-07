@@ -66,14 +66,12 @@ export const expectedToggleInvitation = {
   ids: ['1'],
   status: 'D',
 } as StatusUpdate;
-
+export const expectedDecommissionResponse = {
+  message: 'Site decomissioned successfully',
+} as ApiResponse;
 export const expectedSendInvitation = {ids: ['1']} as InviteSend;
 
 export const expectedSendInviteResponse = {
   invitedParticipantIds: ['1'],
   failedParticipantIds: [''],
 } as UpdateInviteResponse;
-
-export const expectedDecommissionResponse = {
-  message: 'Site decomissioned successfully',
-} as ApiResponse;
