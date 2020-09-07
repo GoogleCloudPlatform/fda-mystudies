@@ -1,63 +1,65 @@
 <div class="max__w__1280">
   <div class="tab-content">
-    <ng-container *ngIf="app$ | async as apps">
-      <div
-        *ngFor="let app of apps"
-        class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row"
-      >
+    <ng-container *ngIf="manageApp$ | async as manageApps">
+      <div *ngIf="manageApps.studyPermissionCount >= 2">
         <div
-          [routerLink]="['/coordinator/apps', app.id]"
-          class="flex__justify__space-between flex__wrap"
+          *ngFor="let app of manageApps.apps"
+          class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row"
         >
-          <div>
-            <div class="blue__text__md text-capitalize">
-              {{ app.customId }}
-            </div>
-            <div
-              class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
-            >
-              {{ app.name }}
-            </div>
-            <div
-              class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
-            >
-              <div class="col-xs-6 col-md-12 p-none">
-                {{ app.totalStudiesCount | i18nPlural: studiesMessageMapping }}
-                <span *ngIf="checkEditPermission(app.appPermission)">
-                  ,
-                  {{ app.appUsersCount | i18nPlural: appUsersMessageMapping }}
-                </span>
+          <div
+            [routerLink]="['/coordinator/apps', app.id]"
+            class="flex__justify__space-between flex__wrap"
+          >
+            <div>
+              <div class="blue__text__md text-capitalize">
+                {{ app.customId }}
+              </div>
+              <div
+                class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
+              >
+                {{ app.name }}
+              </div>
+              <div
+                class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
+              >
+                <div class="col-xs-6 col-md-12 p-none">
+                  {{ app.studiesCount | i18nPlural: studiesMessageMapping }}
+                  <span *ngIf="checkEditPermission(app.permission)">
+                    ,
+                    {{ app.appUsersCount | i18nPlural: appUsersMessageMapping }}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="mb__width__100">
-            <div class="flex__ flex__row align__items__center">
-              <div class="mb__width__100">
-                <div class="col-xs-12 p-none lh__6">
-                  <div class="prog">
-                    <div class="pro__base">
-                      <div class="pro__top" style="width: 30%;"></div>
-                    </div>
-                    <div
-                      class="progress-label font__bold"
-                      [ngClass]="progressBarColor(app)"
-                    >
-                      <span *ngIf="app.invitedCount != 0">
-                        {{ app.enrolledCount }} / {{ app.invitedCount }}
-                      </span>
-                      <span *ngIf="app.invitedCount == 0">N/A</span>
+            <div class="mb__width__100">
+              <div class="flex__ flex__row align__items__center">
+                <div class="mb__width__100">
+                  <div class="col-xs-12 p-none lh__6">
+                    <div class="prog">
+                      <div class="pro__base">
+                        <div class="pro__top" style="width: 30%;"></div>
+                      </div>
+                      <div
+                        class="progress-label font__bold"
+                        [ngClass]="progressBarColor(app)"
+                      >
+                        <span *ngIf="app.invitedCount != 0">
+                          {{ app.enrolledCount }} / {{ app.invitedCount }}
+                        </span>
+                        <span *ngIf="app.invitedCount == 0">N/A</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div class="text-right progress__bar__next">
-                <div class="progress-bar-next__title">
-                  <span *ngIf="app.invitedCount != 0">
-                    {{ app.enrollmentPercentage | number: ".2-2" }}%
-                  </span>
-                  <span *ngIf="app.invitedCount == 0">N/A</span>
+                <div class="text-right progress__bar__next">
+                  <div class="progress-bar-next__title">
+                    <span *ngIf="app.invitedCount != 0">
+                      {{ app.enrollmentPercentage | number: ".2-2" }}%
+                    </span>
+                    <span *ngIf="app.invitedCount == 0">N/A</span>
+                  </div>
+                  <div class="text-grey__sm">Enrolled / Invited</div>
                 </div>
-                <div class="text-grey__sm">Enrolled / Invited</div>
               </div>
             </div>
           </div>

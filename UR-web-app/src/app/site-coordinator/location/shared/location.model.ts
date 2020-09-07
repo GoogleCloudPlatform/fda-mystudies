@@ -1,8 +1,11 @@
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {SuccessCode} from 'src/app/shared/success.codes.enum';
 
+export interface ManageLocations {
+  locations: Location[];
+}
 export interface Location extends ApiResponse {
-  id: number;
+  locationId: string;
 
   name: string;
 
@@ -10,15 +13,15 @@ export interface Location extends ApiResponse {
 
   description: string;
 
-  status: string;
+  status: number;
+
+  studyNames: string[];
 
   studiesCount: number;
-
-  studies: string[];
 }
 
 export interface StatusUpdateRequest {
-  status: string;
+  status: number;
 }
 
 export interface FieldUpdateRequest {
@@ -29,6 +32,6 @@ export interface FieldUpdateRequest {
 export interface UpdateLocationResponse {
   description: string;
   name: string;
-  status: string;
+  status: number;
   code: SuccessCode;
 }

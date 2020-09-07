@@ -6,9 +6,10 @@ import {
   StatusUpdateRequest,
   FieldUpdateRequest,
   UpdateLocationResponse,
+  ManageLocations,
 } from '../shared/location.model';
 import {HttpClient} from '@angular/common/http';
-import {environment} from 'src/environments/environment.prod';
+import {environment} from '@environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +19,8 @@ export class LocationService {
     private readonly entityService: EntityService<Location>,
     private readonly http: HttpClient,
   ) {}
-  getLocations(): Observable<Location[]> {
-    return this.entityService.getCollection('locations');
+  getLocations(): Observable<ManageLocations> {
+    return this.http.get<ManageLocations>(`${environment.baseUrl}/locations`);
   }
   getLocationsForSiteCreation(studyId: string): Observable<Location[]> {
     return this.http.get<Location[]>('locations-for-site-creation', {

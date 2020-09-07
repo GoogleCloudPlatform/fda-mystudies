@@ -3,7 +3,7 @@ import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
-import {App} from '../shared/app.model';
+import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
 @Component({
   selector: 'app-app-list',
@@ -11,7 +11,7 @@ import {Permission} from 'src/app/shared/permission-enums';
 })
 export class AppListComponent implements OnInit {
   query$ = new BehaviorSubject('');
-  app$: Observable<App[]> = of([]);
+  manageApp$: Observable<ManageApps> = of();
   appUsersMessageMapping: {[k: string]: string} = {
     '=0': 'No App Users',
     '=1': 'One App User',
@@ -30,13 +30,17 @@ export class AppListComponent implements OnInit {
   }
 
   getApps(): void {
-    this.app$ = combineLatest(this.appService.getUserApps(), this.query$).pipe(
-      map(([apps, query]) => {
-        return apps.filter(
+    this.manageApp$ = combineLatest(
+      this.appService.getUserApps(),
+      this.query$,
+    ).pipe(
+      map(([manageApps, query]) => {
+        manageApps.apps = manageApps.apps.filter(
           (app: App) =>
             app.name.toLowerCase().includes(query.toLowerCase()) ||
             app.customId.toLowerCase().includes(query.toLowerCase()),
         );
+        return manageApps;
       }),
     );
   }

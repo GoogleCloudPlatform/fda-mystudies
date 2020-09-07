@@ -114,7 +114,7 @@ describe('EditLocationComponent', () => {
     expect(cancelSpy).toHaveBeenCalledTimes(1);
   }));
   it('should update the site when decommission/reactivate is clicked', fakeAsync(async () => {
-    const statusChangeSpy = spyOn(component, 'changeStatus');
+    const statusChangeSpy = spyOn(component, 'toggleStatus');
     component.location = updatedLocation;
     component.statusUpdate = expectedSiteStatus;
     const deactivateButton = statusUpdate.nativeElement as HTMLInputElement;
