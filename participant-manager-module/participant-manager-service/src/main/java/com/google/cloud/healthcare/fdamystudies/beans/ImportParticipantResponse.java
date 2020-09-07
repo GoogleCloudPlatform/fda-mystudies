@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,10 +30,6 @@ public class ImportParticipantResponse extends BaseResponse {
   private Set<String> invalidEmails = new HashSet<>();
 
   private List<String> duplicateEmails = new ArrayList<>();
-
-  public ImportParticipantResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public ImportParticipantResponse(
       MessageCode messageCode, List<ParticipantDetail> participants, List<String> duplicateEmails) {
