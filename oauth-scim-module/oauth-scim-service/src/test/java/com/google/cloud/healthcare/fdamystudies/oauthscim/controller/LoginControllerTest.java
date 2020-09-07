@@ -29,6 +29,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -213,6 +214,35 @@ public class LoginControllerTest extends BaseMockIT {
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SIGNIN_SUCCEEDED.getEventCode(), auditRequest);
     verifyAuditEventCall(auditEventMap, SIGNIN_SUCCEEDED);
+  }
+
+  @Test
+  public void shouldAutoLoginPageFailedInvalidRegId() throws Exception {
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+    queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE_FOR_ANDROID);
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.set("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
+    Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .headers(headers)
+                .queryParams(queryParams)
+                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
+        .andDo(print())
+        .andExpect(status().is2xxSuccessful())
+        .andReturn();
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD);
   }
 
   @Test
