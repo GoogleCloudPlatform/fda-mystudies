@@ -26,6 +26,8 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
@@ -42,6 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
@@ -59,6 +62,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.net.MalformedURLException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import javax.servlet.http.Cookie;
@@ -491,6 +495,96 @@ public class LoginControllerTest extends BaseMockIT {
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(SIGNIN_FAILED_INVALID_PASSWORD.getEventCode(), auditRequest);
     verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_INVALID_PASSWORD);
+  }
+
+  @Test
+  public void validatePasswordExpired() throws Exception {
+    // Step-1 create a user account with ACTIVE status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+
+    JsonNode userInfo = userEntity.getUserInfo();
+    ObjectNode nameNode = (ObjectNode) userInfo.get(PASSWORD);
+    userInfo.get(PASSWORD);
+    nameNode.put("expire_timestamp", Instant.now().toEpochMilli());
+    nameNode.put("otp_used", false);
+    userEntity.setUserInfo(userInfo);
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+    requestParams.set(PASSWORD, PASSWORD_VALUE + 1);
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("userId", userEntity.getUserId());
+
+    ErrorCode expectedErrorCode = ErrorCode.PASSWORD_EXPIRED;
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers)
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+        .andDo(print())
+        .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_FAILED_EXPIRED_PASSWORD.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_EXPIRED_PASSWORD);
+  }
+
+  @Test
+  public void validateTempPasswordExpired() throws Exception {
+    // Step-1 create a user account with ACTIVE status
+    UserResponse userResponse = userService.createUser(newUserRequest());
+    UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
+    userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
+
+    JsonNode userInfo = userEntity.getUserInfo();
+    ObjectNode nameNode = (ObjectNode) userInfo.get(PASSWORD);
+    userInfo.get(PASSWORD);
+    nameNode.put("expire_timestamp", Instant.now().toEpochMilli());
+    nameNode.put("otp_used", false);
+    userEntity.setUserInfo(userInfo);
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    MultiValueMap<String, String> requestParams = getLoginRequestParamsMap();
+    requestParams.set(PASSWORD, PASSWORD_VALUE + 1);
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("userId", userEntity.getUserId());
+
+    ErrorCode expectedErrorCode = ErrorCode.TEMP_PASSWORD_EXPIRED;
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers)
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+        .andDo(print())
+        .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD);
   }
 
   @Test

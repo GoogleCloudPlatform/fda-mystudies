@@ -438,7 +438,7 @@ public class UserServiceImpl implements UserService {
     return authenticationResponse;
   }
 
-  public ErrorCode validatePasswordExpiryAndAccountStatus(
+  private ErrorCode validatePasswordExpiryAndAccountStatus(
       UserEntity userEntity, JsonNode userInfo, AuditLogEventRequest auditRequest) {
     JsonNode passwordNode = userInfo.get(PASSWORD);
     Boolean expired = isPasswordExpired(passwordNode);

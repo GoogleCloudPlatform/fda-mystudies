@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
@@ -20,7 +19,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import java.util.Optional;
 
@@ -50,9 +48,6 @@ public interface UserService {
 
   public UserResponse logout(String userId, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
-
-  public ErrorCode validatePasswordExpiryAndAccountStatus(
-      UserEntity userEntity, JsonNode userInfo, AuditLogEventRequest auditRequest);
 
   public UserResponse revokeAndReplaceRefreshToken(
       String userId, String refreshToken, AuditLogEventRequest auditRequest)
