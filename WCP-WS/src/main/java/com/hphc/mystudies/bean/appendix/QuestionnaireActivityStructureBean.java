@@ -22,10 +22,10 @@
  */
 package com.hphc.mystudies.bean.appendix;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.hphc.mystudies.bean.ActivityMetadataBean;
 import com.hphc.mystudies.bean.QuestionnaireActivityStepsBean;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionnaireActivityStructureBean {
 
