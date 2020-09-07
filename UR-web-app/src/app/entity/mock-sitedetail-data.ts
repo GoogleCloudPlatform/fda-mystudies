@@ -39,20 +39,6 @@ export const expectedSiteParticipantDetails = {
       },
       {
         customLocationId: '',
-        email: 'test12@grr.la',
-        enrollmentDate: '',
-        enrollmentStatus: EnrollmentStatus.Enrolled,
-        id: '407',
-        invitedDate: '06/05/2020',
-        locationName: '',
-        onboardingStatus: 'Invited',
-        siteId: '0',
-        enrolledStudies: [],
-        enrollments: [],
-        consentHistory: [],
-      },
-      {
-        customLocationId: '',
         email: 'test123@grr.la',
         enrollmentDate: '',
         enrollmentStatus: EnrollmentStatus.Enrolled,
@@ -73,7 +59,6 @@ export const expectedSiteParticipantDetails = {
       I: 12,
       N: 21,
     },
-    // status: null
   },
   status: 200,
   message: 'Get participant registry successfully',
@@ -96,12 +81,8 @@ export const expectedToggleInvitation = {
 } as StatusUpdate;
 
 export const expectedSendInvitation = {ids: ['408', '409']} as InviteSend;
-// export const arrayOfParticipantId = ['408', '409'];
+
 export const expectedSendInviteResponse = {
   invitedParticipantIds: ['1'],
   failedParticipantIds: [''],
 } as UpdateInviteResponse;
-
-export const expectedAddParticipantResponse = {
-  message: 'Email added successfully',
-} as ApiResponse;
