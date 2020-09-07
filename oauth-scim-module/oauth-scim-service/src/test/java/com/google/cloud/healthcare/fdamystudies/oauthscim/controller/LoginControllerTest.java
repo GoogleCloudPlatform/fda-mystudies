@@ -26,6 +26,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
@@ -175,10 +176,13 @@ public class LoginControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             get(ApiEndpoint.LOGIN_PAGE.getPath())
+                .headers(getCommonHeaders())
                 .contextPath(getContextPath())
                 .queryParams(queryParams))
         .andDo(print())
         .andExpect(view().name(ERROR_VIEW_NAME));
+
+    verifyAuditEventCall(SIGNIN_FAILED);
   }
 
   @Test
@@ -672,6 +676,7 @@ public class LoginControllerTest extends BaseMockIT {
     headers.add("appId", "GCPMS001");
     headers.add("studyId", "MyStudies");
     headers.add("source", "IntegrationTests");
+    headers.add("correlationId", IdGenerator.id());
     return headers;
   }
 }
