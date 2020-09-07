@@ -117,13 +117,6 @@ public enum AuthScimEvent implements AuditLogEvent {
 
   USER_SIGNOUT_FAILED(null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "USER_SIGNOUT_FAILED"),
 
-  CLIENT_USER_VALIDATED(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Access token, client credentials found valid for user ID ${user_id}.",
-      "CLIENT_USER_VALIDATED"),
-
   ACCESS_TOKEN_INVALID_OR_EXPIRED(
       null,
       SCIM_AUTH_SERVER,
@@ -131,40 +124,12 @@ public enum AuthScimEvent implements AuditLogEvent {
       "Access token found invalid or expired for user ID ${user_id}.",
       "ACCESS_TOKEN_INVALID_OR_EXPIRED"),
 
-  INVALID_CLIENT_APPLICATION_CREDENTIALS(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Client application credentials found invalid for user ID ${user_id}.",
-      "INVALID_CLIENT_APPLICATION_CREDENTIALS"),
-
   NEW_ACCESS_TOKEN_GENERATED(
       null,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
       "New access token generated for user with grant type ${grant_type}.",
-      "NEW_ACCESS_TOKEN_GENERATED"),
-
-  NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Generation of new access token failed, due to invalid client credentials.",
-      "NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_CLIENT_CREDENTIALS"),
-
-  INVALID_REFRESH_TOKEN(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Generation of new access token failed, due to invalid refresh token.",
-      "INVALID_REFRESH_TOKEN"),
-
-  NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Generation of new access token failed for user with grant type ${grant_type}.",
-      "NEW_ACCESS_TOKEN_GENERATION_FAILED_INVALID_GRANT_TYPE");
+      "NEW_ACCESS_TOKEN_GENERATED");
 
   private final Optional<PlatformComponent> source;
   private final PlatformComponent destination;
