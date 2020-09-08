@@ -29,15 +29,21 @@ import com.harvard.studyappmodule.StudyModuleSubscriber;
 import com.harvard.usermodule.UserModuleSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.AppVisibilityDetector;
+import com.harvard.utils.Logger;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import com.harvard.webservicemodule.WebserviceSubscriber;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import org.apache.commons.codec.binary.Base64;
 
 public class FdaApplication extends Application {
   private static FdaApplication instance;
   private FdaEventBusRegistry registry;
+  private static String randomString;
+  private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
   public static final String NOTIFICATION_CHANNEL_ID_SERVICE = AppConfig.PackageName + ".service";
   public static final String NOTIFICATION_CHANNEL_ID_INFO = AppConfig.PackageName + ".general";
@@ -53,50 +59,50 @@ public class FdaApplication extends Application {
     Fabric.with(this, new Crashlytics());
     dbInitialize();
     initChannel();
-
+    randomAlphaNumeric(8);
     startEventProcessing();
 
     AppVisibilityDetector.init(
-        FdaApplication.this,
-        new AppVisibilityDetector.AppVisibilityCallback() {
-          @Override
-          public void onAppGotoForeground() {
-            if (AppController.getHelperSharedPreference()
-                .readPreference(
-                    getApplicationContext(), getResources().getString(R.string.usepasscode), "")
-                .equalsIgnoreCase("yes")) {
-              AppController.getHelperSharedPreference()
-                  .writePreference(getApplicationContext(), "passcodeAnswered", "no");
-              Intent intent = new Intent(getApplicationContext(), PasscodeSetupActivity.class);
-              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-              startActivity(intent);
-            }
-          }
+            FdaApplication.this,
+            new AppVisibilityDetector.AppVisibilityCallback() {
+              @Override
+              public void onAppGotoForeground() {
+                if (AppController.getHelperSharedPreference()
+                        .readPreference(
+                                getApplicationContext(), getResources().getString(R.string.usepasscode), "")
+                        .equalsIgnoreCase("yes")) {
+                  AppController.getHelperSharedPreference()
+                          .writePreference(getApplicationContext(), "passcodeAnswered", "no");
+                  Intent intent = new Intent(getApplicationContext(), PasscodeSetupActivity.class);
+                  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                  startActivity(intent);
+                }
+              }
 
-          @Override
-          public void onAppGotoBackground() {
-            // app is from foreground to background
+              @Override
+              public void onAppGotoBackground() {
+                // app is from foreground to background
 
-          }
-        });
+              }
+            });
   }
 
   private void dbInitialize() {
     Realm.init(this);
     RealmEncryptionHelper realmEncryptionHelper =
-        RealmEncryptionHelper.initHelper(this, getString(R.string.app_name));
+            RealmEncryptionHelper.initHelper(this, getString(R.string.app_name));
     byte[] key = realmEncryptionHelper.getEncryptKey();
 
     //Remove for release builds
     Stetho.initialize(
-        Stetho.newInitializerBuilder(this)
-            .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-            .enableWebKitInspector(
-                RealmInspectorModulesProvider.builder(this)
-                    .withLimit(10000)
-                    .withDefaultEncryptionKey(key)
-                    .build())
-            .build());
+            Stetho.newInitializerBuilder(this)
+                    .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                    .enableWebKitInspector(
+                            RealmInspectorModulesProvider.builder(this)
+                                    .withLimit(10000)
+                                    .withDefaultEncryptionKey(key)
+                                    .build())
+                    .build());
   }
 
   private void startEventProcessing() {
@@ -125,13 +131,39 @@ public class FdaApplication extends Application {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       nm.createNotificationChannel(
-          new NotificationChannel(
-              NOTIFICATION_CHANNEL_ID_SERVICE,
-              "App Service",
-              NotificationManager.IMPORTANCE_DEFAULT));
+              new NotificationChannel(
+                      NOTIFICATION_CHANNEL_ID_SERVICE,
+                      "App Service",
+                      NotificationManager.IMPORTANCE_DEFAULT));
       nm.createNotificationChannel(
-          new NotificationChannel(
-              NOTIFICATION_CHANNEL_ID_INFO, "General", NotificationManager.IMPORTANCE_HIGH));
+              new NotificationChannel(
+                      NOTIFICATION_CHANNEL_ID_INFO, "General", NotificationManager.IMPORTANCE_HIGH));
     }
+  }
+
+
+  public static void randomAlphaNumeric(int count) {
+    StringBuilder builder = new StringBuilder();
+    while (count-- != 0) {
+      int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+      builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+    }
+    randomString = builder.toString();
+  }
+
+  public static String getRandomString() {
+    return randomString;
+  }
+
+  public static String getCodeChallenge(String randomString) {
+    String codeChallenge = "";
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-256");
+      byte[] digest = md.digest(randomString.getBytes(StandardCharsets.US_ASCII));
+      codeChallenge = new String(Base64.encodeBase64(digest));
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    return codeChallenge;
   }
 }
