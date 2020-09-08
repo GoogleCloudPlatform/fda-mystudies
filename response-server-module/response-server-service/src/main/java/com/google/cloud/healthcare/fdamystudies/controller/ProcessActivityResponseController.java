@@ -17,7 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStruct
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.service.ActivityResponseProcessorService;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
@@ -130,13 +130,6 @@ public class ProcessActivityResponseController {
                   + activityId
                   + "\n Activity Version: "
                   + activityVersion);
-          commonService.createActivityLog(
-              userId,
-              "Study response data could not be saved for participant",
-              "Participant Id: "
-                  + participantId
-                  + " - Study Response Metadata Activity Retrieval failed for study with id:  "
-                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_705.code(),
@@ -151,13 +144,6 @@ public class ProcessActivityResponseController {
             partStudyInfoService.getParticipantStudyInfo(studyId, participantId);
         if (partStudyInfo == null) {
           logger.error("GetParticipantStudyInfo() - ParticipantInfo is null. Study Id: " + studyId);
-          commonService.createActivityLog(
-              userId,
-              "Study response data could not be saved for participant",
-              "Participant Id: "
-                  + participantId
-                  + " Reason: Participant Study Info Retrieval failed for study with id: "
-                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_715.code(),
@@ -192,30 +178,8 @@ public class ProcessActivityResponseController {
               activityStateRequestBean);
           SuccessResponseBean srBean = new SuccessResponseBean();
           srBean.setMessage(AppConstants.SUCCESS_MSG);
-          commonService.createActivityLog(
-              userId,
-              "Participant data sharing consent is: " + sharingConsent,
-              " Participant Id: "
-                  + participantId
-                  + " has not provided data sharing consent for study with id:  "
-                  + studyId);
-
-          commonService.createActivityLog(
-              userId,
-              "Study response data successfully saved for participant",
-              "Participant Id: "
-                  + participantId
-                  + " Study Response saved for study with id:  "
-                  + studyId);
           return new ResponseEntity<>(srBean, HttpStatus.OK);
         } else {
-          commonService.createActivityLog(
-              userId,
-              "Study response data could not be saved for participant with id: ",
-              "Participant Id: "
-                  + participantId
-                  + " Reason: Participant has withdrawn from study with id:  "
-                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_716.code(),
@@ -253,13 +217,6 @@ public class ProcessActivityResponseController {
                     + activityVersion
                     + "\n Particpant Id: "
                     + participantId);
-        commonService.createActivityLog(
-            userId,
-            "Study response data could not be saved for participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Reason: Could not validate the participant id for study with id:  "
-                + studyId);
 
         logger.error(
             "Could not save response for participant.\n Study Id: "
@@ -274,13 +231,6 @@ public class ProcessActivityResponseController {
     } catch (Exception e) {
 
       if (!savedResponseData) {
-        commonService.createActivityLog(
-            userId,
-            "Study response data could not be saved for participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Study response could not be saved for participant for study with id: "
-                + studyId);
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_707.code(),
@@ -296,13 +246,6 @@ public class ProcessActivityResponseController {
                 + activityVersion);
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       } else {
-        commonService.createActivityLog(
-            userId,
-            "Participant update activity state for save response failed",
-            "Participant Id: "
-                + participantId
-                + " activity state could not be saved for participant for study with id: "
-                + studyId);
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_714.code(),
@@ -366,13 +309,6 @@ public class ProcessActivityResponseController {
         StoredResponseBean storedResponseBean =
             activityResponseProcessorService.getActivityResponseDataForParticipant(
                 studyId, siteId, participantId, activityId, questionKey);
-        commonService.createActivityLog(
-            userId,
-            "Response data successfully accessed by participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Response data accessed for study with id: "
-                + studyId);
         return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
       } else {
         ErrorBean errorBean =
@@ -396,13 +332,6 @@ public class ProcessActivityResponseController {
                 + siteId
                 + "\n Activity Id: "
                 + activityId);
-        commonService.createActivityLog(
-            userId,
-            "Response data could not be retrieved by participant with id: ",
-            "Participant Id: "
-                + participantId
-                + " Response data requested for study with id: "
-                + studyId);
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
     } catch (Exception e) {
@@ -419,13 +348,6 @@ public class ProcessActivityResponseController {
               + siteId
               + "\n Activity Id: "
               + activityId);
-      commonService.createActivityLog(
-          userId,
-          "Response data could not be retrieved by participant with id: ",
-          "Participant Id: "
-              + participantId
-              + " Response data requested for study with id: "
-              + studyId);
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
   }
@@ -453,55 +375,18 @@ public class ProcessActivityResponseController {
               studyId, participantId);
           responseDataUpdate = true;
 
-          commonService.createActivityLog(
-              null,
-              "Participant response deleted from study on withdrawal",
-              "Participant id: "
-                  + participantId
-                  + " responses deleted for study with id: "
-                  + studyId);
-          commonService.createActivityLog(
-              null,
-              "Participant withdrawn from study",
-              "Participant id: " + participantId + " withdrawn from study with id: " + studyId);
         } else {
           activityResponseProcessorService.updateWithdrawalStatusForParticipant(
               studyId, participantId);
           responseDataUpdate = true;
-
-          commonService.createActivityLog(
-              null,
-              "Participant withdrawal status updated for study",
-              "Participant id: "
-                  + participantId
-                  + " withdrawal status updated for study with id: "
-                  + studyId);
-          commonService.createActivityLog(
-              null,
-              "Participant withdrawn from study",
-              "Participant id: " + participantId + " withdrawn from study with id: " + studyId);
         }
         // Delete all participant activity state from the table
         participantActivityStateResponseService.deleteParticipantActivites(studyId, participantId);
         SuccessResponseBean srBean = new SuccessResponseBean();
-        commonService.createActivityLog(
-            null,
-            "Participant activity state data deleted on withdrawal",
-            "Participant id: "
-                + participantId
-                + " activity state data deletion successful for study with id: "
-                + studyId);
         srBean.setMessage(AppConstants.SUCCESS_MSG);
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
         if (responseDataUpdate) {
-          commonService.createActivityLog(
-              null,
-              "Participant activity state data deletion failed on withdrawal",
-              "Participant id: "
-                  + participantId
-                  + " activity state data deletion failed for study with id: "
-                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_717.code(),
@@ -516,13 +401,6 @@ public class ProcessActivityResponseController {
                   + deleteResponses);
           return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
         } else {
-          commonService.createActivityLog(
-              null,
-              "Participant withdrawal from study failed",
-              "Participant id: "
-                  + participantId
-                  + " withdrawal failed for study with id: "
-                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_712.code(),

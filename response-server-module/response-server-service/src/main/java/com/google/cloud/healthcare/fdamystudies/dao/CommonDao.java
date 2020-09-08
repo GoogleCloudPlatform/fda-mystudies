@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
 
 public interface CommonDao {
   public ParticipantBo getParticipantInfoDetails(String participantId);

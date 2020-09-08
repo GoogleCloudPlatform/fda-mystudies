@@ -21,8 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesBo;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;

@@ -109,14 +109,6 @@ public class ProcessActivityStateController {
                 .stream()
                 .map(s -> s.getActivityId())
                 .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
-            userId,
-            "Activity State Update -success",
-            "Activity state update successful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
-                + activityIds
-                + " .");
 
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
@@ -127,14 +119,6 @@ public class ProcessActivityStateController {
                 .stream()
                 .map(s -> s.getActivityId())
                 .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
-            userId,
-            "Activity State Update -failure",
-            "Activity state update unsuccessful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
-                + activityIds
-                + " .");
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_714.code(),

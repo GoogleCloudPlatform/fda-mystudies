@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
@@ -59,12 +59,6 @@ public class ParticipantIdController {
       participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
       participantBo.setCreatedBy(applicationId);
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
-      commonService.createActivityLog(
-          null,
-          "Participant Id generated successfully",
-          "Participant Id generated successfully for partcipant "
-              + particpantUniqueIdentifier
-              + " .");
       logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
       return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
     } catch (Exception e) {

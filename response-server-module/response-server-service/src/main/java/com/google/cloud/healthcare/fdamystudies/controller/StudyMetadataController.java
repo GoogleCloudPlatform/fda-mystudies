@@ -52,16 +52,8 @@ public class StudyMetadataController {
       }
 
       studyMetadataService.saveStudyMetadata(studyMetadataBean);
-      commonService.createActivityLog(
-          null,
-          "Study metadata updated successfully",
-          "Study metadata successful for study with id: " + studyIdToUpdate + " .");
       return new ResponseEntity<String>(HttpStatus.OK);
     } catch (Exception e) {
-      commonService.createActivityLog(
-          null,
-          "Study metadata update failed",
-          "Study metadata update failed for study with id: " + studyIdToUpdate + " .");
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
               ErrorCode.EC_702.code(),

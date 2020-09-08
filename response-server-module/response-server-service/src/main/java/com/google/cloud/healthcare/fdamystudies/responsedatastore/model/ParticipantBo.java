@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.model;
+package com.google.cloud.healthcare.fdamystudies.responsedatastore.model;
 
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.io.Serializable;

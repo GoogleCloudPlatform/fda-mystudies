@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesBo;
 import java.util.List;
 
 public interface ParticipantActivitiesDao {

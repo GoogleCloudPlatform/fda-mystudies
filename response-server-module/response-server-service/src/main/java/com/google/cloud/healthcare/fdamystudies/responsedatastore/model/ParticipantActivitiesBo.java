@@ -5,36 +5,35 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package com.google.cloud.healthcare.fdamystudies.model;
 
+package com.google.cloud.healthcare.fdamystudies.responsedatastore.model;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
-// @Entity
-// @Table(name = "participant_activities")
-public class ParticipantActivity {
+@Entity
+@Table(name = "participant_activities")
+public class ParticipantActivitiesBo implements Serializable {
+
+  private static final long serialVersionUID = 1005603353927628403L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id")
   private Integer id;
 
-  @Column(name = "_ts")
-  private String _ts;
-
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "participant_id", insertable = false, updatable = false)
-  private ParticipantBo participantInfo;
+  @Column(name = "participant_identifier")
+  private String participantId;
 
   @Column(name = "study_id")
   private String studyId;
@@ -72,12 +71,6 @@ public class ParticipantActivity {
   @Column(name = "missed")
   private Integer missed;
 
-  /*  @Column(name = "application_id")
-  private String applicationId;
-
-  @Column(name = "org_id")
-  private String orgId;*/
-
   @Column(name = "activity_start_date")
   private LocalDateTime activityStartDate;
 
@@ -88,11 +81,8 @@ public class ParticipantActivity {
   private String anchorDateVersion;
 
   @Column(name = "anchordate_created_date")
-  private LocalDateTime anchorDateCreatedDate;
+  private LocalDateTime anchorDateCreatRappledDate;
 
-  @Column(name = "last_modified_date")
-  private LocalDateTime lastModifiedDate;
-
-  /*@Column(name = "user_id")
-  private String userId;*/
+  @Column(name = "created", columnDefinition = "TIMESTAMP")
+  private LocalDateTime created;
 }
