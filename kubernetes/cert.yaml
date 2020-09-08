@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: heroes-hat-cert
+  name: fda-mystudies-cert
 spec:
   domains:
-    - heroes-hat.rocketturtle.net
+    - fda-mystudies.domain.com
