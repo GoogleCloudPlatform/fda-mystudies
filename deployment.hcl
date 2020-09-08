@@ -538,7 +538,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
 # resource "google_firestore_index" "activities_index" {
 #   project    = module.project.project_id
 #   collection = "Activities"
@@ -577,7 +577,7 @@ template "project_data" {
         host_project_id = "{{$prefix}}-{{$env}}-networks"
       }
     }
-    # Step 5: uncomment and re-run the engine once all previous steps have been completed.
+    # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
 data "google_secret_manager_secret_version" "my_studies_db_default_password" {
@@ -588,7 +588,7 @@ data "google_secret_manager_secret_version" "my_studies_db_default_password" {
 EOF
     } */
     resources = {
-      # Step 5: uncomment and re-run the engine once all previous steps have been completed.
+      # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
       # cloud_sql_instances = [{
       #   name               = "mystudies"
       #   type               = "mysql"
