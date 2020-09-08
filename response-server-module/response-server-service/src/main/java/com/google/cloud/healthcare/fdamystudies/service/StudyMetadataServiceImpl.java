@@ -21,6 +21,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Base64;
@@ -53,52 +54,38 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
 
   @Override
   public void saveStudyMetadata(StudyMetadataBean studyMetadataBean)
-      throws ProcessResponseException {
+      throws IOException, ProcessResponseException, IllegalAccessException,
+          IllegalArgumentException, InvocationTargetException, IntrospectionException {
 
-    try {
-      BeanInfo beanInfo;
-      beanInfo = Introspector.getBeanInfo(studyMetadataBean.getClass());
-      PropertyDescriptor[] propDescriptor = beanInfo.getPropertyDescriptors();
-      Map<String, Object> dataToStore = new HashMap<>();
-      for (PropertyDescriptor pd : propDescriptor) {
-        String propertyName = pd.getName();
-        if (!propertyName.equals("class")) {
-          Method getterMethod = pd.getReadMethod();
-          try {
-            Object propertyValue = getterMethod.invoke(studyMetadataBean);
-            if (propertyValue == null) {
-              propertyValue = AppConstants.EMPTY_STR;
-            }
-            logger.debug(
-                "saveStudyMetadata() : \n Property Name: "
-                    + propertyName
-                    + "\t Propert Value : "
-                    + propertyValue);
-            dataToStore.put(propertyName, propertyValue);
-
-          } catch (IllegalAccessException
-              | IllegalArgumentException
-              | InvocationTargetException e) {
-            logger.error(e.getMessage(), e);
-          }
+    BeanInfo beanInfo;
+    beanInfo = Introspector.getBeanInfo(studyMetadataBean.getClass());
+    PropertyDescriptor[] propDescriptor = beanInfo.getPropertyDescriptors();
+    Map<String, Object> dataToStore = new HashMap<>();
+    for (PropertyDescriptor pd : propDescriptor) {
+      String propertyName = pd.getName();
+      if (!propertyName.equals("class")) {
+        Method getterMethod = pd.getReadMethod();
+        Object propertyValue = getterMethod.invoke(studyMetadataBean);
+        if (propertyValue == null) {
+          propertyValue = AppConstants.EMPTY_STR;
         }
+        logger.debug(
+            "saveStudyMetadata() : \n Property Name: "
+                + propertyName
+                + "\t Propert Value : "
+                + propertyValue);
+        dataToStore.put(propertyName, propertyValue);
       }
-      String studyCollectionName = AppUtil.makeStudyCollectionName(studyMetadataBean.getStudyId());
-
-      logger.info("saveStudyMetadata() : \n Study Collection Name: " + studyCollectionName);
-      responsesDao.saveStudyMetadata(
-          studyCollectionName, studyMetadataBean.getStudyId(), dataToStore);
-      logger.debug(
-          "saveStudyMetadata() : \n Study Collection Name: "
-              + studyCollectionName
-              + " added successfully");
-    } catch (IntrospectionException e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
-    } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
     }
+    String studyCollectionName = AppUtil.makeStudyCollectionName(studyMetadataBean.getStudyId());
+
+    logger.info("saveStudyMetadata() : \n Study Collection Name: " + studyCollectionName);
+    responsesDao.saveStudyMetadata(
+        studyCollectionName, studyMetadataBean.getStudyId(), dataToStore);
+    logger.debug(
+        "saveStudyMetadata() : \n Study Collection Name: "
+            + studyCollectionName
+            + " added successfully");
   }
 
   @Override
@@ -111,57 +98,46 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     HttpHeaders headers = null;
 
     ResponseEntity<?> responseEntity = null;
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.ORG_ID_HEADER, orgId);
-      headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
-      headers.set(AppConstants.AUTHORIZATION_HEADER, this.getWcpAuthorizationHeader());
+    headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set(AppConstants.ORG_ID_HEADER, orgId);
+    headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
+    headers.set(AppConstants.AUTHORIZATION_HEADER, this.getWcpAuthorizationHeader());
 
-      UriComponentsBuilder studyMetadataUriBuilder =
-          UriComponentsBuilder.fromHttpUrl(appConfig.getWcpStudyActivityMetadataUrl())
-              .queryParam(
-                  AppConstants.STUDY_ID_PARAM, studyActivityMetadataRequestBean.getStudyId())
-              .queryParam(
-                  AppConstants.ACTIVITY_ID_KEY, studyActivityMetadataRequestBean.getActivityId())
-              .queryParam(
-                  AppConstants.ACTIVITY_VERSION_PARAM,
-                  studyActivityMetadataRequestBean.getActivityVersion());
-      logger.debug(studyMetadataUriBuilder.toUriString());
-      responseEntity =
-          restTemplate.exchange(
-              studyMetadataUriBuilder.toUriString(),
-              HttpMethod.GET,
-              new HttpEntity<>(headers),
-              QuestionnaireActivityMetaDataBean.class);
-      QuestionnaireActivityMetaDataBean metadataParentBean =
-          (QuestionnaireActivityMetaDataBean) responseEntity.getBody();
-      QuestionnaireActivityStructureBean retQuestionnaireActivityStructureBean =
-          metadataParentBean.getActivity();
-      logger.debug("getStudyActivityMetadata() - ends");
-      return retQuestionnaireActivityStructureBean;
-
-    } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
-    }
+    UriComponentsBuilder studyMetadataUriBuilder =
+        UriComponentsBuilder.fromHttpUrl(appConfig.getWcpStudyActivityMetadataUrl())
+            .queryParam(AppConstants.STUDY_ID_PARAM, studyActivityMetadataRequestBean.getStudyId())
+            .queryParam(
+                AppConstants.ACTIVITY_ID_KEY, studyActivityMetadataRequestBean.getActivityId())
+            .queryParam(
+                AppConstants.ACTIVITY_VERSION_PARAM,
+                studyActivityMetadataRequestBean.getActivityVersion());
+    logger.debug(studyMetadataUriBuilder.toUriString());
+    responseEntity =
+        restTemplate.exchange(
+            studyMetadataUriBuilder.toUriString(),
+            HttpMethod.GET,
+            new HttpEntity<>(headers),
+            QuestionnaireActivityMetaDataBean.class);
+    QuestionnaireActivityMetaDataBean metadataParentBean =
+        (QuestionnaireActivityMetaDataBean) responseEntity.getBody();
+    QuestionnaireActivityStructureBean retQuestionnaireActivityStructureBean =
+        metadataParentBean.getActivity();
+    logger.debug("getStudyActivityMetadata() - ends");
+    return retQuestionnaireActivityStructureBean;
   }
 
   private String getWcpAuthorizationHeader() throws ProcessResponseException {
-    try {
-      String wcpAuthUserName = appConfig.getWcpBundleId();
-      String wcpAuthPassword = appConfig.getWcpAppToken();
-      // Get Base64 String Representation of username and password
-      if (!StringUtils.isBlank(wcpAuthUserName) && !StringUtils.isBlank(wcpAuthPassword)) {
-        String wcpAuthStr = wcpAuthUserName + ":" + wcpAuthPassword;
-        String wcpAuthStrEncoded = Base64.getEncoder().encodeToString(wcpAuthStr.getBytes());
-        return AppConstants.BASIC_PREFIX + wcpAuthStrEncoded;
-      } else {
-        throw new ProcessResponseException(
-            "Could not create AUthorization header for WCP as credentials are null.");
-      }
-    } catch (Exception e) {
-      throw new ProcessResponseException("Could not create AUthorization header for WCP");
+    String wcpAuthUserName = appConfig.getWcpBundleId();
+    String wcpAuthPassword = appConfig.getWcpAppToken();
+    // Get Base64 String Representation of username and password
+    if (!StringUtils.isBlank(wcpAuthUserName) && !StringUtils.isBlank(wcpAuthPassword)) {
+      String wcpAuthStr = wcpAuthUserName + ":" + wcpAuthPassword;
+      String wcpAuthStrEncoded = Base64.getEncoder().encodeToString(wcpAuthStr.getBytes());
+      return AppConstants.BASIC_PREFIX + wcpAuthStrEncoded;
+    } else {
+      throw new ProcessResponseException(
+          "Could not create AUthorization header for WCP as credentials are null.");
     }
   }
 }

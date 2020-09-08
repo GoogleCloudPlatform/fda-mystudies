@@ -24,7 +24,6 @@ import com.google.gson.GsonBuilder;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +53,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   public void saveActivityResponseDataForParticipant(
       QuestionnaireActivityStructureBean activityMetadataBeanFromWcp,
       ActivityResponseBean questionnaireActivityResponseBean)
-      throws ProcessResponseException {
+      throws Exception {
     if (activityMetadataBeanFromWcp == null) {
       throw new ProcessResponseException("QuestionnaireActivityStructureBean is null.");
     }
@@ -216,11 +215,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
     } else if (value instanceof Integer) {
       return ((Integer) value).doubleValue();
     } else if (value instanceof String) {
-      try {
-        return Double.parseDouble((String) value);
-      } catch (Exception e) {
-        logger.debug("Failed to parse value as number. Error: " + e.getMessage());
-      }
+      return Double.parseDouble((String) value);
+
     } else {
       logger.error(
           "convertResponseValueToDouble() - "
@@ -330,47 +326,41 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   private void saveActivityResponseData(
       ActivityResponseBean questionnaireActivityResponseBean, String rawResponseData)
-      throws ProcessResponseException {
-    try {
+      throws Exception {
 
-      // Add Timestamp to bean
-      questionnaireActivityResponseBean.setCreatedTimestamp(
-          String.valueOf(System.currentTimeMillis()));
-      Map<String, Object> dataToStoreActivityResults =
-          this.getHashMapForBean(questionnaireActivityResponseBean.getMetadata());
-      dataToStoreActivityResults.remove(AppConstants.DATA_FIELD_KEY);
+    // Add Timestamp to bean
+    questionnaireActivityResponseBean.setCreatedTimestamp(
+        String.valueOf(System.currentTimeMillis()));
+    Map<String, Object> dataToStoreActivityResults =
+        this.getHashMapForBean(questionnaireActivityResponseBean.getMetadata());
+    dataToStoreActivityResults.remove(AppConstants.DATA_FIELD_KEY);
 
-      List<QuestionnaireActivityStepsBean> questionnaireResponses =
-          questionnaireActivityResponseBean.getData().getResults();
-      List<Map<String, Object>> stepsList = new ArrayList<Map<String, Object>>();
-      for (QuestionnaireActivityStepsBean tmpBean : questionnaireResponses) {
-        Map<String, Object> dataToStoreTemp = getHashMapForBean(tmpBean);
-        stepsList.add(dataToStoreTemp);
-      }
-      dataToStoreActivityResults.put(AppConstants.RESULTS_FIELD_KEY, stepsList);
-      this.addParticipantDataToMap(questionnaireActivityResponseBean, dataToStoreActivityResults);
-      if (rawResponseData != null) {
-        // Store raw response data
-        dataToStoreActivityResults.put(AppConstants.RAW_RESPONSE_FIELD_KEY, rawResponseData);
-      }
-      dataToStoreActivityResults.put(
-          AppConstants.CREATED_TS_KEY, questionnaireActivityResponseBean.getCreatedTimestamp());
-
-      String studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
-
-      String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
-      logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
-      responsesDao.saveActivityResponseData(
-          studyId,
-          studyCollectionName,
-          AppConstants.ACTIVITIES_COLLECTION_NAME,
-          dataToStoreActivityResults);
-      logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
-
-    } catch (Exception e) {
-      logger.error(e.getMessage(), e);
-      throw new ProcessResponseException(e.getMessage());
+    List<QuestionnaireActivityStepsBean> questionnaireResponses =
+        questionnaireActivityResponseBean.getData().getResults();
+    List<Map<String, Object>> stepsList = new ArrayList<Map<String, Object>>();
+    for (QuestionnaireActivityStepsBean tmpBean : questionnaireResponses) {
+      Map<String, Object> dataToStoreTemp = getHashMapForBean(tmpBean);
+      stepsList.add(dataToStoreTemp);
     }
+    dataToStoreActivityResults.put(AppConstants.RESULTS_FIELD_KEY, stepsList);
+    this.addParticipantDataToMap(questionnaireActivityResponseBean, dataToStoreActivityResults);
+    if (rawResponseData != null) {
+      // Store raw response data
+      dataToStoreActivityResults.put(AppConstants.RAW_RESPONSE_FIELD_KEY, rawResponseData);
+    }
+    dataToStoreActivityResults.put(
+        AppConstants.CREATED_TS_KEY, questionnaireActivityResponseBean.getCreatedTimestamp());
+
+    String studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
+
+    String studyCollectionName = AppUtil.makeStudyCollectionName(studyId);
+    logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
+    responsesDao.saveActivityResponseData(
+        studyId,
+        studyCollectionName,
+        AppConstants.ACTIVITIES_COLLECTION_NAME,
+        dataToStoreActivityResults);
+    logger.info("saveActivityResponseData() : \n Study Collection Name: " + studyCollectionName);
   }
 
   private Map<String, Object> getMapForParticipantCollection(
@@ -402,14 +392,8 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
   }
 
   private String getRawJsonInputData(Object argBean) {
-    try {
-      Gson gson = new Gson();
-      return gson.toJson(argBean);
-    } catch (Exception ex) {
-      logger.error("Could not convert bean to Json data. \n Exception " + ex.getMessage());
-      // This error should not stop processing of the bean, for save. So returning empty data
-      return AppConstants.EMPTY_STR;
-    }
+    Gson gson = new Gson();
+    return gson.toJson(argBean);
   }
 
   private Map<String, Object> getHashMapForBean(Object bean) throws Exception {
@@ -424,70 +408,65 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       String propertyName = pd.getName();
       if (!propertyName.equals(AppConstants.PROPERTY_NAME_CLASS)) {
         Method getterMethod = pd.getReadMethod();
-        try {
-          Object propertyValue = getterMethod.invoke(bean);
-          if (!(propertyValue instanceof String)) {
-            if (propertyValue instanceof ActivityValueGroupBean
-                || propertyValue instanceof ActivityMetadataBean) {
-              dataToStore.put(propertyName, getHashMapForBean(propertyValue));
-            } else if (propertyValue instanceof List) {
-              try {
-                ArrayList<Object> pvalueList = (ArrayList<Object>) propertyValue;
-                for (Object valueObj : pvalueList) {
-                  if (valueObj instanceof QuestionnaireActivityStepsBean) {
-                    Map<String, Object> tempMap = getHashMapForBean(valueObj);
-                    stepsList.add(tempMap);
-                  } else if (valueObj instanceof String) {
-                    if (valueObj != null) {
-                      Object tmpPropertyValue = dataToStore.get(propertyName);
-                      if (tmpPropertyValue != null) {
-                        String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
-                        if (!StringUtils.isBlank(tmpPropertyValueStr)) {
-                          valueObj = tmpPropertyValueStr + AppConstants.COMMA_STR + valueObj;
-                        }
+        Object propertyValue = getterMethod.invoke(bean);
+        if (!(propertyValue instanceof String)) {
+          if (propertyValue instanceof ActivityValueGroupBean
+              || propertyValue instanceof ActivityMetadataBean) {
+            dataToStore.put(propertyName, getHashMapForBean(propertyValue));
+          } else if (propertyValue instanceof List) {
+            try {
+              ArrayList<Object> pvalueList = (ArrayList<Object>) propertyValue;
+              for (Object valueObj : pvalueList) {
+                if (valueObj instanceof QuestionnaireActivityStepsBean) {
+                  Map<String, Object> tempMap = getHashMapForBean(valueObj);
+                  stepsList.add(tempMap);
+                } else if (valueObj instanceof String) {
+                  if (valueObj != null) {
+                    Object tmpPropertyValue = dataToStore.get(propertyName);
+                    if (tmpPropertyValue != null) {
+                      String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
+                      if (!StringUtils.isBlank(tmpPropertyValueStr)) {
+                        valueObj = tmpPropertyValueStr + AppConstants.COMMA_STR + valueObj;
                       }
-                      dataToStore.put(propertyName, valueObj);
                     }
-                  } else {
-                    if (valueObj != null) {
-                      propertyValue = gson.toJson(valueObj);
-                      Object tmpPropertyValue = dataToStore.get(propertyName);
-                      if (tmpPropertyValue != null) {
-                        String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
-                        if (!StringUtils.isBlank(tmpPropertyValueStr)) {
-                          propertyValue =
-                              tmpPropertyValueStr + AppConstants.COMMA_STR + propertyValue;
-                        }
-                      }
-                      dataToStore.put(propertyName, propertyValue);
-                    }
+                    dataToStore.put(propertyName, valueObj);
                   }
-                  if (stepsList != null && !stepsList.isEmpty()) {
-                    dataToStore.put(AppConstants.RESULTS_FIELD_KEY, stepsList);
+                } else {
+                  if (valueObj != null) {
+                    propertyValue = gson.toJson(valueObj);
+                    Object tmpPropertyValue = dataToStore.get(propertyName);
+                    if (tmpPropertyValue != null) {
+                      String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
+                      if (!StringUtils.isBlank(tmpPropertyValueStr)) {
+                        propertyValue =
+                            tmpPropertyValueStr + AppConstants.COMMA_STR + propertyValue;
+                      }
+                    }
+                    dataToStore.put(propertyName, propertyValue);
                   }
                 }
-              } catch (ClassCastException ce) {
-                propertyValue = gson.toJson(propertyValue);
-                dataToStore.put(propertyName, getHashMapForBean(propertyValue));
+                if (stepsList != null && !stepsList.isEmpty()) {
+                  dataToStore.put(AppConstants.RESULTS_FIELD_KEY, stepsList);
+                }
               }
-            } else {
+            } catch (ClassCastException ce) {
               propertyValue = gson.toJson(propertyValue);
-              dataToStore.put(propertyName, propertyValue);
+              dataToStore.put(propertyName, getHashMapForBean(propertyValue));
             }
           } else {
-            if (propertyValue != null) {
-              dataToStore.put(propertyName, propertyValue);
-            }
+            propertyValue = gson.toJson(propertyValue);
+            dataToStore.put(propertyName, propertyValue);
           }
-          logger.debug(
-              "getHashMapForBean() : \n Property Name: "
-                  + propertyName
-                  + "\t Property Value : "
-                  + propertyValue);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-          logger.error(e.getMessage(), e);
-          throw new ProcessResponseException(e.getMessage());
+        } else {
+          if (propertyValue != null) {
+            dataToStore.put(propertyName, propertyValue);
+          }
         }
+        logger.debug(
+            "getHashMapForBean() : \n Property Name: "
+                + propertyName
+                + "\t Property Value : "
+                + propertyValue);
       }
     }
     return dataToStore;

@@ -15,6 +15,10 @@ import com.google.cloud.healthcare.fdamystudies.service.StudyMetadataService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import java.beans.IntrospectionException;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,43 +38,28 @@ public class StudyMetadataController {
   private static final Logger logger = LoggerFactory.getLogger(StudyMetadataController.class);
 
   @PostMapping("/studymetadata")
-  public ResponseEntity<?> addUpdateStudyMetadata(
-      @RequestBody StudyMetadataBean studyMetadataBean) {
+  public ResponseEntity<?> addUpdateStudyMetadata(@RequestBody StudyMetadataBean studyMetadataBean)
+      throws IOException, ProcessResponseException, IllegalAccessException,
+          IllegalArgumentException, InvocationTargetException, IntrospectionException {
     String studyIdToUpdate = null;
-    try {
-      studyIdToUpdate = studyMetadataBean.getStudyId();
-      if (StringUtils.isBlank(studyIdToUpdate)
-          || StringUtils.isBlank(studyMetadataBean.getStudyVersion())
-          || StringUtils.isBlank(studyMetadataBean.getAppId())) {
-        ErrorBean errorBean =
-            AppUtil.dynamicResponse(
-                ErrorCode.EC_701.code(),
-                ErrorCode.EC_701.errorMessage(),
-                AppConstants.ERROR_STR,
-                ErrorCode.EC_701.errorMessage());
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
-      }
-
-      studyMetadataService.saveStudyMetadata(studyMetadataBean);
-      commonService.createActivityLog(
-          null,
-          "Study metadata updated successfully",
-          "Study metadata successful for study with id: " + studyIdToUpdate + " .");
-      return new ResponseEntity<String>(HttpStatus.OK);
-    } catch (Exception e) {
-      commonService.createActivityLog(
-          null,
-          "Study metadata update failed",
-          "Study metadata update failed for study with id: " + studyIdToUpdate + " .");
+    studyIdToUpdate = studyMetadataBean.getStudyId();
+    if (StringUtils.isBlank(studyIdToUpdate)
+        || StringUtils.isBlank(studyMetadataBean.getStudyVersion())
+        || StringUtils.isBlank(studyMetadataBean.getAppId())) {
       ErrorBean errorBean =
           AppUtil.dynamicResponse(
-              ErrorCode.EC_702.code(),
-              ErrorCode.EC_702.errorMessage(),
+              ErrorCode.EC_701.code(),
+              ErrorCode.EC_701.errorMessage(),
               AppConstants.ERROR_STR,
-              e.getMessage());
-
-      logger.error("Could not create/update Study Metadata for study: " + studyIdToUpdate);
+              ErrorCode.EC_701.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
+
+    studyMetadataService.saveStudyMetadata(studyMetadataBean);
+    commonService.createActivityLog(
+        null,
+        "Study metadata updated successfully",
+        "Study metadata successful for study with id: " + studyIdToUpdate + " .");
+    return new ResponseEntity<String>(HttpStatus.OK);
   }
 }

@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,8 @@ public class ParticipantIdController {
   @PostMapping("/participant/add")
   public ResponseEntity<?> addParticipantIdentifier(
       @RequestHeader("applicationId") String applicationId,
-      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean) {
+      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean)
+      throws ProcessResponseException {
     logger.info("ParticipantIdController addParticipantIdentifier() - starts ");
     if (enrollmentTokenIdentifierBean == null
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getTokenIdentifier())
@@ -53,29 +55,18 @@ public class ParticipantIdController {
               ErrorCode.EC_701.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
-    try {
-      ParticipantBo participantBo = new ParticipantBo();
-      participantBo.setTokenIdentifier(enrollmentTokenIdentifierBean.getTokenIdentifier());
-      participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
-      participantBo.setCreatedBy(applicationId);
-      String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
-      commonService.createActivityLog(
-          null,
-          "Participant Id generated successfully",
-          "Participant Id generated successfully for partcipant "
-              + particpantUniqueIdentifier
-              + " .");
-      logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
-      return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
-    } catch (Exception e) {
-      ErrorBean errorBean =
-          AppUtil.dynamicResponse(
-              ErrorCode.EC_703.code(),
-              ErrorCode.EC_703.errorMessage(),
-              AppConstants.ERROR_STR,
-              e.getMessage());
-      logger.error("Could not create participant identifier: ");
-      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    ParticipantBo participantBo = new ParticipantBo();
+    participantBo.setTokenIdentifier(enrollmentTokenIdentifierBean.getTokenIdentifier());
+    participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
+    participantBo.setCreatedBy(applicationId);
+    String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
+    commonService.createActivityLog(
+        null,
+        "Participant Id generated successfully",
+        "Participant Id generated successfully for partcipant "
+            + particpantUniqueIdentifier
+            + " .");
+    logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
+    return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
   }
 }

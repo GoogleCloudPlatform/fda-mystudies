@@ -73,4 +73,7 @@ public class AppConstants {
   public static final String DETAIL_MESSAGE = "detailMessage";
   public static final String BASIC_PREFIX = "Basic ";
   public static final String COMMA_STR = ",";
+  public static final String PARTICIPANT_ID_NOT_EXISTS_MESSAGE =
+      "Participant does not exist for the given participant ID and secure "
+          + "enrollment token combination";
 }
