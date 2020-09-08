@@ -12,10 +12,13 @@ import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementE
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.SIGNED_CONSENT_DOCUMENT_SAVED;
-import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.STUDY_ENROLLMENT_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ConsentManagementEnum.USER_ENROLLED_INTO_STUDY;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,17 +31,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentReqBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
+import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
+import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
+import com.jayway.jsonpath.JsonPath;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
@@ -47,9 +54,11 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MvcResult;
 
 @ExtendWith(MockitoExtension.class)
 public class UserConsentManagementControllerTests extends BaseMockIT {
@@ -63,6 +72,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired private Storage mockStorage;
+
+  @Mock private FileStorageService cloudStorageService;
 
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
@@ -84,6 +95,13 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
   @Test
   public void updateEligibilityConsentStatus() throws Exception {
+    when(cloudStorageService.saveFile(anyString(), anyString(), anyString()))
+        .thenAnswer(
+            (invocation) -> {
+              String fileName = invocation.getArgument(0);
+              String underDirectory = invocation.getArgument(2);
+              return underDirectory + "/" + fileName;
+            });
     ConsentReqBean consent =
         new ConsentReqBean(
             Constants.VERSION_1_0, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_0);
@@ -138,7 +156,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             + "_"
             + consentStatus.getConsent().getVersion()
             + "_"
-            + new SimpleDateFormat("MMddyyyy").format(new Date())
+            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
             + ".pdf";
 
     BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
@@ -155,11 +173,17 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         String.format(
             "/myStudiesConsentMgmtWS/consentDocument?studyId=%s&consentVersion=%s",
             Constants.STUDYOF_HEALTH, Constants.VERSION_1_0);
-    mockMvc
-        .perform(get(path).headers(headers).contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(content)));
+    MvcResult result =
+        mockMvc
+            .perform(get(path).headers(headers).contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    String sampleContent =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consent.content");
+
+    assertThat(Base64.getDecoder().decode(sampleContent.getBytes()), is(encodedContent));
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -173,7 +197,13 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
   @Test
   public void updateEligibilityConsentStatusUpdateExisting() throws Exception {
-
+    when(cloudStorageService.saveFile(anyString(), anyString(), anyString()))
+        .thenAnswer(
+            (invocation) -> {
+              String fileName = invocation.getArgument(0);
+              String underDirectory = invocation.getArgument(2);
+              return underDirectory + "/" + fileName;
+            });
     ConsentReqBean consent =
         new ConsentReqBean(
             Constants.VERSION_1_0,
@@ -217,16 +247,43 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     clearAuditRequests();
     auditEventMap.clear();
 
+    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
+    String fileName =
+        underDirectory
+            + "/"
+            + Constants.VALID_USER_ID
+            + "_"
+            + consentStatus.getStudyId()
+            + "_"
+            + consentStatus.getConsent().getVersion()
+            + "_"
+            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
+            + ".pdf";
+
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    Blob mockedBlob = mock(Blob.class);
+
+    String content = "sample consent document content";
+    byte[] encodedContent = Base64.getEncoder().encode(content.getBytes());
+    when(mockedBlob.getContent()).thenReturn(encodedContent);
+
+    when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
     // Invoke /consentDocument to get consent and verify pdf content
     String path =
         String.format(
             "/myStudiesConsentMgmtWS/consentDocument?studyId=%s&consentVersion=%s",
             Constants.STUDYOF_HEALTH, Constants.VERSION_1_0);
-    mockMvc
-        .perform(get(path).headers(headers).contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
+    MvcResult result =
+        mockMvc
+            .perform(get(path).headers(headers).contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    String sampleContent =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consent.content");
+
+    assertThat(Base64.getDecoder().decode(sampleContent.getBytes()), is(encodedContent));
 
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -240,6 +297,15 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
   @Test
   public void updateEligibilityConsentStatusAddNewVersion() throws Exception {
+
+    when(cloudStorageService.saveFile(anyString(), anyString(), anyString()))
+        .thenAnswer(
+            (invocation) -> {
+              String fileName = invocation.getArgument(0);
+              String underDirectory = invocation.getArgument(2);
+              return underDirectory + "/" + fileName;
+            });
+
     ConsentReqBean consent =
         new ConsentReqBean(
             Constants.VERSION_1_2, Constants.STATUS_COMPLETE, Constants.ENCODED_CONTENT_1_2);
@@ -281,17 +347,46 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     clearAuditRequests();
     auditEventMap.clear();
 
+    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
+    String fileName =
+        underDirectory
+            + "/"
+            + Constants.VALID_USER_ID
+            + "_"
+            + consentStatus.getStudyId()
+            + "_"
+            + consentStatus.getConsent().getVersion()
+            + "_"
+            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
+            + ".pdf";
+
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    Blob mockedBlob = mock(Blob.class);
+
+    String content = "sample consent document content";
+    byte[] encodedContent = Base64.getEncoder().encode(content.getBytes());
+    when(mockedBlob.getContent()).thenReturn(encodedContent);
+
+    when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
+
     // Invoke http api endpoint to get consent and verify pdf content
-    mockMvc
-        .perform(
-            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
-                .headers(headers)
-                .contextPath(getContextPath())
-                .param("studyId", Constants.STUDYOF_HEALTH)
-                .param("consentVersion", Constants.VERSION_1_2))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
+    MvcResult result =
+        mockMvc
+            .perform(
+                get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                    .headers(headers)
+                    .contextPath(getContextPath())
+                    .param("studyId", Constants.STUDYOF_HEALTH)
+                    .param("consentVersion", Constants.VERSION_1_2))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    String sampleContent =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consent.content");
+
+    assertThat(Base64.getDecoder().decode(sampleContent.getBytes()), is(encodedContent));
+
     auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -307,16 +402,21 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     // Invoke http api endpoint to get old consent and verify pdf content
 
-    mockMvc
-        .perform(
-            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
-                .headers(headers)
-                .contextPath(getContextPath())
-                .param("studyId", Constants.STUDYOF_HEALTH)
-                .param("consentVersion", Constants.VERSION_1_0))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_0_UPDATED)));
+    result =
+        mockMvc
+            .perform(
+                get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                    .headers(headers)
+                    .contextPath(getContextPath())
+                    .param("studyId", Constants.STUDYOF_HEALTH)
+                    .param("consentVersion", Constants.VERSION_1_0))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    sampleContent = JsonPath.read(result.getResponse().getContentAsString(), "$.consent.content");
+
+    assertThat(Base64.getDecoder().decode(sampleContent.getBytes()), is(encodedContent));
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -329,15 +429,20 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     auditEventMap.clear();
 
     // Invoke http api endpoint to get content without mentioning version
-    mockMvc
-        .perform(
-            get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
-                .headers(headers)
-                .contextPath(getContextPath())
-                .param("studyId", Constants.STUDYOF_HEALTH))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.ENCODED_CONTENT_1_2)));
+    result =
+        mockMvc
+            .perform(
+                get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
+                    .headers(headers)
+                    .contextPath(getContextPath())
+                    .param("studyId", Constants.STUDYOF_HEALTH))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andReturn();
+
+    sampleContent = JsonPath.read(result.getResponse().getContentAsString(), "$.consent.content");
+
+    assertThat(Base64.getDecoder().decode(sampleContent.getBytes()), is(encodedContent));
 
     auditEventMap.put(
         READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT.getEventCode(), auditRequest);
@@ -574,16 +679,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isOk());
+        .andExpect(status().isInternalServerError());
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    // check transaction rollback is successful
+    StudyInfoBean studyInfoBean =
+        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
 
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(STUDY_ENROLLMENT_FAILED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, STUDY_ENROLLMENT_FAILED);
+    StudyConsentBO studyConsent =
+        userConsentManagementService.getStudyConsent(
+            Constants.VALID_USER_ID,
+            studyInfoBean.getStudyInfoId(),
+            consentStatus.getConsent().getVersion());
+    assertNull(studyConsent);
   }
 
   @Test
