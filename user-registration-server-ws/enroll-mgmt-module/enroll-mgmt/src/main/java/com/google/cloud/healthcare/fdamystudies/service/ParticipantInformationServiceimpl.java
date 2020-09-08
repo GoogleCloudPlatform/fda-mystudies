@@ -30,13 +30,10 @@ public class ParticipantInformationServiceimpl implements ParticipantInformation
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - starts ");
     ParticipantInfoRespBean participantInforespBean = null;
     Integer studyInfoId = 0;
-    try {
-      studyInfoId = commonDao.getStudyId(studyId);
-      participantInforespBean =
-          participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
-    } catch (Exception e) {
-      logger.error("ParticipantInformationServiceimpl getParticipantInfoDetails() - error ", e);
-    }
+
+    studyInfoId = commonDao.getStudyId(studyId);
+    participantInforespBean =
+        participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
 
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - ends ");
     return participantInforespBean;

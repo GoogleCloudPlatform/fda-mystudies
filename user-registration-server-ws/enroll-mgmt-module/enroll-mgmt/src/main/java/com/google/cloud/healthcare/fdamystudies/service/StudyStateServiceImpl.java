@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -40,9 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
-
 @Service
 public class StudyStateServiceImpl implements StudyStateService {
 
@@ -66,11 +66,9 @@ public class StudyStateServiceImpl implements StudyStateService {
   public List<ParticipantStudiesBO> getParticipantStudiesList(UserDetailsBO user) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
     List<ParticipantStudiesBO> participantStudiesList = null;
-    try {
-      participantStudiesList = studyStateDao.getParticipantStudiesList(user);
-    } catch (Exception e) {
-      logger.error("StudyStateServiceImpl getParticipantStudiesList() - error ", e);
-    }
+
+    participantStudiesList = studyStateDao.getParticipantStudiesList(user);
+
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Ends ");
     return participantStudiesList;
   }
@@ -203,51 +201,43 @@ public class StudyStateServiceImpl implements StudyStateService {
     List<StudyStateBean> serviceResponseList = new ArrayList<>();
 
     if (userId != null) {
-      try {
-        UserDetailsBO userDetailsBO = userRegAdminUserDao.getRecord(userId);
-        if (userDetailsBO != null) {
+      UserDetailsBO userDetailsBO = userRegAdminUserDao.getRecord(userId);
+      if (userDetailsBO != null) {
 
-          List<ParticipantStudiesBO> participantStudiesList =
-              participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsBO.getUserDetailsId());
-          if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
-            for (ParticipantStudiesBO participantStudiesBO : participantStudiesList) {
-              StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
-              if (participantStudiesBO.getParticipantRegistrySite() != null) {
-                String enrolledTokenVal =
-                    studyStateDao.getEnrollTokenForParticipant(
-                        participantStudiesBO.getParticipantRegistrySite().getId());
-                studyStateBean.setHashedToken(
-                    EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
-              }
-              if (participantStudiesBO.getStudyInfo() != null) {
-                studyStateBean.setStudyId(participantStudiesBO.getStudyInfo().getCustomId());
-              }
-              studyStateBean.setStatus(participantStudiesBO.getStatus());
-              if (participantStudiesBO.getParticipantId() != null) {
-                studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
-              }
-              studyStateBean.setCompletion(participantStudiesBO.getCompletion());
-              studyStateBean.setBookmarked(participantStudiesBO.getBookmark());
-              studyStateBean.setAdherence(participantStudiesBO.getAdherence());
-              if (participantStudiesBO.getEnrolledDate() != null) {
-                studyStateBean.setEnrolledDate(
-                    MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
-              }
-              if (participantStudiesBO.getSiteBo() != null) {
-                studyStateBean.setSiteId(participantStudiesBO.getSiteBo().getId().toString());
-              }
-              serviceResponseList.add(studyStateBean);
+        List<ParticipantStudiesBO> participantStudiesList =
+            participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsBO.getUserDetailsId());
+        if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
+          for (ParticipantStudiesBO participantStudiesBO : participantStudiesList) {
+            StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
+            if (participantStudiesBO.getParticipantRegistrySite() != null) {
+              String enrolledTokenVal =
+                  studyStateDao.getEnrollTokenForParticipant(
+                      participantStudiesBO.getParticipantRegistrySite().getId());
+              studyStateBean.setHashedToken(
+                  EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
             }
+            if (participantStudiesBO.getStudyInfo() != null) {
+              studyStateBean.setStudyId(participantStudiesBO.getStudyInfo().getCustomId());
+            }
+            studyStateBean.setStatus(participantStudiesBO.getStatus());
+            if (participantStudiesBO.getParticipantId() != null) {
+              studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
+            }
+            studyStateBean.setCompletion(participantStudiesBO.getCompletion());
+            studyStateBean.setBookmarked(participantStudiesBO.getBookmark());
+            studyStateBean.setAdherence(participantStudiesBO.getAdherence());
+            if (participantStudiesBO.getEnrolledDate() != null) {
+              studyStateBean.setEnrolledDate(
+                  MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
+            }
+            if (participantStudiesBO.getSiteBo() != null) {
+              studyStateBean.setSiteId(participantStudiesBO.getSiteBo().getId().toString());
+            }
+            serviceResponseList.add(studyStateBean);
           }
-        } else {
-          throw new InvalidUserIdException();
         }
-      } catch (InvalidUserIdException | SystemException e) {
-        logger.error("(Service)...StudyStateServiceImpl.getStudiesState(): (ERROR) ", e);
-        throw e;
-      } catch (Exception e) {
-        logger.error("(Service)...StudyStateServiceImpl.getStudiesState(): (ERROR) ", e);
-        throw new SystemException();
+      } else {
+        throw new InvalidUserIdException();
       }
     } else {
       logger.info("(Service)...StudyStateServiceImpl.getStudiesState()...Ended");
@@ -263,21 +253,15 @@ public class StudyStateServiceImpl implements StudyStateService {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    try {
-      message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
-      if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-        enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
-        respBean = new WithDrawFromStudyRespBean();
-        respBean.setCode(HttpStatus.OK.value());
-        respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-      }
-    } catch (UnAuthorizedRequestException | InvalidRequestException e) {
-      logger.error("StudyStateServiceImpl withdrawFromStudy() - error ", e);
-      throw e;
-    } catch (Exception e) {
-      logger.error("StudyStateServiceImpl withdrawFromStudy() - error ", e);
-      throw new SystemException();
+
+    message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
+    if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+      enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
+      respBean = new WithDrawFromStudyRespBean();
+      respBean.setCode(HttpStatus.OK.value());
+      respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
     }
+
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Ends ");
     return respBean;
   }

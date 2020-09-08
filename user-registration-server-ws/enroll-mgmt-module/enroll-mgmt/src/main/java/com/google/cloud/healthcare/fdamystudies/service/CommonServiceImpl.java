@@ -27,12 +27,8 @@ public class CommonServiceImpl implements CommonService {
   public UserDetailsBO getUserInfoDetails(String userId) {
     logger.info("CommonServiceImpl getUserInfoDetails() - Starts ");
     UserDetailsBO userDetailsBO = null;
-    try {
-      if (!StringUtils.isEmpty(userId)) {
-        userDetailsBO = commonDao.getUserInfoDetails(userId);
-      }
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl getUserInfoDetails() - error ", e);
+    if (!StringUtils.isEmpty(userId)) {
+      userDetailsBO = commonDao.getUserInfoDetails(userId);
     }
     logger.info("CommonServiceImpl getUserInfoDetails() - Ends ");
     return userDetailsBO;
