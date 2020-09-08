@@ -76,7 +76,8 @@ public class ProcessActivityStateController {
   public ResponseEntity<?> updateActivityState(
       @RequestBody ActivityStateRequestBean activityStateRequestBean,
       @Context HttpServletResponse response,
-      @RequestHeader String userId) {
+      @RequestHeader String userId)
+      throws ProcessActivityStateException {
 
     if (activityStateRequestBean == null
         || Strings.isBlank(activityStateRequestBean.getParticipantId())
@@ -89,50 +90,25 @@ public class ProcessActivityStateController {
               ErrorCode.EC_701.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
-      try {
-        participantActivityStateResponseService.saveParticipantActivities(activityStateRequestBean);
-        SuccessResponseBean srBean = new SuccessResponseBean();
-        srBean.setMessage(AppConstants.SUCCESS_MSG);
-        String activityIds =
-            activityStateRequestBean
-                .getActivity()
-                .stream()
-                .map(s -> s.getActivityId())
-                .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
-            userId,
-            "Activity State Update -success",
-            "Activity state update successful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
-                + activityIds
-                + " .");
+      participantActivityStateResponseService.saveParticipantActivities(activityStateRequestBean);
+      SuccessResponseBean srBean = new SuccessResponseBean();
+      srBean.setMessage(AppConstants.SUCCESS_MSG);
+      String activityIds =
+          activityStateRequestBean
+              .getActivity()
+              .stream()
+              .map(s -> s.getActivityId())
+              .collect(Collectors.joining(", "));
+      commonService.createActivityLog(
+          userId,
+          "Activity State Update -success",
+          "Activity state update successful for partcipant "
+              + activityStateRequestBean.getParticipantId()
+              + " and activityIds "
+              + activityIds
+              + " .");
 
-        return new ResponseEntity<>(srBean, HttpStatus.OK);
-      } catch (Exception e) {
-        logger.warn("ProcessActivityStateController updateActivityState() failed ", e);
-        String activityIds =
-            activityStateRequestBean
-                .getActivity()
-                .stream()
-                .map(s -> s.getActivityId())
-                .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
-            userId,
-            "Activity State Update -failure",
-            "Activity state update unsuccessful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
-                + activityIds
-                + " .");
-        ErrorBean errorBean =
-            AppUtil.dynamicResponse(
-                ErrorCode.EC_714.code(),
-                ErrorCode.EC_714.errorMessage(),
-                AppConstants.ERROR_STR,
-                e.getMessage());
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
-      }
+      return new ResponseEntity<>(srBean, HttpStatus.OK);
     }
   }
 }

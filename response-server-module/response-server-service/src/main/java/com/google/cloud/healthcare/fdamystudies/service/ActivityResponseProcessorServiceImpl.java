@@ -255,8 +255,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       List<QuestionnaireActivityStepsBean> activityMetadataBeanFromWcp,
       QuestionnaireActivityStepsBean responseBean) {
     ActivityValueGroupBean activityValueGroupBeanRet = new ActivityValueGroupBean();
-    List<QuestionnaireActivityStepsBean> valueResponseBeanList =
-        new ArrayList<QuestionnaireActivityStepsBean>();
+    List<QuestionnaireActivityStepsBean> valueResponseBeanList = new ArrayList<>();
     Object value = responseBean.getValue();
     if (value instanceof List) {
       List<Object> valueList = (ArrayList<Object>) value;
@@ -414,45 +413,41 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               || propertyValue instanceof ActivityMetadataBean) {
             dataToStore.put(propertyName, getHashMapForBean(propertyValue));
           } else if (propertyValue instanceof List) {
-            try {
-              ArrayList<Object> pvalueList = (ArrayList<Object>) propertyValue;
-              for (Object valueObj : pvalueList) {
-                if (valueObj instanceof QuestionnaireActivityStepsBean) {
-                  Map<String, Object> tempMap = getHashMapForBean(valueObj);
-                  stepsList.add(tempMap);
-                } else if (valueObj instanceof String) {
-                  if (valueObj != null) {
-                    Object tmpPropertyValue = dataToStore.get(propertyName);
-                    if (tmpPropertyValue != null) {
-                      String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
-                      if (!StringUtils.isBlank(tmpPropertyValueStr)) {
-                        valueObj = tmpPropertyValueStr + AppConstants.COMMA_STR + valueObj;
-                      }
+            ArrayList<Object> pvalueList = (ArrayList<Object>) propertyValue;
+            for (Object valueObj : pvalueList) {
+              if (valueObj instanceof QuestionnaireActivityStepsBean) {
+                Map<String, Object> tempMap = getHashMapForBean(valueObj);
+                stepsList.add(tempMap);
+              } else if (valueObj instanceof String) {
+                if (valueObj != null) {
+                  Object tmpPropertyValue = dataToStore.get(propertyName);
+                  if (tmpPropertyValue != null) {
+                    String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
+                    if (!StringUtils.isBlank(tmpPropertyValueStr)) {
+                      valueObj = tmpPropertyValueStr + AppConstants.COMMA_STR + valueObj;
                     }
-                    dataToStore.put(propertyName, valueObj);
                   }
-                } else {
-                  if (valueObj != null) {
-                    propertyValue = gson.toJson(valueObj);
-                    Object tmpPropertyValue = dataToStore.get(propertyName);
-                    if (tmpPropertyValue != null) {
-                      String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
-                      if (!StringUtils.isBlank(tmpPropertyValueStr)) {
-                        propertyValue =
-                            tmpPropertyValueStr + AppConstants.COMMA_STR + propertyValue;
-                      }
-                    }
-                    dataToStore.put(propertyName, propertyValue);
-                  }
+                  dataToStore.put(propertyName, valueObj);
                 }
-                if (stepsList != null && !stepsList.isEmpty()) {
-                  dataToStore.put(AppConstants.RESULTS_FIELD_KEY, stepsList);
+              } else {
+                if (valueObj != null) {
+                  propertyValue = gson.toJson(valueObj);
+                  Object tmpPropertyValue = dataToStore.get(propertyName);
+                  if (tmpPropertyValue != null) {
+                    String tmpPropertyValueStr = (String) tmpPropertyValue.toString();
+                    if (!StringUtils.isBlank(tmpPropertyValueStr)) {
+                      propertyValue = tmpPropertyValueStr + AppConstants.COMMA_STR + propertyValue;
+                    }
+                  }
+                  dataToStore.put(propertyName, propertyValue);
                 }
               }
-            } catch (ClassCastException ce) {
-              propertyValue = gson.toJson(propertyValue);
-              dataToStore.put(propertyName, getHashMapForBean(propertyValue));
+              if (stepsList != null && !stepsList.isEmpty()) {
+                dataToStore.put(AppConstants.RESULTS_FIELD_KEY, stepsList);
+              }
             }
+            propertyValue = gson.toJson(propertyValue);
+            dataToStore.put(propertyName, getHashMapForBean(propertyValue));
           } else {
             propertyValue = gson.toJson(propertyValue);
             dataToStore.put(propertyName, propertyValue);
