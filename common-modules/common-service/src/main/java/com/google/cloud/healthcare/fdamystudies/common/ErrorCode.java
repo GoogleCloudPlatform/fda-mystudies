@@ -35,7 +35,7 @@ public enum ErrorCode {
       401,
       "EC-0002",
       HttpStatus.UNAUTHORIZED.toString(),
-      "Your temporary password is expired. Please use the Forgot Password link to reset your password."),
+      "Your temporary password is expired. Please use the forgot password link to reset your password."),
 
   ACCOUNT_DEACTIVATED(403, "EC-0003", Constants.BAD_REQUEST, "Your account has been deactivated"),
 
@@ -78,7 +78,7 @@ public enum ErrorCode {
       400,
       "EC-0011",
       Constants.BAD_REQUEST,
-      "Your new password cannot repeat any of your previous 10 passwords."),
+      "Your new password cannot repeat any of your previous 10 passwords"),
 
   USER_NOT_ACTIVE(400, "EC_0012", Constants.BAD_REQUEST, "User is not active"),
 
@@ -101,10 +101,7 @@ public enum ErrorCode {
       "You are not authorized to access this information"),
 
   BAD_REQUEST(
-      400,
-      "EC-0018",
-      Constants.BAD_REQUEST,
-      "Malformed request syntax or invalid request message framing."),
+      400, "EC-0018", Constants.BAD_REQUEST, "The request cannot be fulfilled due to bad syntax"),
 
   UNAUTHORIZED(401, "EC-0019", "Unauthorized", "Unauthorized or Invalid token"),
 
@@ -112,7 +109,10 @@ public enum ErrorCode {
       400, "EC-0020", Constants.BAD_REQUEST, "Email ID or status to be provided"),
 
   SITE_PERMISSION_ACCESS_DENIED(
-      403, "EC-0021", HttpStatus.FORBIDDEN.toString(), "You do not have permission to add site"),
+      403,
+      "EC-0021",
+      HttpStatus.FORBIDDEN.toString(),
+      "You do not have permission to access this site"),
 
   SITE_EXISTS(
       400, "EC-0022", Constants.BAD_REQUEST, "Site exists with the given location ID and study ID"),
@@ -131,7 +131,7 @@ public enum ErrorCode {
       400,
       "EC-0026",
       Constants.BAD_REQUEST,
-      "Provided email ID does not exists or user is not invited "),
+      "Provided email ID does not exists or user is not invited"),
 
   CANNOT_REACTIVATE(
       400, "EC_0027", Constants.BAD_REQUEST, "Can't activate an already actived location"),
@@ -152,7 +152,7 @@ public enum ErrorCode {
       403, "EC-0031", HttpStatus.FORBIDDEN.toString(), "Participant cannot be added to open study"),
 
   PERMISSION_MISSING(
-      400, "EC_0032", Constants.BAD_REQUEST, "User should have atleast one permission "),
+      400, "EC_0032", Constants.BAD_REQUEST, "User should have atleast one permission"),
 
   INVALID_SECURITY_CODE(404, "EC_0033", "Not Found", "Invalid security code"),
 
@@ -183,9 +183,9 @@ public enum ErrorCode {
       400, "EC_0040", Constants.BAD_REQUEST, "Error in getting consent data"),
 
   INVALID_APPS_FIELDS_VALUES(
-      400, "EC-0041", Constants.BAD_REQUEST, "allowed values for 'fields' are studies, sites"),
+      400, "EC-0041", Constants.BAD_REQUEST, "Allowed values for 'fields' are studies, sites"),
 
-  ADMIN_NOT_FOUND(404, "EC-0042", HttpStatus.NOT_FOUND.toString(), "Admin not found"),
+  ADMIN_NOT_FOUND(404, "EC-0042", HttpStatus.NOT_FOUND.toString(), "Admin user not found"),
 
   PENDING_CONFIRMATION(
       403,
