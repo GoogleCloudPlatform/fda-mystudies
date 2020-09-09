@@ -317,7 +317,7 @@ template "project_networks" {
       }]
       # To connect to the CloudSQL instance via the bastion VM:
       # $ gcloud compute ssh bastion-vm --zone={{$default_location}}-{{$default_zone}} --project={{$prefix}}-{{$env}}-networks
-      # $ cloud_sql_proxy -instances={{$prefix}}-{{$env}}-data:{{$default_location}}:my-studies=tcp:3306
+      # $ cloud_sql_proxy -instances={{$prefix}}-{{$env}}-data:{{$default_location}}:mystudies=tcp:3306
       # $ mysql -u default -p --host 127.0.0.1
       bastion_hosts = [{
         name          = "bastion-vm"
@@ -431,7 +431,7 @@ template "project_apps" {
       raw_config = <<EOF
 # Reserve a static external IP for the Ingress.
 resource "google_compute_global_address" "ingress_static_ip" {
-  name         = "my-studies-ingress-ip"
+  name         = "mystudies-ingress-ip"
   description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = module.project.project_id
@@ -498,7 +498,7 @@ template "project_firebase" {
       storage_buckets = [
         {
           # Firestore data export
-          name = "{{$prefix}}-{{$env}}-my-studies-firestore-raw-data"
+          name = "{{$prefix}}-{{$env}}-mystudies-firestore-raw-data"
           iam_members = [{
             role   = "roles/storage.admin"
             member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
@@ -538,7 +538,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
 # resource "google_firestore_index" "activities_index" {
 #   project    = module.project.project_id
 #   collection = "Activities"
@@ -577,7 +577,7 @@ template "project_data" {
         host_project_id = "{{$prefix}}-{{$env}}-networks"
       }
     }
-    # Step 5: uncomment and re-run the engine once all previous steps have been completed.
+    # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
 data "google_secret_manager_secret_version" "my_studies_db_default_password" {
@@ -588,9 +588,9 @@ data "google_secret_manager_secret_version" "my_studies_db_default_password" {
 EOF
     } */
     resources = {
-      # Step 5: uncomment and re-run the engine once all previous steps have been completed.
+      # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
       # cloud_sql_instances = [{
-      #   name               = "my-studies"
+      #   name               = "mystudies"
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
@@ -615,21 +615,21 @@ EOF
       }
       storage_buckets = [
         {
-          name = "{{$prefix}}-{{$env}}-my-studies-consent-documents"
+          name = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
-          name = "{{$prefix}}-{{$env}}-my-studies-fda-resources"
+          name = "{{$prefix}}-{{$env}}-mystudies-fda-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
-          name = "{{$prefix}}-{{$env}}-my-studies-sql-import"
+          name = "{{$prefix}}-{{$env}}-mystudies-sql-import"
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
           # iam_members = [{
           #   role   = "roles/storage.objectViewer"
