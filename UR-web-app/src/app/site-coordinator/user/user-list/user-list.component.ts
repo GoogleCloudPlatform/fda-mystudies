@@ -4,7 +4,7 @@ import {combineLatest, BehaviorSubject, Observable, of} from 'rxjs';
 import {User} from 'src/app/entity/user';
 import {UserService} from '../shared/user.service';
 import {map} from 'rxjs/operators';
-import {SharedService} from 'src/app/shared/shared.service';
+import {SearchService} from 'src/app/shared/search.service';
 
 @Component({
   selector: 'user-list',
@@ -18,7 +18,7 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private readonly userService: UserService,
-    private readonly sharedService: SharedService,
+    private readonly sharedService: SearchService,
   ) {}
 
   ngOnInit(): void {
@@ -32,7 +32,7 @@ export class UserListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageUser, query]) => {
-        this.manageUsersBackup = manageUser;
+        this.manageUsersBackup = {...manageUser};
         this.manageUsersBackup.users = this.manageUsersBackup.users.filter(
           (user: User) =>
             user.firstName.toLowerCase().includes(query) ||

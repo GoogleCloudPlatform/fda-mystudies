@@ -6,7 +6,7 @@ import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Study} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
-import {SharedService} from 'src/app/shared/shared.service';
+import {SearchService} from 'src/app/shared/search.service';
 @Component({
   selector: 'app-study-list',
   templateUrl: './study-list.component.html',
@@ -21,7 +21,7 @@ export class StudyListComponent implements OnInit {
     private readonly studiesService: StudiesService,
     private readonly router: Router,
     private readonly toastr: ToastrService,
-    private readonly sharedService: SharedService,
+    private readonly sharedService: SearchService,
   ) {}
 
   ngOnInit(): void {
