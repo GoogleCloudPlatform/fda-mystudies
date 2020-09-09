@@ -271,12 +271,10 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
         appDetailsBO = appDetailsList.get(0);
         appInfoId = appDetailsBO.getAppInfoId();
       }
+
       appOrgInfoBean.setAppInfoId(appInfoId);
-    } catch (Exception e) {
-      appOrgInfoBean.setAppInfoId(appInfoId);
-      logger.error("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - error ", e);
     }
-   
+
     appOrgInfoBean.setAppInfoId(appInfoId);
 
     logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
