@@ -306,7 +306,6 @@ public class HttpRequest {
       conn.setRequestMethod("POST");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
-
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
       conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 

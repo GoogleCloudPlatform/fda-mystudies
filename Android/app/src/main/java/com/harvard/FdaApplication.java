@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.util.Base64;
-
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
@@ -60,7 +59,7 @@ public class FdaApplication extends Application {
     Fabric.with(this, new Crashlytics());
     dbInitialize();
     initChannel();
-    randomAlphaNumeric(8);
+    randomAlphaNumeric(50);
     startEventProcessing();
 
     AppVisibilityDetector.init(
