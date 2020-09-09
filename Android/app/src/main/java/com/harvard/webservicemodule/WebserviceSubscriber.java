@@ -29,10 +29,10 @@ public class WebserviceSubscriber extends BaseSubscriber {
   public void onEvent(WcpConfigEvent wcpConfigEvent) {
     String url = "";
     if (wcpConfigEvent
-        .getContext()
-        .getResources()
-        .getString(R.string.app_stage)
-        .equalsIgnoreCase("development")) {
+            .getContext()
+            .getResources()
+            .getString(R.string.app_stage)
+            .equalsIgnoreCase("development")) {
       url = wcpConfigEvent.getDevelopmentUrl() + wcpConfigEvent.getUrl();
     } else {
       url = wcpConfigEvent.getProductionUrl() + wcpConfigEvent.getUrl();
@@ -41,184 +41,184 @@ public class WebserviceSubscriber extends BaseSubscriber {
     if (wcpConfigEvent.getRequestType().equalsIgnoreCase("get")) {
       ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
       apiCall.apiCallGet(
-          url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+              url,
+              wcpConfigEvent.getHeaders(),
+              wcpConfigEvent.getClassT(),
+              wcpConfigEvent.getResponseCode(),
+              wcpConfigEvent.getV(),
+              wcpConfigEvent.isShowAlert(),
+              "WCP");
     } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
       apiCall.apiCallPostJson(
-          url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParamsJson(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+              url,
+              wcpConfigEvent.getHeaders(),
+              wcpConfigEvent.getClassT(),
+              wcpConfigEvent.getRequestParamsJson(),
+              wcpConfigEvent.getResponseCode(),
+              wcpConfigEvent.getV(),
+              wcpConfigEvent.isShowAlert(),
+              "WCP");
     } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
-          url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParamsJson(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+              url,
+              wcpConfigEvent.getHeaders(),
+              wcpConfigEvent.getClassT(),
+              wcpConfigEvent.getRequestParamsJson(),
+              wcpConfigEvent.getResponseCode(),
+              wcpConfigEvent.getV(),
+              wcpConfigEvent.isShowAlert(),
+              "WCP");
     } else {
       ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
-          url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParams(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+              url,
+              wcpConfigEvent.getHeaders(),
+              wcpConfigEvent.getClassT(),
+              wcpConfigEvent.getRequestParams(),
+              wcpConfigEvent.getResponseCode(),
+              wcpConfigEvent.getV(),
+              wcpConfigEvent.isShowAlert(),
+              "WCP");
     }
   }
 
   public void onEvent(RegistrationServerConfigEvent registrationServerConfigEvent) {
     String url = "";
     if (registrationServerConfigEvent
-        .getContext()
-        .getResources()
-        .getString(R.string.app_stage)
-        .equalsIgnoreCase("development")) {
+            .getContext()
+            .getResources()
+            .getString(R.string.app_stage)
+            .equalsIgnoreCase("development")) {
       url =
-          registrationServerConfigEvent.getDevelopmentUrl()
-              + registrationServerConfigEvent.getUrl();
+              registrationServerConfigEvent.getDevelopmentUrl()
+                      + registrationServerConfigEvent.getUrl();
     } else {
       url =
-          registrationServerConfigEvent.getProductionUrl()
-              + registrationServerConfigEvent.getUrl();
+              registrationServerConfigEvent.getProductionUrl()
+                      + registrationServerConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
     if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
       apiCall.apiCallGet(
-          url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
+              url,
+              registrationServerConfigEvent.getHeaders(),
+              registrationServerConfigEvent.getClassT(),
+              registrationServerConfigEvent.getResponseCode(),
+              registrationServerConfigEvent.getV(),
+              registrationServerConfigEvent.isShowAlert(),
+              "RegistrationServer");
     } else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
       apiCall.apiCallPostJson(
-          url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParamsJson(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
-    }else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
+              url,
+              registrationServerConfigEvent.getHeaders(),
+              registrationServerConfigEvent.getClassT(),
+              registrationServerConfigEvent.getRequestParamsJson(),
+              registrationServerConfigEvent.getResponseCode(),
+              registrationServerConfigEvent.getV(),
+              registrationServerConfigEvent.isShowAlert(),
+              "RegistrationServer");
+    } else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
-          url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParamsJson(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
+              url,
+              registrationServerConfigEvent.getHeaders(),
+              registrationServerConfigEvent.getClassT(),
+              registrationServerConfigEvent.getRequestParamsJson(),
+              registrationServerConfigEvent.getResponseCode(),
+              registrationServerConfigEvent.getV(),
+              registrationServerConfigEvent.isShowAlert(),
+              "RegistrationServer");
     } else {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
-          url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParams(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
+              url,
+              registrationServerConfigEvent.getHeaders(),
+              registrationServerConfigEvent.getClassT(),
+              registrationServerConfigEvent.getRequestParams(),
+              registrationServerConfigEvent.getResponseCode(),
+              registrationServerConfigEvent.getV(),
+              registrationServerConfigEvent.isShowAlert(),
+              "RegistrationServer");
     }
   }
 
   public void onEvent(RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent) {
     String url = "";
     if (registrationServerConsentConfigEvent
-        .getContext()
-        .getResources()
-        .getString(R.string.app_stage)
-        .equalsIgnoreCase("development")) {
+            .getContext()
+            .getResources()
+            .getString(R.string.app_stage)
+            .equalsIgnoreCase("development")) {
       url =
-          registrationServerConsentConfigEvent.getDevelopmentUrl()
-              + registrationServerConsentConfigEvent.getUrl();
+              registrationServerConsentConfigEvent.getDevelopmentUrl()
+                      + registrationServerConsentConfigEvent.getUrl();
     } else {
       url =
-          registrationServerConsentConfigEvent.getProductionUrl()
-              + registrationServerConsentConfigEvent.getUrl();
+              registrationServerConsentConfigEvent.getProductionUrl()
+                      + registrationServerConsentConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
     if (registrationServerConsentConfigEvent.getRequestType().equalsIgnoreCase("get")) {
       ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
       apiCall.apiCallGet(
-          url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
+              url,
+              registrationServerConsentConfigEvent.getHeaders(),
+              registrationServerConsentConfigEvent.getClassT(),
+              registrationServerConsentConfigEvent.getResponseCode(),
+              registrationServerConsentConfigEvent.getV(),
+              registrationServerConsentConfigEvent.isShowAlert(),
+              "RegistrationServerConsent");
     } else if (registrationServerConsentConfigEvent
-        .getRequestType()
-        .equalsIgnoreCase("post_object")) {
+            .getRequestType()
+            .equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
       apiCall.apiCallPostJson(
-          url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParamsJson(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
+              url,
+              registrationServerConsentConfigEvent.getHeaders(),
+              registrationServerConsentConfigEvent.getClassT(),
+              registrationServerConsentConfigEvent.getRequestParamsJson(),
+              registrationServerConsentConfigEvent.getResponseCode(),
+              registrationServerConsentConfigEvent.getV(),
+              registrationServerConsentConfigEvent.isShowAlert(),
+              "RegistrationServerConsent");
     } else if (registrationServerConsentConfigEvent
-        .getRequestType()
-        .equalsIgnoreCase("delete_object")) {
+            .getRequestType()
+            .equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
-          url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParamsJson(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
+              url,
+              registrationServerConsentConfigEvent.getHeaders(),
+              registrationServerConsentConfigEvent.getClassT(),
+              registrationServerConsentConfigEvent.getRequestParamsJson(),
+              registrationServerConsentConfigEvent.getResponseCode(),
+              registrationServerConsentConfigEvent.getV(),
+              registrationServerConsentConfigEvent.isShowAlert(),
+              "RegistrationServerConsent");
     } else {
       ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
-          url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParams(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
+              url,
+              registrationServerConsentConfigEvent.getHeaders(),
+              registrationServerConsentConfigEvent.getClassT(),
+              registrationServerConsentConfigEvent.getRequestParams(),
+              registrationServerConsentConfigEvent.getResponseCode(),
+              registrationServerConsentConfigEvent.getV(),
+              registrationServerConsentConfigEvent.isShowAlert(),
+              "RegistrationServerConsent");
     }
   }
 
   public void onEvent(AuthServerConfigEvent authServerConfigEvent) {
     String url = "";
     if (authServerConfigEvent
-        .getContext()
-        .getResources()
-        .getString(R.string.app_stage)
-        .equalsIgnoreCase("development")) {
+            .getContext()
+            .getResources()
+            .getString(R.string.app_stage)
+            .equalsIgnoreCase("development")) {
       url = authServerConfigEvent.getDevelopmentUrl() + authServerConfigEvent.getUrl();
     } else {
       url = authServerConfigEvent.getProductionUrl() + authServerConfigEvent.getUrl();
@@ -227,56 +227,56 @@ public class WebserviceSubscriber extends BaseSubscriber {
     if (authServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
       apiCall.apiCallGet(
-          url,
-          authServerConfigEvent.getHeaders(),
-          authServerConfigEvent.getClassT(),
-          authServerConfigEvent.getResponseCode(),
-          authServerConfigEvent.getV(),
-          authServerConfigEvent.isShowAlert(),
-          "AuthServer");
+              url,
+              authServerConfigEvent.getHeaders(),
+              authServerConfigEvent.getClassT(),
+              authServerConfigEvent.getResponseCode(),
+              authServerConfigEvent.getV(),
+              authServerConfigEvent.isShowAlert(),
+              "AuthServer");
     } else if (authServerConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
       apiCall.apiCallPostJson(
-          url,
-          authServerConfigEvent.getHeaders(),
-          authServerConfigEvent.getClassT(),
-          authServerConfigEvent.getRequestParamsJson(),
-          authServerConfigEvent.getResponseCode(),
-          authServerConfigEvent.getV(),
-          authServerConfigEvent.isShowAlert(),
-          "AuthServer");
-    }else if (authServerConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
+              url,
+              authServerConfigEvent.getHeaders(),
+              authServerConfigEvent.getClassT(),
+              authServerConfigEvent.getRequestParamsJson(),
+              authServerConfigEvent.getResponseCode(),
+              authServerConfigEvent.getV(),
+              authServerConfigEvent.isShowAlert(),
+              "AuthServer");
+    } else if (authServerConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
-          url,
-          authServerConfigEvent.getHeaders(),
-          authServerConfigEvent.getClassT(),
-          authServerConfigEvent.getRequestParamsJson(),
-          authServerConfigEvent.getResponseCode(),
-          authServerConfigEvent.getV(),
-          authServerConfigEvent.isShowAlert(),
-          "AuthServer");
+              url,
+              authServerConfigEvent.getHeaders(),
+              authServerConfigEvent.getClassT(),
+              authServerConfigEvent.getRequestParamsJson(),
+              authServerConfigEvent.getResponseCode(),
+              authServerConfigEvent.getV(),
+              authServerConfigEvent.isShowAlert(),
+              "AuthServer");
     } else {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
-          url,
-          authServerConfigEvent.getHeaders(),
-          authServerConfigEvent.getClassT(),
-          authServerConfigEvent.getRequestParams(),
-          authServerConfigEvent.getResponseCode(),
-          authServerConfigEvent.getV(),
-          authServerConfigEvent.isShowAlert(),
-          "AuthServer");
+              url,
+              authServerConfigEvent.getHeaders(),
+              authServerConfigEvent.getClassT(),
+              authServerConfigEvent.getRequestParams(),
+              authServerConfigEvent.getResponseCode(),
+              authServerConfigEvent.getV(),
+              authServerConfigEvent.isShowAlert(),
+              "AuthServer");
     }
   }
 
   public void onEvent(ResponseServerConfigEvent responseServerConfigEvent) {
     String url = "";
     if (responseServerConfigEvent
-        .getContext()
-        .getResources()
-        .getString(R.string.app_stage)
-        .equalsIgnoreCase("development")) {
+            .getContext()
+            .getResources()
+            .getString(R.string.app_stage)
+            .equalsIgnoreCase("development")) {
       url = responseServerConfigEvent.getDevelopmentUrl() + responseServerConfigEvent.getUrl();
     } else {
       url = responseServerConfigEvent.getProductionUrl() + responseServerConfigEvent.getUrl();
@@ -285,102 +285,102 @@ public class WebserviceSubscriber extends BaseSubscriber {
     if (responseServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
       ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
       apiCall.apiCallGet(
-          url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
+              url,
+              responseServerConfigEvent.getHeaders(),
+              responseServerConfigEvent.getClassT(),
+              responseServerConfigEvent.getResponseCode(),
+              responseServerConfigEvent.getV(),
+              responseServerConfigEvent.isShowAlert(),
+              "ResponseServer");
     } else if (responseServerConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
       apiCall.apiCallPostJson(
-          url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getRequestParamsJson(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
+              url,
+              responseServerConfigEvent.getHeaders(),
+              responseServerConfigEvent.getClassT(),
+              responseServerConfigEvent.getRequestParamsJson(),
+              responseServerConfigEvent.getResponseCode(),
+              responseServerConfigEvent.getV(),
+              responseServerConfigEvent.isShowAlert(),
+              "ResponseServer");
     } else {
       ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
-          url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getRequestParams(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
+              url,
+              responseServerConfigEvent.getHeaders(),
+              responseServerConfigEvent.getClassT(),
+              responseServerConfigEvent.getRequestParams(),
+              responseServerConfigEvent.getResponseCode(),
+              responseServerConfigEvent.getV(),
+              responseServerConfigEvent.isShowAlert(),
+              "ResponseServer");
     }
   }
 
   public void onEvent(
-      RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent) {
+          RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent) {
     String url = "";
     if (registrationServerEnrollmentConfigEvent
-        .getContext()
-        .getResources()
-        .getString(R.string.app_stage)
-        .equalsIgnoreCase("development")) {
+            .getContext()
+            .getResources()
+            .getString(R.string.app_stage)
+            .equalsIgnoreCase("development")) {
       url =
-          registrationServerEnrollmentConfigEvent.getDevelopmentUrl()
-              + registrationServerEnrollmentConfigEvent.getUrl();
+              registrationServerEnrollmentConfigEvent.getDevelopmentUrl()
+                      + registrationServerEnrollmentConfigEvent.getUrl();
     } else {
       url =
-          registrationServerEnrollmentConfigEvent.getProductionUrl()
-              + registrationServerEnrollmentConfigEvent.getUrl();
+              registrationServerEnrollmentConfigEvent.getProductionUrl()
+                      + registrationServerEnrollmentConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
     if (registrationServerEnrollmentConfigEvent.getRequestType().equalsIgnoreCase("get")) {
       ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
       apiCall.apiCallGet(
-          url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
+              url,
+              registrationServerEnrollmentConfigEvent.getHeaders(),
+              registrationServerEnrollmentConfigEvent.getClassT(),
+              registrationServerEnrollmentConfigEvent.getResponseCode(),
+              registrationServerEnrollmentConfigEvent.getV(),
+              registrationServerEnrollmentConfigEvent.isShowAlert(),
+              "RegistrationServerEnrollment");
     } else if (registrationServerEnrollmentConfigEvent
-        .getRequestType()
-        .equalsIgnoreCase("post_object")) {
+            .getRequestType()
+            .equalsIgnoreCase("post_object")) {
       ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
       apiCall.apiCallPostJson(
-          url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParamsJson(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
+              url,
+              registrationServerEnrollmentConfigEvent.getHeaders(),
+              registrationServerEnrollmentConfigEvent.getClassT(),
+              registrationServerEnrollmentConfigEvent.getRequestParamsJson(),
+              registrationServerEnrollmentConfigEvent.getResponseCode(),
+              registrationServerEnrollmentConfigEvent.getV(),
+              registrationServerEnrollmentConfigEvent.isShowAlert(),
+              "RegistrationServerEnrollment");
     } else if (registrationServerEnrollmentConfigEvent
-        .getRequestType()
-        .equalsIgnoreCase("delete_object")) {
+            .getRequestType()
+            .equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
-          url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParamsJson(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
-    }else {
+              url,
+              registrationServerEnrollmentConfigEvent.getHeaders(),
+              registrationServerEnrollmentConfigEvent.getClassT(),
+              registrationServerEnrollmentConfigEvent.getRequestParamsJson(),
+              registrationServerEnrollmentConfigEvent.getResponseCode(),
+              registrationServerEnrollmentConfigEvent.getV(),
+              registrationServerEnrollmentConfigEvent.isShowAlert(),
+              "RegistrationServerEnrollment");
+    } else {
       ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
-          url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParams(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
+              url,
+              registrationServerEnrollmentConfigEvent.getHeaders(),
+              registrationServerEnrollmentConfigEvent.getClassT(),
+              registrationServerEnrollmentConfigEvent.getRequestParams(),
+              registrationServerEnrollmentConfigEvent.getResponseCode(),
+              registrationServerEnrollmentConfigEvent.getV(),
+              registrationServerEnrollmentConfigEvent.isShowAlert(),
+              "RegistrationServerEnrollment");
     }
   }
 }

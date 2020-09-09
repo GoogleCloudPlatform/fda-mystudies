@@ -47,10 +47,10 @@ public class Urls {
           + "&appVersion=" + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE
           + "&mobilePlatform=ANDROID"
           + "&code_challenge_method=S256"
-          + "&code_challenge=wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4"
+          + "&code_challenge="+FdaApplication.getCodeChallenge(FdaApplication.getRandomString())
           + "&correlationId=" + FdaApplication.getRandomString()
           + "&redirect_uri=" + AUTH_SERVER_REDIRECT
-          + "&state=wR4RMz7BGMNNXf6H9lWjV";
+          + "&state="+FdaApplication.getRandomString();
 
   // Registration Server
   public static String REGISTER_USER = "register";

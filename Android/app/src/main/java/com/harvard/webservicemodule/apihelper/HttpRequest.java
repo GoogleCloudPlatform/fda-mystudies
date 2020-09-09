@@ -38,6 +38,7 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -57,6 +58,9 @@ import org.json.JSONObject;
 public class HttpRequest {
 
   private static String basicAuth = AppConfig.API_TOKEN;
+  private static int TimeoutInterval = 180000;
+  private static String errorDescKey = "error_description";
+  private static String headerErrorKey = "StatusMessage";
 
   /**
    * To make a Get request.
@@ -76,18 +80,14 @@ public class HttpRequest {
       URL obj = new URL(url);
       conn = (HttpURLConnection) obj.openConnection();
       conn.setRequestMethod("GET");
-      conn.setReadTimeout(180000); // 3 min timeout
+      conn.setReadTimeout(TimeoutInterval); // 3 min timeout
       conn.setRequestProperty("Content-Type", "application/json");
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -122,8 +122,8 @@ public class HttpRequest {
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
         responseData = "session expired";
       } else {
-        if (conn.getHeaderField("StatusMessage") != null) {
-          responseModel.setServermsg(conn.getHeaderField("StatusMessage"));
+        if (conn.getHeaderField(headerErrorKey) != null) {
+          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
           responseData = "http_not_ok";
         } else {
           BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -137,8 +137,8 @@ public class HttpRequest {
           responseData = response.toString();
 
           JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has("error_description")) {
-            responseModel.setServermsg(responseDataJson.getString("error_description"));
+          if (responseDataJson.has(errorDescKey)) {
+            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
           } else {
             responseModel.setServermsg("server error");
           }
@@ -181,22 +181,18 @@ public class HttpRequest {
     try {
       url1 = new URL(url);
       HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(180000);
-      conn.setConnectTimeout(180000);
+      conn.setReadTimeout(TimeoutInterval);
+      conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestMethod("POST");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
 
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -213,7 +209,7 @@ public class HttpRequest {
       conn.setDoOutput(true);
 
       OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
       if (conn.getRequestProperty("Content-Type").equalsIgnoreCase("application/json")) {
         writer.write(getPostDataString(params));
       } else {
@@ -245,8 +241,8 @@ public class HttpRequest {
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
         responseData = "session expired";
       } else {
-        if (conn.getHeaderField("StatusMessage") != null) {
-          responseModel.setServermsg(conn.getHeaderField("StatusMessage"));
+        if (conn.getHeaderField(headerErrorKey) != null) {
+          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
           responseData = "http_not_ok";
         } else {
           BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -260,8 +256,8 @@ public class HttpRequest {
           responseData = response.toString();
 
           JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has("error_description")) {
-            responseModel.setServermsg(responseDataJson.getString("error_description"));
+          if (responseDataJson.has(errorDescKey)) {
+            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
           } else {
             responseModel.setServermsg("server error");
           }
@@ -303,22 +299,18 @@ public class HttpRequest {
     try {
       url1 = new URL(urlpath);
       HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(180000);
-      conn.setConnectTimeout(180000);
+      conn.setReadTimeout(TimeoutInterval);
+      conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestMethod("POST");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
 
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -335,7 +327,7 @@ public class HttpRequest {
       conn.setDoOutput(true);
 
       OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
       writer.write(jsonObject.toString());
 
       writer.flush();
@@ -364,8 +356,8 @@ public class HttpRequest {
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
         responseData = "session expired";
       } else {
-        if (conn.getHeaderField("StatusMessage") != null) {
-          responseModel.setServermsg(conn.getHeaderField("StatusMessage"));
+        if (conn.getHeaderField(headerErrorKey) != null) {
+          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
           responseData = "http_not_ok";
         } else {
           BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -379,8 +371,8 @@ public class HttpRequest {
           responseData = response.toString();
 
           JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has("error_description")) {
-            responseModel.setServermsg(responseDataJson.getString("error_description"));
+          if (responseDataJson.has(errorDescKey)) {
+            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
           } else {
             responseModel.setServermsg("server error");
           }
@@ -422,22 +414,17 @@ public class HttpRequest {
     try {
       url1 = new URL(urlpath);
       HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(180000);
-      conn.setConnectTimeout(180000);
+      conn.setReadTimeout(TimeoutInterval);
+      conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestMethod("PATCH");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
-
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -454,7 +441,7 @@ public class HttpRequest {
       conn.setDoOutput(true);
 
       OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
       writer.write(jsonObject.toString());
 
       writer.flush();
@@ -483,8 +470,8 @@ public class HttpRequest {
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
         responseData = "session expired";
       } else {
-        if (conn.getHeaderField("StatusMessage") != null) {
-          responseModel.setServermsg(conn.getHeaderField("StatusMessage"));
+        if (conn.getHeaderField(headerErrorKey) != null) {
+          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
           responseData = "http_not_ok";
         } else {
           BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -498,8 +485,8 @@ public class HttpRequest {
           responseData = response.toString();
 
           JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has("error_description")) {
-            responseModel.setServermsg(responseDataJson.getString("error_description"));
+          if (responseDataJson.has(errorDescKey)) {
+            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
           } else {
             responseModel.setServermsg("server error");
           }
@@ -541,22 +528,17 @@ public class HttpRequest {
     try {
       url1 = new URL(urlpath);
       HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(180000);
-      conn.setConnectTimeout(180000);
+      conn.setReadTimeout(TimeoutInterval);
+      conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestMethod("PUT");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
-
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       if (headersData != null) {
@@ -573,7 +555,7 @@ public class HttpRequest {
       conn.setDoOutput(true);
 
       OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
       writer.write(jsonObject.toString());
 
       writer.flush();
@@ -602,8 +584,8 @@ public class HttpRequest {
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
         responseData = "session expired";
       } else {
-        if (conn.getHeaderField("StatusMessage") != null) {
-          responseModel.setServermsg(conn.getHeaderField("StatusMessage"));
+        if (conn.getHeaderField(headerErrorKey) != null) {
+          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
           responseData = "http_not_ok";
         } else {
           BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -617,8 +599,8 @@ public class HttpRequest {
           responseData = response.toString();
 
           JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has("error_description")) {
-            responseModel.setServermsg(responseDataJson.getString("error_description"));
+          if (responseDataJson.has(errorDescKey)) {
+            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
           } else {
             responseModel.setServermsg("server error");
           }
@@ -658,9 +640,9 @@ public class HttpRequest {
       } else {
         result.append("&");
       }
-      result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+      result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
       result.append("=");
-      result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+      result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
     }
     return result.toString();
   }
@@ -692,25 +674,20 @@ public class HttpRequest {
       conn.setUseCaches(false);
       conn.setDoOutput(true); // indicates POST method
       conn.setDoInput(true);
-      conn.setReadTimeout(180000);
-      conn.setConnectTimeout(180000);
+      conn.setReadTimeout(TimeoutInterval);
+      conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestProperty("Content-Type", "multipart/form-data;");
       conn.setRequestProperty("User-Agent", "CodeJava Agent");
-
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-      conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-      conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
         conn.setRequestProperty("Authorization", "Basic " + encoding);
         conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
       }
 
       OutputStream outputStream = conn.getOutputStream();
-      PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
+      PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
 
       if (headers != null) {
         Set keys = headers.keySet();
@@ -780,8 +757,8 @@ public class HttpRequest {
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
         responseData = "session expired";
       } else {
-        if (conn.getHeaderField("StatusMessage") != null) {
-          responseModel.setServermsg(conn.getHeaderField("StatusMessage"));
+        if (conn.getHeaderField(headerErrorKey) != null) {
+          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
           responseData = "http_not_ok";
         } else {
           BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -795,8 +772,8 @@ public class HttpRequest {
           responseData = response.toString();
 
           JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has("error_description")) {
-            responseModel.setServermsg(responseDataJson.getString("error_description"));
+          if (responseDataJson.has(errorDescKey)) {
+            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
           } else {
             responseModel.setServermsg("server error");
           }
@@ -831,22 +808,17 @@ public class HttpRequest {
       try {
         url1 = new URL(urlpath);
         HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-        conn.setReadTimeout(180000);
-        conn.setConnectTimeout(180000);
+        conn.setReadTimeout(TimeoutInterval);
+        conn.setConnectTimeout(TimeoutInterval);
         conn.setRequestMethod("DELETE");
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/json");
-
         conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-        conn.setRequestProperty(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-        conn.setRequestProperty(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
         if (serverType.equalsIgnoreCase("WCP")) {
           String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
           conn.setRequestProperty("Authorization", "Basic " + encoding);
           conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-          conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
         }
 
         if (headersData != null) {
@@ -863,7 +835,7 @@ public class HttpRequest {
         conn.setDoOutput(true);
 
         OutputStream os = conn.getOutputStream();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         writer.write(jsonObject.toString());
 
         writer.flush();
@@ -891,8 +863,8 @@ public class HttpRequest {
         } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
           responseData = "session expired";
         } else {
-          if (conn.getHeaderField("StatusMessage") != null) {
-            responseModel.setServermsg(conn.getHeaderField("StatusMessage"));
+          if (conn.getHeaderField(headerErrorKey) != null) {
+            responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
             responseData = "http_not_ok";
           } else {
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -906,8 +878,8 @@ public class HttpRequest {
             responseData = response.toString();
 
             JSONObject responseDataJson = new JSONObject(responseData);
-            if (responseDataJson.has("error_description")) {
-              responseModel.setServermsg(responseDataJson.getString("error_description"));
+            if (responseDataJson.has(errorDescKey)) {
+              responseModel.setServermsg(responseDataJson.getString(errorDescKey));
             } else {
               responseModel.setServermsg("server error");
             }
@@ -925,8 +897,8 @@ public class HttpRequest {
     } else {
       try {
         HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, 180000);
-        HttpConnectionParams.setSoTimeout(httpParams, 180000);
+        HttpConnectionParams.setConnectionTimeout(httpParams, TimeoutInterval);
+        HttpConnectionParams.setSoTimeout(httpParams, TimeoutInterval);
         OwnHttpDelete httppost = new OwnHttpDelete(urlpath);
 
         if (headersData != null) {
@@ -941,9 +913,6 @@ public class HttpRequest {
         }
         httppost.addHeader("Content-Type", "application/json");
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-        httppost.addHeader(AppConfig.CLIENT_ID_KEY, AppConfig.CLIENT_ID_VALUE);
-        httppost.addHeader(AppConfig.SECRET_KEY, AppConfig.SECRET_KEY_VALUE);
 
         StringEntity params1 = new StringEntity(jsonObject.toString());
         httppost.setEntity(params1);
@@ -982,7 +951,6 @@ public class HttpRequest {
                   responseData += line;
                 }
                 br.close();
-                //                    conn.disconnect();
               } finally {
                 instream.close();
               }
@@ -994,8 +962,8 @@ public class HttpRequest {
           }
         }
 
-        if (response1.getFirstHeader("StatusMessage") != null) {
-          responseModel.setServermsg(response1.getFirstHeader("StatusMessage").getValue());
+        if (response1.getFirstHeader(headerErrorKey) != null) {
+          responseModel.setServermsg(response1.getFirstHeader(headerErrorKey).getValue());
         } else {
           responseModel.setServermsg("success");
         }
