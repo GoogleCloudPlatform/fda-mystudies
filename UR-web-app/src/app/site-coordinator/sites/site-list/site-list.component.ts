@@ -16,6 +16,7 @@ import {SearchService} from 'src/app/shared/search.service';
 export class SiteListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   study$: Observable<StudyResponse> = of();
+  manageStudiesBackup = {} as StudyResponse;
   study = {} as Study;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
@@ -44,11 +45,14 @@ export class SiteListComponent implements OnInit {
       this.studiesService.getStudiesWithSites(),
       this.query$,
     ).pipe(
-      map(([studies, query]) => {
-        studies.studies.filter((study: Study) =>
-          study.name.toLowerCase().includes(query.toLowerCase()),
+      map(([manageStudies, query]) => {
+        this.manageStudiesBackup = {...manageStudies};
+        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
+          (study: Study) =>
+            study.name.toLowerCase().includes(query.toLowerCase()) ||
+            study.customId.toLowerCase().includes(query.toLowerCase()),
         );
-        return studies;
+        return this.manageStudiesBackup;
       }),
     );
   }

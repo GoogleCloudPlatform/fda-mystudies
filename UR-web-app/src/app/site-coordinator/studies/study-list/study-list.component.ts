@@ -16,6 +16,7 @@ export class StudyListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   studyList$: Observable<StudyResponse> = of();
   studies: Study[] = [];
+  manageStudiesBackup = {} as StudyResponse;
 
   constructor(
     private readonly studiesService: StudiesService,
@@ -34,14 +35,14 @@ export class StudyListComponent implements OnInit {
       this.studiesService.getStudies(),
       this.query$,
     ).pipe(
-      map(([study, query]) => {
-        this.studies = study.studies;
-        study.studies = study.studies.filter(
+      map(([manageStudies, query]) => {
+        this.manageStudiesBackup = {...manageStudies};
+        this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
             study.name.toLowerCase().includes(query.toLowerCase()) ||
             study.customId.toLowerCase().includes(query.toLowerCase()),
         );
-        return study;
+        return this.manageStudiesBackup;
       }),
     );
   }
