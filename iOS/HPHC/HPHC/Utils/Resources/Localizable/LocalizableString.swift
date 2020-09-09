@@ -20,19 +20,19 @@ enum LocalizableString: String {
   case aboutStudy = "About the Study"
   case leaveSubtitle = "This will also delete your app account."
 
-  // MARK: - Activities 
+  // MARK: - Activities
   case missedActivity =
     """
-    It appears you’ve missed a few study activities in the period you were away.
-    This is a gentle reminder to visit the app regularly to complete pending study activities, if any.
+    Thanks for your continued participation in this study.
+    Your consistency in contributing your experiences helps make this study useful.
     """
 
   // MARK: - Consent
   case learnMore = "Learn more"
 
   // MARK: - Force Upgrade
-  case blockerScreenLabelText = "Please update to the latest version of the app to continue."
-  case appStoreUpdateText = "Please go to AppStore to update to the latest version of the app."
+  case blockerScreenLabelText = "Please update the app to the latest version to continue."
+  case appStoreUpdateText = "Please go to App Store to update the app to the latest version."
 
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }
