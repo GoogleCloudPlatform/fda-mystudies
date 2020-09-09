@@ -21,6 +21,7 @@ import Foundation
 import IQKeyboardManagerSwift
 import SlideMenuControllerSwift
 import UIKit
+import WebKit
 
 let kVerifyMessageFromSignIn =
   """
@@ -34,21 +35,29 @@ enum SignInLoadFrom: Int {
   case menu
 }
 
+private enum SignInScheme: String {
+  case forgotPassword
+  case signup
+  case terms
+  case privacyPolicy
+  case callback
+}
+
 class SignInViewController: UIViewController {
 
   // MARK: - Outlets
-  @IBOutlet var tableView: UITableView?
-
-  @IBOutlet var buttonSignIn: UIButton?
-  @IBOutlet var buttonSignUp: UIButton?
-  @IBOutlet var termsAndCondition: LinkTextView?
+  @IBOutlet var webKitView: WKWebView!
 
   // MARK: - Properties
-  lazy var viewLoadFrom: SignInLoadFrom = .menu
 
-  var tableViewRowDetails: NSMutableArray?
+  /// Progress view reflecting the current loading progress of the web view.
+  let progressView = UIProgressView(progressViewStyle: .default)
+
+  /// The observation object for the progress of the web view (we only receive notifications until it is deallocated).
+  private var estimatedProgressObserver: NSKeyValueObservation?
+
+  lazy var viewLoadFrom: SignInLoadFrom = .menu
   lazy var user = User.currentUser
-  lazy var termsPageOpened = false
 
   override var preferredStatusBarStyle: UIStatusBarStyle {
     return .default
@@ -58,60 +67,19 @@ class SignInViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    // Used to set border color for bottom view
-    buttonSignIn?.layer.borderColor = kUicolorForButtonBackground
-    self.title = NSLocalizedString(kSignInTitleText, comment: "")
-
-    // load plist info
-    let plistPath = Bundle.main.path(
-      forResource: "SignInPlist",
-      ofType: ".plist",
-      inDirectory: nil
-    )
-    tableViewRowDetails = NSMutableArray(contentsOfFile: plistPath!)
-
-    // Used for background tap dismiss keyboard
-    let gestureRecognizer: UITapGestureRecognizer = UITapGestureRecognizer(
-      target: self,
-      action: #selector(SignInViewController.dismissKeyboard)
-    )
-    self.tableView?.addGestureRecognizer(gestureRecognizer)
-
-    // info button
-    self.navigationItem.rightBarButtonItem = UIBarButtonItem(
-      image: UIImage(named: "info"),
-      style: .done,
-      target: self,
-      action: #selector(self.buttonInfoAction(_:))
-    )
-
-    if let attributedTitle = buttonSignUp?.attributedTitle(for: .normal) {
-      let mutableAttributedTitle = NSMutableAttributedString(
-        attributedString: attributedTitle
-      )
-
-      mutableAttributedTitle.addAttribute(
-        NSAttributedString.Key.foregroundColor,
-        value: #colorLiteral(red: 0, green: 0.4862745098, blue: 0.7294117647, alpha: 1),
-        range: NSRange(location: 10, length: 7)
-      )
-
-      buttonSignUp?.setAttributedTitle(mutableAttributedTitle, for: .normal)
+    setupNavigation()
+    setupProgressView()
+    setupEstimatedProgressObserver()
+    DispatchQueue.main.async {
+      self.webKitView.navigationDelegate = self
+      self.load()
+      self.initializeTermsAndPolicy()
     }
-
-    TermsAndPolicy.currentTermsAndPolicy = TermsAndPolicy()
-    let policyURL = Branding.privacyPolicyURL
-    let terms = Branding.termsAndConditionURL
-    TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
-    self.agreeToTermsAndConditions()
   }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-
     // unhide navigationbar
-
     self.navigationController?.setNavigationBarHidden(false, animated: true)
 
     User.resetCurrentUser()
@@ -122,13 +90,6 @@ class SignInViewController: UIViewController {
     } else {
       self.setNavigationBarItem()
     }
-
-    if termsPageOpened {
-      termsPageOpened = false
-    }
-
-    self.tableView?.reloadData()
-
     setNeedsStatusBarAppearanceUpdate()
   }
 
@@ -140,74 +101,131 @@ class SignInViewController: UIViewController {
     }
   }
 
-  // MARK: - Button Action
+  // MARK: - UI Utils
 
-  @IBAction func signInButtonAction(_ sender: Any) {
+  private func setupNavigation() {
+    self.navigationItem.rightBarButtonItem = UIBarButtonItem(
+      image: UIImage(named: "info"),
+      style: .done,
+      target: self,
+      action: #selector(self.buttonInfoAction(_:))
+    )
+    self.title = NSLocalizedString(kSignInTitleText, comment: "")
+  }
 
-    self.view.endEditing(true)
-    if (user.emailId?.isEmpty)! && (user.password?.isEmpty)! {
-      self.showAlertMessages(textMessage: kMessageAllFieldsAreEmpty)
-    } else if user.emailId == "" {
-      self.showAlertMessages(textMessage: kMessageEmailBlank)
-    } else if !(Utilities.isValidEmail(testStr: user.emailId!)) {
-      self.showAlertMessages(textMessage: kMessageValidEmail)
+  private func setupProgressView() {
+    guard let navigationBar = navigationController?.navigationBar else { return }
+    progressView.translatesAutoresizingMaskIntoConstraints = false
+    navigationBar.addSubview(progressView)
+    progressView.isHidden = true
+    NSLayoutConstraint.activate([
+      progressView.leadingAnchor.constraint(equalTo: navigationBar.leadingAnchor),
+      progressView.trailingAnchor.constraint(equalTo: navigationBar.trailingAnchor),
+      progressView.bottomAnchor.constraint(equalTo: navigationBar.bottomAnchor),
+      progressView.heightAnchor.constraint(equalToConstant: 2.0),
+    ])
+  }
 
-    } else if user.password == "" {
-      self.showAlertMessages(textMessage: kMessagePasswordBlank)
+  // MARK: - Utils
 
-    } else {
-
-      let ud = UserDefaults.standard
-      if user.emailId == kStagingUserEmailId {
-        ud.set(true, forKey: kIsStagingUser)
-      } else {
-        ud.set(false, forKey: kIsStagingUser)
-      }
-      ud.synchronize()
-
-      AuthServices().loginUser(self)
+  private func setupEstimatedProgressObserver() {
+    estimatedProgressObserver = webKitView.observe(\.estimatedProgress, options: [.new]) { [weak self] webView, _ in
+      self?.progressView.progress = Float(webView.estimatedProgress)
     }
   }
+
+  func initializeTermsAndPolicy() {
+    TermsAndPolicy.currentTermsAndPolicy = TermsAndPolicy()
+    let policyURL = Branding.privacyPolicyURL
+    let terms = Branding.termsAndConditionURL
+    TermsAndPolicy.currentTermsAndPolicy?.initWith(terms: terms, policy: policyURL)
+  }
+
+  /// Loads the Login request on webview.
+  private func load() {
+    if let request = HydraAPI.loginRequest() {
+      webKitView.load(request)
+    }
+  }
+
+  fileprivate func handleDataCallback(_ url: URL) {
+    if let code = url["code"],
+      let userID = url["userId"],
+      let status = Int(url["accountStatus"] ?? ""),
+      let accountStatus = AccountStatus(rawValue: status)
+    {
+      let delegate = UIApplication.shared.delegate as? AppDelegate
+      delegate?.calculateTimeZoneChange()
+      User.currentUser.userId = userID
+      switch accountStatus {
+      case .verified:
+        User.currentUser.verified = true
+        HydraAPI.grant(user: User.currentUser, with: code) { [weak self] (status, error) in
+          if status {
+            self?.userDidLoggedIn()
+          } else if let error = error {
+            self?.presentDefaultAlertWithError(
+              error: error,
+              animated: true,
+              action: {
+                SessionService.resetSession()  // Reset the session.
+                self?.load()  // Load the login again.
+              },
+              completion: nil
+            )
+          }
+        }
+      case .pending:
+        User.currentUser.verified = false
+        navigateToVerifyController()
+      case .tempPassword:
+        User.currentUser.isLoginWithTempPassword = true
+        self.userDidLoggedIn()
+      }
+    }
+  }
+
+  private func handleScheme(for url: URL) {
+    guard let scheme = SignInScheme(rawValue: url.lastPathComponent) else { return }
+    switch scheme {
+    case .forgotPassword, .signup:
+      self.performSegue(withIdentifier: scheme.rawValue, sender: self)
+    case .terms:
+      let link = TermsAndPolicy.currentTermsAndPolicy?.termsURL ?? ""
+      didLoadPrivacyOrTerms(title: kNavigationTitleTerms, link: link)
+    case .privacyPolicy:
+      let link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
+      didLoadPrivacyOrTerms(title: kNavigationTitlePrivacyPolicy, link: link)
+    case .callback:
+      handleDataCallback(url)
+    }
+  }
+
+  // MARK: - Actions
+
+  /// Loads the privacy or Terms screen
+  /// - Parameters:
+  ///   - title: Title for the screen.
+  ///   - link: Link to load in webview.
+  private func didLoadPrivacyOrTerms(title: String, link: String) {
+    let mainStoryboard = UIStoryboard(name: "Main", bundle: .main)
+    if let webViewController = mainStoryboard.instantiateViewController(withIdentifier: "WebViewController")
+      as? UINavigationController,
+      let webview = webViewController.viewControllers.first as? WebViewController
+    {
+      webview.requestLink = link
+      webview.title = title
+      self.navigationController?.present(webViewController, animated: true, completion: nil)
+    }
+  }
+
+  // MARK: - Button Action
 
   /// To Display registration information.
   @IBAction func buttonInfoAction(_ sender: Any) {
     UIUtilities.showAlertWithTitleAndMessage(
       title: "Why Register?",
       message: kRegistrationInfoMessage as NSString
-    )
-  }
-
-  // MARK: -
-
-  /// Initial Data Setup which displays email and password.
-  func setInitialDate() {
-
-    // if textfield have data then we are updating same to model object
-
-    var selectedCell: SignInTableViewCell =
-      (tableView!.cellForRow(at: IndexPath(row: 0, section: 0)) as? SignInTableViewCell)!
-
-    let emailTextFieldValue = selectedCell.textFieldValue?.text
-    selectedCell = (tableView!.cellForRow(at: IndexPath(row: 1, section: 0)) as? SignInTableViewCell)!
-
-    let passwordTextFieldValue = selectedCell.textFieldValue?.text
-
-    if emailTextFieldValue?.isEmpty == false && (emailTextFieldValue?.count)! > 0 {
-      user.emailId = emailTextFieldValue
-    }
-    if passwordTextFieldValue?.isEmpty == false && (passwordTextFieldValue?.count)! > 0 {
-      user.password = passwordTextFieldValue
-    }
-    self.tableView?.reloadData()
-  }
-
-  /// Used to show the alert using Utility.
-  func showAlertMessages(textMessage: String) {
-    UIUtilities.showAlertMessage(
-      "",
-      errorMessage: NSLocalizedString(textMessage, comment: ""),
-      errorAlertActionTitle: NSLocalizedString("OK", comment: ""),
-      viewControllerUsed: self
     )
   }
 
@@ -257,34 +275,6 @@ class SignInViewController: UIViewController {
     self.navigationController?.pushViewController(fda, animated: true)
   }
 
-  /// Create T & C Attributed text with URLs.
-  func agreeToTermsAndConditions() {
-
-    self.termsAndCondition?.delegate = self
-    let attributedString = (termsAndCondition?.attributedText.mutableCopy() as? NSMutableAttributedString)!
-
-    var foundRange = attributedString.mutableString.range(of: "Terms")
-    attributedString.addAttribute(
-      NSAttributedString.Key.link,
-      value: (TermsAndPolicy.currentTermsAndPolicy?.termsURL!)! as String,
-      range: foundRange
-    )
-
-    foundRange = attributedString.mutableString.range(of: "Privacy Policy")
-    attributedString.addAttribute(
-      NSAttributedString.Key.link,
-      value: (TermsAndPolicy.currentTermsAndPolicy?.policyURL!)! as String,
-      range: foundRange
-    )
-
-    termsAndCondition?.attributedText = attributedString
-
-    termsAndCondition?.linkTextAttributes = convertToOptionalNSAttributedStringKeyDictionary(
-      [NSAttributedString.Key.foregroundColor.rawValue: Utilities.getUIColorFromHex(0x007CBA)]
-    )
-
-  }
-
   // MARK: - Segue Methods
 
   @IBAction func unwindFromVerification(_ segue: UIStoryboardSegue) {}
@@ -320,88 +310,6 @@ class SignInViewController: UIViewController {
   }
 }
 
-// MARK: - TableView Data source
-extension SignInViewController: UITableViewDataSource {
-
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 2
-  }
-
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    let tableViewData = (tableViewRowDetails?.object(at: indexPath.row) as? NSDictionary)!
-
-    let cell =
-      (tableView.dequeueReusableCell(
-        withIdentifier: kSignInTableViewCellIdentifier,
-        for: indexPath
-      )
-      as? SignInTableViewCell)!
-
-    cell.textFieldValue?.text = ""
-    var isSecuredEntry: Bool = false
-    if indexPath.row == SignInTableViewTags.password.rawValue {
-      isSecuredEntry = true
-    } else {
-      cell.textFieldValue?.keyboardType = .emailAddress
-    }
-
-    cell.textFieldValue?.tag = indexPath.row
-    cell.populateCellData(data: tableViewData, securedText: isSecuredEntry)
-
-    return cell
-  }
-}
-
-// MARK: - TableView Delegates
-extension SignInViewController: UITableViewDelegate {
-
-  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPath, animated: true)
-
-  }
-}
-
-// MARK: - Textfield Delegate
-extension SignInViewController: UITextFieldDelegate {
-
-  func textField(
-    _ textField: UITextField,
-    shouldChangeCharactersIn range: NSRange,
-    replacementString string: String
-  ) -> Bool {
-
-    let tag: SignInTableViewTags = SignInTableViewTags(rawValue: textField.tag)!
-
-    if tag == .emailId {
-      if string == " " {
-        return false
-      } else {
-        return true
-      }
-    } else {
-      if range.location == textField.text?.count && string == " " {
-
-        textField.text = textField.text?.appending("\u{00a0}")
-        return false
-      }
-      return true
-    }
-  }
-
-  func textFieldDidEndEditing(_ textField: UITextField) {
-    switch textField.tag {
-    case SignInTableViewTags.emailId.rawValue:
-      user.emailId = textField.text
-
-    case SignInTableViewTags.password.rawValue:
-      user.password = textField.text
-
-    default:
-      break
-    }
-  }
-}
-
 extension SignInViewController: UIGestureRecognizerDelegate {
   func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
     if gestureRecognizer.isKind(of: UITapGestureRecognizer.classForCoder()) {
@@ -413,118 +321,114 @@ extension SignInViewController: UIGestureRecognizerDelegate {
   }
 }
 
-extension SignInViewController: UITextViewDelegate {
-
-  func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange)
-    -> Bool
-  {
-    var link: String = TermsAndPolicy.currentTermsAndPolicy?.termsURL ?? ""
-    var title: String = kNavigationTitleTerms
-    if URL.absoluteString == TermsAndPolicy.currentTermsAndPolicy?.policyURL
-      && characterRange
-        .length == String("Privacy Policy").count
-    {
-      link = TermsAndPolicy.currentTermsAndPolicy?.policyURL ?? ""
-      title = kNavigationTitlePrivacyPolicy
-    }
-    guard !link.isEmpty else { return false }
-
-    let loginStoryboard = UIStoryboard.init(name: "Main", bundle: Bundle.main)
-    let webViewController =
-      (loginStoryboard.instantiateViewController(withIdentifier: "WebViewController")
-      as? UINavigationController)!
-    let webview = (webViewController.viewControllers[0] as? WebViewController)!
-    webview.requestLink = link
-    webview.title = title
-    self.navigationController?.present(webViewController, animated: true, completion: nil)
-
-    termsPageOpened = true
-
-    return false
-  }
-
-  func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress)
-    -> Bool
-  {
-    return false
-  }
-
-  func textViewDidChangeSelection(_ textView: UITextView) {
-    if !NSEqualRanges(textView.selectedRange, NSRange(location: 0, length: 0)) {
-      textView.selectedRange = NSRange(location: 0, length: 0)
-    }
-  }
-}
-
 // MARK: - Webservices Delegate
-extension SignInViewController: NMWebServiceDelegate {
+extension SignInViewController {
 
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    self.addProgressIndicator()
-  }
+  fileprivate func userDidLoggedIn() {
+    let ud = UserDefaults.standard
+    ud.set(true, forKey: kNotificationRegistrationIsPending)
+    ud.synchronize()
 
-  func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    self.removeProgressIndicator()
+    ORKPasscodeViewController.removePasscodeFromKeychain()
 
-    if requestName as String == WCPMethods.termsPolicy.method.methodName {
-      self.agreeToTermsAndConditions()
+    if User.currentUser.isLoginWithTempPassword {
+      self.navigateToChangePassword()
     } else {
-      let delegate = (UIApplication.shared.delegate as? AppDelegate)!
-      delegate.calculateTimeZoneChange()
-      if User.currentUser.verified == true {
 
-        let ud = UserDefaults.standard
-        ud.set(true, forKey: kNotificationRegistrationIsPending)
-        ud.synchronize()
+      if viewLoadFrom == .gatewayOverview {
+        self.navigateToGatewayDashboard()
 
-        ORKPasscodeViewController.removePasscodeFromKeychain()
+      } else if viewLoadFrom == .joinStudy {
 
-        if User.currentUser.isLoginWithTempPassword {
-          self.navigateToChangePassword()
-        } else {
+        let leftController = slideMenuController()?.leftViewController as? LeftMenuViewController
+        leftController?.createLeftmenuItems()
+        self.performSegue(withIdentifier: "unwindStudyHomeSegue", sender: self)
 
-          if viewLoadFrom == .gatewayOverview {
-            self.navigateToGatewayDashboard()
-
-          } else if viewLoadFrom == .joinStudy {
-
-            let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
-            leftController.createLeftmenuItems()
-            self.performSegue(withIdentifier: "unwindStudyHomeSegue", sender: self)
-
-          } else {
-
-            let leftController = (slideMenuController()?.leftViewController as? LeftMenuViewController)!
-            leftController.createLeftmenuItems()
-            leftController.changeViewController(.studyList)
-          }
-        }
       } else {
 
-        self.navigateToVerifyController()
+        let leftController = slideMenuController()?.leftViewController as? LeftMenuViewController
+        leftController?.createLeftmenuItems()
+        leftController?.changeViewController(.studyList)
       }
     }
   }
 
-  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-
-    self.removeProgressIndicator()
-
-    UIUtilities.showAlertWithTitleAndMessage(
-      title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-      message: error.localizedDescription as NSString
-    )
-  }
 }
 
-// Helper function inserted by Swift 4.2 migrator.
-private func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?)
-  -> [NSAttributedString.Key: Any]?
-{
-  guard let input = input else { return nil }
-  return Dictionary(
-    uniqueKeysWithValues: input.map { key, value in
-      (NSAttributedString.Key(rawValue: key), value)
+extension SignInViewController: WKNavigationDelegate {
+
+  func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+    if progressView.isHidden {
+      // Make sure our animation is visible.
+      progressView.isHidden = false
     }
-  )
+
+    UIView.animate(
+      withDuration: 0.33,
+      animations: {
+        self.progressView.alpha = 1.0
+      }
+    )
+  }
+
+  func webView(
+    _ webView: WKWebView,
+    didFinish navigation: WKNavigation!
+  ) {
+    UIView.animate(
+      withDuration: 0.33,
+      animations: {
+        self.progressView.alpha = 0.0
+      },
+      completion: { isFinished in
+        // Update `isHidden` flag accordingly:
+        //  - set to `true` in case animation was completly finished.
+        //  - set to `false` in case animation was interrupted, e.g. due to starting of another animation.
+        self.progressView.isHidden = isFinished
+      }
+    )
+  }
+
+  func webView(
+    _ webView: WKWebView,
+    didFail navigation: WKNavigation!,
+    withError error: Error
+  ) {
+    self.view.makeToast(error.localizedDescription)
+  }
+
+  func webView(
+    _ webView: WKWebView,
+    didFailProvisionalNavigation navigation: WKNavigation!,
+    withError error: Error
+  ) {
+    self.view.makeToast(error.localizedDescription)
+  }
+
+  func webView(
+    _ webView: WKWebView,
+    didReceive challenge: URLAuthenticationChallenge,
+    completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+  ) {
+    if challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust {
+      let cred = URLCredential(trust: challenge.protectionSpace.serverTrust!)
+      completionHandler(.useCredential, cred)
+    } else {
+      completionHandler(.performDefaultHandling, nil)
+    }
+  }
+
+  func webView(
+    _ webView: WKWebView,
+    decidePolicyFor navigationAction: WKNavigationAction,
+    decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+  ) {
+    if let url = navigationAction.request.url, url.scheme == "app" {
+      // Handle the callbacks
+      handleScheme(for: url)
+      decisionHandler(.cancel)
+    } else {
+      decisionHandler(.allow)
+    }
+  }
 }

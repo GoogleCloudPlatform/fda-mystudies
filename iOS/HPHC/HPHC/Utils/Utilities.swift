@@ -492,6 +492,10 @@ class Utilities: NSObject {
     return Bundle.main.bundleIdentifier!
   }
 
+  class func currentDevicePlatform() -> String {
+    return "IOS"
+  }
+
   // MARK: Alert handlers
 
   class func showAlertWithTitleAndMessage(title: String, message: String, on vc: UIViewController) {

@@ -123,8 +123,13 @@
 		6F214B9624603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */; };
 		6F2392DE2423E0F300013AC0 /* EnrollServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2392DD2423E0F300013AC0 /* EnrollServices.swift */; };
 		6F36467824293ED2008F815A /* RegistrationServerKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD1E15123F17ACA009DACAE /* RegistrationServerKeys.swift */; };
+		6F4B51B7250644A200DC5991 /* SessionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B6250644A200DC5991 /* SessionService.swift */; };
+		6F4B51B92506562D00DC5991 /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51B82506562D00DC5991 /* URL+Extensions.swift */; };
+		6F4B51BB250659DB00DC5991 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4B51BA250659DB00DC5991 /* APIService.swift */; };
 		6F4E1B2D24223C210051D3E2 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2A24223C210051D3E2 /* README.md */; };
 		6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */; };
+		6F55B9BA250225AC00A052A9 /* AuthRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F55B9B9250225AC00A052A9 /* AuthRouter.swift */; };
+		6F55B9BE250239DA00A052A9 /* HydraAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F55B9BD250239DA00A052A9 /* HydraAPI.swift */; };
 		6F83039524864431009409A5 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F83039424864431009409A5 /* APIError.swift */; };
 		6F83039C24864D6B009409A5 /* LocalizableString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F83039924864D6B009409A5 /* LocalizableString.swift */; };
 		6F83039D24864D6B009409A5 /* Localizable.strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6F83039A24864D6B009409A5 /* Localizable.strings.txt */; };
@@ -419,8 +424,13 @@
 		6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebView+Extensions.swift"; sourceTree = "<group>"; };
 		6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIPrintPageRenderer+Extensions.swift"; sourceTree = "<group>"; };
 		6F2392DD2423E0F300013AC0 /* EnrollServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollServices.swift; sourceTree = "<group>"; };
+		6F4B51B6250644A200DC5991 /* SessionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionService.swift; sourceTree = "<group>"; };
+		6F4B51B82506562D00DC5991 /* URL+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extensions.swift"; sourceTree = "<group>"; };
+		6F4B51BA250659DB00DC5991 /* APIService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		6F4E1B2A24223C210051D3E2 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		6F4E1B2E24223CA20051D3E2 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
+		6F55B9B9250225AC00A052A9 /* AuthRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthRouter.swift; sourceTree = "<group>"; };
+		6F55B9BD250239DA00A052A9 /* HydraAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydraAPI.swift; sourceTree = "<group>"; };
 		6F83039424864431009409A5 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		6F83039924864D6B009409A5 /* LocalizableString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizableString.swift; sourceTree = "<group>"; };
 		6F83039A24864D6B009409A5 /* Localizable.strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Localizable.strings.txt; sourceTree = "<group>"; };
@@ -1005,6 +1015,23 @@
 			path = Branding;
 			sourceTree = "<group>";
 		};
+		6F4B51B52506449400DC5991 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				6F4B51BA250659DB00DC5991 /* APIService.swift */,
+				6F4B51B6250644A200DC5991 /* SessionService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		6F55B9B62502259400A052A9 /* Routers */ = {
+			isa = PBXGroup;
+			children = (
+				6F55B9B9250225AC00A052A9 /* AuthRouter.swift */,
+			);
+			path = Routers;
+			sourceTree = "<group>";
+		};
 		6F83039824864D6B009409A5 /* Localizable */ = {
 			isa = PBXGroup;
 			children = (
@@ -1435,6 +1462,7 @@
 		6FE00CF723900A3A0067A7B8 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
+				6F55B9B62502259400A052A9 /* Routers */,
 				6F99755824236E0B0044944E /* Environment */,
 				6FD1E15823F18239009DACAE /* ConsentServerConfiguration.swift */,
 				94CD96EE1E4B16D900946477 /* WCPConfiguration.swift */,
@@ -1455,6 +1483,7 @@
 				9487102B1E54870000246109 /* ResponseServices.swift */,
 				89AD25AB23D7295A00F9450C /* AuthServices.swift */,
 				6F2392DD2423E0F300013AC0 /* EnrollServices.swift */,
+				6F55B9BD250239DA00A052A9 /* HydraAPI.swift */,
 			);
 			path = APIs;
 			sourceTree = "<group>";
@@ -1553,6 +1582,7 @@
 				6F209F01242E5E96005DD23F /* Data+Extensions.swift */,
 				6F214B9324603EFE008F2742 /* WKWebView+Extensions.swift */,
 				6F214B9524603F8D008F2742 /* UIPrintPageRenderer+Extensions.swift */,
+				6F4B51B82506562D00DC5991 /* URL+Extensions.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -1716,6 +1746,7 @@
 		94CD96E31E4AF61800946477 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				6F4B51B52506449400DC5991 /* Services */,
 				6F99755924236E5A0044944E /* Network setup */,
 				6FE00CF823900A550067A7B8 /* APIs */,
 				6FE00CF723900A3A0067A7B8 /* Configurations */,
@@ -2132,6 +2163,7 @@
 				94B3DD431E6ED8E500327AE5 /* NotificationViewController.swift in Sources */,
 				94334F8A1E7005BF00755444 /* LeftMenuCell.swift in Sources */,
 				946CA5E91E728C2300CC8535 /* String+Extensions.swift in Sources */,
+				6F4B51B7250644A200DC5991 /* SessionService.swift in Sources */,
 				6E4CECB61F31B41C005E0832 /* PinterestLayout.swift in Sources */,
 				6FB89C28225F416C00420A7B /* Cell+Extensions.swift in Sources */,
 				94D20E9F1E9DFFE7005C3531 /* DBActivity.swift in Sources */,
@@ -2162,6 +2194,7 @@
 				94B3DD5A1E6ED8E500327AE5 /* SignUpViewController.swift in Sources */,
 				6FB89C1B225F40EB00420A7B /* TextChoiceQuestionController.swift in Sources */,
 				6F209F02242E5E96005DD23F /* Data+Extensions.swift in Sources */,
+				6F55B9BA250225AC00A052A9 /* AuthRouter.swift in Sources */,
 				6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */,
 				6F99755F242387300044944E /* AppConfiguration.swift in Sources */,
 				6ED86F641EA6498D00365AF0 /* RepeatableFormStepViewController.m in Sources */,
@@ -2194,10 +2227,12 @@
 				484ACBF61F2896A500BCC819 /* FilterListCollectionViewCell.swift in Sources */,
 				6ED8A2E61E447AA2004DEC01 /* Formatter.swift in Sources */,
 				6EBC2E801E94FB5300828CA1 /* StudyDashboardViewController.swift in Sources */,
+				6F55B9BE250239DA00A052A9 /* HydraAPI.swift in Sources */,
 				941909B51E52FA9B001B01C5 /* Study.swift in Sources */,
 				94B3DD471E6ED8E500327AE5 /* ResourcesListCell.swift in Sources */,
 				6F4E1B2F24223CA20051D3E2 /* UIImage+Extensions.swift in Sources */,
 				6F07148C2428DCE2002749DA /* Collection+Extensions.swift in Sources */,
+				6F4B51B92506562D00DC5991 /* URL+Extensions.swift in Sources */,
 				89903062224A502C00B3A85C /* AnchorDateHandler.swift in Sources */,
 				7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */,
 				94B5F2F41ECA354800BC0336 /* LocalNotification.swift in Sources */,
@@ -2208,6 +2243,7 @@
 				89AD25AC23D7295A00F9450C /* AuthServices.swift in Sources */,
 				6FD1E15B23F18239009DACAE /* APIConfiguration.swift in Sources */,
 				6EA889BE1E6FD20000F160A1 /* ConfirmationTableViewCell.swift in Sources */,
+				6F4B51BB250659DB00DC5991 /* APIService.swift in Sources */,
 				6E9B39C01E55DFF10037D09D /* ActivityBuilder.swift in Sources */,
 				6ECA92851E49B5CF00DA6287 /* File.swift in Sources */,
 				6EBC2E821E94FB5300828CA1 /* StudyDashboardActivityCollectionViewCell.swift in Sources */,
