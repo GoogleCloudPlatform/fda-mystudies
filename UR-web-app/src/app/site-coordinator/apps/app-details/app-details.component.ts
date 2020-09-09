@@ -7,7 +7,7 @@ import {AppDetails, Participant, EnrolledStudy} from '../shared/app-details';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {map} from 'rxjs/operators';
 import {Status} from 'src/app/shared/enums';
-import {SharedService} from 'src/app/shared/shared.service';
+import {SearchService} from 'src/app/shared/search.service';
 
 @Component({
   selector: 'app-app-details',
@@ -28,7 +28,7 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
     public modalRef: BsModalRef,
     private readonly appDetailsService: AppDetailsService,
     private readonly route: ActivatedRoute,
-    private readonly sharedService: SharedService,
+    private readonly sharedService: SearchService,
   ) {
     super();
   }

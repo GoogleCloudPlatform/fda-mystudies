@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {SharedService} from '../shared/shared.service';
-import {SearchBarGeneric} from '../shared/search-bar-generic';
+import {SearchService} from '../shared/search.service';
+import {SearchBar} from '../shared/search-bar';
 
 @Component({
   selector: 'site-coordinator',
@@ -11,12 +11,12 @@ export class SiteCoordinatorComponent implements OnInit {
   searchPlaceholder = 'Search by Site or Study ID or Name';
   showSearchBar = false;
   filterQuery = '';
-  componentRef!: SearchBarGeneric;
+  searchBar: SearchBar | undefined;
 
-  constructor(private readonly sharedService: SharedService) {}
+  constructor(private readonly searchService: SearchService) {}
 
   ngOnInit(): void {
-    this.sharedService.updatedSearchPlaceHolder.subscribe(
+    this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
         this.showSearchBar = true;
         this.searchPlaceholder = updatedPlaceHolder;
@@ -24,13 +24,13 @@ export class SiteCoordinatorComponent implements OnInit {
     );
   }
   public onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      void this.componentRef.search(this.filterQuery);
+    if (event.key === 'Enter' && this.searchBar) {
+      void this.searchBar.search(this.filterQuery);
     }
   }
-  onActivate(componentRef: SearchBarGeneric): void {
+  onActivate(componentRef: SearchBar): void {
     this.showSearchBar = false;
     this.filterQuery = '';
-    this.componentRef = componentRef;
+    this.searchBar = componentRef;
   }
 }

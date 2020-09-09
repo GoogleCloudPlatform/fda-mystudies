@@ -14,7 +14,7 @@ import {
 import {Permission} from 'src/app/shared/permission-enums';
 import {TemplateRef} from '@angular/core';
 import {RegistryParticipant} from 'src/app/shared/participant';
-import {SharedService} from 'src/app/shared/shared.service';
+import {SearchService} from 'src/app/shared/search.service';
 
 @Component({
   selector: 'app-study-details',
@@ -36,7 +36,7 @@ export class StudyDetailsComponent extends UnsubscribeOnDestroyAdapter
     private modalRef: BsModalRef,
     private readonly studyDetailsService: StudyDetailsService,
     private readonly route: ActivatedRoute,
-    private readonly sharedService: SharedService,
+    private readonly sharedService: SearchService,
   ) {
     super();
   }
@@ -61,7 +61,7 @@ export class StudyDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.query$,
     ).pipe(
       map(([studyDetails, query]) => {
-        this.studyDetailsBackup = studyDetails;
+        this.studyDetailsBackup = {...studyDetails};
         this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()) ||

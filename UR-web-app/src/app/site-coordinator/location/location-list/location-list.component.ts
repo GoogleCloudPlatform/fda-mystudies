@@ -6,7 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {SharedService} from 'src/app/shared/shared.service';
+import {SearchService} from 'src/app/shared/search.service';
 
 @Component({
   selector: 'location-list',
@@ -21,7 +21,7 @@ export class LocationListComponent implements OnInit {
     private readonly locationService: LocationService,
     private readonly router: Router,
     private readonly toastr: ToastrService,
-    private readonly sharedService: SharedService,
+    private readonly sharedService: SearchService,
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +35,7 @@ export class LocationListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageLocations, query]) => {
-        this.manageLocationBackup = Object.assign({}, manageLocations);
+        this.manageLocationBackup = {...manageLocations};
         this.manageLocationBackup.locations = this.manageLocationBackup.locations.filter(
           (location: Location) =>
             (location.name &&

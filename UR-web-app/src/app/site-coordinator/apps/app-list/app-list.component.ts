@@ -5,7 +5,7 @@ import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
 import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
-import {SharedService} from 'src/app/shared/shared.service';
+import {SearchService} from 'src/app/shared/search.service';
 @Component({
   selector: 'app-app-list',
   templateUrl: './app-list.component.html',
@@ -27,7 +27,7 @@ export class AppListComponent implements OnInit {
 
   constructor(
     private readonly appService: AppsService,
-    private readonly sharedService: SharedService,
+    private readonly sharedService: SearchService,
   ) {}
 
   ngOnInit(): void {
@@ -41,7 +41,7 @@ export class AppListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageApps, query]) => {
-        this.manageAppsBackup = manageApps;
+        this.manageAppsBackup = {...manageApps};
         this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
           (app: App) =>
             app.name.toLowerCase().includes(query.toLowerCase()) ||
