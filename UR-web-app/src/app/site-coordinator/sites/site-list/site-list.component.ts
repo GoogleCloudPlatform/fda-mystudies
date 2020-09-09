@@ -2,7 +2,7 @@ import {Component, OnInit, TemplateRef} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {Study} from '../../studies/shared/study.model';
+import {Study, StudyResponse} from '../../studies/shared/study.model';
 import {Site} from '../../studies/shared/site.model';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {StudiesService} from '../../studies/shared/studies.service';
