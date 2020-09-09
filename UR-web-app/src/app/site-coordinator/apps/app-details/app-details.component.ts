@@ -7,6 +7,7 @@ import {AppDetails, Participant, EnrolledStudy} from '../shared/app-details';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {map} from 'rxjs/operators';
 import {Status} from 'src/app/shared/enums';
+import {SharedService} from 'src/app/shared/shared.service';
 
 @Component({
   selector: 'app-app-details',
@@ -18,6 +19,7 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
   appId = '';
   query$ = new BehaviorSubject('');
   appDetail$: Observable<AppDetails> = of();
+  appDetailsBackup = {} as AppDetails;
   statusEnum = Status;
   enrolledStudies: EnrolledStudy[] = [];
 
@@ -26,6 +28,7 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
     public modalRef: BsModalRef,
     private readonly appDetailsService: AppDetailsService,
     private readonly route: ActivatedRoute,
+    private readonly sharedService: SharedService,
   ) {
     super();
   }
@@ -33,7 +36,7 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
   openModal(
     appEnrollList: TemplateRef<unknown>,
     enrolledStudies: EnrolledStudy[],
-  ) {
+  ): void {
     this.enrolledStudies = enrolledStudies;
     if (enrolledStudies.length > 0) {
       this.modalRef = this.modalService.show(appEnrollList);
@@ -41,6 +44,7 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
   }
 
   ngOnInit(): void {
+    this.sharedService.updateSearchPlaceHolder('Search Participant Email');
     this.subs.add(
       this.route.params.subscribe((params) => {
         if (params.appId) {
@@ -57,11 +61,12 @@ export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.query$,
     ).pipe(
       map(([appDetails, query]) => {
-        appDetails.participants = appDetails.participants.filter(
+        this.appDetailsBackup = appDetails;
+        this.appDetailsBackup.participants = this.appDetailsBackup.participants.filter(
           (participant: Participant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),
         );
-        return appDetails;
+        return this.appDetailsBackup;
       }),
     );
   }
