@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.multidex.MultiDex;
+import android.util.Base64;
+
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
@@ -37,7 +39,6 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import org.apache.commons.codec.binary.Base64;
 
 public class FdaApplication extends Application {
   private static FdaApplication instance;
@@ -155,12 +156,12 @@ public class FdaApplication extends Application {
     return randomString;
   }
 
-  public static String getCodeChallenge(String randomString) {
+  public static String getCodeChallenge(String codeVerifier) {
     String codeChallenge = "";
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
-      byte[] digest = md.digest(randomString.getBytes(StandardCharsets.US_ASCII));
-      codeChallenge = new String(Base64.encodeBase64(digest));
+      byte[] digest = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
+      codeChallenge = Base64.encodeToString(digest, Base64.NO_PADDING);
     } catch (Exception e) {
       Logger.log(e);
     }

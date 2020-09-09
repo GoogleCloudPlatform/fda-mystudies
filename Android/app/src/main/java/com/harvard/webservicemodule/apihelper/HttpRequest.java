@@ -83,6 +83,7 @@ public class HttpRequest {
       conn.setReadTimeout(TimeoutInterval); // 3 min timeout
       conn.setRequestProperty("Content-Type", "application/json");
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
@@ -122,6 +123,7 @@ public class HttpRequest {
       } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
         responseData = "session expired";
       } else {
+
         if (conn.getHeaderField(headerErrorKey) != null) {
           responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
           responseData = "http_not_ok";
@@ -186,8 +188,8 @@ public class HttpRequest {
       conn.setRequestMethod("POST");
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
-
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
@@ -306,6 +308,7 @@ public class HttpRequest {
       conn.setRequestProperty("Content-Type", "application/json");
 
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
@@ -420,6 +423,7 @@ public class HttpRequest {
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
@@ -534,6 +538,7 @@ public class HttpRequest {
       conn.setDoInput(true);
       conn.setRequestProperty("Content-Type", "application/json");
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
@@ -679,6 +684,7 @@ public class HttpRequest {
       conn.setRequestProperty("Content-Type", "multipart/form-data;");
       conn.setRequestProperty("User-Agent", "CodeJava Agent");
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (serverType.equalsIgnoreCase("WCP")) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
@@ -814,6 +820,7 @@ public class HttpRequest {
         conn.setDoInput(true);
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
         if (serverType.equalsIgnoreCase("WCP")) {
           String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
@@ -913,6 +920,7 @@ public class HttpRequest {
         }
         httppost.addHeader("Content-Type", "application/json");
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+        httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
         StringEntity params1 = new StringEntity(jsonObject.toString());
         httppost.setEntity(params1);
@@ -951,6 +959,7 @@ public class HttpRequest {
                   responseData += line;
                 }
                 br.close();
+                //                    conn.disconnect();
               } finally {
                 instream.close();
               }
