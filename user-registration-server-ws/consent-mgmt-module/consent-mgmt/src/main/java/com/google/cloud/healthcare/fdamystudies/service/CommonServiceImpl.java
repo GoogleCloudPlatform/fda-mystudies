@@ -25,11 +25,8 @@ public class CommonServiceImpl implements CommonService {
   public Integer getUserDetailsId(String userId) {
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
     Integer userDetailId = null;
-    try {
-      userDetailId = commonDao.getUserDetailsId(userId);
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl getStudyInfoId() - error ", e);
-    }
+
+    userDetailId = commonDao.getUserDetailsId(userId);
 
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Ends ");
     return userDetailId;
