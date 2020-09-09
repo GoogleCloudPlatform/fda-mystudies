@@ -224,7 +224,7 @@ public enum ErrorCode {
   ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found"),
 
   INVALID_USER_STATUS(400, "EC-114", Constants.BAD_REQUEST, "Invalid user status"),
-  
+
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
 
