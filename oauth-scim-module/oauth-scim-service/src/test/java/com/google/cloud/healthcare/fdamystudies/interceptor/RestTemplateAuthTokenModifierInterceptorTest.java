@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.interceptor;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -37,5 +41,10 @@ public class RestTemplateAuthTokenModifierInterceptorTest extends BaseMockIT {
     ResponseEntity<Void> response =
         restTemplate.exchange(url, HttpMethod.GET, requestEntity, Void.class);
     assertThat(response.getStatusCode(), equalTo(HttpStatus.OK));
+
+    verify(
+        1,
+        getRequestedFor(urlEqualTo("/restTemplateAuthTokenModifierInterceptor"))
+            .withHeader("Authorization", equalTo(VALID_BEARER_TOKEN)));
   }
 }
