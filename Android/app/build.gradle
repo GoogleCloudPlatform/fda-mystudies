@@ -28,18 +28,16 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
-        buildConfigField("String", "SECRET_KEY_VALUE", apikeyProperties['SECRET_KEY_VALUE'])
-        buildConfigField("String", "CLIENT_ID_VALUE", apikeyProperties['CLIENT_ID_VALUE'])
         buildConfigField("String", "BASE_URL_WCP_SERVER", apikeyProperties['BASE_URL_WCP_SERVER'])
         buildConfigField("String", "BASE_URL_REGISTRATION_SERVER", apikeyProperties['BASE_URL_REGISTRATION_SERVER'])
         buildConfigField("String", "BASE_URL_REGISTRATION_CONSENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_CONSENT_SERVER'])
         buildConfigField("String", "BASE_URL_REGISTRATION_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_ENROLLMENT_SERVER'])
         buildConfigField("String", "BASE_URL_AUTH_SERVER", apikeyProperties['BASE_URL_AUTH_SERVER'])
+        buildConfigField("String", "AUTH_SERVER_REDIRECT_URL", apikeyProperties['AUTH_SERVER_REDIRECT_URL'])
         buildConfigField("String", "BASE_URL_HYDRA_SERVER", apikeyProperties['BASE_URL_HYDRA_SERVER'])
         buildConfigField("String", "BASE_URL_RESPONSE_SERVER", apikeyProperties['BASE_URL_RESPONSE_SERVER'])
         buildConfigField("String", "APP_TYPE", apikeyProperties['APP_TYPE'])
         buildConfigField("String", "APP_ID", apikeyProperties['APP_ID'])
-        buildConfigField("String", "ORG_ID", apikeyProperties['ORG_ID'])
         buildConfigField("String", "STUDY_ID", apikeyProperties['STUDY_ID'])
     }
     buildTypes {

@@ -21,6 +21,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityInfoData;
@@ -371,7 +372,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                   SharedPreferenceHelper.readPreference(
                           context, context.getString(R.string.userid), ""));
           refreshTokenJsonData.put(
-                  "redirect_uri", Urls.AUTH_SERVER_REDIRECT);
+                  "redirect_uri", BuildConfig.AUTH_SERVER_REDIRECT_URL);
           refreshTokenJsonData.put(
                   "client_id", "oauth-scim-client-id");
           refreshTokenJsonData.put(

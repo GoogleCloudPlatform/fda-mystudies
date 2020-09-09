@@ -17,7 +17,6 @@ package com.harvard.utils;
 
 import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
-import com.harvard.utils.version.VersionChecker;
 
 public class Urls {
   public static String BASE_URL_WCP_SERVER = BuildConfig.BASE_URL_WCP_SERVER;
@@ -32,13 +31,12 @@ public class Urls {
   // Auth Server
   public static String LOGIN = "login";
 
-  //New Auth Server
+  // New Auth Server
   public static String TOKENS = "oauth2/token";
   public static String AUTH_SERVICE = "users/";
   public static String CHANGE_PASSWORD = "/change_password";
   public static String FORGOT_PASSWORD = "user/reset_password";
   public static String LOGOUT = "/logout";
-  public static String AUTH_SERVER_REDIRECT = "https://34.69.210.52/qa/oauth-scim-service/login";
   public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "auth"
           + "?client_id=oauth-scim-client-id"
           + "&scope=offline_access"
@@ -49,7 +47,7 @@ public class Urls {
           + "&code_challenge_method=S256"
           + "&code_challenge="+FdaApplication.getCodeChallenge(FdaApplication.getRandomString())
           + "&correlationId=" + FdaApplication.getRandomString()
-          + "&redirect_uri=" + AUTH_SERVER_REDIRECT
+          + "&redirect_uri=" + BuildConfig.AUTH_SERVER_REDIRECT_URL
           + "&state="+FdaApplication.getRandomString();
 
   // Registration Server
