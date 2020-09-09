@@ -17,7 +17,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStruct
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.service.ActivityResponseProcessorService;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
@@ -106,7 +106,7 @@ public class ProcessActivityResponseController {
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
       // Check if participant is valid
-      ParticipantBo participantBo = new ParticipantBo();
+      ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
       participantBo.setTokenIdentifier(secureEnrollmentToken);
       participantBo.setParticipantIdentifier(participantId);
 
@@ -300,7 +300,7 @@ public class ProcessActivityResponseController {
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
       // Check if participant is valid
-      ParticipantBo participantBo = new ParticipantBo();
+      ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
       participantBo.setTokenIdentifier(tokenIdentifier);
       participantBo.setParticipantIdentifier(participantId);
 

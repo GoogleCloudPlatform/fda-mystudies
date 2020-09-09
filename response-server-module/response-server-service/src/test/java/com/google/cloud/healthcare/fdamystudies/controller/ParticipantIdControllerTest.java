@@ -24,7 +24,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBe
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
 import java.util.UUID;
@@ -62,7 +62,8 @@ public class ParticipantIdControllerTest extends BaseMockIT {
     String participantId = result.getResponse().getContentAsString();
     assertNotNull(participantId);
     // Step-2 Find ParticipantBo by participantId and compare with input ParticipantBo object
-    List<ParticipantBo> participantBoList = repository.findByParticipantIdentifier(participantId);
+    List<ParticipantInfoEntity> participantBoList =
+        repository.findByParticipantIdentifier(participantId);
     assertNotNull(participantBoList);
     assertEquals(1, participantBoList.size());
     assertEquals(

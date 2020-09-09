@@ -22,7 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesEntity;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
@@ -163,7 +163,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     String participantId = inputActivityStateBean.getParticipantId();
 
     // Step 2: verify updated values
-    List<ParticipantActivitiesBo> resultsList =
+    List<ParticipantActivitiesEntity> resultsList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
     assertNotNull(resultsList);
     assertEquals(1, resultsList.size());
@@ -207,7 +207,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     String studyId = inputActivityStateBean.getStudyId();
     String participantId = inputActivityStateBean.getParticipantId();
 
-    List<ParticipantActivitiesBo> resultsList =
+    List<ParticipantActivitiesEntity> resultsList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
     assertNotNull(resultsList);
     assertEquals(2, resultsList.size());

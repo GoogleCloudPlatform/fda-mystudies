@@ -8,14 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParticipantActivitiesRepository
-    extends JpaRepository<ParticipantActivitiesBo, Integer> {
+    extends JpaRepository<ParticipantActivitiesEntity, Integer> {
 
-  List<ParticipantActivitiesBo> findByStudyIdAndParticipantId(String studyId, String participantId);
+  List<ParticipantActivitiesEntity> findByStudyIdAndParticipantId(
+      String studyId, String participantId);
 }

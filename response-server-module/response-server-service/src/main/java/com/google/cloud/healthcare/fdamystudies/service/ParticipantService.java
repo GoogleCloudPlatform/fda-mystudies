@@ -8,11 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 
 public interface ParticipantService {
-  String saveParticipant(ParticipantBo participantBo) throws ProcessResponseException;
+  String saveParticipant(ParticipantInfoEntity participantBo) throws ProcessResponseException;
 
-  boolean isValidParticipant(ParticipantBo participantBo) throws ProcessResponseException;
+  boolean isValidParticipant(ParticipantInfoEntity participantBo) throws ProcessResponseException;
 }

@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,9 @@ public class CommonServiceImpl implements CommonService {
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
-  public ParticipantBo getParticipantInfoDetails(String participantId) {
+  public ParticipantInfoEntity getParticipantInfoDetails(String participantId) {
     logger.info("CommonServiceImpl getParticipantInfoDetails() - starts ");
-    ParticipantBo participantInfo = null;
+    ParticipantInfoEntity participantInfo = null;
     try {
       participantInfo = commonDao.getParticipantInfoDetails(participantId);
     } catch (Exception e) {

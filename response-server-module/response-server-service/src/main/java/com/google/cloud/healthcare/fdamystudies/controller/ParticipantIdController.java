@@ -10,7 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
@@ -54,7 +54,7 @@ public class ParticipantIdController {
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
     try {
-      ParticipantBo participantBo = new ParticipantBo();
+      ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
       participantBo.setTokenIdentifier(enrollmentTokenIdentifierBean.getTokenIdentifier());
       participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
       participantBo.setCreatedBy(applicationId);

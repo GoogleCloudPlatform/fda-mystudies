@@ -8,10 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.EntityManagerFactory;
@@ -36,7 +35,8 @@ public class ParticipantDaoImpl implements ParticipantDao {
   private static final Logger logger = LoggerFactory.getLogger(ParticipantDaoImpl.class);
 
   @Override
-  public String saveParticipant(ParticipantBo participantBo) throws ProcessResponseException {
+  public String saveParticipant(ParticipantInfoEntity participantBo)
+      throws ProcessResponseException {
     logger.info("ParticipantDaoImpl saveParticipant() - starts ");
     Transaction transaction = null;
     Session session = null;
@@ -45,22 +45,23 @@ public class ParticipantDaoImpl implements ParticipantDao {
       session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
 
       CriteriaBuilder builder = session.getCriteriaBuilder();
-      CriteriaQuery<ParticipantBo> participantBoCriteria = builder.createQuery(ParticipantBo.class);
-      Root<ParticipantBo> root = participantBoCriteria.from(ParticipantBo.class);
+      CriteriaQuery<ParticipantInfoEntity> participantBoCriteria =
+          builder.createQuery(ParticipantInfoEntity.class);
+      Root<ParticipantInfoEntity> root = participantBoCriteria.from(ParticipantInfoEntity.class);
       Predicate[] predicate = new Predicate[1];
       predicate[0] =
           builder.equal(
               root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY),
               participantBo.getTokenIdentifier());
       participantBoCriteria.select(root).where(predicate);
-      List<ParticipantBo> resultList = session.createQuery(participantBoCriteria).getResultList();
+      List<ParticipantInfoEntity> resultList =
+          session.createQuery(participantBoCriteria).getResultList();
       if (resultList != null && !resultList.isEmpty()) {
         throw new ProcessResponseException("Enrollment token exists, and cannot be added again");
       }
 
       UUID particpantUniqueIdentifier = UUID.randomUUID();
       participantBo.setParticipantIdentifier(particpantUniqueIdentifier.toString());
-      participantBo.setCreated(LocalDateTime.now());
       transaction = session.beginTransaction();
       session.save(participantBo);
       transaction.commit();
@@ -79,7 +80,6 @@ public class ParticipantDaoImpl implements ParticipantDao {
         }
         UUID particpantUniqueIdentifier = UUID.randomUUID();
         participantBo.setParticipantIdentifier(particpantUniqueIdentifier.toString());
-        participantBo.setCreated(LocalDateTime.now());
         transaction = session.beginTransaction();
         session.save(participantBo);
         transaction.commit();
@@ -100,7 +100,8 @@ public class ParticipantDaoImpl implements ParticipantDao {
   }
 
   @Override
-  public boolean isValidParticipant(ParticipantBo participantBo) throws ProcessResponseException {
+  public boolean isValidParticipant(ParticipantInfoEntity participantBo)
+      throws ProcessResponseException {
 
     Session session = null;
 
@@ -108,8 +109,9 @@ public class ParticipantDaoImpl implements ParticipantDao {
       session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
 
       CriteriaBuilder builder = session.getCriteriaBuilder();
-      CriteriaQuery<ParticipantBo> participantBoCriteria = builder.createQuery(ParticipantBo.class);
-      Root<ParticipantBo> root = participantBoCriteria.from(ParticipantBo.class);
+      CriteriaQuery<ParticipantInfoEntity> participantBoCriteria =
+          builder.createQuery(ParticipantInfoEntity.class);
+      Root<ParticipantInfoEntity> root = participantBoCriteria.from(ParticipantInfoEntity.class);
       Predicate[] predicate = new Predicate[2];
       predicate[0] =
           builder.equal(
@@ -120,7 +122,8 @@ public class ParticipantDaoImpl implements ParticipantDao {
               root.get(AppConstants.PARTICIPANT_IDENTIFIER_KEY),
               participantBo.getParticipantIdentifier());
       participantBoCriteria.select(root).where(predicate);
-      List<ParticipantBo> resultList = session.createQuery(participantBoCriteria).getResultList();
+      List<ParticipantInfoEntity> resultList =
+          session.createQuery(participantBoCriteria).getResultList();
       if (resultList != null && resultList.size() == 1) {
         return true;
       } else {

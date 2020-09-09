@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesEntity;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import org.hibernate.Session;
@@ -29,17 +29,17 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<ParticipantActivitiesBo> getParticipantActivities(
+  public List<ParticipantActivitiesEntity> getParticipantActivities(
       String studyId, String participantId) throws ProcessActivityStateException {
     logger.debug("getParticipantActivities()...start");
-    List<ParticipantActivitiesBo> participantActivitiesList = null;
+    List<ParticipantActivitiesEntity> participantActivitiesList = null;
 
     if (studyId != null && participantId != null) {
       try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
 
-        Query<ParticipantActivitiesBo> query =
+        Query<ParticipantActivitiesEntity> query =
             session.createQuery(
-                "from ParticipantActivitiesBo "
+                "from ParticipantActivitiesEntity "
                     + "where studyId = :studyId and participantId =:participantId");
 
         query.setParameter("studyId", studyId);
@@ -59,7 +59,7 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
   }
 
   @Override
-  public void saveParticipantActivities(List<ParticipantActivitiesBo> participantActivitiesList)
+  public void saveParticipantActivities(List<ParticipantActivitiesEntity> participantActivitiesList)
       throws ProcessActivityStateException {
     logger.debug("saveParticipantActivities() - Starts ");
 
@@ -70,7 +70,7 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
       session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
       transaction = session.beginTransaction();
 
-      for (ParticipantActivitiesBo participantActivities : participantActivitiesList) {
+      for (ParticipantActivitiesEntity participantActivities : participantActivitiesList) {
         session.saveOrUpdate(participantActivities);
       }
       transaction.commit();
@@ -103,7 +103,7 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
 
         session
             .createQuery(
-                "delete from ParticipantActivitiesBo "
+                "delete from ParticipantActivitiesEntity "
                     + "where participantId = :participantId and studyId = :studyId")
             .setParameter("participantId", participantId)
             .setParameter("studyId", studyId)

@@ -14,7 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityBean;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantActivitiesDao;
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class ParticipantActivityStateResponseServiceImpl
   public ActivitiesBean getParticipantActivities(String studyId, String participantId)
       throws ProcessActivityStateException {
     logger.debug("ActivityResponseProcessorServiceImpl getParticipantActivitiesList() - Starts ");
-    List<ParticipantActivitiesBo> participantActivityList = null;
+    List<ParticipantActivitiesEntity> participantActivityList = null;
     ActivitiesBean retActivitiesBean = new ActivitiesBean();
     retActivitiesBean.setMessage(AppConstants.FAILURE);
     try {
@@ -44,7 +44,7 @@ public class ParticipantActivityStateResponseServiceImpl
           participantActivitiesDao.getParticipantActivities(studyId, participantId);
       if (!participantActivityList.isEmpty()) {
         List<ParticipantActivityBean> participantActivityBeanList = new ArrayList<>();
-        for (ParticipantActivitiesBo participantActivity : participantActivityList) {
+        for (ParticipantActivitiesEntity participantActivity : participantActivityList) {
           if (participantActivity != null) {
             ParticipantActivityBean tempParticipantActivityBean = new ParticipantActivityBean();
             ActivityRunBean tempActivityRunBean = new ActivityRunBean();
@@ -94,13 +94,13 @@ public class ParticipantActivityStateResponseServiceImpl
     try {
       if (activityStateRequestBean.getStudyId() != null
           && activityStateRequestBean.getParticipantId() != null) {
-        List<ParticipantActivitiesBo> inputParticipantActivitiesList =
+        List<ParticipantActivitiesEntity> inputParticipantActivitiesList =
             this.getDtoObject(activityStateRequestBean);
 
-        List<ParticipantActivitiesBo> existingParticipantActivitiesList =
+        List<ParticipantActivitiesEntity> existingParticipantActivitiesList =
             participantActivitiesDao.getParticipantActivities(
                 activityStateRequestBean.getStudyId(), activityStateRequestBean.getParticipantId());
-        List<ParticipantActivitiesBo> participantActivitiesListToUpdate =
+        List<ParticipantActivitiesEntity> participantActivitiesListToUpdate =
             this.getConsolidatedParticipantListToUpdate(
                 inputParticipantActivitiesList, existingParticipantActivitiesList);
 
@@ -125,14 +125,14 @@ public class ParticipantActivityStateResponseServiceImpl
     participantActivitiesDao.deleteParticipantActivites(studyId, participantId);
   }
 
-  private List<ParticipantActivitiesBo> getConsolidatedParticipantListToUpdate(
-      List<ParticipantActivitiesBo> inputParticipantActivitiesList,
-      List<ParticipantActivitiesBo> saveOrUpdateParticipantActivitiesList) {
+  private List<ParticipantActivitiesEntity> getConsolidatedParticipantListToUpdate(
+      List<ParticipantActivitiesEntity> inputParticipantActivitiesList,
+      List<ParticipantActivitiesEntity> saveOrUpdateParticipantActivitiesList) {
     if (!inputParticipantActivitiesList.isEmpty()) {
-      for (ParticipantActivitiesBo participantActivityInput : inputParticipantActivitiesList) {
+      for (ParticipantActivitiesEntity participantActivityInput : inputParticipantActivitiesList) {
         boolean isExistingRecord = false;
         if (!saveOrUpdateParticipantActivitiesList.isEmpty()) {
-          for (ParticipantActivitiesBo participantActivityExisting :
+          for (ParticipantActivitiesEntity participantActivityExisting :
               saveOrUpdateParticipantActivitiesList) {
             if (participantActivityInput
                 .getActivityId()
@@ -159,12 +159,12 @@ public class ParticipantActivityStateResponseServiceImpl
     return saveOrUpdateParticipantActivitiesList;
   }
 
-  private List<ParticipantActivitiesBo> getDtoObject(
+  private List<ParticipantActivitiesEntity> getDtoObject(
       ActivityStateRequestBean activityStateRequestBean) {
-    List<ParticipantActivitiesBo> retList = new ArrayList<>();
+    List<ParticipantActivitiesEntity> retList = new ArrayList<>();
     if (activityStateRequestBean != null && activityStateRequestBean.getActivity() != null) {
       for (ParticipantActivityBean activityRequestBean : activityStateRequestBean.getActivity()) {
-        ParticipantActivitiesBo tempParticipantActivitiesBo = new ParticipantActivitiesBo();
+        ParticipantActivitiesEntity tempParticipantActivitiesBo = new ParticipantActivitiesEntity();
         tempParticipantActivitiesBo.setActivityId(activityRequestBean.getActivityId());
         tempParticipantActivitiesBo.setActivityRunId(activityRequestBean.getActivityRunId());
         tempParticipantActivitiesBo.setActivityState(activityRequestBean.getActivityState());

@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 
 public interface CommonService {
 
-  public ParticipantBo getParticipantInfoDetails(String participantId);
+  public ParticipantInfoEntity getParticipantInfoDetails(String participantId);
 }

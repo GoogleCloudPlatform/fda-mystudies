@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -30,18 +30,18 @@ public class CommonDaoImpl implements CommonDao {
   @Autowired private EntityManagerFactory entityManagerFactory;
 
   @Override
-  public ParticipantBo getParticipantInfoDetails(String participantId) {
+  public ParticipantInfoEntity getParticipantInfoDetails(String participantId) {
     logger.info("CommonDaoImpl getParticipantInfoDetails() - Ends ");
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<ParticipantBo> participantBoCriteriaQuery = null;
-    Root<ParticipantBo> participantBoRoot = null;
+    CriteriaQuery<ParticipantInfoEntity> participantBoCriteriaQuery = null;
+    Root<ParticipantInfoEntity> participantBoRoot = null;
     Predicate[] participantBoPredicates = new Predicate[1];
-    List<ParticipantBo> participantBoList = null;
-    ParticipantBo participantBO = null;
+    List<ParticipantInfoEntity> participantBoList = null;
+    ParticipantInfoEntity participantBO = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      participantBoCriteriaQuery = criteriaBuilder.createQuery(ParticipantBo.class);
-      participantBoRoot = participantBoCriteriaQuery.from(ParticipantBo.class);
+      participantBoCriteriaQuery = criteriaBuilder.createQuery(ParticipantInfoEntity.class);
+      participantBoRoot = participantBoCriteriaQuery.from(ParticipantInfoEntity.class);
       participantBoPredicates[0] =
           criteriaBuilder.equal(participantBoRoot.get("participantIdentifier"), participantId);
       participantBoCriteriaQuery.select(participantBoRoot).where(participantBoPredicates);

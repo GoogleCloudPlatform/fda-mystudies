@@ -46,8 +46,8 @@ import com.google.cloud.healthcare.fdamystudies.dao.CloudFirestoreResponsesDaoIm
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesBo;
-import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesEntity;
+import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +72,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
   @Autowired private ParticipantBoRepository participantBoRepository;
 
-  private ParticipantBo participantBo;
+  private ParticipantInfoEntity participantBo;
 
   @MockBean private CloudFirestoreResponsesDaoImpl responsesDaoMock;
 
@@ -120,7 +120,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(SUCCESS)));
 
     // Step-3: verify saved values
-    List<ParticipantActivitiesBo> participantActivitiesList =
+    List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
             STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
 
@@ -280,7 +280,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(SUCCESS)));
 
     // Step 3: verify deleted values
-    List<ParticipantActivitiesBo> participantActivitiesList =
+    List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
             STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
     assertTrue(participantActivitiesList.isEmpty());
@@ -326,7 +326,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(SUCCESS)));
 
     // Step 3: verify deleted values
-    List<ParticipantActivitiesBo> participantActivitiesList =
+    List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
             STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
     assertTrue(participantActivitiesList.isEmpty());

@@ -8,58 +8,60 @@
 
 package com.google.cloud.healthcare.fdamystudies.responsedatastore.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "participant_activities")
-public class ParticipantActivitiesBo implements Serializable {
+public class ParticipantActivitiesEntity implements Serializable {
 
   private static final long serialVersionUID = 1005603353927628403L;
 
+  @ToString.Exclude
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "id")
-  private Integer id;
+  @GeneratedValue(generator = "system-uuid")
+  @GenericGenerator(name = "system-uuid", strategy = "uuid")
+  @Column(name = "id", updatable = false, nullable = false)
+  private String id;
 
-  @Column(name = "participant_identifier")
+  @Column(name = "participant_identifier", length = SMALL_LENGTH)
   private String participantId;
 
-  @Column(name = "study_id")
+  @Column(name = "study_id", length = XS_LENGTH)
   private String studyId;
 
-  @Column(name = "activity_id")
+  @Column(name = "activity_id", length = SMALL_LENGTH)
   private String activityId;
 
   @Column(name = "activity_complete_id")
   private Integer activityCompleteId;
 
-  @Column(name = "activity_type")
-  private String activityType;
-
   @Column(name = "bookmark", columnDefinition = "TINYINT(1)")
   private Boolean bookmark = false;
 
-  @Column(name = "status")
-  private String status;
-
-  @Column(name = "activity_version")
+  @Column(name = "activity_version", length = XS_LENGTH)
   private String activityVersion;
 
-  @Column(name = "activity_state")
+  @Column(name = "activity_state", length = LARGE_LENGTH)
   private String activityState;
 
-  @Column(name = "activity_run_id")
+  @Column(name = "activity_run_id", length = XS_LENGTH)
   private String activityRunId;
 
   @Column(name = "total")
@@ -72,17 +74,18 @@ public class ParticipantActivitiesBo implements Serializable {
   private Integer missed;
 
   @Column(name = "activity_start_date")
-  private LocalDateTime activityStartDate;
+  private Timestamp activityStartDate;
 
   @Column(name = "activity_end_date")
-  private LocalDateTime activityEndDate;
+  private Timestamp activityEndDate;
 
-  @Column(name = "anchordate_version")
+  @Column(name = "anchordate_version", length = XS_LENGTH)
   private String anchorDateVersion;
 
   @Column(name = "anchordate_created_date")
-  private LocalDateTime anchorDateCreatRappledDate;
+  private Timestamp anchorDateCreatRappledDate;
 
-  @Column(name = "created", columnDefinition = "TIMESTAMP")
-  private LocalDateTime created;
+  @Column(name = "created_time")
+  @CreationTimestamp
+  private Timestamp created;
 }
