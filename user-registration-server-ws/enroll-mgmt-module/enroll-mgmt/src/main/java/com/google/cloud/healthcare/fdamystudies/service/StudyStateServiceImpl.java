@@ -78,7 +78,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
-  @Transactional(readOnly = false)
+  @Transactional
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudiesBO> existParticipantStudies,
