@@ -30,7 +30,6 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
-import java.io.File;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
@@ -43,13 +42,10 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   private String urlPassed;
   private HashMap<String, String> hashmapData;
   private JSONObject jsonData;
-  private JSONArray jsonArray;
   private String webserviceType;
   private Class<T> genericClass;
   private Context context;
   private HashMap<String, String> headersData;
-  private HashMap<String, String> formData;
-  private HashMap<String, File> filesData;
   private T obj;
   private OnAsyncRequestComplete onAsyncRequestComplete;
   private int resultCode;
@@ -126,38 +122,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   }
 
   /**
-   * To make a PATCH Json request.
-   *
-   * @param url          url path
-   * @param genericClass model class to parse
-   * @param headers      null if no header to pass
-   * @param jsonData     json object params
-   * @param resultCode   call back code
-   * @param v            activity context
-   * @param showAlert    wherever to show alert
-   */
-  public void apiCallPatchJson(
-          String url,
-          HashMap<String, String> headers,
-          Class<T> genericClass,
-          JSONObject jsonData,
-          int resultCode,
-          V v,
-          boolean showAlert,
-          String serverType) {
-    this.urlPassed = url;
-    this.genericClass = genericClass;
-    this.headersData = headers;
-    this.jsonData = jsonData;
-    this.webserviceType = "patch_json";
-    this.resultCode = resultCode;
-    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
-    this.showAlert = showAlert;
-    this.serverType = serverType;
-    execute();
-  }
-
-  /**
    * To make a PUT Json request.
    *
    * @param url          url path
@@ -222,41 +186,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   }
 
   /**
-   * To make a POST Multi-part request.
-   *
-   * @param url          url path
-   * @param genericClass model class to parse
-   * @param headers      null if no header to pass
-   * @param formData     null if no form data
-   * @param files        null if no files to upload
-   * @param resultCode   call back code
-   * @param v            activity context
-   * @param showAlert    wherever to show alert
-   */
-  public void apiCallMultipart(
-          String url,
-          Class<T> genericClass,
-          HashMap<String, String> headers,
-          HashMap<String, String> formData,
-          HashMap<String, File> files,
-          int resultCode,
-          V v,
-          boolean showAlert,
-          String serverType) {
-    this.urlPassed = url;
-    this.genericClass = genericClass;
-    this.headersData = headers;
-    this.formData = formData;
-    this.filesData = files;
-    this.webserviceType = "post_multi";
-    this.resultCode = resultCode;
-    this.onAsyncRequestComplete = (OnAsyncRequestComplete) v;
-    this.serverType = serverType;
-    this.showAlert = showAlert;
-    execute();
-  }
-
-  /**
    * To make a GET request.
    *
    * @param url          url path
@@ -313,11 +242,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         case "get":
           responseModel = HttpRequest.getRequest(urlPassed, headersData, serverType);
           break;
-        case "patch_json":
-          responseModel =
-                  HttpRequest.makePatchRequestWithJson(
-                          urlPassed, jsonData, headersData, serverType);
-          break;
         case "put_json":
           responseModel =
                   HttpRequest.makePutRequestWithJson(
@@ -331,11 +255,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         case "post_json":
           responseModel =
                   HttpRequest.makePostRequestWithJson(urlPassed, jsonData, headersData, serverType);
-          break;
-        case "post_multi":
-          responseModel =
-                  HttpRequest.postRequestMultipart(
-                          urlPassed, headersData, formData, filesData, serverType);
           break;
         case "delete_json":
           responseModel =
@@ -355,8 +274,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       } else if (Integer.parseInt(responseCode) >= 500
               && Integer.parseInt(responseCode) < 600) {
         response = "server error";
-      } else if (response.equalsIgnoreCase("http_not_ok")) {
-        response = "Unknown error";
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
         response = "session expired";
 
@@ -401,9 +318,9 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
               case "get":
                 responseModel = HttpRequest.getRequest(urlPassed, headersData, serverType);
                 break;
-              case "patch_json":
+              case "put_json":
                 responseModel =
-                        HttpRequest.makePatchRequestWithJson(
+                        HttpRequest.makePutRequestWithJson(
                                 urlPassed, jsonData, headersData, serverType);
                 break;
               case "post_hashmap":
@@ -416,11 +333,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                         HttpRequest.makePostRequestWithJson(
                                 urlPassed, jsonData, headersData, serverType);
                 break;
-              case "post_multi":
-                responseModel =
-                        HttpRequest.postRequestMultipart(
-                                urlPassed, headersData, formData, filesData, serverType);
-                break;
               case "delete_json":
                 responseModel =
                         HttpRequest.makeDeleteRequestWithJson(
@@ -432,6 +344,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                   || s.equalsIgnoreCase("Unknown error")
                   || s.equalsIgnoreCase("server error")
                   || s.equalsIgnoreCase("client error")
+                  || s.equalsIgnoreCase("")
                   || s.equalsIgnoreCase("No data")) {
             responseModel.setResponseCode("401");
             responseModel.setServermsg("session expired");
@@ -551,15 +464,11 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
     } else if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("")) {
       response = "error";
     } else if (Integer.parseInt(responseCode) >= 400
-            && Integer.parseInt(responseCode) < 500
-            && response.equalsIgnoreCase("http_not_ok")) {
+            && Integer.parseInt(responseCode) < 500) {
       response = "client error";
     } else if (Integer.parseInt(responseCode) >= 500
-            && Integer.parseInt(responseCode) < 600
-            && response.equalsIgnoreCase("http_not_ok")) {
+            && Integer.parseInt(responseCode) < 600) {
       response = "server error";
-    } else if (response.equalsIgnoreCase("http_not_ok")) {
-      response = "Unknown error";
     } else if (Integer.parseInt(responseCode) == httpUnauthorized) {
       response = "session expired";
     } else if (Integer.parseInt(responseCode) >= HttpURLConnection.HTTP_OK && Integer.parseInt(responseCode) < HttpURLConnection.HTTP_MULT_CHOICE

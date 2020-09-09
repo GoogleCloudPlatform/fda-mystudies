@@ -22,21 +22,17 @@ import com.harvard.AppConfig;
 import com.harvard.utils.Logger;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -61,6 +57,7 @@ public class HttpRequest {
   private static int TimeoutInterval = 180000;
   private static String errorDescKey = "error_description";
   private static String headerErrorKey = "StatusMessage";
+  private static String SERVER_TYPE_WCP = "WCP";
 
   /**
    * To make a Get request.
@@ -71,95 +68,7 @@ public class HttpRequest {
    */
   public static Responsemodel getRequest(
           String url, HashMap<String, String> headersData, String serverType) {
-    StringBuffer response = new StringBuffer();
-    Responsemodel responseModel = new Responsemodel();
-    String responseData;
-    HttpURLConnection conn;
-    int responseCode = 0;
-    try {
-      URL obj = new URL(url);
-      conn = (HttpURLConnection) obj.openConnection();
-      conn.setRequestMethod("GET");
-      conn.setReadTimeout(TimeoutInterval); // 3 min timeout
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-
-      if (serverType.equalsIgnoreCase("WCP")) {
-        String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
-        conn.setRequestProperty("Authorization", "Basic " + encoding);
-        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      }
-
-      if (headersData != null) {
-        Set mapSet = (Set) headersData.entrySet();
-        Iterator mapIterator = mapSet.iterator();
-        while (mapIterator.hasNext()) {
-          Map.Entry mapEntry = (Map.Entry) mapIterator.next();
-          String keyValue = (String) mapEntry.getKey();
-          String value = (String) mapEntry.getValue();
-          conn.setRequestProperty(keyValue, value);
-        }
-      }
-      try {
-        // Will throw IOException if server responds with 401.
-        responseCode = conn.getResponseCode();
-      } catch (IOException e) {
-        // Will return 401, because now connection has the correct internal state.
-        responseCode = conn.getResponseCode();
-      }
-
-      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
-        }
-        in.close();
-        conn.disconnect();
-        responseData = response.toString();
-        responseModel.setServermsg("success");
-      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-        responseData = "session expired";
-      } else {
-
-        if (conn.getHeaderField(headerErrorKey) != null) {
-          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
-          responseData = "http_not_ok";
-        } else {
-          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-          String inputLine;
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-          conn.disconnect();
-          responseData = response.toString();
-
-          JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has(errorDescKey)) {
-            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
-          } else {
-            responseModel.setServermsg("server error");
-          }
-        }
-      }
-    } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "timeout";
-      Logger.log(e);
-    } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "";
-      Logger.log(e);
-    }
-
-    responseModel.setResponseCode("" + responseCode);
-    responseModel.setResponseData(responseData);
-
-    return responseModel;
+    return getResponse(url, "GET", serverType, headersData, null);
   }
 
   /**
@@ -175,454 +84,46 @@ public class HttpRequest {
           HashMap<String, String> params,
           HashMap<String, String> headersData,
           String serverType) {
-    Responsemodel responseModel = new Responsemodel();
-    String responseData = "";
-    StringBuffer response = new StringBuffer();
-    int responseCode = 0;
-    URL url1;
-    try {
-      url1 = new URL(url);
-      HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(TimeoutInterval);
-      conn.setConnectTimeout(TimeoutInterval);
-      conn.setRequestMethod("POST");
-      conn.setDoInput(true);
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-
-      if (serverType.equalsIgnoreCase("WCP")) {
-        String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
-        conn.setRequestProperty("Authorization", "Basic " + encoding);
-        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      }
-
-      if (headersData != null) {
-        Set mapSet = (Set) headersData.entrySet();
-        Iterator mapIterator = mapSet.iterator();
-        while (mapIterator.hasNext()) {
-          Map.Entry mapEntry = (Map.Entry) mapIterator.next();
-          String keyValue = (String) mapEntry.getKey();
-          String value = (String) mapEntry.getValue();
-          conn.setRequestProperty(keyValue, value);
-        }
-      }
-
-      conn.setDoOutput(true);
-
-      OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-      if (conn.getRequestProperty("Content-Type").equalsIgnoreCase("application/json")) {
-        writer.write(getPostDataString(params));
-      } else {
-        writer.write(getDataString(params));
-      }
-      writer.flush();
-      writer.close();
-      os.close();
-
-      try {
-        // Will throw IOException if server responds with 401.
-        responseCode = conn.getResponseCode();
-      } catch (IOException e) {
-        Logger.log(e);
-        // Will return 401, because now connection has the correct internal state.
-        responseCode = conn.getResponseCode();
-      }
-      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
-        }
-        in.close();
-        conn.disconnect();
-        responseData = response.toString();
-        responseModel.setServermsg("success");
-      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-        responseData = "session expired";
-      } else {
-        if (conn.getHeaderField(headerErrorKey) != null) {
-          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
-          responseData = "http_not_ok";
-        } else {
-          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-          String inputLine;
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-          conn.disconnect();
-          responseData = response.toString();
-
-          JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has(errorDescKey)) {
-            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
-          } else {
-            responseModel.setServermsg("server error");
-          }
-        }
-      }
-    } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "timeout";
-      Logger.log(e);
-    } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "";
-      Logger.log(e);
+    String bodyParams;
+    if (headersData.containsKey("Content-Type") && headersData.get("Content-Type").equalsIgnoreCase("application/x-www-form-urlencoded")) {
+      bodyParams = getDataString(params);
+    } else {
+      bodyParams = getPostDataString(params);
     }
-
-    responseModel.setResponseCode("" + responseCode);
-    responseModel.setResponseData(responseData);
-    return responseModel;
+    return getResponse(url, "POST", serverType, headersData, bodyParams);
   }
 
   /**
    * To make post request using json object.
    *
-   * @param urlpath     -->url path
+   * @param url         -->url path
    * @param jsonObject  -->json object
    * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel makePostRequestWithJson(
-          String urlpath,
+          String url,
           JSONObject jsonObject,
           HashMap<String, String> headersData,
           String serverType) {
-    Responsemodel responseModel = new Responsemodel();
-    StringBuffer response = new StringBuffer();
-    String responseData = "";
-    int responseCode = 0;
-    URL url1;
-    try {
-      url1 = new URL(urlpath);
-      HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(TimeoutInterval);
-      conn.setConnectTimeout(TimeoutInterval);
-      conn.setRequestMethod("POST");
-      conn.setDoInput(true);
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
-      if (serverType.equalsIgnoreCase("WCP")) {
-        String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
-        conn.setRequestProperty("Authorization", "Basic " + encoding);
-        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      }
-
-      if (headersData != null) {
-        Set mapSet = (Set) headersData.entrySet();
-        Iterator mapIterator = mapSet.iterator();
-        while (mapIterator.hasNext()) {
-          Map.Entry mapEntry = (Map.Entry) mapIterator.next();
-          String keyValue = (String) mapEntry.getKey();
-          String value = (String) mapEntry.getValue();
-          conn.setRequestProperty(keyValue, value);
-        }
-      }
-
-      conn.setDoOutput(true);
-
-      OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-      writer.write(jsonObject.toString());
-
-      writer.flush();
-      writer.close();
-      os.close();
-
-      try {
-        // Will throw IOException if server responds with 401.
-        responseCode = conn.getResponseCode();
-      } catch (IOException e) {
-        // Will return 401, because now connection has the correct internal state.
-        responseCode = conn.getResponseCode();
-      }
-
-      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
-        }
-        in.close();
-        conn.disconnect();
-        responseData = response.toString();
-        responseModel.setServermsg("success");
-      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-        responseData = "session expired";
-      } else {
-        if (conn.getHeaderField(headerErrorKey) != null) {
-          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
-          responseData = "http_not_ok";
-        } else {
-          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-          String inputLine;
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-          conn.disconnect();
-          responseData = response.toString();
-
-          JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has(errorDescKey)) {
-            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
-          } else {
-            responseModel.setServermsg("server error");
-          }
-        }
-      }
-    } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "timeout";
-      Logger.log(e);
-    } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "";
-      Logger.log(e);
-    }
-
-    responseModel.setResponseCode("" + responseCode);
-    responseModel.setResponseData(responseData);
-    return responseModel;
-  }
-
-  /**
-   * To make patch request using json object.
-   *
-   * @param urlpath     -->url path
-   * @param jsonObject  -->json object
-   * @param headersData --> null if no header
-   * @return Responsemodel
-   */
-  static Responsemodel makePatchRequestWithJson(
-          String urlpath,
-          JSONObject jsonObject,
-          HashMap<String, String> headersData,
-          String serverType) {
-    Responsemodel responseModel = new Responsemodel();
-    String responseData = "";
-    StringBuffer response = new StringBuffer();
-    int responseCode = 0;
-    URL url1;
-    try {
-      url1 = new URL(urlpath);
-      HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(TimeoutInterval);
-      conn.setConnectTimeout(TimeoutInterval);
-      conn.setRequestMethod("PATCH");
-      conn.setDoInput(true);
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-
-      if (serverType.equalsIgnoreCase("WCP")) {
-        String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
-        conn.setRequestProperty("Authorization", "Basic " + encoding);
-        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      }
-
-      if (headersData != null) {
-        Set mapSet = (Set) headersData.entrySet();
-        Iterator mapIterator = mapSet.iterator();
-        while (mapIterator.hasNext()) {
-          Map.Entry mapEntry = (Map.Entry) mapIterator.next();
-          String keyValue = (String) mapEntry.getKey();
-          String value = (String) mapEntry.getValue();
-          conn.setRequestProperty(keyValue, value);
-        }
-      }
-
-      conn.setDoOutput(true);
-
-      OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-      writer.write(jsonObject.toString());
-
-      writer.flush();
-      writer.close();
-      os.close();
-
-      try {
-        // Will throw IOException if server responds with 401.
-        responseCode = conn.getResponseCode();
-      } catch (IOException e) {
-        // Will return 401, because now connection has the correct internal state.
-        responseCode = conn.getResponseCode();
-      }
-
-      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
-        }
-        in.close();
-        conn.disconnect();
-        responseData = response.toString();
-        responseModel.setServermsg("success");
-      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-        responseData = "session expired";
-      } else {
-        if (conn.getHeaderField(headerErrorKey) != null) {
-          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
-          responseData = "http_not_ok";
-        } else {
-          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-          String inputLine;
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-          conn.disconnect();
-          responseData = response.toString();
-
-          JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has(errorDescKey)) {
-            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
-          } else {
-            responseModel.setServermsg("server error");
-          }
-        }
-      }
-    } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "timeout";
-      Logger.log(e);
-    } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "";
-      Logger.log(e);
-    }
-
-    responseModel.setResponseCode("" + responseCode);
-    responseModel.setResponseData(responseData);
-    return responseModel;
+    return getResponse(url, "POST", serverType, headersData, jsonObject.toString());
   }
 
   /**
    * To make put request using json object.
    *
-   * @param urlpath     -->url path
+   * @param url         -->url path
    * @param jsonObject  -->json object
    * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel makePutRequestWithJson(
-          String urlpath,
+          String url,
           JSONObject jsonObject,
           HashMap<String, String> headersData,
           String serverType) {
-    Responsemodel responseModel = new Responsemodel();
-    StringBuffer response = new StringBuffer();
-    String responseData = "";
-    int responseCode = 0;
-    URL url1;
-    try {
-      url1 = new URL(urlpath);
-      HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-      conn.setReadTimeout(TimeoutInterval);
-      conn.setConnectTimeout(TimeoutInterval);
-      conn.setRequestMethod("PUT");
-      conn.setDoInput(true);
-      conn.setRequestProperty("Content-Type", "application/json");
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-
-      if (serverType.equalsIgnoreCase("WCP")) {
-        String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
-        conn.setRequestProperty("Authorization", "Basic " + encoding);
-        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      }
-
-      if (headersData != null) {
-        Set mapSet = (Set) headersData.entrySet();
-        Iterator mapIterator = mapSet.iterator();
-        while (mapIterator.hasNext()) {
-          Map.Entry mapEntry = (Map.Entry) mapIterator.next();
-          String keyValue = (String) mapEntry.getKey();
-          String value = (String) mapEntry.getValue();
-          conn.setRequestProperty(keyValue, value);
-        }
-      }
-
-      conn.setDoOutput(true);
-
-      OutputStream os = conn.getOutputStream();
-      BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-      writer.write(jsonObject.toString());
-
-      writer.flush();
-      writer.close();
-      os.close();
-
-      try {
-        // Will throw IOException if server responds with 401.
-        responseCode = conn.getResponseCode();
-      } catch (IOException e) {
-        // Will return 401, because now connection has the correct internal state.
-        responseCode = conn.getResponseCode();
-      }
-
-      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
-        }
-        in.close();
-        conn.disconnect();
-        responseData = response.toString();
-        responseModel.setServermsg("success");
-      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-        responseData = "session expired";
-      } else {
-        if (conn.getHeaderField(headerErrorKey) != null) {
-          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
-          responseData = "http_not_ok";
-        } else {
-          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-          String inputLine;
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-          conn.disconnect();
-          responseData = response.toString();
-
-          JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has(errorDescKey)) {
-            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
-          } else {
-            responseModel.setServermsg("server error");
-          }
-        }
-      }
-    } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "timeout";
-      Logger.log(e);
-    } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "";
-      Logger.log(e);
-    }
-
-    responseModel.setResponseCode("" + responseCode);
-    responseModel.setResponseData(responseData);
-    return responseModel;
+    return getResponse(url, "PUT", serverType, headersData, jsonObject.toString());
   }
 
   /**
@@ -635,277 +136,42 @@ public class HttpRequest {
     return new Gson().toJson(params);
   }
 
-  private static String getDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
+  private static String getDataString(HashMap<String, String> params) {
     StringBuilder result = new StringBuilder();
-    boolean first = true;
-    for (Map.Entry<String, String> entry : params.entrySet()) {
-      if (first) {
-        first = false;
-      } else {
-        result.append("&");
+    try {
+      boolean first = true;
+      for (Map.Entry<String, String> entry : params.entrySet()) {
+        if (first) {
+          first = false;
+        } else {
+          result.append("&");
+        }
+        result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+        result.append("=");
+        result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
       }
-      result.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
-      result.append("=");
-      result.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
     }
     return result.toString();
   }
 
-  /**
-   * To make post request for form data and files upload.
-   *
-   * @param urlPath  --> url path
-   * @param headers  --> null if no header
-   * @param formData --> null if no form data
-   * @param files    --> null if no files
-   * @return web-service response as String
-   */
-  static Responsemodel postRequestMultipart(
-          String urlPath,
-          HashMap<String, String> headers,
-          HashMap<String, String> formData,
-          HashMap<String, File> files,
-          String serverType) {
-    Responsemodel responseModel = new Responsemodel();
-    HttpURLConnection conn;
-    StringBuffer response = new StringBuffer();
-    String responseData = "";
-    String lineFeed = "\r\n";
-    int responseCode = 0;
-    try {
-      URL url = new URL(urlPath);
-      conn = (HttpURLConnection) url.openConnection();
-      conn.setUseCaches(false);
-      conn.setDoOutput(true); // indicates POST method
-      conn.setDoInput(true);
-      conn.setReadTimeout(TimeoutInterval);
-      conn.setConnectTimeout(TimeoutInterval);
-      conn.setRequestProperty("Content-Type", "multipart/form-data;");
-      conn.setRequestProperty("User-Agent", "CodeJava Agent");
-      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-
-      if (serverType.equalsIgnoreCase("WCP")) {
-        String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
-        conn.setRequestProperty("Authorization", "Basic " + encoding);
-        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      }
-
-      OutputStream outputStream = conn.getOutputStream();
-      PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, StandardCharsets.UTF_8), true);
-
-      if (headers != null) {
-        Set keys = headers.keySet();
-        for (Iterator i = keys.iterator(); i.hasNext(); ) {
-          writer.append(i.next() + ": " + headers.get(i.next())).append(lineFeed);
-          writer.flush();
-        }
-      }
-      if (formData != null) {
-        Set keys = formData.keySet();
-        for (Iterator i = keys.iterator(); i.hasNext(); ) {
-          writer.append(lineFeed);
-          writer
-                  .append("Content-Disposition: form-data; name=\"" + i.next() + "\"")
-                  .append(lineFeed);
-          writer.append("Content-Type: text/plain; charset=UTF-8").append(lineFeed);
-          writer.append(lineFeed);
-          writer.append(formData.get(i.next())).append(lineFeed);
-          writer.flush();
-        }
-      }
-      if (files != null) {
-        Set keys = files.keySet();
-        for (Iterator i = keys.iterator(); i.hasNext(); ) {
-          String fileName = files.get(i.next()).getName();
-          writer
-                  .append(
-                          "Content-Disposition: form-data; name=\""
-                                  + i.next()
-                                  + "\"; filename=\""
-                                  + fileName
-                                  + "\"")
-                  .append(lineFeed);
-          writer
-                  .append("Content-Type: " + URLConnection.guessContentTypeFromName(fileName))
-                  .append(lineFeed);
-          writer.append("Content-Transfer-Encoding: binary").append(lineFeed);
-          writer.append(lineFeed);
-          writer.flush();
-
-          FileInputStream inputStream = new FileInputStream(files.get(i.next()));
-          byte[] buffer = new byte[4096];
-          int bytesRead = -1;
-          while ((bytesRead = inputStream.read(buffer)) != -1) {
-            outputStream.write(buffer, 0, bytesRead);
-          }
-          outputStream.flush();
-          inputStream.close();
-          writer.append(lineFeed);
-          writer.flush();
-        }
-      }
-      writer.close();
-      // checks server's status code first
-      responseCode = conn.getResponseCode();
-      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String inputLine;
-
-        while ((inputLine = in.readLine()) != null) {
-          response.append(inputLine);
-        }
-        in.close();
-        conn.disconnect();
-        responseData = response.toString();
-        responseModel.setServermsg("success");
-      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-        responseData = "session expired";
-      } else {
-        if (conn.getHeaderField(headerErrorKey) != null) {
-          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
-          responseData = "http_not_ok";
-        } else {
-          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-          String inputLine;
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-          conn.disconnect();
-          responseData = response.toString();
-
-          JSONObject responseDataJson = new JSONObject(responseData);
-          if (responseDataJson.has(errorDescKey)) {
-            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
-          } else {
-            responseModel.setServermsg("server error");
-          }
-        }
-      }
-    } catch (ConnectException e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "timeout";
-      Logger.log(e);
-    } catch (Exception e) {
-      responseModel.setServermsg("No internet connection/cannot connect to server");
-      responseData = "";
-      Logger.log(e);
-    }
-
-    responseModel.setResponseCode("" + responseCode);
-    responseModel.setResponseData(responseData);
-    return responseModel;
-  }
-
   static Responsemodel makeDeleteRequestWithJson(
-          String urlpath,
+          String url,
           JSONObject jsonObject,
           HashMap<String, String> headersData,
           String serverType) {
     Responsemodel responseModel = new Responsemodel();
-    StringBuffer response = new StringBuffer();
     String responseData = "";
     int responseCode = 0;
-    URL url1;
     if (Build.VERSION.SDK_INT >= 21) {
-      try {
-        url1 = new URL(urlpath);
-        HttpURLConnection conn = (HttpURLConnection) url1.openConnection();
-        conn.setReadTimeout(TimeoutInterval);
-        conn.setConnectTimeout(TimeoutInterval);
-        conn.setRequestMethod("DELETE");
-        conn.setDoInput(true);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
-
-        if (serverType.equalsIgnoreCase("WCP")) {
-          String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
-          conn.setRequestProperty("Authorization", "Basic " + encoding);
-          conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        }
-
-        if (headersData != null) {
-          Set mapSet = (Set) headersData.entrySet();
-          Iterator mapIterator = mapSet.iterator();
-          while (mapIterator.hasNext()) {
-            Map.Entry mapEntry = (Map.Entry) mapIterator.next();
-            String keyValue = (String) mapEntry.getKey();
-            String value = (String) mapEntry.getValue();
-            conn.setRequestProperty(keyValue, value);
-          }
-        }
-
-        conn.setDoOutput(true);
-
-        OutputStream os = conn.getOutputStream();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-        writer.write(jsonObject.toString());
-
-        writer.flush();
-        writer.close();
-        os.close();
-
-        try {
-          // Will throw IOException if server responds with 401.
-          responseCode = conn.getResponseCode();
-        } catch (IOException e) {
-          // Will return 401, because now connection has the correct internal state.
-          responseCode = conn.getResponseCode();
-        }
-        if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
-          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-          String inputLine;
-
-          while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-          }
-          in.close();
-          conn.disconnect();
-          responseData = response.toString();
-          responseModel.setServermsg("success");
-        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-          responseData = "session expired";
-        } else {
-          if (conn.getHeaderField(headerErrorKey) != null) {
-            responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
-            responseData = "http_not_ok";
-          } else {
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-            String inputLine;
-
-            while ((inputLine = in.readLine()) != null) {
-              response.append(inputLine);
-            }
-            in.close();
-            conn.disconnect();
-            responseData = response.toString();
-
-            JSONObject responseDataJson = new JSONObject(responseData);
-            if (responseDataJson.has(errorDescKey)) {
-              responseModel.setServermsg(responseDataJson.getString(errorDescKey));
-            } else {
-              responseModel.setServermsg("server error");
-            }
-          }
-        }
-      } catch (ConnectException e) {
-        responseModel.setServermsg("No internet connection/cannot connect to server");
-        responseData = "timeout";
-        Logger.log(e);
-      } catch (Exception e) {
-        responseModel.setServermsg("No internet connection/cannot connect to server");
-        responseData = "";
-        Logger.log(e);
-      }
+      return getResponse(url, "DELETE", serverType, headersData, jsonObject.toString());
     } else {
       try {
         HttpParams httpParams = new BasicHttpParams();
         HttpConnectionParams.setConnectionTimeout(httpParams, TimeoutInterval);
         HttpConnectionParams.setSoTimeout(httpParams, TimeoutInterval);
-        OwnHttpDelete httppost = new OwnHttpDelete(urlpath);
+        OwnHttpDelete httppost = new OwnHttpDelete(url);
 
         if (headersData != null) {
           Set mapSet = (Set) headersData.entrySet();
@@ -929,58 +195,32 @@ public class HttpRequest {
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 
-        if (serverType.equalsIgnoreCase("Response")) {
-          HttpEntity entity = response1.getEntity();
-          String line;
-          if (entity != null) {
-            InputStream instream = entity.getContent();
-            try {
-              // do something useful
-              BufferedReader br = new BufferedReader(new InputStreamReader(instream));
-              while ((line = br.readLine()) != null) {
-                responseData += line;
-              }
-              br.close();
-            } finally {
-              instream.close();
-            }
-          }
-        } else {
-          if (responseCode == HttpURLConnection.HTTP_OK) {
-            HttpEntity entity = response1.getEntity();
-            String line;
-            if (entity != null) {
-              InputStream instream = entity.getContent();
-              try {
-                // do something useful
-                BufferedReader br = new BufferedReader(new InputStreamReader(instream));
-                while ((line = br.readLine()) != null) {
-                  responseData += line;
-                }
-                br.close();
-                //                    conn.disconnect();
-              } finally {
-                instream.close();
-              }
-            }
-          } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-            responseData = "session expired";
-          } else {
-            responseData = "http_not_ok";
-          }
-        }
 
-        if (response1.getFirstHeader(headerErrorKey) != null) {
-          responseModel.setServermsg(response1.getFirstHeader(headerErrorKey).getValue());
-        } else {
+        if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
+          responseData = getResponseData(response1);
           responseModel.setServermsg("success");
+        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+          responseData = "session expired";
+        } else {
+          if (response1.getFirstHeader(headerErrorKey) != null) {
+            responseModel.setServermsg(response1.getFirstHeader(headerErrorKey).getValue());
+          } else {
+            responseData = getResponseData(response1);
+            JSONObject responseDataJson = new JSONObject(responseData);
+            if (responseDataJson.has(errorDescKey)) {
+              responseModel.setServermsg(responseDataJson.getString(errorDescKey));
+            } else {
+              responseModel.setServermsg("server error");
+            }
+          }
         }
-
-      } catch (ConnectTimeoutException e) {
-        Logger.log(e);
-      } catch (SocketTimeoutException e) {
+      } catch (ConnectTimeoutException | SocketTimeoutException e) {
+        responseModel.setServermsg("No internet connection/cannot connect to server");
+        responseData = "timeout";
         Logger.log(e);
       } catch (Exception e) {
+        responseModel.setServermsg("No internet connection/cannot connect to server");
+        responseData = "";
         Logger.log(e);
       }
     }
@@ -988,6 +228,26 @@ public class HttpRequest {
     responseModel.setResponseCode("" + responseCode);
     responseModel.setResponseData(responseData);
     return responseModel;
+  }
+
+  private static String getResponseData(HttpResponse response1) throws IOException {
+    StringBuilder responseData = new StringBuilder();
+    HttpEntity entity = response1.getEntity();
+    String line;
+    if (entity != null) {
+      InputStream instream = entity.getContent();
+      try {
+        // do something useful
+        BufferedReader br = new BufferedReader(new InputStreamReader(instream));
+        while ((line = br.readLine()) != null) {
+          responseData.append(line);
+        }
+        br.close();
+      } finally {
+        instream.close();
+      }
+    }
+    return responseData.toString();
   }
 
   private static class OwnHttpDelete extends HttpPost {
@@ -1008,5 +268,105 @@ public class HttpRequest {
     public String getMethod() {
       return METHOD_NAME;
     }
+  }
+
+  private static Responsemodel getResponse(String url, String methodType, String serverType, HashMap<String, String> headersData, String bodyParams) {
+    Responsemodel responseModel = new Responsemodel();
+    StringBuilder response = new StringBuilder();
+    String responseData = "";
+    int responseCode = 0;
+    try {
+      URL obj = new URL(url);
+      HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+      conn.setRequestMethod(methodType);
+      conn.setReadTimeout(TimeoutInterval);
+      conn.setConnectTimeout(TimeoutInterval);
+      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
+
+      if (serverType.equalsIgnoreCase(SERVER_TYPE_WCP)) {
+        String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);
+        conn.setRequestProperty("Authorization", "Basic " + encoding);
+        conn.setRequestProperty(AppConfig.WCP_APP_ID_KEY, AppConfig.APP_ID_VALUE);
+      }
+
+      if (headersData != null) {
+        Set mapSet = (Set) headersData.entrySet();
+        Iterator mapIterator = mapSet.iterator();
+        while (mapIterator.hasNext()) {
+          Map.Entry mapEntry = (Map.Entry) mapIterator.next();
+          String keyValue = (String) mapEntry.getKey();
+          String value = (String) mapEntry.getValue();
+          conn.setRequestProperty(keyValue, value);
+        }
+      }
+
+      if (!methodType.equalsIgnoreCase("get")) {
+        conn.setDoOutput(true);
+        OutputStream os = conn.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+        writer.write(bodyParams);
+        writer.flush();
+        writer.close();
+        os.close();
+      }
+
+      try {
+        // Will throw IOException if server responds with 401.
+        responseCode = conn.getResponseCode();
+      } catch (IOException e) {
+        // Will return 401, because now connection has the correct internal state.
+        responseCode = conn.getResponseCode();
+      }
+
+      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null) {
+          response.append(inputLine);
+        }
+        in.close();
+        conn.disconnect();
+        responseData = response.toString();
+        responseModel.setServermsg("success");
+      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+        responseData = "session expired";
+      } else {
+        if (conn.getHeaderField(headerErrorKey) != null) {
+          responseModel.setServermsg(conn.getHeaderField(headerErrorKey));
+        } else {
+          BufferedReader in = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+          String inputLine;
+
+          while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+          }
+          in.close();
+          conn.disconnect();
+          responseData = response.toString();
+
+          JSONObject responseDataJson = new JSONObject(responseData);
+          if (responseDataJson.has(errorDescKey)) {
+            responseModel.setServermsg(responseDataJson.getString(errorDescKey));
+          } else {
+            responseModel.setServermsg("server error");
+          }
+        }
+      }
+    } catch (ConnectException e) {
+      responseModel.setServermsg("No internet connection/cannot connect to server");
+      responseData = "timeout";
+      Logger.log(e);
+    } catch (Exception e) {
+      responseModel.setServermsg("No internet connection/cannot connect to server");
+      responseData = "";
+      Logger.log(e);
+    }
+
+    responseModel.setResponseCode(String.valueOf(responseCode));
+    responseModel.setResponseData(responseData);
+    return responseModel;
   }
 }
