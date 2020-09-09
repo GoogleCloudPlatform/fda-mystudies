@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
@@ -25,7 +24,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
@@ -123,35 +121,22 @@ public class StudyStateController {
   public ResponseEntity<?> getStudyState(
       @RequestHeader(USER_ID) String userId,
       @Context HttpServletResponse response,
-      HttpServletRequest request)
-      throws Exception {
+      HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     logger.info("(C)...StudyStateController.getStudyState()...Started");
     if (((userId.length() != 0) || StringUtils.isNotEmpty(userId))) {
       StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
-      try {
-        List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
-        studyStateResponse.setStudies(studies);
-        studyStateResponse.setMessage(AppConstants.SUCCESS);
 
-        auditRequest.setUserId(userId);
-        enrollAuditEventHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
+      List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
+      studyStateResponse.setStudies(studies);
+      studyStateResponse.setMessage(AppConstants.SUCCESS);
 
-        return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
-      } catch (InvalidUserIdException e) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_128.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
-            response);
+      auditRequest.setUserId(userId);
+      enrollAuditEventHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
 
-        auditRequest.setUserId(userId);
-        enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
+      return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
 
-        logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_USER_ID");
-        return null;
-      }
     } else {
       MyStudiesUserRegUtil.getFailureResponse(
           MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
@@ -170,8 +155,7 @@ public class StudyStateController {
   public ResponseEntity<?> withdrawFromStudy(
       @RequestBody WithdrawFromStudyBean withdrawFromStudyBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request)
-      throws Exception {
+      HttpServletRequest request) {
     logger.info("StudyStateController withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);

@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
@@ -225,9 +224,7 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isUnauthorized());
-
-    verifyAuditEventCall(READ_OPERATION_FAILED_FOR_STUDY_INFO);
+        .andExpect(status().isNotFound());
 
     verifyTokenIntrospectRequest();
   }

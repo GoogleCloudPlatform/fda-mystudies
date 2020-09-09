@@ -32,8 +32,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   @Override
   public boolean enrollmentTokenRequired(@NotNull String studyId) {
     logger.info("EnrollmentTokenServiceImpl enrollmentTokenRequired() - Starts ");
-    boolean isTokenRequired = false;
-    isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(studyId);
+    boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(studyId);
     logger.info("EnrollmentTokenServiceImpl enrollmentTokenRequired() - Ends ");
     return isTokenRequired;
   }
@@ -41,8 +40,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   @Override
   public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenServiceImpl hasParticipant() - Starts ");
-    boolean hasParticipant = false;
-    hasParticipant = enrollmentTokenDao.hasParticipant(studyId, tokenValue);
+    boolean hasParticipant = enrollmentTokenDao.hasParticipant(studyId, tokenValue);
     logger.info("EnrollmentTokenServiceImpl hasParticipant() - Ends ");
     return hasParticipant;
   }
@@ -50,8 +48,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   @Override
   public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
-    boolean isValidStudyToken = false;
-    isValidStudyToken = enrollmentTokenDao.isValidStudyToken(token, studyId);
+    boolean isValidStudyToken = enrollmentTokenDao.isValidStudyToken(token, studyId);
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Ends ");
     return isValidStudyToken;
   }
@@ -59,8 +56,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   @Override
   public boolean studyExists(@NotNull String studyId) {
     logger.info("EnrollmentTokenServiceImpl studyExists() - Starts ");
-    boolean isStudyExist = false;
-    isStudyExist = enrollmentTokenDao.studyExists(studyId);
+    boolean isStudyExist = enrollmentTokenDao.studyExists(studyId);
     logger.info("EnrollmentTokenServiceImpl studyExists() - Ends ");
     return isStudyExist;
   }
@@ -70,17 +66,13 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       @NotNull String shortName,
       String tokenValue,
       String userId,
-      AuditLogEventRequest auditRequest)
-      throws Exception {
+      AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
-    EnrollmentResponseBean participantBean = null;
-    String hashedTokenValue = "";
-    boolean isTokenRequired = false;
-    String participantId = "";
-    isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
-    hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue);
-    participantId = enrollUtil.getParticipantId("", hashedTokenValue, shortName, auditRequest);
-    participantBean =
+    boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
+    String hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue);
+    String participantId =
+        enrollUtil.getParticipantId("", hashedTokenValue, shortName, auditRequest);
+    EnrollmentResponseBean participantBean =
         enrollmentTokenDao.enrollParticipant(
             shortName,
             tokenValue,

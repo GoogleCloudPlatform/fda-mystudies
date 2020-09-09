@@ -27,6 +27,5 @@ public interface EnrollmentTokenService {
       @NotNull String shortName,
       @Nullable String tokenValue,
       String userId,
-      AuditLogEventRequest auditRequest)
-      throws Exception;
+      AuditLogEventRequest auditRequest);
 }

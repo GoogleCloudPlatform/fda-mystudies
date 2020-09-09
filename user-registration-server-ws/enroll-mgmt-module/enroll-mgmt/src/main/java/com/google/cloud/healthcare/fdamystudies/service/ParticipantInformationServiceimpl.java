@@ -28,11 +28,9 @@ public class ParticipantInformationServiceimpl implements ParticipantInformation
   @Override
   public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - starts ");
-    ParticipantInfoRespBean participantInforespBean = null;
-    Integer studyInfoId = 0;
 
-    studyInfoId = commonDao.getStudyId(studyId);
-    participantInforespBean =
+    Integer studyInfoId = commonDao.getStudyId(studyId);
+    ParticipantInfoRespBean participantInforespBean =
         participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
 
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - ends ");
