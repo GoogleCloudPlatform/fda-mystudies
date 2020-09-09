@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,8 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 // TODO (#761) Added @Ignore to test classes written by UNC team, should be fixed later or next
 // track

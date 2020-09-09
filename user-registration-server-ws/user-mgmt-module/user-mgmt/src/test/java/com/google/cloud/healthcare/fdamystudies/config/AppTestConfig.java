@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
@@ -17,10 +21,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;
-
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @Profile("mockit")
 @Configuration

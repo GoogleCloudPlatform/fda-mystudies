@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
+
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
 import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
@@ -31,12 +37,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 // TODO (#761) Added @Ignore to test classes written by UNC team, should be fixed later or next
 // track
