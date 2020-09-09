@@ -49,15 +49,16 @@ export class SiteListComponent implements OnInit {
         this.manageStudiesBackup = {...manageStudies};
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
-            study.name.toLowerCase().includes(query.toLowerCase()) ||
-            study.customId.toLowerCase().includes(query.toLowerCase()),
+            study.name.toLowerCase().includes(query) ||
+            study.customId.toLowerCase().includes(query) ||
+            study.sites.some((site) => site.name.includes(query)),
         );
         return this.manageStudiesBackup;
       }),
     );
   }
   search(query: string): void {
-    this.query$.next(query.trim());
+    this.query$.next(query.trim().toLowerCase());
   }
   progressBarColor(site: Site): string {
     if (site.enrollmentPercentage < 30) {
