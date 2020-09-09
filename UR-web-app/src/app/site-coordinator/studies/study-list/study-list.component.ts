@@ -4,7 +4,7 @@ import {ToastrService} from 'ngx-toastr';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {Study, StudyResponse} from '../shared/study.model';
+import {Study} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
 @Component({
   selector: 'app-study-list',
@@ -13,7 +13,7 @@ import {StudiesService} from '../shared/studies.service';
 })
 export class StudyListComponent implements OnInit {
   query$ = new BehaviorSubject('');
-  studyList$: Observable<StudyResponse> = of();
+  study$: Observable<Study[]> = of([]);
   studies: Study[] = [];
   constructor(
     private readonly studiesService: StudiesService,
@@ -26,18 +26,17 @@ export class StudyListComponent implements OnInit {
   }
 
   getStudies(): void {
-    this.studyList$ = combineLatest(
+    this.study$ = combineLatest(
       this.studiesService.getStudies(),
       this.query$,
     ).pipe(
-      map(([study, query]) => {
-        this.studies = study.studies;
-        study.studies = study.studies.filter(
+      map(([studies, query]) => {
+        this.studies = studies;
+        return this.studies.filter(
           (study: Study) =>
             study.name.toLowerCase().includes(query.toLowerCase()) ||
             study.customId.toLowerCase().includes(query.toLowerCase()),
         );
-        return study;
       }),
     );
   }
@@ -45,9 +44,9 @@ export class StudyListComponent implements OnInit {
     this.query$.next(query.trim());
   }
   progressBarColor(study: Study): string {
-    if (study.enrollmentPercentage && study.enrollmentPercentage < 30) {
+    if (study.enrollmentPercentage < 30) {
       return 'red__text__sm';
-    } else if (study.enrollmentPercentage && study.enrollmentPercentage < 70) {
+    } else if (study.enrollmentPercentage < 70) {
       return 'orange__text__sm';
     } else {
       return 'green__text__sm';

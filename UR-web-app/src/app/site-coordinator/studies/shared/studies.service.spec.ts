@@ -6,14 +6,13 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {EntityService} from '../../../service/entity.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {throwError, of} from 'rxjs';
-import {StudyResponse} from './study.model';
+import {Study} from './study.model';
 import {StudiesService} from './studies.service';
-import {
-  expectedStudyList,
-  expectedSitesList,
-} from 'src/app/entity/mock-studies-data';
+import {expectedStudyList} from 'src/app/entity/mock-studies-data';
+
 describe('StudiesService', () => {
   let studiesService: StudiesService;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -34,11 +33,13 @@ describe('StudiesService', () => {
   });
 
   it('should return expected Studies List', fakeAsync(() => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<StudyResponse>>(
+    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
       'EntityService',
-      {get: of(expectedStudyList)},
+      ['getCollection'],
     );
     studiesService = new StudiesService(entityServicespy);
+
+    entityServicespy.getCollection.and.returnValue(of(expectedStudyList));
     studiesService
       .getStudies()
       .subscribe(
@@ -47,40 +48,41 @@ describe('StudiesService', () => {
         fail,
       );
 
-    expect(entityServicespy.get).toHaveBeenCalledTimes(1);
+    expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   }));
 
   it('should return expected Sites List', fakeAsync(() => {
-    const entityServiceSpy = jasmine.createSpyObj<EntityService<StudyResponse>>(
+    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
       'EntityService',
-      {get: of(expectedSitesList)},
+      ['getCollection'],
     );
-    studiesService = new StudiesService(entityServiceSpy);
+    studiesService = new StudiesService(entityServicespy);
 
+    entityServicespy.getCollection.and.returnValue(of(expectedStudyList));
     studiesService
       .getStudiesWithSites()
       .subscribe(
         (studies) =>
-          expect(studies).toEqual(expectedSitesList, 'expected StudiesList'),
+          expect(studies).toEqual(expectedStudyList, 'expected StudiesList'),
         fail,
       );
 
-    expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
+    expect(entityServicespy.getCollection.calls.count()).toBe(1, 'one call');
   }));
 
   it('should return an error when the server returns a 400', fakeAsync(() => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Study>>(
+      'EntityService',
+      ['getCollection'],
+    );
+    studiesService = new StudiesService(entityServicespy);
     const errorResponses: ApiResponse = {
       message: 'Bad Request',
     } as ApiResponse;
 
-    const entityServicespy = jasmine.createSpyObj<EntityService<StudyResponse>>(
-      'EntityService',
-      {get: throwError(errorResponses)},
-    );
-    studiesService = new StudiesService(entityServicespy);
-
+    entityServicespy.getCollection.and.returnValue(throwError(errorResponses));
     tick(40);
-    studiesService.getStudiesWithSites().subscribe(
+    studiesService.getStudies().subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');

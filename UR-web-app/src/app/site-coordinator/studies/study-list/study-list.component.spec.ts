@@ -27,7 +27,7 @@ describe('StudyListComponent', () => {
   beforeEach(async(async () => {
     const studyServiceSpy = jasmine.createSpyObj<StudiesService>(
       'StudiesService',
-      {getStudies: of(expectedStudyList)},
+      ['getStudies'],
     );
     await TestBed.configureTestingModule({
       declarations: [StudyListComponent],
@@ -56,6 +56,8 @@ describe('StudyListComponent', () => {
       .then(() => {
         fixture = TestBed.createComponent(StudyListComponent);
         component = fixture.componentInstance;
+
+        studyServiceSpy.getStudies.and.returnValue(of(expectedStudyList));
       });
   }));
 
@@ -64,11 +66,8 @@ describe('StudyListComponent', () => {
   });
 
   it('should NOT have studies before ngOnInit', () => {
-    component.studyList$.subscribe((studies) => {
-      expect(studies.studies.length).toBe(
-        0,
-        'should not have studies before ngOnInit',
-      );
+    component.study$.subscribe((studies) => {
+      expect(studies.length).toBe(0, 'should not have studies before ngOnInit');
     });
   });
 
@@ -81,15 +80,15 @@ describe('StudyListComponent', () => {
     }));
 
     it('should get the studies List via refresh function', fakeAsync(() => {
-      component.studyList$.subscribe((studies) => {
-        expect(studies.studies.length).toEqual(4);
+      component.study$.subscribe((studies) => {
+        expect(studies.length).toEqual(3);
       });
     }));
     it('should display all studies', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       fixture.detectChanges();
       expect(compiled.querySelectorAll('.studies_row').length).toBe(
-        4,
+        3,
         'should display all studies list',
       );
     });
