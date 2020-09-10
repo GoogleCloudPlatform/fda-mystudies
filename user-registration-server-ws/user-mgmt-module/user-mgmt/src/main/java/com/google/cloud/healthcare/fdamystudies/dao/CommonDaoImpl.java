@@ -318,7 +318,7 @@ public class CommonDaoImpl implements CommonDao {
     return studyDeviceTokenMap;
   }
 
-  public String getParticicpantId(String id, String customStudyId) {
+  public String getParticipantId(String id, String customStudyId) {
     logger.info("CommonDaoImpl getParticicpantId() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
     String participantId = null;

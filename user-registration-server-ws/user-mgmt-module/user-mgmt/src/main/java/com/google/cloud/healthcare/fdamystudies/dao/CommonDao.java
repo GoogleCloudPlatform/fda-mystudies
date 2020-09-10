@@ -32,5 +32,5 @@ public interface CommonDao {
   public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
       List<StudyEntity> studyInfoIds);
 
-  public String getParticicpantId(String id, String customeStudyId);
+  public String getParticipantId(String id, String customStudyId);
 }

@@ -272,7 +272,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             && !deactivateAcctBean.getDeleteData().isEmpty()) {
           for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
             studyBean = new WithdrawFromStudyBean();
-            participantId = commonDao.getParticicpantId(userDetailsId, studyReqBean.getStudyId());
+            participantId = commonDao.getParticipantId(userDetailsId, studyReqBean.getStudyId());
             studyReqBean.setStudyId(studyReqBean.getStudyId());
             if (participantId != null && !participantId.isEmpty())
               studyBean.setParticipantId(participantId);
