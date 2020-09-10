@@ -1,1 +1,108 @@
-<p>user-profile works!</p>
+<section class="max__w__850 add__location">
+  <div>
+    <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+      <div class="mt-lg">
+        <div class="subheader__title">My Account</div>
+        <div class="bg__white card__inside__pad box__shadow-cmn m-none">
+          <div class="row border-bottom__c4d1e6">
+            <div class="col-xs-12 col-md-12 p-none">
+              <div class="form-group">
+                <label for="email">Email ID</label>
+                <input
+                  class="form-control"
+                  id="email"
+                  placeholder="Enter Email"
+                  type="text"
+                  formControlName="email"
+                  readonly
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="firstName"
+                  placeholder="Enter First Name"
+                  formControlName="firstName"
+                />
+                <div
+                  *ngIf="
+                    f.firstName.invalid &&
+                    (f.firstName.dirty || f.firstName.touched)
+                  "
+                >
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.firstName.errors?.required"
+                  >
+                    Please fill out this filed.
+                  </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.firstName.errors?.pattern"
+                  >
+                    Please enter atlest 4 alphabets with no space.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-6 p-none">
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lastName"
+                  placeholder="Enter Last Name"
+                  formControlName="lastName"
+                />
+                <div
+                  *ngIf="
+                    f.lastName.invalid &&
+                    (f.lastName.dirty || f.lastName.touched)
+                  "
+                >
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.lastName.errors?.required"
+                  >
+                    Please fill out this filed.
+                  </span>
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.lastName.errors?.pattern"
+                  >
+                    Please enter atlest 4 alphabets with no space.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn__container flex__justify__space-between mb-xlg">
+        <div>
+          <button
+            name="buttonUpdateProfile"
+            type="submit"
+            class="btn bt__add mr-sm"
+            [disabled]="!profileForm.valid || profileForm.pristine"
+          >
+            Update
+          </button>
+          <button type="button" class="btn bt__cancel" disabled>Cancel</button>
+        </div>
+        <div>
+          <button type="button" class="primary__btn bt__so">Sign Out</button>
+        </div>
+      </div>
+      <span><a [routerLink]="['changepassword']">Change password?</a></span>
+    </form>
+  </div>
+</section>
