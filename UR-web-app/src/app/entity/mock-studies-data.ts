@@ -1,114 +1,88 @@
-import {
-  Study,
-  StudyResponse,
-} from '../site-coordinator/studies/shared/study.model';
+import {Study} from '../site-coordinator/studies/shared/study.model';
 import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
 import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus} from '../shared/enums';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-export const expectedSitesList = {
-  studies: [
-    {
-      id: '1',
-      customId: 'TestStudy001',
-      name: 'abcd',
-      sitesCount: 1,
-      sites: [
-        {
-          id: '1',
-          name: 'Location1',
-          invited: 300,
-          enrolled: 1,
-          enrollmentPercentage: 0.3333333333333333,
-          edit: 1,
-          status: '',
-        },
-      ],
-      type: 'OPEN',
-      appInfoId: '1',
-      appId: 'Studies',
-      studyPermission: 1,
-    },
-    {
-      id: '3',
-      customId: 'TestStudy003',
-      name: 'abcd',
-      sitesCount: 1,
-      sites: [
-        {
-          id: '5',
-          name: 'Location1',
-          invited: 0,
-          enrolled: null,
-          enrollmentPercentage: null,
-          edit: null,
-          status: null,
-        },
-      ],
-      type: 'CLOSE',
-      appInfoId: '1',
-      appId: 'Studies',
-      studyPermission: 2,
-    },
-  ],
-  status: 200,
-  message: 'Get sites successfully',
-  code: 'MSG-0018',
-} as StudyResponse;
+export const expectedStudyList = [
+  {
+    appId: '',
+    appInfoId: 0,
+    customId: 'NewStudyTest',
+    enrolledCount: 41,
+    enrollmentPercentage: 38,
+    id: 1,
+    invitedCount: 4,
+    name: 'New Study Test',
+    sites: [
+      {
+        edit: 1,
+        enrolledCount: 7,
+        enrollmentPercentage: 50,
+        id: 11,
+        invitedCount: 14,
+        name: 'Location 1',
+        status: '',
+      },
+    ],
+    studyPermission: 2,
+    totalSitesCount: 16,
+    type: 'CLOSE',
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-export const expectedStudyList = {
-  studies: [
-    {
-      id: '5',
-      customId: 'test1',
-      name: 'abcd',
-      sitesCount: 1,
-      type: 'CLOSE',
-      invited: 0,
-      enrolled: 0,
-    },
-    {
-      id: '3',
-      customId: 'TestStudy003',
-      name: 'abcd',
-      sitesCount: 1,
-      type: 'CLOSE',
-      invited: 0,
-      enrolled: 0,
-      studyPermission: 1,
-    },
-    {
-      id: '1',
-      customId: 'TestStudy001',
-      name: 'abcd',
-      sitesCount: 1,
-      type: 'OPEN',
-      invited: 300,
-      enrolled: 1,
-      enrollmentPercentage: 0.3333333333333333,
-      studyPermission: 1,
-    },
-    {
-      id: '2',
-      customId: 'TestStudy002',
-      name: 'pqr',
-      sitesCount: 13,
-      type: 'CLOSE',
-      invited: 28,
-      enrolled: 4,
-      enrollmentPercentage: 14.285714285714286,
-      studyPermission: 2,
-    },
-  ],
-  sitePermissionCount: 16,
-  status: 200,
-  message: 'Get studies successfully',
-  code: 'MSG-0004',
-} as StudyResponse;
+    logo: '/path_to_img/',
+  },
+  {
+    appId: '',
+    appInfoId: 0,
+    customId: 'OpenStudy',
+    enrolledCount: 5,
+    enrollmentPercentage: 0,
+    id: 12,
+    invitedCount: 9,
+    name: 'Open Study 02',
+    sites: [
+      {
+        edit: 1,
+        enrolledCount: 12,
+        enrollmentPercentage: 14,
+        id: 10,
+        invitedCount: 0,
+        name: 'Location 2',
+        status: '',
+      },
+      {
+        edit: 1,
+        enrolledCount: 32,
+        enrollmentPercentage: 44,
+        id: 10,
+        invitedCount: 0,
+        name: 'Location 3',
+        status: '',
+      },
+    ],
+    studyPermission: 1,
+    totalSitesCount: 5,
+    type: 'CLOSE',
+
+    logo: '/path_to_img/',
+  },
+  {
+    appId: '',
+    appInfoId: 0,
+    customId: 'ClosedStudy',
+    enrolledCount: 54,
+    enrollmentPercentage: 17,
+    id: 14,
+    invitedCount: 0,
+    name: 'Closed Study',
+    sites: [],
+    studyPermission: 2,
+    totalSitesCount: 6,
+    type: 'OPEN',
+    logo: '/path_to_img/',
+  },
+] as Study[];
 
 export const expectedStudiesDetails = {
   participantRegistryDetail: {
@@ -171,7 +145,7 @@ export const expectedStudiesDetails = {
   code: 'MSG-0013',
 } as StudyDetails;
 
-export const expectedStudyId = {id: '1'} as Study;
+export const expectedStudyId = {id: 1} as Study;
 
 export const expectedResponse = {
   message: 'Target Enrollment updated successfully',

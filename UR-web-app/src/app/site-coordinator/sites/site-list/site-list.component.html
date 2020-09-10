@@ -1,9 +1,9 @@
 <div class="max__w__1280">
   <div class="tab-content">
     <ng-container *ngIf="study$ | async as studies">
-      <div>
+      <div *ngIf="studies.length != 0">
         <div
-          *ngFor="let study of studies.studies"
+          *ngFor="let study of studies"
           class="bg__white cards box__shadow-cmn ml-none mr-none studies_row"
         >
           <div class="flex__ flex__row">
@@ -21,12 +21,11 @@
                   class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
                 >
                   <div class="col-xs-6 col-md-3 p-none">
-                    <span *ngIf="study.sites && study.type != 'OPEN'">
+                    <span *ngIf="study.type != 'OPEN'">
                       {{ study.sites.length | i18nPlural: messageMapping }}
                     </span>
                     <span *ngIf="study.type == 'OPEN'">Open Study</span>
                   </div>
-
                   <div
                     class="col-xs-6 col-md-9 text-right p-none mb__display__none"
                   >
@@ -58,7 +57,7 @@
                     <div class="col-xs-12 col-md-4 p-none lh__6">
                       <div class="prog">
                         <div class="pro__base">
-                          <div *ngIf="site.invited">
+                          <div *ngIf="site.invitedCount != 0">
                             <div
                               class="pro__top"
                               [style.width.%]="site.enrollmentPercentage"
@@ -71,10 +70,10 @@
                         [ngClass]="progressBarColor(site)"
                       >
                         <div>
-                          <span *ngIf="site.invited" class="enrolled">
-                            {{ site.enrolled }} / {{ site.invited }}
+                          <span *ngIf="site.invitedCount != 0" class="enrolled">
+                            {{ site.enrolledCount }} / {{ site.invitedCount }}
                           </span>
-                          <span *ngIf="site.invited === 0">N/A</span>
+                          <span *ngIf="site.invitedCount == 0">N/A</span>
                         </div>
                       </div>
                     </div>

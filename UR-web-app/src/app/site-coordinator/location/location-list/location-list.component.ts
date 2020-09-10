@@ -6,7 +6,6 @@ import {ToastrService} from 'ngx-toastr';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {SearchService} from 'src/app/shared/search.service';
 
 @Component({
   selector: 'location-list',
@@ -16,16 +15,13 @@ import {SearchService} from 'src/app/shared/search.service';
 export class LocationListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   location$: Observable<ManageLocations> = of();
-  manageLocationBackup = {} as ManageLocations;
   constructor(
     private readonly locationService: LocationService,
     private readonly router: Router,
     private readonly toastr: ToastrService,
-    private readonly sharedService: SearchService,
   ) {}
 
   ngOnInit(): void {
-    this.sharedService.updateSearchPlaceHolder('Search Location');
     this.getLocation();
   }
 
@@ -35,15 +31,14 @@ export class LocationListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageLocations, query]) => {
-        this.manageLocationBackup = {...manageLocations};
-        this.manageLocationBackup.locations = this.manageLocationBackup.locations.filter(
+        manageLocations.locations = manageLocations.locations.filter(
           (location: Location) =>
             (location.name &&
               location.name.toLowerCase().includes(query.toLowerCase())) ||
             (location.customId &&
               location.customId.toLowerCase().includes(query.toLowerCase())),
         );
-        return this.manageLocationBackup;
+        return manageLocations;
       }),
     );
   }

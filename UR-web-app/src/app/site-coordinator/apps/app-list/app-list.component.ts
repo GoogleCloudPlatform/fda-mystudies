@@ -5,7 +5,6 @@ import {of} from 'rxjs';
 import {AppsService} from '../shared/apps.service';
 import {ManageApps, App} from '../shared/app.model';
 import {Permission} from 'src/app/shared/permission-enums';
-import {SearchService} from 'src/app/shared/search.service';
 @Component({
   selector: 'app-app-list',
   templateUrl: './app-list.component.html',
@@ -13,7 +12,6 @@ import {SearchService} from 'src/app/shared/search.service';
 export class AppListComponent implements OnInit {
   query$ = new BehaviorSubject('');
   manageApp$: Observable<ManageApps> = of();
-  manageAppsBackup = {} as ManageApps;
   appUsersMessageMapping: {[k: string]: string} = {
     '=0': 'No App Users',
     '=1': 'One App User',
@@ -25,13 +23,9 @@ export class AppListComponent implements OnInit {
     'other': '# Studies',
   };
 
-  constructor(
-    private readonly appService: AppsService,
-    private readonly sharedService: SearchService,
-  ) {}
+  constructor(private readonly appService: AppsService) {}
 
   ngOnInit(): void {
-    this.sharedService.updateSearchPlaceHolder('Search by App ID or Name');
     this.getApps();
   }
 
@@ -41,13 +35,12 @@ export class AppListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageApps, query]) => {
-        this.manageAppsBackup = {...manageApps};
-        this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
+        manageApps.apps = manageApps.apps.filter(
           (app: App) =>
             app.name.toLowerCase().includes(query.toLowerCase()) ||
             app.customId.toLowerCase().includes(query.toLowerCase()),
         );
-        return this.manageAppsBackup;
+        return manageApps;
       }),
     );
   }

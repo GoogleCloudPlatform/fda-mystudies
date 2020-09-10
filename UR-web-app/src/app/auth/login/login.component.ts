@@ -14,10 +14,15 @@ export class LoginComponent {
   ) {}
 
   ngOnInit(): void {
-    if (!this.authService.hasCredentials()) {
-      this.authService.redirectToLoginPage();
+    this.redirectToAuth();
+  }
+
+  redirectToAuth(): void {
+    if (this.authService.getUserAccessToken() === '') {
+      this.authService.storeDefaultsValues();
+      this.authService.grantAutoSignIn();
     } else {
-      void this.router.navigate(['/coordinator/']);
+      void this.router.navigate(['/login/']);
     }
   }
 }

@@ -6,22 +6,16 @@ import {
   HttpRequest,
   HttpEvent,
   HttpErrorResponse,
-  HttpResponse,
 } from '@angular/common/http';
 import {finalize} from 'rxjs/operators';
-import {User} from '../entity/user';
-import {Observable, OperatorFunction, throwError, of} from 'rxjs';
+import {Observable, OperatorFunction, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {getMessage} from '../shared/error.codes.enum';
 import {AuthService} from '../service/auth.service';
-import accessToken from 'src/app/auth/access-token.json';
-import {AccessToken} from '../entity/access-token';
-import account from 'src/app/auth/account.json';
 import {ApiResponse} from '../entity/api.response.model';
 import {environment} from 'src/environments/environment';
 import {CookieService} from 'ngx-cookie-service';
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
@@ -35,22 +29,6 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<unknown>,
     next: HttpHandler,
   ): Observable<HttpEvent<unknown>> {
-    if (req.url === `${environment.authServerUrl}/oauth2/token`) {
-      return of(
-        new HttpResponse({
-          status: 200,
-          body: accessToken as AccessToken,
-        }),
-      );
-    }
-    if (req.url === `${environment.baseUrl}/users`) {
-      return of(
-        new HttpResponse({
-          status: 200,
-          body: account as User,
-        }),
-      );
-    }
     void this.spinner.show();
 
     if (!this.authService.hasCredentials()) {
@@ -61,14 +39,16 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     }
-    const user: User = this.authService.getUser();
     if (req.url.includes(`${environment.authServerUrl}`)) {
       const headers = req.headers
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .set('Accept', 'application/json')
-        .set('correlationId', this.cookieService.get('correlationId'))
-        .set('appId', 'PARTICIPANT-MANAGER')
-        .set('mobilePlatform', 'DESKTOP');
+        .set(
+          'correlationId',
+          `${sessionStorage.getItem('correlationId') || ''} `,
+        )
+        .set('appId', `${environment.appId}`)
+        .set('mobilePlatform', `${environment.mobilePlatform}`);
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
         this.handleError(),
@@ -79,9 +59,11 @@ export class AuthInterceptor implements HttpInterceptor {
     } else {
       const headers = req.headers
         .set('Content-Type', 'application/json')
-        .set('userId', user.id.toString())
-        .set('authToken', this.authService.getUserAccessToken())
-        .set('authUserId', user.urAdminAuthId);
+        .set('userId', `${sessionStorage.getItem('userId') || ''} `)
+        .set(
+          'Authorization',
+          `Bearer ${sessionStorage.getItem('authToken') || ''} `,
+        );
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
         this.handleError(),
