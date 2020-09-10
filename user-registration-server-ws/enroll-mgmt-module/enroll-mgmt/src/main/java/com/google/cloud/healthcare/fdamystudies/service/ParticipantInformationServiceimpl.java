@@ -29,7 +29,7 @@ public class ParticipantInformationServiceimpl implements ParticipantInformation
   public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - starts ");
     ParticipantInfoRespBean participantInforespBean = null;
-    String studyInfoId = "";
+    String studyInfoId = String.valueOf(0);
     try {
       studyInfoId = commonDao.getStudyId(studyId);
       participantInforespBean =
