@@ -9,7 +9,7 @@
       </button>
       <a
         [ngClass]="showSearchOnClick ? ' display__none ' : 'display__block '"
-        routerLink="/user/dashboard"
+        routerLink="/coordinator/studies"
       >
         <img class="mr-sm" src="assets/images/landing-logo.gif" />
         <span class="header__logo__text">FDA MyStudies</span>
@@ -20,6 +20,7 @@
       class="navbar-nav inner-addon right-addon search-icon"
     >
       <div
+        *ngIf="showSearchBar"
         class="position__relative searchbar__rightspace"
         [ngClass]="showSearchOnClick ? ' display__block ' : 'display__none'"
       >
@@ -65,9 +66,8 @@
       <ul class="user__profile__ul">
         <li>
           <a
-            routerLink="/coordinator/participants/dashboard"
+            routerLink="/coordinator/studies"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}"
             class="nav-item nav-link"
           >
             Dashboard
@@ -77,7 +77,6 @@
           <a
             routerLink="/coordinator/locations"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}"
             class="nav-item nav-link"
           >
             Locations
@@ -87,7 +86,6 @@
           <a
             routerLink="/coordinator/users"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}"
             class="nav-item nav-link"
           >
             Users
@@ -97,7 +95,6 @@
           <a
             routerLink="/coordinator/accounts"
             routerLinkActive="active"
-            [routerLinkActiveOptions]="{exact: true}"
             class="nav-item nav-link"
           >
             My Account
