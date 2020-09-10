@@ -22,9 +22,9 @@ public class Validator {
     return true;
   }
 
-  public static boolean isValid(String applicationId, String orgId) {
-    if ((applicationId == null) || (orgId == null)) {
-      throw new BadRequest("applicationId or orgId is missing in request header");
+  public static boolean isValid(String applicationId) {
+    if ((applicationId == null)) {
+      throw new BadRequest("applicationId is missing in request header");
     }
     return true;
   }
