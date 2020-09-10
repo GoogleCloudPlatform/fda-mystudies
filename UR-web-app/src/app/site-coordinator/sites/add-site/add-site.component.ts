@@ -6,7 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {Study} from '../../studies/shared/study.model';
 import {AddSiteRequest} from '../shared/add.sites.request';
 import {LocationService} from '../../location/shared/location.service';
-import {Location, ManageLocations} from '../../location/shared/location.model';
+import {ManageLocations} from '../../location/shared/location.model';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Observable, of} from 'rxjs';
 @Component({
