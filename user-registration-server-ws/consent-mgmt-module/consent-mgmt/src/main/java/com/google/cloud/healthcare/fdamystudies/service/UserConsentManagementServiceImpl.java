@@ -15,9 +15,11 @@ import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.storage.StorageException;
 import java.util.Collections;
 import java.util.List;
@@ -42,45 +44,25 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Override
   @Transactional(readOnly = true)
   public ParticipantStudiesBO getParticipantStudies(Integer studyId, String userId) {
-    logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
-
-    ParticipantStudiesBO participantStudiesBO =
-        userConsentManagementDao.getParticipantStudies(studyId, userId);
-    logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Ends ");
-    return participantStudiesBO;
+    return userConsentManagementDao.getParticipantStudies(studyId, userId);
   }
 
   @Override
   @Transactional
   public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
-    logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
-
-    String message = userConsentManagementDao.saveParticipantStudies(participantStudiesList);
-    logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Ends ");
-    return message;
+    return userConsentManagementDao.saveParticipantStudies(participantStudiesList);
   }
 
   @Override
   @Transactional(readOnly = true)
   public StudyConsentBO getStudyConsent(String userId, Integer studyId, String consentVersion) {
-    logger.info("UserConsentManagementServiceImpl getStudyConsent() - Started ");
-
-    StudyConsentBO studyConsent =
-        userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
-
-    logger.info("UserConsentManagementServiceImpl getStudyConsent() - Ends ");
-    return studyConsent;
+    return userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
   }
 
   @Override
   @Transactional
   public String saveStudyConsent(StudyConsentBO studyConsent) {
-    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
-
-    String addOrUpdateConsentMessage = userConsentManagementDao.saveStudyConsent(studyConsent);
-
-    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Ends ");
-    return addOrUpdateConsentMessage;
+    return userConsentManagementDao.saveStudyConsent(studyConsent);
   }
 
   @Override
@@ -133,28 +115,20 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
           READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest, map);
     } catch (StorageException e) {
       consentAuditHelper.logEvent(READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest);
+      logger.error("Download consent document from cloud storage failed", e);
+      throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
     }
   }
 
   @Override
   @Transactional(readOnly = true)
   public StudyInfoBean getStudyInfoId(String customStudyId) {
-    logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Starts ");
-
-    StudyInfoBean studyInfoBean = userConsentManagementDao.getStudyInfoId(customStudyId);
-
-    logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Ends ");
-    return studyInfoBean;
+    return userConsentManagementDao.getStudyInfoId(customStudyId);
   }
 
   @Override
   @Transactional(readOnly = true)
   public Integer getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
-
-    Integer userDetailId = userConsentManagementDao.getUserDetailsId(userId);
-
-    logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Ends ");
-    return userDetailId;
+    return userConsentManagementDao.getUserDetailsId(userId);
   }
 }
