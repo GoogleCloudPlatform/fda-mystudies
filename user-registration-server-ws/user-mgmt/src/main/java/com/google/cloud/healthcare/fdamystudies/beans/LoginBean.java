@@ -22,5 +22,5 @@ import lombok.Setter;
 public class LoginBean {
   @NotBlank private String emailId;
   // TODO: no longer used.
-  @NotNull private String password;
+  private String password;
 }
