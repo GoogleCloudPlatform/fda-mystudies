@@ -64,7 +64,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserControllerTest extends BaseMockIT {
@@ -86,8 +85,6 @@ public class UserControllerTest extends BaseMockIT {
   @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Autowired private AppPermissionRepository appPermissionRepository;
-
-  @Autowired private JavaMailSender emailSender;
 
   private AppEntity appEntity;
 
