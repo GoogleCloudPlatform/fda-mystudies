@@ -19,6 +19,7 @@ import {
   expectedProfiledataResposnse,
   expectedUpdateResponse,
 } from '../../../entity/mock-profile-data';
+import {By} from '@angular/platform-browser';
 describe('ChangePasswordComponent', () => {
   let component: AccountProfileComponent;
   let fixture: ComponentFixture<AccountProfileComponent>;
@@ -66,23 +67,23 @@ describe('ChangePasswordComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should update the profile when  button is submitted', fakeAsync(async () => {
-    spyOn(component, 'updateProfile').and.callThrough();
-    component.updateProfile();
-    expect(component.profileForm.invalid).toBe(false);
+
+  it('should get profile details on ngOnInit', fakeAsync(() => {
+    const spyObjs = spyOn(component, 'getProfileDetails');
+    component.getProfileDetails();
     fixture.detectChanges();
-    tick(10000);
-    await fixture.whenStable();
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(component.updateProfile).toHaveBeenCalled();
+    expect(spyObjs).toHaveBeenCalledTimes(1);
   }));
-  it('should cancel the profile when  cancel is clicked', fakeAsync(async () => {
-    spyOn(component, 'cancel').and.callThrough();
-    component.cancel();
+
+  it('should update the profile when  button is submitted', fakeAsync(async () => {
+    const toggleChangeSpy = spyOn(component, 'updateProfile');
     fixture.detectChanges();
-    tick(10000);
+    tick();
+    fixture.debugElement
+      .query(By.css('form'))
+      .triggerEventHandler('submit', null);
+    fixture.detectChanges();
     await fixture.whenStable();
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(component.cancel).toHaveBeenCalled();
+    expect(toggleChangeSpy).toHaveBeenCalledTimes(1);
   }));
 });

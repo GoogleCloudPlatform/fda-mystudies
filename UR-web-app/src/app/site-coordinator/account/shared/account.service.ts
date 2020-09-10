@@ -11,13 +11,15 @@ import {AuthService} from '../../../service/auth.service';
   providedIn: 'root',
 })
 export class AccountService {
+  user: User;
   constructor(
     private readonly entityService: EntityService<Profile>,
     private readonly http: HttpClient,
     private readonly authService: AuthService,
-  ) {}
-  // eslint-disable-next-line no-invalid-this
-  user: User = this.authService.getUser();
+  ) {
+    this.user = this.authService.getUser();
+  }
+
   fetchProfile(): Observable<Profile> {
     return this.entityService.get(`/users/${encodeURIComponent(this.user.id)}`);
   }
@@ -29,6 +31,15 @@ export class AccountService {
         this.user.id,
       )}/profile`,
       profileToBeUpdated,
+    );
+  }
+
+  logout(): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.authServerUrl}/users/${encodeURIComponent(
+        this.user.id,
+      )}/logout`,
+      '',
     );
   }
 }
