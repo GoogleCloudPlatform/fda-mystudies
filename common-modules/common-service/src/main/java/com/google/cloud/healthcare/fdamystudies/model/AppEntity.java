@@ -22,8 +22,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -62,11 +60,6 @@ public class AppEntity implements Serializable {
   @Column(name = "app_description")
   @Type(type = "text")
   private String appDescription;
-
-  @ToString.Exclude
-  @ManyToOne(cascade = CascadeType.MERGE)
-  @JoinColumn(name = "org_info_id")
-  private OrgInfoEntity orgInfo;
 
   @ToString.Exclude
   @Column(name = "ios_bundle_id", length = SMALL_LENGTH)
