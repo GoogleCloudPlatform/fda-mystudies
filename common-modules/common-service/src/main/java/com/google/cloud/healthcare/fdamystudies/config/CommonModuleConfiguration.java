@@ -47,16 +47,6 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
     return restTemplate;
   }
 
-  @Bean
-  public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
-      @Override
-      public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("*");
-      }
-    };
-  }
-
   protected void addInterceptors(RestTemplate restTemplate) {
     List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
     if (CollectionUtils.isEmpty(interceptors)) {
