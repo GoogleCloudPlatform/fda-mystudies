@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import {RegistryParticipant} from './participant';
 import {Permission} from './permission-enums';
 import {StudyType} from './enums';
@@ -17,8 +18,15 @@ export interface ParticipantRegistryDetail {
   locationStatus?: string;
   sitePermission?: Permission;
   openStudySitePermission?: Permission;
-  siteStatus?: string;
+  siteStatus?: number;
   registryParticipants: RegistryParticipant[];
-  countByStatus?: string;
+  countByStatus: CountByStatus;
   status?: string;
+}
+export interface CountByStatus {
+  A?: number;
+  D?: number;
+  E?: number;
+  I?: number;
+  N?: number;
 }

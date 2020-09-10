@@ -165,7 +165,15 @@ export const expectedStudiesDetails = {
         consentHistory: [],
       },
     ],
+    countByStatus: {
+      A: 34,
+      D: 0,
+      E: 1,
+      I: 12,
+      N: 21,
+    },
   },
+
   status: 200,
   message: 'Get participant registry successfully',
   code: 'MSG-0013',
