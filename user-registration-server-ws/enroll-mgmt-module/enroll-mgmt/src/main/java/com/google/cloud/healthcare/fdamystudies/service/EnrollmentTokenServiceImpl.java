@@ -90,7 +90,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Transactional
   public EnrollmentResponseBean enrollParticipant(
       @NotNull String shortName,
       String tokenValue,

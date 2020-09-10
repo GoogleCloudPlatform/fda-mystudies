@@ -37,7 +37,6 @@ public class CommonDaoImpl implements CommonDao {
   public UserDetailsBO getUserInfoDetails(String userId) {
     logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
     CriteriaBuilder criteriaBuilder = null;
-    Integer userDetailsId = null;
     CriteriaQuery<UserDetailsBO> userDetailsCriteriaQuery = null;
     Root<UserDetailsBO> userDetailsBoRoot = null;
     Predicate[] userDetailspredicates = new Predicate[1];
