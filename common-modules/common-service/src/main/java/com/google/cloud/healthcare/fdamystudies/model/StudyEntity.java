@@ -37,7 +37,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
@@ -49,10 +48,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
           columnNames = {"custom_id", "app_info_id"},
           name = "study_info_custom_id_app_info_id_uidx")
     })
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class StudyEntity implements Serializable {
 
   private static final long serialVersionUID = 5392367043067145963L;
