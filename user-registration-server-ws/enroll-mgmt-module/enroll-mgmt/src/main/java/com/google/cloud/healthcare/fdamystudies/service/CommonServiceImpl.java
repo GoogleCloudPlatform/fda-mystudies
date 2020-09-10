@@ -25,7 +25,7 @@ public class CommonServiceImpl implements CommonService {
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
-  @Transactional
+  @Transactional(readOnly = true)
   public UserDetailsBO getUserInfoDetails(String userId) {
     logger.info("CommonServiceImpl getUserInfoDetails() - Starts ");
     UserDetailsBO userDetailsBO = null;
