@@ -119,7 +119,7 @@ module "example_dev_my_studies_firestore_raw_data" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-firestore-raw-data"
+  name       = "example-dev-mystudies-firestore-raw-data"
   project_id = module.project.project_id
   location   = "us-central1"
 

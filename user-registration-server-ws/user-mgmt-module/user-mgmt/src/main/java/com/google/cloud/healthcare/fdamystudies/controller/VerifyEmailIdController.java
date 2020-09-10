@@ -64,7 +64,6 @@ public class VerifyEmailIdController {
   public ResponseEntity<?> verifyEmailId(
       @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("appId") String appId,
-      @RequestHeader("orgId") String orgId,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
     logger.info("VerifyEmailIdController verifyEmailId() - starts");
@@ -77,8 +76,7 @@ public class VerifyEmailIdController {
 
     try {
       isValidAppMsg =
-          commonService.validatedUserAppDetailsByAllApi(
-              "", verificationForm.getEmailId(), appId, orgId);
+          commonService.validatedUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId);
 
       if (!StringUtils.isNotEmpty(isValidAppMsg)) {
 
@@ -90,7 +88,7 @@ public class VerifyEmailIdController {
         return null;
       }
       AppOrgInfoBean appOrgInfoBean =
-          commonService.getUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId, orgId);
+          commonService.getUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId);
       if (appOrgInfoBean != null) {
         participantDetails = getParticipantDetails(verificationForm, appOrgInfoBean);
       }
@@ -155,9 +153,7 @@ public class VerifyEmailIdController {
     UserDetailsBO participantDetails = null;
     participantDetails =
         userManagementProfService.getParticipantDetailsByEmail(
-            verificationForm.getEmailId(),
-            appOrgInfoBean.getAppInfoId(),
-            appOrgInfoBean.getOrgInfoId());
+            verificationForm.getEmailId(), appOrgInfoBean.getAppInfoId());
     return participantDetails;
   }
 }
