@@ -4,7 +4,6 @@ import {AuthService} from 'src/app/service/auth.service';
 import {HttpClientModule} from '@angular/common/http';
 import {EntityService} from 'src/app/service/entity.service';
 import {LoginCallbackComponent} from './login-callback.component';
-import {LoginComponent} from '../login/login.component';
 
 describe('LoginCallbackComponent', () => {
   let component: LoginCallbackComponent;
@@ -13,15 +12,7 @@ describe('LoginCallbackComponent', () => {
   beforeEach(async(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginCallbackComponent],
-      imports: [
-        RouterTestingModule.withRoutes([
-          {
-            path: 'login',
-            component: LoginComponent,
-          },
-        ]),
-        HttpClientModule,
-      ],
+      imports: [RouterTestingModule.withRoutes([]), HttpClientModule],
       providers: [AuthService, EntityService],
     }).compileComponents();
   }));

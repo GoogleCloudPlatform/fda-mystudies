@@ -31,7 +31,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.annotation.Transient;
 
 @ToString
@@ -39,10 +38,6 @@ import org.springframework.data.annotation.Transient;
 @Setter
 @Entity
 @Table(name = "ur_admin_user")
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class UserRegAdminEntity implements Serializable {
 
   private static final long serialVersionUID = 8686769972691178223L;
