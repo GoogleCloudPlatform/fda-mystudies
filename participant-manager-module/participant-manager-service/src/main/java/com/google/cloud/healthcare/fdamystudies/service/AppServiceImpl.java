@@ -23,6 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AppMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.mapper.StudyMapper;
@@ -41,7 +42,6 @@ import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -79,8 +79,6 @@ public class AppServiceImpl implements AppService {
 
   @Autowired private StudyRepository studyRepository;
 
-  @Autowired private SiteRepository siteRepository;
-
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Override
@@ -91,8 +89,7 @@ public class AppServiceImpl implements AppService {
     List<SitePermissionEntity> sitePermissions =
         sitePermissionRepository.findSitePermissionByUserId(userId);
     if (CollectionUtils.isEmpty(sitePermissions)) {
-      logger.exit(ErrorCode.APP_NOT_FOUND);
-      return new AppResponse(ErrorCode.APP_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
     }
 
     List<String> appIds = getAppIds(sitePermissions);
@@ -276,8 +273,7 @@ public class AppServiceImpl implements AppService {
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
 
     if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
-      logger.exit(ErrorCode.USER_ADMIN_ACCESS_DENIED);
-      return new AppResponse(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.USER_ADMIN_ACCESS_DENIED);
     }
 
     List<AppEntity> apps = appRepository.findAll();
@@ -341,8 +337,7 @@ public class AppServiceImpl implements AppService {
         appPermissionRepository.findByUserIdAndAppId(adminId, appId);
 
     if (!optAppPermissionEntity.isPresent()) {
-      logger.exit(ErrorCode.APP_NOT_FOUND);
-      return new AppParticipantsResponse(ErrorCode.APP_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
     }
 
     AppPermissionEntity appPermission = optAppPermissionEntity.get();

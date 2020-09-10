@@ -119,20 +119,20 @@ public class VerifyEmailIdController {
         return new ResponseEntity<>(respBean, HttpStatus.BAD_REQUEST);
       }
 
-      boolean serviceResponse = userDetailsService.updateStatus(participantDetails);
+      String tempRegId = userDetailsService.updateStatus(participantDetails);
 
       AuditLogEvent auditEvent =
-          serviceResponse ? USER_ACCOUNT_ACTIVATED : ACCOUNT_ACTIVATION_FAILED;
+          StringUtils.isNotEmpty(tempRegId) ? USER_ACCOUNT_ACTIVATED : ACCOUNT_ACTIVATION_FAILED;
       userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
 
-      if (!serviceResponse) {
+      if (StringUtils.isEmpty(tempRegId)) {
         ResponseBean respBean = ResponseUtil.prepareSystemExceptionResponse(response);
         return new ResponseEntity<>(respBean, HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
       ResponseBean respBean = ResponseUtil.prepareSuccessResponse(response);
       verifyEmailIdResponse =
-          new VerifyEmailIdResponse(respBean.getCode(), respBean.getMessage(), true);
+          new VerifyEmailIdResponse(respBean.getCode(), respBean.getMessage(), true, tempRegId);
 
       userMgmntAuditHelper.logEvent(USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION, auditRequest);
 

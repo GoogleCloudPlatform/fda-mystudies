@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +31,6 @@ public class AppParticipantsResponse extends BaseResponse {
   private String name;
 
   private List<ParticipantDetail> participants = new ArrayList<>();
-
-  public AppParticipantsResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public AppParticipantsResponse(
       MessageCode messageCode, String appId, String customId, String name) {

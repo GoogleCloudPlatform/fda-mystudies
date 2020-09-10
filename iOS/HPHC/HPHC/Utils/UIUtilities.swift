@@ -105,18 +105,14 @@ class UIUtilities: NSObject {
   }
 
   class func removeBlurFromFrequency(fromView: UIView) {
-    for subView in fromView.subviews {
-      if subView.tag == 500 {
-        subView.removeFromSuperview()
-      }
+    for subView in fromView.subviews where subView.tag == 500 {
+      subView.removeFromSuperview()
     }
   }
 
   class func removeBlur(fromView: UIView) {
-    for subView in fromView.subviews {
-      if subView.tag == 100 {
-        subView.removeFromSuperview()
-      }
+    for subView in fromView.subviews where subView.tag == 100 {
+      subView.removeFromSuperview()
     }
   }
 

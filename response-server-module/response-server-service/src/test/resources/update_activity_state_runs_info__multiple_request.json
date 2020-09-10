@@ -1,0 +1,30 @@
+{
+  "studyId": "RT3",
+  "participantId": "567",
+  "activity": [
+    {
+      "activityId": "questionnaire_1",
+      "bookmarked": true,
+      "activityState": "Completed",
+      "activityRunId": "7",
+      "activityVersion": "9.0",
+      "activityRun": {
+        "total": 11,
+        "completed": 5,
+        "missed": 6
+      }
+    },
+    {
+      "activityId": "questionnaire_2",
+      "bookmarked": false,
+      "activityState": "In progress",
+      "activityRunId": "1",
+      "activityVersion": "1.0",
+      "activityRun": {
+        "total": 7,
+        "completed": 0,
+        "missed": 7
+      }
+    }
+  ]
+}

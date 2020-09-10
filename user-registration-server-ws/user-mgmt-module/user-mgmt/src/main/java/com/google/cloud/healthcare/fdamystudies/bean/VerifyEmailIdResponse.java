@@ -22,4 +22,5 @@ public class VerifyEmailIdResponse {
   private Integer code;
   private String message;
   private boolean verified;
+  private String tempRegId;
 }

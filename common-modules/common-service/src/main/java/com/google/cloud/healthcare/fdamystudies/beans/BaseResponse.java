@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,33 +26,14 @@ public class BaseResponse {
   private Integer httpStatusCode;
 
   @JsonInclude(Include.NON_NULL)
-  @JsonProperty("error_code")
-  private String errorCode;
-
-  @JsonInclude(Include.NON_NULL)
   @JsonProperty("code")
   private String code;
-
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("error_type")
-  private String errorType;
-
-  @JsonInclude(Include.NON_NULL)
-  @JsonProperty("error_description")
-  private String errorDescription;
 
   @JsonInclude(Include.NON_NULL)
   @JsonProperty("message")
   private String message;
 
   public BaseResponse() {}
-
-  public BaseResponse(ErrorCode errorCode) {
-    this.httpStatusCode = errorCode.getStatus();
-    this.code = errorCode.getCode();
-    this.errorType = errorCode.getErrorType();
-    this.errorDescription = errorCode.getDescription();
-  }
 
   public BaseResponse(MessageCode messageCode) {
     this.httpStatusCode = messageCode.getHttpStatus().value();

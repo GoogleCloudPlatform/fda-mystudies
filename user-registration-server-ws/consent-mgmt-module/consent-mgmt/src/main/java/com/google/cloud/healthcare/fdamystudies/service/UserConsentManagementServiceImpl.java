@@ -21,8 +21,6 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import com.google.cloud.storage.StorageException;
-import java.io.ByteArrayOutputStream;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserConsentManagementServiceImpl implements UserConsentManagementService {
@@ -44,6 +43,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
       LoggerFactory.getLogger(UserConsentManagementServiceImpl.class);
 
   @Override
+  @Transactional(readOnly = true)
   public ParticipantStudyEntity getParticipantStudies(String studyId, String userId) {
     logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
     ParticipantStudyEntity participantStudiesEntity = null;
@@ -56,6 +56,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
     logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -69,6 +70,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public StudyConsentEntity getStudyConsent(String userId, String studyId, String consentVersion) {
     logger.info("UserConsentManagementServiceImpl getStudyConsent() - Started ");
     StudyConsentEntity studyConsent = null;
@@ -82,6 +84,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional
   public String saveStudyConsent(StudyConsentEntity studyConsent) {
     logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
     String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
@@ -97,6 +100,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public ConsentStudyResponseBean getStudyConsentDetails(
       String userId, String studyId, String consentVersion, AuditLogEventRequest auditRequest) {
 
@@ -119,8 +123,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
         if (studyConsent.getPdfStorage() == 1) {
           String path = studyConsent.getPdfPath();
 
-          ByteArrayOutputStream baos = new ByteArrayOutputStream();
-          downloadConsentDocument(path, baos, consentStudyResponseBean, userId, auditRequest);
+          downloadConsentDocument(path, consentStudyResponseBean, userId, auditRequest);
         }
         consentStudyResponseBean.getConsent().setType("application/pdf");
         participantStudiesEntity = userConsentManagementDao.getParticipantStudies(studyId, userId);
@@ -141,18 +144,15 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   private void downloadConsentDocument(
-      String fileName,
-      ByteArrayOutputStream baos,
+      String filepath,
       ConsentStudyResponseBean consentStudyResponseBean,
       String userId,
       AuditLogEventRequest auditRequest) {
     try {
       auditRequest.setUserId(userId);
-      Map<String, String> map = Collections.singletonMap("file_name", fileName);
-      cloudStorageService.downloadFileTo(fileName, baos);
-      consentStudyResponseBean
-          .getConsent()
-          .setContent(new String(Base64.getEncoder().encode(baos.toByteArray())));
+      Map<String, String> map = Collections.singletonMap("file_name", filepath);
+      String documentContent = cloudStorageService.getDocumentContent(filepath);
+      consentStudyResponseBean.getConsent().setContent(documentContent);
       consentAuditHelper.logEvent(
           READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest, map);
     } catch (StorageException e) {
@@ -161,6 +161,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public StudyInfoBean getStudyInfoId(String customStudyId) {
     logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Starts ");
     StudyInfoBean studyInfoBean = null;
@@ -175,6 +176,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public String getUserDetailsId(String userId) {
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
     String userDetailId = null;

@@ -38,9 +38,7 @@ public class AppConstants {
   public static final String RESULTS_FIELD_KEY = "results";
   public static final String RAW_RESPONSE_FIELD_KEY = "rawResponseData";
   public static final Object PROPERTY_NAME_CLASS = "class";
-  public static final String CLIENT_TOKEN_KEY = "clientToken";
   public static final String USER_ID_KEY = "userId";
-  public static final String ACCESS_TOKEN_KEY = "accessToken";
   public static final String ORG_ID_HEADER = "orgId";
   public static final String APPLICATION_ID_HEADER_WCP = "applicationId";
   public static final String APPLICATION_ID_HEADER = "appId";

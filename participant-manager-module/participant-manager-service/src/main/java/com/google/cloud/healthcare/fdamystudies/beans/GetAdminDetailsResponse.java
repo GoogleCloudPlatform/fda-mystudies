@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,10 +19,6 @@ import lombok.ToString;
 public class GetAdminDetailsResponse extends BaseResponse {
 
   private User user;
-
-  public GetAdminDetailsResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public GetAdminDetailsResponse(MessageCode messageCode, User user) {
     super(messageCode);

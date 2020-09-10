@@ -96,7 +96,9 @@ public enum MessageCode {
 
   DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG-0032", "User deactivated successfully"),
 
-  GET_USERS_SUCCESS(HttpStatus.OK, "MSG-0033", "All users fetched successfully");
+  GET_USERS_SUCCESS(HttpStatus.OK, "MSG-0033", "All users fetched successfully"),
+
+  REACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG-0032", "User reactivated successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

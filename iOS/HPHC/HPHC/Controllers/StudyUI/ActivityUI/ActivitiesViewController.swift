@@ -251,7 +251,7 @@ class ActivitiesViewController: UIViewController {
 
   func fetchActivityAnchorDateResponse() {
     guard let currentStudy = Study.currentStudy else { return }
-    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { [weak self] (status) in
+    AnchorDateHandler(study: currentStudy).fetchActivityAnchorDateResponse { [weak self] (_) in
       self?.loadActivitiesFromDatabase()
     }
   }

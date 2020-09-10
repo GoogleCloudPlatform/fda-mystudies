@@ -20,6 +20,7 @@ import {AccessToken} from '../entity/access-token';
 import account from 'src/app/auth/account.json';
 import {ApiResponse} from '../entity/api.response.model';
 import {environment} from 'src/environments/environment';
+import {CookieService} from 'ngx-cookie-service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -27,6 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
     private readonly authService: AuthService,
+    public cookieService: CookieService,
   ) {}
 
   intercept(
@@ -41,7 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     }
-    if (req.url === `${environment.baseUrl}/users` && req.method === 'GET') {
+    if (req.url === `${environment.baseUrl}/users`) {
       return of(
         new HttpResponse({
           status: 200,
@@ -60,19 +62,34 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     }
     const user: User = this.authService.getUser();
-
-    const headers = req.headers
-      .set('Content-Type', 'application/json')
-      .set('userId', user.id.toString())
-      .set('authToken', this.authService.getUserAccessToken())
-      .set('authUserId', user.urAdminAuthId);
-    const authReq = req.clone({headers});
-    return next.handle(authReq).pipe(
-      this.handleError(),
-      finalize(() => {
-        void this.spinner.hide();
-      }),
-    );
+    if (req.url.includes(`${environment.authServerUrl}`)) {
+      const headers = req.headers
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .set('Accept', 'application/json')
+        .set('correlationId', this.cookieService.get('correlationId'))
+        .set('appId', 'PARTICIPANT-MANAGER')
+        .set('mobilePlatform', 'DESKTOP');
+      const authReq = req.clone({headers});
+      return next.handle(authReq).pipe(
+        this.handleError(),
+        finalize(() => {
+          void this.spinner.hide();
+        }),
+      );
+    } else {
+      const headers = req.headers
+        .set('Content-Type', 'application/json')
+        .set('userId', user.id.toString())
+        .set('authToken', this.authService.getUserAccessToken())
+        .set('authUserId', user.urAdminAuthId);
+      const authReq = req.clone({headers});
+      return next.handle(authReq).pipe(
+        this.handleError(),
+        finalize(() => {
+          void this.spinner.hide();
+        }),
+      );
+    }
   }
   handleError<T>(): OperatorFunction<T, T> {
     return catchError(

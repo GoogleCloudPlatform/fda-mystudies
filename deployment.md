@@ -194,6 +194,16 @@ regenerating the Terraform configs several times.
 
 ### Step 2: Deploy projects and first set of resources through CICD
 
+1. Add the following items to your `.gitignore` file to avoid accidentally
+    commit any `.terraform/` directories, `*.tfstate` or `*.tfstate.backup`
+    files generated from previous manual deployments:
+
+    ```bash
+    **/.terraform
+    *.tfstate
+    *.tfstate.*
+    ```
+
 1. Commit your current local git working dir and send a Pull Request to merge
     these configs. Make sure the presubmit tests pass and get code review
     approvals. The CD job will then deploy the following resources for you.
@@ -243,8 +253,8 @@ regenerating the Terraform configs several times.
 
 ### Step 5: Deploy additional Firebase resources and Data resources through CICD
 
-1. In $ENGINE_CONFIG, uncomment the blocks that are marked as *Step 5* and
-    regenerate the Terraform configs:
+1. In $ENGINE_CONFIG, uncomment the blocks that are marked as *Step 5.1*, *Step
+    5.2* and *Step 5.3*. Then regenerate the Terraform configs:
 
     ```bash
     ./tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
