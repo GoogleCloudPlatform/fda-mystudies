@@ -24,9 +24,8 @@ public class CommonServiceImpl implements CommonService {
   @Override
   public Integer getUserDetailsId(String userId) {
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
-    Integer userDetailId = null;
 
-    userDetailId = commonDao.getUserDetailsId(userId);
+    Integer userDetailId = commonDao.getUserDetailsId(userId);
 
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Ends ");
     return userDetailId;

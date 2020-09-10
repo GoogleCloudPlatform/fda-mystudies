@@ -18,7 +18,6 @@ import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
-import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
 import com.google.cloud.storage.StorageException;
 import java.util.Collections;
 import java.util.List;
@@ -44,10 +43,10 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Transactional(readOnly = true)
   public ParticipantStudiesBO getParticipantStudies(Integer studyId, String userId) {
     logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
-    ParticipantStudiesBO participantStudiesBO = null;
 
-    participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
-
+    ParticipantStudiesBO participantStudiesBO =
+        userConsentManagementDao.getParticipantStudies(studyId, userId);
+    logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Ends ");
     return participantStudiesBO;
   }
 
@@ -55,10 +54,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Transactional
   public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
     logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
-    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
 
-    message = userConsentManagementDao.saveParticipantStudies(participantStudiesList);
-
+    String message = userConsentManagementDao.saveParticipantStudies(participantStudiesList);
+    logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Ends ");
     return message;
   }
 
@@ -66,9 +64,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Transactional(readOnly = true)
   public StudyConsentBO getStudyConsent(String userId, Integer studyId, String consentVersion) {
     logger.info("UserConsentManagementServiceImpl getStudyConsent() - Started ");
-    StudyConsentBO studyConsent = null;
 
-    studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
+    StudyConsentBO studyConsent =
+        userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
 
     logger.info("UserConsentManagementServiceImpl getStudyConsent() - Ends ");
     return studyConsent;
@@ -78,9 +76,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Transactional
   public String saveStudyConsent(StudyConsentBO studyConsent) {
     logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
-    String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
 
-    addOrUpdateConsentMessage = userConsentManagementDao.saveStudyConsent(studyConsent);
+    String addOrUpdateConsentMessage = userConsentManagementDao.saveStudyConsent(studyConsent);
 
     logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Ends ");
     return addOrUpdateConsentMessage;
@@ -143,9 +140,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Transactional(readOnly = true)
   public StudyInfoBean getStudyInfoId(String customStudyId) {
     logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Starts ");
-    StudyInfoBean studyInfoBean = null;
 
-    studyInfoBean = userConsentManagementDao.getStudyInfoId(customStudyId);
+    StudyInfoBean studyInfoBean = userConsentManagementDao.getStudyInfoId(customStudyId);
 
     logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Ends ");
     return studyInfoBean;
@@ -155,9 +151,8 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Transactional(readOnly = true)
   public Integer getUserDetailsId(String userId) {
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
-    Integer userDetailId = null;
 
-    userDetailId = userConsentManagementDao.getUserDetailsId(userId);
+    Integer userDetailId = userConsentManagementDao.getUserDetailsId(userId);
 
     logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Ends ");
     return userDetailId;
