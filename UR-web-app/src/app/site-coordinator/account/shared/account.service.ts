@@ -17,7 +17,7 @@ export class AccountService {
     private readonly authService: AuthService,
   ) {}
   // eslint-disable-next-line no-invalid-this
-  user: User = this.authService.getUser();
+  user: User = this.authService.getAuthUserId();
   fetchProfile(): Observable<Profile> {
     return this.entityService.get(`/users/${encodeURIComponent(this.user.id)}`);
   }
