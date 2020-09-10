@@ -7,7 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -71,28 +70,4 @@ public class ParticipantActivity {
 
   @Column(name = "missed")
   private Integer missed;
-
-  /*  @Column(name = "application_id")
-  private String applicationId;
-
-  @Column(name = "org_id")
-  private String orgId;*/
-
-  @Column(name = "activity_start_date")
-  private LocalDateTime activityStartDate;
-
-  @Column(name = "activity_end_date")
-  private LocalDateTime activityEndDate;
-
-  @Column(name = "anchordate_version")
-  private String anchorDateVersion;
-
-  @Column(name = "anchordate_created_date")
-  private LocalDateTime anchorDateCreatedDate;
-
-  @Column(name = "last_modified_date")
-  private LocalDateTime lastModifiedDate;
-
-  /*@Column(name = "user_id")
-  private String userId;*/
 }
