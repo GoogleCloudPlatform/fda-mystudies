@@ -1,9 +1,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -11,6 +9,9 @@ import com.google.cloud.healthcare.fdamystudies.controller.EnrollmentTokenContro
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 
 public class EnrollmentTokenControllerTest extends BaseMockIT {
 
@@ -68,7 +69,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   @Test
   public void validateEnrollmentTokenForbidden() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add(Constants.USER_ID_HEADER, Constants.NEW_USER_ID);
 
     // study id not exists
     String requestJson = getEnrollmentJson(Constants.TOKEN, Constants.STUDYID_NOT_EXIST);

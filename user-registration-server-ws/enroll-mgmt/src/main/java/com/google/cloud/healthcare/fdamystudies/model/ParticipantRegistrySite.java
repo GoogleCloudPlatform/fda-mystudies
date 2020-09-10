@@ -18,13 +18,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "participant_registry_site")
+@Table(
+    name = "participant_registry_site",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"email", "study_info_id"},
+          name = "participant_registry_site_email_study_info_id_uidx")
+    })
 public class ParticipantRegistrySite implements Serializable {
   private static final long serialVersionUID = 1L;
 
@@ -62,7 +69,7 @@ public class ParticipantRegistrySite implements Serializable {
   @Column(name = "onboarding_status", columnDefinition = "CHAR(1)")
   private String onboardingStatus = "";
 
-  @Column(name = "enrollment_token", columnDefinition = "VARCHAR(50)")
+  @Column(name = "enrollment_token", unique = true, columnDefinition = "VARCHAR(50)")
   private String enrollmentToken = "";
 
   @Column(name = "created", columnDefinition = "TIMESTAMP")

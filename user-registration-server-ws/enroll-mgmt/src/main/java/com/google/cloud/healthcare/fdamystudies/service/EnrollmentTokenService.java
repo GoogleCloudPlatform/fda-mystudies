@@ -8,24 +8,25 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import javax.validation.constraints.NotNull;
-import org.springframework.lang.Nullable;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
+import javax.validation.constraints.NotNull;
+import org.springframework.lang.Nullable;
 
 public interface EnrollmentTokenService {
 
-  public boolean studyExists(@NotNull String shortName);
+  public boolean studyExists(@NotNull String studyId);
 
-  public boolean hasParticipant(@NotNull String shortName, @NotNull String tokenValue);
+  public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue);
 
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String shortName);
+  public boolean isEnrollmentTokenValid(
+      @NotNull String token, @NotNull String studyId, @NotNull String userId);
 
-  public boolean enrollmentTokenRequired(@NotNull String shortName);
+  public boolean enrollmentTokenRequired(@NotNull String studyId);
 
   public EnrollmentResponseBean enrollParticipant(
-      @NotNull String shortName, @Nullable String tokenValue, String userId)
+      @NotNull String studyId, @Nullable String tokenValue, String userId)
       throws SystemException, InvalidRequestException, UnAuthorizedRequestException;
 }
