@@ -271,21 +271,11 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
         appDetailsBO = appDetailsList.get(0);
         appInfoId = appDetailsBO.getAppInfoId();
       }
-    }
-    if (!StringUtils.isEmpty(orgId)) {
 
-      orgDetailsBoCriteria = criteriaBuilder.createQuery(OrgInfo.class);
-      orgDetailsBoRoot = orgDetailsBoCriteria.from(OrgInfo.class);
-      orgDetailsBoPredicates[0] = criteriaBuilder.equal(orgDetailsBoRoot.get("orgId"), orgId);
-      orgDetailsBoCriteria.select(orgDetailsBoRoot).where(orgDetailsBoPredicates);
-      orgDetailsBoList = session.createQuery(orgDetailsBoCriteria).getResultList();
-      if (!orgDetailsBoList.isEmpty()) {
-        orgDetailsBo = orgDetailsBoList.get(0);
-        orgInfoId = orgDetailsBo.getId();
-      }
+      appOrgInfoBean.setAppInfoId(appInfoId);
     }
+
     appOrgInfoBean.setAppInfoId(appInfoId);
-    appOrgInfoBean.setOrgInfoId(orgInfoId);
 
     logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
