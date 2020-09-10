@@ -18,7 +18,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {BsModalService, BsModalRef, ModalModule} from 'ngx-bootstrap/modal';
-import {expectedStudyList} from '../../../entity/mock-studies-data';
+import {expectedSitesList} from '../../../entity/mock-studies-data';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {LocationService} from '../../location/shared/location.service';
@@ -30,7 +30,7 @@ describe('SiteListComponent', () => {
   beforeEach(async(async () => {
     const studyServiceSpy = jasmine.createSpyObj<StudiesService>(
       'studiesService',
-      {getStudiesWithSites: of(expectedStudyList)},
+      {getStudiesWithSites: of(expectedSitesList)},
     );
     await TestBed.configureTestingModule({
       declarations: [SiteListComponent],
@@ -75,17 +75,14 @@ describe('SiteListComponent', () => {
 
   it('should get the sites list via refresh function', () => {
     component.study$.subscribe((studies) => {
-      expect(studies.length).toEqual(3);
-      expect(studies[0].sites.length).toEqual(1);
-      expect(studies[1].sites.length).toEqual(2);
+      expect(studies.studies.length).toEqual(2);
     });
   });
 
   it('should expect same location details', () => {
     component.study$.subscribe((studies) => {
-      expect(studies[0].sites[0].name).toEqual('Location 1');
-      expect(studies[1].sites[0].name).toEqual('Location 2');
-      expect(studies[1].sites[1].name).toEqual('Location 3');
+      expect(studies.studies[0].sites).toBeTruthy();
+      expect(studies.studies[0].sites[0].name).toEqual('Location1');
     });
   });
 
@@ -94,13 +91,13 @@ describe('SiteListComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     expect(compiled.querySelectorAll('.studies_row').length).toBe(
-      3,
+      2,
       'should display all study list',
     );
     const sitesLists = compiled.querySelectorAll('.sites_row');
     const sitesListPCT = compiled.querySelectorAll('.enrolled');
-    expect(sitesLists[0].textContent).toContain('Location 1');
-    expect(sitesListPCT[0].textContent).toContain('7 / 14');
+    expect(sitesLists[0].textContent).toContain('Location1');
+    expect(sitesListPCT[0].textContent).toContain(' 1 / 300 ');
   });
 
   it('should display the modal when Add site button is clicked', fakeAsync(async () => {

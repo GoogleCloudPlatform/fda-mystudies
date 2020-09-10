@@ -9,7 +9,10 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <div class="navbar-nav ml-auto">
             <div class="navbar-nav display-flex-center">
-              <div class="navbar-nav inner-addon right-addon search-icon">
+              <div
+                *ngIf="showSearchBar"
+                class="navbar-nav inner-addon right-addon search-icon"
+              >
                 <input
                   type="text"
                   [attr.placeholder]="searchPlaceholder"
@@ -20,9 +23,8 @@
               </div>
 
               <a
-                routerLink="/coordinator/participants/dashboard"
+                routerLink="/coordinator/studies"
                 routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}"
                 class="nav-item nav-link"
               >
                 Dashboard
@@ -30,7 +32,6 @@
               <a
                 routerLink="/coordinator/locations"
                 routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}"
                 class="nav-item nav-link"
               >
                 Locations
@@ -38,7 +39,6 @@
               <a
                 routerLink="/coordinator/users"
                 routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}"
                 class="nav-item nav-link"
               >
                 Users
@@ -46,7 +46,6 @@
               <a
                 routerLink="/coordinator/accounts"
                 routerLinkActive="active"
-                [routerLinkActiveOptions]="{exact: true}"
                 class="nav-item nav-link"
               >
                 My Account
@@ -67,7 +66,7 @@
   ></mobile-menu>
 </header>
 
-<router-outlet></router-outlet>
+<router-outlet (activate)="onActivate($event)"></router-outlet>
 
 <footer>
   <div>
