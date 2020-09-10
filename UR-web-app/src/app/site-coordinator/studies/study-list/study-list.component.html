@@ -1,9 +1,9 @@
 <div class="max__w__1280">
   <div class="tab-content">
-    <ng-container *ngIf="study$ | async as studies">
-      <div *ngIf="studies.length != 0">
+    <ng-container *ngIf="studyList$ | async as studyList">
+      <div>
         <div
-          *ngFor="let study of studies"
+          *ngFor="let study of studyList.studies"
           class="bg__white cards cards__var box__shadow-cmn ml-none mr-none studies_row"
         >
           <div
@@ -32,9 +32,7 @@
                         {{ study.totalSitesCount }}
                         sites
                       </span>
-                      <span *ngIf="study.type == 'OPEN'">
-                        Open Study
-                      </span>
+                      <span *ngIf="study.type == 'OPEN'">Open Study</span>
                     </div>
                   </div>
                 </div>
@@ -45,7 +43,7 @@
                 <div class="mb__width__100">
                   <div class="col-xs-12 p-none lh__6">
                     <div class="prog">
-                      <div *ngIf="study.invitedCount != 0" class="pro__base">
+                      <div *ngIf="study.invited" class="pro__base">
                         <div
                           class="pro__top"
                           [style.width.%]="study.enrollmentPercentage"
@@ -55,33 +53,25 @@
                         class="progress-label font__bold"
                         [ngClass]="progressBarColor(study)"
                       >
-                        <span *ngIf="study.invitedCount != 0">
-                          {{ study.enrolledCount }} /
-                          {{ study.invitedCount }}
+                        <span *ngIf="study.invited">
+                          {{ study.enrolled }} /
+                          {{ study.invited }}
                         </span>
-                        <span *ngIf="study.invitedCount == 0">
-                          N/A
-                        </span>
+                        <span *ngIf="study.invited == 0">N/A</span>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="text-right progress__bar__next">
                   <div class="progress-bar-next__title">
-                    <span *ngIf="study.invitedCount != 0">
+                    <span *ngIf="study.invited != 0">
                       {{ study.enrollmentPercentage | number: ".2-2" }}%
                     </span>
-                    <span *ngIf="study.invitedCount == 0">
-                      N/A
-                    </span>
+                    <span *ngIf="study.invited == 0">N/A</span>
                   </div>
                   <div class="text-grey__sm">
-                    <span *ngIf="study.type != 'OPEN'">
-                      Enrolled / Invited
-                    </span>
-                    <span *ngIf="study.type == 'OPEN'">
-                      Enrolled / Target
-                    </span>
+                    <span *ngIf="study.type != 'OPEN'">Enrolled / Invited</span>
+                    <span *ngIf="study.type == 'OPEN'">Enrolled / Target</span>
                   </div>
                 </div>
               </div>
