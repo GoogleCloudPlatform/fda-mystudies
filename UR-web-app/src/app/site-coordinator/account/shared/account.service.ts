@@ -5,7 +5,6 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {environment} from '@environment';
-import {User} from '../../../entity/user';
 import {AuthService} from '../../../service/auth.service';
 @Injectable({
   providedIn: 'root',
@@ -17,17 +16,15 @@ export class AccountService {
     private readonly authService: AuthService,
   ) {}
   // eslint-disable-next-line no-invalid-this
-  user: User = this.authService.getAuthUserId();
+  id = this.authService.getAuthUserId();
   fetchProfile(): Observable<Profile> {
-    return this.entityService.get(`/users/${encodeURIComponent(this.user.id)}`);
+    return this.entityService.get(`/users/${encodeURIComponent(this.id)}`);
   }
   updateUserProfile(
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
-      `${environment.baseUrl}/users/${encodeURIComponent(
-        this.user.id,
-      )}/profile`,
+      `${environment.baseUrl}/users/${encodeURIComponent(this.id)}/profile`,
       profileToBeUpdated,
     );
   }
