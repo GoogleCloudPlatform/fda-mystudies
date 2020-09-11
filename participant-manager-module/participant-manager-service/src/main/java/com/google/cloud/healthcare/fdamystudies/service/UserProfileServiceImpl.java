@@ -215,7 +215,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     UserRegAdminEntity userRegAdmin = optUserRegAdmin.get();
 
     if (!userRegAdmin.isSuperAdmin()) {
-      throw new ErrorCodeException(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
 
     UserStatus userStatus = UserStatus.fromValue(statusRequest.getStatus());
