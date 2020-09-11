@@ -140,8 +140,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public UserDetailsEntity getParticipantDetailsByEmail(
-      String email, AppEntity app, String orgInfoId) {
+  public UserDetailsEntity getParticipantDetailsByEmail(String email, AppEntity app) {
+
     logger.info("UserProfileManagementDaoImpl getParticipantDetailsByEmail() - Starts ");
     UserDetailsEntity userDetails = null;
     CriteriaBuilder criteriaBuilder = null;

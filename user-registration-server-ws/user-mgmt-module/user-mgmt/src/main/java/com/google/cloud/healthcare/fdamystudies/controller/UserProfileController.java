@@ -90,7 +90,7 @@ public class UserProfileController {
 
     UserProfileRespBean userPrlofileRespBean = null;
     try {
-      userPrlofileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0, 0);
+      userPrlofileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0);
       if (userPrlofileRespBean != null) {
         userMgmntAuditHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE, auditRequest);
 
@@ -189,7 +189,6 @@ public class UserProfileController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resendConfirmation(
       @RequestHeader("appId") String appId,
-      @RequestHeader("orgId") String orgId,
       @Valid @RequestBody LoginBean loginBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
@@ -201,16 +200,14 @@ public class UserProfileController {
     ResponseBean responseBean = new ResponseBean();
     try {
       String isValidAppMsg =
-          commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId, orgId);
+          commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
       if (!StringUtils.isEmpty(isValidAppMsg)) {
         AppOrgInfoBean appOrgInfoBean =
-            commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId, orgId);
+            commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
         if (appOrgInfoBean != null) {
           participantDetails =
               userManagementProfService.getParticipantDetailsByEmail(
-                  loginBean.getEmailId(),
-                  appOrgInfoBean.getAppInfoId(),
-                  appOrgInfoBean.getOrgInfoId());
+                  loginBean.getEmailId(), appOrgInfoBean.getAppInfoId());
         }
         if (participantDetails != null) {
           if (participantDetails.getStatus() == 2) {

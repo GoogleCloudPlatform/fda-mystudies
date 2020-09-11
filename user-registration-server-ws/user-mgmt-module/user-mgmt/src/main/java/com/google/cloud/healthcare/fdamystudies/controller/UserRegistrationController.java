@@ -48,13 +48,11 @@ public class UserRegistrationController {
   public ResponseEntity<UserRegistrationResponse> registerUser(
       @Valid @RequestBody UserRegistrationForm user,
       @RequestHeader("appId") String appId,
-      @RequestHeader("orgId") String orgId,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     user.setAppId(appId);
-    user.setOrgId(orgId);
 
     UserRegistrationResponse userRegistrationResponse =
         userRegistrationService.register(user, auditRequest);

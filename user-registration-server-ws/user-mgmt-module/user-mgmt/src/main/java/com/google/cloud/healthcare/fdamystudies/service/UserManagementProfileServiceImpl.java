@@ -76,8 +76,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
 
   @Override
-  public UserProfileRespBean getParticipantInfoDetails(
-      String userId, Integer appInfoId, Integer orgInfoId) {
+  public UserProfileRespBean getParticipantInfoDetails(String userId, Integer appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
     UserDetailsEntity userDetails = null;
     UserProfileRespBean userProfileRespBean = null;
@@ -174,16 +173,15 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public UserDetailsEntity getParticipantDetailsByEmail(
-      String email, String appInfoId, String orgInfoId) {
+  public UserDetailsEntity getParticipantDetailsByEmail(String email, String appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
     UserDetailsEntity userDetails = null;
     try {
       Optional<AppEntity> optApp = appRepository.findByCustomId(appInfoId);
       if (optApp.isPresent()) {
-        userDetails =
-            userProfileManagementDao.getParticipantDetailsByEmail(email, optApp.get(), orgInfoId);
+        userDetails = userProfileManagementDao.getParticipantDetailsByEmail(email, optApp.get());
       }
+
     } catch (Exception e) {
       logger.error("UserManagementProfileServiceImpl - getParticipantDetailsByEmail() - Error", e);
     }
@@ -352,7 +350,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     String subject = "";
     AppOrgInfoBean appOrgInfoBean = null;
     try {
-      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi("", applicationId, "");
+      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi("", applicationId);
       appPropertiesDetails =
           userProfileManagementDao.getAppPropertiesDetailsByAppId(appOrgInfoBean.getAppInfoId());
       if ((appPropertiesDetails == null)

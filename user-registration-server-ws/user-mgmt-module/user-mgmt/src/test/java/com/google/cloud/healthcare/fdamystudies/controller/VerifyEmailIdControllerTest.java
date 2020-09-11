@@ -70,8 +70,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForInvalidCode() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
     // invalid code
     String requestJson = getEmailIdVerificationForm(Constants.INVALID_CODE, "abc1234@gmail.com");
     mockMvc
@@ -98,8 +97,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForInvalidEmailId() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
     // expired code
     String requestJson =
         getEmailIdVerificationForm(Constants.VALID_CODE, Constants.INVALID_EMAIL_ID);
@@ -128,8 +126,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForEmailNotExists() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
     // invalid emailId
     String requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.INVALID_EMAIL);
     mockMvc
@@ -155,8 +152,7 @@ public class VerifyEmailIdControllerTest extends BaseMockIT {
 
   @Test
   public void shouldUpdateEmailStatusToVerified() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     String requestJson = getEmailIdVerificationForm(Constants.CODE, Constants.VERIFY_CODE_EMAIL);
 

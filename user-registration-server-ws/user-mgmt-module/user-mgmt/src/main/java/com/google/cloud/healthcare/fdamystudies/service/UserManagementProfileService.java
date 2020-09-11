@@ -18,13 +18,11 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface UserManagementProfileService {
 
-  public UserProfileRespBean getParticipantInfoDetails(
-      String userId, Integer appInfoId, Integer orgInfoId);
+  public UserProfileRespBean getParticipantInfoDetails(String userId, Integer appInfoId);
 
   public ErrorBean updateUserProfile(String userId, UserRequestBean user);
 
-  public UserDetailsEntity getParticipantDetailsByEmail(
-      String email, String appInfoId, String orgInfoId);
+  public UserDetailsEntity getParticipantDetailsByEmail(String email, String appInfoId);
 
   public LoginAttemptsEntity getLoginAttempts(String email);
 
