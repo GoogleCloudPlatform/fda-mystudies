@@ -12,9 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.CON
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.FEEDBACK_CONTENT_EMAILED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,17 +23,17 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import java.util.HashMap;
 import java.util.Map;
-import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.mail.javamail.JavaMailSender;
 
 public class UserSupportControllerTest extends BaseMockIT {
 
@@ -51,8 +48,6 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
   @Autowired private ObjectMapper objectMapper;
-
-  @Autowired private JavaMailSender emailSender;
 
   @Test
   public void contextLoads() {
@@ -75,7 +70,14 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    String subject = appConfig.getFeedbackMailSubject() + Constants.SUBJECT;
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("body", Constants.BODY);
+    templateArgs.put("orgName", appConfig.getOrgName());
+    String body =
+        PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getFeedbackMailBody(), templateArgs);
+
+    verifyMimeMessage(appConfig.getFeedbackToEmail(), appConfig.getFromEmail(), subject, body);
 
     verifyTokenIntrospectRequest(1);
 
@@ -110,7 +112,18 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    String subject = appConfig.getContactusMailSubject() + Constants.SUBJECT;
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("firstName", Constants.FIRST_NAME);
+    templateArgs.put("email", Constants.EMAIL_ID);
+    templateArgs.put("subject", Constants.SUBJECT);
+    templateArgs.put("body", Constants.BODY);
+    templateArgs.put("orgName", appConfig.getOrgName());
+    String body =
+        PlaceholderReplacer.replaceNamedPlaceholders(
+            appConfig.getContactusMailBody(), templateArgs);
+
+    verifyMimeMessage(appConfig.getContactusToEmail(), appConfig.getFromEmail(), subject, body);
 
     verifyTokenIntrospectRequest(1);
 

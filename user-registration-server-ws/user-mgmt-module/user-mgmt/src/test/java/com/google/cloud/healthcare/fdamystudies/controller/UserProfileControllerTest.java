@@ -24,9 +24,6 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,6 +41,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -51,9 +51,9 @@ import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +87,10 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;
+
+  @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private UserDetailsBORepository userDetailsBORepository;
 
   @Test
   public void contextLoads() {
@@ -316,7 +320,17 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.SUCCESS)));
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    List<UserDetailsBO> listOfUserDetails =
+        userDetailsBORepository.findByEmail(Constants.VALID_EMAIL);
+    String subject = appConfig.getConfirmationMailSubject();
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("securitytoken", listOfUserDetails.get(0).getEmailCode());
+    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    String body =
+        PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
+
+    verifyMimeMessage(Constants.VALID_EMAIL, appConfig.getFromEmail(), subject, body);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);
