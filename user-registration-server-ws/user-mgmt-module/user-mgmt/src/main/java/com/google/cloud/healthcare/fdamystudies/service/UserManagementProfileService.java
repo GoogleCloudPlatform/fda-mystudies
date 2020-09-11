@@ -36,5 +36,5 @@ public interface UserManagementProfileService {
       String userId, DeactivateAcctBean deactivateBean, AuditLogEventRequest auditRequest);
 
   public int resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId);
+      String applicationId, String securityToken, String emailId) throws Exception;
 }

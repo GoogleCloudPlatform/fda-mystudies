@@ -8,10 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
 
 public interface UserAppDetailsService {
 
-  UserAppDetailsBO save(UserAppDetailsBO userAppDetails) throws SystemException;
+  UserAppDetailsBO save(UserAppDetailsBO userAppDetails);
 }

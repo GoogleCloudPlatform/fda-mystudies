@@ -224,11 +224,17 @@ public enum ErrorCode {
   ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found"),
 
   INVALID_USER_STATUS(400, "EC-114", Constants.BAD_REQUEST, "Invalid user status"),
-  
+
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
 
-  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required");
+  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required"),
+
+  EMAIL_ID_OR_PASSWORD_NULL(
+      400, "EC-400", Constants.BAD_REQUEST, "emailId or password is blank in request"),
+
+  APPLICATION_ID_MISSING(
+      400, "EC-400", Constants.BAD_REQUEST, "applicationId is missing in request header");
 
   private final int status;
   private final String code;

@@ -1,0 +1,7 @@
+{
+	"status": 404,
+	"error_code": "EC-114",
+	"error_type": "Bad Request",
+	"error_description": "User not found.",
+	"timestamp": 1599655166
+}

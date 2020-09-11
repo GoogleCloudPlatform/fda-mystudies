@@ -8,10 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
 
 public interface AuthInfoBOService {
 
-  AuthInfoBO save(AuthInfoBO authInfo) throws SystemException;
+  AuthInfoBO save(AuthInfoBO authInfo);
 }

@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserAppDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class UserAppDetailsServiceImpl implements UserAppDetailsService {
   @Autowired private UserAppDetailsDao userAppDetailsDao;
 
   @Override
-  public UserAppDetailsBO save(UserAppDetailsBO userAppDetails) throws SystemException {
+  public UserAppDetailsBO save(UserAppDetailsBO userAppDetails) {
 
     logger.info("UserAppDetailsServiceImpl save() - starts");
 

@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoBORepository;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
@@ -30,19 +29,8 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
   @Autowired AuthInfoBORepository authInfoRepository;
 
   @Override
-  public AuthInfoBO save(AuthInfoBO authInfo) throws SystemException {
-    logger.info("AuthInfoBODaoImpl save() - starts");
-    AuthInfoBO dbResponse = null;
-    if (authInfo != null) {
-      try {
-        dbResponse = authInfoRepository.save(authInfo);
-        logger.info("AuthInfoBODaoImpl save() - ends");
-        return dbResponse;
-      } catch (Exception e) {
-        logger.error("AuthInfoBODaoImpl save(): ", e);
-        throw new SystemException();
-      }
-    } else return null;
+  public AuthInfoBO save(AuthInfoBO authInfo) {
+    return authInfoRepository.save(authInfo);
   }
 
   @Override

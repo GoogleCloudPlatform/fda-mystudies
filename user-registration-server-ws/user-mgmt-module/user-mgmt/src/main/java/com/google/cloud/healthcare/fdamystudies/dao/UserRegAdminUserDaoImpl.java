@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminUserRepository;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserRegAdminUser;
 import org.slf4j.Logger;
@@ -24,19 +23,13 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
   @Autowired private UserRegAdminUserRepository adminUserRepository;
 
   @Override
-  public UserRegAdminUser save(UserRegAdminUser adminUser) throws SystemException {
+  public UserRegAdminUser save(UserRegAdminUser adminUser) {
     logger.info("UserRegAdminUserDaoImpl save() - starts");
-    UserRegAdminUser userRegAdminUser = null;
     if (adminUser != null) {
-      try {
-        userRegAdminUser = adminUserRepository.save(adminUser);
-        logger.info("UserRegAdminUserDaoImpl save() - ends");
-        return userRegAdminUser;
-      } catch (Exception e) {
-        logger.error("UserRegAdminUserDaoImpl save(): ", e);
-        throw new SystemException();
-      }
+      UserRegAdminUser userRegAdminUser = adminUserRepository.save(adminUser);
+      logger.info("UserRegAdminUserDaoImpl save() - ends");
+      return userRegAdminUser;
     }
-    return userRegAdminUser;
+    return null;
   }
 }

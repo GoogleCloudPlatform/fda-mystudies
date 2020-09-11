@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
@@ -38,53 +37,34 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   @Transactional
-  public UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsBO loadUserDetailsByUserId(String userId) {
     logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - starts");
-    try {
-      UserDetailsBO userDetailsBO = null;
-      if (userId != null) {
-        userDetailsBO = repository.findByUserId(userId);
-      }
-      logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
-      return userDetailsBO;
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl.loadUserDetailsByUserId(): ", e);
-      throw new SystemException();
+
+    UserDetailsBO userDetailsBO = null;
+    if (userId != null) {
+      userDetailsBO = repository.findByUserId(userId);
     }
+    logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
+    return userDetailsBO;
   }
 
   @Override
-  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException {
-    logger.info("FdaEaUserDetailsDaoImpl saveUser() - starts");
-    try {
-      UserDetailsBO savedUserDetails = null;
-      if (userDetailsBO != null) {
-        savedUserDetails = repository.save(userDetailsBO);
-      }
-      logger.info("FdaEaUserDetailsDaoImpl saveUser() - ends");
-      return savedUserDetails;
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl.saveUser(): ", e);
-      throw new SystemException();
-    }
+  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) {
+    return repository.save(userDetailsBO);
   }
 
   @Override
-  public UserDetailsBO loadEmailCodeByUserId(String userId) throws SystemException {
+  public UserDetailsBO loadEmailCodeByUserId(String userId) {
     logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() - starts");
-    try {
-      UserDetailsBO dbResponse = null;
-      if (userId != null) {
-        dbResponse = repository.findByUserId(userId);
-        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
-        return dbResponse;
-      } else {
-        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
-        return dbResponse;
-      }
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId(): ", e);
-      throw new SystemException();
+
+    UserDetailsBO dbResponse = null;
+    if (userId != null) {
+      dbResponse = repository.findByUserId(userId);
+      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      return dbResponse;
+    } else {
+      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      return dbResponse;
     }
   }
 
@@ -102,8 +82,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   public boolean saveAllRecords(
-      UserDetailsBO userDetailsBO, AuthInfoBO authInfo, UserAppDetailsBO userAppDetails)
-      throws SystemException {
+      UserDetailsBO userDetailsBO, AuthInfoBO authInfo, UserAppDetailsBO userAppDetails) {
 
     logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - starts");
     if (userDetailsBO != null && authInfo != null && userAppDetails != null) {
@@ -128,7 +107,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
             logger.error("FdaEaUserDetailsDaoImpl saveAllRecords(): ", e);
           }
         }
-        throw new SystemException();
+        throw e;
       }
     } else {
       logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - ends");

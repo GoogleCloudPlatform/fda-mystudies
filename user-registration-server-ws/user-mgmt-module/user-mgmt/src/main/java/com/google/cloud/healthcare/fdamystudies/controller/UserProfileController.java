@@ -28,7 +28,6 @@ import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.time.LocalDateTime;
@@ -87,27 +86,24 @@ public class UserProfileController {
     auditRequest.setUserId(userId);
 
     UserProfileRespBean userPrlofileRespBean = null;
-    try {
-      userPrlofileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0);
-      if (userPrlofileRespBean != null) {
-        userMgmntAuditHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE, auditRequest);
 
-        userPrlofileRespBean.setMessage(
-            MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+    userPrlofileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0);
+    if (userPrlofileRespBean != null) {
+      userMgmntAuditHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE, auditRequest);
 
-      } else {
-        userMgmntAuditHelper.logEvent(READ_OPERATION_FAILED_FOR_USER_PROFILE, auditRequest);
+      userPrlofileRespBean.setMessage(
+          MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
-            response);
-      }
-    } catch (Exception e) {
-      logger.error("UserProfileController getUserProfile() - error ", e);
-      return AppUtil.httpResponseForInternalServerError();
+    } else {
+      userMgmntAuditHelper.logEvent(READ_OPERATION_FAILED_FOR_USER_PROFILE, auditRequest);
+
+      MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.NO_DATA_AVAILABLE.getValue(),
+          response);
     }
+
     logger.info("UserProfileController getUserProfile() - Ends ");
     return new ResponseEntity<>(userPrlofileRespBean, HttpStatus.OK);
   }
@@ -126,20 +122,15 @@ public class UserProfileController {
     auditRequest.setUserId(userId);
 
     ErrorBean errorBean = null;
-    try {
-      errorBean = userManagementProfService.updateUserProfile(userId, user);
-      if (errorBean.getCode() == ErrorCode.EC_200.code()) {
-        userMgmntAuditHelper.logEvent(USER_PROFILE_UPDATED, auditRequest);
+    errorBean = userManagementProfService.updateUserProfile(userId, user);
+    if (errorBean.getCode() == ErrorCode.EC_200.code()) {
+      userMgmntAuditHelper.logEvent(USER_PROFILE_UPDATED, auditRequest);
 
-        errorBean = new ErrorBean(HttpStatus.OK.value(), ErrorCode.EC_30.errorMessage());
-      } else {
-        userMgmntAuditHelper.logEvent(USER_PROFILE_UPDATE_FAILED, auditRequest);
+      errorBean = new ErrorBean(HttpStatus.OK.value(), ErrorCode.EC_30.errorMessage());
+    } else {
+      userMgmntAuditHelper.logEvent(USER_PROFILE_UPDATE_FAILED, auditRequest);
 
-        return new ResponseEntity<>(errorBean, HttpStatus.CONFLICT);
-      }
-    } catch (Exception e) {
-      logger.error("UserProfileController getUserProfile() - error ", e);
-      return AppUtil.httpResponseForInternalServerError();
+      return new ResponseEntity<>(errorBean, HttpStatus.CONFLICT);
     }
     logger.info("UserProfileController updateUserProfile() - Ends ");
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
@@ -159,24 +150,20 @@ public class UserProfileController {
 
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     ResponseBean responseBean = new ResponseBean();
-    try {
 
-      message =
-          userManagementProfService.deactivateAccount(userId, deactivateAcctBean, auditRequest);
+    message = userManagementProfService.deactivateAccount(userId, deactivateAcctBean, auditRequest);
 
-      if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-        responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-      } else {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-            response);
-        return null;
-      }
-    } catch (Exception e) {
-      logger.error("UserProfileController deactivateAccount() - error ", e);
+    if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+      responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+    } else {
+      MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
+          response);
+      return null;
     }
+
     logger.info("UserProfileController deactivateAccount() - Ends ");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
@@ -189,71 +176,70 @@ public class UserProfileController {
       @RequestHeader("appId") String appId,
       @Valid @RequestBody LoginBean loginBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.info("UserProfileController resendConfirmation() - Starts ");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setAppId(appId);
 
     UserDetailsBO participantDetails = null;
     ResponseBean responseBean = new ResponseBean();
-    try {
-      String isValidAppMsg =
-          commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
-      if (!StringUtils.isEmpty(isValidAppMsg)) {
-        AppOrgInfoBean appOrgInfoBean =
-            commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
-        if (appOrgInfoBean != null) {
-          participantDetails =
-              userManagementProfService.getParticipantDetailsByEmail(
-                  loginBean.getEmailId(), appOrgInfoBean.getAppInfoId());
-        }
-        if (participantDetails != null) {
-          if (participantDetails.getStatus() == 2) {
-            String code = RandomStringUtils.randomAlphanumeric(6);
-            participantDetails.setEmailCode(code);
-            participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
-            participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-            UserDetailsBO updParticipantDetails =
-                userManagementProfService.saveParticipant(participantDetails);
-            if (updParticipantDetails != null) {
-              int isSent =
-                  userManagementProfService.resendConfirmationthroughEmail(
-                      appId, participantDetails.getEmailCode(), participantDetails.getEmail());
-              if (isSent == 2) {
-                auditRequest.setUserId(updParticipantDetails.getUserId());
-                userMgmntAuditHelper.logEvent(
-                    VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
-                responseBean.setMessage(
-                    MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-              }
+
+    String isValidAppMsg =
+        commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+    if (!StringUtils.isEmpty(isValidAppMsg)) {
+      AppOrgInfoBean appOrgInfoBean =
+          commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+      if (appOrgInfoBean != null) {
+        participantDetails =
+            userManagementProfService.getParticipantDetailsByEmail(
+                loginBean.getEmailId(), appOrgInfoBean.getAppInfoId());
+      }
+      if (participantDetails != null) {
+        if (participantDetails.getStatus() == 2) {
+          String code = RandomStringUtils.randomAlphanumeric(6);
+          participantDetails.setEmailCode(code);
+          participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
+          participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+          UserDetailsBO updParticipantDetails =
+              userManagementProfService.saveParticipant(participantDetails);
+          if (updParticipantDetails != null) {
+            int isSent =
+                userManagementProfService.resendConfirmationthroughEmail(
+                    appId, participantDetails.getEmailCode(), participantDetails.getEmail());
+            if (isSent == 2) {
+              auditRequest.setUserId(updParticipantDetails.getUserId());
+              userMgmntAuditHelper.logEvent(
+                  VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
+              responseBean.setMessage(
+                  MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
             }
-          } else {
-            MyStudiesUserRegUtil.getFailureResponse(
-                MyStudiesUserRegUtil.ErrorCodes.STATUS_103.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
-                response);
-            return null;
           }
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.STATUS_103.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.USER_ALREADY_VERIFIED.getValue(),
               response);
           return null;
         }
       } else {
         MyStudiesUserRegUtil.getFailureResponse(
             MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.EMAIL_NOT_EXISTS.getValue(),
             response);
         return null;
       }
-    } catch (Exception e) {
-      logger.error("UserProfileController resendConfirmation() - error ", e);
+    } else {
+      MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+          response);
+      return null;
     }
+
     logger.info("UserProfileController resendConfirmation() - Ends ");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }

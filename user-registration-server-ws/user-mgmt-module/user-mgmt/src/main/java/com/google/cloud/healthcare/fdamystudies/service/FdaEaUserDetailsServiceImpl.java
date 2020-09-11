@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
@@ -42,33 +41,30 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   @Override
   @Transactional
-  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException {
+  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) {
     logger.info("FdaEaUserDetailsServiceImpl saveUser() - starts");
     UserDetailsBO daoResp = null;
-    try {
-      if (userDetailsBO != null) {
-        daoResp = userDetailsDao.saveUser(userDetailsBO);
-        AuthInfoBO authInfo = new AuthInfoBO();
-        authInfo.setAppId(daoResp.getAppInfoId());
-        authInfo.setUserId(daoResp.getUserDetailsId());
-        authInfo.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
-        authInfoService.save(authInfo);
-        UserAppDetailsBO userAppDetails = new UserAppDetailsBO();
-        userAppDetails.setAppInfoId(daoResp.getAppInfoId());
-        userAppDetails.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
-        userAppDetails.setUserDetailsId(daoResp.getUserDetailsId());
-        userAppDetailsService.save(userAppDetails);
-      }
-      logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsServiceImpl saveUser(): ", e);
-      throw new SystemException();
+
+    if (userDetailsBO != null) {
+      daoResp = userDetailsDao.saveUser(userDetailsBO);
+      AuthInfoBO authInfo = new AuthInfoBO();
+      authInfo.setAppId(daoResp.getAppInfoId());
+      authInfo.setUserId(daoResp.getUserDetailsId());
+      authInfo.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
+      authInfoService.save(authInfo);
+      UserAppDetailsBO userAppDetails = new UserAppDetailsBO();
+      userAppDetails.setAppInfoId(daoResp.getAppInfoId());
+      userAppDetails.setCreatedOn(LocalDateTime.now(ZoneId.systemDefault()));
+      userAppDetails.setUserDetailsId(daoResp.getUserDetailsId());
+      userAppDetailsService.save(userAppDetails);
     }
+    logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
+
     return daoResp;
   }
 
   @Override
-  public UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsBO loadUserDetailsByUserId(String userId) {
     // call dao layer to get the user details using userId
     logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - starts");
     UserDetailsBO daoResp = null;

@@ -239,10 +239,10 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void deactivateAccountBadRequest() throws Exception {
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.INVALID_USER_ID);
+  public void deactivateAccountIsNotFound() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
-    // invalid userId
+    // invalid userId, expect user not found error from auth server
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
     DeactivateAcctBean acctBean = new DeactivateAcctBean();
     String requestJson = getObjectMapper().writeValueAsString(acctBean);
@@ -253,7 +253,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isNotFound());
 
     verifyTokenIntrospectRequest(1);
   }

@@ -8,22 +8,20 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 
 public interface FdaEaUserDetailsDao {
 
-  UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException;
+  UserDetailsBO saveUser(UserDetailsBO userDetailsBO);
 
-  UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException;
+  UserDetailsBO loadUserDetailsByUserId(String userId);
 
-  UserDetailsBO loadEmailCodeByUserId(String userId) throws SystemException;
+  UserDetailsBO loadEmailCodeByUserId(String userId);
 
   boolean updateStatus(UserDetailsBO participantDetails);
 
   boolean saveAllRecords(
-      UserDetailsBO userDetailsBO, AuthInfoBO authInfo, UserAppDetailsBO userAppDetails)
-      throws SystemException;
+      UserDetailsBO userDetailsBO, AuthInfoBO authInfo, UserAppDetailsBO userAppDetails);
 }
