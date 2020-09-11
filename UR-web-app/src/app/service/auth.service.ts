@@ -28,8 +28,8 @@ export class AuthService {
   storeDefaultsValues(): void {
     const codeVerifier = 'IIZLcGtmuoCgXhazHneHoXVMmPRM1tkjfUs2yJ4uXvv3nVswiv';
     const codeChallenge = 'wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4';
-    sessionStorage.setItem('pkceVerifier', verifier);
-    sessionStorage.setItem('pkceChallenge', challenge);
+    sessionStorage.setItem('pkceVerifier', codeVerifier);
+    sessionStorage.setItem('pkceChallenge', codeChallenge);
     sessionStorage.setItem('tempRegId', '');
     if (!sessionStorage.hasOwnProperty('correlationId')) {
       sessionStorage.setItem('correlationId', uuidv4());
