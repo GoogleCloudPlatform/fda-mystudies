@@ -22,9 +22,9 @@ export class LocationService {
   getLocations(): Observable<ManageLocations> {
     return this.http.get<ManageLocations>(`${environment.baseUrl}/locations`);
   }
-  getLocationsForSiteCreation(studyId: string): Observable<Location[]> {
-    return this.http.get<Location[]>('locations-for-site-creation', {
-      params: {studyId},
+  getLocationsForSiteCreation(studyId: string): Observable<ManageLocations> {
+    return this.http.get<ManageLocations>(`${environment.baseUrl}/locations`, {
+      params: {excludeStudyId: studyId},
     });
   }
   addLocation(location: Location): Observable<Location> {

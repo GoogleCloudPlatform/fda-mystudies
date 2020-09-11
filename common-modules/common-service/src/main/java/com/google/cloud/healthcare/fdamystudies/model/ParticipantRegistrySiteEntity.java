@@ -12,6 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -34,12 +35,7 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 @Setter
 @Getter
 @Entity
@@ -69,7 +65,7 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   private StudyEntity study;
 
   @ToString.Exclude
-  @Column(length = LARGE_LENGTH)
+  @Column(length = EMAIL_LENGTH)
   private String email;
 
   @ToString.Exclude
