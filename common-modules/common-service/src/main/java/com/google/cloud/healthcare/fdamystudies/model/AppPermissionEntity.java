@@ -30,17 +30,12 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @ToString
 @Setter
 @Getter
 @Entity
 @Table(name = "app_permissions")
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class AppPermissionEntity implements Serializable {
 
   private static final long serialVersionUID = 8610289975376774137L;

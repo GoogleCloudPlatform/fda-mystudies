@@ -13,7 +13,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppPermission;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LocationBo;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.OrgInfo;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.SiteBo;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
 import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyPermission;
@@ -58,12 +57,7 @@ public class StudiesDaoImpl implements StudiesDao {
     Root<AppInfoDetailsBO> appRoot = null;
     Predicate[] appPredicate = new Predicate[1];
 
-    CriteriaQuery<OrgInfo> orgCriteria = null;
-    Root<OrgInfo> orgRoot = null;
-    Predicate[] orgPredicate = new Predicate[1];
-
     AppInfoDetailsBO appInfo = null;
-    OrgInfo orgInfo = null;
 
     UserRegAdminUser superAdminUser;
 
@@ -83,12 +77,6 @@ public class StudiesDaoImpl implements StudiesDao {
       appCriteria.select(appRoot).where(appPredicate);
       appInfo = session.createQuery(appCriteria).uniqueResult();
 
-      orgCriteria = builder.createQuery(OrgInfo.class);
-      orgRoot = orgCriteria.from(OrgInfo.class);
-      orgPredicate[0] = builder.equal(orgRoot.get("orgId"), studyMetadataBean.getOrgId());
-      orgCriteria.select(orgRoot).where(orgPredicate);
-      orgInfo = session.createQuery(orgCriteria).uniqueResult();
-
       CriteriaQuery<UserRegAdminUser> urAdminUserCriteria =
           builder.createQuery(UserRegAdminUser.class);
       Root<UserRegAdminUser> urAdminUserRoot = urAdminUserCriteria.from(UserRegAdminUser.class);
@@ -99,18 +87,12 @@ public class StudiesDaoImpl implements StudiesDao {
 
       if (studyInfo != null) {
         appInfo = studyInfo.getAppInfo();
-        orgInfo = appInfo.getOrgInfo();
-
-        orgInfo.setOrgId(studyMetadataBean.getOrgId());
-        orgInfo.setModifiedBy(0);
-        orgInfo.setModifiedDate(UserManagementUtil.getCurrentUtilDateTime());
 
         appInfo.setAppId(studyMetadataBean.getAppId());
         appInfo.setAppName(studyMetadataBean.getAppName());
         appInfo.setAppDescription(studyMetadataBean.getAppDescription());
         appInfo.setModifiedBy(0);
         appInfo.setModifiedDate(UserManagementUtil.getCurrentUtilDateTime());
-        appInfo.setOrgInfo(orgInfo);
 
         studyInfo.setCustomId(studyMetadataBean.getStudyId());
         studyInfo.setName(studyMetadataBean.getStudyTitle());
@@ -130,14 +112,6 @@ public class StudiesDaoImpl implements StudiesDao {
         }
       } else {
 
-        if (orgInfo == null) {
-          orgInfo = new OrgInfo();
-          orgInfo.setOrgId(studyMetadataBean.getOrgId());
-          orgInfo.setCreatedBy(0);
-          orgInfo.setCreatedOn(UserManagementUtil.getCurrentUtilDateTime());
-          session.save(orgInfo);
-        }
-
         if (appInfo == null) {
           appInfo = new AppInfoDetailsBO();
           appInfo.setAppId(studyMetadataBean.getAppId());
@@ -145,7 +119,6 @@ public class StudiesDaoImpl implements StudiesDao {
           appInfo.setAppDescription(studyMetadataBean.getAppDescription());
           appInfo.setCreatedBy(0);
           appInfo.setCreatedOn(UserManagementUtil.getCurrentUtilDateTime());
-          appInfo.setOrgInfo(orgInfo);
           session.save(appInfo);
 
           AppPermission appPermission = new AppPermission();
