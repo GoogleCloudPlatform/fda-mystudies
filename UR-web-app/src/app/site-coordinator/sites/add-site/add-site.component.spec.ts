@@ -76,8 +76,10 @@ describe('AddSiteComponent', () => {
   });
 
   it('should get location list for the dropdown', fakeAsync(() => {
-    component.location$.subscribe((location) => {
-      expect(location.length).toBe(expectLocationDropdown.length);
+    component.location$.subscribe((manageLocations) => {
+      expect(manageLocations.locations.length).toBe(
+        expectLocationDropdown.locations.length,
+      );
     });
   }));
 
