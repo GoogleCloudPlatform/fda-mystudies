@@ -73,9 +73,6 @@ public class ParticipantActivities {
   @Column(name = "application_id")
   private String applicationId;
 
-  @Column(name = "org_id")
-  private String orgId;
-
   @Column(name = "activity_start_date")
   private String activityStartDate;
 

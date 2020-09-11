@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.repository;
 
-import com.google.cloud.healthcare.fdamystudies.oauthscim.model.oauthscim.UserEntity;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import java.sql.Timestamp;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

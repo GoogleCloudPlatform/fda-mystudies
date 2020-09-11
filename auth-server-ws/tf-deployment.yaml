@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: auth-server-ws
-          image: gcr.io/heroes-hat-dev-apps/auth-server-ws:latest
+          image: gcr.io/fda-mystudies-dev-apps/auth-server-ws:latest
           env:
             - name: DB_USER
               valueFrom:
@@ -65,7 +65,7 @@ spec:
             readOnly: true
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ['/cloud_sql_proxy', '-instances=heroes-hat-dev-data:us-east1:my-studies=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
+          command: ['/cloud_sql_proxy', '-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
           volumeMounts:
           - name: gcloud-key-volume
             mountPath: /secrets/gcloud_key

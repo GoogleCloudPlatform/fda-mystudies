@@ -46,7 +46,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.model.oauthscim.UserEntity;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.util.Optional;

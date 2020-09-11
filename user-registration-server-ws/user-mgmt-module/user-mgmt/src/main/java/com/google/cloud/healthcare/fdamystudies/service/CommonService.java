@@ -12,9 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 
 public interface CommonService {
 
-  public String validatedUserAppDetailsByAllApi(
-      String userId, String email, String appId, String orgId);
+  public String validatedUserAppDetailsByAllApi(String userId, String email, String appId);
 
-  public AppOrgInfoBean getUserAppDetailsByAllApi(
-      String userId, String emailId, String appId, String orgId);
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String emailId, String appId);
 }
