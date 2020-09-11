@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.common;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,6 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -38,6 +40,10 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.SerializationUtils;
@@ -58,6 +64,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -108,6 +115,8 @@ public class BaseMockIT {
   @Autowired protected AuditEventService mockAuditService;
 
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
+
+  @Autowired protected JavaMailSender emailSender;
 
   @LocalServerPort int randomServerPort;
 
@@ -289,5 +298,24 @@ public class BaseMockIT {
         times,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+  }
+
+  protected void verifyMimeMessage(String toEmail, String fromEmail, String subject, String body)
+      throws MessagingException, IOException {
+    ArgumentCaptor<MimeMessage> mailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+    verify(emailSender, atLeastOnce()).send(mailCaptor.capture());
+
+    MimeMessage mail = mailCaptor.getValue();
+
+    assertThat(mail.getFrom()).containsExactly(new InternetAddress(fromEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.TO))
+        .containsExactly(new InternetAddress(toEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.CC)).isNull();
+
+    assertThat(mail.getSubject()).isEqualToIgnoringCase(subject);
+    assertThat(mail.getContent().toString()).contains(body);
+
+    assertThat(mail.getDataHandler().getContentType())
+        .isEqualToIgnoringCase("text/html; charset=utf-8");
   }
 }
