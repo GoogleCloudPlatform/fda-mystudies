@@ -28,17 +28,12 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
 @ToString
 @Entity
 @Table(name = "study_permissions")
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class StudyPermissionEntity implements Serializable {
 
   private static final long serialVersionUID = -9223143734827095684L;

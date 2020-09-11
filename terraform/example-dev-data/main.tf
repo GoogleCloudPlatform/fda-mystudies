@@ -84,7 +84,7 @@ module "example_dev_my_studies_consent_documents" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-consent-documents"
+  name       = "example-dev-mystudies-consent-documents"
   project_id = module.project.project_id
   location   = "us-central1"
 
@@ -100,7 +100,7 @@ module "example_dev_my_studies_fda_resources" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-fda-resources"
+  name       = "example-dev-mystudies-fda-resources"
   project_id = module.project.project_id
   location   = "us-central1"
 
@@ -116,7 +116,7 @@ module "example_dev_my_studies_sql_import" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-sql-import"
+  name       = "example-dev-mystudies-sql-import"
   project_id = module.project.project_id
   location   = "us-central1"
 
