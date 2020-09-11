@@ -54,7 +54,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -72,12 +71,6 @@ public class UserConsentManagementController {
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserConsentManagementController.class);
-
-  @RequestMapping(value = "/ping")
-  public String ping() {
-    logger.info(" UserConsentManagementController - ping()  ");
-    return "Mystudies UserRegistration Webservice Started !!!";
-  }
 
   @PostMapping(
       value = "/updateEligibilityConsentStatus",

@@ -13,7 +13,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.P
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,11 +32,6 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class EnrollmentTokenControllerTest extends BaseMockIT {
 
@@ -55,17 +49,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     assertNotNull(controller);
     assertNotNull(mockMvc);
     assertNotNull(enrollmentTokenService);
-  }
-
-  @Test
-  public void ping() throws Exception {
-
-    HttpHeaders headers = TestUtils.getCommonHeaders();
-    mockMvc
-        .perform(
-            get(ApiEndpoint.PING_PATH.getPath()).headers(headers).contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk());
   }
 
   @Test
