@@ -24,7 +24,7 @@ public interface UserConsentManagementDao {
 
   public String saveStudyConsent(StudyConsentBO studyConsent);
 
-  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId);
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId);
 
   public StudyInfoBean getStudyInfoId(String customStudyId);
 
