@@ -93,8 +93,7 @@ public class UserSupportControllerTest extends BaseMockIT {
     appConfig.setContactusToEmail("contactus_app_test@grr.la");
 
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.USER_ID_HEADER);
 
     String requestJson =
         getContactUsRequest(
