@@ -230,14 +230,13 @@ public enum ErrorCode {
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC_0053", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
 
+  USER_ID_REQUIRED(400, "EC_0054", Constants.BAD_REQUEST, "User Id is required"),
+
   EMAIL_ID_OR_PASSWORD_NULL(
-      400, "EC-400", Constants.BAD_REQUEST, "emailId or password is blank in request"),
+      400, "EC_0055", Constants.BAD_REQUEST, "emailId or password is blank in request"),
 
   APPLICATION_ID_MISSING(
-      400, "EC-400", Constants.BAD_REQUEST, "applicationId is missing in request header"),
-
-  USER_ID_REQUIRED(400, "EC_0054", Constants.BAD_REQUEST, "User Id is required");
-
+      400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header");
 
   private final int status;
   private final String code;
