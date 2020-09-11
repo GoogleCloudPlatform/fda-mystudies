@@ -22,83 +22,84 @@ import org.springframework.http.HttpStatus;
 @RequiredArgsConstructor
 @JsonSerialize(using = MessageCode.MessageCodeSerializer.class)
 public enum MessageCode {
-  ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG-0001", "Site added successfully"),
+  ADD_SITE_SUCCESS(HttpStatus.CREATED, "MSG_0001", "Site added successfully"),
 
-  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG-0002", "New location added successfully"),
+  ADD_LOCATION_SUCCESS(HttpStatus.CREATED, "MSG_0002", "New location added successfully"),
 
-  GET_APPS_SUCCESS(HttpStatus.OK, "MSG-0003", "Get apps successfully"),
+  GET_APPS_SUCCESS(HttpStatus.OK, "MSG_0003", "Apps fetched successfully"),
 
-  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG-0004", "Get studies successfully"),
+  GET_STUDIES_SUCCESS(HttpStatus.OK, "MSG_0004", "Study details fetched successfully"),
 
-  DECOMMISSION_SUCCESS(HttpStatus.OK, "MSG-0003", "Decommission successfully"),
+  DECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG_0005", "Site decommissioned successfully"),
 
-  REACTIVE_SUCCESS(HttpStatus.OK, "MSG-0004", "Reactivate successfully"),
+  RECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG_0006", "Site activated successfully"),
 
-  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0004", "Location updated successfully"),
+  LOCATION_UPDATE_SUCCESS(HttpStatus.OK, "MSG_0007", "Location details updated successfully"),
 
   GET_PARTICIPANT_REGISTRY_SUCCESS(
-      HttpStatus.OK, "MSG-0008", "Get participant registry successfully"),
+      HttpStatus.OK, "MSG_0008", "Participant registry fetched successfully"),
 
-  ADD_PARTICIPANT_SUCCESS(HttpStatus.CREATED, "MSG-0016", "Participant added successfully"),
+  ADD_PARTICIPANT_SUCCESS(HttpStatus.CREATED, "MSG_0009", "Email added successfully"),
 
-  GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0018", "Get App Details successfully"),
-
-  DECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0014", "Site Decommissioned successfully"),
-
-  RECOMMISSION_SITE_SUCCESS(HttpStatus.OK, "MSG-0015", "Site Recommissioned successfully"),
-
-  GET_LOCATION_SUCCESS(HttpStatus.OK, "MSG-0008", "Get locations successfully"),
-
-  GET_LOCATION_FOR_SITE_SUCCESS(HttpStatus.OK, "MSG-0009", "Get locations for site successfully"),
-
-  GET_APP_PARTICIPANTS_SUCCESS(HttpStatus.OK, "MSG-0005", "get App Participants successfully"),
-
-  ADD_NEW_USER_SUCCESS(HttpStatus.CREATED, "MSG-0020", "New user added successfully"),
-
-  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG-0021", "User updated successfully"),
-
-  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG-0022", "Get user profile successfully"),
-
-  GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
-      HttpStatus.OK, "MSG-0023", "Get user profile with security code successfully"),
-
-  GET_PARTICIPANT_DETAILS_SUCCESS(
-      HttpStatus.OK, "MSG-0019", "Get participant details successfully"),
-
-  PARTICIPANTS_INVITED_SUCCESS(HttpStatus.OK, "MSG-0016", "Participants are invited"),
-
-  PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG-0001", "Your password has been reset successfully!"),
-
-  CHANGE_PASSWORD_SUCCESS(
-      HttpStatus.OK, "MSG-0002", "Your password has been changed successfully!"),
-
-  EMAIL_ACCEPTED_BY_MAIL_SERVER(
-      HttpStatus.ACCEPTED, "MSG-0022", "The email is accepted by the receiving mail server."),
-
-  IMPORT_PARTICIPANT_SUCCESS(HttpStatus.OK, "MSG-0026", "Participants imported successfully"),
-
-  UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG-0028", "Status updated successfully"),
-
-  GET_SITES_SUCCESS(HttpStatus.OK, "MSG-0018", "Get sites successfully"),
-
-  PROFILE_UPDATE_SUCCESS(HttpStatus.OK, "MSG-0011", "Profile updated successfully"),
+  GET_APPS_DETAILS_SUCCESS(HttpStatus.OK, "MSG_0010", "App details fetched successfully"),
 
   TARGET_ENROLLMENT_UPDATE_SUCCESS(
-      HttpStatus.OK, "MSG-0030", "Target enrollment updated successfully"),
+      HttpStatus.OK, "MSG_0011", "Target enrollment updated successfully"),
 
-  GET_CONSENT_DOCUMENT_SUCCESS(HttpStatus.OK, "MSG-0023", "Get consent document successfully"),
+  GET_APP_PARTICIPANTS_SUCCESS(HttpStatus.OK, "MSG_0012", "App participants fetched successfully"),
 
-  UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0004", "User details successfully updated."),
+  ADD_NEW_USER_SUCCESS(HttpStatus.CREATED, "MSG_0013", "New user added successfully"),
 
-  SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG-0005", "New account added successfully"),
+  UPDATE_USER_SUCCESS(HttpStatus.OK, "MSG_0014", "User details updated successfully"),
 
-  GET_ADMIN_DETAILS_SUCCESS(HttpStatus.OK, "MSG-0029", "Admin details fetched successfully"),
+  GET_USER_PROFILE_SUCCESS(HttpStatus.OK, "MSG_0015", "User profile fetched successfully"),
 
-  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG-0032", "User deactivated successfully"),
+  GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS(
+      HttpStatus.OK, "MSG_0016", "User profile with security code fetched successfully"),
 
-  GET_USERS_SUCCESS(HttpStatus.OK, "MSG-0033", "All users fetched successfully"),
+  GET_PARTICIPANT_DETAILS_SUCCESS(
+      HttpStatus.OK, "MSG_0017", "Participant details fetched successfully"),
 
-  REACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG-0032", "User reactivated successfully");
+  PARTICIPANTS_INVITED_SUCCESS(
+      HttpStatus.OK, "MSG_0018", "Invitation to particiapant sent successfully"),
+
+  PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG_0019", "Your password has been reset successfully"),
+
+  EMAIL_ACCEPTED_BY_MAIL_SERVER(
+      HttpStatus.ACCEPTED, "MSG_0020", "Email accepted by receiving mail server"),
+
+  IMPORT_PARTICIPANT_SUCCESS(HttpStatus.OK, "MSG_0021", "Email list imported successfully"),
+
+  UPDATE_STATUS_SUCCESS(HttpStatus.OK, "MSG_0022", "Status updated successfully"),
+
+  GET_SITES_SUCCESS(HttpStatus.OK, "MSG_0023", "Sites fetched successfully"),
+
+  GET_CONSENT_DOCUMENT_SUCCESS(HttpStatus.OK, "MSG_0024", "Consent document fetched successfully"),
+
+  UPDATE_USER_DETAILS_SUCCESS(HttpStatus.OK, "MSG_0025", "User details updated successfully"),
+
+  SET_UP_ACCOUNT_SUCCESS(HttpStatus.CREATED, "MSG_0026", "New account added successfully"),
+
+  GET_ADMIN_DETAILS_SUCCESS(HttpStatus.OK, "MSG_0027", "Admin details fetched successfully"),
+
+  DEACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0028", "User deactivated successfully"),
+
+  REACTIVATE_USER_SUCCESS(HttpStatus.OK, "MSG_0029", "User activated successfully"),
+
+  DECOMMISSION_SUCCESS(HttpStatus.OK, "MSG_0030", "Location decommisioned successfully"),
+
+  REACTIVE_SUCCESS(HttpStatus.OK, "MSG_0031", "Location activated successfully"),
+
+  GET_LOCATION_SUCCESS(HttpStatus.OK, "MSG_0032", "Location fetched successfully"),
+
+  GET_LOCATION_FOR_SITE_SUCCESS(
+      HttpStatus.OK, "MSG_0033", "Locations for site fetched successfully"),
+
+  PROFILE_UPDATE_SUCCESS(HttpStatus.OK, "MSG_0034", "Profile updated successfully"),
+
+  CHANGE_PASSWORD_SUCCESS(HttpStatus.OK, "MSG_0035", "Your password has been changed successfully"),
+
+  GET_USERS_SUCCESS(HttpStatus.OK, "MSG_0036", "User details fetched successfully");
 
   private final HttpStatus httpStatus;
   private final String code;
