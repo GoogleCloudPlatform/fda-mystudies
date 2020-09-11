@@ -210,8 +210,7 @@ public class AppControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(
-            jsonPath(
-                "$.error_description", is(ErrorCode.USER_ADMIN_ACCESS_DENIED.getDescription())));
+            jsonPath("$.error_description", is(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
