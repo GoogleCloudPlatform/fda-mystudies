@@ -8,12 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.util.Optional;
-import lombok.Getter;
-
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.CLOUD_STORAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.MOBILE_APPS;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_DATASTORE;
+
+import java.util.Optional;
+import lombok.Getter;
 
 @Getter
 public enum ConsentManagementEnum implements AuditLogEvent {
