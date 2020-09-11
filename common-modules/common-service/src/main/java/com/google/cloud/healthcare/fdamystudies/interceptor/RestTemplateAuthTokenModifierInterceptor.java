@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RestTemplateAuthTokenModifierInterceptor implements ClientHttpRequestInterceptor {
 
   @Autowired private OAuthService oauthService;

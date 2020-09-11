@@ -1,11 +1,4 @@
-import {
-  async,
-  TestBed,
-  ComponentFixture,
-  fakeAsync,
-  tick,
-  flush,
-} from '@angular/core/testing';
+import {async, TestBed, ComponentFixture} from '@angular/core/testing';
 import {
   BrowserAnimationsModule,
   NoopAnimationsModule,
@@ -22,7 +15,6 @@ import {expectedSitesList} from '../../../entity/mock-studies-data';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {LocationService} from '../../location/shared/location.service';
-import {By} from '@angular/platform-browser';
 
 describe('SiteListComponent', () => {
   let component: SiteListComponent;
@@ -99,17 +91,4 @@ describe('SiteListComponent', () => {
     expect(sitesLists[0].textContent).toContain('Location1');
     expect(sitesListPCT[0].textContent).toContain(' 1 / 300 ');
   });
-
-  it('should display the modal when Add site button is clicked', fakeAsync(async () => {
-    const clickAddButton = fixture.debugElement.query(
-      By.css('button[name="add"]'),
-    );
-    const clickSpyobj = spyOn(component, 'openAddSiteModal');
-    clickAddButton.triggerEventHandler('click', null);
-    tick();
-    await fixture.whenStable();
-    fixture.detectChanges();
-    expect(clickSpyobj).toBeTruthy();
-    flush();
-  }));
 });
