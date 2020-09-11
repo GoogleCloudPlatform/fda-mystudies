@@ -1,7 +1,6 @@
-INSERT INTO `org_info` (`id`, `name`, `org_id`, `created_on`, `created_by`, `modified_by`, `modified_date`) VALUES (1, 'organizations name', 1, '2020-03-03 15:35:27', 0, 0, '2020-03-12 15:25:14');
+INSERT INTO `app_info` (`app_info_id`, `custom_app_id`, `created_on`, `app_name`, `created_by`, `modified_date`) VALUES
+	(1, 'app-id-cust', '2020-01-16 15:22:22', 'app-name-1', 0, '2020-03-12 15:17:56');
 
-INSERT INTO `app_info` (`app_info_id`, `custom_app_id`, `org_info_id`, `created_on`, `app_name`, `created_by`, `modified_date`) VALUES (1, 'app-id-cust', 1, '2020-01-16 15:22:22', 'app-name-1', 0, '2020-03-12 15:17:56');
-	
 INSERT INTO `study_info` (`id`, `custom_id`, `app_info_id`, `name`, `description`, `type`,`created_by`, `created_on`, `modified_date`) VALUES (1, 'StudyofHealth', 1, 'name', 'description', 'OPEN', 0, '2020-03-12 15:23:41',  '2020-03-12 15:24:42'), (2, 'custom-id-2', 1, 'name-2', 'description', 'CLOSE', 0, '2020-03-12 15:23:44', '2020-03-12 15:24:45'), (3, 'StudyofHealthClose', 1, 'name', 'description', 'CLOSE', 0, '2020-03-12 15:23:41',  '2020-03-12 15:24:42'), (4, 'StudyofHealth1', 1, 'name', 'description', 'CLOSE', 0, '2020-03-12 15:23:41',  '2020-03-12 15:24:42'), (5, 'OpenStudy02', 1, 'name', 'description', 'CLOSE', 0, '2020-03-12 15:23:41',  '2020-03-12 15:24:42');
 
 INSERT INTO `locations` (`id`, `created`, `created_by`, `custom_id`, `description`, `is_default`, `name`, `status`) VALUES (2, '2020-03-17 18:59:15', 1, '-customId130.53', 'location-descp-updated', 'N', 'name -1-updated000', '1');
