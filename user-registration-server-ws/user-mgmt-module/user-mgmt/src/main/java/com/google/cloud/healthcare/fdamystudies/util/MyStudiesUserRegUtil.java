@@ -44,7 +44,6 @@ public class MyStudiesUserRegUtil {
     STATUS_119("119"), // Password is missing
     STATUS_120("120"), // Connection error msg
     STATUS_126("126"), // appId is missing
-    STATUS_127("127"), // orgId is missing
 
     STATUS_128("128"), // User Form is empty
     STATUS_129("129"), // Client Id is missing
@@ -58,7 +57,6 @@ public class MyStudiesUserRegUtil {
     SECRET_KEY_MISSING("Secret key is missing"),
 
     APP_ID_MISSING("appId is missing"),
-    ORG_ID_MISSING("orgId is missing"),
     ACCESS_TOKEN_MISSING("Access token is missing"),
     CODE_MISSING("Code is missing"),
 
