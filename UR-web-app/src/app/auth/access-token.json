@@ -1,0 +1,8 @@
+{
+  "accessToken": "ziV8Gh2BAQbx4PWUUa6chVcmoV6WrD8F1OBld-gigfccjj",
+  "expiresIn": 3600,
+  "idToken": "eyJhbGciOiJSUzI1NiIsImtpZCI6InB1Ymxabgfc",
+  "refreshToken": "bMYV9whRYGSz96ZWyyGo5IFQ8VN",
+  "scope": "offline_access offline openid",
+  "tokenType": "bearer"
+}

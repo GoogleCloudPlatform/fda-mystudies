@@ -1,0 +1,144 @@
+<div class="modal-body modal__body">
+  <form #updateLocationForm="ngForm" autocomplete="off">
+    <div class="row border__bottom__periwinkle-gray">
+      <div class="col-xs-12 col-md-12 p-none">
+        <div class="form-group background__mystic-gray border-radius__77">
+          <label>Location ID</label>
+          <input
+            type="text"
+            class="form-control"
+            readonly
+            [value]="location.customId"
+          />
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-12 p-none">
+        <div class="form-group">
+          <label>Location Name</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Location Name"
+            [(ngModel)]="fieldUpdate.name"
+            required
+            name="name"
+            maxlength="200"
+            #name="ngModel"
+          />
+          <div
+            class="validation-error"
+            *ngIf="name.invalid && (name.dirty || name.touched)"
+          >
+            <span
+              class="help-block with-errors error__msg"
+              *ngIf="name.errors?.required"
+            >
+              Location Name is required.
+            </span>
+            <span
+              class="help-block with-errors error__msg"
+              *ngIf="name.errors?.maxlength"
+            >
+              Location Name exceeds max length (200 characters).
+            </span>
+            <span
+              class="help-block with-errors error__msg"
+              *ngIf="
+                name.errors && !name.errors.required && !name.errors.maxlength
+              "
+            >
+              Location Name is invalid.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row border__bottom__periwinkle-gray">
+      <div class="col-xs-12 col-md-12 p-none">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Description"
+            [(ngModel)]="fieldUpdate.description"
+            required
+            name="description"
+            maxlength="500"
+            #description="ngModel"
+          />
+          <div
+            class="validation-error"
+            *ngIf="
+              description.invalid && (description.dirty || description.touched)
+            "
+          >
+            <span
+              class="help-block with-errors error__msg"
+              *ngIf="description.errors?.required"
+            >
+              Location Description is required.
+            </span>
+            <span
+              class="help-block with-errors error__msg"
+              *ngIf="description.errors?.maxlength"
+            >
+              Location Description exceeds max length (500 characters).
+            </span>
+            <span
+              class="help-block with-errors error__msg"
+              *ngIf="
+                description.errors &&
+                !description.errors.required &&
+                !description.errors.maxlength
+              "
+            >
+              Location Description is invalid.
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-xlg flex__justify__space-between">
+      <div>
+        <button
+          type="submit"
+          name="update"
+          class="btn bt__add mr-sm"
+          [disabled]="!updateLocationForm.form.valid"
+          (click)="update()"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          name="cancel"
+          class="btn bt__cancel"
+          (click)="closeModal()"
+        >
+          Cancel
+        </button>
+      </div>
+      <div>
+        <button
+          type="submit"
+          name="status"
+          [ngClass]="
+            statusUpdate.status === 1
+              ? 'banner__default__btn'
+              : 'banner__primary__btn'
+          "
+          class="btn flex__row__reverse"
+          (click)="toggleStatus()"
+        >
+          {{
+            statusUpdate.status === 1
+              ? "Decommission Location"
+              : "Reactivate Location"
+          }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

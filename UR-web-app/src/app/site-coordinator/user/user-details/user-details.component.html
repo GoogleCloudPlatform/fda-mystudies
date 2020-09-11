@@ -1,0 +1,249 @@
+<section class="subheader p-none pl-none">
+  <div class="max__w__850 m-none">
+    <div class="flex__justify__space-between">
+      <div>
+        <a routerLink="/coordinator/users" class="subheader__title">
+          <img
+            class="mr-sm"
+            src="../assets/svgs/back-arrow.svg"
+            alt="Go Back"
+          />
+          <span>User Details</span>
+        </a>
+      </div>
+      <div>
+        <button
+          class="btn font12__light-grey p-none"
+          [routerLink]="['/coordinator/users', adminId, 'edit']"
+        >
+          <img class="mr-xs" src="assets/svgs/edit.svg" alt="Edit" />
+          <span class="text__deco font12__light-grey">Edit User Details</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="max__w__850 add__location user__details">
+  <section>
+    <div
+      class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg"
+    >
+      <div>
+        <div class="mb__mb-sm">
+          <div class="blue__text__md">Participant Email</div>
+          <div class="participant-email">{{ user.email }}</div>
+        </div>
+        <div>
+          <div
+            class="flex__justify__space-between flex__wrap user__details__label"
+          >
+            <div>
+              <div class="blue__text__md">First Name</div>
+              <div class="participant__label">{{ user.firstName }}</div>
+            </div>
+            <div>
+              <div class="blue__text__md">Last Name</div>
+              <div class="participant__label">{{ user.lastName }}</div>
+            </div>
+            <div>
+              <div class="blue__text__md">Role</div>
+              <div class="participant__label">
+                <span *ngIf="user.superAdmin">Super Admin</span>
+                <span *ngIf="!user.superAdmin">Site Admin</span>
+              </div>
+            </div>
+            <div>
+              <div class="blue__text__md">Status</div>
+              <div class="participant__label">{{ user.status }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="subheader__title mb-sm">Permissions</h2>
+
+  <section class="bg__white card__inside__pad box__shadow-cmn m-none">
+    <div class="row">
+      <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+        <div class="form-group">
+          <div class="custom__labels">
+            <input
+              type="checkbox"
+              id="locations"
+              disabled
+              [value]="user.manageLocationsSelected"
+            />
+            <label for="locations">Allow access to locations</label>
+          </div>
+          <div class="pl-lg text-grey__sm pt-xs">
+            <span *ngIf="user.manageLocations == permission.View">
+              View Only
+            </span>
+            <span *ngIf="user.manageLocations == permission.ViewAndEdit">
+              View And Edit
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg__white card__inside__pad box__shadow-cmn m-none">
+    <div class="form-group">
+      <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
+    </div>
+    <div class="form-group pt-none">
+      <div class="accordion" id="accordionExample">
+        <div *ngFor="let app of user.apps" class="card">
+          <div class="flex__justify__space-between">
+            <div class="acc__dele">
+              <div class="card-header">
+                <div class="mb-0 flex__justify__space-between">
+                  <div>
+                    <div class="custom__labels">
+                      <input
+                        type="checkbox"
+                        id="appCheckBox{{ app.id }}"
+                        disabled
+                        [value]="app.selected"
+                      />
+                      <label for="appCheckBox{{ app.id }}">
+                        {{ app.name }}({{ app.customId }})
+                        <span class="app__id ml-xs"></span>
+                        <span>
+                          {{
+                            app.selectedSitesCount
+                              | i18nPlural: sitesMessageMapping
+                          }}
+                        </span>
+                      </label>
+                    </div>
+                    <div class="pl-xl pt-xs">
+                      <span *ngIf="app.permission == permission.View">
+                        View Only
+                      </span>
+                      <span *ngIf="app.permission == permission.ViewAndEdit">
+                        View And Edit
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="fa__plus__minus"
+                    type="button"
+                    data-toggle="collapse"
+                    [attr.data-target]="'#collapse' + app.id"
+                    aria-expanded="false"
+                  ></div>
+                </div>
+              </div>
+              <div
+                id="collapse{{ app.id }}"
+                class="collapse"
+                data-parent="#accordionExample"
+              >
+                <div class="card-body">
+                  <div
+                    class="accordion sub__accordian card-body__pad"
+                    id="accordionExample{{ app.id }}"
+                  >
+                    <div class="orange__text__sm pb-sm"></div>
+                    <div *ngFor="let study of app.studies">
+                      <div class="card" *ngIf="study.selectedSitesCount != 0">
+                        <div class="card-header">
+                          <div
+                            class="mb-0 flex__justify__space-between card__header__study__block"
+                          >
+                            <div>
+                              <div class="custom__labels">
+                                <input
+                                  type="checkbox"
+                                  id="studyCheckBox{{ study.studyId }}"
+                                  disabled
+                                  [value]="study.selected"
+                                />
+                                <label for="studyCheckBox{{ study.studyId }}">
+                                  {{ study.studyName }}
+                                </label>
+                              </div>
+                              <div class="custom__labels__radio">
+                                <span
+                                  *ngIf="study.permission == permission.View"
+                                >
+                                  View Only
+                                </span>
+                                <span
+                                  *ngIf="
+                                    study.permission == permission.ViewAndEdit
+                                  "
+                                >
+                                  View And Edit
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="fa__plus__minus"
+                              type="button"
+                              data-toggle="collapse"
+                              [attr.data-target]="
+                                '#collapseTwo' + study.studyId
+                              "
+                              aria-expanded="false"
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        id="collapseTwo{{ study.studyId }}"
+                        class="collapse"
+                        [attr.data-parent]="'#accordionExample' + app.id"
+                      >
+                        <div class="card-body">
+                          <div class="orange__text__sm pad__T10__B20">
+                            {{
+                              study.selectedSitesCount
+                                | i18nPlural: sitesMessageMapping
+                            }}
+                          </div>
+                          <div *ngFor="let site of study.sites">
+                            <div *ngIf="site.selected">
+                              <div class="custom__labels">
+                                <input
+                                  type="checkbox"
+                                  id="siteCheckBox{{ site.siteId }}"
+                                  disabled
+                                  [value]="site.selected"
+                                />
+                                <label for="siteCheckBox{{ site.siteId }}">
+                                  {{ site.locationName }}
+                                </label>
+                              </div>
+                            </div>
+                            <div class="custom__labels__radio">
+                              <span *ngIf="site.permission == permission.View">
+                                View Only
+                              </span>
+                              <span
+                                *ngIf="
+                                  site.permission == permission.ViewAndEdit
+                                "
+                              >
+                                View And Edit
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
