@@ -8,6 +8,34 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_ID_KEY;
+import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACTIVITY_COLLECTION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACTIVITY_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.PARTICIPANT_ID_NOT_EXISTS_MESSAGE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.QUESTION_KEY_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.SITE_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_COLLECTION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.SUCCESS;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
+import static com.google.cloud.healthcare.fdamystudies.utils.ErrorCode.EC_701;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
@@ -36,34 +64,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
-
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
-import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_ID_KEY;
-import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACTIVITY_COLLECTION_NAME_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACTIVITY_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.PARTICIPANT_ID_NOT_EXISTS_MESSAGE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.QUESTION_KEY_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.SITE_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_COLLECTION_NAME_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_ID_VALUE;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.SUCCESS;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
-import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
-import static com.google.cloud.healthcare.fdamystudies.utils.ErrorCode.EC_701;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ProcessActivityResponseControllerTest extends BaseMockIT {
