@@ -23,7 +23,7 @@ SET @ios_certificate := '';
 SET @ios_certificate_password := '';
 SET @reg_email_body := '';
 SET @reg_email_sub := '';
-SET @org_info_id := 0;
+
 SET @app_info_id := 10;
 UPDATE mystudies_userregistration.app_info a 
    SET
@@ -40,6 +40,6 @@ a.ios_bundle_id= CASE WHEN @ios_bundle_id<> '' THEN @ios_bundle_id ELSE a.ios_bu
 a.ios_certificate= CASE WHEN @ios_certificate<> '' THEN @ios_certificate  ELSE a.ios_certificate END ,
 a.ios_certificate_password= CASE WHEN @ios_certificate_password<> '' THEN @ios_certificate_password ELSE a.ios_certificate_password END ,
 a.reg_email_body= CASE WHEN @reg_email_body<> '' THEN @reg_email_body ELSE a.reg_email_body END ,
-a.reg_email_sub= CASE WHEN @reg_email_sub<> '' THEN @reg_email_sub ELSE a.reg_email_sub END ,
-a.org_info_id= CASE WHEN @org_info_id<> 0 THEN @org_info_id ELSE a.org_info_id END
+a.reg_email_sub= CASE WHEN @reg_email_sub<> '' THEN @reg_email_sub ELSE a.reg_email_sub END
+
 WHERE  a.app_info_id=@app_info_id

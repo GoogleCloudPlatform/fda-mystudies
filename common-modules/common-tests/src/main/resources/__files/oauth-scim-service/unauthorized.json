@@ -1,0 +1,8 @@
+{
+  "error": "request_unauthorized",
+  "error_description": "The request could not be authorized",
+  "error_hint": "Check that you provided valid credentials in the right format.",
+  "status_code": 401,
+  "error_debug": ": not_found",
+  "request_id": ""
+}

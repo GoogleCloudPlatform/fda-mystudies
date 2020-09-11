@@ -43,7 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     }
-    if (req.url === `${environment.baseUrl}/users`) {
+    if (req.url === `${environment.baseUrl}/users/profile`) {
       return of(
         new HttpResponse({
           status: 200,
