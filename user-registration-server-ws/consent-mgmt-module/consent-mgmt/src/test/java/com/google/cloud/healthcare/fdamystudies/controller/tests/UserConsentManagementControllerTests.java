@@ -36,8 +36,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -686,7 +686,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     StudyInfoBean studyInfoBean =
         userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
 
-    StudyConsentBO studyConsent =
+    StudyConsentEntity studyConsent =
         userConsentManagementService.getStudyConsent(
             Constants.VALID_USER_ID,
             studyInfoBean.getStudyInfoId(),
