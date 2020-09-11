@@ -51,8 +51,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
       Predicate[] predicate = new Predicate[1];
       predicate[0] =
           builder.equal(
-              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY),
-              participantBo.getTokenIdentifier());
+              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY), participantBo.getTokenId());
       participantBoCriteria.select(root).where(predicate);
       List<ParticipantInfoEntity> resultList =
           session.createQuery(participantBoCriteria).getResultList();
@@ -61,7 +60,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
       }
 
       UUID particpantUniqueIdentifier = UUID.randomUUID();
-      participantBo.setParticipantIdentifier(particpantUniqueIdentifier.toString());
+      participantBo.setParticipantId(particpantUniqueIdentifier.toString());
       transaction = session.beginTransaction();
       session.save(participantBo);
       transaction.commit();
@@ -79,7 +78,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
           transaction.rollback();
         }
         UUID particpantUniqueIdentifier = UUID.randomUUID();
-        participantBo.setParticipantIdentifier(particpantUniqueIdentifier.toString());
+        participantBo.setParticipantId(particpantUniqueIdentifier.toString());
         transaction = session.beginTransaction();
         session.save(participantBo);
         transaction.commit();
@@ -115,12 +114,10 @@ public class ParticipantDaoImpl implements ParticipantDao {
       Predicate[] predicate = new Predicate[2];
       predicate[0] =
           builder.equal(
-              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY),
-              participantBo.getTokenIdentifier());
+              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY), participantBo.getTokenId());
       predicate[1] =
           builder.equal(
-              root.get(AppConstants.PARTICIPANT_IDENTIFIER_KEY),
-              participantBo.getParticipantIdentifier());
+              root.get(AppConstants.PARTICIPANT_IDENTIFIER_KEY), participantBo.getParticipantId());
       participantBoCriteria.select(root).where(predicate);
       List<ParticipantInfoEntity> resultList =
           session.createQuery(participantBoCriteria).getResultList();

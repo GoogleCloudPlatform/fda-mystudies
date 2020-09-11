@@ -21,7 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -33,17 +32,16 @@ public class ParticipantActivitiesEntity implements Serializable {
 
   private static final long serialVersionUID = 1005603353927628403L;
 
-  @ToString.Exclude
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "participant_identifier", length = SMALL_LENGTH)
+  @Column(name = "participant_id", nullable = false, length = SMALL_LENGTH)
   private String participantId;
 
-  @Column(name = "study_id", length = XS_LENGTH)
+  @Column(name = "study_id", nullable = false, length = XS_LENGTH)
   private String studyId;
 
   @Column(name = "activity_id", length = SMALL_LENGTH)
@@ -52,8 +50,8 @@ public class ParticipantActivitiesEntity implements Serializable {
   @Column(name = "activity_complete_id")
   private Integer activityCompleteId;
 
-  @Column(name = "bookmark", columnDefinition = "TINYINT(1)")
-  private Boolean bookmark = false;
+  @Column(name = "bookmark", columnDefinition = "TINYINT(1) default 0")
+  private Boolean bookmark;
 
   @Column(name = "activity_version", length = XS_LENGTH)
   private String activityVersion;

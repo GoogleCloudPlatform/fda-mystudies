@@ -107,8 +107,8 @@ public class ProcessActivityResponseController {
       }
       // Check if participant is valid
       ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
-      participantBo.setTokenIdentifier(secureEnrollmentToken);
-      participantBo.setParticipantIdentifier(participantId);
+      participantBo.setTokenId(secureEnrollmentToken);
+      participantBo.setParticipantId(participantId);
 
       if (participantService.isValidParticipant(participantBo)) {
 
@@ -301,8 +301,8 @@ public class ProcessActivityResponseController {
       }
       // Check if participant is valid
       ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
-      participantBo.setTokenIdentifier(tokenIdentifier);
-      participantBo.setParticipantIdentifier(participantId);
+      participantBo.setTokenId(tokenIdentifier);
+      participantBo.setParticipantId(participantId);
 
       if (participantService.isValidParticipant(participantBo)) {
 

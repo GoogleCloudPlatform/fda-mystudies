@@ -71,7 +71,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
         participantBoList.get(0).getStudyId());
     assertEquals(
         enrollmentTokenIdentifierBeanRequest.getTokenIdentifier(),
-        participantBoList.get(0).getTokenIdentifier());
+        participantBoList.get(0).getTokenId());
 
     // Step-3 cleanup - delete the record from database
     repository.deleteAll();

@@ -23,8 +23,8 @@ public class TestDataHelper {
 
   public ParticipantInfoEntity saveParticipant() {
     ParticipantInfoEntity participant = new ParticipantInfoEntity();
-    participant.setTokenIdentifier(IdGenerator.id());
-    participant.setParticipantIdentifier(IdGenerator.id());
+    participant.setTokenId(IdGenerator.id());
+    participant.setParticipantId(IdGenerator.id());
 
     return participantBoRepository.saveAndFlush(participant);
   }

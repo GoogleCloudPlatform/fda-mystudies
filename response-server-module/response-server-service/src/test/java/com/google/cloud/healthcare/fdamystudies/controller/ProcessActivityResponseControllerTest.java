@@ -95,7 +95,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   @Test
   public void shouldSaveProcessActivityResponse() throws Exception {
     Map<String, Object> dataToStore = new HashMap<>();
-    dataToStore.put(PARTICIPANT_ID_KEY, participantBo.getParticipantIdentifier());
+    dataToStore.put(PARTICIPANT_ID_KEY, participantBo.getParticipantId());
 
     // Step-1 saveActivityResponseData
     doNothing()
@@ -122,7 +122,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     // Step-3: verify saved values
     List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
-            STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_ID_VALUE, participantBo.getParticipantId());
 
     assertNotNull(participantActivitiesList);
     assertEquals(1, participantActivitiesList.size());
@@ -140,8 +140,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(ACTIVITY_COLLECTION_NAME_VALUE, activityCollectionNameCaptor.getValue());
     assertEquals(
-        participantBo.getParticipantIdentifier(),
-        dataToStoreCaptor.getValue().get(PARTICIPANT_ID_KEY));
+        participantBo.getParticipantId(), dataToStoreCaptor.getValue().get(PARTICIPANT_ID_KEY));
   }
 
   @Test
@@ -186,7 +185,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             STUDY_COLLECTION_NAME_VALUE,
             STUDY_ID_VALUE,
             SITE_ID_VALUE,
-            participantBo.getParticipantIdentifier(),
+            participantBo.getParticipantId(),
             ACTIVITY_ID_VALUE,
             QUESTION_KEY_VALUE))
         .thenReturn(storedResponseBean);
@@ -203,9 +202,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                     .queryParam("appId", "appId")
                     .queryParam("studyId", STUDY_ID_VALUE)
                     .queryParam("siteId", SITE_ID_VALUE)
-                    .queryParam("participantId", participantBo.getParticipantIdentifier())
-                    .queryParam(
-                        PARTICIPANT_TOKEN_IDENTIFIER_KEY, participantBo.getTokenIdentifier())
+                    .queryParam("participantId", participantBo.getParticipantId())
+                    .queryParam(PARTICIPANT_TOKEN_IDENTIFIER_KEY, participantBo.getTokenId())
                     .queryParam("activityId", ACTIVITY_ID_VALUE)
                     .queryParam("questionKey", QUESTION_KEY_VALUE))
             .andDo(print())
@@ -228,7 +226,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
     assertEquals(SITE_ID_VALUE, siteIdCaptor.getValue());
-    assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+    assertEquals(participantBo.getParticipantId(), participantIdCaptor.getValue());
     assertEquals(ACTIVITY_ID_VALUE, activityIdCaptor.getValue());
     assertEquals(QUESTION_KEY_VALUE, questionKeyCaptor.getValue());
   }
@@ -260,7 +258,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     doNothing()
         .when(responsesDaoMock)
         .updateWithdrawalStatusForParticipant(
-            STUDY_COLLECTION_NAME_VALUE, STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_COLLECTION_NAME_VALUE, STUDY_ID_VALUE, participantBo.getParticipantId());
 
     // Step-2 call API to update withdraw status of participant from study
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
@@ -273,7 +271,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers)
                 .queryParam("deleteResponses", "")
-                .queryParam("participantId", participantBo.getParticipantIdentifier())
+                .queryParam("participantId", participantBo.getParticipantId())
                 .queryParam("studyId", STUDY_ID_VALUE))
         .andDo(print())
         .andExpect(status().isOk())
@@ -282,7 +280,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     // Step 3: verify deleted values
     List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
-            STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_ID_VALUE, participantBo.getParticipantId());
     assertTrue(participantActivitiesList.isEmpty());
 
     verify(responsesDaoMock)
@@ -294,7 +292,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     // Step 4: assert argument capture
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
-    assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+    assertEquals(participantBo.getParticipantId(), participantIdCaptor.getValue());
   }
 
   @Test
@@ -306,7 +304,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             STUDY_COLLECTION_NAME_VALUE,
             STUDY_ID_VALUE,
             ACTIVITY_COLLECTION_NAME_VALUE,
-            participantBo.getParticipantIdentifier());
+            participantBo.getParticipantId());
 
     // Step-2 call API to delete participant from study
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
@@ -319,7 +317,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers)
                 .queryParam("deleteResponses", "true")
-                .queryParam("participantId", participantBo.getParticipantIdentifier())
+                .queryParam("participantId", participantBo.getParticipantId())
                 .queryParam("studyId", STUDY_ID_VALUE))
         .andDo(print())
         .andExpect(status().isOk())
@@ -328,7 +326,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     // Step 3: verify deleted values
     List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
-            STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_ID_VALUE, participantBo.getParticipantId());
     assertTrue(participantActivitiesList.isEmpty());
 
     verify(responsesDaoMock)
@@ -342,7 +340,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
     assertEquals(ACTIVITY_COLLECTION_NAME_VALUE, activityCollectionNameCaptor.getValue());
-    assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+    assertEquals(participantBo.getParticipantId(), participantIdCaptor.getValue());
   }
 
   @Test
@@ -373,11 +371,11 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     ActivityResponseBean activityResponseBean = new ActivityResponseBean();
     activityResponseBean.setOrgId("OrgName");
     activityResponseBean.setApplicationId("UNCSTAND001");
-    activityResponseBean.setParticipantId(participantBo.getParticipantIdentifier());
+    activityResponseBean.setParticipantId(participantBo.getParticipantId());
     activityResponseBean.getMetadata().setActivityId(ACTIVITY_ID_VALUE);
     activityResponseBean.getMetadata().setVersion("1.0");
     activityResponseBean.getMetadata().setStudyId(STUDY_ID_VALUE);
-    activityResponseBean.setTokenIdentifier(participantBo.getTokenIdentifier());
+    activityResponseBean.setTokenIdentifier(participantBo.getTokenId());
     return activityResponseBean;
   }
 }

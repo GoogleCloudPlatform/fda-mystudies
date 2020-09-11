@@ -55,7 +55,7 @@ public class ParticipantIdController {
     }
     try {
       ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
-      participantBo.setTokenIdentifier(enrollmentTokenIdentifierBean.getTokenIdentifier());
+      participantBo.setTokenId(enrollmentTokenIdentifierBean.getTokenIdentifier());
       participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
       participantBo.setCreatedBy(applicationId);
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);

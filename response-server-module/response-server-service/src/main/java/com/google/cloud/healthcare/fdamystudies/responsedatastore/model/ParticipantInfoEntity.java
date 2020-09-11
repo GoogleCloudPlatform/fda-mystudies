@@ -12,7 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
 
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Column;
@@ -22,7 +21,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -34,18 +32,17 @@ public class ParticipantInfoEntity implements Serializable {
 
   private static final long serialVersionUID = -8669517487080184697L;
 
-  @ToString.Exclude
   @Id
   @GeneratedValue(generator = "system-uuid")
   @GenericGenerator(name = "system-uuid", strategy = "uuid")
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "participant_identifier", unique = true, length = SMALL_LENGTH)
-  private String participantIdentifier = AppConstants.EMPTY_STR;
+  @Column(name = "participant_id", unique = true, nullable = false, length = SMALL_LENGTH)
+  private String participantId;
 
-  @Column(name = "token_identifier", length = SMALL_LENGTH)
-  private String tokenIdentifier = AppConstants.EMPTY_STR;
+  @Column(name = "token_id", nullable = false, length = SMALL_LENGTH)
+  private String tokenId;
 
   @Column(name = "created_time")
   @CreationTimestamp
@@ -54,6 +51,6 @@ public class ParticipantInfoEntity implements Serializable {
   @Column(name = "created_by", length = LARGE_LENGTH)
   private String createdBy;
 
-  @Column(name = "study_id", length = XS_LENGTH)
+  @Column(name = "study_id", nullable = false, length = XS_LENGTH)
   private String studyId;
 }
