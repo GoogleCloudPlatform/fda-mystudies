@@ -12,7 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EN
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
@@ -70,7 +69,6 @@ import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -128,7 +126,6 @@ public class SiteControllerTest extends BaseMockIT {
   private ParticipantStudyEntity participantStudyEntity;
   private SitePermissionEntity sitePermissionEntity;
   private StudyConsentEntity studyConsentEntity;
-  private OrgInfoEntity orgInfoEntity;
 
   private static final String IMPORT_EMAIL_1 = "mockitoimport01@grr.la";
 
@@ -138,7 +135,6 @@ public class SiteControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
-    orgInfoEntity = testDataHelper.createOrgInfo();
     locationEntity = testDataHelper.createLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
@@ -287,31 +283,6 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
-
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
-  public void shouldReturnEnrolledParticipantForAddNewParticipant() throws Exception {
-    // Step 1: set participantStudy status to enrolled
-    siteEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(ENROLLED_STATUS);
-    participantRegistrySiteEntity.setEmail(newParticipantRequest().getEmail());
-    participantStudyRepository.saveAndFlush(participantStudyEntity);
-
-    // Step 2: Call API to return ENROLLED_PARTICIPANT error
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.ADD_NEW_PARTICIPANT.getPath(), siteEntity.getId())
-                .headers(headers)
-                .content(asJsonString(newParticipantRequest()))
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.error_description", is(ENROLLED_PARTICIPANT.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
@@ -843,7 +814,6 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
-    appEntity.setOrgInfo(orgInfoEntity);
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
@@ -912,7 +882,6 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldInviteParticipant() throws Exception {
-    appEntity.setOrgInfo(orgInfoEntity);
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);

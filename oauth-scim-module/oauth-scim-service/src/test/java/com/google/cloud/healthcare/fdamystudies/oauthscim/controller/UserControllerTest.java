@@ -409,7 +409,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value("Your password has been changed successfully!"));
+        .andExpect(jsonPath("$.message").value("Your password has been changed successfully"));
 
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
