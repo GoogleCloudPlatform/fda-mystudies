@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
@@ -85,98 +86,105 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     Map<String, String> placeHolder = new HashMap<>();
     auditRequest.setUserId(userId);
+    try {
+      for (int i = 0; i < studiesBeenList.size(); i++) {
+        StudiesBean studiesBean = studiesBeenList.get(i);
 
-    for (int i = 0; i < studiesBeenList.size(); i++) {
-      StudiesBean studiesBean = studiesBeenList.get(i);
-
-      auditRequest.setStudyId(studiesBean.getStudyId());
-      auditRequest.setParticipantId(studiesBean.getParticipantId());
-      studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
-      if (existParticipantStudies != null && !existParticipantStudies.isEmpty()) {
-        for (ParticipantStudiesBO participantStudies : existParticipantStudies) {
-          if (studyInfo != null) {
-            if (studyInfo.getId().equals(participantStudies.getStudyInfo().getId())) {
-              isExists = true;
-              if (participantStudies.getStatus() != null
-                  && participantStudies
-                      .getStatus()
-                      .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue())) {
-                participantStudies.setEnrolledDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-              }
-              if (studiesBean.getStatus() != null
-                  && !StringUtils.isEmpty(studiesBean.getStatus())) {
-                participantStudies.setStatus(studiesBean.getStatus());
-
-                if (studiesBean
-                    .getStatus()
-                    .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+        auditRequest.setStudyId(studiesBean.getStudyId());
+        auditRequest.setParticipantId(studiesBean.getParticipantId());
+        studyInfo = commonDao.getStudyDetails(studiesBean.getStudyId().trim());
+        if (existParticipantStudies != null && !existParticipantStudies.isEmpty()) {
+          for (ParticipantStudiesBO participantStudies : existParticipantStudies) {
+            if (studyInfo != null) {
+              if (studyInfo.getId().equals(participantStudies.getStudyInfo().getId())) {
+                isExists = true;
+                if (participantStudies.getStatus() != null
+                    && participantStudies
+                        .getStatus()
+                        .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue())) {
                   participantStudies.setEnrolledDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
                 }
+                if (studiesBean.getStatus() != null
+                    && !StringUtils.isEmpty(studiesBean.getStatus())) {
+                  participantStudies.setStatus(studiesBean.getStatus());
+
+                  if (studiesBean
+                      .getStatus()
+                      .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+                    participantStudies.setEnrolledDate(
+                        MyStudiesUserRegUtil.getCurrentUtilDateTime());
+                  }
+                }
+                if (studiesBean.getBookmarked() != null) {
+                  participantStudies.setBookmark(studiesBean.getBookmarked());
+                }
+                if (studiesBean.getCompletion() != null) {
+                  participantStudies.setCompletion(studiesBean.getCompletion());
+                }
+                if (studiesBean.getAdherence() != null) {
+                  participantStudies.setAdherence(studiesBean.getAdherence());
+                }
+                if (studiesBean.getParticipantId() != null
+                    && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
+                  participantStudies.setParticipantId(studiesBean.getParticipantId());
+                }
+                placeHolder.put("study_state_value", participantStudies.getStatus());
+                addParticipantStudiesList.add(participantStudies);
               }
-              if (studiesBean.getBookmarked() != null) {
-                participantStudies.setBookmark(studiesBean.getBookmarked());
-              }
-              if (studiesBean.getCompletion() != null) {
-                participantStudies.setCompletion(studiesBean.getCompletion());
-              }
-              if (studiesBean.getAdherence() != null) {
-                participantStudies.setAdherence(studiesBean.getAdherence());
-              }
-              if (studiesBean.getParticipantId() != null
-                  && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
-                participantStudies.setParticipantId(studiesBean.getParticipantId());
-              }
-              placeHolder.put("study_state_value", participantStudies.getStatus());
-              addParticipantStudiesList.add(participantStudies);
             }
           }
         }
-      }
-      if (!isExists) {
-        if (studiesBean.getStudyId() != null
-            && StringUtils.isNotEmpty(studiesBean.getStudyId())
-            && studyInfo != null) {
-          participantStudyBo.setStudyInfo(studyInfo);
-        }
-        if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
-          participantStudyBo.setStatus(studiesBean.getStatus());
-          if (studiesBean
-              .getStatus()
-              .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
-            participantStudyBo.setEnrolledDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+        if (!isExists) {
+          if (studiesBean.getStudyId() != null
+              && StringUtils.isNotEmpty(studiesBean.getStudyId())
+              && studyInfo != null) {
+            participantStudyBo.setStudyInfo(studyInfo);
           }
-        } else {
-          participantStudyBo.setStatus(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
+          if (studiesBean.getStatus() != null && StringUtils.isNotEmpty(studiesBean.getStatus())) {
+            participantStudyBo.setStatus(studiesBean.getStatus());
+            if (studiesBean
+                .getStatus()
+                .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.IN_PROGRESS.getValue())) {
+              participantStudyBo.setEnrolledDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
+            }
+          } else {
+            participantStudyBo.setStatus(MyStudiesUserRegUtil.ErrorCodes.YET_TO_JOIN.getValue());
+          }
+          if (studiesBean.getBookmarked() != null) {
+            participantStudyBo.setBookmark(studiesBean.getBookmarked());
+          }
+          if (userId != null && StringUtils.isNotEmpty(userId)) {
+            participantStudyBo.setUserDetails(commonDao.getUserInfoDetails(userId));
+          }
+          if (studiesBean.getCompletion() != null) {
+            participantStudyBo.setCompletion(studiesBean.getCompletion());
+          }
+          if (studiesBean.getAdherence() != null) {
+            participantStudyBo.setAdherence(studiesBean.getAdherence());
+          }
+          if (studiesBean.getParticipantId() != null
+              && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
+            participantStudyBo.setParticipantId(studiesBean.getParticipantId());
+          }
+          placeHolder.put("study_state_value", participantStudyBo.getStatus());
+          addParticipantStudiesList.add(participantStudyBo);
+          customStudyIdList.add(studiesBean.getStudyId());
         }
-        if (studiesBean.getBookmarked() != null) {
-          participantStudyBo.setBookmark(studiesBean.getBookmarked());
-        }
-        if (userId != null && StringUtils.isNotEmpty(userId)) {
-          participantStudyBo.setUserDetails(commonDao.getUserInfoDetails(userId));
-        }
-        if (studiesBean.getCompletion() != null) {
-          participantStudyBo.setCompletion(studiesBean.getCompletion());
-        }
-        if (studiesBean.getAdherence() != null) {
-          participantStudyBo.setAdherence(studiesBean.getAdherence());
-        }
-        if (studiesBean.getParticipantId() != null
-            && StringUtils.isNotEmpty(studiesBean.getParticipantId())) {
-          participantStudyBo.setParticipantId(studiesBean.getParticipantId());
-        }
-        placeHolder.put("study_state_value", participantStudyBo.getStatus());
-        addParticipantStudiesList.add(participantStudyBo);
-        customStudyIdList.add(studiesBean.getStudyId());
       }
-    }
-    message = studyStateDao.saveParticipantStudies(addParticipantStudiesList);
-    if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-      studyStateRespBean = new StudyStateRespBean();
-      studyStateRespBean.setMessage(
-          MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+      message = studyStateDao.saveParticipantStudies(addParticipantStudiesList);
+      if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+        studyStateRespBean = new StudyStateRespBean();
+        studyStateRespBean.setMessage(
+            MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
-      enrollAuditEventHelper.logEvent(
-          STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, placeHolder);
+        enrollAuditEventHelper.logEvent(
+            STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT, auditRequest, placeHolder);
+      }
+
+    } catch (Exception e) {
+      enrollAuditEventHelper.logEvent(STUDY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest, placeHolder);
+      logger.error("StudyStateServiceImpl saveParticipantStudies() - error ", e);
+      throw e;
     }
 
     logger.info("StudyStateServiceImpl saveParticipantStudies() - Ends ");

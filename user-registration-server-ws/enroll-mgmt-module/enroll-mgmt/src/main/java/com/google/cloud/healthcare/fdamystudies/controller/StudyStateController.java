@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_FAILED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
@@ -124,27 +125,35 @@ public class StudyStateController {
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    logger.info("(C)...StudyStateController.getStudyState()...Started");
-    if (((userId.length() != 0) || StringUtils.isNotEmpty(userId))) {
-      StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
+    try {
+      logger.info("(C)...StudyStateController.getStudyState()...Started");
+      if (((userId.length() != 0) || StringUtils.isNotEmpty(userId))) {
+        StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
 
-      List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
-      studyStateResponse.setStudies(studies);
-      studyStateResponse.setMessage(AppConstants.SUCCESS);
+        List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
+        studyStateResponse.setStudies(studies);
+        studyStateResponse.setMessage(AppConstants.SUCCESS);
 
+        auditRequest.setUserId(userId);
+        enrollAuditEventHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
+
+        return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
+
+      } else {
+        MyStudiesUserRegUtil.getFailureResponse(
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+            response);
+        logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
+        return null;
+      }
+
+    } catch (Exception e) {
       auditRequest.setUserId(userId);
-      enrollAuditEventHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
-
-      return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
-
-    } else {
-      MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-          response);
-      logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
-      return null;
+      enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
+      logger.info("(C)...StudyStateController.getStudyState()...Ended with Internal Server Error");
+      throw e;
     }
   }
 

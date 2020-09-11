@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_RECEIVED;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
@@ -146,21 +147,28 @@ public class EnrollmentManagementUtil {
     ResponseEntity<?> responseEntity = null;
     String participantId = "";
 
-    headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set("applicationId", applicationId);
-    headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
-    bodyProvider = new EnrollmentBodyProvider();
-    bodyProvider.setTokenIdentifier(hashedTokenValue);
-    bodyProvider.setCustomStudyId(studyId);
-    requestBody = new HttpEntity<>(bodyProvider, headers);
-    responseEntity =
-        restTemplate.postForEntity(appConfig.getAddParticipantId(), requestBody, String.class);
-    if (responseEntity.getStatusCode() == HttpStatus.OK) {
-      participantId = (String) responseEntity.getBody();
-      auditRequest.setParticipantId(participantId);
+    try {
+      headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.set("applicationId", applicationId);
+      headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
+      bodyProvider = new EnrollmentBodyProvider();
+      bodyProvider.setTokenIdentifier(hashedTokenValue);
+      bodyProvider.setCustomStudyId(studyId);
+      requestBody = new HttpEntity<>(bodyProvider, headers);
+      responseEntity =
+          restTemplate.postForEntity(appConfig.getAddParticipantId(), requestBody, String.class);
+      if (responseEntity.getStatusCode() == HttpStatus.OK) {
+        participantId = (String) responseEntity.getBody();
+        auditRequest.setParticipantId(participantId);
 
-      enrollAuditEventHelper.logEvent(PARTICIPANT_ID_RECEIVED, auditRequest);
+        enrollAuditEventHelper.logEvent(PARTICIPANT_ID_RECEIVED, auditRequest);
+      }
+
+    } catch (Exception e) {
+      enrollAuditEventHelper.logEvent(PARTICIPANT_ID_NOT_RECEIVED, auditRequest);
+      logger.error("EnrollmentManagementUtil getParticipantId() - Ends ", e);
+      throw e;
     }
 
     logger.info("EnrollmentManagementUtil getParticipantId() - Ends ");
