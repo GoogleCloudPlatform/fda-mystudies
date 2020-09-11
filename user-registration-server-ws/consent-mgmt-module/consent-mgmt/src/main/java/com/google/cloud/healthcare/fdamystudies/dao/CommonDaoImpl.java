@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
@@ -38,7 +37,7 @@ public class CommonDaoImpl implements CommonDao {
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
-  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId) {
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
     logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
@@ -48,15 +47,9 @@ public class CommonDaoImpl implements CommonDao {
     List<AppEntity> appDetailsList = null;
     AppEntity appEntity = null;
 
-    CriteriaQuery<OrgInfoEntity> orgDetailsBoCriteria = null;
-    Root<OrgInfoEntity> orgDetailsBoRoot = null;
-    Predicate[] orgDetailsBoPredicates = new Predicate[1];
-    List<OrgInfoEntity> orgDetailsBoList = null;
-    OrgInfoEntity orgDetailsBo = null;
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     String message = "";
     String appInfoId = String.valueOf(0);
-    String orgInfoId = String.valueOf(0);
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
@@ -73,25 +66,9 @@ public class CommonDaoImpl implements CommonDao {
         }
       }
 
-      if (!StringUtils.isEmpty(orgId)) {
-
-        orgDetailsBoCriteria = criteriaBuilder.createQuery(OrgInfoEntity.class);
-        orgDetailsBoRoot = orgDetailsBoCriteria.from(OrgInfoEntity.class);
-        orgDetailsBoPredicates[0] = criteriaBuilder.equal(orgDetailsBoRoot.get("orgId"), orgId);
-        orgDetailsBoCriteria.select(orgDetailsBoRoot).where(orgDetailsBoPredicates);
-        orgDetailsBoList = session.createQuery(orgDetailsBoCriteria).getResultList();
-
-        if (!orgDetailsBoList.isEmpty()) {
-          orgDetailsBo = orgDetailsBoList.get(0);
-          orgInfoId = orgDetailsBo.getId();
-        }
-      }
       appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
-
     } catch (Exception e) {
       appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
       logger.error("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - error ", e);
     }
     logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");

@@ -261,8 +261,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void resendConfirmationBadRequest() throws Exception {
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // without email
     String requestJson = getLoginBean("", Constants.PASSWORD);
@@ -311,8 +310,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 Mockito.any()))
         .thenReturn(true);
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
 
