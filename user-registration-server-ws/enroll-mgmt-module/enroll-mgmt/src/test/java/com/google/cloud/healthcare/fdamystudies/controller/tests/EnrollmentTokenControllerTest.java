@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Autowired private EnrollmentTokenController controller;
@@ -202,7 +203,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void enrollParticipantSuccessStudyTypeClose() throws Exception {
 
     // study type close
@@ -234,7 +234,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void enrollParticipantSuccessStudyTypeOpen() throws Exception {
     // study type open
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
@@ -265,7 +264,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void enrollParticipantSuccessNewUser() throws Exception {
     // new user id
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
