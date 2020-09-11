@@ -56,7 +56,7 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
       },
       (error) => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        this.toastr.error(error.error.userMessage);
+        this.toastr.error(String(error.error.userMessage));
       },
     );
   }

@@ -68,12 +68,21 @@ describe('ChangePasswordComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should get profile details on ngOnInit', fakeAsync(() => {
-    const spyObjs = spyOn(component, 'getProfileDetails');
-    component.getProfileDetails();
+  it('should update the form after component initialized', () => {
     fixture.detectChanges();
-    expect(spyObjs).toHaveBeenCalledTimes(1);
-  }));
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    expect(String(component.profileForm.value.firstName)).toEqual(
+      expectedProfiledataResposnse.firstName,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    expect(String(component.profileForm.value.lastName)).toEqual(
+      expectedProfiledataResposnse.lastName,
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    expect(String(component.profileForm.value.email)).toEqual(
+      expectedProfiledataResposnse.email,
+    );
+  });
 
   it('should update the profile when  button is submitted', fakeAsync(async () => {
     const toggleChangeSpy = spyOn(component, 'updateProfile');
