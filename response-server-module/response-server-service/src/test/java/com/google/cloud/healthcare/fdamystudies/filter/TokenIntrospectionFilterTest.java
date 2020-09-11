@@ -25,7 +25,13 @@ public class TokenIntrospectionFilterTest extends BaseMockIT {
   @ParameterizedTest
   @EnumSource(
       value = ApiEndpoint.class,
-      names = {"ADD", "PROCESS_RESPONSE", "WITHDRAW", "UPDATE_ACTIVITY_STATE", "STUDYMETADATA"})
+      names = {
+        "ADD",
+        "PROCESS_ACTIVITY_RESPONSE",
+        "WITHDRAW",
+        "UPDATE_ACTIVITY_STATE",
+        "STUDYMETADATA"
+      })
   @DisplayName("Test token validation for POST endpoints")
   void shouldValidateTokenForPostEndpoints(ApiEndpoint apiEnum) throws Exception {
     mockMvc
