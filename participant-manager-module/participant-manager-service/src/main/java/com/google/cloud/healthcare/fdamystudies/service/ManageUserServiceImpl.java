@@ -350,7 +350,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   private ErrorCode validateUpdateUserRequest(UserRequest user, String superAdminUserId) {
     logger.entry("validateUpdateUserRequest()");
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
-    if (!optAdminDetails.isPresent() || user.getUserId() == null) {
+    if (!optAdminDetails.isPresent() || user.getId() == null) {
       return ErrorCode.USER_NOT_FOUND;
     }
 
@@ -368,7 +368,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private AdminUserResponse updateSuperAdminDetails(UserRequest user, String superAdminUserId) {
     logger.entry("updateSuperAdminDetails()");
-    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getUserId());
+    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getId());
 
     if (!optAdminDetails.isPresent()) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
@@ -377,7 +377,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     UserRegAdminEntity adminDetails = optAdminDetails.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
 
-    deleteAllPermissions(user.getUserId());
+    deleteAllPermissions(user.getId());
 
     user.setSuperAdminUserId(superAdminUserId);
 
@@ -401,7 +401,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   private AdminUserResponse updateAdminDetails(UserRequest user, String superAdminUserId) {
     logger.entry("updateAdminDetails()");
 
-    Optional<UserRegAdminEntity> optAdminDeatils = userAdminRepository.findById(user.getUserId());
+    Optional<UserRegAdminEntity> optAdminDeatils = userAdminRepository.findById(user.getId());
 
     if (!optAdminDeatils.isPresent()) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
@@ -411,7 +411,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
     userAdminRepository.saveAndFlush(adminDetails);
 
-    deleteAllPermissions(user.getUserId());
+    deleteAllPermissions(user.getId());
 
     user.setSuperAdminUserId(superAdminUserId);
 

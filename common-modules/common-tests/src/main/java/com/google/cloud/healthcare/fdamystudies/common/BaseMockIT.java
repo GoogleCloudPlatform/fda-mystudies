@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.SerializationUtils;
@@ -53,6 +54,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
@@ -106,6 +108,13 @@ public class BaseMockIT {
   @Autowired protected AuditEventService mockAuditService;
 
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
+
+  @LocalServerPort int randomServerPort;
+
+  @PostConstruct
+  public void logServerPort() {
+    logger.debug(String.format("server port=%d", randomServerPort));
+  }
 
   protected WireMockServer getWireMockServer() {
     return wireMockServer;
