@@ -19,7 +19,6 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Setter
 @Getter
@@ -28,10 +27,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 @Builder
 @NoArgsConstructor
 @Table(name = "user_institution")
-@ConditionalOnProperty(
-    value = "participant.datastore.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 public class UserInstitutionEntity {
   @Id
   @GeneratedValue(generator = "system-uuid")

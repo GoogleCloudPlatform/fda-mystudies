@@ -72,8 +72,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
 
   @Override
-  public UserProfileRespBean getParticipantInfoDetails(
-      String userId, Integer appInfoId, Integer orgInfoId) {
+  public UserProfileRespBean getParticipantInfoDetails(String userId, Integer appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
     UserDetailsBO userDetailsBO = null;
     UserProfileRespBean userProfileRespBean = null;
@@ -170,13 +169,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public UserDetailsBO getParticipantDetailsByEmail(
-      String email, Integer appInfoId, Integer orgInfoId) {
+  public UserDetailsBO getParticipantDetailsByEmail(String email, Integer appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
     UserDetailsBO userDetailsBO = null;
     try {
-      userDetailsBO =
-          userProfileManagementDao.getParticipantDetailsByEmail(email, appInfoId, orgInfoId);
+      userDetailsBO = userProfileManagementDao.getParticipantDetailsByEmail(email, appInfoId);
     } catch (Exception e) {
       logger.error("UserManagementProfileServiceImpl - getParticipantDetailsByEmail() - Error", e);
     }
@@ -340,7 +337,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     String content = "";
     String subject = "";
     AppOrgInfoBean appOrgInfoBean = null;
-    appOrgInfoBean = commonDao.getUserAppDetailsByAllApi("", applicationId, "");
+    appOrgInfoBean = commonDao.getUserAppDetailsByAllApi("", applicationId);
     appPropertiesDetails =
         userProfileManagementDao.getAppPropertiesDetailsByAppId(appOrgInfoBean.getAppInfoId());
     Map<String, String> templateArgs = new HashMap<>();
