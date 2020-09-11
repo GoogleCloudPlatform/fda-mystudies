@@ -514,7 +514,7 @@ class ActivitiesViewController: UIViewController {
     var totalRuns = 0
     var totalCompletedRuns = 0
     var totalIncompletedRuns = 0
-    let activities = Study.currentStudy?.activities  //.filter({$0.state == "active"})
+    let activities = Study.currentStudy?.activities.filter({$0.state == "active"})
 
     /// Calculate Runs
     for activity in activities! {
