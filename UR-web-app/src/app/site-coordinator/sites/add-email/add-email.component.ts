@@ -11,16 +11,18 @@ import {ToastrService} from 'ngx-toastr';
   styleUrls: ['./add-email.component.scss'],
 })
 export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
-  @Output() cancelled = new EventEmitter();
-  @Output() successSubmit = new EventEmitter();
+  @Output() cancel = new EventEmitter();
+  // eslint-disable-next-line @angular-eslint/no-output-native
+  @Output() submit = new EventEmitter();
   @Input() siteId = '';
   submitted = false;
-  model = new AddEmail('');
+  model: AddEmail;
   constructor(
     private readonly siteDetailedService: SiteDetailsService,
     private readonly toastr: ToastrService,
   ) {
     super();
+    this.model = {email: ''};
   }
 
   addParticipant(): void {
@@ -34,16 +36,18 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
-              this.successSubmit.emit();
+              this.submit.emit();
             }
           },
-          () => {
-            this.successSubmit.emit();
+          (errorResponse: ApiResponse) => {
+            if (getMessage(errorResponse.code)) {
+              this.toastr.error(getMessage(errorResponse.code));
+            }
           },
         ),
     );
   }
-  cancel(): void {
-    this.cancelled.emit();
+  onCancel(): void {
+    this.cancel.emit();
   }
 }

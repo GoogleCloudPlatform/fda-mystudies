@@ -3,7 +3,6 @@ import {
   ComponentFixture,
   TestBed,
   fakeAsync,
-  tick,
 } from '@angular/core/testing';
 import {AddEmailComponent} from './add-email.component';
 import {HttpClientModule} from '@angular/common/http';
@@ -52,7 +51,6 @@ describe('AddEmailComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     addParticipant = fixture.debugElement.query(By.css('[name="addEmail"]'));
-    // emailInput = fixture.debugElement.query(By.css('#email'));
     emailInput = fixture.debugElement.query(By.css('[name="email"]'));
     cancel = fixture.debugElement.query(By.css('[name="cancel"]'));
   });
@@ -60,6 +58,7 @@ describe('AddEmailComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
   it('should bind input email value to Component property', () => {
     const emailInputs = emailInput.nativeElement as HTMLInputElement;
     fixture.detectChanges();
@@ -68,32 +67,25 @@ describe('AddEmailComponent', () => {
   });
 
   it('should add the particpants when add participants clicked', fakeAsync(async () => {
-    component.addParticipant();
     const addParticipantSpy = spyOn(component, 'addParticipant');
     const addParticipantButton = addParticipant.nativeElement as HTMLInputElement;
     const emailInputs = emailInput.nativeElement as HTMLInputElement;
     emailInputs.value = 'prak@grr.la';
     dispatchEvent(new Event('input'));
     fixture.detectChanges();
-    tick(10000);
     addParticipantButton.click();
-    tick(10000);
     fixture.detectChanges();
     await fixture.whenStable();
     expect(addParticipantSpy).toHaveBeenCalledTimes(1);
   }));
 
   it('should hide component onclick cancel button', fakeAsync(async () => {
-    component.cancel();
-    const cancelSpy = spyOn(component, 'cancel');
+    const cancelSpy = spyOn(component, 'onCancel');
     const cancelButton = cancel.nativeElement as HTMLInputElement;
     fixture.detectChanges();
-    tick(10000);
     cancelButton.click();
     fixture.detectChanges();
-    tick(10000);
     await fixture.whenStable();
-    // tick(10000);
     expect(cancelSpy).toHaveBeenCalledTimes(1);
   }));
 });

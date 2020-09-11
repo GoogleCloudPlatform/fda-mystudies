@@ -1,3 +1,3 @@
-export class AddEmail {
-  constructor(public email: string) {}
+export interface AddEmail {
+  email: string;
 }

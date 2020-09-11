@@ -550,8 +550,8 @@
       <div class="modal-body modal__body">
         <app-add-email
           [siteId]="siteId"
-          (successSubmit)="onSucceedAddEmail()"
-          (cancelled)="modalRef.hide()"
+          (submit)="onSucceedAddEmail()"
+          (cancel)="modalRef.hide()"
         ></app-add-email>
       </div>
     </ng-template>
