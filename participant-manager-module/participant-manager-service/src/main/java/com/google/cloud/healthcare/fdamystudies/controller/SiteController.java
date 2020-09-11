@@ -26,6 +26,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -109,8 +109,7 @@ public class SiteController {
 
     if (StringUtils.isNotEmpty(onboardingStatus)
         && OnboardingStatus.fromCode(onboardingStatus) == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new ParticipantRegistryResponse(ErrorCode.INVALID_ONBOARDING_STATUS));
+      throw new ErrorCodeException(ErrorCode.INVALID_ONBOARDING_STATUS);
     }
 
     ParticipantRegistryResponse participants =

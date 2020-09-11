@@ -74,7 +74,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 public class LocationControllerTest extends BaseMockIT {
 
-  private static final String CUSTOM_LOCATION_ID = "OpenStudy02";
+  private static final String CUSTOM_LOCATION_ID = "Location@#$02";
 
   @Autowired private LocationController controller;
 

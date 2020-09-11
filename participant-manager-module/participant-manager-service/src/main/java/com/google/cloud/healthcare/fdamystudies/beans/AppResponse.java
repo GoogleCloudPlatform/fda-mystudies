@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.beans;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +24,6 @@ public class AppResponse extends BaseResponse {
   private List<AppDetails> apps = new ArrayList<>();
 
   private int studyPermissionCount;
-
-  public AppResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public AppResponse(MessageCode messageCode, List<AppDetails> apps, int studyPermissionCount) {
     super(messageCode);

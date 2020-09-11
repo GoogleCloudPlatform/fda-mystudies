@@ -14,8 +14,8 @@ import * as expectedResult from 'src/app/entity/mock-location-data';
 
 describe('LocationService', () => {
   let locationService: LocationService;
-  let httpServicespyobj: jasmine.SpyObj<HttpClient>;
-
+  let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
+  let entityServiceSpy: jasmine.SpyObj<EntityService<Location>>;
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -36,11 +36,10 @@ describe('LocationService', () => {
   });
 
   it('should return expected Locations List', () => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      {getCollection: of(expectedResult.expectedLocationList)},
-    );
-    locationService = new LocationService(entityServicespy, httpServicespyobj);
+    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedResult.expectedLocationList),
+    });
+    locationService = new LocationService(entityServiceSpy, httpServicespyobj);
 
     locationService
       .getLocations()
@@ -53,23 +52,17 @@ describe('LocationService', () => {
         fail,
       );
 
-    expect(entityServicespy.getCollection).toHaveBeenCalledTimes(1);
+    expect(httpServicespyobj.get).toHaveBeenCalledTimes(1);
   });
 
   it('should return Locations list for the site creation', () => {
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      {getCollection: of(expectedResult.expectedLocations)},
-    );
     const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: of(expectedResult.expectedLocations),
     });
-    locationService = new LocationService(entityServicespy, httpServicespyobj);
+    locationService = new LocationService(entityServiceSpy, httpServicespyobj);
 
     locationService
-      .getLocationsForSiteCreation(
-        expectedResult.expectedLocatiodId.id.toString(),
-      )
+      .getLocationsForSiteCreation(expectedResult.expectedLocationId.locationId)
       .subscribe(
         (locations) =>
           expect(locations).toEqual(
@@ -86,9 +79,9 @@ describe('LocationService', () => {
       'EntityService',
       {get: of(expectedResult.expectedLocation)},
     );
-    locationService = new LocationService(entityServiceSpy, httpServicespyobj);
+    locationService = new LocationService(entityServiceSpy, httpServiceSpyObj);
     locationService
-      .get(expectedResult.expectedLocatiodId.id.toString())
+      .get(expectedResult.expectedLocationId.locationId)
       .subscribe(
         (locations) =>
           expect(locations).toEqual(
@@ -108,7 +101,7 @@ describe('LocationService', () => {
     );
     locationService = new LocationService(
       entityServicespyobj,
-      httpServicespyobj,
+      httpServiceSpyObj,
     );
 
     locationService
@@ -129,17 +122,17 @@ describe('LocationService', () => {
       'EntityService',
       {put: of(expectedResult.expectedResponse)},
     );
-    const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       put: of(expectedResult.expectedResponse),
     });
     locationService = new LocationService(
       entityServicespyobj,
-      httpServicespyobj,
+      httpServiceSpyObj,
     );
     locationService
       .update(
         expectedResult.expectedLocation,
-        expectedResult.expectedLocatiodId.id.toString(),
+        expectedResult.expectedLocationId.locationId,
       )
       .subscribe(
         (succesResponse: UpdateLocationResponse) =>
@@ -149,19 +142,17 @@ describe('LocationService', () => {
           ),
         fail,
       );
-    expect(httpServicespyobj.put).toHaveBeenCalledTimes(1);
+    expect(httpServiceSpyObj.put).toHaveBeenCalledTimes(1);
   });
 
   it('should return an error when the server returns a error status code', fakeAsync(() => {
     const errorResponse = {
       message: 'User does not exist',
     } as ApiResponse;
-
-    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
-      'EntityService',
-      {getCollection: throwError(errorResponse)},
-    );
-    locationService = new LocationService(entityServicespy, httpServicespyobj);
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: throwError(errorResponse),
+    });
+    locationService = new LocationService(entityServiceSpy, httpServiceSpyObj);
 
     locationService.getLocations().subscribe(
       () => fail('expected an error, not locations'),

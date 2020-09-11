@@ -74,10 +74,8 @@ public class UserManagementUtil {
 
     logger.debug(
         String.format(
-            "status =%d, message=%s, error=%s",
-            updateEmailResponse.getHttpStatusCode(),
-            updateEmailResponse.getMessage(),
-            updateEmailResponse.getErrorDescription()));
+            "status =%d, message=%s",
+            updateEmailResponse.getHttpStatusCode(), updateEmailResponse.getMessage()));
     return updateEmailResponse;
   }
 

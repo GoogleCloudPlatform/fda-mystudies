@@ -13,7 +13,7 @@ import {ToastrModule} from 'ngx-toastr';
 import {EntityService} from '../../../service/entity.service';
 import {of} from 'rxjs';
 import {LocationService} from '../shared/location.service';
-import {Location} from '../shared/location.model';
+import {ManageLocations} from '../shared/location.model';
 import {expectedLocationList} from 'src/app/entity/mock-location-data';
 
 describe('LocationsListComponent', () => {
@@ -59,16 +59,16 @@ describe('LocationsListComponent', () => {
   });
 
   it('should NOT have locations before ngOnInit', () => {
-    component.location$.pipe().subscribe((location: Location[]) => {
-      expect(location.length).toBe(
+    component.location$.pipe().subscribe((manageLocation: ManageLocations) => {
+      expect(manageLocation.locations.length).toBe(
         0,
         'should not have locations before ngOnInit',
       );
     });
   });
   it('should NOT have locations immediately after ngOnInit', () => {
-    component.location$.pipe().subscribe((location: Location[]) => {
-      expect(location.length).toBe(
+    component.location$.pipe().subscribe((manageLocation: ManageLocations) => {
+      expect(manageLocation.locations.length).toBe(
         0,
         'should not have locations until service promise resolves',
       );
@@ -85,6 +85,8 @@ describe('LocationsListComponent', () => {
 
     it('should not have search box ', () => {
       const compiled = fixture.nativeElement as HTMLElement;
+      console.log('search box');
+      console.log(compiled.querySelector('.search-icon')?.classList.length);
       expect(compiled.querySelector('.search-icon')?.classList.length).toBe(
         undefined,
         'should not have search box',
@@ -92,12 +94,12 @@ describe('LocationsListComponent', () => {
     });
 
     it('should get the Location List via refresh function', fakeAsync(() => {
-      component.location$.subscribe((locations) => {
-        expect(locations.length).toEqual(2);
+      component.location$.subscribe((manageLocation: ManageLocations) => {
+        expect(manageLocation).toEqual(expectedLocationList);
       });
     }));
 
-    it('should DISPLAY Locations', () => {
+    it('should display Locations', () => {
       const compiled = fixture.nativeElement as HTMLElement;
       fixture.detectChanges();
       expect(compiled.querySelectorAll('.location_row').length).toBe(

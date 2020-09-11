@@ -92,7 +92,7 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
 
     uriTemplateAndMethods.put(
         String.format("%s/users/{userId}", context.getContextPath()),
-        new String[] {HttpMethod.GET.name()});
+        new String[] {HttpMethod.GET.name(), HttpMethod.PATCH.name()});
     uriTemplateAndMethods.put(
         String.format("%s/users/{userId}/profile", context.getContextPath()),
         new String[] {HttpMethod.PUT.name()});
@@ -102,9 +102,6 @@ public class TokenIntrospectionFilter extends BaseTokenIntrospectionFilter {
     uriTemplateAndMethods.put(
         String.format("%s/users/securitycodes/{securityCode}", context.getContextPath()),
         new String[] {HttpMethod.GET.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/users/{userId}/deactivate", context.getContextPath()),
-        new String[] {HttpMethod.PATCH.name()});
   }
 
   @Override

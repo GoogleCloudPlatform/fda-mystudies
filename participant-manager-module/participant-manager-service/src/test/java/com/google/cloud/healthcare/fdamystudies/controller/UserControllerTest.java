@@ -370,7 +370,7 @@ public class UserControllerTest extends BaseMockIT {
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     UserRequest userRequest = newUserRequestForUpdate();
-    userRequest.setUserId(adminforUpdate.getId());
+    userRequest.setId(adminforUpdate.getId());
     mockMvc
         .perform(
             put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())
@@ -407,7 +407,7 @@ public class UserControllerTest extends BaseMockIT {
     updateAdminUserRequestJson =
         json.set("$.apps[0].studies[0].sites[0].siteId", siteEntity.getId())
             .set("$.apps[0].studies[0].sites[0].selected", true)
-            .set("$.userId", adminforUpdate.getId())
+            .set("$.id", adminforUpdate.getId())
             .jsonString();
     mockMvc
         .perform(
@@ -443,7 +443,7 @@ public class UserControllerTest extends BaseMockIT {
     updateAdminUserRequestJson =
         json.set("$.apps[0].studies[0].studyId", studyEntity.getId())
             .set("$.apps[0].studies[0].selected", true)
-            .set("$.userId", adminforUpdate.getId())
+            .set("$.id", adminforUpdate.getId())
             .jsonString();
     mockMvc
         .perform(
@@ -480,7 +480,7 @@ public class UserControllerTest extends BaseMockIT {
     updateAdminUserRequestJson =
         json.set("$.apps[0].id", appEntity.getId())
             .set("$.apps[0].selected", true)
-            .set("$.userId", adminforUpdate.getId())
+            .set("$.id", adminforUpdate.getId())
             .jsonString();
     mockMvc
         .perform(
@@ -532,7 +532,7 @@ public class UserControllerTest extends BaseMockIT {
     adminforUpdate = testDataHelper.createSuperAdmin();
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     UserRequest userRequest = newUserRequestForUpdate();
-    userRequest.setUserId(adminforUpdate.getId());
+    userRequest.setId(adminforUpdate.getId());
     mockMvc
         .perform(
             put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())

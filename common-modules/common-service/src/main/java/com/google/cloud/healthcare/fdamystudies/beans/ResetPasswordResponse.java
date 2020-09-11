@@ -8,16 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 
 public class ResetPasswordResponse extends BaseResponse {
 
   public ResetPasswordResponse() {}
-
-  public ResetPasswordResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public ResetPasswordResponse(MessageCode messageCode) {
     super(messageCode);

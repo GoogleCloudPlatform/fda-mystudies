@@ -3,7 +3,7 @@
 	"firstName": "mockit_user_firstname_updated",
 	"lastName": "mockit_user_lastname_updated",
 	"superAdmin": false,
-	"userId": "4028e381737a4b6901737a5e73d9001c",
+	"id": "4028e381737a4b6901737a5e73d9001c",
 	"manageLocations": 1,
 	"apps": [
 		{

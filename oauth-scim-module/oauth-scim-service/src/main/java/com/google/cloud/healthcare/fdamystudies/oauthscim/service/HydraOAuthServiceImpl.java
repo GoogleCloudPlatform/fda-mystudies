@@ -108,9 +108,6 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
       UserResponse userResponse =
           userService.revokeAndReplaceRefreshToken(paramMap.getFirst(USER_ID), refreshToken);
       if (!HttpStatus.valueOf(userResponse.getHttpStatusCode()).is2xxSuccessful()) {
-        logger.error(
-            String.format(
-                "revokeAndReplaceRefreshToken error=%s", userResponse.getErrorDescription()));
         return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
       }
     }

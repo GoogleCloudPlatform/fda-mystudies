@@ -1,11 +1,11 @@
 export interface Site {
-  edit: number;
-  enrolledCount: number;
+  edit?: number;
+  enrolled: number;
   enrollmentPercentage: number;
-  id: number;
-  invitedCount: number;
+  status?: string;
+  id: string;
   name: string;
-  status: string;
+  invited?: number;
 }
 export interface UpdateTargetEnrollmentRequest {
   targetEnrollment: number;

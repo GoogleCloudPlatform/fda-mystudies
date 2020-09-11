@@ -259,7 +259,7 @@ class ActivityBuilder {
 
                   // Choicearray and destination array will hold predicates & their respective destination
                   var choicePredicate: [NSPredicate] = [NSPredicate]()
-                  var destination: [String]? = [String]()
+                  var destinations: [String] = []
 
                   for dict in (activityStep?.destinations)! {
 
@@ -293,13 +293,11 @@ class ActivityBuilder {
                           && (dict[kDestination] as? String)! == ""
                         {
                           // this means c = value & d = ""
-                          destination?.append(kCompletionStep)
+                          destinations.append(kCompletionStep)
 
-                        } else {
+                        } else if let dest = dict[kDestination] as? String {
                           // this means c = value && d =  value
-                          destination?.append(
-                            (dict[kDestination]! as? String)!
-                          )
+                          destinations.append(dest)
                         }
 
                       case is ORKNumericAnswerFormat, is ORKScaleAnswerFormat,
@@ -413,15 +411,11 @@ class ActivityBuilder {
                             && (dict[kDestination] as? String)! == ""
                           {
                             // this means c = value & d = ""
-                            destination?.append(kCompletionStep)
-
-                          } else {
+                            destinations.append(kCompletionStep)
+                          } else if let destination = dict[kDestination] as? String {
                             // this means c = value && d =  value
-                            destination?.append(
-                              (dict[kDestination]! as? String)!
-                            )
+                            destinations.append(destination)
                           }
-                        } else {
                         }
 
                       case is ORKBooleanAnswerFormat:
@@ -470,13 +464,11 @@ class ActivityBuilder {
                           && (dict[kDestination] as? String)! == ""
                         {
                           // this means c = value & d = ""
-                          destination?.append(kCompletionStep)
+                          destinations.append(kCompletionStep)
 
-                        } else {
+                        } else if let destination = dict[kDestination] as? String {
                           // this means c = value && d =  value
-                          destination?.append(
-                            (dict[kDestination]! as? String)!
-                          )
+                          destinations.append(destination)
                         }
                       default: break
                       }
@@ -504,25 +496,22 @@ class ActivityBuilder {
 
                     // if condition is empty
 
-                    if (destination?.count)! > 0 {
+                    if destinations.count > 0 {
 
                       // if destination is not empty but condition is empty
 
-                      for destinationId in destination! {
+                      for destinationId in destinations where destinationId.count != 0 {
 
-                        if destinationId.count != 0 {
+                        let directRule = ORKDirectStepNavigationRule(
+                          destinationStepIdentifier: destinationId
+                        )
 
-                          let directRule = ORKDirectStepNavigationRule(
-                            destinationStepIdentifier: destinationId
+                        (task as? ORKNavigableOrderedTask)!
+                          .setNavigationRule(
+                            directRule,
+                            forTriggerStepIdentifier: step
+                              .identifier
                           )
-
-                          (task as? ORKNavigableOrderedTask)!
-                            .setNavigationRule(
-                              directRule,
-                              forTriggerStepIdentifier: step
-                                .identifier
-                            )
-                        }
                       }
                     } else {
                       // if both destination and condition are empty
@@ -547,7 +536,7 @@ class ActivityBuilder {
 
                     predicateRule = ORKPredicateStepNavigationRule(
                       resultPredicates: choicePredicate,
-                      destinationStepIdentifiers: destination!,
+                      destinationStepIdentifiers: destinations,
                       defaultStepIdentifier: defaultStepIdentifier,
                       validateArrays: true
                     )

@@ -14,7 +14,10 @@
     </div>
   </div>
   <form ngForm #addSiteForm="ngForm" autocomplete="off">
-    <div class="row border__bottom__c4d1e6">
+    <div
+      *ngIf="location$ | async as manageLocations"
+      class="row border__bottom__c4d1e6"
+    >
       <div class="col-xs-12 col-md-12 p-none">
         <div class="form-group">
           <div class="form-item">
@@ -30,8 +33,8 @@
                 <option disabled selected>Select Location</option>
                 <option
                   class="cursor__pointer"
-                  *ngFor="let location of location$ | async"
-                  value="{{ location.id }}"
+                  *ngFor="let location of manageLocations.locations"
+                  value="{{ location.locationId }}"
                 >
                   {{ location.name }}
                 </option>

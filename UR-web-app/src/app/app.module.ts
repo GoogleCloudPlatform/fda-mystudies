@@ -10,7 +10,7 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {EntityService} from './service/entity.service';
 import {httpInterceptorProviders} from './http-interceptors';
 import {ToastrModule} from 'ngx-toastr';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import {HttpClientModule} from '@angular/common/http';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -32,6 +32,7 @@ import {CookieService} from 'ngx-cookie-service';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     NgxSpinnerModule,
     HttpClientModule,
     BrowserAnimationsModule,

@@ -8,14 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@ConditionalOnProperty(
-    value = "participant.manager.repository.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
-public interface OrgInfoRepository extends JpaRepository<OrgInfoEntity, String> {}
+public interface ParticipantBoRepository extends JpaRepository<ParticipantBo, Integer> {
+
+  List<ParticipantBo> findByParticipantIdentifier(String participantId);
+}

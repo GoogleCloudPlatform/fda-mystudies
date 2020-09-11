@@ -23,8 +23,7 @@ public interface UserProfileManagementDao {
 
   public AuthInfoBO getAuthInfo(Integer userDetailsId);
 
-  public UserDetailsBO getParticipantDetailsByEmail(
-      String email, Integer appInfoId, Integer orgInfoId);
+  public UserDetailsBO getParticipantDetailsByEmail(String email, Integer appInfoId);
 
   public LoginAttemptsBO getLoginAttempts(String email);
 
