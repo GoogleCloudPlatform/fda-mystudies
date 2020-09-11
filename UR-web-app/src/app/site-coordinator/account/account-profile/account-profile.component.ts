@@ -82,7 +82,7 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
   }
 
   cancel(): void {
-    this.getProfileDetails();
+    void this.router.navigate(['coordinator/studies']);
   }
 
   signOut(): void {
