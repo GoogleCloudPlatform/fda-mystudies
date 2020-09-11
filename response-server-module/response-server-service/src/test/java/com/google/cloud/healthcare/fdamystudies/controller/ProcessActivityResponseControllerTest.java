@@ -371,7 +371,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
   private ActivityResponseBean setActivityResponseBean() {
     ActivityResponseBean activityResponseBean = new ActivityResponseBean();
-    activityResponseBean.setOrgId("OrgName");
     activityResponseBean.setApplicationId("UNCSTAND001");
     activityResponseBean.setParticipantId(participantBo.getParticipantIdentifier());
     activityResponseBean.getMetadata().setActivityId(ACTIVITY_ID_VALUE);
