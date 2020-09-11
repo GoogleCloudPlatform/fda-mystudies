@@ -294,7 +294,7 @@ public class BaseMockIT {
   protected void verifyMimeMessage(String toEmail, String fromEmail, String subject, String body)
       throws MessagingException, IOException {
     ArgumentCaptor<MimeMessage> mailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
-    verify(emailSender).send(mailCaptor.capture());
+    verify(emailSender, atLeastOnce()).send(mailCaptor.capture());
 
     MimeMessage mail = mailCaptor.getValue();
 
@@ -306,6 +306,6 @@ public class BaseMockIT {
     assertThat(mail.getSubject()).isEqualTo(subject);
     assertThat(mail.getContent().toString()).contains(body);
 
-    assertThat(mail.getDataHandler().getContentType()).isEqualTo("text/html;charset=UTF-8");
+    assertThat(mail.getDataHandler().getContentType()).isEqualTo("text/html; charset=utf-8");
   }
 }
