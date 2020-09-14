@@ -99,6 +99,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
     headers.set(AppConstants.AUTHORIZATION_HEADER, this.getWcpAuthorizationHeader());
+  
 
     UriComponentsBuilder studyMetadataUriBuilder =
         UriComponentsBuilder.fromHttpUrl(appConfig.getWcpStudyActivityMetadataUrl())

@@ -199,7 +199,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 get(ApiEndpoint.GET_PROCESS_ACTIVITY_RESPONSE.getPath())
                     .contextPath(getContextPath())
                     .headers(headers)
-                    .queryParam("orgId", "orgId")
                     .queryParam("appId", "appId")
                     .queryParam("studyId", STUDY_ID_VALUE)
                     .queryParam("siteId", SITE_ID_VALUE)
@@ -241,7 +240,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             get(ApiEndpoint.GET_PROCESS_ACTIVITY_RESPONSE.getPath())
                 .contextPath(getContextPath())
                 .headers(headers)
-                .queryParam("orgId", "")
                 .queryParam("appId", "")
                 .queryParam("studyId", "")
                 .queryParam("siteId", "")
@@ -371,7 +369,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
   private ActivityResponseBean setActivityResponseBean() {
     ActivityResponseBean activityResponseBean = new ActivityResponseBean();
-    activityResponseBean.setOrgId("OrgName");
     activityResponseBean.setApplicationId("UNCSTAND001");
     activityResponseBean.setParticipantId(participantBo.getParticipantIdentifier());
     activityResponseBean.getMetadata().setActivityId(ACTIVITY_ID_VALUE);

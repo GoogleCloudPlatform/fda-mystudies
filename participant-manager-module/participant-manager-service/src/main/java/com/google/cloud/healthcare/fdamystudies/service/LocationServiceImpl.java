@@ -180,7 +180,7 @@ public class LocationServiceImpl implements LocationService {
         siteRepository.findByLocationIdAndStatus(locationRequest.getLocationId(), ACTIVE_STATUS);
     if (INACTIVE_STATUS.equals(locationRequest.getStatus())
         && CollectionUtils.isNotEmpty(listOfSite)) {
-      return ErrorCode.CANNOT_DECOMMISSIONED;
+      return ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS;
     }
 
     if (ACTIVE_STATUS.equals(locationRequest.getStatus())
