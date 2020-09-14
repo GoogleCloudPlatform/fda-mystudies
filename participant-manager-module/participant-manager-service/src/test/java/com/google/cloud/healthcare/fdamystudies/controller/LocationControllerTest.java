@@ -10,8 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO_OF_RECORDS;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PAGE_NO;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ALREADY_DECOMMISSIONED;
@@ -28,6 +26,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.NO_OF_RECORDS;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.PAGE_NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.UPDATE_LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.UPDATE_LOCATION_NAME_VALUE;
 import static org.hamcrest.CoreMatchers.is;
@@ -456,6 +456,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)))
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
         .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
+        .andExpect(jsonPath("$.totalLocationsCount", is(1)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
