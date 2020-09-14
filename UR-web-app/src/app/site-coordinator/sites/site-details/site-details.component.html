@@ -554,8 +554,8 @@
       <div class="modal-body modal__body">
         <app-import-email-list
           [siteId]="siteId"
-          (successSubmit)="onSucceedFileImport()"
-          (cancelled)="modalRef.hide()"
+          (import)="onSucceedFileImport()"
+          (cancel)="modalRef.hide()"
         ></app-import-email-list>
       </div>
     </ng-template>

@@ -12,7 +12,7 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
-  @Output() submited = new EventEmitter();
+  @Output() import = new EventEmitter();
   @Input() siteId = '';
   fileName = '';
   file?: File;
@@ -24,8 +24,8 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   }
   fileChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    const fileHeld: File = (target.files as FileList)[0];
-    this.file = fileHeld;
+    const selectedFile: File = (target.files as FileList)[0];
+    this.file = selectedFile;
     this.fileName = this.file.name;
   }
 
@@ -45,7 +45,7 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
-              this.submited.emit();
+              this.import.emit();
             }
           },
           (error) => {
