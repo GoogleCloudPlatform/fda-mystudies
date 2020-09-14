@@ -14,6 +14,7 @@ import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTIC
 import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACTIVITY_COLLECTION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACTIVITY_ID_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.utils.Constants.PARTICIPANT_ID_NOT_EXISTS_MESSAGE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.QUESTION_KEY_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.SITE_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.STUDY_COLLECTION_NAME_VALUE;
@@ -170,13 +171,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers))
         .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(
-            jsonPath(
-                "$.error_description",
-                is(
-                    com.google.cloud.healthcare.fdamystudies.common.ErrorCode
-                        .PARTICIPANT_ID_NOT_EXISTS.getDescription())));
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.detailMessage", is(PARTICIPANT_ID_NOT_EXISTS_MESSAGE)));
   }
 
   @Test

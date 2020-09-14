@@ -224,17 +224,11 @@ public enum ErrorCode {
   ADMIN_NOT_FOUND(404, "EC-114", Constants.BAD_REQUEST, "Admin not found"),
 
   INVALID_USER_STATUS(400, "EC-114", Constants.BAD_REQUEST, "Invalid user status"),
-
+  
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC-989", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
 
-  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required"),
-
-  PARTICIPANT_ID_NOT_EXISTS(
-      404,
-      "EC-404",
-      HttpStatus.NOT_FOUND.toString(),
-      "Participant does not exist for the given participant ID and secure enrollment token combination");
+  USER_ID_REQUIRED(400, "EC-400", Constants.BAD_REQUEST, "userId is required");
 
   private final int status;
   private final String code;

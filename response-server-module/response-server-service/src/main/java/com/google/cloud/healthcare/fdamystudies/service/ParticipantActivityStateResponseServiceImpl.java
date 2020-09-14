@@ -39,49 +39,43 @@ public class ParticipantActivityStateResponseServiceImpl
     List<ParticipantActivitiesBo> participantActivityList = null;
     ActivitiesBean retActivitiesBean = new ActivitiesBean();
     retActivitiesBean.setMessage(AppConstants.FAILURE);
-    try {
-      participantActivityList =
-          participantActivitiesDao.getParticipantActivities(studyId, participantId);
-      if (!participantActivityList.isEmpty()) {
-        List<ParticipantActivityBean> participantActivityBeanList = new ArrayList<>();
-        for (ParticipantActivitiesBo participantActivity : participantActivityList) {
-          if (participantActivity != null) {
-            ParticipantActivityBean tempParticipantActivityBean = new ParticipantActivityBean();
-            ActivityRunBean tempActivityRunBean = new ActivityRunBean();
-            tempParticipantActivityBean.setActivityId(participantActivity.getActivityId());
-            if (!StringUtils.isBlank(participantActivity.getActivityState())) {
-              tempParticipantActivityBean.setActivityState(participantActivity.getActivityState());
-            }
-            if (!StringUtils.isBlank(participantActivity.getActivityRunId())) {
-              tempParticipantActivityBean.setActivityRunId(participantActivity.getActivityRunId());
-            }
-            if (!StringUtils.isBlank(participantActivity.getActivityVersion())) {
-              tempParticipantActivityBean.setActivityVersion(
-                  participantActivity.getActivityVersion());
-            }
-            if (participantActivity.getBookmark() != null) {
-              tempParticipantActivityBean.setBookmarked(participantActivity.getBookmark());
-            }
-            if (participantActivity.getCompleted() != null) {
-              tempActivityRunBean.setCompleted(participantActivity.getCompleted());
-            }
-            if (participantActivity.getMissed() != null) {
-              tempActivityRunBean.setMissed(participantActivity.getMissed());
-            }
-            if (participantActivity.getTotal() != null) {
-              tempActivityRunBean.setTotal(participantActivity.getTotal());
-            }
-            tempParticipantActivityBean.setActivityRun(tempActivityRunBean);
-            participantActivityBeanList.add(tempParticipantActivityBean);
+    participantActivityList =
+        participantActivitiesDao.getParticipantActivities(studyId, participantId);
+    if (!participantActivityList.isEmpty()) {
+      List<ParticipantActivityBean> participantActivityBeanList = new ArrayList<>();
+      for (ParticipantActivitiesBo participantActivity : participantActivityList) {
+        if (participantActivity != null) {
+          ParticipantActivityBean tempParticipantActivityBean = new ParticipantActivityBean();
+          ActivityRunBean tempActivityRunBean = new ActivityRunBean();
+          tempParticipantActivityBean.setActivityId(participantActivity.getActivityId());
+          if (!StringUtils.isBlank(participantActivity.getActivityState())) {
+            tempParticipantActivityBean.setActivityState(participantActivity.getActivityState());
           }
+          if (!StringUtils.isBlank(participantActivity.getActivityRunId())) {
+            tempParticipantActivityBean.setActivityRunId(participantActivity.getActivityRunId());
+          }
+          if (!StringUtils.isBlank(participantActivity.getActivityVersion())) {
+            tempParticipantActivityBean.setActivityVersion(
+                participantActivity.getActivityVersion());
+          }
+          if (participantActivity.getBookmark() != null) {
+            tempParticipantActivityBean.setBookmarked(participantActivity.getBookmark());
+          }
+          if (participantActivity.getCompleted() != null) {
+            tempActivityRunBean.setCompleted(participantActivity.getCompleted());
+          }
+          if (participantActivity.getMissed() != null) {
+            tempActivityRunBean.setMissed(participantActivity.getMissed());
+          }
+          if (participantActivity.getTotal() != null) {
+            tempActivityRunBean.setTotal(participantActivity.getTotal());
+          }
+          tempParticipantActivityBean.setActivityRun(tempActivityRunBean);
+          participantActivityBeanList.add(tempParticipantActivityBean);
         }
-        retActivitiesBean.setActivities(participantActivityBeanList);
-        retActivitiesBean.setMessage(AppConstants.SUCCESS_MSG);
       }
-    } catch (Exception e) {
-      logger.error("getParticipantActivitiesList() - error ", e);
-      throw new ProcessActivityStateException(
-          "Error getting activity stat list for participant.\n" + e.getMessage());
+      retActivitiesBean.setActivities(participantActivityBeanList);
+      retActivitiesBean.setMessage(AppConstants.SUCCESS_MSG);
     }
     logger.info("ActivityResponseProcessorServiceImpl getParticipantActivitiesList() - Ends ");
     return retActivitiesBean;
@@ -91,31 +85,25 @@ public class ParticipantActivityStateResponseServiceImpl
   public void saveParticipantActivities(ActivityStateRequestBean activityStateRequestBean)
       throws ProcessActivityStateException {
     logger.debug("saveParticipantActivities() - Start ");
-    try {
-      if (activityStateRequestBean.getStudyId() != null
-          && activityStateRequestBean.getParticipantId() != null) {
-        List<ParticipantActivitiesBo> inputParticipantActivitiesList =
-            this.getDtoObject(activityStateRequestBean);
+    if (activityStateRequestBean.getStudyId() != null
+        && activityStateRequestBean.getParticipantId() != null) {
+      List<ParticipantActivitiesBo> inputParticipantActivitiesList =
+          this.getDtoObject(activityStateRequestBean);
 
-        List<ParticipantActivitiesBo> existingParticipantActivitiesList =
-            participantActivitiesDao.getParticipantActivities(
-                activityStateRequestBean.getStudyId(), activityStateRequestBean.getParticipantId());
-        List<ParticipantActivitiesBo> participantActivitiesListToUpdate =
-            this.getConsolidatedParticipantListToUpdate(
-                inputParticipantActivitiesList, existingParticipantActivitiesList);
+      List<ParticipantActivitiesBo> existingParticipantActivitiesList =
+          participantActivitiesDao.getParticipantActivities(
+              activityStateRequestBean.getStudyId(), activityStateRequestBean.getParticipantId());
+      List<ParticipantActivitiesBo> participantActivitiesListToUpdate =
+          this.getConsolidatedParticipantListToUpdate(
+              inputParticipantActivitiesList, existingParticipantActivitiesList);
 
-        participantActivitiesDao.saveParticipantActivities(participantActivitiesListToUpdate);
-      } else {
-        throw new ProcessActivityStateException(
-            "saveParticipantActivities() - error. Provided input for"
-                + " studyId or participantId is null ");
-      }
-
-    } catch (Exception e) {
-      logger.error("saveParticipantActivities() - error ", e);
+      participantActivitiesDao.saveParticipantActivities(participantActivitiesListToUpdate);
+    } else {
       throw new ProcessActivityStateException(
-          "saveParticipantActivities() - error " + e.getMessage());
+          "saveParticipantActivities() - error. Provided input for"
+              + " studyId or participantId is null ");
     }
+
     logger.debug("saveParticipantActivities() - Ends ");
   }
 

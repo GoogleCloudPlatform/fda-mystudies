@@ -37,11 +37,7 @@ public class CommonServiceImpl implements CommonService {
   public ParticipantBo getParticipantInfoDetails(String participantId) {
     logger.info("CommonServiceImpl getParticipantInfoDetails() - starts ");
     ParticipantBo participantInfo = null;
-    try {
-      participantInfo = commonDao.getParticipantInfoDetails(participantId);
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl getParticipantInfoDetails() - error ", e);
-    }
+    participantInfo = commonDao.getParticipantInfoDetails(participantId);
 
     logger.info("CommonServiceImpl getParticipantInfoDetails() - starts ");
     return participantInfo;
@@ -51,16 +47,12 @@ public class CommonServiceImpl implements CommonService {
   public ActivityLog createActivityLog(String userId, String activityName, String activtyDesc) {
     logger.info("CommonServiceImpl createActivityLog() - starts ");
     ActivityLog activityLog = new ActivityLog();
-    try {
-      activityLog.setAuthUserId(userId);
-      activityLog.setActivityName(activityName);
-      activityLog.setActivtyDesc(activtyDesc);
-      activityLog.setActivityDateTime(LocalDateTime.now());
-      activityLogRepository.save(activityLog);
+    activityLog.setAuthUserId(userId);
+    activityLog.setActivityName(activityName);
+    activityLog.setActivtyDesc(activtyDesc);
+    activityLog.setActivityDateTime(LocalDateTime.now());
+    activityLogRepository.save(activityLog);
 
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl createActivityLog() - error ", e);
-    }
     logger.info("CommonServiceImpl createActivityLog() - ends ");
 
     return activityLog;

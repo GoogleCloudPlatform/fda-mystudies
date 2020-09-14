@@ -18,7 +18,7 @@ public interface ActivityResponseProcessorService {
   void saveActivityResponseDataForParticipant(
       QuestionnaireActivityStructureBean activityMetadatFromWcp,
       ActivityResponseBean questionnaireActivityResponseBean)
-      throws ProcessResponseException;
+      throws ProcessResponseException, Exception;
 
   StoredResponseBean getActivityResponseDataForParticipant(
       String studyId, String siteId, String participantId, String activityId, String questionKey)

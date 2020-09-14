@@ -123,6 +123,10 @@ public class ParticipantDaoImpl implements ParticipantDao {
       List<ParticipantBo> resultList = session.createQuery(participantBoCriteria).getResultList();
       if (resultList != null && resultList.size() == 1) {
         return true;
+      } else {
+        throw new ProcessResponseException(
+            "Participant does not exist for the given participant ID and secure "
+                + "enrollment token combination");
       }
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
@@ -132,6 +136,5 @@ public class ParticipantDaoImpl implements ParticipantDao {
         session.close();
       }
     }
-    return false;
   }
 }
