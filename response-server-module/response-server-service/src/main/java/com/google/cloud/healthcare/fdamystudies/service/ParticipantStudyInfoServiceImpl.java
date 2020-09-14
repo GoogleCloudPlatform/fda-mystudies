@@ -40,27 +40,33 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
     HttpHeaders headers = null;
 
     ResponseEntity<?> responseEntity = null;
-    headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.CLIENT_ID_PARAM, appConfig.getRegServerClientId());
-    headers.set(
-        AppConstants.CLIENT_SECRET_PARAM,
-        ResponseServerUtil.getHashedValue(appConfig.getRegServerClientSecret()));
+    try {
+      headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      headers.set(AppConstants.CLIENT_ID_PARAM, appConfig.getRegServerClientId());
+      headers.set(
+          AppConstants.CLIENT_SECRET_PARAM,
+          ResponseServerUtil.getHashedValue(appConfig.getRegServerClientSecret()));
 
-    UriComponentsBuilder getPartInfoUriBuilder =
-        UriComponentsBuilder.fromHttpUrl(appConfig.getRegServerPartStudyInfoUrl())
-            .queryParam(AppConstants.STUDY_ID_PARAM, studyId)
-            .queryParam(AppConstants.PARTICIPANT_ID_KEY, participantId);
-    responseEntity =
-        restTemplate.exchange(
-            getPartInfoUriBuilder.toUriString(),
-            HttpMethod.GET,
-            new HttpEntity<>(headers),
-            ParticipantStudyInformation.class);
-    ParticipantStudyInformation partStudyInfo =
-        (ParticipantStudyInformation) responseEntity.getBody();
+      UriComponentsBuilder getPartInfoUriBuilder =
+          UriComponentsBuilder.fromHttpUrl(appConfig.getRegServerPartStudyInfoUrl())
+              .queryParam(AppConstants.STUDY_ID_PARAM, studyId)
+              .queryParam(AppConstants.PARTICIPANT_ID_KEY, participantId);
+      responseEntity =
+          restTemplate.exchange(
+              getPartInfoUriBuilder.toUriString(),
+              HttpMethod.GET,
+              new HttpEntity<>(headers),
+              ParticipantStudyInformation.class);
+      ParticipantStudyInformation partStudyInfo =
+          (ParticipantStudyInformation) responseEntity.getBody();
 
-    logger.debug("getStudyActivityMetadata() - ends");
-    return partStudyInfo;
+      logger.debug("getStudyActivityMetadata() - ends");
+      return partStudyInfo;
+
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new ProcessResponseException(e.getMessage());
+    }
   }
 }

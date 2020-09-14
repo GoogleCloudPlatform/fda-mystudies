@@ -21,7 +21,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Base64;
@@ -54,8 +53,8 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
 
   @Override
   public void saveStudyMetadata(StudyMetadataBean studyMetadataBean)
-      throws IOException, ProcessResponseException, IllegalAccessException,
-          IllegalArgumentException, InvocationTargetException, IntrospectionException {
+      throws ProcessResponseException, IntrospectionException, IllegalAccessException,
+          IllegalArgumentException, InvocationTargetException {
 
     BeanInfo beanInfo;
     beanInfo = Introspector.getBeanInfo(studyMetadataBean.getClass());
@@ -90,9 +89,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
 
   @Override
   public QuestionnaireActivityStructureBean getStudyActivityMetadata(
-      String orgId,
-      String applicationId,
-      StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
+      String applicationId, StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
       throws ProcessResponseException {
     logger.debug("getStudyActivityMetadata() - starts ");
     HttpHeaders headers = null;
@@ -100,7 +97,6 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
     ResponseEntity<?> responseEntity = null;
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.ORG_ID_HEADER, orgId);
     headers.set(AppConstants.APPLICATION_ID_HEADER_WCP, applicationId);
     headers.set(AppConstants.AUTHORIZATION_HEADER, this.getWcpAuthorizationHeader());
 
