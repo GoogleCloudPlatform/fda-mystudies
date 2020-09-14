@@ -116,10 +116,10 @@ public class ProcessActivityResponseController {
         studyActivityMetadataRequestBean.setStudyId(studyId);
         studyActivityMetadataRequestBean.setActivityId(activityId);
         studyActivityMetadataRequestBean.setActivityVersion(activityVersion);
-        QuestionnaireActivityStructureBean activityMetadatFromWcp =
+        QuestionnaireActivityStructureBean activityMetaDataFromWcp =
             studyMetadataService.getStudyActivityMetadata(
                 applicationId, studyActivityMetadataRequestBean);
-        if (activityMetadatFromWcp == null) {
+        if (activityMetaDataFromWcp == null) {
           logger.error(
               "Input values are :\n Study Id: "
                   + studyId
@@ -170,7 +170,7 @@ public class ProcessActivityResponseController {
 
         if (!withdrawalStatus) {
           activityResponseProcessorService.saveActivityResponseDataForParticipant(
-              activityMetadatFromWcp, questionnaireActivityResponseBean);
+              activityMetaDataFromWcp, questionnaireActivityResponseBean);
           savedResponseData = true;
 
           // Update Participant Activity State

@@ -133,7 +133,7 @@ public class StudyMetadataServiceImpl implements StudyMetadataService {
       return AppConstants.BASIC_PREFIX + wcpAuthStrEncoded;
     } else {
       throw new ProcessResponseException(
-          "Could not create AUthorization header for WCP as credentials are null.");
+          "Could not create Authorization header for WCP as credentials are null.");
     }
   }
 }
