@@ -10,6 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO_OF_RECORDS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PAGE_NO;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YES;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ALREADY_DECOMMISSIONED;
@@ -415,7 +417,11 @@ public class LocationControllerTest extends BaseMockIT {
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_LOCATIONS.getPath()).headers(headers).contextPath(getContextPath()))
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .headers(headers)
+                .queryParam("page", PAGE_NO)
+                .queryParam("limit", NO_OF_RECORDS)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
@@ -437,7 +443,11 @@ public class LocationControllerTest extends BaseMockIT {
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_LOCATIONS.getPath()).headers(headers).contextPath(getContextPath()))
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .headers(headers)
+                .queryParam("page", PAGE_NO)
+                .queryParam("limit", NO_OF_RECORDS)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locations").isArray())
@@ -452,6 +462,53 @@ public class LocationControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnLocationsForPagination() throws Exception {
+    // Step 1: 1 location already added in @BeforeEach, add 20 new locations
+    for (int i = 1; i <= 20; i++) {
+      locationEntity = testDataHelper.createLocation();
+      locationEntity.setCustomId(CUSTOM_ID_VALUE + i);
+    }
+
+    // Step 2: Call API and expect GET_LOCATION_SUCCESS message and fetch only 5 data out of 21
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .headers(headers)
+                .queryParam("page", PAGE_NO)
+                .queryParam("limit", NO_OF_RECORDS)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.locations").isArray())
+        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
+        .andExpect(jsonPath("$.locations", hasSize(5)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.totalLocationsCount", is(21)));
+
+    verifyTokenIntrospectRequest(1);
+
+    // page index starts with 0, get locations for 3rd page
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .headers(headers)
+                .queryParam("page", "2")
+                .queryParam("limit", "9")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.locations").isArray())
+        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
+        .andExpect(jsonPath("$.locations", hasSize(3)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.totalLocationsCount", is(21)));
+
+    verifyTokenIntrospectRequest(2);
+  }
+
+  @Test
   public void shouldReturnForbiddenForLocationForSiteAccessDenied() throws Exception {
     // Step 1: change editPermission to null
     userRegAdminEntity.setLocationPermission(Permission.NO_PERMISSION.value());
@@ -463,6 +520,8 @@ public class LocationControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .queryParam("page", PAGE_NO)
+                .queryParam("limit", NO_OF_RECORDS)
                 .queryParam("excludeStudyId", studyEntity.getId())
                 .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
                 .content(asJsonString(getLocationRequest()))
@@ -491,6 +550,8 @@ public class LocationControllerTest extends BaseMockIT {
             get(ApiEndpoint.GET_LOCATIONS.getPath())
                 .queryParam("excludeStudyId", studyEntity.getId())
                 .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
+                .queryParam("page", PAGE_NO)
+                .queryParam("limit", NO_OF_RECORDS)
                 .content(asJsonString(getLocationRequest()))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -520,6 +581,8 @@ public class LocationControllerTest extends BaseMockIT {
             get(ApiEndpoint.GET_LOCATIONS.getPath())
                 .queryParam("excludeStudyId", studyEntity.getId())
                 .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
+                .queryParam("page", PAGE_NO)
+                .queryParam("limit", NO_OF_RECORDS)
                 .content(asJsonString(getLocationRequest()))
                 .headers(headers)
                 .contextPath(getContextPath()))
