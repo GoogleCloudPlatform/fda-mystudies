@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
@@ -39,9 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVE_OR_UPDATE_FAILED;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudyStateServiceImpl implements StudyStateService {
@@ -63,6 +64,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   @Override
+  @Transactional(readOnly = true)
   public List<ParticipantStudiesBO> getParticipantStudiesList(UserDetailsBO user) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
     List<ParticipantStudiesBO> participantStudiesList = null;
@@ -76,6 +78,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
+  @Transactional
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudiesBO> existParticipantStudies,
@@ -196,6 +199,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<StudyStateBean> getStudiesState(String userId)
       throws SystemException, InvalidUserIdException /*, NoStudyEnrolledException*/ {
     logger.info("(Service)...StudyStateServiceImpl.getStudiesState()...Started");
@@ -257,6 +261,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public WithDrawFromStudyRespBean withdrawFromStudy(
       String participantId, String studyId, boolean delete)
       throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
