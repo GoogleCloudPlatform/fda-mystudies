@@ -14,12 +14,8 @@ import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import java.util.Optional;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +27,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Autowired private UserDetailsRepository repository;
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
-
-  @PersistenceContext private EntityManager entityManager;
+  @Autowired private SessionFactory sessionFactory;
 
   private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsDaoImpl.class);
 
@@ -94,10 +88,12 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
   public boolean updateStatus(UserDetailsEntity participantDetails) {
 
     logger.info("FdaEaUserDetailsDaoImpl updateStatus() - starts");
+    Session session = this.sessionFactory.getCurrentSession();
+
     if (participantDetails == null) {
       throw new IllegalArgumentException();
     }
-    entityManager.merge(participantDetails);
+    session.merge(participantDetails);
     return true;
   }
 
@@ -108,33 +104,19 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
     logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - starts");
     if (userDetails != null && authInfo != null && userAppDetails != null) {
-      Transaction transaction = null;
-      try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-        transaction = session.beginTransaction();
+      Session session = this.sessionFactory.getCurrentSession();
 
-        String userDetailsId = (String) session.save(userDetails);
+      String userDetailsId = (String) session.save(userDetails);
 
-        Optional<UserDetailsEntity> optUserDetail = repository.findById(userDetailsId);
-        if (optUserDetail.isPresent()) {
-          authInfo.setUserDetails(optUserDetail.get());
-          userAppDetails.setUserDetails(optUserDetail.get());
-        }
-        session.save(authInfo);
-        session.save(userAppDetails);
-
-        transaction.commit();
-        return true;
-      } catch (Exception e) {
-        logger.error("FdaEaUserDetailsDaoImpl saveAllRecords(): ", e);
-        if (transaction != null) {
-          try {
-            transaction.rollback();
-          } catch (Exception e1) {
-            logger.error("FdaEaUserDetailsDaoImpl saveAllRecords(): ", e);
-          }
-        }
-        throw new SystemException();
+      Optional<UserDetailsEntity> optUserDetail = repository.findById(userDetailsId);
+      if (optUserDetail.isPresent()) {
+        authInfo.setUserDetails(optUserDetail.get());
+        userAppDetails.setUserDetails(optUserDetail.get());
       }
+      session.save(authInfo);
+      session.save(userAppDetails);
+
+      return true;
     } else {
       logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - ends");
       return false;

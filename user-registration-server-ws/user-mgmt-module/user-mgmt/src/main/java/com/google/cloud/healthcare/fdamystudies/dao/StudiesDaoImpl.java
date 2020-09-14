@@ -24,7 +24,6 @@ import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -32,7 +31,6 @@ import javax.persistence.criteria.Root;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +41,11 @@ public class StudiesDaoImpl implements StudiesDao {
 
   private static final Logger logger = LoggerFactory.getLogger(StudiesDaoImpl.class);
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
+  @Autowired private SessionFactory sessionFactory;
 
   @Override
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
     logger.info("StudiesDaoImpl - saveStudyMetadata() : Starts");
-    Transaction transaction = null;
     CriteriaBuilder builder = null;
     CriteriaQuery<StudyEntity> studyCriteria = null;
     Root<StudyEntity> studyRoot = null;
@@ -69,149 +66,136 @@ public class StudiesDaoImpl implements StudiesDao {
     UserRegAdminEntity superAdminUser;
 
     ErrorBean errorBean = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      transaction = session.beginTransaction();
-      builder = session.getCriteriaBuilder();
-      studyCriteria = builder.createQuery(StudyEntity.class);
-      studyRoot = studyCriteria.from(StudyEntity.class);
-      studyPredicate[0] = builder.equal(studyRoot.get("customId"), studyMetadataBean.getStudyId());
-      studyCriteria.select(studyRoot).where(studyPredicate);
-      studyInfo = session.createQuery(studyCriteria).uniqueResult();
+    Session session = this.sessionFactory.getCurrentSession();
+    builder = session.getCriteriaBuilder();
+    studyCriteria = builder.createQuery(StudyEntity.class);
+    studyRoot = studyCriteria.from(StudyEntity.class);
+    studyPredicate[0] = builder.equal(studyRoot.get("customId"), studyMetadataBean.getStudyId());
+    studyCriteria.select(studyRoot).where(studyPredicate);
+    studyInfo = session.createQuery(studyCriteria).uniqueResult();
 
-      appCriteria = builder.createQuery(AppEntity.class);
-      appRoot = appCriteria.from(AppEntity.class);
-      appPredicate[0] = builder.equal(appRoot.get("appId"), studyMetadataBean.getAppId());
-      appCriteria.select(appRoot).where(appPredicate);
-      appInfo = session.createQuery(appCriteria).uniqueResult();
+    appCriteria = builder.createQuery(AppEntity.class);
+    appRoot = appCriteria.from(AppEntity.class);
+    appPredicate[0] = builder.equal(appRoot.get("appId"), studyMetadataBean.getAppId());
+    appCriteria.select(appRoot).where(appPredicate);
+    appInfo = session.createQuery(appCriteria).uniqueResult();
 
-      orgCriteria = builder.createQuery(OrgInfoEntity.class);
-      orgRoot = orgCriteria.from(OrgInfoEntity.class);
-      orgPredicate[0] = builder.equal(orgRoot.get("orgId"), studyMetadataBean.getOrgId());
-      orgCriteria.select(orgRoot).where(orgPredicate);
-      orgInfo = session.createQuery(orgCriteria).uniqueResult();
+    orgCriteria = builder.createQuery(OrgInfoEntity.class);
+    orgRoot = orgCriteria.from(OrgInfoEntity.class);
+    orgPredicate[0] = builder.equal(orgRoot.get("orgId"), studyMetadataBean.getOrgId());
+    orgCriteria.select(orgRoot).where(orgPredicate);
+    orgInfo = session.createQuery(orgCriteria).uniqueResult();
 
-      CriteriaQuery<UserRegAdminEntity> urAdminUserCriteria =
-          builder.createQuery(UserRegAdminEntity.class);
-      Root<UserRegAdminEntity> urAdminUserRoot = urAdminUserCriteria.from(UserRegAdminEntity.class);
-      Predicate[] urAdminUserPredicate = new Predicate[1];
-      urAdminUserPredicate[0] = builder.equal(urAdminUserRoot.get("superAdmin"), true);
-      urAdminUserCriteria.select(urAdminUserRoot).where(urAdminUserPredicate);
-      superAdminUser = session.createQuery(urAdminUserCriteria).uniqueResult();
+    CriteriaQuery<UserRegAdminEntity> urAdminUserCriteria =
+        builder.createQuery(UserRegAdminEntity.class);
+    Root<UserRegAdminEntity> urAdminUserRoot = urAdminUserCriteria.from(UserRegAdminEntity.class);
+    Predicate[] urAdminUserPredicate = new Predicate[1];
+    urAdminUserPredicate[0] = builder.equal(urAdminUserRoot.get("superAdmin"), true);
+    urAdminUserCriteria.select(urAdminUserRoot).where(urAdminUserPredicate);
+    superAdminUser = session.createQuery(urAdminUserCriteria).uniqueResult();
 
-      if (studyInfo != null) {
-        appInfo = studyInfo.getApp();
-        orgInfo = appInfo.getOrgInfo();
+    if (studyInfo != null) {
+      appInfo = studyInfo.getApp();
+      orgInfo = appInfo.getOrgInfo();
 
+      orgInfo.setOrgId(studyMetadataBean.getOrgId());
+      orgInfo.setModifiedBy(String.valueOf(0));
+      orgInfo.setModified(Timestamp.from(Instant.now()));
+
+      appInfo.setAppId(studyMetadataBean.getAppId());
+      appInfo.setAppName(studyMetadataBean.getAppName());
+      appInfo.setAppDescription(studyMetadataBean.getAppDescription());
+      appInfo.setModifiedBy(String.valueOf(0));
+      appInfo.setModified(Timestamp.from(Instant.now()));
+      appInfo.setOrgInfo(orgInfo);
+
+      studyInfo.setCustomId(studyMetadataBean.getStudyId());
+      studyInfo.setName(studyMetadataBean.getStudyTitle());
+      studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
+      studyInfo.setType(studyMetadataBean.getStudyType());
+      studyInfo.setStatus(studyMetadataBean.getStudyStatus());
+      studyInfo.setCategory(studyMetadataBean.getStudyCategory());
+      studyInfo.setTagline(studyMetadataBean.getStudyTagline());
+      studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
+      studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
+      studyInfo.setApp(appInfo);
+      studyInfo.setModifiedBy(String.valueOf(0));
+      studyInfo.setModified(Timestamp.from(Instant.now()));
+      session.update(studyInfo);
+      if (studyInfo.getStatus().equalsIgnoreCase("Deactivated")) {
+        decommisionSiteFromStudy(session, studyInfo);
+      }
+    } else {
+
+      if (orgInfo == null) {
+        orgInfo = new OrgInfoEntity();
         orgInfo.setOrgId(studyMetadataBean.getOrgId());
-        orgInfo.setModifiedBy(String.valueOf(0));
-        orgInfo.setModified(Timestamp.from(Instant.now()));
+        orgInfo.setCreatedBy(String.valueOf(0));
+        orgInfo.setCreated(Timestamp.from(Instant.now()));
+        session.save(orgInfo);
+      }
 
+      if (appInfo == null) {
+        appInfo = new AppEntity();
         appInfo.setAppId(studyMetadataBean.getAppId());
         appInfo.setAppName(studyMetadataBean.getAppName());
         appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-        appInfo.setModifiedBy(String.valueOf(0));
-        appInfo.setModified(Timestamp.from(Instant.now()));
+        appInfo.setCreatedBy(String.valueOf(0));
+        appInfo.setCreated(Timestamp.from(Instant.now()));
         appInfo.setOrgInfo(orgInfo);
+        session.save(appInfo);
 
-        studyInfo.setCustomId(studyMetadataBean.getStudyId());
-        studyInfo.setName(studyMetadataBean.getStudyTitle());
-        studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
-        studyInfo.setType(studyMetadataBean.getStudyType());
-        studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-        studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-        studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-        studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
-        studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
-        studyInfo.setApp(appInfo);
-        studyInfo.setModifiedBy(String.valueOf(0));
-        studyInfo.setModified(Timestamp.from(Instant.now()));
-        session.update(studyInfo);
-        if (studyInfo.getStatus().equalsIgnoreCase("Deactivated")) {
-          decommisionSiteFromStudy(session, studyInfo);
-        }
-      } else {
+        AppPermissionEntity appPermission = new AppPermissionEntity();
+        appPermission.setApp(appInfo);
+        appPermission.setUrAdminUser(superAdminUser);
+        appPermission.setEdit(Permission.EDIT);
+        appPermission.setCreated(Timestamp.from(Instant.now()));
+        appPermission.setCreatedBy(superAdminUser.getId());
+        session.save(appPermission);
+      }
 
-        if (orgInfo == null) {
-          orgInfo = new OrgInfoEntity();
-          orgInfo.setOrgId(studyMetadataBean.getOrgId());
-          orgInfo.setCreatedBy(String.valueOf(0));
-          orgInfo.setCreated(Timestamp.from(Instant.now()));
-          session.save(orgInfo);
-        }
+      studyInfo = new StudyEntity();
+      studyInfo.setCustomId(studyMetadataBean.getStudyId());
+      studyInfo.setName(studyMetadataBean.getStudyTitle());
+      studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
+      studyInfo.setType(studyMetadataBean.getStudyType());
+      studyInfo.setStatus(studyMetadataBean.getStudyStatus());
+      studyInfo.setCategory(studyMetadataBean.getStudyCategory());
+      studyInfo.setTagline(studyMetadataBean.getStudyTagline());
+      studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
+      studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
+      studyInfo.setApp(appInfo);
+      studyInfo.setCreatedBy(String.valueOf(0));
+      studyInfo.setCreated(Timestamp.from(Instant.now()));
+      String generatedStudyid = (String) session.save(studyInfo);
 
-        if (appInfo == null) {
-          appInfo = new AppEntity();
-          appInfo.setAppId(studyMetadataBean.getAppId());
-          appInfo.setAppName(studyMetadataBean.getAppName());
-          appInfo.setAppDescription(studyMetadataBean.getAppDescription());
-          appInfo.setCreatedBy(String.valueOf(0));
-          appInfo.setCreated(Timestamp.from(Instant.now()));
-          appInfo.setOrgInfo(orgInfo);
-          session.save(appInfo);
+      StudyPermissionEntity studyPermission = new StudyPermissionEntity();
+      studyPermission.setApp(appInfo);
+      studyPermission.setStudy(studyInfo);
+      studyPermission.setUrAdminUser(superAdminUser);
+      studyPermission.setEdit(Permission.EDIT);
+      studyPermission.setCreated(Timestamp.from(Instant.now()));
+      studyPermission.setCreatedBy(superAdminUser.getId());
+      session.save(studyPermission);
 
-          AppPermissionEntity appPermission = new AppPermissionEntity();
-          appPermission.setApp(appInfo);
-          appPermission.setUrAdminUser(superAdminUser);
-          appPermission.setEdit(Permission.EDIT);
-          appPermission.setCreated(Timestamp.from(Instant.now()));
-          appPermission.setCreatedBy(superAdminUser.getId());
-          session.save(appPermission);
-        }
-
-        studyInfo = new StudyEntity();
-        studyInfo.setCustomId(studyMetadataBean.getStudyId());
-        studyInfo.setName(studyMetadataBean.getStudyTitle());
-        studyInfo.setVersion(Float.valueOf(studyMetadataBean.getStudyVersion()));
-        studyInfo.setType(studyMetadataBean.getStudyType());
-        studyInfo.setStatus(studyMetadataBean.getStudyStatus());
-        studyInfo.setCategory(studyMetadataBean.getStudyCategory());
-        studyInfo.setTagline(studyMetadataBean.getStudyTagline());
-        studyInfo.setSponsor(studyMetadataBean.getStudySponsor());
-        studyInfo.setEnrolling(studyMetadataBean.getStudyEnrolling());
-        studyInfo.setApp(appInfo);
-        studyInfo.setCreatedBy(String.valueOf(0));
-        studyInfo.setCreated(Timestamp.from(Instant.now()));
-        String generatedStudyid = (String) session.save(studyInfo);
-
-        StudyPermissionEntity studyPermission = new StudyPermissionEntity();
-        studyPermission.setApp(appInfo);
-        studyPermission.setStudy(studyInfo);
-        studyPermission.setUrAdminUser(superAdminUser);
-        studyPermission.setEdit(Permission.EDIT);
-        studyPermission.setCreated(Timestamp.from(Instant.now()));
-        studyPermission.setCreatedBy(superAdminUser.getId());
-        session.save(studyPermission);
-
-        if (!StringUtils.isBlank(studyMetadataBean.getStudyType())
-            && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {
-          LocationEntity defaultLocation =
-              (LocationEntity)
-                  session.createQuery("from LocationBo where isdefault='Y'").getSingleResult();
-          if (defaultLocation != null) {
-            StudyEntity studyInfoCreated = session.get(StudyEntity.class, generatedStudyid);
-            SiteEntity site = new SiteEntity();
-            site.setStudy(studyInfoCreated);
-            site.setLocation(defaultLocation);
-            site.setCreatedBy(String.valueOf(0));
-            site.setStatus(1);
-            site.setTargetEnrollment(0);
-            session.save(site);
-          }
+      if (!StringUtils.isBlank(studyMetadataBean.getStudyType())
+          && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {
+        LocationEntity defaultLocation =
+            (LocationEntity)
+                session.createQuery("from LocationBo where isdefault='Y'").getSingleResult();
+        if (defaultLocation != null) {
+          StudyEntity studyInfoCreated = session.get(StudyEntity.class, generatedStudyid);
+          SiteEntity site = new SiteEntity();
+          site.setStudy(studyInfoCreated);
+          site.setLocation(defaultLocation);
+          site.setCreatedBy(String.valueOf(0));
+          site.setStatus(1);
+          site.setTargetEnrollment(0);
+          session.save(site);
         }
       }
-      errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
-      transaction.commit();
-    } catch (Exception e) {
-      logger.error("StudiesDaoImpl - saveStudyMetadata() : error ", e);
-      if (transaction != null) {
-        try {
-          transaction.rollback();
-        } catch (Exception e1) {
-          logger.error("StudiesDaoImpl - saveStudyMetadata() rollback- error", e1);
-        }
-      }
-      return new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
     }
+    errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
     logger.info("StudiesDaoImpl - saveStudyMetadata() : ends");
     return errorBean;
   }
@@ -223,23 +207,19 @@ public class StudiesDaoImpl implements StudiesDao {
     Root<SiteEntity> siteRoot = null;
     Predicate[] sitePredicate = new Predicate[1];
     List<SiteEntity> siteList = null;
-    try {
-      builder = session.getCriteriaBuilder();
-      siteCriteria = builder.createQuery(SiteEntity.class);
-      siteRoot = siteCriteria.from(SiteEntity.class);
-      sitePredicate[0] = builder.equal(siteRoot.get("study"), study);
-      siteCriteria.select(siteRoot).where(sitePredicate);
-      siteList = session.createQuery(siteCriteria).getResultList();
-      if (!siteList.isEmpty()) {
-        for (SiteEntity site : siteList) {
-          site.setStatus(0);
-          site.setModifiedBy(String.valueOf(0));
-          site.setModified(Timestamp.from(Instant.now()));
-          session.update(site);
-        }
+    builder = session.getCriteriaBuilder();
+    siteCriteria = builder.createQuery(SiteEntity.class);
+    siteRoot = siteCriteria.from(SiteEntity.class);
+    sitePredicate[0] = builder.equal(siteRoot.get("study"), study);
+    siteCriteria.select(siteRoot).where(sitePredicate);
+    siteList = session.createQuery(siteCriteria).getResultList();
+    if (!siteList.isEmpty()) {
+      for (SiteEntity site : siteList) {
+        site.setStatus(0);
+        site.setModifiedBy(String.valueOf(0));
+        site.setModified(Timestamp.from(Instant.now()));
+        session.update(site);
       }
-    } catch (Exception e) {
-      logger.error("StudiesDaoImpl - decommisionSiteFromStudy() : error ", e);
     }
     logger.info("StudiesDaoImpl - decommisionSiteFromStudy() : ends");
   }

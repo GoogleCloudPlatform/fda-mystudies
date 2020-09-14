@@ -28,14 +28,9 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
     logger.info("UserRegAdminUserDaoImpl save() - starts");
     UserRegAdminEntity userRegAdminUser = null;
     if (adminUser != null) {
-      try {
-        userRegAdminUser = adminUserRepository.save(adminUser);
-        logger.info("UserRegAdminUserDaoImpl save() - ends");
-        return userRegAdminUser;
-      } catch (Exception e) {
-        logger.error("UserRegAdminUserDaoImpl save(): ", e);
-        throw new SystemException();
-      }
+      userRegAdminUser = adminUserRepository.save(adminUser);
+      logger.info("UserRegAdminUserDaoImpl save() - ends");
+      return userRegAdminUser;
     }
     return userRegAdminUser;
   }
