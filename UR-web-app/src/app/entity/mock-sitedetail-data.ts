@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import {EnrollmentStatus} from '../shared/enums';
 import {
   StatusUpdate,
@@ -52,11 +51,17 @@ export const expectedSiteParticipantDetails = {
         consentHistory: [],
       },
     ],
+
     countByStatus: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       A: 1,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       D: 0,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       E: 1,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       I: 12,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       N: 21,
     },
   },
