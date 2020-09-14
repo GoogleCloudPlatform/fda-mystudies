@@ -14,10 +14,14 @@ import {of} from 'rxjs';
 import {EntityService} from 'src/app/service/entity.service';
 import * as expectedResult from 'src/app/entity/mock-sitedetail-data';
 import {SitesModule} from '../sites.module';
-
+import {DebugElement} from '@angular/core';
+import {By} from '@angular/platform-browser';
 describe('ImportEmailListComponent', () => {
   let component: ImportEmailListComponent;
   let fixture: ComponentFixture<ImportEmailListComponent>;
+  let importParticipantButton: DebugElement;
+  let cancelButtonName: DebugElement;
+
   beforeEach(async(async () => {
     const siteDetailsServiceSpy = jasmine.createSpyObj<SiteDetailsService>(
       'SiteDetailsService',
@@ -45,30 +49,41 @@ describe('ImportEmailListComponent', () => {
       ],
     }).compileComponents();
   }));
+
   beforeEach(() => {
     fixture = TestBed.createComponent(ImportEmailListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    importParticipantButton = fixture.debugElement.query(
+      By.css('[name="buttonImport"]'),
+    );
+    cancelButtonName = fixture.debugElement.query(
+      By.css('[name="buttonCancel"]'),
+    );
   });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
   it('should update the profile when  button is submitted', fakeAsync(async () => {
-    spyOn(component, 'importParticipants').and.callThrough();
-    component.importParticipants();
+    const importSpy = spyOn(component, 'importParticipants');
+    const importButton = importParticipantButton.nativeElement as HTMLInputElement;
     fixture.detectChanges();
-    tick(10000);
+    tick();
+    importButton.click();
+    fixture.detectChanges();
     await fixture.whenStable();
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(component.importParticipants).toHaveBeenCalled();
+    expect(importSpy).toHaveBeenCalled();
   }));
+
   it('should hide component onclick cancel button', fakeAsync(async () => {
-    spyOn(component, 'onCancel').and.callThrough();
-    component.onCancel();
+    const cancelSpy = spyOn(component, 'cancelled');
+    const cancelButton = cancelButtonName.nativeElement as HTMLInputElement;
     fixture.detectChanges();
-    tick(100);
+    cancelButton.click();
+    fixture.detectChanges();
     await fixture.whenStable();
-    // eslint-disable-next-line @typescript-eslint/unbound-method
-    expect(component.onCancel).toHaveBeenCalled();
+    expect(cancelSpy).toHaveBeenCalledTimes(1);
   }));
 });

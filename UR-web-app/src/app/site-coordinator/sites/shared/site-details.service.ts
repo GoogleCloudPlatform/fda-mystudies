@@ -72,7 +72,7 @@ export class SiteDetailsService {
     return this.http.post<ApiResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(
         siteId,
-      )}/participants/import?file`,
+      )}/participants/import`,
       formData,
       httpOptionsForUpload,
     );

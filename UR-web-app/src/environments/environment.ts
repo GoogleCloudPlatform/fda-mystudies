@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:3000/participant-manager-service',
-  authServerUrl: 'http://localhost:3000/oauth-scim-service',
+  authServerUrl: 'http://35.193.185.224:8087/oauth-scim-service',
   redirectUrl: 'http://35.193.185.224:8087/oauth-scim-service/login',
 };
 
