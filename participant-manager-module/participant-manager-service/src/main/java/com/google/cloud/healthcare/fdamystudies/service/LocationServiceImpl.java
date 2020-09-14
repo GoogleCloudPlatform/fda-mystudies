@@ -193,7 +193,7 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationResponse getLocations(String userId) {
+  public LocationResponse getLocations(String userId, Integer page, Integer limit) {
     logger.entry("begin getLocations()");
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
@@ -217,8 +217,10 @@ public class LocationServiceImpl implements LocationService {
       }
       locationDetails.setStudiesCount(locationDetails.getStudyNames().size());
     }
+
     LocationResponse locationResponse =
         new LocationResponse(MessageCode.GET_LOCATION_SUCCESS, locationDetailsList);
+    locationResponse.setTotalLocationsCount(locationRepository.count());
     logger.exit(String.format("locations size=%d", locationResponse.getLocations().size()));
     return locationResponse;
   }
