@@ -16,8 +16,6 @@ public enum ApiEndpoint {
 
   ADD("http://localhost:8004/mystudies-response-server/participant/add"),
 
-  PROCESS_RESPONSE("http://localhost:8004/mystudies-response-server/participant/process-response"),
-
   STUDYMETADATA("http://localhost:8004/mystudies-response-server/studymetadata"),
 
   ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add"),
