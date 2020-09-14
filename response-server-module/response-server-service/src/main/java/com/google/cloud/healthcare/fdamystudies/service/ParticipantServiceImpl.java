@@ -13,19 +13,21 @@ import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.Particip
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ParticipantServiceImpl implements ParticipantService {
   @Autowired private ParticipantDao participantDao;
 
   @Override
+  @Transactional
   public String saveParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
-    System.out.println("ParticipantServiceImpl saveParticipant starts");
     return participantDao.saveParticipant(participantBo);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public boolean isValidParticipant(ParticipantInfoEntity participantBo)
       throws ProcessResponseException {
     return participantDao.isValidParticipant(participantBo);

@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ParticipantActivityStateResponseServiceImpl
@@ -33,6 +34,7 @@ public class ParticipantActivityStateResponseServiceImpl
       LoggerFactory.getLogger(ParticipantActivityStateResponseServiceImpl.class);
 
   @Override
+  @Transactional(readOnly = true)
   public ActivitiesBean getParticipantActivities(String studyId, String participantId)
       throws ProcessActivityStateException {
     logger.debug("ActivityResponseProcessorServiceImpl getParticipantActivitiesList() - Starts ");
@@ -88,6 +90,7 @@ public class ParticipantActivityStateResponseServiceImpl
   }
 
   @Override
+  @Transactional
   public void saveParticipantActivities(ActivityStateRequestBean activityStateRequestBean)
       throws ProcessActivityStateException {
     logger.debug("saveParticipantActivities() - Start ");
@@ -120,6 +123,7 @@ public class ParticipantActivityStateResponseServiceImpl
   }
 
   @Override
+  @Transactional
   public void deleteParticipantActivites(String studyId, String participantId)
       throws ProcessActivityStateException {
     participantActivitiesDao.deleteParticipantActivites(studyId, participantId);

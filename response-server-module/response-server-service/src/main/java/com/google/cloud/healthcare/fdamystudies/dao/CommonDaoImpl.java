@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -27,31 +26,29 @@ public class CommonDaoImpl implements CommonDao {
 
   private static Logger logger = LoggerFactory.getLogger(CommonDaoImpl.class);
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
+  @Autowired private SessionFactory sessionFactory;
 
   @Override
   public ParticipantInfoEntity getParticipantInfoDetails(String participantId) {
     logger.info("CommonDaoImpl getParticipantInfoDetails() - Ends ");
-    CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<ParticipantInfoEntity> participantBoCriteriaQuery = null;
-    Root<ParticipantInfoEntity> participantBoRoot = null;
     Predicate[] participantBoPredicates = new Predicate[1];
-    List<ParticipantInfoEntity> participantBoList = null;
+
+    Session session = this.sessionFactory.getCurrentSession();
+    CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+    CriteriaQuery<ParticipantInfoEntity> participantBoCriteriaQuery =
+        criteriaBuilder.createQuery(ParticipantInfoEntity.class);
+    Root<ParticipantInfoEntity> participantBoRoot =
+        participantBoCriteriaQuery.from(ParticipantInfoEntity.class);
+    participantBoPredicates[0] =
+        criteriaBuilder.equal(participantBoRoot.get("participantIdentifier"), participantId);
+    participantBoCriteriaQuery.select(participantBoRoot).where(participantBoPredicates);
+    List<ParticipantInfoEntity> participantBoList =
+        session.createQuery(participantBoCriteriaQuery).getResultList();
     ParticipantInfoEntity participantBO = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      criteriaBuilder = session.getCriteriaBuilder();
-      participantBoCriteriaQuery = criteriaBuilder.createQuery(ParticipantInfoEntity.class);
-      participantBoRoot = participantBoCriteriaQuery.from(ParticipantInfoEntity.class);
-      participantBoPredicates[0] =
-          criteriaBuilder.equal(participantBoRoot.get("participantIdentifier"), participantId);
-      participantBoCriteriaQuery.select(participantBoRoot).where(participantBoPredicates);
-      participantBoList = session.createQuery(participantBoCriteriaQuery).getResultList();
-      if (!participantBoList.isEmpty()) {
-        participantBO = participantBoList.get(0);
-      }
-    } catch (Exception e) {
-      logger.error("CommonDaoImpl getParticipantInfoDetails() - error ", e);
+    if (!participantBoList.isEmpty()) {
+      participantBO = participantBoList.get(0);
     }
+
     logger.info("CommonDaoImpl getParticipantInfoDetails() - Ends ");
     return participantBO;
   }
