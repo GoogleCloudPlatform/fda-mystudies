@@ -14,6 +14,8 @@ import com.google.cloud.healthcare.fdamystudies.interceptor.RestTemplateAuthToke
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -27,6 +29,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = "com.google.cloud.healthcare.fdamystudies")
 public class CommonModuleConfiguration implements WebMvcConfigurer {
 
+  @Value("${cors.allowed.origins:}")
+  private String corsAllowedOrigins;
+  
   @Autowired
   private RestTemplateAuthTokenModifierInterceptor restTemplateAuthTokenModifierInterceptor;
 
@@ -46,16 +51,6 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
     return restTemplate;
   }
 
-  @Bean
-  public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
-      @Override
-      public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowedHeaders("*").allowedMethods("*");
-      }
-    };
-  }
-
   protected void addInterceptors(RestTemplate restTemplate) {
     List<ClientHttpRequestInterceptor> interceptors = restTemplate.getInterceptors();
     if (CollectionUtils.isEmpty(interceptors)) {
@@ -63,5 +58,16 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
     }
     interceptors.add(restTemplateAuthTokenModifierInterceptor);
     restTemplate.setInterceptors(interceptors);
+  }
+
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    if (StringUtils.isNotEmpty(corsAllowedOrigins)) {
+      registry
+          .addMapping("/**")
+          .allowedOrigins(corsAllowedOrigins.split(","))
+          .allowedMethods("*")
+          .allowedHeaders("*");
+    }
   }
 }
