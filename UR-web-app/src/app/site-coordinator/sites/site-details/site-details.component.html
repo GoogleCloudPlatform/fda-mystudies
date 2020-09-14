@@ -80,7 +80,7 @@
                       <div class="mr-sm">
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(template)"
+                          (click)="openModal(addEmail)"
                         >
                           Add Email
                         </button>
@@ -88,7 +88,7 @@
                       <div>
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(template1)"
+                          (click)="openModal(importParticipant)"
                         >
                           Import Email List
                         </button>
@@ -148,7 +148,7 @@
                   <div class="mr-sm">
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(template)"
+                      (click)="openModal(addEmail)"
                     >
                       Add Email
                     </button>
@@ -156,7 +156,7 @@
                   <div>
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(template1)"
+                      (click)="openModal(importParticipant)"
                     >
                       Import Email List
                     </button>
@@ -561,11 +561,11 @@
       </div>
     </div>
 
-    <ng-template #template>
+    <ng-template #addEmail>
       <div class="modal-body modal__body"></div>
     </ng-template>
 
-    <ng-template #template1>
+    <ng-template #importParticipant>
       <div class="modal-body modal__body"></div>
     </ng-template>
   </div>

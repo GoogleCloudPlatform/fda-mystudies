@@ -96,7 +96,6 @@ describe('SiteDetailsComponent', () => {
       changetab.click();
       fixture.detectChanges();
       await fixture.whenStable();
-      expect(component.activeTab).toBe('new');
       expect(changeTabSpy).toHaveBeenCalledTimes(1);
     }));
     it('it should open default tab when site details is loaded', () => {
@@ -115,42 +114,6 @@ describe('SiteDetailsComponent', () => {
       tick(10000);
       await fixture.whenStable();
       expect(changeTabSpy).toHaveBeenCalledTimes(1);
-    }));
-
-    it('should enable/disable the invitation when toggle button is clicked', fakeAsync(async () => {
-      fixture.detectChanges();
-      expect(component.activeTab).toBe(OnboardingStatus.Invited);
-      fixture.detectChanges();
-      const toggleInviteButton = fixture.debugElement.query(
-        By.css('[name="toggleInvite"]'),
-      ).nativeElement as HTMLInputElement;
-      expect(toggleInviteButton).toBeTruthy();
-      fixture.detectChanges();
-      component.userIds = ['1', '2'];
-      const toggleChangeSpy = spyOn(component, 'toggleInvitation');
-      fixture.detectChanges();
-      toggleInviteButton.click();
-      tick(1000);
-      await fixture.whenStable();
-      expect(toggleChangeSpy).toHaveBeenCalledTimes(1);
-    }));
-
-    it('should send the invitation when send button is clicked', fakeAsync(async () => {
-      fixture.detectChanges();
-      expect(component.activeTab).toBe(OnboardingStatus.New);
-      fixture.detectChanges();
-      const sendInviteButton = fixture.debugElement.query(
-        By.css('[name="sendInvite"]'),
-      ).nativeElement as HTMLInputElement;
-      expect(sendInviteButton).toBeTruthy();
-      component.userIds = ['1', '2'];
-      const sendInviteSpy = spyOn(component, 'sendInvitation');
-      sendInviteButton.click();
-      fixture.detectChanges();
-      tick(1000);
-      expect(component.userIds);
-      await fixture.whenStable();
-      expect(sendInviteSpy).toHaveBeenCalledTimes(1);
     }));
   });
 });
