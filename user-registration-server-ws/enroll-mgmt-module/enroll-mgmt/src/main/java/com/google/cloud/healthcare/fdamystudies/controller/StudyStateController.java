@@ -25,9 +25,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
-import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
@@ -75,36 +72,28 @@ public class StudyStateController {
     logger.info("StudyStateController updateStudyState() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    try {
-      if (studyStateReqBean != null && userId != null && !StringUtils.isEmpty(userId)) {
-        if (studyStateReqBean.getStudies() != null && !studyStateReqBean.getStudies().isEmpty()) {
-          List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
-          UserDetailsBO user = commonService.getUserInfoDetails(userId);
-          if (user != null) {
-            List<ParticipantStudiesBO> existParticipantStudies =
-                studyStateService.getParticipantStudiesList(user);
-            studyStateRespBean =
-                studyStateService.saveParticipantStudies(
-                    studiesBeenList, existParticipantStudies, userId, auditRequest);
-            if (studyStateRespBean != null
-                && studyStateRespBean
-                    .getMessage()
-                    .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-              studyStateRespBean.setCode(HttpStatus.OK.value());
-            }
-          } else {
-            MyStudiesUserRegUtil.getFailureResponse(
-                MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
-                response);
-            return null;
+
+    if (studyStateReqBean != null && userId != null && !StringUtils.isEmpty(userId)) {
+      if (studyStateReqBean.getStudies() != null && !studyStateReqBean.getStudies().isEmpty()) {
+        List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
+        UserDetailsBO user = commonService.getUserInfoDetails(userId);
+        if (user != null) {
+          List<ParticipantStudiesBO> existParticipantStudies =
+              studyStateService.getParticipantStudiesList(user);
+          studyStateRespBean =
+              studyStateService.saveParticipantStudies(
+                  studiesBeenList, existParticipantStudies, userId, auditRequest);
+          if (studyStateRespBean != null
+              && studyStateRespBean
+                  .getMessage()
+                  .equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+            studyStateRespBean.setCode(HttpStatus.OK.value());
           }
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
               MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
               MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
               response);
           return null;
         }
@@ -116,9 +105,15 @@ public class StudyStateController {
             response);
         return null;
       }
-    } catch (Exception e) {
-      logger.error("StudyStateController updateStudyState() - error ", e);
+    } else {
+      MyStudiesUserRegUtil.getFailureResponse(
+          MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
+          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+          response);
+      return null;
     }
+
     logger.info("StudyStateController updateStudyState() - Ends ");
     return new ResponseEntity<>(studyStateRespBean, HttpStatus.OK);
   }
@@ -130,10 +125,11 @@ public class StudyStateController {
       HttpServletRequest request) {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    logger.info("(C)...StudyStateController.getStudyState()...Started");
-    if (((userId.length() != 0) || StringUtils.isNotEmpty(userId))) {
-      StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
-      try {
+    try {
+      logger.info("(C)...StudyStateController.getStudyState()...Started");
+      if (((userId.length() != 0) || StringUtils.isNotEmpty(userId))) {
+        StudyStateResponse studyStateResponse = BeanUtil.getBean(StudyStateResponse.class);
+
         List<StudyStateBean> studies = studyStateService.getStudiesState(userId);
         studyStateResponse.setStudies(studies);
         studyStateResponse.setMessage(AppConstants.SUCCESS);
@@ -142,37 +138,22 @@ public class StudyStateController {
         enrollAuditEventHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_STUDY_INFO, auditRequest);
 
         return new ResponseEntity<>(studyStateResponse, HttpStatus.OK);
-      } catch (InvalidUserIdException e) {
+
+      } else {
         MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.STATUS_128.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
             MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.INVALID_USER_ID.getValue(),
+            MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
             response);
-
-        auditRequest.setUserId(userId);
-        enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
-
-        logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_USER_ID");
-        return null;
-      } catch (Exception e) {
-        MyStudiesUserRegUtil.getFailureResponse(
-            MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-            MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
-            response);
-
-        logger.info(
-            "(C)...StudyStateController.getStudyState()...Ended with Internal Server Error");
+        logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
         return null;
       }
-    } else {
-      MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-          response);
-      logger.info("(C)...StudyStateController.getStudyState()...Ended with INVALID_INPUT");
-      return null;
+
+    } catch (Exception e) {
+      auditRequest.setUserId(userId);
+      enrollAuditEventHelper.logEvent(READ_OPERATION_FAILED_FOR_STUDY_INFO, auditRequest);
+      logger.info("(C)...StudyStateController.getStudyState()...Ended with Internal Server Error");
+      throw e;
     }
   }
 
@@ -187,46 +168,38 @@ public class StudyStateController {
     logger.info("StudyStateController withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    try {
-      if (withdrawFromStudyBean != null) {
-        if (withdrawFromStudyBean.getParticipantId() != null
-            && !withdrawFromStudyBean.getParticipantId().isEmpty()
-            && withdrawFromStudyBean.getStudyId() != null
-            && !withdrawFromStudyBean.getStudyId().isEmpty()) {
 
-          auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
-          auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
+    if (withdrawFromStudyBean != null) {
+      if (withdrawFromStudyBean.getParticipantId() != null
+          && !withdrawFromStudyBean.getParticipantId().isEmpty()
+          && withdrawFromStudyBean.getStudyId() != null
+          && !withdrawFromStudyBean.getStudyId().isEmpty()) {
 
-          respBean =
-              studyStateService.withdrawFromStudy(
-                  withdrawFromStudyBean.getParticipantId(),
-                  withdrawFromStudyBean.getStudyId(),
-                  withdrawFromStudyBean.isDelete());
-          if (respBean != null) {
-            logger.info("StudyStateController withdrawFromStudy() - Ends ");
-            respBean.setCode(ErrorCode.EC_200.code());
-            respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
+        auditRequest.setParticipantId(withdrawFromStudyBean.getParticipantId());
+        auditRequest.setStudyId(withdrawFromStudyBean.getStudyId());
 
-            enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
+        respBean =
+            studyStateService.withdrawFromStudy(
+                withdrawFromStudyBean.getParticipantId(),
+                withdrawFromStudyBean.getStudyId(),
+                withdrawFromStudyBean.isDelete());
+        if (respBean != null) {
+          logger.info("StudyStateController withdrawFromStudy() - Ends ");
+          respBean.setCode(ErrorCode.EC_200.code());
+          respBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue());
 
-            return new ResponseEntity<>(respBean, HttpStatus.OK);
-          } else {
-            MyStudiesUserRegUtil.getFailureResponse(
-                MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-                MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-                response);
+          enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_SUCCEEDED, auditRequest);
 
-            enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_FAILED, auditRequest);
-
-            return null;
-          }
+          return new ResponseEntity<>(respBean, HttpStatus.OK);
         } else {
           MyStudiesUserRegUtil.getFailureResponse(
-              MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
-              MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.STATUS_104.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
+              MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
               response);
+
+          enrollAuditEventHelper.logEvent(WITHDRAWAL_FROM_STUDY_FAILED, auditRequest);
+
           return null;
         }
       } else {
@@ -237,28 +210,11 @@ public class StudyStateController {
             response);
         return null;
       }
-    } catch (UnAuthorizedRequestException e) {
-      logger.error("StudyStateController withdrawFromStudy() - error ", e);
-      MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.STATUS_108.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.UNAUTHORIZED.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.INVALID_CLIENTID_OR_SECRET_KEY.getValue(),
-          response);
-      return null;
-    } catch (InvalidRequestException e) {
-      logger.error("StudyStateController withdrawFromStudy() - error ", e);
+    } else {
       MyStudiesUserRegUtil.getFailureResponse(
           MyStudiesUserRegUtil.ErrorCodes.STATUS_102.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT.getValue(),
           MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG.getValue(),
-          response);
-      return null;
-    } catch (Exception e) {
-      logger.error("StudyStateController withdrawFromStudy() - error ", e);
-      MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.UNKNOWN.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.CONNECTION_ERROR_MSG.getValue(),
           response);
       return null;
     }

@@ -225,10 +225,9 @@ public class StudyStateControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isNotFound());
 
     verifyAuditEventCall(READ_OPERATION_FAILED_FOR_STUDY_INFO);
-
     verifyTokenIntrospectRequest();
   }
 
