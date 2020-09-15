@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
@@ -33,6 +34,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   private static final Logger logger = LoggerFactory.getLogger(EnrollmentTokenServiceImpl.class);
 
   @Override
+  @Transactional(readOnly = true)
   public boolean enrollmentTokenRequired(@NotNull String studyId) {
     logger.info("EnrollmentTokenServiceImpl hasParticipant() - Starts ");
     boolean isTokenRequired = false;
@@ -45,6 +47,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenServiceImpl hasParticipant() - Starts ");
     boolean hasParticipant = false;
@@ -58,6 +61,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
     boolean isValidStudyToken = false;
@@ -71,6 +75,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public boolean studyExists(@NotNull String studyId) {
     logger.info("EnrollmentTokenServiceImpl studyExists() - Starts ");
     boolean isStudyExist = false;
@@ -85,6 +90,7 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
   }
 
   @Override
+  @Transactional
   public EnrollmentResponseBean enrollParticipant(
       @NotNull String shortName,
       String tokenValue,

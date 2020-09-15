@@ -326,4 +326,22 @@ public class BaseMockIT {
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
+
+  protected void verifyMimeMessage(String toEmail, String fromEmail, String subject, String body)
+      throws MessagingException, IOException {
+    ArgumentCaptor<MimeMessage> mailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+    verify(emailSender, atLeastOnce()).send(mailCaptor.capture());
+
+    MimeMessage mail = mailCaptor.getValue();
+
+    assertThat(mail.getFrom()).containsExactly(new InternetAddress(fromEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.TO))
+        .containsExactly(new InternetAddress(toEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.CC)).isNull();
+
+    assertThat(mail.getSubject()).isEqualTo(subject);
+    assertThat(mail.getContent().toString()).contains(body);
+
+    assertThat(mail.getDataHandler().getContentType()).isEqualTo("text/html; charset=utf-8");
+  }
 }
