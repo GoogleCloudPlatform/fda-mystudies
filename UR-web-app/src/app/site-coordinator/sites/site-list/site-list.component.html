@@ -1,9 +1,9 @@
 <div class="max__w__1280">
   <div class="tab-content">
     <ng-container *ngIf="study$ | async as studies">
-      <div *ngIf="studies.length != 0">
+      <div>
         <div
-          *ngFor="let study of studies"
+          *ngFor="let study of studies.studies"
           class="bg__white cards box__shadow-cmn ml-none mr-none studies_row"
         >
           <div class="flex__ flex__row">
@@ -21,17 +21,20 @@
                   class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
                 >
                   <div class="col-xs-6 col-md-3 p-none">
-                    <span *ngIf="study.type != 'OPEN'">
+                    <span *ngIf="study.sites && study.type !== studyTypes.Open">
                       {{ study.sites.length | i18nPlural: messageMapping }}
                     </span>
-                    <span *ngIf="study.type == 'OPEN'">Open Study</span>
+                    <span *ngIf="study.type === studyTypes.Open">
+                      Open Study
+                    </span>
                   </div>
+
                   <div
                     class="col-xs-6 col-md-9 text-right p-none mb__display__none"
                   >
                     Enrolled /
-                    <span *ngIf="study.type != 'OPEN'">Invited</span>
-                    <span *ngIf="study.type == 'OPEN'">Target</span>
+                    <span *ngIf="study.type !== studyTypes.Open">Invited</span>
+                    <span *ngIf="study.type === studyTypes.Open">Target</span>
                   </div>
                 </div>
                 <div
@@ -41,23 +44,26 @@
                     *ngFor="let site of study.sites"
                     class="row display-flex-center progress__bar__row"
                     [routerLink]="
-                      study.type === 'OPEN'
+                      study.type === studyTypes.Open
                         ? ['/coordinator/studies', study.id]
                         : ['/coordinator/studies/sites/', site.id]
                     "
                   >
                     <div class="col-xs-12 col-md-8 p-none cursor__pointer">
-                      <span *ngIf="study.type != 'OPEN'" class="sites_row">
+                      <span
+                        *ngIf="study.type !== studyTypes.Open"
+                        class="sites_row"
+                      >
                         {{ site.name }}
                       </span>
-                      <span *ngIf="study.type == 'OPEN'">
+                      <span *ngIf="study.type === studyTypes.Open">
                         Enrollment Registry
                       </span>
                     </div>
                     <div class="col-xs-12 col-md-4 p-none lh__6">
                       <div class="prog">
                         <div class="pro__base">
-                          <div *ngIf="site.invitedCount != 0">
+                          <div *ngIf="site.invited">
                             <div
                               class="pro__top"
                               [style.width.%]="site.enrollmentPercentage"
@@ -70,17 +76,22 @@
                         [ngClass]="progressBarColor(site)"
                       >
                         <div>
-                          <span *ngIf="site.invitedCount != 0" class="enrolled">
-                            {{ site.enrolledCount }} / {{ site.invitedCount }}
+                          <span *ngIf="site.invited" class="enrolled">
+                            {{ site.enrolled }} / {{ site.invited }}
                           </span>
-                          <span *ngIf="site.invitedCount == 0">N/A</span>
+                          <span *ngIf="site.invited === 0">N/A</span>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div *ngIf="study.type != 'OPEN' && study.studyPermission == 2">
+              <div
+                *ngIf="
+                  study.type !== studyTypes.Open &&
+                  study.studyPermission === permission.ViewAndEdit
+                "
+              >
                 <button
                   name="add"
                   class="primary__btn add__site"
