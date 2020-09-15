@@ -26,21 +26,21 @@ export class AuthService {
   ) {}
 
   storeDefaultsValues(): void {
-    const codeVerifier = 'IIZLcGtmuoCgXhazHneHoXVMmPRM1tkjfUs2yJ4uXvv3nVswiv';
-    const codeChallenge = 'wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4';
-    sessionStorage.setItem('pkceVerifier', codeVerifier);
-    sessionStorage.setItem('pkceChallenge', codeChallenge);
+    const codeVerifier = this.strRandom(50);
+    const codeChallenge = window.btoa(codeVerifier);
     sessionStorage.setItem('tempRegId', '');
     if (!sessionStorage.hasOwnProperty('correlationId')) {
       sessionStorage.setItem('correlationId', uuidv4());
-      getPkce(43, (error, {verifier, challenge}) => {
-        if (!error) {
-          sessionStorage.setItem('pkceVerifier', verifier);
-          sessionStorage.setItem('pkceChallenge', challenge);
-        } else {
-          console.log(error);
-        }
-      });
+      sessionStorage.setItem('pkceVerifier', codeVerifier);
+      sessionStorage.setItem('pkceChallenge', codeChallenge);
+      // getPkce(43, (error, {verifier, challenge}) => {
+      //   if (!error) {
+      //     sessionStorage.setItem('pkceVerifier', verifier);
+      //     sessionStorage.setItem('pkceChallenge', challenge);
+      //   } else {
+      //     console.log(error);
+      //   }
+      // });
     }
   }
 
@@ -104,5 +104,15 @@ export class AuthService {
   logOutUser(): void {
     sessionStorage.clear();
     this.cookieService.deleteAll();
+  }
+  private strRandom(length: number) {
+    let result = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 }
