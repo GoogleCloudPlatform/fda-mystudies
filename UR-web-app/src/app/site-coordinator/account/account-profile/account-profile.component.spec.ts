@@ -70,17 +70,14 @@ describe('ChangePasswordComponent', () => {
 
   it('should update the form after component initialized', () => {
     fixture.detectChanges();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    expect(String(component.profileForm.value.firstName)).toEqual(
+    expect(component.profileForm.controls['email'].value).toEqual(
+      expectedProfiledataResposnse.email,
+    );
+    expect(component.profileForm.controls['firstName'].value).toEqual(
       expectedProfiledataResposnse.firstName,
     );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    expect(String(component.profileForm.value.lastName)).toEqual(
+    expect(component.profileForm.controls['lastName'].value).toEqual(
       expectedProfiledataResposnse.lastName,
-    );
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    expect(String(component.profileForm.value.email)).toEqual(
-      expectedProfiledataResposnse.email,
     );
   });
 

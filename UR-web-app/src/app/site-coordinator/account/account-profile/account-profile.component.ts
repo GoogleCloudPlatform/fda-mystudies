@@ -8,6 +8,7 @@ import {getMessage} from 'src/app/shared/success.codes.enum';
 import {UpdateProfile} from '../shared/profile.model';
 import {Validators} from '@angular/forms';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {StateService} from 'src/app/service/state.service';
 
 @Component({
   selector: 'account-profile',
@@ -23,6 +24,7 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly toastr: ToastrService,
+    private readonly userState: StateService,
   ) {
     super();
     this.profileForm = fb.group({
@@ -55,8 +57,7 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
         this.profileForm.patchValue(data);
       },
       (error) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        this.toastr.error(String(error.error.userMessage));
+        this.toastr.error(error);
       },
     );
   }
@@ -64,13 +65,14 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
   updateProfile(): void {
     if (!this.profileForm.valid) return;
     const profileToBeUpdated: UpdateProfile = {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      firstName: String(this.profileForm.value.firstName),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      lastName: String(this.profileForm.value.lastName),
+      firstName: String(this.profileForm.controls['firstName'].value),
+      lastName: String(this.profileForm.controls['lastName'].value),
     };
     this.accountService.updateUserProfile(profileToBeUpdated).subscribe(
       (successResponse: ApiResponse) => {
+        this.userState.setCurrentUserName(
+          this.profileForm.controls['firstName'].value,
+        );
         this.toastr.success(successResponse.message);
       },
       (errorResponse: ApiResponse) => {

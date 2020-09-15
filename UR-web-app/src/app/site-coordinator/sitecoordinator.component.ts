@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SearchService} from '../shared/search.service';
 import {SearchBar} from '../shared/search-bar';
-
+import {StateService} from '../service/state.service';
 @Component({
   selector: 'site-coordinator',
   templateUrl: './sitecoordinator.component.html',
@@ -12,8 +12,11 @@ export class SiteCoordinatorComponent implements OnInit {
   showSearchBar = false;
   filterQuery = '';
   searchBar: SearchBar | undefined;
-
-  constructor(private readonly searchService: SearchService) {}
+  userName = '';
+  constructor(
+    private readonly searchService: SearchService,
+    private readonly userState: StateService,
+  ) {}
 
   ngOnInit(): void {
     this.searchService.searchPlaceHolder$.subscribe(
@@ -22,6 +25,10 @@ export class SiteCoordinatorComponent implements OnInit {
         this.searchPlaceholder = updatedPlaceHolder;
       },
     );
+
+    this.userState.currentUserName$.subscribe((upadtedUsername) => {
+      this.userName = upadtedUsername;
+    });
   }
   public onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter' && this.searchBar) {
