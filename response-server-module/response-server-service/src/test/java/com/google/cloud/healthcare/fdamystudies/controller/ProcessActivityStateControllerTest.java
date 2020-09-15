@@ -40,7 +40,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 @AutoConfigureTestDatabase
 public class ProcessActivityStateControllerTest extends BaseMockIT {
   @Autowired ParticipantActivitiesRepository participantActivitiesRepository;

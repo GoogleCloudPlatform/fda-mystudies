@@ -37,7 +37,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
 @AutoConfigureTestDatabase
 public class ParticipantIdControllerTest extends BaseMockIT {
   @Autowired private ParticipantBoRepository repository;
