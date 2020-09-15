@@ -55,7 +55,6 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
   @Override
   public Authentication authenticate(Authentication authentication) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    UserBO userBO;
     final Integer MAX_ATTEMPTS = Integer.valueOf(propMap.get("max.login.attempts"));
     final Integer USER_LOCK_DURATION =
         Integer.valueOf(propMap.get("user.lock.duration.in.minutes"));
@@ -65,17 +64,15 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
           (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
       attributes.getRequest();
       String username = (String) authentication.getPrincipal();
-      if (StringUtils.isNotEmpty(username)) {
-        userBO = loginDAO.getValidUserByEmail(username.toLowerCase());
-        if (userBO == null) {
-          auditLogDAO.saveToAuditLog(
-              null,
-              null,
-              null,
-              FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_MESSAGE,
-              FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_DEATILS_MESSAGE,
-              "LimitLoginAuthenticationProvider - authenticate()");
-        }
+      UserBO userBO = StringUtils.isNotEmpty(username) ? loginDAO.getValidUserByEmail(username.toLowerCase()) : null;
+      if (userBO == null) {
+        auditLogDAO.saveToAuditLog(
+            null,
+            null,
+            null,
+            FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_MESSAGE,
+            FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_DEATILS_MESSAGE,
+            "LimitLoginAuthenticationProvider - authenticate()");
       }
       UserAttemptsBo userAttempts =
           loginDAO.getUserAttempts(authentication.getName().toLowerCase());
@@ -108,9 +105,11 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       // thrown
       // reset the user_attempts
       Authentication auth = super.authenticate(token);
-      loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
+      if (userBO != null) {
+        userBO.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+        loginDAO.updateUser(userBO);
+      }
       return auth;
-
     } catch (BadCredentialsException e) {
 
       // invalid login, update to user_attempts
