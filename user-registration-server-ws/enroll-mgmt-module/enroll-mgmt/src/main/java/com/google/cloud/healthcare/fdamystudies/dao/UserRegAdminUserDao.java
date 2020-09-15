@@ -9,9 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 
 public interface UserRegAdminUserDao {
 
-  UserDetailsBO getRecord(String userId) throws SystemException;
+  UserDetailsBO getRecord(String userId);
 }
