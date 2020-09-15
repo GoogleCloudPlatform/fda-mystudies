@@ -11,7 +11,7 @@ import {
   UpdateInviteResponse,
 } from '../../participant-details/participant-details';
 import {ApiResponse} from 'src/app/entity/api.response.model';
-
+import {OnboardingStatus} from 'src/app/shared/enums';
 @Injectable({
   providedIn: 'root',
 })
@@ -21,26 +21,30 @@ export class SiteDetailsService {
     private readonly entityService: EntityService<SiteParticipants>,
     private readonly http: HttpClient,
   ) {}
-
-  get(siteId: string, fetchingOption: string): Observable<SiteParticipants> {
-    const fetchingOptions =
-      fetchingOption === 'all'
-        ? ''
-        : fetchingOption === 'new'
-        ? '?onboardingStatus=N'
-        : fetchingOption === 'invited'
-        ? '?onboardingStatus=I'
-        : '?onboardingStatus=D';
-    return this.entityService.get(
-      `sites/${siteId}/participants` + fetchingOptions,
-    );
+  get(
+    siteId: string,
+    fetchingOption: OnboardingStatus,
+  ): Observable<SiteParticipants> {
+    const fetchingOptions = this.getInvitationType(fetchingOption);
+    if (fetchingOption !== OnboardingStatus.All) {
+      return this.entityService.get(
+        `sites/${encodeURIComponent(siteId)}/participants?onboardingStatus=` +
+          fetchingOptions,
+      );
+    } else {
+      return this.entityService.get(
+        `sites/${encodeURIComponent(siteId)}/participants`,
+      );
+    }
   }
+
   siteDecommission(siteId: string): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/decommission`,
       '',
     );
   }
+
   toggleInvitation(
     siteId: string,
     participantToBeUpdated: StatusUpdate,
@@ -71,5 +75,19 @@ export class SiteDetailsService {
       `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/participants`,
       modelEmail,
     );
+  }
+
+  private getInvitationType(fetchingOption: string): string {
+    switch (fetchingOption) {
+      case 'All':
+        return '';
+      case 'New':
+        return 'N';
+      case 'Invited':
+        return 'I';
+      case 'Disabled':
+        return 'D';
+    }
+    return '';
   }
 }

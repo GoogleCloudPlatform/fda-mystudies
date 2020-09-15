@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import {
   Study,
   StudyResponse,
@@ -9,7 +8,6 @@ import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus} from '../shared/enums';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const expectedSitesList = {
   studies: [
     {
@@ -60,7 +58,6 @@ export const expectedSitesList = {
   code: 'MSG-0018',
 } as StudyResponse;
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const expectedStudyList = {
   studies: [
     {
@@ -167,6 +164,7 @@ export const expectedStudiesDetails = {
       },
     ],
     countByStatus: {
+      /* eslint-disable @typescript-eslint/naming-convention */
       A: 34,
       D: 0,
       E: 1,

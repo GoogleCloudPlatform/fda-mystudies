@@ -73,14 +73,14 @@
                     <i class="fa fa-caret-down"></i>
                   </button>
                   <div
-                    [ngClass]="toggLeDisplay ? 'show' : ''"
+                    [ngClass]="toggleDisplay ? 'show' : ''"
                     class="dropdown-content participantSlideDown"
                   >
                     <div class="flex__justify__space-between mb-xs">
                       <div class="mr-sm">
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(template)"
+                          (click)="openModal(addEmail)"
                         >
                           Add Email
                         </button>
@@ -88,7 +88,7 @@
                       <div>
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(template1)"
+                          (click)="openModal(importParticipant)"
                         >
                           Import Email List
                         </button>
@@ -141,14 +141,14 @@
                 <i class="fa fa-caret-down"></i>
               </button>
               <div
-                [ngClass]="toggLeDisplay ? 'show' : ''"
+                [ngClass]="toggleDisplay ? 'show' : ''"
                 lass="dropdown-content participantSlideDown"
               >
                 <div class="flex__justify__space-between mb-xs">
                   <div class="mr-sm">
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(template)"
+                      (click)="openModal(addEmail)"
                     >
                       Add Email
                     </button>
@@ -156,7 +156,7 @@
                   <div>
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(template1)"
+                      (click)="openModal(importParticipant)"
                     >
                       Import Email List
                     </button>
@@ -188,8 +188,8 @@
       </div>
       <div>
         <ul class="nav nav-tabs">
-          <li [ngClass]="{active: activeTab == 'all'}">
-            <a data-toggle="tab" (click)="changeTab('all')">
+          <li [ngClass]="{active: activeTab == onBoardingStatus.All}">
+            <a data-toggle="tab" (click)="changeTab(onBoardingStatus.All)">
               All
               <span class="font11">
                 ({{
@@ -198,8 +198,12 @@
               </span>
             </a>
           </li>
-          <li [ngClass]="{active: activeTab == 'new'}">
-            <a class="classNew" data-toggle="tab" (click)="changeTab('new')">
+          <li [ngClass]="{active: activeTab == onBoardingStatus.New}">
+            <a
+              class="classNew"
+              data-toggle="tab"
+              (click)="changeTab(onBoardingStatus.New)"
+            >
               New
               <span class="font11">
                 ({{
@@ -208,8 +212,8 @@
               </span>
             </a>
           </li>
-          <li [ngClass]="{active: activeTab == 'invited'}">
-            <a data-toggle="tab" (click)="changeTab('invited')">
+          <li [ngClass]="{active: activeTab == onBoardingStatus.Invited}">
+            <a data-toggle="tab" (click)="changeTab(onBoardingStatus.Invited)">
               Invited
               <span class="font11">
                 ({{
@@ -218,8 +222,8 @@
               </span>
             </a>
           </li>
-          <li [ngClass]="{active: activeTab == 'disabled'}">
-            <a data-toggle="tab" (click)="changeTab('disabled')">
+          <li [ngClass]="{active: activeTab == onBoardingStatus.Disabled}">
+            <a data-toggle="tab" (click)="changeTab(onBoardingStatus.Disabled)">
               Disabled
               <span class="font11">
                 ({{
@@ -234,7 +238,10 @@
       <div class="sred">
         <div class="flex__ flex__justify__center">
           <div
-            *ngIf="activeTab == 'new' || activeTab == 'invited'"
+            *ngIf="
+              activeTab == onBoardingStatus.New ||
+              activeTab == onBoardingStatus.Invited
+            "
             class="mr-sm"
           >
             <button
@@ -248,9 +255,9 @@
           <div
             class="sendResendActiveClass"
             *ngIf="
-              activeTab == 'new' ||
-              activeTab == 'invited' ||
-              activeTab == 'disable'
+              activeTab == onBoardingStatus.New ||
+              activeTab == onBoardingStatus.Invited ||
+              activeTab == onBoardingStatus.Disabled
             "
           >
             <button
@@ -271,8 +278,8 @@
         >
           <div>
             <ul class="nav nav-tabs">
-              <li [ngClass]="{active: activeTab == 'all'}">
-                <a data-toggle="tab" (click)="changeTab('all')">
+              <li [ngClass]="{active: activeTab == onBoardingStatus.All}">
+                <a data-toggle="tab" (click)="changeTab(onBoardingStatus.All)">
                   All
                   <span class="font11">
                     ({{
@@ -282,11 +289,11 @@
                   </span>
                 </a>
               </li>
-              <li [ngClass]="{active: activeTab == 'new'}">
+              <li [ngClass]="{active: activeTab == onBoardingStatus.New}">
                 <a
                   class="classNew"
                   data-toggle="tab"
-                  (click)="changeTab('new')"
+                  (click)="changeTab(onBoardingStatus.New)"
                 >
                   New
                   <span class="font11">
@@ -297,8 +304,11 @@
                   </span>
                 </a>
               </li>
-              <li [ngClass]="{active: activeTab == 'invited'}">
-                <a data-toggle="tab" (click)="changeTab('invited')">
+              <li [ngClass]="{active: activeTab == onBoardingStatus.Invited}">
+                <a
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.Invited)"
+                >
                   Invited
                   <span class="font11">
                     ({{
@@ -308,8 +318,11 @@
                   </span>
                 </a>
               </li>
-              <li [ngClass]="{active: activeTab == 'disabled'}">
-                <a data-toggle="tab" (click)="changeTab('disabled')">
+              <li [ngClass]="{active: activeTab == onBoardingStatus.Disabled}">
+                <a
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.Disabled)"
+                >
                   Disabled
                   <span class="font11">
                     ({{
@@ -325,7 +338,10 @@
           <div class="pr-xlg">
             <div class="flex__justify__space-between mb-xs">
               <div
-                *ngIf="activeTab == 'new' || activeTab == 'invited'"
+                *ngIf="
+                  activeTab == onBoardingStatus.New ||
+                  activeTab == onBoardingStatus.Invited
+                "
                 class="mr-sm"
               >
                 <button
@@ -339,9 +355,9 @@
               <div
                 class="sendResendActiveClass"
                 *ngIf="
-                  activeTab == 'new' ||
-                  activeTab == 'invited' ||
-                  activeTab == 'disable'
+                  activeTab == onBoardingStatus.New ||
+                  activeTab == onBoardingStatus.Invited ||
+                  activeTab == onBoardingStatus.Disabled
                 "
               >
                 <button
@@ -357,7 +373,6 @@
         </div>
       </div>
       <div class="tab-content site__table">
-        <!-- <div *ngIf="activeTab == 'all'"> -->
         <div>
           <table
             class="table table-striped"
@@ -375,10 +390,10 @@
                 >
                   Sort By:
                 </span>
-                <th *ngIf="activeTab != 'new'">
+                <th *ngIf="activeTab != onBoardingStatus.New">
                   <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
                 </th>
-                <th *ngIf="activeTab == 'new'">
+                <th *ngIf="activeTab == onBoardingStatus.New">
                   <mfDefaultSorter by="name">
                     <div class="form-group mb-none">
                       <label for="css">Participant Email</label>
@@ -386,27 +401,27 @@
                   </mfDefaultSorter>
                 </th>
 
-                <th *ngIf="activeTab == 'all'">
+                <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
                     Onboarding Status
                   </mfDefaultSorter>
                 </th>
-                <th *ngIf="activeTab == 'invited'">
+                <th *ngIf="activeTab == onBoardingStatus.Invited">
                   <mfDefaultSorter by="invitedDate">
                     Last Invited On
                   </mfDefaultSorter>
                 </th>
-                <th *ngIf="activeTab == 'disabled'">
+                <th *ngIf="activeTab == onBoardingStatus.Disabled">
                   <mfDefaultSorter by="invitedDate">
                     Date Disabled
                   </mfDefaultSorter>
                 </th>
-                <th *ngIf="activeTab != 'new'">
+                <th *ngIf="activeTab != onBoardingStatus.New">
                   <mfDefaultSorter by="enrollmentStatus">
                     Enrollment Status
                   </mfDefaultSorter>
                 </th>
-                <th *ngIf="activeTab == 'all'">
+                <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="enrollmentDate">
                     Enrollment Date
                   </mfDefaultSorter>
@@ -417,14 +432,14 @@
               <tr *ngFor="let participant of mf.data">
                 <!-- for all Selected -->
                 <td
-                  *ngIf="activeTab == 'all'"
+                  *ngIf="activeTab == onBoardingStatus.All"
                   (click)="redirectParticipant(participant.id)"
                 >
                   <span class="no_st_en">{{ participant.email }}</span>
                 </td>
 
                 <!-- for New Selected -->
-                <td *ngIf="activeTab == 'new'">
+                <td *ngIf="activeTab == onBoardingStatus.New">
                   <div>
                     <div class="form-group mb-none">
                       <input
@@ -443,7 +458,7 @@
                     </div>
                   </div>
                 </td>
-                <td *ngIf="activeTab == 'all'">
+                <td *ngIf="activeTab == onBoardingStatus.All">
                   <div
                     [ngClass]="{
                       participant__label:
@@ -459,7 +474,7 @@
                 </td>
 
                 <!-- For Invited  -->
-                <td *ngIf="activeTab == 'invited'">
+                <td *ngIf="activeTab == onBoardingStatus.Invited">
                   <div>
                     <div class="form-group mb-none">
                       <div
@@ -489,11 +504,11 @@
                     </div>
                   </div>
                 </td>
-                <td *ngIf="activeTab == 'invited'">
+                <td *ngIf="activeTab == onBoardingStatus.Invited">
                   {{ participant.invitedDate }}
                 </td>
                 <!-- For Disabled -->
-                <td *ngIf="activeTab === 'disabled'">
+                <td *ngIf="activeTab === onBoardingStatus.Disabled">
                   <div>
                     <div class="form-group mb-none">
                       <input
@@ -512,11 +527,11 @@
                     </div>
                   </div>
                 </td>
-                <td *ngIf="activeTab === 'disabled'">
+                <td *ngIf="activeTab === onBoardingStatus.Disabled">
                   {{ participant.invitedDate }}
                 </td>
                 <!-- Belongs to all and invited and disabled  -->
-                <td *ngIf="activeTab != 'new'">
+                <td *ngIf="activeTab != onBoardingStatus.New">
                   <div
                     [ngClass]="{
                       participant__label:
@@ -529,7 +544,7 @@
                   </div>
                 </td>
                 <!-- Belongs to all -->
-                <td *ngIf="activeTab == 'all'">
+                <td *ngIf="activeTab == onBoardingStatus.All">
                   {{ participant.enrollmentDate }}
                 </td>
               </tr>
@@ -546,17 +561,11 @@
       </div>
     </div>
 
-    <ng-template #template>
-      <div class="modal-body modal__body">
-        <app-add-email
-          [siteId]="siteId"
-          (addEmail)="onSucceedAddEmail()"
-          (cancel)="modalRef.hide()"
-        ></app-add-email>
-      </div>
+    <ng-template #addEmail>
+      <div class="modal-body modal__body"></div>
     </ng-template>
 
-    <ng-template #template1>
+    <ng-template #importParticipant>
       <div class="modal-body modal__body"></div>
     </ng-template>
   </div>
