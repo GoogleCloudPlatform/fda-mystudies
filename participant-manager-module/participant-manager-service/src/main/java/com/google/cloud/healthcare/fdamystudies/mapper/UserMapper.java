@@ -59,7 +59,6 @@ public final class UserMapper {
 
   public static UserRegAdminEntity fromUpdateUserRequest(
       UserRequest userRequest, UserRegAdminEntity adminDetails) {
-    adminDetails.setEmail(userRequest.getEmail());
     adminDetails.setFirstName(userRequest.getFirstName());
     adminDetails.setLastName(userRequest.getLastName());
     adminDetails.setSuperAdmin(userRequest.isSuperAdmin());

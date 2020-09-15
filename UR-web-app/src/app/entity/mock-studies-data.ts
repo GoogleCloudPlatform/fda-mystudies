@@ -195,7 +195,6 @@ export const expectedTargetEnrollment: UpdateTargetEnrollmentRequest = {
 };
 export const expectedSiteResponse = {
   message: 'New site added successfully',
-  code: 'MSG_001',
 } as ApiResponse;
 
 export const expectedNewSite = {
