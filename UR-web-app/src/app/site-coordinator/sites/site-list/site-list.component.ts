@@ -7,8 +7,6 @@ import {Site} from '../../studies/shared/site.model';
 import {BsModalService, BsModalRef} from 'ngx-bootstrap/modal';
 import {StudiesService} from '../../studies/shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
-import {Permission} from 'src/app/shared/permission-enums';
-import {StudyType} from 'src/app/shared/enums';
 
 @Component({
   selector: 'app-site-list',
@@ -20,8 +18,6 @@ export class SiteListComponent implements OnInit {
   study$: Observable<StudyResponse> = of();
   manageStudiesBackup = {} as StudyResponse;
   study = {} as Study;
-  permission = Permission;
-  studyTypes = StudyType;
   messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',

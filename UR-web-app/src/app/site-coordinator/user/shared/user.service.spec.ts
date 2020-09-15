@@ -94,20 +94,4 @@ describe('UserService', () => {
       );
     expect(httpServiceSpyObj.post).toHaveBeenCalledTimes(1);
   });
-
-  it('should update the expected user data', () => {
-    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
-      put: of(addUserResponse),
-    });
-    service = new UserService(httpServiceSpyObj);
-
-    service
-      .update(addUserRequest, addUserRequest.id)
-      .subscribe(
-        (successResponse: ApiResponse) =>
-          expect(successResponse).toEqual(addUserResponse),
-        fail,
-      );
-    expect(httpServiceSpyObj.put).toHaveBeenCalledTimes(1);
-  });
 });

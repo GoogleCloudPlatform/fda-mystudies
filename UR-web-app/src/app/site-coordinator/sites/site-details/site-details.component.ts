@@ -19,16 +19,6 @@ import {OnboardingStatus} from 'src/app/shared/enums';
 })
 export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
-  query$ = new BehaviorSubject('');
-  siteParticipants$: Observable<SiteParticipants> = of();
-  siteId = '';
-  sendResend = '';
-  enableDisable = '';
-  toggleDisplay = false;
-  userIds: string[] = [];
-  onBoardingStatus = OnboardingStatus;
-  activeTab = OnboardingStatus.All;
-
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -39,8 +29,17 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   ) {
     super();
   }
-  openModal(templateRef: TemplateRef<unknown>): void {
-    this.modalRef = this.modalService.show(templateRef);
+  query$ = new BehaviorSubject('');
+  siteParticipants$: Observable<SiteParticipants> = of();
+  siteId = '';
+  sendResend = '';
+  enableDisable = '';
+  activeTab = 'all';
+  toggLeDisplay = false;
+  arrayOfuserId: string[] = [];
+  onBoardingStatus = OnboardingStatus;
+  openModal(templateref: TemplateRef<unknown>): void {
+    this.modalRef = this.modalService.show(templateref);
   }
   ngOnInit(): void {
     this.subs.add(
@@ -48,19 +47,22 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
         if (params.siteId) {
           this.siteId = params.siteId as string;
         }
-        this.fetchSiteParticipant(OnboardingStatus.All);
+        this.fetchSiteParticipant('all');
       }),
     );
   }
   toggleParticipant(): void {
-    this.toggleDisplay = !this.toggleDisplay;
+    if (this.toggLeDisplay) {
+      this.toggLeDisplay = false;
+    } else this.toggLeDisplay = true;
   }
-  fetchSiteParticipant(fetchingOption: OnboardingStatus): void {
+  fetchSiteParticipant(fetcingOption: string): void {
     this.siteParticipants$ = combineLatest(
-      this.particpantDetailService.get(this.siteId, fetchingOption),
+      this.particpantDetailService.get(this.siteId, fetcingOption),
       this.query$,
     ).pipe(
       map(([siteDetails, query]) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         siteDetails.participantRegistryDetail.registryParticipants = siteDetails.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),
@@ -72,17 +74,16 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   search(query: string): void {
     this.query$.next(query.trim());
   }
-  changeTab(tab: OnboardingStatus): void {
-    this.sendResend =
-      tab === OnboardingStatus.New ? 'Send Invitation' : 'Resend Invitation';
+  changeTab(tab: string): void {
+    this.sendResend = tab === 'new' ? 'Send Invitation' : 'Resend Invitation';
     this.enableDisable =
-      tab === OnboardingStatus.New || tab === OnboardingStatus.Invited
+      tab === 'new' || tab === 'inivited'
         ? 'Disable Invitation'
         : 'Enable Invitation';
     this.activeTab = tab;
-    this.toggleDisplay = false;
-    this.userIds = [];
-    this.fetchSiteParticipant(tab);
+    this.toggLeDisplay = false;
+    this.arrayOfuserId.splice(0, this.arrayOfuserId.length);
+    this.fetchSiteParticipant(this.activeTab);
   }
   redirectParticipant(userId: string): void {
     void this.router.navigate(['/user/participantDetail', userId]);
@@ -90,10 +91,13 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   rowCheckBoxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
-      this.userIds.push(checkbox.id);
+      this.arrayOfuserId.push(checkbox.id);
     } else {
-      this.userIds = this.userIds.filter((item) => item !== checkbox.id);
+      this.arrayOfuserId = this.arrayOfuserId.filter(
+        (item) => item !== checkbox.id,
+      );
     }
+    console.log(this.arrayOfuserId);
   }
   decommissionSite(): void {
     this.subs.add(
@@ -110,12 +114,12 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
     );
   }
   sendInvitation(): void {
-    if (this.userIds.length > 0) {
-      if (this.userIds.length > 11) {
+    if (this.arrayOfuserId.length > 0) {
+      if (this.arrayOfuserId.length > 11) {
         this.toastr.error('Please select less than 10 participants');
       } else {
         const sendInvitations = {
-          ids: this.userIds,
+          ids: this.arrayOfuserId,
         };
         this.subs.add(
           this.particpantDetailService
@@ -125,26 +129,28 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(OnboardingStatus.Invited);
+                this.changeTab('invited');
               }
             }),
         );
       }
     } else {
-      this.toastr.error('Please select at least one participant');
+      this.toastr.error(
+        'Please select atleast one participant for sending invitation',
+      );
     }
   }
-
   toggleInvitation(): void {
-    const MAXIMUM_USER_COUNT = 10;
-    if (this.userIds.length > 0) {
-      if (this.userIds.length > MAXIMUM_USER_COUNT) {
+    if (this.arrayOfuserId.length > 0) {
+      if (this.arrayOfuserId.length > 11) {
         this.toastr.error('Please select less than 10 participants');
       } else {
         const statusUpdate =
-          this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
+          this.activeTab === 'Enable' || this.activeTab === 'Invited'
+            ? 'N'
+            : 'D';
         const invitationUpdate = {
-          ids: this.userIds,
+          ids: this.arrayOfuserId,
           status: statusUpdate,
         };
         this.subs.add(
@@ -155,27 +161,25 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(
-                  this.activeTab === OnboardingStatus.Disabled
-                    ? OnboardingStatus.Disabled
-                    : OnboardingStatus.New,
-                );
+                this.changeTab(status === 'enable' ? 'new' : 'disabled');
               }
             }),
         );
       }
     } else {
-      this.toastr.error('Please select at least one participant');
+      this.toastr.error(
+        status === '0'
+          ? 'Please select atleast one participant to disable'
+          : 'Please select atleast one participant for to enable',
+      );
     }
   }
-
   onSucceedAddEmail(): void {
     this.modalRef.hide();
-    this.fetchSiteParticipant(OnboardingStatus.New);
+    this.fetchSiteParticipant(this.activeTab);
   }
-
-  onFileImportSuccess(): void {
-    this.fetchSiteParticipant(OnboardingStatus.New);
+  onSucceedFileImport(): void {
+    this.changeTab('new');
     this.modalRef.hide();
   }
 }

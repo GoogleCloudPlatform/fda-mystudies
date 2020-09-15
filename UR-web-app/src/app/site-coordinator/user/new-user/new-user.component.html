@@ -23,6 +23,7 @@
               type="text"
               class="form-control"
               id="fname"
+              minlength="3"
               maxlength="50"
               [(ngModel)]="user.firstName"
               name="firstName"
@@ -56,6 +57,7 @@
             <label for="lname">Last Name</label>
             <input
               type="text"
+              minlength="2"
               maxlength="50"
               [(ngModel)]="user.lastName"
               name="lastName"
@@ -127,12 +129,12 @@
             <div class="custom__labels">
               <input
                 type="checkbox"
-                id="role"
+                id="Users"
                 [(ngModel)]="user.superAdmin"
                 name="superAdminCheckBox"
                 #superAdminCheckBox="ngModel"
               />
-              <label class="mt-xs" for="role">
+              <label class="mt-xs" for="Users">
                 Super Admin
                 <span
                   class="tool"

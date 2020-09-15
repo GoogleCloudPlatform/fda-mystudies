@@ -21,20 +21,18 @@
                   class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
                 >
                   <div class="col-xs-6 col-md-3 p-none">
-                    <span *ngIf="study.sites && study.type !== studyTypes.Open">
+                    <span *ngIf="study.sites && study.type != 'OPEN'">
                       {{ study.sites.length | i18nPlural: messageMapping }}
                     </span>
-                    <span *ngIf="study.type === studyTypes.Open">
-                      Open Study
-                    </span>
+                    <span *ngIf="study.type == 'OPEN'">Open Study</span>
                   </div>
 
                   <div
                     class="col-xs-6 col-md-9 text-right p-none mb__display__none"
                   >
                     Enrolled /
-                    <span *ngIf="study.type !== studyTypes.Open">Invited</span>
-                    <span *ngIf="study.type === studyTypes.Open">Target</span>
+                    <span *ngIf="study.type != 'OPEN'">Invited</span>
+                    <span *ngIf="study.type == 'OPEN'">Target</span>
                   </div>
                 </div>
                 <div
@@ -44,19 +42,16 @@
                     *ngFor="let site of study.sites"
                     class="row display-flex-center progress__bar__row"
                     [routerLink]="
-                      study.type === studyTypes.Open
+                      study.type === 'OPEN'
                         ? ['/coordinator/studies', study.id]
                         : ['/coordinator/studies/sites/', site.id]
                     "
                   >
                     <div class="col-xs-12 col-md-8 p-none cursor__pointer">
-                      <span
-                        *ngIf="study.type !== studyTypes.Open"
-                        class="sites_row"
-                      >
+                      <span *ngIf="study.type != 'OPEN'" class="sites_row">
                         {{ site.name }}
                       </span>
-                      <span *ngIf="study.type === studyTypes.Open">
+                      <span *ngIf="study.type == 'OPEN'">
                         Enrollment Registry
                       </span>
                     </div>
@@ -86,12 +81,7 @@
                   </div>
                 </div>
               </div>
-              <div
-                *ngIf="
-                  study.type !== studyTypes.Open &&
-                  study.studyPermission === permission.ViewAndEdit
-                "
-              >
+              <div *ngIf="study.type != 'OPEN' && study.studyPermission == 2">
                 <button
                   name="add"
                   class="primary__btn add__site"

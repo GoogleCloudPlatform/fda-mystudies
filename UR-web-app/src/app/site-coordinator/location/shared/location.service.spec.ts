@@ -56,10 +56,14 @@ describe('LocationService', () => {
   });
 
   it('should return Locations list for the site creation', () => {
+    const entityServicespy = jasmine.createSpyObj<EntityService<Location>>(
+      'EntityService',
+      {getCollection: of(expectedResult.expectedLocations)},
+    );
     const httpServicespyobj = jasmine.createSpyObj<HttpClient>('HttpClient', {
       get: of(expectedResult.expectedLocations),
     });
-    locationService = new LocationService(entityServiceSpy, httpServicespyobj);
+    locationService = new LocationService(entityServicespy, httpServicespyobj);
 
     locationService
       .getLocationsForSiteCreation(expectedResult.expectedLocationId.locationId)

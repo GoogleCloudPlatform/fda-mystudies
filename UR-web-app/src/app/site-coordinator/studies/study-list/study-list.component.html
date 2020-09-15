@@ -28,13 +28,11 @@
                     class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
                   >
                     <div class="col-xs-6 col-md-12 p-none">
-                      <span *ngIf="study.type !== studyTypes.Open">
+                      <span *ngIf="study.type != 'OPEN'">
                         {{ study.totalSitesCount }}
                         sites
                       </span>
-                      <span *ngIf="study.type === studyTypes.Open">
-                        Open Study
-                      </span>
+                      <span *ngIf="study.type == 'OPEN'">Open Study</span>
                     </div>
                   </div>
                 </div>
@@ -72,12 +70,8 @@
                     <span *ngIf="study.invited == 0">N/A</span>
                   </div>
                   <div class="text-grey__sm">
-                    <span *ngIf="study.type !== studyTypes.Open">
-                      Enrolled / Invited
-                    </span>
-                    <span *ngIf="study.type === studyTypes.Open">
-                      Enrolled / Target
-                    </span>
+                    <span *ngIf="study.type != 'OPEN'">Enrolled / Invited</span>
+                    <span *ngIf="study.type == 'OPEN'">Enrolled / Target</span>
                   </div>
                 </div>
               </div>

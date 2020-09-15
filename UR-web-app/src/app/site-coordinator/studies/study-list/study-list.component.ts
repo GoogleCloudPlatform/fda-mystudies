@@ -7,7 +7,6 @@ import {of} from 'rxjs';
 import {Study, StudyResponse} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
-import {StudyType} from 'src/app/shared/enums';
 @Component({
   selector: 'app-study-list',
   templateUrl: './study-list.component.html',
@@ -18,7 +17,6 @@ export class StudyListComponent implements OnInit {
   studyList$: Observable<StudyResponse> = of();
   studies: Study[] = [];
   manageStudiesBackup = {} as StudyResponse;
-  studyTypes = StudyType;
 
   constructor(
     private readonly studiesService: StudiesService,

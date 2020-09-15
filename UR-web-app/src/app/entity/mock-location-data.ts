@@ -12,17 +12,15 @@ export const expectedLocation = {
   status: 0,
 } as Location;
 
-export const expectedLocations = {
-  locations: [
-    {
-      locationId: '2',
-      status: 1,
-      customId: 'customIDlocation',
-      name: 'Location Name',
-      description: 'location Description',
-    },
-  ],
-} as ManageLocations;
+export const expectedLocations = [
+  {
+    locationId: '2',
+    status: 1,
+    customId: 'customIDlocation',
+    name: 'Location Name',
+    description: 'location Description',
+  },
+] as Location[];
 
 export const updateList = {
   customId: 'customid123',
@@ -61,9 +59,10 @@ export const expectedResponse = {
   message: 'Location updated successfully',
 } as Location;
 
-export const expectLocationDropdown = {
-  locations: [{name: 'Location 1'}, {name: 'Location 2'}],
-} as ManageLocations;
+export const expectLocationDropdown = [
+  {name: 'Location 1'},
+  {name: 'Location 2'},
+] as Location[];
 
 export const updateLocation = {
   name: 'name -123-updated0',

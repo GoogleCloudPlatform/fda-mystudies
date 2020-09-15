@@ -12,7 +12,7 @@ import {SiteParticipants} from '../shared/site-detail.model';
 import * as expectedResult from '../../../entity/mock-participant-data';
 import {ApiResponse} from '../../../entity/api.response.model';
 import {expectedSiteParticipantDetails} from '../../../entity/mock-sitedetail-data';
-import {OnboardingStatus} from 'src/app/shared/enums';
+
 describe('SiteDetailsService', () => {
   let participantDetailsService: SiteDetailsService;
   let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
@@ -43,7 +43,7 @@ describe('SiteDetailsService', () => {
       httpServiceSpyObj,
     );
     participantDetailsService
-      .get(expectedResult.expectedSiteId.siteId, OnboardingStatus.All)
+      .get(expectedResult.expectedSiteId.siteId, 'all')
       .subscribe(
         (participant) =>
           expect(participant).toEqual(
