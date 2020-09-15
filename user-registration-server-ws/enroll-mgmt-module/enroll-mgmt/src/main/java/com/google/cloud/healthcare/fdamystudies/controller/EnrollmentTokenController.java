@@ -8,6 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_ENROLLMENT_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
@@ -40,12 +46,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_ENROLLMENT_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
 
 @RestController
 public class EnrollmentTokenController {

@@ -23,14 +23,15 @@ public enum ApiEndpoint {
 
   WITHDRAW("http://localhost:8004/mystudies-response-server/participant/withdraw"),
 
-  GET_ACTIVITY_STATE(
-      "http://localhost:8004/mystudies-response-server/participant/get-activity-state"),
+  STUDYMETADATA("http://localhost:8004/mystudies-response-server/studymetadata"),
+
+  ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add"),
 
   UPDATE_ACTIVITY_STATE(
       "http://localhost:8004/mystudies-response-server/participant/update-activity-state"),
 
-  STUDYMETADATA("http://localhost:8004/mystudies-response-server/studymetadata");
-
+  GET_ACTIVITY_STATE(
+      "http://localhost:8004/mystudies-response-server/participant/get-activity-state");
   private String url;
 
   private ApiEndpoint(String url) {
