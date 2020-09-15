@@ -295,10 +295,7 @@ public class SiteServiceImpl implements SiteService {
           participantStudyRepository.findByParticipantRegistrySiteId(
               participantRegistrySite.getId());
 
-      if (participantStudy.isPresent()
-          && ENROLLED_STATUS.equals(participantStudy.get().getStatus())) {
-        return ErrorCode.ENROLLED_PARTICIPANT;
-      } else {
+      if (participantStudy.isPresent()) {
         return ErrorCode.EMAIL_EXISTS;
       }
     }
@@ -738,10 +735,10 @@ public class SiteServiceImpl implements SiteService {
     templateArgs.put("study name", siteEntity.getStudy().getName());
     templateArgs.put("org name", appPropertyConfig.getOrgName());
     templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
-    templateArgs.put("contact email address", appPropertyConfig.getFromEmailAddress());
+    templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
-            appPropertyConfig.getFromEmailAddress(),
+            appPropertyConfig.getFromEmail(),
             new String[] {participantRegistrySiteEntity.getEmail()},
             null,
             null,

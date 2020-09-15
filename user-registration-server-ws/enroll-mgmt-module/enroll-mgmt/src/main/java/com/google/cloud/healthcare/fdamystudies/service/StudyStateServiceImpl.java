@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudyStateServiceImpl implements StudyStateService {
@@ -59,6 +60,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   @Override
+  @Transactional(readOnly = true)
   public List<ParticipantStudiesBO> getParticipantStudiesList(UserDetailsBO user) {
     logger.info("StudyStateServiceImpl getParticipantStudiesList() - Starts ");
 
@@ -70,6 +72,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
+  @Transactional
   public StudyStateRespBean saveParticipantStudies(
       List<StudiesBean> studiesBeenList,
       List<ParticipantStudiesBO> existParticipantStudies,
@@ -192,7 +195,9 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
-  public List<StudyStateBean> getStudiesState(String userId) {
+  @Transactional(readOnly = true)
+  public List<StudyStateBean> getStudiesState(String userId)
+      throws SystemException, InvalidUserIdException /*, NoStudyEnrolledException*/ {
     logger.info("(Service)...StudyStateServiceImpl.getStudiesState()...Started");
 
     List<StudyStateBean> serviceResponseList = new ArrayList<>();
@@ -238,6 +243,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public WithDrawFromStudyRespBean withdrawFromStudy(
       String participantId, String studyId, boolean delete) {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");

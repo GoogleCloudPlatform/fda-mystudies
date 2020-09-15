@@ -33,7 +33,9 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.annotation.DirtiesContext;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Autowired private EnrollmentTokenController controller;
