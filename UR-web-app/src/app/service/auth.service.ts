@@ -13,7 +13,8 @@ import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
 import getPkce from 'oauth-pkce';
 import {Observable} from 'rxjs';
-
+import sha256 from 'crypto-js/sha256';
+import Base64 from 'crypto-js/enc-base64';
 @Injectable({providedIn: 'root'})
 export class AuthService {
   constructor(
@@ -27,7 +28,8 @@ export class AuthService {
 
   storeDefaultsValues(): void {
     const codeVerifier = this.strRandom(50);
-    const codeChallenge = window.btoa(codeVerifier);
+    const codeChallenge = this.generateCodeChallenge(codeVerifier);
+
     sessionStorage.setItem('tempRegId', '');
     if (!sessionStorage.hasOwnProperty('correlationId')) {
       sessionStorage.setItem('correlationId', uuidv4());
@@ -114,5 +116,12 @@ export class AuthService {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+  }
+  generateCodeChallenge(codeVerifier: string): string {
+    const codeVerifierHash = sha256(codeVerifier).toString(Base64);
+    return codeVerifierHash
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
   }
 }

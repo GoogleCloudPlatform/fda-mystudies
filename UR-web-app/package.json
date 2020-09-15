@@ -35,6 +35,7 @@
     "bootstrap": "^4.3.1",
     "classlist.js": "1.1.20150312",
     "core-js": "^2.5.4",
+    "crypto-js": "^4.0.0",
     "glyphicons": "^0.2.0",
     "jquery": "^3.4.1",
     "ng-connection-service": "^1.0.4",
@@ -53,10 +54,16 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.901.1",
+    "@angular-eslint/builder": "0.0.1-alpha.32",
+    "@angular-eslint/eslint-plugin": "0.0.1-alpha.32",
+    "@angular-eslint/eslint-plugin-template": "0.0.1-alpha.32",
+    "@angular-eslint/schematics": "0.0.1-alpha.32",
+    "@angular-eslint/template-parser": "0.0.1-alpha.32",
     "@angular/cli": "^9.1.1",
     "@angular/compiler-cli": "^9.1.1",
     "@angular/language-service": "^9.1.1",
     "@prettier/plugin-xml": "^0.7.2",
+    "@types/crypto-js": "^3.1.47",
     "@types/jasmine": "^3.5.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
@@ -77,11 +84,6 @@
     "prettier": "^2.0.5",
     "protractor": "~5.4.4",
     "ts-node": "~7.0.0",
-    "typescript": "~3.8.3",
-    "@angular-eslint/builder": "0.0.1-alpha.32",
-    "@angular-eslint/eslint-plugin": "0.0.1-alpha.32",
-    "@angular-eslint/eslint-plugin-template": "0.0.1-alpha.32",
-    "@angular-eslint/schematics": "0.0.1-alpha.32",
-    "@angular-eslint/template-parser": "0.0.1-alpha.32"
+    "typescript": "~3.8.3"
   }
 }
