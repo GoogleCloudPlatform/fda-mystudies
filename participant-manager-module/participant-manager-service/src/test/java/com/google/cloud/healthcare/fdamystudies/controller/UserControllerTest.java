@@ -22,9 +22,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -66,7 +63,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -244,8 +240,6 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
 
@@ -255,6 +249,11 @@ public class UserControllerTest extends BaseMockIT {
     verifyAuditEventCall(auditEventMap, NEW_USER_CREATED, NEW_USER_INVITATION_EMAIL_SENT);
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    String subject = getMailSubject();
+    String body = getMailBody(optUserRegAdminEntity.get());
+    verifyMimeMessage(
+        TestConstants.USER_EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
 
     // Step 3: verify saved values
     assertAdminUser(userId, true);
@@ -289,8 +288,6 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.message").value(MessageCode.ADD_NEW_USER_SUCCESS.getMessage()))
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
-
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
@@ -339,8 +336,6 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
 
@@ -386,8 +381,6 @@ public class UserControllerTest extends BaseMockIT {
             .andExpect(jsonPath("$.message").value(MessageCode.ADD_NEW_USER_SUCCESS.getMessage()))
             .andExpect(jsonPath("$.userId", notNullValue()))
             .andReturn();
-
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
