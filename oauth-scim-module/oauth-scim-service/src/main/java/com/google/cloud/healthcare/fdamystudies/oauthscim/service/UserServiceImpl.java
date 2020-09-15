@@ -106,9 +106,7 @@ public class UserServiceImpl implements UserService {
         repository.findByAppIdAndEmail(userRequest.getAppId(), userRequest.getEmail());
 
     if (user.isPresent()) {
-      UserResponse userResponse = new UserResponse(ErrorCode.EMAIL_EXISTS);
-      logger.exit(String.format("error=%s", ErrorCode.EMAIL_EXISTS));
-      return userResponse;
+      throw new ErrorCodeException(ErrorCode.EMAIL_EXISTS);
     }
 
     // save user account details
@@ -179,15 +177,23 @@ public class UserServiceImpl implements UserService {
             resetPasswordRequest.getAppId(), resetPasswordRequest.getEmail());
 
     if (!entity.isPresent()) {
-      logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
-      return new ResetPasswordResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    UserEntity userEntity = entity.get();
+    if (userEntity.getStatus() == UserAccountStatus.PENDING_CONFIRMATION.getStatus()) {
+      throw new ErrorCodeException(ErrorCode.ACCOUNT_NOT_VERIFIED);
+    }
+
+    if (userEntity.getStatus() == UserAccountStatus.DEACTIVATED.getStatus()) {
+      throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
     }
 
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-      UserEntity userEntity = entity.get();
+
       ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
       setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
       userEntity.setUserInfo(userInfo);
@@ -201,7 +207,7 @@ public class UserServiceImpl implements UserService {
     logger.exit(
         String.format(
             "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
-    return new ResetPasswordResponse(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
+    throw new ErrorCodeException(ErrorCode.EMAIL_SEND_FAILED_EXCEPTION);
   }
 
   private EmailResponse sendPasswordResetEmail(
@@ -228,11 +234,11 @@ public class UserServiceImpl implements UserService {
     Optional<UserEntity> optionalEntity = repository.findByUserId(userRequest.getUserId());
 
     if (!optionalEntity.isPresent()) {
-      logger.exit(ErrorCode.USER_NOT_FOUND);
-      return new ChangePasswordResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     UserEntity userEntity = optionalEntity.get();
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     ArrayNode passwordHistory =
         userInfo.hasNonNull(PASSWORD_HISTORY)
@@ -243,8 +249,7 @@ public class UserServiceImpl implements UserService {
     ErrorCode errorCode =
         validateChangePasswordRequest(userRequest, currentPwdNode, passwordHistory);
     if (errorCode != null) {
-      logger.exit(String.format("change password failed with error code=%s", errorCode));
-      return new ChangePasswordResponse(errorCode);
+      throw new ErrorCodeException(errorCode);
     }
 
     setPasswordAndPasswordHistoryFields(
@@ -285,7 +290,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  @Transactional
+  @Transactional(noRollbackFor = ErrorCodeException.class)
   public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
     // check if the email present in the database
@@ -293,7 +298,7 @@ public class UserServiceImpl implements UserService {
         repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
 
     if (!optUserEntity.isPresent()) {
-      return new AuthenticationResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     UserEntity userEntity = optUserEntity.get();
@@ -305,18 +310,18 @@ public class UserServiceImpl implements UserService {
 
     // check the account status and password expiry condition
     ErrorCode errorCode = validatePasswordExpiryAndAccountStatus(userEntity, userInfo);
-    if (errorCode != null) {
-      return new AuthenticationResponse(errorCode, userEntity.getUserId(), userEntity.getStatus());
+    if (errorCode == null) {
+      String passwordHash = hash(encrypt(user.getPassword(), salt));
+      if (StringUtils.equals(passwordHash, hash)) {
+        // reset login attempts
+        return updateLoginAttemptsAndAuthenticationTime(userEntity, userInfo);
+      } else {
+        errorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
+      }
     }
 
-    String passwordHash = hash(encrypt(user.getPassword(), salt));
-    if (StringUtils.equals(passwordHash, hash)) {
-      // reset login attempts
-      return updateLoginAttemptsAndAuthenticationTime(userEntity, userInfo);
-    } else {
-      // increment login attempts
-      return updateInvalidLoginAttempts(userEntity, userInfo);
-    }
+    // increment login attempts
+    return updateInvalidLoginAttempts(userEntity, userInfo, errorCode);
   }
 
   private EmailResponse sendAccountLockedEmail(UserEntity user, String tempPassword) {
@@ -341,11 +346,12 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateInvalidLoginAttempts(
-      UserEntity userEntity, JsonNode userInfoJsonNode) {
+      UserEntity userEntity, JsonNode userInfoJsonNode, ErrorCode errorCode) {
     ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     int loginAttempts =
         userInfo.hasNonNull(LOGIN_ATTEMPTS) ? userInfo.get(LOGIN_ATTEMPTS).intValue() : 0;
-    userInfo.put(LOGIN_ATTEMPTS, ++loginAttempts);
+    loginAttempts += 1;
+    userInfo.put(LOGIN_ATTEMPTS, loginAttempts);
 
     if (userInfo.get(LOGIN_ATTEMPTS).intValue() >= appConfig.getMaxInvalidLoginAttempts()) {
       String tempPassword = PasswordGenerator.generate(12);
@@ -359,12 +365,12 @@ public class UserServiceImpl implements UserService {
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
-    ErrorCode ec =
+    errorCode =
         UserAccountStatus.ACCOUNT_LOCKED.equals(UserAccountStatus.valueOf(userEntity.getStatus()))
             ? ErrorCode.ACCOUNT_LOCKED
-            : ErrorCode.INVALID_LOGIN_CREDENTIALS;
+            : errorCode;
 
-    return new AuthenticationResponse(ec);
+    throw new ErrorCodeException(errorCode);
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
@@ -403,8 +409,6 @@ public class UserServiceImpl implements UserService {
     switch (accountStatus) {
       case DEACTIVATED:
         return ErrorCode.ACCOUNT_DEACTIVATED;
-      case PENDING_CONFIRMATION:
-        return ErrorCode.PENDING_CONFIRMATION;
       case ACCOUNT_LOCKED:
         return isPasswordExpired(passwordNode) ? ErrorCode.TEMP_PASSWORD_EXPIRED : null;
       case PASSWORD_RESET:
@@ -441,8 +445,7 @@ public class UserServiceImpl implements UserService {
     logger.entry("begin updateEmailStatusAndTempRegId()");
     Optional<UserEntity> optUser = repository.findByUserId(userRequest.getUserId());
     if (!optUser.isPresent()) {
-      logger.exit(ErrorCode.USER_NOT_FOUND);
-      return new UpdateEmailStatusResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     UserEntity userEntity = optUser.get();
@@ -465,7 +468,7 @@ public class UserServiceImpl implements UserService {
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
 
     if (!optUserEntity.isPresent()) {
-      return new UserResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     return revokeAndReplaceRefreshToken(userId, null);
@@ -477,7 +480,7 @@ public class UserServiceImpl implements UserService {
     logger.entry("revokeAndReplaceRefreshToken(userId, refreshToken)");
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
     if (!optUserEntity.isPresent()) {
-      return new UserResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
     UserEntity userEntity = optUserEntity.get();
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
@@ -491,11 +494,7 @@ public class UserServiceImpl implements UserService {
       requestParams.add(TOKEN, prevRefreshToken);
       ResponseEntity<JsonNode> response = oauthService.revokeToken(requestParams, headers);
       if (!response.getStatusCode().is2xxSuccessful()) {
-        logger.error(
-            String.format(
-                "revoke token failed with status=%d and response=%s",
-                response.getStatusCodeValue(), response.getBody()));
-        return new UserResponse(ErrorCode.APPLICATION_ERROR);
+        throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
       }
     }
 

@@ -10,13 +10,19 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.LOCATION_ACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.LOCATION_DECOMMISSIONED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.LOCATION_EDITED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_LOCATION_ADDED;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationDetailsResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.LocationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateLocationRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.LocationMapper;
@@ -29,6 +35,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,9 +62,12 @@ public class LocationServiceImpl implements LocationService {
 
   @Autowired private StudyRepository studyRepository;
 
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
   @Override
   @Transactional
-  public LocationEntity addNewLocation(LocationEntity location, String userId)
+  public LocationEntity addNewLocation(
+      LocationEntity location, String userId, AuditLogEventRequest auditRequest)
       throws ErrorCodeException {
     logger.entry("begin addNewLocation()");
 
@@ -67,7 +77,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.EDIT != Permission.fromValue(adminUser.getEditPermission())) {
+    if (Permission.EDIT != Permission.fromValue(adminUser.getLocationPermission())) {
       logger.exit(
           String.format(
               "Add location failed with error code=%s", ErrorCode.LOCATION_ACCESS_DENIED));
@@ -77,13 +87,19 @@ public class LocationServiceImpl implements LocationService {
     location.setCreatedBy(adminUser.getId());
     LocationEntity created = locationRepository.saveAndFlush(location);
 
+    auditRequest.setUserId(adminUser.getId());
+    Map<String, String> map = Collections.singletonMap("location_id", created.getId());
+
+    participantManagerHelper.logEvent(NEW_LOCATION_ADDED, auditRequest, map);
+
     logger.exit(String.format("locationId=%s", created.getId()));
     return created;
   }
 
   @Override
   @Transactional
-  public LocationDetailsResponse updateLocation(UpdateLocationRequest locationRequest) {
+  public LocationDetailsResponse updateLocation(
+      UpdateLocationRequest locationRequest, AuditLogEventRequest auditRequest) {
     logger.entry("begin updateLocation()");
 
     Optional<LocationEntity> optLocation =
@@ -91,8 +107,7 @@ public class LocationServiceImpl implements LocationService {
 
     ErrorCode errorCode = validateUpdateLocationRequest(locationRequest, optLocation);
     if (errorCode != null) {
-      logger.exit(errorCode);
-      return new LocationDetailsResponse(errorCode);
+      throw new ErrorCodeException(errorCode);
     }
 
     LocationEntity locationEntity = optLocation.get();
@@ -110,6 +125,17 @@ public class LocationServiceImpl implements LocationService {
     MessageCode messageCode = getMessageCodeByLocationStatus(locationRequest.getStatus());
     LocationDetailsResponse locationResponse =
         LocationMapper.toLocationDetailsResponse(locationEntity, messageCode);
+
+    auditRequest.setUserId(locationRequest.getUserId());
+    Map<String, String> map = Collections.singletonMap("location_id", locationEntity.getId());
+
+    if (messageCode == MessageCode.REACTIVE_SUCCESS) {
+      participantManagerHelper.logEvent(LOCATION_ACTIVATED, auditRequest, map);
+    } else if (messageCode == MessageCode.DECOMMISSION_SUCCESS) {
+      participantManagerHelper.logEvent(LOCATION_DECOMMISSIONED, auditRequest, map);
+    } else {
+      participantManagerHelper.logEvent(LOCATION_EDITED, auditRequest, map);
+    }
 
     logger.exit(String.format("locationId=%s", locationEntity.getId()));
     return locationResponse;
@@ -131,7 +157,7 @@ public class LocationServiceImpl implements LocationService {
 
     if (optUserRegAdminUser.isPresent()) {
       UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-      if (Permission.EDIT != Permission.fromValue(adminUser.getEditPermission())) {
+      if (Permission.EDIT != Permission.fromValue(adminUser.getLocationPermission())) {
         return ErrorCode.LOCATION_UPDATE_DENIED;
       }
     }
@@ -154,7 +180,7 @@ public class LocationServiceImpl implements LocationService {
         siteRepository.findByLocationIdAndStatus(locationRequest.getLocationId(), ACTIVE_STATUS);
     if (INACTIVE_STATUS.equals(locationRequest.getStatus())
         && CollectionUtils.isNotEmpty(listOfSite)) {
-      return ErrorCode.CANNOT_DECOMMISSIONED;
+      return ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS;
     }
 
     if (ACTIVE_STATUS.equals(locationRequest.getStatus())
@@ -172,9 +198,8 @@ public class LocationServiceImpl implements LocationService {
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
-      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
-      return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
 
     List<LocationEntity> locations =
@@ -187,7 +212,9 @@ public class LocationServiceImpl implements LocationService {
         locations.stream().map(LocationMapper::toLocationDetails).collect(Collectors.toList());
     for (LocationDetails locationDetails : locationDetailsList) {
       List<String> studies = locationStudies.get(locationDetails.getLocationId());
-      locationDetails.getStudyNames().addAll(studies);
+      if (CollectionUtils.isNotEmpty(studies)) {
+        locationDetails.getStudyNames().addAll(studies);
+      }
       locationDetails.setStudiesCount(locationDetails.getStudyNames().size());
     }
     LocationResponse locationResponse =
@@ -221,15 +248,13 @@ public class LocationServiceImpl implements LocationService {
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
-      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
-      return new LocationDetailsResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
 
     Optional<LocationEntity> optOfEntity = locationRepository.findById(locationId);
     if (!optOfEntity.isPresent()) {
-      logger.exit(ErrorCode.LOCATION_NOT_FOUND);
-      return new LocationDetailsResponse(ErrorCode.LOCATION_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.LOCATION_NOT_FOUND);
     }
 
     LocationEntity locationEntity = optOfEntity.get();
@@ -252,9 +277,8 @@ public class LocationServiceImpl implements LocationService {
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
 
     UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getEditPermission())) {
-      logger.exit(ErrorCode.LOCATION_ACCESS_DENIED);
-      return new LocationResponse(ErrorCode.LOCATION_ACCESS_DENIED);
+    if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
     List<LocationEntity> listOfLocation =
         (List<LocationEntity>)

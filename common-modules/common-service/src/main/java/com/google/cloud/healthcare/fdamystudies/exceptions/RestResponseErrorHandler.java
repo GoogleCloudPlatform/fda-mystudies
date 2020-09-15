@@ -30,18 +30,19 @@ public class RestResponseErrorHandler implements ResponseErrorHandler {
     if (response.getStatusCode().series() == HttpStatus.Series.SERVER_ERROR) {
       // handle 5xx errors
       errorCode = ErrorCode.APPLICATION_ERROR;
+    } else if (response.getStatusCode() == HttpStatus.UNAUTHORIZED) {
+      errorCode = ErrorCode.UNAUTHORIZED;
     } else if (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR
-        && StringUtils.containsIgnoreCase(headers.getFirst("Content-Type"), "json")) {
+        && StringUtils.containsIgnoreCase(headers.getFirst("Content-Type"), "json")
+        && StringUtils.contains(responseBody, "error_code")
+        && StringUtils.contains(responseBody, "error_description")) {
       // handle 4xx errors
-      if (StringUtils.contains(responseBody, "error_code")
-          && StringUtils.contains(responseBody, "error_description")) {
-        String code = JsonPath.read(responseBody, "$.error_code");
-        String description = JsonPath.read(responseBody, "$.error_description");
-        errorCode = ErrorCode.fromCodeAndDescription(code, description);
-      }
+      String code = JsonPath.read(responseBody, "$.error_code");
+      String description = JsonPath.read(responseBody, "$.error_description");
+      errorCode = ErrorCode.fromCodeAndDescription(code, description);
     }
 
-    errorCode = errorCode == null ? ErrorCode.BAD_REQUEST : errorCode;
+    errorCode = errorCode == null ? ErrorCode.APPLICATION_ERROR : errorCode;
 
     logger.error(
         String.format(

@@ -33,21 +33,6 @@ public class AppPropertyConfig implements Serializable {
   @Value("${participant.invite.body}")
   private String participantInviteBody;
 
-  @Value("${fromEmailAddress}")
-  private String fromEmailAddress;
-
-  @Value("${fromEmailPasswod}")
-  private String fromEmailPasswod;
-
-  @Value("${sslFactoryValue}")
-  private String sslFactoryValue;
-
-  @Value("${smtpPortValue}")
-  private String smtpPortValue;
-
-  @Value("${smtpHostName}")
-  private String smtpHostName;
-
   @Value("${bucket.name}")
   private String bucketName;
 
@@ -74,4 +59,10 @@ public class AppPropertyConfig implements Serializable {
 
   @Value("${auth.server.updateStatusUrl}")
   private String authServerUpdateStatusUrl;
+
+  @Value("${mail.contact-email}")
+  private String contactEmail;
+
+  @Value("${mail.from-email}")
+  private String fromEmail;
 }

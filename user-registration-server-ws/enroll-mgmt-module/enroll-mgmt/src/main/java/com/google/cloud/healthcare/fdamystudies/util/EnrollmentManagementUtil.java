@@ -8,8 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.util;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_NOT_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_RECEIVED;
+
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
 import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
@@ -48,6 +53,8 @@ public class EnrollmentManagementUtil {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
+
+  @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
 
   @Autowired private OAuthService oAuthService;
 
@@ -133,7 +140,11 @@ public class EnrollmentManagementUtil {
     return generatedHash;
   }
 
-  public String getParticipantId(String applicationId, String hashedTokenValue, String studyId)
+  public String getParticipantId(
+      String applicationId,
+      String hashedTokenValue,
+      String studyId,
+      AuditLogEventRequest auditRequest)
       throws InvalidRequestException, UnAuthorizedRequestException, SystemException {
     logger.info("EnrollmentManagementUtil getParticipantId() - starts ");
     HttpHeaders headers = null;
@@ -154,7 +165,11 @@ public class EnrollmentManagementUtil {
           restTemplate.postForEntity(appConfig.getAddParticipantId(), requestBody, String.class);
       if (responseEntity.getStatusCode() == HttpStatus.OK) {
         participantId = (String) responseEntity.getBody();
+        auditRequest.setParticipantId(participantId);
+
+        enrollAuditEventHelper.logEvent(PARTICIPANT_ID_RECEIVED, auditRequest);
       }
+
     } catch (RestClientResponseException e) {
 
       if (e.getRawStatusCode() == 401) {
@@ -165,6 +180,9 @@ public class EnrollmentManagementUtil {
         throw new SystemException();
       }
     } catch (Exception e) {
+
+      enrollAuditEventHelper.logEvent(PARTICIPANT_ID_NOT_RECEIVED, auditRequest);
+
       logger.error("EnrollmentManagementUtil getParticipantId() - Ends ", e);
       throw new SystemException();
     }

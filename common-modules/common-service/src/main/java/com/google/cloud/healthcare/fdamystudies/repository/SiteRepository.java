@@ -26,7 +26,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
 
   @Query(
       "SELECT site from SiteEntity site where site.location.id = :locationId and site.study.id= :studyId")
-  public Optional<SiteEntity> findByLocationIdAndStudyId(String locationId, String studyId);
+  public List<SiteEntity> findByLocationIdAndStudyId(String locationId, String studyId);
 
   @Query(
       "SELECT site from SiteEntity site where site.location.id = :locationId and site.status= :status")

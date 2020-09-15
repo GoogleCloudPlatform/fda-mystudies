@@ -250,7 +250,6 @@ extension ChangePasswordViewController: UITextFieldDelegate {
       self.newPassword = textField.text!
     case .confirmPassword:
       self.confirmPassword = textField.text!
-      break
     }
   }
 }

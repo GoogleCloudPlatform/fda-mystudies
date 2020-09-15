@@ -39,8 +39,7 @@ public class ParticipantIdController {
   @PostMapping("/participant/add")
   public ResponseEntity<?> addParticipantIdentifier(
       @RequestHeader("applicationId") String applicationId,
-      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean,
-      @RequestHeader String clientId) {
+      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean) {
     logger.info("ParticipantIdController addParticipantIdentifier() - starts ");
     if (enrollmentTokenIdentifierBean == null
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getTokenIdentifier())
@@ -65,8 +64,7 @@ public class ParticipantIdController {
           "Participant Id generated successfully",
           "Participant Id generated successfully for partcipant "
               + particpantUniqueIdentifier
-              + " .",
-          clientId);
+              + " .");
       logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
       return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
     } catch (Exception e) {

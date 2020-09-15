@@ -94,8 +94,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForRegisterUser() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     UserRegistrationForm userRegistrationForm = new UserRegistrationForm();
     MvcResult result =
@@ -119,8 +118,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   public void shouldReturnBadRequestForInvalidPassword() throws Exception {
 
     // invalid  password
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // invalid  password
     String requestJson = getRegisterUser("mockito123@gmail.com", Constants.INVALID_PASSWORD);
@@ -128,7 +126,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         .perform(
             post(REGISTER_PATH).content(requestJson).headers(headers).contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isInternalServerError());
 
     verify(
         1,
@@ -138,8 +136,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForEmailExists() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // user exists
     String requestJson = getRegisterUser(Constants.EMAIL_ID, Constants.PASSWORD);
@@ -166,8 +163,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldRegisterUser() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
     MvcResult result =

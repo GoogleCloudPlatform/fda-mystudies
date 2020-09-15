@@ -267,15 +267,12 @@ extension ContactUsViewController: UITextFieldDelegate {
 
     case .email:
       ContactUsFields.email = textField.text!
-      break
 
     case .firstName:
       ContactUsFields.firstName = textField.text!
-      break
 
     case .subject:
       ContactUsFields.subject = textField.text!
-      break
     }
   }
 }

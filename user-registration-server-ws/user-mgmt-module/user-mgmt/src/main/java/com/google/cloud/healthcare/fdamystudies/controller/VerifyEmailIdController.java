@@ -64,7 +64,6 @@ public class VerifyEmailIdController {
   public ResponseEntity<?> verifyEmailId(
       @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("appId") String appId,
-      @RequestHeader("orgId") String orgId,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
     logger.info("VerifyEmailIdController verifyEmailId() - starts");
@@ -77,8 +76,7 @@ public class VerifyEmailIdController {
 
     try {
       isValidAppMsg =
-          commonService.validatedUserAppDetailsByAllApi(
-              "", verificationForm.getEmailId(), appId, orgId);
+          commonService.validatedUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId);
 
       if (!StringUtils.isNotEmpty(isValidAppMsg)) {
 
@@ -90,7 +88,7 @@ public class VerifyEmailIdController {
         return null;
       }
       AppOrgInfoBean appOrgInfoBean =
-          commonService.getUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId, orgId);
+          commonService.getUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId);
       if (appOrgInfoBean != null) {
         participantDetails = getParticipantDetails(verificationForm, appOrgInfoBean);
       }
@@ -119,20 +117,20 @@ public class VerifyEmailIdController {
         return new ResponseEntity<>(respBean, HttpStatus.BAD_REQUEST);
       }
 
-      boolean serviceResponse = userDetailsService.updateStatus(participantDetails);
+      String tempRegId = userDetailsService.updateStatus(participantDetails);
 
       AuditLogEvent auditEvent =
-          serviceResponse ? USER_ACCOUNT_ACTIVATED : ACCOUNT_ACTIVATION_FAILED;
+          StringUtils.isNotEmpty(tempRegId) ? USER_ACCOUNT_ACTIVATED : ACCOUNT_ACTIVATION_FAILED;
       userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
 
-      if (!serviceResponse) {
+      if (StringUtils.isEmpty(tempRegId)) {
         ResponseBean respBean = ResponseUtil.prepareSystemExceptionResponse(response);
         return new ResponseEntity<>(respBean, HttpStatus.INTERNAL_SERVER_ERROR);
       }
 
       ResponseBean respBean = ResponseUtil.prepareSuccessResponse(response);
       verifyEmailIdResponse =
-          new VerifyEmailIdResponse(respBean.getCode(), respBean.getMessage(), true);
+          new VerifyEmailIdResponse(respBean.getCode(), respBean.getMessage(), true, tempRegId);
 
       userMgmntAuditHelper.logEvent(USER_EMAIL_VERIFIED_FOR_ACCOUNT_ACTIVATION, auditRequest);
 
@@ -155,9 +153,7 @@ public class VerifyEmailIdController {
     UserDetailsBO participantDetails = null;
     participantDetails =
         userManagementProfService.getParticipantDetailsByEmail(
-            verificationForm.getEmailId(),
-            appOrgInfoBean.getAppInfoId(),
-            appOrgInfoBean.getOrgInfoId());
+            verificationForm.getEmailId(), appOrgInfoBean.getAppInfoId());
     return participantDetails;
   }
 }

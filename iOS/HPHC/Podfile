@@ -14,6 +14,7 @@ def main_pods
   pod 'ActionSheetPicker-3.0'
   pod 'Toast-Swift'
   pod 'ReachabilitySwift'
+  pod 'Alamofire'
 end
 
 target 'HPHC' do

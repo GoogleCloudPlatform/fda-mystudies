@@ -7,7 +7,7 @@ export const addUserResponse = {
 } as ApiResponse;
 
 export const addUserRequest = {
-  id: 1,
+  id: '1',
   firstName: 'super',
   lastName: 'admin',
   superAdmin: true,

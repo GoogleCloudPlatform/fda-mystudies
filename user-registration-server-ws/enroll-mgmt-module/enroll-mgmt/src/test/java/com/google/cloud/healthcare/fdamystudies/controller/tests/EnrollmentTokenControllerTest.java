@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller.tests;
 
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.ENROLLMENT_TOKEN_FOUND_INVALID;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -23,10 +28,14 @@ import com.google.cloud.healthcare.fdamystudies.controller.EnrollmentTokenContro
 import com.google.cloud.healthcare.fdamystudies.service.EnrollmentTokenService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
+import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.annotation.DirtiesContext;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Autowired private EnrollmentTokenController controller;
@@ -130,6 +139,14 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(ENROLLMENT_TOKEN_FOUND_INVALID.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, ENROLLMENT_TOKEN_FOUND_INVALID);
+
     verifyTokenIntrospectRequest(4);
   }
 
@@ -203,6 +220,16 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk());
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_ID_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PARTICIPANT_ID_RECEIVED);
+
     verifyTokenIntrospectRequest();
   }
 
@@ -222,6 +249,16 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_FOUND_ELIGIBLE_FOR_STUDY.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, USER_FOUND_ELIGIBLE_FOR_STUDY);
 
     verifyTokenIntrospectRequest();
   }
@@ -266,6 +303,13 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest());
 
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(USER_FOUND_INELIGIBLE_FOR_STUDY.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, USER_FOUND_INELIGIBLE_FOR_STUDY);
+
     verifyTokenIntrospectRequest();
 
     // without token
@@ -284,6 +328,10 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
     // unknown token id
     requestJson = getEnrollmentJson(Constants.UNKOWN_TOKEN, Constants.STUDYOF_HEALTH_CLOSE);
+
+    // Reset Audit Event calls
+    clearAuditRequests();
+    auditEventMap.clear();
 
     mockMvc
         .perform(

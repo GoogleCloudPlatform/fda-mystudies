@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
@@ -16,7 +17,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PAR
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
@@ -85,9 +85,6 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired private ObjectMapper objectMapper;
 
-  @Value("${auth.server.deactivateUrl}")
-  private String deactivateUrl;
-
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;
 
@@ -117,7 +114,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk());
 
     verifyTokenIntrospectRequest(1);
-    
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -139,7 +136,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest(1);
-    
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.INVALID_USER_ID);
 
@@ -215,7 +212,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
     assertEquals(3, daoResp.getStatus());
 
-    verify(1, postRequestedFor(urlEqualTo("/AuthServer/deactivate")));
+    verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
     verify(
         1,
         postRequestedFor(
@@ -243,7 +240,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void deactivateAccountBadRequest() throws Exception {
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.INVALID_USER_ID);
 
     // invalid userId
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
@@ -259,21 +256,12 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest(1);
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.INVALID_USER_ID);
-
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_ACCOUNT_DEACTIVATION_FAILED.getEventCode(), auditRequest);
-
-    verifyAuditEventCall(auditEventMap, USER_ACCOUNT_DEACTIVATION_FAILED);
   }
 
   @Test
   public void resendConfirmationBadRequest() throws Exception {
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // without email
     String requestJson = getLoginBean("", Constants.PASSWORD);
@@ -322,8 +310,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 Mockito.any()))
         .thenReturn(true);
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
 

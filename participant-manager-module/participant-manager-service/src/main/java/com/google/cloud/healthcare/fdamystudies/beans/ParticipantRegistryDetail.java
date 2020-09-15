@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,11 +57,9 @@ public class ParticipantRegistryDetail extends BaseResponse {
 
   private Integer siteStatus;
 
+  private Permission openStudySitePermission;
+
   private List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
   private Map<String, Long> countByStatus;
-
-  public ParticipantRegistryDetail(ErrorCode errorCode) {
-    super(errorCode);
-  }
 }

@@ -53,4 +53,5 @@ public class Constants {
   public static final String STATUS_COMPLETE = "complete";
   public static final String SHARING_VALUE = "sharing";
   public static final String INVALID_USER_ID = "invalid userId";
+  public static final String INVALID_STUDY_ID = "invalid studyId";
 }

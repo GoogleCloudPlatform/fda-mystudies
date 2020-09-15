@@ -9,7 +9,9 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ConsentDocumentResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ConsentService;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.ext.XLogger;
@@ -34,7 +36,9 @@ public class ConsentController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       HttpServletRequest request) {
     logger.entry("%s request", request.getRequestURI());
-    ConsentDocumentResponse consentDocument = consentService.getConsentDocument(consentId, userId);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    ConsentDocumentResponse consentDocument =
+        consentService.getConsentDocument(consentId, userId, auditRequest);
 
     logger.exit(String.format("status=%d", consentDocument.getHttpStatusCode()));
     return ResponseEntity.status(consentDocument.getHttpStatusCode()).body(consentDocument);

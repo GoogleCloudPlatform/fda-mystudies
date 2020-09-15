@@ -210,7 +210,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         params: requestParams,
         headers: headers!
       )
-      break
     case .requestTypeJSON:
       self.generateJSONRequest(
         requestName,
@@ -218,7 +217,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         params: requestParams,
         headers: headers
       )
-      break
     }
   }
 
@@ -252,7 +250,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         params: requestParams,
         headers: headers
       )
-      break
     case .requestTypeJSON:
       self.generateJSONRequest(
         method.methodName as NSString,
@@ -260,7 +257,6 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
         params: requestParams,
         headers: headers
       )
-      break
     }
   }
 

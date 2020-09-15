@@ -392,11 +392,9 @@ extension SignInViewController: UITextFieldDelegate {
     switch textField.tag {
     case SignInTableViewTags.emailId.rawValue:
       user.emailId = textField.text
-      break
 
     case SignInTableViewTags.password.rawValue:
       user.password = textField.text
-      break
 
     default:
       break

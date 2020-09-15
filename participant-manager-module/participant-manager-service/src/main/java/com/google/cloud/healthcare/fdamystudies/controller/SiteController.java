@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ImportParticipantResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.InviteParticipantResponse;
@@ -25,6 +26,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.SiteStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -32,7 +35,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,8 +89,11 @@ public class SiteController {
       @Valid @RequestBody ParticipantDetailRequest participant,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     participant.setSiteId(siteId);
-    ParticipantResponse participantResponse = siteService.addNewParticipant(participant, userId);
+    ParticipantResponse participantResponse =
+        siteService.addNewParticipant(participant, userId, auditRequest);
     logger.exit(String.format(STATUS_LOG, participantResponse.getHttpStatusCode()));
     return ResponseEntity.status(participantResponse.getHttpStatusCode()).body(participantResponse);
   }
@@ -100,15 +105,15 @@ public class SiteController {
       @RequestParam(name = "onboardingStatus", required = false) String onboardingStatus,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     if (StringUtils.isNotEmpty(onboardingStatus)
         && OnboardingStatus.fromCode(onboardingStatus) == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(new ParticipantRegistryResponse(ErrorCode.INVALID_ONBOARDING_STATUS));
+      throw new ErrorCodeException(ErrorCode.INVALID_ONBOARDING_STATUS);
     }
 
     ParticipantRegistryResponse participants =
-        siteService.getParticipants(userId, siteId, onboardingStatus);
+        siteService.getParticipants(userId, siteId, onboardingStatus, auditRequest);
     logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
@@ -122,8 +127,10 @@ public class SiteController {
       @PathVariable String siteId,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    SiteStatusResponse decomissionSiteResponse = siteService.toggleSiteStatus(userId, siteId);
+    SiteStatusResponse decomissionSiteResponse =
+        siteService.toggleSiteStatus(userId, siteId, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, decomissionSiteResponse.getHttpStatusCode()));
     return ResponseEntity.status(decomissionSiteResponse.getHttpStatusCode())
@@ -154,8 +161,10 @@ public class SiteController {
 
     inviteParticipantRequest.setSiteId(siteId);
     inviteParticipantRequest.setUserId(userId);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     InviteParticipantResponse inviteParticipantResponse =
-        siteService.inviteParticipants(inviteParticipantRequest);
+        siteService.inviteParticipants(inviteParticipantRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, inviteParticipantResponse.getHttpStatusCode()));
     return ResponseEntity.status(inviteParticipantResponse.getHttpStatusCode())
@@ -171,9 +180,10 @@ public class SiteController {
       @RequestParam("file") MultipartFile inputFile,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ImportParticipantResponse participants =
-        siteService.importParticipants(userId, siteId, inputFile);
+        siteService.importParticipants(userId, siteId, inputFile, auditRequest);
     logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
@@ -185,11 +195,12 @@ public class SiteController {
       @Valid @RequestBody ParticipantStatusRequest participantStatusRequest,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     participantStatusRequest.setSiteId(siteId);
     participantStatusRequest.setUserId(userId);
     ParticipantStatusResponse response =
-        siteService.updateOnboardingStatus(participantStatusRequest);
+        siteService.updateOnboardingStatus(participantStatusRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, response.getHttpStatusCode()));
     return ResponseEntity.status(response.getHttpStatusCode()).body(response);

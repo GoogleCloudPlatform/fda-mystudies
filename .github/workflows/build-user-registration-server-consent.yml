@@ -1,6 +1,7 @@
 on:
   pull_request:
     paths:
+    - 'common-modules/**'
     - 'user-registration-server-ws/consent-mgmt-module/**'
     - '.github/workflows/build-user-registration-server-consent.yml'
 name: Build user-registration-server-ws-consent-module

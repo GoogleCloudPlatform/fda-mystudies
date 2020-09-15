@@ -116,8 +116,7 @@ public class ProcessActivityStateController {
                 + activityStateRequestBean.getParticipantId()
                 + " and activityIds "
                 + activityIds
-                + " .",
-            null);
+                + " .");
 
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
@@ -135,8 +134,7 @@ public class ProcessActivityStateController {
                 + activityStateRequestBean.getParticipantId()
                 + " and activityIds "
                 + activityIds
-                + " .",
-            null);
+                + " .");
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_714.code(),

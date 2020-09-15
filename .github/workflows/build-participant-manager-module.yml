@@ -1,6 +1,7 @@
 on:
   pull_request:
     paths:
+    - 'common-modules/**'
     - 'participant-manager-module/**'
     - '.github/workflows/build-participant-manager-module.yml'
 name: Build-participant-manager-module

@@ -1,8 +1,9 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.Getter;
@@ -21,13 +22,9 @@ public class SetUpAccountRequest {
   private static final String PASSWORD_REGEX =
       "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!\\\"#$%&'()*+,-.:;<=>?@\\[\\]^_`{|}~]).{8,64}$";
 
-  @NotBlank
-  @Size(max = 100)
-  private String appId;
-
   @ToString.Exclude
   @NotBlank
-  @Size(max = 320)
+  @Size(max = EMAIL_LENGTH)
   @Email
   private String email;
 
@@ -50,6 +47,4 @@ public class SetUpAccountRequest {
   @NotBlank
   @Size(max = 320)
   private String lastName;
-
-  @NotNull private Integer status;
 }

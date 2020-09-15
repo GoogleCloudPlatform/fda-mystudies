@@ -19,5 +19,5 @@ public interface FdaEaUserDetailsService {
 
   boolean verifyCode(String code, UserDetailsBO participantDetails);
 
-  boolean updateStatus(UserDetailsBO participantDetails);
+  String updateStatus(UserDetailsBO participantDetails);
 }

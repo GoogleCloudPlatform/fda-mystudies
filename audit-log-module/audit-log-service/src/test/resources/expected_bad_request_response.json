@@ -1,48 +1,51 @@
 {
-  "violations": [
-    {
-      "path": "source",
-      "message": "must not be blank"
-    },
-    {
-      "path": "description",
-      "message": "must not be blank"
-    },
-    {
-      "path": "platformVersion",
-      "message": "must not be blank"
-    },
-    {
-      "path": "userId",
-      "message": "size must be between 0 and 64"
-    },
-    {
-      "path": "mobilePlatform",
-      "message": "must not be blank"
-    },
-    {
-      "path": "destinationApplicationVersion",
-      "message": "must not be blank"
-    },
-    {
-      "path": "correlationId",
-      "message": "must not be blank"
-    },
-    {
-      "path": "userIp",
-      "message": "size must be between 7 and 39"
-    },
-    {
-      "path": "sourceApplicationVersion",
-      "message": "must not be blank"
-    },
-    {
-      "path": "eventCode",
-      "message": "must not be blank"
-    },
-    {
-      "path": "destination",
-      "message": "must not be blank"
-    }
-  ]
+	"violations": [
+		{
+			"path": "source",
+			"message": "must not be blank"
+		},
+		{
+			"path": "description",
+			"message": "must not be blank"
+		},
+		{
+			"path": "platformVersion",
+			"message": "must not be blank"
+		},
+		{
+			"path": "userId",
+			"message": "size must be between 0 and 64"
+		},
+		{
+			"path": "mobilePlatform",
+			"message": "must not be blank"
+		},
+		{
+			"path": "destinationApplicationVersion",
+			"message": "must not be blank"
+		},
+		{
+			"path": "correlationId",
+			"message": "must not be blank"
+		},
+		{
+			"path": "userIp",
+			"message": "size must be between 7 and 39"
+		},
+		{
+			"path": "sourceApplicationVersion",
+			"message": "must not be blank"
+		},
+		{
+			"path": "eventCode",
+			"message": "must not be blank"
+		},
+		{
+			"path": "destination",
+			"message": "must not be blank"
+		}
+	],
+	"error_description": "Invalid entries found in the submitted form. Please try again.",
+	"error_type": "BAD REQUEST",
+	"error_code": "EC-400"
 }

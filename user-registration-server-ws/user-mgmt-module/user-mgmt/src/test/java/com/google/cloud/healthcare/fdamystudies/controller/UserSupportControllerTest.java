@@ -100,7 +100,6 @@ public class UserSupportControllerTest extends BaseMockIT {
     auditEventMap.put(FEEDBACK_CONTENT_EMAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, FEEDBACK_CONTENT_EMAILED);
-
   }
 
   @Test
@@ -116,8 +115,7 @@ public class UserSupportControllerTest extends BaseMockIT {
         .thenReturn(true);
 
     HttpHeaders headers =
-        TestUtils.getCommonHeaders(
-            Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER, Constants.USER_ID_HEADER);
+        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.USER_ID_HEADER);
 
     String requestJson =
         getContactUsRequest(

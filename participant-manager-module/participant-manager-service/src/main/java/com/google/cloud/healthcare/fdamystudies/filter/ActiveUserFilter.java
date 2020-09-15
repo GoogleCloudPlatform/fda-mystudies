@@ -29,6 +29,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import org.springframework.http.server.PathContainer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
+
 @Component
 @Order(3)
 @ConditionalOnProperty(
@@ -64,16 +66,10 @@ public class ActiveUserFilter implements Filter {
   public void init() {
     uriTemplateAndMethods.put(
         String.format("%s/locations", context.getContextPath()),
-        new String[] {HttpMethod.POST.name()});
+        new String[] {HttpMethod.POST.name(), HttpMethod.GET.name()});
     uriTemplateAndMethods.put(
         String.format("%s/locations/{locationId}", context.getContextPath()),
-        new String[] {HttpMethod.PUT.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/locations", context.getContextPath()),
-        new String[] {HttpMethod.GET.name()});
-    uriTemplateAndMethods.put(
-        String.format("%s/locations/{locationId}", context.getContextPath()),
-        new String[] {HttpMethod.GET.name()});
+        new String[] {HttpMethod.PUT.name(), HttpMethod.GET.name()});
   }
 
   protected Map<String, String[]> getUriTemplateAndHttpMethodsMap() {
@@ -89,16 +85,23 @@ public class ActiveUserFilter implements Filter {
     if (validatePathAndHttpMethod(req)) {
       logger.info(String.format("check user status for %s", req.getRequestURI()));
       String userId = req.getHeader(USER_ID_HEADER);
-      Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
-      ErrorCode ec = !optUserRegAdminUser.isPresent() ? ErrorCode.USER_NOT_EXISTS : null;
+      ErrorCode ec = null;
 
-      if (optUserRegAdminUser.isPresent()) {
-        UserRegAdminEntity adminUser = optUserRegAdminUser.get();
-        ec = !adminUser.isActive() ? ErrorCode.USER_NOT_ACTIVE : null;
+      if (StringUtils.isEmpty(userId)) {
+        logger.error(String.format("userId is empty errorCode=%s", ErrorCode.USER_ID_REQUIRED));
+        ec = ErrorCode.USER_ID_REQUIRED;
+      } else {
+        Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
+        ec = !optUserRegAdminUser.isPresent() ? ErrorCode.USER_NOT_EXISTS : null;
+
+        if (optUserRegAdminUser.isPresent()) {
+          UserRegAdminEntity adminUser = optUserRegAdminUser.get();
+          ec = !adminUser.isActive() ? ErrorCode.USER_NOT_ACTIVE : null;
+        }
       }
 
       if (ec != null) {
-        logger.exit(String.format("User status check failed with error code=%s", ec));
+        logger.error(String.format("User status check failed with error code=%s", ec));
         setErrorResponse(response, ec);
       } else {
         chain.doFilter(request, response);

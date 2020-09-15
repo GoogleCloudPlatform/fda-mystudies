@@ -7,7 +7,6 @@
  */
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,16 +20,11 @@ public class ConsentDocument extends BaseResponse {
   private String type;
   private String content;
 
-  public ConsentDocument(ErrorCode errorCode) {
-    super(errorCode);
-  }
-
   public ConsentDocument(MessageCode messageCode) {
     super(messageCode);
   }
-  
-  public ConsentDocument(
-      MessageCode messageCode, String version, String type, String content) {
+
+  public ConsentDocument(MessageCode messageCode, String version, String type, String content) {
     super(messageCode);
     this.version = version;
     this.type = type;

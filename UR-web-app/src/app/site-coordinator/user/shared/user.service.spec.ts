@@ -1,11 +1,16 @@
-import {TestBed} from '@angular/core/testing';
+import {TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {UserService} from './user.service';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {addUserResponse, addUserRequest} from 'src/app/entity/mock-app-details';
-import {of} from 'rxjs';
+import {of, throwError} from 'rxjs';
 import {ApiResponse} from 'src/app/entity/api.response.model';
+import {
+  expectedManageUsers,
+  expectedManageUserDetails,
+} from 'src/app/entity/mock-users-data';
+
 describe('UserService', () => {
   let service: UserService;
   beforeEach(() => {
@@ -19,6 +24,60 @@ describe('UserService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('should return expected user list', fakeAsync(() => {
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedManageUsers),
+    });
+    service = new UserService(httpServiceSpyObj);
+    service
+      .getUsers()
+      .subscribe(
+        (manageUser) =>
+          expect(manageUser).toEqual(
+            expectedManageUsers,
+            'expected user`s List',
+          ),
+        fail,
+      );
+    expect(httpServiceSpyObj.get).toHaveBeenCalledTimes(1);
+  }));
+
+  it('should return an error when the server returns a 400', fakeAsync(() => {
+    const errorResponses: ApiResponse = {
+      message: 'Bad Request',
+    } as ApiResponse;
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: throwError(errorResponses),
+    });
+    service = new UserService(httpServiceSpyObj);
+    tick(40);
+    service.getUsers().subscribe(
+      () => fail('expected an error'),
+      (error: ApiResponse) => {
+        expect(error.message).toBe('Bad Request');
+      },
+    );
+  }));
+
+  it('should return expected user`s details', fakeAsync(() => {
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      get: of(expectedManageUserDetails),
+    });
+    service = new UserService(httpServiceSpyObj);
+
+    service
+      .getUserDetails(expectedManageUserDetails.user.id)
+      .subscribe(
+        (userDetails) =>
+          expect(userDetails).toEqual(
+            expectedManageUserDetails,
+            'expected user`s details',
+          ),
+        fail,
+      );
+    expect(httpServiceSpyObj.get).toHaveBeenCalledTimes(1);
+  }));
 
   it('should post the expected new user data', () => {
     const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
@@ -34,5 +93,21 @@ describe('UserService', () => {
         fail,
       );
     expect(httpServiceSpyObj.post).toHaveBeenCalledTimes(1);
+  });
+
+  it('should update the expected user data', () => {
+    const httpServiceSpyObj = jasmine.createSpyObj<HttpClient>('HttpClient', {
+      put: of(addUserResponse),
+    });
+    service = new UserService(httpServiceSpyObj);
+
+    service
+      .update(addUserRequest, addUserRequest.id)
+      .subscribe(
+        (successResponse: ApiResponse) =>
+          expect(successResponse).toEqual(addUserResponse),
+        fail,
+      );
+    expect(httpServiceSpyObj.put).toHaveBeenCalledTimes(1);
   });
 });

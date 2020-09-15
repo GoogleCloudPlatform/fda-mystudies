@@ -36,6 +36,7 @@ import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -99,8 +100,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.entry(String.format("createUser() with isSuperAdmin=%b", user.isSuperAdmin()));
     ErrorCode errorCode = validateUserRequest(user);
     if (errorCode != null) {
-      logger.exit(String.format(CommonConstants.ERROR_CODE_LOG, errorCode));
-      return new AdminUserResponse(errorCode);
+      throw new ErrorCodeException(errorCode);
     }
 
     AdminUserResponse userResponse =
@@ -125,10 +125,10 @@ public class ManageUserServiceImpl implements ManageUserService {
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
     templateArgs.put("FIRST_NAME", user.getFirstName());
     templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + securityCode);
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getFromEmailAddress());
+    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmailAddress(),
+            appConfig.getFromEmail(),
             new String[] {user.getEmail()},
             null,
             null,
@@ -409,8 +409,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.entry(String.format("updateUser() with isSuperAdmin=%b", user.isSuperAdmin()));
     ErrorCode errorCode = validateUpdateUserRequest(user, superAdminUserId);
     if (errorCode != null) {
-      logger.exit(String.format(CommonConstants.ERROR_CODE_LOG, errorCode));
-      return new AdminUserResponse(errorCode);
+      throw new ErrorCodeException(errorCode);
     }
 
     AdminUserResponse userResponse =
@@ -420,7 +419,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     String accessLevel = user.isSuperAdmin() ? CommonConstants.SUPER_ADMIN : CommonConstants.ADMIN;
     if (MessageCode.UPDATE_USER_SUCCESS.getMessage().equals(userResponse.getMessage())) {
       Map<String, String> map = new HashedMap<>();
-      map.put(CommonConstants.EDITED_USER_ID, user.getUserId());
+      map.put(CommonConstants.EDITED_USER_ID, user.getId());
       map.put("edited_user_access_level", accessLevel);
       participantManagerHelper.logEvent(USER_RECORD_UPDATED, auditRequest, map);
     }
@@ -432,7 +431,7 @@ public class ManageUserServiceImpl implements ManageUserService {
   private ErrorCode validateUpdateUserRequest(UserRequest user, String superAdminUserId) {
     logger.entry("validateUpdateUserRequest()");
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
-    if (!optAdminDetails.isPresent() || user.getUserId() == null) {
+    if (!optAdminDetails.isPresent() || user.getId() == null) {
       return ErrorCode.USER_NOT_FOUND;
     }
 
@@ -451,16 +450,16 @@ public class ManageUserServiceImpl implements ManageUserService {
   private AdminUserResponse updateSuperAdminDetails(
       UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
     logger.entry("updateSuperAdminDetails()");
-    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getUserId());
+    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getId());
 
     if (!optAdminDetails.isPresent()) {
-      return new AdminUserResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     UserRegAdminEntity adminDetails = optAdminDetails.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
 
-    deleteAllPermissions(user.getUserId());
+    deleteAllPermissions(user.getId());
 
     user.setSuperAdminUserId(superAdminUserId);
 
@@ -496,10 +495,10 @@ public class ManageUserServiceImpl implements ManageUserService {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
     templateArgs.put("FIRST_NAME", user.getFirstName());
-    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getFromEmailAddress());
+    templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
-            appConfig.getFromEmailAddress(),
+            appConfig.getFromEmail(),
             new String[] {user.getEmail()},
             null,
             null,
@@ -513,17 +512,17 @@ public class ManageUserServiceImpl implements ManageUserService {
       UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
     logger.entry("updateAdminDetails()");
 
-    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getUserId());
+    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getId());
 
     if (!optAdminDetails.isPresent()) {
-      return new AdminUserResponse(ErrorCode.USER_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
     UserRegAdminEntity adminDetails = optAdminDetails.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
     userAdminRepository.saveAndFlush(adminDetails);
 
-    deleteAllPermissions(user.getUserId());
+    deleteAllPermissions(user.getId());
 
     user.setSuperAdminUserId(superAdminUserId);
 
@@ -578,14 +577,12 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.entry("getAdminDetails()");
     ErrorCode errorCode = validateUserRequest(userId);
     if (errorCode != null) {
-      logger.error(errorCode.toString());
-      return new GetAdminDetailsResponse(errorCode);
+      throw new ErrorCodeException(errorCode);
     }
 
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(adminId);
     if (!optAdminDetails.isPresent()) {
-      logger.error(ErrorCode.ADMIN_NOT_FOUND.toString());
-      return new GetAdminDetailsResponse(ErrorCode.ADMIN_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.ADMIN_NOT_FOUND);
     }
 
     UserRegAdminEntity adminDetails = optAdminDetails.get();
@@ -729,8 +726,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.entry("getUsers()");
     ErrorCode errorCode = validateUserRequest(superAdminUserId);
     if (errorCode != null) {
-      logger.error(errorCode.toString());
-      return new GetUsersResponse(errorCode);
+      throw new ErrorCodeException(errorCode);
     }
 
     List<User> users = new ArrayList<>();

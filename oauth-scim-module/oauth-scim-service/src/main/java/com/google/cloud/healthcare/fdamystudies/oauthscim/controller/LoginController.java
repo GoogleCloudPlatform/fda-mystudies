@@ -40,6 +40,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
@@ -190,9 +192,8 @@ public class LoginController {
 
     AuthenticationResponse authenticationResponse = userService.authenticate(user);
 
-    if (ErrorCode.PENDING_CONFIRMATION
-        .getDescription()
-        .equalsIgnoreCase(authenticationResponse.getErrorDescription())) {
+    if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
+        == authenticationResponse.getAccountStatus()) {
       String redirectUrl = redirectConfig.getAccountActivationUrl(mobilePlatform);
       String url = String.format("%s?email=%s", redirectUrl, loginRequest.getEmail());
       return redirect(response, url);
@@ -206,11 +207,6 @@ public class LoginController {
           ACCOUNT_STATUS_COOKIE,
           String.valueOf(authenticationResponse.getAccountStatus()));
     } else {
-      logger.error(
-          String.format(
-              "authentication failed with error %s", authenticationResponse.getErrorDescription()));
-
-      model.addAttribute(ERROR_DESCRIPTION, authenticationResponse.getErrorDescription());
       return LOGIN_VIEW_NAME;
     }
     return redirectToConsentPage(
@@ -321,6 +317,17 @@ public class LoginController {
     logger.error(String.format("Request %s failed with an exception", req.getRequestURL()), ex);
     ModelAndView modelView = new ModelAndView();
     modelView.setViewName(ERROR_VIEW_NAME);
+    return modelView;
+  }
+
+  @ExceptionHandler(ErrorCodeException.class)
+  public ModelAndView handleErrorCodeException(HttpServletRequest req, ErrorCodeException ex) {
+    logger.error(
+        String.format("Request %s failed with an ErrorCodeException", req.getRequestURL()), ex);
+    ModelAndView modelView = new ModelAndView();
+    modelView.addObject("loginRequest", new LoginRequest());
+    modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
+    modelView.setViewName(LOGIN_VIEW_NAME);
     return modelView;
   }
 }

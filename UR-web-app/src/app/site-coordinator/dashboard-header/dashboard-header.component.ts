@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
+import {SearchBar} from 'src/app/shared/search-bar';
 export interface NavLink {
   label: string;
   link: string;
@@ -14,6 +15,7 @@ export interface NavLink {
 export class DashboardHeaderComponent extends UnsubscribeOnDestroyAdapter {
   navLinks: NavLink[];
   showNavBar = true;
+  searchBar: SearchBar | undefined;
   constructor(private readonly router: Router) {
     super();
     this.navLinks = [
@@ -45,5 +47,11 @@ export class DashboardHeaderComponent extends UnsubscribeOnDestroyAdapter {
         }
       }),
     );
+  }
+  onActivate(componentRef: SearchBar): void {
+    this.searchBar = componentRef;
+  }
+  search(query: string): void {
+    if (this.searchBar) this.searchBar.search(query);
   }
 }

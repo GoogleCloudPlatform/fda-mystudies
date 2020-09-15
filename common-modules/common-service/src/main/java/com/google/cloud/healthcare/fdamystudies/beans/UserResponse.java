@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,8 +21,4 @@ public class UserResponse extends BaseResponse {
   @ToString.Exclude private String tempRegId;
 
   public UserResponse() {}
-
-  public UserResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 }

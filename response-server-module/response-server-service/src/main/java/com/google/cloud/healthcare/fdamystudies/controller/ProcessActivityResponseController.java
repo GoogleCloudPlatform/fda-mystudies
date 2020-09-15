@@ -61,7 +61,6 @@ public class ProcessActivityResponseController {
   public ResponseEntity<?> processActivityResponseForParticipant(
       @RequestBody ActivityResponseBean questionnaireActivityResponseBean,
       @RequestHeader String userId) {
-    String orgId = null;
     String applicationId = null;
     String studyId = null;
     String activityId = null;
@@ -70,7 +69,6 @@ public class ProcessActivityResponseController {
     String secureEnrollmentToken = null;
     boolean savedResponseData = false;
     try {
-      orgId = questionnaireActivityResponseBean.getOrgId();
       applicationId = questionnaireActivityResponseBean.getApplicationId();
       studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
       activityId = questionnaireActivityResponseBean.getMetadata().getActivityId();
@@ -84,8 +82,7 @@ public class ProcessActivityResponseController {
               + activityId
               + "\n Activity Version: "
               + activityVersion);
-      if (StringUtils.isBlank(orgId)
-          || StringUtils.isBlank(applicationId)
+      if (StringUtils.isBlank(applicationId)
           || StringUtils.isBlank(secureEnrollmentToken)
           || StringUtils.isBlank(studyId)
           || StringUtils.isBlank(activityId)
@@ -121,7 +118,7 @@ public class ProcessActivityResponseController {
         studyActivityMetadataRequestBean.setActivityVersion(activityVersion);
         QuestionnaireActivityStructureBean activityMetadatFromWcp =
             studyMetadataService.getStudyActivityMetadata(
-                orgId, applicationId, studyActivityMetadataRequestBean);
+                applicationId, studyActivityMetadataRequestBean);
         if (activityMetadatFromWcp == null) {
           logger.error(
               "Input values are :\n Study Id: "
@@ -136,8 +133,7 @@ public class ProcessActivityResponseController {
               "Participant Id: "
                   + participantId
                   + " - Study Response Metadata Activity Retrieval failed for study with id:  "
-                  + studyId,
-              null);
+                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_705.code(),
@@ -158,8 +154,7 @@ public class ProcessActivityResponseController {
               "Participant Id: "
                   + participantId
                   + " Reason: Participant Study Info Retrieval failed for study with id: "
-                  + studyId,
-              null);
+                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_715.code(),
@@ -200,8 +195,7 @@ public class ProcessActivityResponseController {
               " Participant Id: "
                   + participantId
                   + " has not provided data sharing consent for study with id:  "
-                  + studyId,
-              null);
+                  + studyId);
 
           commonService.createActivityLog(
               userId,
@@ -209,8 +203,7 @@ public class ProcessActivityResponseController {
               "Participant Id: "
                   + participantId
                   + " Study Response saved for study with id:  "
-                  + studyId,
-              null);
+                  + studyId);
           return new ResponseEntity<>(srBean, HttpStatus.OK);
         } else {
           commonService.createActivityLog(
@@ -219,8 +212,7 @@ public class ProcessActivityResponseController {
               "Participant Id: "
                   + participantId
                   + " Reason: Participant has withdrawn from study with id:  "
-                  + studyId,
-              null);
+                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_716.code(),
@@ -264,8 +256,7 @@ public class ProcessActivityResponseController {
             "Participant Id: "
                 + participantId
                 + " Reason: Could not validate the participant id for study with id:  "
-                + studyId,
-            null);
+                + studyId);
 
         logger.error(
             "Could not save response for participant.\n Study Id: "
@@ -286,8 +277,7 @@ public class ProcessActivityResponseController {
             "Participant Id: "
                 + participantId
                 + " Study response could not be saved for participant for study with id: "
-                + studyId,
-            null);
+                + studyId);
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_707.code(),
@@ -309,8 +299,7 @@ public class ProcessActivityResponseController {
             "Participant Id: "
                 + participantId
                 + " activity state could not be saved for participant for study with id: "
-                + studyId,
-            null);
+                + studyId);
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_714.code(),
@@ -331,7 +320,6 @@ public class ProcessActivityResponseController {
 
   @GetMapping("/participant/getresponse")
   public ResponseEntity<?> getActivityResponseDataForParticipant(
-      @RequestParam("orgId") String orgId,
       @RequestParam("appId") String applicationId,
       @RequestParam("studyId") String studyId,
       @RequestParam("siteId") String siteId,
@@ -349,8 +337,7 @@ public class ProcessActivityResponseController {
               + siteId
               + "\n Activity Id: "
               + activityId);
-      if (StringUtils.isBlank(orgId)
-          || StringUtils.isBlank(applicationId)
+      if (StringUtils.isBlank(applicationId)
           || StringUtils.isBlank(studyId)
           || StringUtils.isBlank(siteId)
           || StringUtils.isBlank(participantId)
@@ -380,8 +367,7 @@ public class ProcessActivityResponseController {
             "Participant Id: "
                 + participantId
                 + " Response data accessed for study with id: "
-                + studyId,
-            null);
+                + studyId);
         return new ResponseEntity<>(storedResponseBean, HttpStatus.OK);
       } else {
         ErrorBean errorBean =
@@ -411,8 +397,7 @@ public class ProcessActivityResponseController {
             "Participant Id: "
                 + participantId
                 + " Response data requested for study with id: "
-                + studyId,
-            null);
+                + studyId);
         return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
       }
     } catch (Exception e) {
@@ -435,8 +420,7 @@ public class ProcessActivityResponseController {
           "Participant Id: "
               + participantId
               + " Response data requested for study with id: "
-              + studyId,
-          null);
+              + studyId);
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
   }
@@ -445,8 +429,7 @@ public class ProcessActivityResponseController {
   public ResponseEntity<?> withdrawParticipantFromStudy(
       @RequestParam(name = "studyId") String studyId,
       @RequestParam(name = "participantId") String participantId,
-      @RequestParam(name = "deleteResponses") String deleteResponses,
-      @RequestHeader String clientId) {
+      @RequestParam(name = "deleteResponses") String deleteResponses) {
 
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       ErrorBean errorBean =
@@ -471,13 +454,11 @@ public class ProcessActivityResponseController {
               "Participant id: "
                   + participantId
                   + " responses deleted for study with id: "
-                  + studyId,
-              clientId);
+                  + studyId);
           commonService.createActivityLog(
               null,
               "Participant withdrawn from study",
-              "Participant id: " + participantId + " withdrawn from study with id: " + studyId,
-              clientId);
+              "Participant id: " + participantId + " withdrawn from study with id: " + studyId);
         } else {
           activityResponseProcessorService.updateWithdrawalStatusForParticipant(
               studyId, participantId);
@@ -489,13 +470,11 @@ public class ProcessActivityResponseController {
               "Participant id: "
                   + participantId
                   + " withdrawal status updated for study with id: "
-                  + studyId,
-              clientId);
+                  + studyId);
           commonService.createActivityLog(
               null,
               "Participant withdrawn from study",
-              "Participant id: " + participantId + " withdrawn from study with id: " + studyId,
-              clientId);
+              "Participant id: " + participantId + " withdrawn from study with id: " + studyId);
         }
         // Delete all participant activity state from the table
         participantActivityStateResponseService.deleteParticipantActivites(studyId, participantId);
@@ -506,8 +485,7 @@ public class ProcessActivityResponseController {
             "Participant id: "
                 + participantId
                 + " activity state data deletion successful for study with id: "
-                + studyId,
-            clientId);
+                + studyId);
         srBean.setMessage(AppConstants.SUCCESS_MSG);
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
@@ -518,8 +496,7 @@ public class ProcessActivityResponseController {
               "Participant id: "
                   + participantId
                   + " activity state data deletion failed for study with id: "
-                  + studyId,
-              clientId);
+                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_717.code(),
@@ -540,8 +517,7 @@ public class ProcessActivityResponseController {
               "Participant id: "
                   + participantId
                   + " withdrawal failed for study with id: "
-                  + studyId,
-              clientId);
+                  + studyId);
           ErrorBean errorBean =
               AppUtil.dynamicResponse(
                   ErrorCode.EC_712.code(),

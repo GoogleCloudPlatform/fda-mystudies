@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.beans;
 
-import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,10 +19,6 @@ import lombok.Setter;
 public class UpdateTargetEnrollmentResponse extends BaseResponse {
 
   private String siteId;
-
-  public UpdateTargetEnrollmentResponse(ErrorCode errorCode) {
-    super(errorCode);
-  }
 
   public UpdateTargetEnrollmentResponse(String siteId, MessageCode messageCode) {
     super(messageCode);

@@ -9,10 +9,9 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_AND_EDIT_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.READ_PERMISSION;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.VIEW_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.STUDY_PARTICIPANT_REGISTRY_VIEWED;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
@@ -21,6 +20,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
@@ -69,6 +71,8 @@ public class StudyServiceImpl implements StudyService {
 
   @Autowired private SiteRepository siteRepository;
 
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
   @Override
   @Transactional(readOnly = true)
   public StudyResponse getStudies(String userId) {
@@ -78,8 +82,7 @@ public class StudyServiceImpl implements StudyService {
         sitePermissionRepository.findSitePermissionByUserId(userId);
 
     if (CollectionUtils.isEmpty(sitePermissions)) {
-      logger.exit(ErrorCode.STUDY_NOT_FOUND);
-      return new StudyResponse(ErrorCode.STUDY_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
     }
 
     Map<StudyEntity, List<SitePermissionEntity>> studyPermissionMap =
@@ -157,7 +160,9 @@ public class StudyServiceImpl implements StudyService {
         Integer studyEditPermission =
             studyPermissionsByStudyInfoId.get(entry.getKey().getId()).getEdit().value();
         studyDetail.setStudyPermission(
-            studyEditPermission == VIEW_VALUE ? READ_PERMISSION : READ_AND_EDIT_PERMISSION);
+            studyEditPermission == Permission.NO_PERMISSION.value()
+                ? Permission.VIEW.value()
+                : Permission.EDIT.value());
         studyDetail.setStudyPermission(studyEditPermission);
       }
 
@@ -187,8 +192,10 @@ public class StudyServiceImpl implements StudyService {
           getStudyInvitedCount(
               siteWithInvitedParticipantCountMap, entry, studyInvitedCount, sitePermission);
 
-      studyEnrolledCount +=
-          siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
+      if (siteWithEnrolledParticipantCountMap.containsKey(sitePermission.getSite().getId())) {
+        studyEnrolledCount +=
+            siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
+      }
     }
 
     studyDetail.setEnrolled(studyEnrolledCount);
@@ -229,7 +236,9 @@ public class StudyServiceImpl implements StudyService {
 
   private Map<String, Long> getSiteWithInvitedParticipantCountMap(List<String> usersSiteIds) {
     List<ParticipantRegistrySiteEntity> participantRegistry =
-        participantRegistrySiteRepository.findBySiteIds(usersSiteIds);
+        (List<ParticipantRegistrySiteEntity>)
+            CollectionUtils.emptyIfNull(
+                participantRegistrySiteRepository.findBySiteIds(usersSiteIds));
 
     return participantRegistry
         .stream()
@@ -240,37 +249,35 @@ public class StudyServiceImpl implements StudyService {
   }
 
   @Override
-  public ParticipantRegistryResponse getStudyParticipants(String userId, String studyId) {
+  public ParticipantRegistryResponse getStudyParticipants(
+      String userId, String studyId, AuditLogEventRequest auditRequest) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
     if (!optStudy.isPresent()) {
-      logger.exit(ErrorCode.STUDY_NOT_FOUND);
-      return new ParticipantRegistryResponse(ErrorCode.STUDY_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
     }
 
     Optional<StudyPermissionEntity> optStudyPermission =
         studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
 
     if (!optStudyPermission.isPresent()) {
-      logger.exit(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
-      return new ParticipantRegistryResponse(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
     }
 
     StudyPermissionEntity studyPermission = optStudyPermission.get();
 
     if (studyPermission.getApp() == null) {
-      logger.exit(ErrorCode.APP_NOT_FOUND);
-      return new ParticipantRegistryResponse(ErrorCode.APP_NOT_FOUND);
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
     }
 
     Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
-    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get());
+    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get(), userId, auditRequest);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
-      StudyEntity study, AppEntity app) {
+      StudyEntity study, AppEntity app, String userId, AuditLogEventRequest auditRequest) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
 
@@ -279,6 +286,11 @@ public class StudyServiceImpl implements StudyService {
           siteRepository.findByStudyIdAndType(study.getId(), study.getType());
       if (optSiteEntity.isPresent()) {
         participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
+
+        Optional<SitePermissionEntity> optSitePermission =
+            sitePermissionRepository.findByUserIdAndSiteId(userId, optSiteEntity.get().getId());
+
+        participantRegistryDetail.setOpenStudySitePermission(optSitePermission.get().getCanEdit());
       }
     }
 
@@ -307,6 +319,11 @@ public class StudyServiceImpl implements StudyService {
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
+
+    auditRequest.setUserId(userId);
+    auditRequest.setStudyId(study.getId());
+    auditRequest.setAppId(app.getId());
+    participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
 
     logger.exit(String.format("message=%s", participantRegistryResponse.getMessage()));
     return participantRegistryResponse;

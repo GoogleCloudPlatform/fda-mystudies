@@ -41,6 +41,7 @@ public class AppTestConfig {
     doNothing().when(javaMailSender).send(mimeMessage);
     return javaMailSender;
   }
+
   @Bean
   @Primary
   public AuditEventService auditService() {

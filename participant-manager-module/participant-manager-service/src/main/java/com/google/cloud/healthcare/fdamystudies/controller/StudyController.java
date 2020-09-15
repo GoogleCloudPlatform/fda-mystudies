@@ -10,10 +10,12 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateTargetEnrollmentResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyService;
 import javax.servlet.http.HttpServletRequest;
@@ -62,8 +64,10 @@ public class StudyController {
       @PathVariable String studyId,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     ParticipantRegistryResponse participantRegistryResponse =
-        studyService.getStudyParticipants(userId, studyId);
+        studyService.getStudyParticipants(userId, studyId, auditRequest);
     logger.exit(String.format(STATUS_LOG, participantRegistryResponse.getHttpStatusCode()));
     return ResponseEntity.status(participantRegistryResponse.getHttpStatusCode())
         .body(participantRegistryResponse);
@@ -79,11 +83,12 @@ public class StudyController {
       @Valid @RequestBody UpdateTargetEnrollmentRequest targetEnrollmentRequest,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     targetEnrollmentRequest.setUserId(userId);
     targetEnrollmentRequest.setStudyId(studyId);
     UpdateTargetEnrollmentResponse updateTargetEnrollmentResponse =
-        siteService.updateTargetEnrollment(targetEnrollmentRequest);
+        siteService.updateTargetEnrollment(targetEnrollmentRequest, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, updateTargetEnrollmentResponse.getHttpStatusCode()));
     return ResponseEntity.status(updateTargetEnrollmentResponse.getHttpStatusCode())

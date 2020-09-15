@@ -7,6 +7,8 @@ import {UpdateUserComponent} from './update-user/update-user.component';
 import {UserDetailsComponent} from './user-details/user-details.component';
 import {FormsModule} from '@angular/forms';
 import {NgSelectModule} from '@ng-select/ng-select';
+import {NgxDataTableModule} from 'angular-9-datatable';
+
 @NgModule({
   declarations: [
     AddNewUserComponent,
@@ -14,6 +16,12 @@ import {NgSelectModule} from '@ng-select/ng-select';
     UpdateUserComponent,
     UserDetailsComponent,
   ],
-  imports: [CommonModule, UserRoutingModule, FormsModule, NgSelectModule],
+  imports: [
+    CommonModule,
+    UserRoutingModule,
+    FormsModule,
+    NgSelectModule,
+    NgxDataTableModule,
+  ],
 })
 export class UserModule {}

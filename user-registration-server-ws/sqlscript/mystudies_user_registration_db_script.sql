@@ -16,16 +16,7 @@
 CREATE DATABASE IF NOT EXISTS `mystudies_userregistration` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `mystudies_userregistration`;
 
--- Dumping structure for table mystudies_userregistration.activity_log
-CREATE TABLE IF NOT EXISTS `activity_log` (
-  `activity_log_id` int(11) NOT NULL,
-  `activity_date_time` datetime DEFAULT NULL,
-  `actvity_name` varchar(255) DEFAULT NULL,
-  `activity_description` varchar(255) DEFAULT NULL,
-  `auth_user_id` varchar(255) DEFAULT NULL,
-  `server_client_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`activity_log_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- Data exporting was unselected.
 
@@ -51,10 +42,9 @@ CREATE TABLE IF NOT EXISTS `app_info` (
   `modified_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `reg_email_body` varchar(255) DEFAULT NULL,
   `reg_email_sub` varchar(255) DEFAULT NULL,
-  `org_info_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`app_info_id`),
-  KEY `FK1kiba8w1fk6ae3t5ve0bmxynm` (`org_info_id`),
-  CONSTRAINT `FK1kiba8w1fk6ae3t5ve0bmxynm` FOREIGN KEY (`org_info_id`) REFERENCES `org_info` (`id`)
+ 
+  PRIMARY KEY (`app_info_id`)
+ 
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
 -- Data exporting was unselected.
@@ -164,50 +154,9 @@ CREATE TABLE IF NOT EXISTS `mail_messages` (
 
 -- Data exporting was unselected.
 
--- Dumping structure for table mystudies_userregistration.org_info
-CREATE TABLE IF NOT EXISTS `org_info` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `created_by` int(20) DEFAULT '0',
-  `created_on` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified_by` int(20) DEFAULT NULL,
-  `modified_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `name` varchar(255) DEFAULT NULL,
-  `org_id` varchar(255) DEFAULT NULL,
-  `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
--- Data exporting was unselected.
 
--- Dumping structure for table mystudies_userregistration.participant_activities
-CREATE TABLE IF NOT EXISTS `participant_activities` (
-  `id` int(11) NOT NULL,
-  `activity_complete_id` int(11) DEFAULT NULL,
-  `activity_end_date` varchar(255) DEFAULT NULL,
-  `activity_id` varchar(255) DEFAULT NULL,
-  `activity_run_id` varchar(255) DEFAULT NULL,
-  `activity_start_date` varchar(255) DEFAULT NULL,
-  `activity_state` varchar(255) DEFAULT NULL,
-  `activity_type` varchar(255) DEFAULT NULL,
-  `activity_version` varchar(255) DEFAULT NULL,
-  `anchordate_created_date` varchar(255) DEFAULT NULL,
-  `anchordate_version` varchar(255) DEFAULT NULL,
-  `application_id` varchar(255) DEFAULT NULL,
-  `bookmark` tinyint(1) DEFAULT NULL,
-  `completed` int(11) DEFAULT NULL,
-  `last_modified_date` varchar(255) DEFAULT NULL,
-  `missed` int(11) DEFAULT NULL,
-  `org_id` varchar(255) DEFAULT NULL,
-  `participant_id` varchar(255) DEFAULT NULL,
-  `status` varchar(255) DEFAULT NULL,
-  `study_id` varchar(255) DEFAULT NULL,
-  `total` int(11) DEFAULT NULL,
-  `_ts` varchar(255) DEFAULT NULL,
-  `user_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Data exporting was unselected.
 
 -- Dumping structure for table mystudies_userregistration.participant_registry_site
 CREATE TABLE IF NOT EXISTS `participant_registry_site` (

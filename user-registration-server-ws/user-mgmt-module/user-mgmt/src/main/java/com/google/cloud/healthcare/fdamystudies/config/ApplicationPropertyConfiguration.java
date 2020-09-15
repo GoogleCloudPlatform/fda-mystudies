@@ -43,7 +43,7 @@ public class ApplicationPropertyConfiguration {
   private Boolean useIpWhitelist;
 
   // Domain to use with the IP whitelist relay.
-  // Must be in the form rocketturtle rather than rocketturtle.net.
+  // Must be in the form domain rather than domain.com.
 
   @Value("${from.email.domain}")
   private String fromDomain;
@@ -54,17 +54,8 @@ public class ApplicationPropertyConfiguration {
   @Value("${confirmation.mail.content}")
   private String confirmationMail;
 
-  @Value("${authServerAccessTokenValidationUrl}")
-  private String authServerAccessTokenValidationUrl;
-
-  @Value("${auth.server.url}")
-  private String authServerUrl;
-
   @Value("${auth.server.updateStatus.url}")
   private String authServerUpdateStatusUrl;
-
-  @Value("${auth.server.deleteStatusUrl}")
-  private String authServerDeleteStatusUrl;
 
   @Value("${register.url}")
   private String authServerRegisterStatusUrl;
@@ -80,9 +71,6 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${serverApiUrls}")
   private String serverApiUrls;
-
-  @Value("${authServerClientValidationUrl}")
-  private String authServerClientValidationUrl;
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
@@ -116,9 +104,6 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${cloud.institution.bucket}")
   private String institutionBucketName;
-
-  @Value("${auth.server.deactivateurl}")
-  private String authServerDeactivateUrl;
 
   @Value("${org.name}")
   private String orgName;
