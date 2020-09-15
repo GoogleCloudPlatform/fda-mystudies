@@ -8,6 +8,6 @@ export class UserService {
   constructor(private readonly http: HttpClient) {}
 
   getUserDetails(): Observable<User> {
-    return this.http.get<User>(`${environment.baseUrl}/users`);
+    return this.http.get<User>(`${environment.baseUrl}/users/profile`);
   }
 }

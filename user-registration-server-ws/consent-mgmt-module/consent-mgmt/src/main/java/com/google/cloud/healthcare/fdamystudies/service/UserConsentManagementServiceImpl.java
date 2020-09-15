@@ -15,10 +15,11 @@ import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
 import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
-import com.google.cloud.healthcare.fdamystudies.utils.MyStudiesUserRegUtil;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.storage.StorageException;
 import java.util.Collections;
 import java.util.List;
@@ -43,58 +44,25 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
   @Override
   @Transactional(readOnly = true)
   public ParticipantStudiesBO getParticipantStudies(Integer studyId, String userId) {
-    logger.info("UserConsentManagementServiceImpl getParticipantStudies() - Started ");
-    ParticipantStudiesBO participantStudiesBO = null;
-    try {
-      participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl getParticipantStudies() - error ", e);
-    }
-    return participantStudiesBO;
+    return userConsentManagementDao.getParticipantStudies(studyId, userId);
   }
 
   @Override
   @Transactional
   public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
-    logger.info("UserConsentManagementServiceImpl saveParticipantStudies() - Started ");
-    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    try {
-      message = userConsentManagementDao.saveParticipantStudies(participantStudiesList);
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl saveParticipantStudies() - error ", e);
-    }
-
-    return message;
+    return userConsentManagementDao.saveParticipantStudies(participantStudiesList);
   }
 
   @Override
   @Transactional(readOnly = true)
   public StudyConsentBO getStudyConsent(String userId, Integer studyId, String consentVersion) {
-    logger.info("UserConsentManagementServiceImpl getStudyConsent() - Started ");
-    StudyConsentBO studyConsent = null;
-    try {
-      studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl getStudyConsent() - error ", e);
-    }
-    logger.info("UserConsentManagementServiceImpl getStudyConsent() - Ends ");
-    return studyConsent;
+    return userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
   }
 
   @Override
   @Transactional
   public String saveStudyConsent(StudyConsentBO studyConsent) {
-    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Started ");
-    String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    try {
-
-      addOrUpdateConsentMessage = userConsentManagementDao.saveStudyConsent(studyConsent);
-
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl saveStudyConsent() - error ", e);
-    }
-    logger.info("UserConsentManagementServiceImpl saveStudyConsent() - Ends ");
-    return addOrUpdateConsentMessage;
+    return userConsentManagementDao.saveStudyConsent(studyConsent);
   }
 
   @Override
@@ -106,32 +74,27 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
     StudyConsentBO studyConsent = null;
     ParticipantStudiesBO participantStudiesBO = null;
     ConsentStudyResponseBean consentStudyResponseBean = new ConsentStudyResponseBean();
-    try {
 
-      studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
+    studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
 
-      if (studyConsent != null) {
-        if (studyConsent.getVersion() != null) {
-          consentStudyResponseBean.getConsent().setVersion(studyConsent.getVersion());
-        }
-        if (studyConsent.getPdf() != null) {
-          consentStudyResponseBean.getConsent().setContent(studyConsent.getPdf());
-        }
-
-        if (studyConsent.getPdfStorage() == 1) {
-          String path = studyConsent.getPdfPath();
-
-          downloadConsentDocument(path, consentStudyResponseBean, userId, auditRequest);
-        }
-        consentStudyResponseBean.getConsent().setType("application/pdf");
-        participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
-        if (participantStudiesBO != null) {
-          consentStudyResponseBean.setSharing(participantStudiesBO.getSharing());
-        }
+    if (studyConsent != null) {
+      if (studyConsent.getVersion() != null) {
+        consentStudyResponseBean.getConsent().setVersion(studyConsent.getVersion());
+      }
+      if (studyConsent.getPdf() != null) {
+        consentStudyResponseBean.getConsent().setContent(studyConsent.getPdf());
       }
 
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl getStudyConsentDetails() - error ", e);
+      if (studyConsent.getPdfStorage() == 1) {
+        String path = studyConsent.getPdfPath();
+
+        downloadConsentDocument(path, consentStudyResponseBean, userId, auditRequest);
+      }
+      consentStudyResponseBean.getConsent().setType("application/pdf");
+      participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
+      if (participantStudiesBO != null) {
+        consentStudyResponseBean.setSharing(participantStudiesBO.getSharing());
+      }
     }
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Ends ");
@@ -152,36 +115,20 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
           READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest, map);
     } catch (StorageException e) {
       consentAuditHelper.logEvent(READ_OPERATION_FAILED_FOR_SIGNED_CONSENT_DOCUMENT, auditRequest);
+      logger.error("Download consent document from cloud storage failed", e);
+      throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
     }
   }
 
   @Override
   @Transactional(readOnly = true)
   public StudyInfoBean getStudyInfoId(String customStudyId) {
-    logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Starts ");
-    StudyInfoBean studyInfoBean = null;
-    try {
-      studyInfoBean = userConsentManagementDao.getStudyInfoId(customStudyId);
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl getStudyInfoId() - error ", e);
-    }
-
-    logger.info("UserConsentManagementServiceImpl getStudyInfoId() - Ends ");
-    return studyInfoBean;
+    return userConsentManagementDao.getStudyInfoId(customStudyId);
   }
 
   @Override
   @Transactional(readOnly = true)
   public Integer getUserDetailsId(String userId) {
-    logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Starts ");
-    Integer userDetailId = null;
-    try {
-      userDetailId = userConsentManagementDao.getUserDetailsId(userId);
-    } catch (Exception e) {
-      logger.error("UserConsentManagementServiceImpl getStudyInfoId() - error ", e);
-    }
-
-    logger.info("UserConsentManagementServiceImpl getUserDetailsId() - Ends ");
-    return userDetailId;
+    return userConsentManagementDao.getUserDetailsId(userId);
   }
 }
