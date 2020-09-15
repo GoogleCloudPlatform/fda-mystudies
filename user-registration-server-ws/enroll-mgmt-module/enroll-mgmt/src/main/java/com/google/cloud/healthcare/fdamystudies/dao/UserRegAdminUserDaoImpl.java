@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateServiceImpl;
 import java.util.List;
 import org.hibernate.Session;
@@ -29,7 +28,7 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
 
   @Override
   @SuppressWarnings("unchecked")
-  public UserDetailsBO getRecord(String userId) throws SystemException {
+  public UserDetailsBO getRecord(String userId) {
     logger.info("(Service)...UserRegAdminUserDaoImpl.getRecord()...Started");
     List<UserDetailsBO> userList = null;
     UserDetailsBO user = null;
