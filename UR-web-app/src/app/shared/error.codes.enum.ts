@@ -78,10 +78,6 @@ const errorMessages = {
   EC_0063:
     'You need to have permission to one or more studies to see app level information.',
   EC_0064: 'email_id already exist',
-  EC_0065: 'The argument value provided is invalid.',
-  EC_0066: 'The argument required is missing.',
-  EC_0067: 'Participant already enrolled',
-  EC_0068: 'You do not have super admin permission',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 
