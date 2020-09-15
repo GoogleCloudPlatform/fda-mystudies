@@ -78,4 +78,8 @@ public final class CommonConstants {
   public static final String NEW_USER_ID = "new_user_id";
 
   public static final double DEFAULT_PERCENTAGE = 100.00;
+
+  public static final String DELETE = "delete";
+
+  public static final String RETAIN = "retain";
 }
