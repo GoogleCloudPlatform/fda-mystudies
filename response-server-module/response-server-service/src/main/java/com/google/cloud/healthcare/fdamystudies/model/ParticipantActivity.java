@@ -70,4 +70,5 @@ public class ParticipantActivity {
 
   @Column(name = "missed")
   private Integer missed;
+
 }
