@@ -44,7 +44,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -61,12 +60,6 @@ public class EnrollmentTokenController {
   @Autowired private EnrollmentManagementUtil enrollManagementUtil;
 
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
-
-  @RequestMapping(value = "/ping")
-  public String ping() {
-    logger.info(" EnrollmentTokenController - ping()  ");
-    return "Mystudies UserRegistration Webservice Enrollment Management Service Bundle Started !!!";
-  }
 
   @PostMapping(value = "/validateEnrollmentToken", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> validateEnrollmentToken(
