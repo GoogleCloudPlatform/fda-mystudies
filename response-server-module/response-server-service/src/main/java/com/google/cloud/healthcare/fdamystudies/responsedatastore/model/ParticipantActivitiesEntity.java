@@ -44,22 +44,19 @@ public class ParticipantActivitiesEntity implements Serializable {
   @Column(name = "study_id", nullable = false, length = XS_LENGTH)
   private String studyId;
 
-  @Column(name = "activity_id", length = SMALL_LENGTH)
+  @Column(name = "activity_id", nullable = false, length = SMALL_LENGTH)
   private String activityId;
 
-  @Column(name = "activity_complete_id")
-  private Integer activityCompleteId;
-
-  @Column(name = "bookmark", columnDefinition = "TINYINT(1) default 0")
+  @Column(name = "bookmark", nullable = false, columnDefinition = "TINYINT(1) default 0")
   private Boolean bookmark;
 
-  @Column(name = "activity_version", length = XS_LENGTH)
+  @Column(name = "activity_version", nullable = false, length = XS_LENGTH)
   private String activityVersion;
 
-  @Column(name = "activity_state", length = LARGE_LENGTH)
+  @Column(name = "activity_state", nullable = false, length = LARGE_LENGTH)
   private String activityState;
 
-  @Column(name = "activity_run_id", length = XS_LENGTH)
+  @Column(name = "activity_run_id", nullable = false, length = XS_LENGTH)
   private String activityRunId;
 
   @Column(name = "total")
@@ -70,18 +67,6 @@ public class ParticipantActivitiesEntity implements Serializable {
 
   @Column(name = "missed")
   private Integer missed;
-
-  @Column(name = "activity_start_date")
-  private Timestamp activityStartDate;
-
-  @Column(name = "activity_end_date")
-  private Timestamp activityEndDate;
-
-  @Column(name = "anchordate_version", length = XS_LENGTH)
-  private String anchorDateVersion;
-
-  @Column(name = "anchordate_created_date")
-  private Timestamp anchorDateCreatRappledDate;
 
   @Column(name = "created_time")
   @CreationTimestamp

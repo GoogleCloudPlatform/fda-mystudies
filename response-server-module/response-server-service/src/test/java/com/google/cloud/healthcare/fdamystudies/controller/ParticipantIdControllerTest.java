@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ParticipantIdControllerTest extends BaseMockIT {
-  @Autowired private ParticipantBoRepository repository;
+  @Autowired private ParticipantInfoRepository repository;
 
   @Test
   void shouldAddParticipant() throws Exception {
@@ -62,8 +62,7 @@ public class ParticipantIdControllerTest extends BaseMockIT {
     String participantId = result.getResponse().getContentAsString();
     assertNotNull(participantId);
     // Step-2 Find ParticipantBo by participantId and compare with input ParticipantBo object
-    List<ParticipantInfoEntity> participantBoList =
-        repository.findByParticipantIdentifier(participantId);
+    List<ParticipantInfoEntity> participantBoList = repository.findByParticipantId(participantId);
     assertNotNull(participantBoList);
     assertEquals(1, participantBoList.size());
     assertEquals(

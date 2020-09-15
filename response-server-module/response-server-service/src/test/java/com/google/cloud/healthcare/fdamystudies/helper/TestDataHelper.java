@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.helper;
 
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantInfoEntity;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestDataHelper {
 
-  @Autowired private ParticipantBoRepository participantBoRepository;
+  @Autowired private ParticipantInfoRepository participantBoRepository;
 
   public ParticipantInfoEntity saveParticipant() {
     ParticipantInfoEntity participant = new ParticipantInfoEntity();
     participant.setTokenId(IdGenerator.id());
     participant.setParticipantId(IdGenerator.id());
+    participant.setStudyId("CovidStudy");
 
     return participantBoRepository.saveAndFlush(participant);
   }
