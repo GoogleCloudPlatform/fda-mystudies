@@ -87,13 +87,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
   }
 
   @Test
-  public void ping() throws Exception {
-
-    HttpHeaders headers = TestUtils.getCommonHeaders();
-    mockMvc.perform(get("/ping").headers(headers)).andDo(print()).andExpect(status().isOk());
-  }
-
-  @Test
   public void updateEligibilityConsentStatus() throws Exception {
     when(cloudStorageService.saveFile(anyString(), anyString(), anyString()))
         .thenAnswer(
