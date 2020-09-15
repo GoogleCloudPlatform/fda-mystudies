@@ -27,8 +27,8 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   toggleDisplay = false;
   userIds: string[] = [];
   onBoardingStatus = OnboardingStatus;
-  activeTab = 'All';
-  maximumUser = 10;
+  activeTab = OnboardingStatus.All;
+
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -48,7 +48,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
         if (params.siteId) {
           this.siteId = params.siteId as string;
         }
-        this.fetchSiteParticipant(this.onBoardingStatus.All);
+        this.fetchSiteParticipant(OnboardingStatus.All);
       }),
     );
   }
@@ -74,11 +74,9 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   }
   changeTab(tab: OnboardingStatus): void {
     this.sendResend =
-      tab === this.onBoardingStatus.New
-        ? 'Send Invitation'
-        : 'Resend Invitation';
+      tab === OnboardingStatus.New ? 'Send Invitation' : 'Resend Invitation';
     this.enableDisable =
-      tab === this.onBoardingStatus.New || tab === this.onBoardingStatus.Invited
+      tab === OnboardingStatus.New || tab === OnboardingStatus.Invited
         ? 'Disable Invitation'
         : 'Enable Invitation';
     this.activeTab = tab;
@@ -127,7 +125,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(this.onBoardingStatus.Invited);
+                this.changeTab(OnboardingStatus.Invited);
               }
             }),
         );
@@ -136,12 +134,15 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.toastr.error('Please select at least one participant');
     }
   }
+
   toggleInvitation(): void {
+    const MAXIMUM_USER_COUNT = 10;
     if (this.userIds.length > 0) {
-      if (this.userIds.length > this.maximumUser) {
+      if (this.userIds.length > MAXIMUM_USER_COUNT) {
         this.toastr.error('Please select less than 10 participants');
       } else {
-        const statusUpdate = this.activeTab === 'Disabled' ? 'N' : 'D';
+        const statusUpdate =
+          this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
         const invitationUpdate = {
           ids: this.userIds,
           status: statusUpdate,
@@ -155,9 +156,9 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
               } else {
                 this.toastr.success(successResponse.message);
                 this.changeTab(
-                  this.activeTab === this.onBoardingStatus.Disabled
-                    ? this.onBoardingStatus.Disabled
-                    : this.onBoardingStatus.New,
+                  this.activeTab === OnboardingStatus.Disabled
+                    ? OnboardingStatus.Disabled
+                    : OnboardingStatus.New,
                 );
               }
             }),
@@ -167,12 +168,14 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.toastr.error('Please select at least one participant');
     }
   }
+
   onSucceedAddEmail(): void {
     this.modalRef.hide();
-    this.fetchSiteParticipant(this.onBoardingStatus.New);
+    this.fetchSiteParticipant(OnboardingStatus.New);
   }
+
   onFileImportSuccess(): void {
-    this.fetchSiteParticipant(this.onBoardingStatus.New);
+    this.fetchSiteParticipant(OnboardingStatus.New);
     this.modalRef.hide();
   }
 }

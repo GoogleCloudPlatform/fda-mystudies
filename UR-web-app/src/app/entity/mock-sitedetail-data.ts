@@ -53,15 +53,11 @@ export const expectedSiteParticipantDetails = {
     ],
 
     countByStatus: {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+      /* eslint-disable @typescript-eslint/naming-convention */
       A: 1,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       D: 0,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       E: 1,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       I: 12,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       N: 21,
     },
   },

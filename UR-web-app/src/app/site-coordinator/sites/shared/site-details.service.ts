@@ -25,9 +25,16 @@ export class SiteDetailsService {
     fetchingOption: OnboardingStatus,
   ): Observable<SiteParticipants> {
     const fetchingOptions = this.getInvitationType(fetchingOption);
-    return this.entityService.get(
-      `sites/${encodeURIComponent(siteId)}/participants` + fetchingOptions,
-    );
+    if (fetchingOption !== OnboardingStatus.All) {
+      return this.entityService.get(
+        `sites/${encodeURIComponent(siteId)}/participants?onboardingStatus=` +
+          fetchingOptions,
+      );
+    } else {
+      return this.entityService.get(
+        `sites/${encodeURIComponent(siteId)}/participants`,
+      );
+    }
   }
 
   siteDecommission(siteId: string): Observable<ApiResponse> {
@@ -36,6 +43,7 @@ export class SiteDetailsService {
       '',
     );
   }
+
   toggleInvitation(
     siteId: string,
     participantToBeUpdated: StatusUpdate,
@@ -59,23 +67,16 @@ export class SiteDetailsService {
     );
   }
 
-  getInvitationType(fetchingOption: string): string {
+  private getInvitationType(fetchingOption: string): string {
     switch (fetchingOption) {
       case 'All':
         return '';
-        break;
-
       case 'New':
-        return '?onboardingStatus=N';
-        break;
-
+        return 'N';
       case 'Invited':
-        return '?onboardingStatus=I';
-        break;
-
+        return 'I';
       case 'Disabled':
-        return '?onboardingStatus=D';
-        break;
+        return 'D';
     }
     return '';
   }
