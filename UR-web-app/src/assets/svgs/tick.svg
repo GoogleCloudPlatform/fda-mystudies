@@ -1,9 +1,7 @@
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  height="16"
-  viewBox="0 0 24 24"
-  width="16"
->
-  <path d="M0 0h24v24H0z" fill="none" />
-  <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#1a73e8" />
-</svg>
+<!-- 
+  Copyright 2020 Google LLC
+ 
+  Use of this source code is governed by an APACHE LICENSE, VERSION 2.0
+  that can be found in the LICENSE file or at
+  https://www.apache.org/licenses/LICENSE-2.0.html -->
+  <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 24 24" width="16"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" fill="#1a73e8"/></svg>
