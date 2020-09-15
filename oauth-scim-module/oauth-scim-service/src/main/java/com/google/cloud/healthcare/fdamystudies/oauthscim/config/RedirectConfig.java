@@ -23,107 +23,65 @@ public class RedirectConfig implements Serializable {
 
   private static final long serialVersionUID = 2189883675260389666L;
 
-  @Value("${participant.manager.callback-url}")
-  private String participantManagerCallbackUrl;
+  @Value("${participant.manager.url}")
+  private String participantManagerUrl;
 
-  @Value("${mystudies.ios.app.callback-url}")
-  private String myStudiesIosAppCallbackUrl;
+  @Value("${ios.deeplink.url}")
+  private String iosDeeplinkUrl;
 
-  @Value("${mystudies.android.app.callback-url}")
-  private String myStudiesAndroidAppCallbackUrl;
-
-  @Value("${participant.manager.forgot-password-url}")
-  private String participantManagerForgotPasswordUrl;
-
-  @Value("${mystudies.ios.app.forgot-password-url}")
-  private String myStudiesIosAppForgotPasswordUrl;
-
-  @Value("${mystudies.android.app.forgot-password-url}")
-  private String myStudiesAndroidAppForgotPasswordUrl;
-
-  @Value("${mystudies.ios.app.signup-url}")
-  private String myStudiesIosAppSignupUrl;
-
-  @Value("${mystudies.android.app.signup-url}")
-  private String myStudiesAndroidAppSignupUrl;
-
-  @Value("${mystudies.ios.app.account-activation-url}")
-  private String myStudiesIosAppAccountActivationUrl;
-
-  @Value("${mystudies.android.app.account-activation-url}")
-  private String myStudiesAndroidAppAccountActivationUrl;
-
-  @Value("${participant.manager.account-activation-url}")
-  private String participantManagerAccountActivationUrl;
-
-  @Value("${mystudies.ios.app.terms-url}")
-  private String myStudiesIosAppTermsUrl;
-
-  @Value("${mystudies.android.app.terms-url}")
-  private String myStudiesAndroidAppTermsUrl;
-
-  @Value("${participant.manager.terms-url}")
-  private String participantManagerTermsUrl;
-
-  @Value("${mystudies.ios.app.privacy-policy-url}")
-  private String myStudiesIosAppPrivacyPolicyUrl;
-
-  @Value("${mystudies.android.app.privacy-policy-url}")
-  private String myStudiesAndroidAppPrivacyPolicyUrl;
-
-  @Value("${participant.manager.about-url}")
-  private String participantManagerAboutUrl;
+  @Value("${android.deeplink.url}")
+  private String androidDeeplinkUrl;
 
   public String getCallbackUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppCallbackUrl;
+      return androidDeeplinkUrl + "/callback";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppCallbackUrl;
+      return iosDeeplinkUrl + "/callback";
     }
-    return participantManagerCallbackUrl;
+    return participantManagerUrl + "/#/callback";
   }
 
   public String getForgotPasswordUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppForgotPasswordUrl;
+      return androidDeeplinkUrl + "/forgotPassword";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppForgotPasswordUrl;
+      return iosDeeplinkUrl + "/forgotPassword";
     }
-    return participantManagerForgotPasswordUrl;
+    return participantManagerUrl + "/#/forgotPassword";
   }
 
   public String getSignupUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppSignupUrl;
+      return androidDeeplinkUrl + "/signup";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppSignupUrl;
+      return iosDeeplinkUrl + "/signup";
     }
     return null;
   }
 
   public String getAccountActivationUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppAccountActivationUrl;
+      return androidDeeplinkUrl + "/activation";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppAccountActivationUrl;
+      return iosDeeplinkUrl + "/activation";
     }
-    return participantManagerAccountActivationUrl;
+    return participantManagerUrl + "/#/activation";
   }
 
   public String getTermsUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppTermsUrl;
+      return androidDeeplinkUrl + "/terms";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppTermsUrl;
+      return iosDeeplinkUrl + "/terms";
     }
-    return participantManagerTermsUrl;
+    return participantManagerUrl + "/#/terms";
   }
 
   public String getPrivacyPolicyUrl(String mobilePlatform) {
     if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
-      return myStudiesAndroidAppPrivacyPolicyUrl;
+      return androidDeeplinkUrl + "/privacyPolicy";
     } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return myStudiesIosAppPrivacyPolicyUrl;
+      return iosDeeplinkUrl + "/privacyPolicy";
     }
     return null;
   }
@@ -133,6 +91,6 @@ public class RedirectConfig implements Serializable {
         || MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return null;
     }
-    return participantManagerAboutUrl;
+    return participantManagerUrl + "/#/about";
   }
 }
