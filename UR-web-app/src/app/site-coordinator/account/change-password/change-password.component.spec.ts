@@ -5,7 +5,7 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
-import {AccountProfileComponent} from './account-profile.component';
+import {ChangePasswordComponent} from './change-password.component';
 import {EntityService} from 'src/app/service/entity.service';
 import {AccountService} from '../shared/account.service';
 import {of} from 'rxjs';
@@ -15,25 +15,20 @@ import {SiteCoordinatorModule} from '../../../site-coordinator/site-coordinator.
 import {RouterTestingModule} from '@angular/router/testing';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HttpClientModule} from '@angular/common/http';
-import {
-  expectedProfiledataResposnse,
-  expectedUpdateResponse,
-} from '../../../entity/mock-profile-data';
-import {By} from '@angular/platform-browser';
+import {expectedChangePasswordResponse} from '../../../entity/mock-profile-data';
 describe('ChangePasswordComponent', () => {
-  let component: AccountProfileComponent;
-  let fixture: ComponentFixture<AccountProfileComponent>;
+  let component: ChangePasswordComponent;
+  let fixture: ComponentFixture<ChangePasswordComponent>;
 
   beforeEach(async(async () => {
-    const accountServiceSpy = jasmine.createSpyObj<AccountService>(
+    const changePasswordServiceSpy = jasmine.createSpyObj<AccountService>(
       'AccountService',
       {
-        fetchProfile: of(expectedProfiledataResposnse),
-        updateUserProfile: of(expectedUpdateResponse),
+        changePassword: of(expectedChangePasswordResponse),
       },
     );
     await TestBed.configureTestingModule({
-      declarations: [AccountProfileComponent],
+      declarations: [ChangePasswordComponent],
       imports: [
         AccountModule,
         RouterTestingModule,
@@ -48,18 +43,18 @@ describe('ChangePasswordComponent', () => {
       ],
       providers: [
         EntityService,
-        {provide: AccountService, useValue: accountServiceSpy},
+        {provide: AccountService, useValue: changePasswordServiceSpy},
       ],
     })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(AccountProfileComponent);
+        fixture = TestBed.createComponent(ChangePasswordComponent);
         component = fixture.componentInstance;
       });
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AccountProfileComponent);
+    fixture = TestBed.createComponent(ChangePasswordComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -68,28 +63,27 @@ describe('ChangePasswordComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update the form after component initialized', () => {
-    fixture.detectChanges();
-    expect(component.profileForm.controls['email'].value).toEqual(
-      expectedProfiledataResposnse.email,
+  it('should update the password when  button is submitted', fakeAsync(async () => {
+    spyOn(component, 'changePassword').and.callThrough();
+    component.changePassword();
+    component.resetPasswordForm.controls['currentPassword'].setValue(
+      'currentPassword',
     );
-    expect(component.profileForm.controls['firstName'].value).toEqual(
-      expectedProfiledataResposnse.firstName,
+    component.resetPasswordForm.controls['newPassword'].setValue(
+      'Newpassword3241*',
     );
-    expect(component.profileForm.controls['lastName'].value).toEqual(
-      expectedProfiledataResposnse.lastName,
+    component.resetPasswordForm.controls['confirmPassword'].setValue(
+      'Newpassword3241*',
     );
-  });
-
-  it('should update the profile when  button is submitted', fakeAsync(async () => {
-    const toggleChangeSpy = spyOn(component, 'updateProfile');
     fixture.detectChanges();
-    tick();
-    fixture.debugElement
-      .query(By.css('form'))
-      .triggerEventHandler('submit', null);
+    expect(component.resetPasswordForm.invalid).toBe(false);
     fixture.detectChanges();
+    tick(10000);
     await fixture.whenStable();
-    expect(toggleChangeSpy).toHaveBeenCalledTimes(1);
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(component.changePassword).toHaveBeenCalled();
   }));
+  it('should validate the form when input is not provided', () => {
+    expect(component.resetPasswordForm.invalid).toBe(true);
+  });
 });
