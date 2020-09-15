@@ -67,7 +67,7 @@ export class AuthService {
     return sessionStorage.getItem('accessToken') || '';
   }
   getAuthUserId(): string {
-    return sessionStorage.getItem('userId') || '';
+    return sessionStorage.getItem('authUserId') || '';
   }
 
   grantAuthorization(code: string, userId: string): Observable<AccessToken> {

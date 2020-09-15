@@ -10,22 +10,35 @@ import {AuthService} from '../../../service/auth.service';
   providedIn: 'root',
 })
 export class AccountService {
+    authUserId='';
   constructor(
     private readonly entityService: EntityService<Profile>,
     private readonly http: HttpClient,
     private readonly authService: AuthService,
-  ) {}
-  // eslint-disable-next-line no-invalid-this
-  id = this.authService.getAuthUserId();
+  ) {
+  this.authUserId= this.authService.getAuthUserId();
+  }
+
   fetchProfile(): Observable<Profile> {
-    return this.entityService.get(`/users/${encodeURIComponent(this.id)}`);
+    return this.entityService.get(`/users/${encodeURIComponent( this.authUserId)}`);
   }
   updateUserProfile(
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
-      `${environment.baseUrl}/users/${encodeURIComponent(this.id)}/profile`,
+      `${environment.baseUrl}/users/${encodeURIComponent(
+        this.authUserId,
+      )}/profile`,
       profileToBeUpdated,
+    );
+  }
+
+  logout(): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.authServerUrl}/users/${encodeURIComponent(
+         this.authUserId,
+      )}/logout`,
+      '',
     );
   }
 }

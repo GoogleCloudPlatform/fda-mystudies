@@ -41,13 +41,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.firstName.errors?.required"
                   >
-                    Please fill out this filed.
-                  </span>
-                  <span
-                    class="help-block with-errors error__msg"
-                    *ngIf="f.firstName.errors?.pattern"
-                  >
-                    Please enter atlest 4 alphabets with no space.
+                    This field is required.
                   </span>
                 </div>
               </div>
@@ -72,13 +66,7 @@
                     class="help-block with-errors error__msg"
                     *ngIf="f.lastName.errors?.required"
                   >
-                    Please fill out this filed.
-                  </span>
-                  <span
-                    class="help-block with-errors error__msg"
-                    *ngIf="f.lastName.errors?.pattern"
-                  >
-                    Please enter atlest 4 alphabets with no space.
+                    This field is required.
                   </span>
                 </div>
               </div>
@@ -89,17 +77,25 @@
       <div class="btn__container flex__justify__space-between mb-xlg">
         <div>
           <button
-            name="buttonUpdateProfile"
             type="submit"
             class="btn bt__add mr-sm"
             [disabled]="!profileForm.valid || profileForm.pristine"
           >
             Update
           </button>
-          <button type="button" class="btn bt__cancel" disabled>Cancel</button>
+          <button
+            name="cancel"
+            (click)="cancel()"
+            type="button"
+            class="btn bt__cancel"
+          >
+            Cancel
+          </button>
         </div>
         <div>
-          <button type="button" class="primary__btn bt__so">Sign Out</button>
+          <button (click)="signOut()" type="button" class="primary__btn bt__so">
+            Sign Out
+          </button>
         </div>
       </div>
       <span><a [routerLink]="['changepassword']">Change password?</a></span>
