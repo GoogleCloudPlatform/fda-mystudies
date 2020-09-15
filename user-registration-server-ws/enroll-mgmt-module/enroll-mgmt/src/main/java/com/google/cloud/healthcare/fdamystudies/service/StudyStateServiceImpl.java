@@ -196,8 +196,7 @@ public class StudyStateServiceImpl implements StudyStateService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<StudyStateBean> getStudiesState(String userId)
-      throws SystemException, InvalidUserIdException /*, NoStudyEnrolledException*/ {
+  public List<StudyStateBean> getStudiesState(String userId) {
     logger.info("(Service)...StudyStateServiceImpl.getStudiesState()...Started");
 
     List<StudyStateBean> serviceResponseList = new ArrayList<>();
