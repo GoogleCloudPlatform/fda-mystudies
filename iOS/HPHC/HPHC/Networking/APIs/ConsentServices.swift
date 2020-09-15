@@ -13,7 +13,6 @@ class ConsentServices: NSObject {
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
   var method: Method!
-  var failedRequestServices = FailedUserServices()
 
   // MARK: Requests
 
@@ -100,17 +99,12 @@ class ConsentServices: NSObject {
   }
 
   // MARK: Parsers
-  func handleUpdateTokenResponse(response: [String: Any]) {
-
-    let headerParams =
-      self.failedRequestServices.headerParams == nil
-      ? [:] : self.failedRequestServices.headerParams
+  func handleUpdateTokenResponse() {
     self.sendRequestWith(
-      method: self.failedRequestServices.method,
-      params: (self.requestParams == nil ? nil : self.requestParams),
-      headers: headerParams
+      method: self.method,
+      params: self.requestParams,
+      headers: self.headerParams
     )
-
   }
 
   /// Sends Request
@@ -143,7 +137,8 @@ extension ConsentServices: NMWebServiceDelegate {
     case ConsentServerMethods.updateEligibilityConsentStatus.description as String: break
     case ConsentServerMethods.consentDocument.description as String: break
     case AuthServerMethods.getRefreshedToken.description as String:
-      self.handleUpdateTokenResponse(response: (response as? [String: Any])!)
+      self.handleUpdateTokenResponse()
+      return
     default: break
     }
 
@@ -156,30 +151,12 @@ extension ConsentServices: NMWebServiceDelegate {
     if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // Session expired.
       delegate?.failedRequest(manager, requestName: requestName, error: error)
     } else if error.code == 401 {
-
-      self.failedRequestServices.headerParams = self.headerParams
-      self.failedRequestServices.requestParams = self.requestParams
-      self.failedRequestServices.method = self.method
-
-      if User.currentUser.refreshToken == ""
-        && requestName as String
-          != AuthServerMethods
-          .login
-          .description
-      {
-        // Unauthorized Access
-        let errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
-        let localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
-        delegate?.failedRequest(manager, requestName: requestName, error: localError)
-      } else {
-        // Update Refresh Token
-        AuthServices().updateToken(delegate: self)
-      }
+      AuthServices().updateToken(delegate: self)
     } else {
       var errorInfo = error.userInfo
       var localError = error
       if error.code == 403 {
-        errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
+        errorInfo = ["NSLocalizedDescription": LocalizableString.sessionExpired.localizedString]
         localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
       }
       delegate?.failedRequest(manager, requestName: requestName, error: localError)
