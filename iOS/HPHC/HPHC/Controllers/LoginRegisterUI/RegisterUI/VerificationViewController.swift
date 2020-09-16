@@ -185,6 +185,17 @@ class VerificationViewController: UIViewController {
 
     self.navigationController?.pushViewController(fda, animated: true)
   }
+
+  private func navigateToLogin() {
+    if let signInVC = self.storyboard?
+      .instantiateViewController(withIdentifier: "SignInViewController") as? SignInViewController
+    {
+      let navigationVC = UINavigationController(rootViewController: signInVC)
+      signInVC.viewLoadFrom = .signUp
+      signInVC.delegate = self
+      self.present(navigationVC, animated: true, completion: nil)
+    }
+  }
 }
 
 // MARK: - TextField Delegates
@@ -222,27 +233,8 @@ extension VerificationViewController: NMWebServiceDelegate {
   func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
 
     self.removeProgressIndicator()
-
     if User.currentUser.verified == true {
-
-      let ud = UserDefaults.standard
-      ud.set(true, forKey: kNotificationRegistrationIsPending)
-      ud.synchronize()
-
-      if viewLoadFrom == .forgotPassword {
-        resetPasswordOnVerification()
-      } else if viewLoadFrom == .joinStudy {
-
-        let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
-        appDelegate.checkPasscode(viewController: self)
-
-        self.navigateToSignUpCompletionStep()
-      } else {
-        let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
-        appDelegate.checkPasscode(viewController: self)
-
-        self.navigateToSignUpCompletionStep()
-      }
+      navigateToLogin()
     } else {
 
       if requestName as String == RegistrationMethods.resendConfirmation.description {
@@ -312,4 +304,31 @@ extension VerificationViewController: ORKTaskViewControllerDelegate {
   ) {
 
   }
+}
+
+extension VerificationViewController: SignInViewControllerDelegate {
+
+  func didFailLogIn() {
+    self.navigationController?.popViewController(animated: true)
+  }
+
+  func didLogInCompleted() {
+
+    UserDefaults.standard.set(true, forKey: kNotificationRegistrationIsPending)
+    if viewLoadFrom == .forgotPassword {
+      resetPasswordOnVerification()
+    } else if viewLoadFrom == .joinStudy {
+
+      let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+      appDelegate.checkPasscode(viewController: self)
+
+      self.navigateToSignUpCompletionStep()
+    } else {
+      let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
+      appDelegate.checkPasscode(viewController: self)
+
+      self.navigateToSignUpCompletionStep()
+    }
+  }
+
 }

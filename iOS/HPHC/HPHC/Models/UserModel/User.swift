@@ -88,6 +88,8 @@ class User {
   var password: String? = ""
   var refreshToken: String! = ""
 
+  /// Temporary ID to Auto login the user after successfull verification.
+  var tempRegID: String?
   var verified: Bool = false
   var authToken: String!
   var participatedStudies: [UserStudyStatus]! = []

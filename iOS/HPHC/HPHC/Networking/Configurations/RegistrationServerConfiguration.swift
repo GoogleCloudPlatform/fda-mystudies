@@ -91,6 +91,15 @@ enum RegistrationServerURLConstants {
 }
 
 class RegistrationServerConfiguration: NetworkConfiguration {
+
+  struct JSONKey {
+    static let errorDesc = "error_description"
+    static let status = "status"
+    static let error = "error"
+    static let code = "code"
+    static let message = "message"
+  }
+
   static let configuration = RegistrationServerConfiguration()
 
   // MARK: Delegates
@@ -120,7 +129,32 @@ class RegistrationServerConfiguration: NetworkConfiguration {
   }
 
   override func shouldParseErrorMessage() -> Bool {
-    return false
+    return true
+  }
+
+  override func parseError(errorResponse: [String: Any]) -> NSError {
+
+    if let code = errorResponse[JSONKey.status] as? Int {
+      let message = errorResponse[JSONKey.error] as? String ?? errorResponse[JSONKey.errorDesc] as? String ?? ""
+      return NSError(
+        domain: NSURLErrorDomain,
+        code: code,
+        userInfo: [NSLocalizedDescriptionKey: message]
+      )
+    } else if let code = errorResponse[JSONKey.code] as? Int {
+      let message = errorResponse[JSONKey.message] as? String ?? ""
+      return NSError(
+        domain: NSURLErrorDomain,
+        code: code,
+        userInfo: [NSLocalizedDescriptionKey: message]
+      )
+    } else {
+      return NSError(
+        domain: NSURLErrorDomain,
+        code: 0,
+        userInfo: [NSLocalizedDescriptionKey: LocalizableString.badHappened.localizedString]
+      )
+    }
   }
 
 }

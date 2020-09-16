@@ -18,7 +18,7 @@ struct HydraAPI {
   /// Generates request for Hydra web login.
   /// - Parameter tempRegID: Temporary registration ID.
   /// - Returns: Instance of `URLRequest`
-  static func loginRequest(tempRegID: String = "") -> URLRequest? {
+  static func loginRequest() -> URLRequest? {
 
     let parameters: JSONDictionary = [
       "client_id": API.authClientID,
@@ -27,7 +27,7 @@ struct HydraAPI {
       "appId": AppConfiguration.appID,
       "appVersion": Utilities.getAppVersion(),
       "mobilePlatform": Utilities.currentDevicePlatform(),
-      "tempRegId": tempRegID,
+      "tempRegId": User.currentUser.tempRegID ?? "",
       "code_challenge_method": "S256",
       "code_challenge": SessionService.instance.codeChallenge,
       "correlationId": SessionService.instance.correlationID,
