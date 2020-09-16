@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -73,7 +73,7 @@ public class UserDetailsEntity implements Serializable {
   private String lastName;
 
   @ToString.Exclude
-  @Column(name = "email", length = LARGE_LENGTH)
+  @Column(name = "email", length = EMAIL_LENGTH)
   private String email;
 
   @ToString.Exclude
