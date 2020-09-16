@@ -48,6 +48,7 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -204,7 +205,8 @@ public class LocationServiceImpl implements LocationService {
       throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
 
-    Page<LocationEntity> locationsPage = locationRepository.findAll(PageRequest.of(page, limit));
+    Page<LocationEntity> locationsPage =
+        locationRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
     List<LocationEntity> locations =
         (List<LocationEntity>) CollectionUtils.emptyIfNull(locationsPage.getContent());
 

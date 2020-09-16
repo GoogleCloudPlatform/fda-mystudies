@@ -93,8 +93,8 @@ public class LocationController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @RequestParam(required = false) Integer status,
       @RequestParam(required = false) String excludeStudyId,
-      @RequestParam Integer page,
-      @RequestParam Integer limit,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int limit,
       HttpServletRequest request) {
     logger.entry(
         String.format(
