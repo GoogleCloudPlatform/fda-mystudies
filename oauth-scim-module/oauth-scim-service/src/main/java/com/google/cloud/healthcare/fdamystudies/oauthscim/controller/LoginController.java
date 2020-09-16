@@ -227,6 +227,7 @@ public class LoginController {
       UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
       cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
+      cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
       userService.resetTempRegId(user.getUserId());
       return redirectToConsentPage(loginChallenge, user.getUserId(), request, response);
     }
