@@ -118,8 +118,6 @@ public class BaseMockIT {
 
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
-  @Autowired protected JavaMailSender emailSender;
-
   @LocalServerPort int randomServerPort;
 
   @PostConstruct
