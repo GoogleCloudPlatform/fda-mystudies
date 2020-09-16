@@ -723,9 +723,14 @@ public class UserControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnUsersForPagination() throws Exception {
     // Step 1: 1 user already added in @BeforeEach, Add 20 new users
-    for (int i = 1; i <= 20; i++) {
+    /*for (int i = 1; i <= 20; i++) {
       UserRegAdminEntity userRegAdminEntity = testDataHelper.newNonSuperAdmin();
       userRegAdminEntity.setEmail(String.valueOf(i) + NON_SUPER_ADMIN_EMAIL_ID);
+      userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+    }*/
+    for (int i = 1; i <= 20; i++) {
+      userRegAdminEntity = testDataHelper.createSuperAdmin();
+      userRegAdminEntity.setEmail(String.valueOf(i) + EMAIL_VALUE);
       userRegAdminRepository.saveAndFlush(userRegAdminEntity);
     }
 
@@ -748,7 +753,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.users[0].apps").isArray())
         .andExpect(jsonPath("$.users[0].apps").isEmpty())
         .andExpect(jsonPath("$.message", is(MessageCode.GET_USERS_SUCCESS.getMessage())))
-        .andExpect(jsonPath("$.users[0].email", is(String.valueOf(20) + NON_SUPER_ADMIN_EMAIL_ID)));
+        .andExpect(jsonPath("$.users[0].email", is(String.valueOf(20) + EMAIL_VALUE)));
 
     verifyTokenIntrospectRequest();
 
@@ -768,7 +773,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.users[0].apps").isArray())
         .andExpect(jsonPath("$.users[0].apps").isEmpty())
         .andExpect(jsonPath("$.message", is(MessageCode.GET_USERS_SUCCESS.getMessage())))
-        .andExpect(jsonPath("$.users[0].email", is(String.valueOf(2) + NON_SUPER_ADMIN_EMAIL_ID)));
+        .andExpect(jsonPath("$.users[0].email", is(String.valueOf(2) + EMAIL_VALUE)));
 
     verifyTokenIntrospectRequest(2);
 
@@ -785,7 +790,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.users[0].apps").isArray())
         .andExpect(jsonPath("$.users[0].apps").isEmpty())
         .andExpect(jsonPath("$.message", is(MessageCode.GET_USERS_SUCCESS.getMessage())))
-        .andExpect(jsonPath("$.users[0].email", is(String.valueOf(20) + NON_SUPER_ADMIN_EMAIL_ID)));
+        .andExpect(jsonPath("$.users[0].email", is(String.valueOf(20) + EMAIL_VALUE)));
 
     verifyTokenIntrospectRequest(3);
   }
