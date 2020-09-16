@@ -47,7 +47,7 @@ public class ParticipantActivitiesEntity implements Serializable {
   @Column(name = "activity_id", nullable = false, length = SMALL_LENGTH)
   private String activityId;
 
-  @Column(name = "bookmark", nullable = false, columnDefinition = "TINYINT(1) default 0")
+  @Column(name = "bookmark", columnDefinition = "TINYINT(1) default 0")
   private Boolean bookmark;
 
   @Column(name = "activity_version", nullable = false, length = XS_LENGTH)
