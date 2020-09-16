@@ -47,4 +47,8 @@ public final class TestConstants {
   public static final String CONSENT_VERSION = "1.0";
 
   public static final String SITE_NAME = "siteName";
+
+  public static final String NO_OF_RECORDS = "5";
+
+  public static final String PAGE_NO = "0";
 }
