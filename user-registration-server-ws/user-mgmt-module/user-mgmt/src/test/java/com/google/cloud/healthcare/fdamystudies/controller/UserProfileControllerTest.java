@@ -65,8 +65,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
 
-  private static final String PING_PATH = "/ping";
-
   private static final String USER_PROFILE_PATH = "/myStudiesUserMgmtWS/userProfile";
 
   private static final String UPDATE_USER_PROFILE_PATH = "/myStudiesUserMgmtWS/updateUserProfile";
@@ -98,14 +96,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertNotNull(mockMvc);
     assertNotNull(profileService);
     assertNotNull(service);
-  }
-
-  @Test
-  public void ping() throws Exception {
-    mockMvc
-        .perform(get(PING_PATH).headers(TestUtils.getCommonHeaders(Constants.USER_ID_HEADER)))
-        .andDo(print())
-        .andExpect(status().isOk());
   }
 
   @Test

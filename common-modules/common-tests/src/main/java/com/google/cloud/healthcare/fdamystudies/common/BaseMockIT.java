@@ -114,6 +114,8 @@ public class BaseMockIT {
 
   @Autowired protected AuditEventService mockAuditService;
 
+  @Autowired protected JavaMailSender emailSender;
+
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
 
   @Autowired protected JavaMailSender emailSender;
