@@ -110,7 +110,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     // save user details
     UserDetailsEntity userDetails = fromUserRegistrationForm(user);
-    Optional<AppEntity> app = appRepository.findById(appOrgInfoBean.getAppInfoId());
+    Optional<AppEntity> app = appRepository.findByAppId(appOrgInfoBean.getAppInfoId());
     if (app.isPresent()) {
       userDetails.setApp(app.get());
     }

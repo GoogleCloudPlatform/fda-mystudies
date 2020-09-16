@@ -177,7 +177,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
     UserDetailsEntity userDetails = null;
     try {
-      Optional<AppEntity> optApp = appRepository.findByCustomId(appInfoId);
+      Optional<AppEntity> optApp = appRepository.findByAppId(appInfoId);
       if (optApp.isPresent()) {
         userDetails = userProfileManagementDao.getParticipantDetailsByEmail(email, optApp.get());
       }
