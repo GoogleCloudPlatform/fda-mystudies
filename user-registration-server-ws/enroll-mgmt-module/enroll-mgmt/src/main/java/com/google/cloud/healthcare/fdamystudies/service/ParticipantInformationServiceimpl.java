@@ -30,15 +30,10 @@ public class ParticipantInformationServiceimpl implements ParticipantInformation
   @Transactional(readOnly = true)
   public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - starts ");
-    ParticipantInfoRespBean participantInforespBean = null;
-    Integer studyInfoId = 0;
-    try {
-      studyInfoId = commonDao.getStudyId(studyId);
-      participantInforespBean =
-          participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
-    } catch (Exception e) {
-      logger.error("ParticipantInformationServiceimpl getParticipantInfoDetails() - error ", e);
-    }
+
+    Integer studyInfoId = commonDao.getStudyId(studyId);
+    ParticipantInfoRespBean participantInforespBean =
+        participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
 
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - ends ");
     return participantInforespBean;
