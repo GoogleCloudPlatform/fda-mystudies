@@ -421,8 +421,6 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), IdGenerator.id())
                 .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isNotFound())
@@ -446,8 +444,6 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
                 .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isForbidden())
@@ -475,8 +471,6 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
                 .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
                 .param("onboardingStatus", "NEW")
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -506,8 +500,6 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
                 .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
                 .param("onboardingStatus", OnboardingStatus.NEW.getCode())
                 .contextPath(getContextPath()))
         .andDo(print())
