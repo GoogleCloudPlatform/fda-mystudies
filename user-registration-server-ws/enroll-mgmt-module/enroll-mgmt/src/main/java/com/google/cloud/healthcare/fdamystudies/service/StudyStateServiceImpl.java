@@ -17,10 +17,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
@@ -204,39 +206,40 @@ public class StudyStateServiceImpl implements StudyStateService {
 
     if (userId != null) {
       UserDetailsEntity userDetailsEntity = userRegAdminUserDao.getRecord(userId);
-      if (userDetailsEntity != null) {
+      if (userDetailsEntity == null) {
+        throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+      }
 
-        List<ParticipantStudyEntity> participantStudiesList =
-            participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsEntity.getUserId());
-        if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
-          for (ParticipantStudyEntity participantStudiesBO : participantStudiesList) {
-            StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
-            if (participantStudiesBO.getParticipantRegistrySite() != null) {
-              String enrolledTokenVal =
-                  studyStateDao.getEnrollTokenForParticipant(
-                      participantStudiesBO.getParticipantRegistrySite().getId());
-              studyStateBean.setHashedToken(
-                  EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
-            }
-            if (participantStudiesBO.getStudy() != null) {
-              studyStateBean.setStudyId(participantStudiesBO.getStudy().getCustomId());
-            }
-            studyStateBean.setStatus(participantStudiesBO.getStatus());
-            if (participantStudiesBO.getParticipantId() != null) {
-              studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
-            }
-            studyStateBean.setCompletion(participantStudiesBO.getCompletion());
-            studyStateBean.setBookmarked(participantStudiesBO.getBookmark());
-            studyStateBean.setAdherence(participantStudiesBO.getAdherence());
-            if (participantStudiesBO.getEnrolledDate() != null) {
-              studyStateBean.setEnrolledDate(
-                  MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
-            }
-            if (participantStudiesBO.getSite() != null) {
-              studyStateBean.setSiteId(participantStudiesBO.getSite().getId().toString());
-            }
-            serviceResponseList.add(studyStateBean);
+      List<ParticipantStudyEntity> participantStudiesList =
+          participantStudiesInfoDao.getParticipantStudiesInfo(userDetailsEntity.getUserId());
+      if (participantStudiesList != null && !participantStudiesList.isEmpty()) {
+        for (ParticipantStudyEntity participantStudiesBO : participantStudiesList) {
+          StudyStateBean studyStateBean = BeanUtil.getBean(StudyStateBean.class);
+          if (participantStudiesBO.getParticipantRegistrySite() != null) {
+            String enrolledTokenVal =
+                studyStateDao.getEnrollTokenForParticipant(
+                    participantStudiesBO.getParticipantRegistrySite().getId());
+            studyStateBean.setHashedToken(
+                EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
           }
+          if (participantStudiesBO.getStudy() != null) {
+            studyStateBean.setStudyId(participantStudiesBO.getStudy().getCustomId());
+          }
+          studyStateBean.setStatus(participantStudiesBO.getStatus());
+          if (participantStudiesBO.getParticipantId() != null) {
+            studyStateBean.setParticipantId(participantStudiesBO.getParticipantId());
+          }
+          studyStateBean.setCompletion(participantStudiesBO.getCompletion());
+          studyStateBean.setBookmarked(participantStudiesBO.getBookmark());
+          studyStateBean.setAdherence(participantStudiesBO.getAdherence());
+          if (participantStudiesBO.getEnrolledDate() != null) {
+            studyStateBean.setEnrolledDate(
+                MyStudiesUserRegUtil.getIsoDateFormat(participantStudiesBO.getEnrolledDate()));
+          }
+          if (participantStudiesBO.getSite() != null) {
+            studyStateBean.setSiteId(participantStudiesBO.getSite().getId().toString());
+          }
+          serviceResponseList.add(studyStateBean);
         }
       }
     }
