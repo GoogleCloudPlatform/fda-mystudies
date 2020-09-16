@@ -89,8 +89,8 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<GetUsersResponse> getUsers(
       @RequestHeader("userId") String superAdminUserId,
-      @RequestParam Integer page,
-      @RequestParam Integer limit,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int limit,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
     GetUsersResponse userResponse = manageUserService.getUsers(superAdminUserId, page, limit);
