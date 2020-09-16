@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,12 +27,12 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<ParticipantStudiesBO> getParticipantStudiesInfo(Integer userDetailsId)
-      throws SystemException {
+  public List<ParticipantStudiesBO> getParticipantStudiesInfo(Integer userDetailsId) {
 
     List<ParticipantStudiesBO> participantStudiesList = null;
     logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Started");
     if (userDetailsId != null) {
+
       Session session = this.sessionFactory.getCurrentSession();
       Query<ParticipantStudiesBO> query =
           session.createQuery(
@@ -41,7 +40,6 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
       query.setParameter("userDetailsId", userDetailsId);
       participantStudiesList = query.getResultList();
       return participantStudiesList;
-
     } else {
       logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Ended");
       return null;

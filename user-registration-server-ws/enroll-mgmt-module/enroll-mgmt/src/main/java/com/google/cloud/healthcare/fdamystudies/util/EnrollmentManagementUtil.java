@@ -16,9 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +34,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -100,7 +96,6 @@ public class EnrollmentManagementUtil {
   }
 
   private int codePointFromCharacter(char character) {
-    System.out.println("validInputChars.indexOf(character)->" + validInputChars.indexOf(character));
     return validInputChars.indexOf(character);
   }
 
@@ -144,14 +139,14 @@ public class EnrollmentManagementUtil {
       String applicationId,
       String hashedTokenValue,
       String studyId,
-      AuditLogEventRequest auditRequest)
-      throws InvalidRequestException, UnAuthorizedRequestException, SystemException {
+      AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentManagementUtil getParticipantId() - starts ");
     HttpHeaders headers = null;
     EnrollmentBodyProvider bodyProvider = null;
     HttpEntity<EnrollmentBodyProvider> requestBody = null;
     ResponseEntity<?> responseEntity = null;
     String participantId = "";
+
     try {
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
@@ -170,69 +165,44 @@ public class EnrollmentManagementUtil {
         enrollAuditEventHelper.logEvent(PARTICIPANT_ID_RECEIVED, auditRequest);
       }
 
-    } catch (RestClientResponseException e) {
-
-      if (e.getRawStatusCode() == 401) {
-        throw new UnAuthorizedRequestException();
-      } else if (e.getRawStatusCode() == 400) {
-        throw new InvalidRequestException();
-      } else {
-        throw new SystemException();
-      }
     } catch (Exception e) {
-
       enrollAuditEventHelper.logEvent(PARTICIPANT_ID_NOT_RECEIVED, auditRequest);
-
       logger.error("EnrollmentManagementUtil getParticipantId() - Ends ", e);
-      throw new SystemException();
+      throw e;
     }
+
     logger.info("EnrollmentManagementUtil getParticipantId() - Ends ");
     return participantId;
   }
 
-  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete)
-      throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
+  public String withDrawParticipantFromStudy(String participantId, String studyId, boolean delete) {
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
     String message = "";
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.APPLICATION_ID, null);
-      headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
 
-      request = new HttpEntity<>(null, headers);
+    headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set(AppConstants.APPLICATION_ID, null);
+    headers.set("Authorization", "Bearer " + oAuthService.getAccessToken());
 
-      String url =
-          appConfig.getWithdrawStudyUrl()
-              + "?studyId="
-              + studyId
-              + "&participantId="
-              + participantId
-              + "&deleteResponses="
-              + String.valueOf(delete);
+    request = new HttpEntity<>(null, headers);
 
-      ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
+    String url =
+        appConfig.getWithdrawStudyUrl()
+            + "?studyId="
+            + studyId
+            + "&participantId="
+            + participantId
+            + "&deleteResponses="
+            + String.valueOf(delete);
 
-      if (response.getStatusCode() == HttpStatus.OK) {
-        message = "SUCCESS";
-      }
+    ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 
-    } catch (RestClientResponseException e) {
-      if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client credential");
-        throw new UnAuthorizedRequestException();
-      } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request. Missing required parameters");
-        throw new InvalidRequestException();
-      } else {
-        throw new SystemException();
-      }
-    } catch (Exception e) {
-      logger.error("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ", e);
-      throw new SystemException();
+    if (response.getStatusCode() == HttpStatus.OK) {
+      message = "SUCCESS";
     }
+
     logger.info("EnrollmentManagementUtil withDrawParticipantFromStudy() - Ends ");
     return message;
   }
