@@ -13,7 +13,6 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -30,7 +29,7 @@ public class CommonDaoImpl implements CommonDao {
 
   private static Logger logger = LoggerFactory.getLogger(CommonDaoImpl.class);
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
+  @Autowired private SessionFactory sessionFactory;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
@@ -43,20 +42,18 @@ public class CommonDaoImpl implements CommonDao {
     Predicate[] userDetailspredicates = new Predicate[1];
     List<UserDetailsEntity> userDetailsList = null;
     UserDetailsEntity userDetailsEntity = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      criteriaBuilder = session.getCriteriaBuilder();
-      userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsEntity.class);
-      userDetailsEntityRoot = userDetailsCriteriaQuery.from(UserDetailsEntity.class);
-      userDetailspredicates[0] =
-          criteriaBuilder.equal(userDetailsEntityRoot.get(AppConstants.USER_ID), userId);
-      userDetailsCriteriaQuery.select(userDetailsEntityRoot).where(userDetailspredicates);
-      userDetailsList = session.createQuery(userDetailsCriteriaQuery).getResultList();
-      if (!userDetailsList.isEmpty()) {
-        userDetailsEntity = userDetailsList.get(0);
-      }
-    } catch (Exception e) {
-      logger.error("CommonDaoImpl getUserInfoDetails() - error ", e);
+    Session session = this.sessionFactory.getCurrentSession();
+    criteriaBuilder = session.getCriteriaBuilder();
+    userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsEntity.class);
+    userDetailsEntityRoot = userDetailsCriteriaQuery.from(UserDetailsEntity.class);
+    userDetailspredicates[0] =
+        criteriaBuilder.equal(userDetailsEntityRoot.get(AppConstants.USER_ID), userId);
+    userDetailsCriteriaQuery.select(userDetailsEntityRoot).where(userDetailspredicates);
+    userDetailsList = session.createQuery(userDetailsCriteriaQuery).getResultList();
+    if (!userDetailsList.isEmpty()) {
+      userDetailsEntity = userDetailsList.get(0);
     }
+
     logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
     return userDetailsEntity;
   }
@@ -71,20 +68,18 @@ public class CommonDaoImpl implements CommonDao {
     Predicate[] predicates = new Predicate[1];
     List<StudyEntity> studyList = null;
     StudyEntity studyInfo = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
-      root = criteriaQuery.from(StudyEntity.class);
-      predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
-      criteriaQuery.select(root).where(predicates);
-      studyList = session.createQuery(criteriaQuery).getResultList();
-      if (!studyList.isEmpty()) {
-        studyInfo = studyList.get(0);
-        studyInfoId = studyInfo.getId();
-      }
-    } catch (Exception e) {
-      logger.error("CommonDaoImpl getStudyId() - error ", e);
+    Session session = this.sessionFactory.getCurrentSession();
+    criteriaBuilder = session.getCriteriaBuilder();
+    criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
+    root = criteriaQuery.from(StudyEntity.class);
+    predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
+    criteriaQuery.select(root).where(predicates);
+    studyList = session.createQuery(criteriaQuery).getResultList();
+    if (!studyList.isEmpty()) {
+      studyInfo = studyList.get(0);
+      studyInfoId = studyInfo.getId();
     }
+
     logger.info("CommonDaoImpl getStudyId() - Ends ");
     return studyInfoId;
   }
@@ -98,20 +93,17 @@ public class CommonDaoImpl implements CommonDao {
     Predicate[] predicates = new Predicate[1];
     List<StudyEntity> studyList = null;
     StudyEntity studyInfo = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
-      root = criteriaQuery.from(StudyEntity.class);
-      predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
-      criteriaQuery.select(root).where(predicates);
-      studyList = session.createQuery(criteriaQuery).getResultList();
-      if (!studyList.isEmpty()) {
-        studyInfo = studyList.get(0);
-      }
-    } catch (Exception e) {
-      logger.error("CommonDaoImpl getStudyDetails() - error ", e);
+    Session session = this.sessionFactory.getCurrentSession();
+    criteriaBuilder = session.getCriteriaBuilder();
+    criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
+    root = criteriaQuery.from(StudyEntity.class);
+    predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
+    criteriaQuery.select(root).where(predicates);
+    studyList = session.createQuery(criteriaQuery).getResultList();
+    if (!studyList.isEmpty()) {
+      studyInfo = studyList.get(0);
     }
-    logger.info("CommonDaoImpl getStudyDetails() - Ends ");
+
     return studyInfo;
   }
 }

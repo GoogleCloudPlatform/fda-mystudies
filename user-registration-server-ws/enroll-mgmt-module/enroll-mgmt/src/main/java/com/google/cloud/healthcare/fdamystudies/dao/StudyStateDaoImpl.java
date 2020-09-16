@@ -16,7 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
@@ -24,7 +23,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +33,7 @@ public class StudyStateDaoImpl implements StudyStateDao {
 
   private static final Logger logger = LoggerFactory.getLogger(StudyStateDaoImpl.class);
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
+  @Autowired private SessionFactory sessionFactory;
 
   @Override
   public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user) {
@@ -45,16 +43,14 @@ public class StudyStateDaoImpl implements StudyStateDao {
     Root<ParticipantStudyEntity> root = null;
     Predicate[] predicates = new Predicate[1];
     List<ParticipantStudyEntity> participantStudiesList = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
-      root = criteriaQuery.from(ParticipantStudyEntity.class);
-      predicates[0] = criteriaBuilder.equal(root.get("userDetails"), user);
-      criteriaQuery.select(root).where(predicates);
-      participantStudiesList = session.createQuery(criteriaQuery).getResultList();
-    } catch (Exception e) {
-      logger.error("StudyStateDaoImpl getParticipantStudiesList() - error ", e);
-    }
+    Session session = this.sessionFactory.getCurrentSession();
+    criteriaBuilder = session.getCriteriaBuilder();
+    criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
+    root = criteriaQuery.from(ParticipantStudyEntity.class);
+    predicates[0] = criteriaBuilder.equal(root.get("userDetails"), user);
+    criteriaQuery.select(root).where(predicates);
+    participantStudiesList = session.createQuery(criteriaQuery).getResultList();
+
     logger.info("StudyStateDaoImpl getParticipantStudiesList() - Ends ");
     return participantStudiesList;
   }
@@ -63,29 +59,17 @@ public class StudyStateDaoImpl implements StudyStateDao {
   public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Starts ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    Transaction transaction = null;
     boolean isUpdated = false;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      transaction = session.beginTransaction();
-      for (ParticipantStudyEntity participantStudies : participantStudiesList) {
-        session.saveOrUpdate(participantStudies);
-        isUpdated = true;
-      }
-
-      if (isUpdated && !participantStudiesList.isEmpty()) {
-        message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-      }
-      transaction.commit();
-    } catch (Exception e) {
-      logger.error("StudyStateDaoImpl saveParticipantStudies() - error ", e);
-      if (transaction != null) {
-        try {
-          transaction.rollback();
-        } catch (Exception e1) {
-          logger.error("StudyStateDaoImpl - saveParticipantStudies() - error rollback", e1);
-        }
-      }
+    Session session = this.sessionFactory.getCurrentSession();
+    for (ParticipantStudyEntity participantStudies : participantStudiesList) {
+      session.saveOrUpdate(participantStudies);
+      isUpdated = true;
     }
+
+    if (isUpdated && !participantStudiesList.isEmpty()) {
+      message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+    }
+
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Ends ");
     return message;
   }
@@ -100,21 +84,19 @@ public class StudyStateDaoImpl implements StudyStateDao {
     Predicate[] predicates = new Predicate[1];
     List<ParticipantRegistrySiteEntity> participantRegistryList = null;
     ParticipantRegistrySiteEntity participantRegistrySite = null;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(ParticipantRegistrySiteEntity.class);
-      root = criteriaQuery.from(ParticipantRegistrySiteEntity.class);
-      predicates[0] = criteriaBuilder.equal(root.get("id"), participantRegistryId);
-      criteriaQuery.select(root).where(predicates);
-      participantRegistryList = session.createQuery(criteriaQuery).getResultList();
-      if (!participantRegistryList.isEmpty()) {
-        participantRegistrySite = participantRegistryList.get(0);
-        enrolledToken = participantRegistrySite.getEnrollmentToken();
-      }
 
-    } catch (Exception e) {
-      logger.error("StudyStateDaoImpl - getEnrollTokenForParticipant() - error rollback", e);
+    Session session = this.sessionFactory.getCurrentSession();
+    criteriaBuilder = session.getCriteriaBuilder();
+    criteriaQuery = criteriaBuilder.createQuery(ParticipantRegistrySiteEntity.class);
+    root = criteriaQuery.from(ParticipantRegistrySiteEntity.class);
+    predicates[0] = criteriaBuilder.equal(root.get("id"), participantRegistryId);
+    criteriaQuery.select(root).where(predicates);
+    participantRegistryList = session.createQuery(criteriaQuery).getResultList();
+    if (!participantRegistryList.isEmpty()) {
+      participantRegistrySite = participantRegistryList.get(0);
+      enrolledToken = participantRegistrySite.getEnrollmentToken();
     }
+
     logger.info("StudyStateDaoImpl getEnrollTokenForParticipant() - Ends ");
     return enrolledToken;
   }
@@ -123,7 +105,6 @@ public class StudyStateDaoImpl implements StudyStateDao {
   public String withdrawFromStudy(String participantId, String studyId, boolean delete) {
     logger.info("StudyStateDaoImpl withdrawFromStudy() - Ends ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
 
     CriteriaQuery<StudyEntity> studyEntityCriteria = null;
@@ -136,41 +117,30 @@ public class StudyStateDaoImpl implements StudyStateDao {
     Root<ParticipantStudyEntity> participantStudyRoot = null;
     List<Predicate> predicates = new ArrayList<>();
     int isUpdated = 0;
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+    Session session = this.sessionFactory.getCurrentSession();
 
-      transaction = session.beginTransaction();
-      criteriaBuilder = session.getCriteriaBuilder();
+    criteriaBuilder = session.getCriteriaBuilder();
 
-      studyEntityCriteria = criteriaBuilder.createQuery(StudyEntity.class);
-      studyEntityRoot = studyEntityCriteria.from(StudyEntity.class);
-      studyEntityPredicates[0] = criteriaBuilder.equal(studyEntityRoot.get("customId"), studyId);
-      studyEntityCriteria.select(studyEntityRoot).where(studyEntityPredicates);
-      studiesBoList = session.createQuery(studyEntityCriteria).getResultList();
-      if (!studiesBoList.isEmpty()) {
-        studyEntity = studiesBoList.get(0);
-        criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
-        participantStudyRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
-        criteriaUpdate.set("status", AppConstants.WITHDRAWN);
-        predicates.add(
-            criteriaBuilder.equal(participantStudyRoot.get("participantId"), participantId));
-        predicates.add(criteriaBuilder.equal(participantStudyRoot.get("study"), studyEntity));
-        criteriaUpdate.where(predicates.toArray(new Predicate[predicates.size()]));
-        isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
-        if (isUpdated > 0) {
-          message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-        }
-      }
-      transaction.commit();
-    } catch (Exception e) {
-      logger.error("StudyStateDaoImpl withdrawFromStudy() - error ", e);
-      if (transaction != null) {
-        try {
-          transaction.rollback();
-        } catch (Exception e1) {
-          logger.error("StudyStateDaoImpl - withdrawFromStudy() - error rollback", e1);
-        }
+    studyEntityCriteria = criteriaBuilder.createQuery(StudyEntity.class);
+    studyEntityRoot = studyEntityCriteria.from(StudyEntity.class);
+    studyEntityPredicates[0] = criteriaBuilder.equal(studyEntityRoot.get("customId"), studyId);
+    studyEntityCriteria.select(studyEntityRoot).where(studyEntityPredicates);
+    studiesBoList = session.createQuery(studyEntityCriteria).getResultList();
+    if (!studiesBoList.isEmpty()) {
+      studyEntity = studiesBoList.get(0);
+      criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
+      participantStudyRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
+      criteriaUpdate.set("status", AppConstants.WITHDRAWN);
+      predicates.add(
+          criteriaBuilder.equal(participantStudyRoot.get("participantId"), participantId));
+      predicates.add(criteriaBuilder.equal(participantStudyRoot.get("study"), studyEntity));
+      criteriaUpdate.where(predicates.toArray(new Predicate[predicates.size()]));
+      isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
+      if (isUpdated > 0) {
+        message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
       }
     }
+
     logger.info("StudyStateDaoImpl withdrawFromStudy() - Ends ");
     return message;
   }

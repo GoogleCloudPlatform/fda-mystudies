@@ -13,7 +13,6 @@ import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -31,7 +30,7 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
 
   private static final Logger logger = LoggerFactory.getLogger(ParticipantInformationDaoImpl.class);
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
+  @Autowired private SessionFactory sessionFactory;
 
   @Override
   public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
@@ -45,39 +44,36 @@ public class ParticipantInformationDaoImpl implements ParticipantInformationDao 
     ParticipantStudyEntity participantEntity = null;
     ParticipantInfoRespBean participantRespBean = null;
 
-    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-      criteriaBuilder = session.getCriteriaBuilder();
-      participantStudyCriteria = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
-      participantStudyRoot = participantStudyCriteria.from(ParticipantStudyEntity.class);
-      StudyEntity studyInfo = session.get(StudyEntity.class, studyId);
-      predicates[0] =
-          criteriaBuilder.equal(participantStudyRoot.get("participantId"), particpinatId);
-      predicates[1] = criteriaBuilder.equal(participantStudyRoot.get("study"), studyInfo);
-      participantStudyCriteria.select(participantStudyRoot).where(predicates);
-      participantStudyList = session.createQuery(participantStudyCriteria).getResultList();
-      if (!participantStudyList.isEmpty()) {
-        participantEntity = participantStudyList.get(0);
-        if (participantEntity != null) {
-          participantRespBean = new ParticipantInfoRespBean();
+    Session session = this.sessionFactory.getCurrentSession();
+    criteriaBuilder = session.getCriteriaBuilder();
+    participantStudyCriteria = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
+    participantStudyRoot = participantStudyCriteria.from(ParticipantStudyEntity.class);
+    StudyEntity studyInfo = session.get(StudyEntity.class, studyId);
+    predicates[0] = criteriaBuilder.equal(participantStudyRoot.get("participantId"), particpinatId);
+    predicates[1] = criteriaBuilder.equal(participantStudyRoot.get("study"), studyInfo);
+    participantStudyCriteria.select(participantStudyRoot).where(predicates);
+    participantStudyList = session.createQuery(participantStudyCriteria).getResultList();
+    if (!participantStudyList.isEmpty()) {
+      participantEntity = participantStudyList.get(0);
+      if (participantEntity != null) {
+        participantRespBean = new ParticipantInfoRespBean();
 
-          String sharing =
-              StringUtils.defaultIfEmpty(
-                  participantEntity.getSharing(), DataSharingStatus.UNDEFINED.value());
-          participantRespBean.setSharing(sharing);
+        String sharing =
+            StringUtils.defaultIfEmpty(
+                participantEntity.getSharing(), DataSharingStatus.UNDEFINED.value());
+        participantRespBean.setSharing(sharing);
 
-          if (participantEntity.getEnrolledDate().toString() != null) {
-            participantRespBean.setEnrollment(participantEntity.getEnrolledDate().toString());
-          }
-          if (participantEntity.getWithdrawalDate() != null) {
-            if (participantEntity.getWithdrawalDate().toString() != null) {
-              participantRespBean.setWithdrawal(participantEntity.getWithdrawalDate().toString());
-            }
+        if (participantEntity.getEnrolledDate().toString() != null) {
+          participantRespBean.setEnrollment(participantEntity.getEnrolledDate().toString());
+        }
+        if (participantEntity.getWithdrawalDate() != null) {
+          if (participantEntity.getWithdrawalDate().toString() != null) {
+            participantRespBean.setWithdrawal(participantEntity.getWithdrawalDate().toString());
           }
         }
       }
-    } catch (Exception e) {
-      logger.error("ParticipantInformationDaoImpl getParticipantDetails() - error ", e);
     }
+
     logger.info("ParticipantInformationDaoImpl getParticipantDetails() - ends ");
     return participantRespBean;
   }

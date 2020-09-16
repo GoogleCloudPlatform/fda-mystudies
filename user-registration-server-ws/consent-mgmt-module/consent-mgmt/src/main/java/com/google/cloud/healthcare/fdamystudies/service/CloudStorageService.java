@@ -9,7 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.WriteChannel;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
@@ -18,24 +20,22 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Base64;
-import java.util.List;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CloudStorageService implements FileStorageService {
 
+  private XLogger logger = XLoggerFactory.getXLogger(CloudStorageService.class.getName());
+
   @Autowired private Storage storageService;
 
   private static final String PATH_SEPARATOR = "/";
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
-
-  @Override
-  public List<String> listFiles(String underDirectory, boolean recursive) {
-    return null;
-  }
 
   @Override
   public String saveFile(String fileName, String content, String underDirectory) {
@@ -51,7 +51,8 @@ public class CloudStorageService implements FileStorageService {
 
         writer.write(ByteBuffer.wrap(bytes, 0, bytes.length));
       } catch (IOException e) {
-        throw new RuntimeException(e);
+        logger.error("Save file in cloud storage failed", e);
+        throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
       }
     }
     return absoluteFileName;

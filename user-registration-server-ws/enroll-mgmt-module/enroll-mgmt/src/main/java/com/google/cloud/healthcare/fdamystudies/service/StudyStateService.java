@@ -13,10 +13,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudiesBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateBean;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exception.InvalidUserIdException;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exception.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import java.util.List;
@@ -32,9 +28,8 @@ public interface StudyStateService {
       AuditLogEventRequest auditRequest);
 
   public List<StudyStateBean> getStudiesState(String userId)
-      throws SystemException, InvalidUserIdException /*, NoStudyEnrolledException*/;
+      throws javax.transaction.SystemException;
 
   public WithDrawFromStudyRespBean withdrawFromStudy(
-      String participantId, String studyId, boolean delete)
-      throws UnAuthorizedRequestException, InvalidRequestException, SystemException;
+      String participantId, String studyId, boolean delete);
 }
