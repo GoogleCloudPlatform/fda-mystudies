@@ -11,10 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
 import com.google.cloud.healthcare.fdamystudies.responsedatastore.model.ParticipantActivitiesEntity;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,34 +23,29 @@ import org.springframework.stereotype.Repository;
 public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
 
   private static final Logger logger = LoggerFactory.getLogger(ParticipantActivitiesDaoImpl.class);
-  @Autowired private EntityManagerFactory entityManagerFactory;
+
+  @Autowired private SessionFactory sessionFactory;
 
   @Override
   @SuppressWarnings("unchecked")
   public List<ParticipantActivitiesEntity> getParticipantActivities(
       String studyId, String participantId) throws ProcessActivityStateException {
     logger.debug("getParticipantActivities()...start");
-    List<ParticipantActivitiesEntity> participantActivitiesList = null;
 
     if (studyId != null && participantId != null) {
-      try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+      Session session = this.sessionFactory.getCurrentSession();
 
-        Query<ParticipantActivitiesEntity> query =
-            session.createQuery(
-                "from ParticipantActivitiesEntity "
-                    + "where studyId = :studyId and participantId =:participantId");
+      Query<ParticipantActivitiesEntity> query =
+          session.createQuery(
+              "from ParticipantActivitiesEntity "
+                  + "where studyId = :studyId and participantId =:participantId");
 
-        query.setParameter("studyId", studyId);
-        query.setParameter("participantId", participantId);
-        participantActivitiesList = query.getResultList();
+      query.setParameter("studyId", studyId);
+      query.setParameter("participantId", participantId);
+      List<ParticipantActivitiesEntity> participantActivitiesList = query.getResultList();
 
-        logger.debug("getParticipantActivities()...end " + participantActivitiesList);
-        return participantActivitiesList;
-      } catch (Exception e) {
-        logger.error("getParticipantActivities: (ERROR) ", e);
-        throw new ProcessActivityStateException(
-            "Exception getting activity state data" + e.getMessage());
-      }
+      logger.debug("getParticipantActivities()...end " + participantActivitiesList);
+      return participantActivitiesList;
     } else {
       throw new ProcessActivityStateException("Required input parameter is null");
     }
@@ -63,65 +56,29 @@ public class ParticipantActivitiesDaoImpl implements ParticipantActivitiesDao {
       throws ProcessActivityStateException {
     logger.debug("saveParticipantActivities() - Starts ");
 
-    Transaction transaction = null;
-    Session session = null;
-
-    try {
-      session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
-      transaction = session.beginTransaction();
-
-      for (ParticipantActivitiesEntity participantActivities : participantActivitiesList) {
-        session.saveOrUpdate(participantActivities);
-      }
-      transaction.commit();
-
-    } catch (Exception e) {
-      logger.error("saveParticipantActivities - error ", e.getMessage());
-      throw new ProcessActivityStateException(
-          "Exception save activity state data" + e.getMessage());
-    } finally {
-      if (transaction != null) {
-        transaction.rollback();
-      }
-      if (session != null) {
-        session.close();
-      }
-      logger.debug("saveParticipantActivities() - Ends ");
+    Session session = this.sessionFactory.getCurrentSession();
+    for (ParticipantActivitiesEntity participantActivities : participantActivitiesList) {
+      session.saveOrUpdate(participantActivities);
     }
+
+    logger.debug("saveParticipantActivities() - Ends ");
   }
 
   @Override
   public void deleteParticipantActivites(String studyId, String participantId)
       throws ProcessActivityStateException {
     logger.debug("deleteParticipantActivites()...start");
-    Transaction transaction = null;
-    Session session = null;
     if (studyId != null && participantId != null) {
-      try {
-        session = entityManagerFactory.unwrap(SessionFactory.class).openSession();
-        transaction = session.beginTransaction();
+      Session session = this.sessionFactory.getCurrentSession();
 
-        session
-            .createQuery(
-                "delete from ParticipantActivitiesEntity "
-                    + "where participantId = :participantId and studyId = :studyId")
-            .setParameter("participantId", participantId)
-            .setParameter("studyId", studyId)
-            .executeUpdate();
-        logger.debug("deleteParticipantActivites()...end ");
-      } catch (Exception e) {
-        logger.error("deleteParticipantActivites: (ERROR) ", e);
-        throw new ProcessActivityStateException(
-            "Exception deleting activity state data" + e.getMessage());
-      } finally {
-        if (transaction != null) {
-          transaction.rollback();
-        }
-        if (session != null) {
-          session.close();
-        }
-        logger.debug("deleteParticipantActivites() - Ends ");
-      }
+      session
+          .createQuery(
+              "delete from ParticipantActivitiesEntity "
+                  + "where participantId = :participantId and studyId = :studyId")
+          .setParameter("participantId", participantId)
+          .setParameter("studyId", studyId)
+          .executeUpdate();
+      logger.debug("deleteParticipantActivites()...end ");
     } else {
       throw new ProcessActivityStateException("Required input parameter is null");
     }

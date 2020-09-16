@@ -35,7 +35,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
   private static final Logger logger = LoggerFactory.getLogger(ParticipantDaoImpl.class);
 
   @Override
-  public String saveParticipant(ParticipantInfoEntity participantBo)
+  public String saveParticipant(ParticipantInfoEntity participantInfoEntity)
       throws ProcessResponseException {
     logger.info("ParticipantDaoImpl saveParticipant() - starts ");
     Transaction transaction = null;
@@ -51,7 +51,8 @@ public class ParticipantDaoImpl implements ParticipantDao {
       Predicate[] predicate = new Predicate[1];
       predicate[0] =
           builder.equal(
-              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY), participantBo.getTokenId());
+              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY),
+              participantInfoEntity.getTokenId());
       participantBoCriteria.select(root).where(predicate);
       List<ParticipantInfoEntity> resultList =
           session.createQuery(participantBoCriteria).getResultList();
@@ -60,9 +61,9 @@ public class ParticipantDaoImpl implements ParticipantDao {
       }
 
       UUID particpantUniqueIdentifier = UUID.randomUUID();
-      participantBo.setParticipantId(particpantUniqueIdentifier.toString());
+      participantInfoEntity.setParticipantId(particpantUniqueIdentifier.toString());
       transaction = session.beginTransaction();
-      session.save(participantBo);
+      session.save(participantInfoEntity);
       transaction.commit();
       logger.info("ParticipantDaoImpl saveParticipant() - ends ");
       return particpantUniqueIdentifier.toString();
@@ -78,9 +79,9 @@ public class ParticipantDaoImpl implements ParticipantDao {
           transaction.rollback();
         }
         UUID particpantUniqueIdentifier = UUID.randomUUID();
-        participantBo.setParticipantId(particpantUniqueIdentifier.toString());
+        participantInfoEntity.setParticipantId(particpantUniqueIdentifier.toString());
         transaction = session.beginTransaction();
-        session.save(participantBo);
+        session.save(participantInfoEntity);
         transaction.commit();
         return particpantUniqueIdentifier.toString();
       }
@@ -99,7 +100,7 @@ public class ParticipantDaoImpl implements ParticipantDao {
   }
 
   @Override
-  public boolean isValidParticipant(ParticipantInfoEntity participantBo)
+  public boolean isValidParticipant(ParticipantInfoEntity participantInfoEntity)
       throws ProcessResponseException {
 
     Session session = null;
@@ -114,10 +115,12 @@ public class ParticipantDaoImpl implements ParticipantDao {
       Predicate[] predicate = new Predicate[2];
       predicate[0] =
           builder.equal(
-              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY), participantBo.getTokenId());
+              root.get(AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY),
+              participantInfoEntity.getTokenId());
       predicate[1] =
           builder.equal(
-              root.get(AppConstants.PARTICIPANT_IDENTIFIER_KEY), participantBo.getParticipantId());
+              root.get(AppConstants.PARTICIPANT_IDENTIFIER_KEY),
+              participantInfoEntity.getParticipantId());
       participantBoCriteria.select(root).where(predicate);
       List<ParticipantInfoEntity> resultList =
           session.createQuery(participantBoCriteria).getResultList();
