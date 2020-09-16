@@ -24,7 +24,7 @@ public interface LocationService {
   public LocationDetailsResponse updateLocation(
       UpdateLocationRequest locationRequest, AuditLogEventRequest auditRequest);
 
-  public LocationResponse getLocations(String userId, Integer page, Integer limit);
+  public LocationResponse getLocations(String userId, int page, int limit);
 
   public LocationResponse getLocationsForSite(String userId, Integer status, String excludeStudyId);
 

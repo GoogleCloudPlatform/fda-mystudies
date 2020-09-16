@@ -196,7 +196,7 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationResponse getLocations(String userId, Integer page, Integer limit) {
+  public LocationResponse getLocations(String userId, int page, int limit) {
     logger.entry("begin getLocations()");
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
