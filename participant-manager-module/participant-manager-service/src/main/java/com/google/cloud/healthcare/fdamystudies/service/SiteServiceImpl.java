@@ -117,6 +117,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -304,7 +307,12 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   public ParticipantRegistryResponse getParticipants(
-      String userId, String siteId, String onboardingStatus, AuditLogEventRequest auditRequest) {
+      String userId,
+      String siteId,
+      String onboardingStatus,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit) {
     logger.info("getParticipants()");
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
 
@@ -326,23 +334,32 @@ public class SiteServiceImpl implements SiteService {
     Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
     participantRegistryDetail.setCountByStatus(statusWithCountMap);
 
-    List<ParticipantRegistrySiteEntity> participantRegistrySites = null;
+    Page<ParticipantRegistrySiteEntity> participantRegistrySitesPage = null;
+    Long totalParticipantsCount = null;
     if (StringUtils.isEmpty(onboardingStatus)) {
-      participantRegistrySites = participantRegistrySiteRepository.findBySiteId(siteId);
+      totalParticipantsCount = participantRegistrySiteRepository.countbysiteId(siteId);
+      participantRegistrySitesPage =
+          participantRegistrySiteRepository.findBySiteId(
+              siteId, PageRequest.of(page, limit, Sort.by("created").descending()));
     } else {
-      participantRegistrySites =
-          (List<ParticipantRegistrySiteEntity>)
-              CollectionUtils.emptyIfNull(
-                  participantRegistrySiteRepository.findBySiteIdAndStatus(
-                      siteId, onboardingStatus));
+      totalParticipantsCount =
+          participantRegistrySiteRepository.countBySiteIdAndStatus(siteId, onboardingStatus);
+      participantRegistrySitesPage =
+          participantRegistrySiteRepository.findBySiteIdAndStatus(
+              siteId,
+              onboardingStatus,
+              PageRequest.of(page, limit, Sort.by("created").descending()));
     }
 
+    List<ParticipantRegistrySiteEntity> participantRegistrySites =
+        participantRegistrySitesPage.getContent();
     addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
 
+    participantRegistryResponse.setTotalParticipantCount(totalParticipantsCount);
     auditRequest.setSiteId(siteId);
     auditRequest.setStudyId(optSite.get().getStudyId());
     auditRequest.setAppId(optSite.get().getStudy().getAppId());
