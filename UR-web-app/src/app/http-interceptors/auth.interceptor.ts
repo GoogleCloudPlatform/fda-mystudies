@@ -47,10 +47,12 @@ export class AuthInterceptor implements HttpInterceptor {
           `${sessionStorage.getItem('correlationId') || ''} `,
         )
         .set('appId', `${environment.appId}`)
-        .set('mobilePlatform', `${environment.mobilePlatform}`);
-      if (!req.headers.has('Content-Type')) {
-        req.headers.set('Content-Type', 'application/json');
-      }
+        .set('mobilePlatform', `${environment.mobilePlatform}`)
+        .set(
+          'Authorization',
+          `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
+        );
+
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
         this.handleError(),
@@ -63,7 +65,7 @@ export class AuthInterceptor implements HttpInterceptor {
         .set('userId', `${sessionStorage.getItem('userId') || ''} `)
         .set(
           'Authorization',
-          `Bearer ${sessionStorage.getItem('authToken') || ''} `,
+          `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
       if (!req.headers.has('Content-Type')) {
         req.headers.set('Content-Type', 'application/json');

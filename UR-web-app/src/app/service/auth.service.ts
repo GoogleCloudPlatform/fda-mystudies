@@ -13,8 +13,6 @@ import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
 import getPkce from 'oauth-pkce';
 import {Observable} from 'rxjs';
-import sha256 from 'crypto-js/sha256';
-import Base64 from 'crypto-js/enc-base64';
 @Injectable({providedIn: 'root'})
 export class AuthService {
   constructor(
@@ -26,38 +24,46 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  storeDefaultsValues(): void {
-    const codeVerifier = this.strRandom(50);
-    const codeChallenge = this.generateCodeChallenge(codeVerifier);
+  initSessionStorage(): void {
+    sessionStorage.setItem('correlationId', uuidv4());
 
-    sessionStorage.setItem('tempRegId', '');
-    if (!sessionStorage.hasOwnProperty('correlationId')) {
-      sessionStorage.setItem('correlationId', uuidv4());
-      sessionStorage.setItem('pkceVerifier', codeVerifier);
-      sessionStorage.setItem('pkceChallenge', codeChallenge);
-      // getPkce(43, (error, {verifier, challenge}) => {
-      //   if (!error) {
-      //     sessionStorage.setItem('pkceVerifier', verifier);
-      //     sessionStorage.setItem('pkceChallenge', challenge);
-      //   } else {
-      //     console.log(error);
-      //   }
-      // });
-    }
+    //TODO(Prakash) uncomment getPkce method once https enabled in test enviornment
+
+    // getPkce(43, (error, {verifier, challenge}) => {
+    //   if (!error) {
+    //     sessionStorage.setItem('pkceVerifier', verifier);
+    //     sessionStorage.setItem('pkceChallenge', challenge);
+    //   }
+    // });
+
+    //TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
+
+    sessionStorage.setItem(
+      'pkceVerifier',
+      'IIZLcGtmuoCgXhazHneHoXVMmPRM1tkjfUs2yJ4uXvv3nVswiv',
+    );
+    sessionStorage.setItem(
+      'pkceChallenge',
+      'wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4',
+    );
   }
 
-  grantAutoSignIn(): void {
-    window.location.href = `${environment.loginUrl}?client_id=${
-      environment.client_id
-    }&scope=offline_access&response_type=code&appId=${
-      environment.appId
-    }&mobilePlatform=${environment.mobilePlatform}&tempRegId=${
-      sessionStorage.getItem('tempRegId') || ''
-    }&code_challenge_method=S256&code_challenge=${
-      sessionStorage.getItem('pkceChallenge') || ''
-    }&correlationId=${
-      sessionStorage.getItem('correlationId') || ''
-    }&redirect_uri=${environment.redirectUrl}&state=${uuidv4()}`;
+  beginLoginConsentFlow(): void {
+    const params = new HttpParams()
+      .set('client_id', environment.client_id)
+      .set('scope', 'offline_access')
+      .set('appId', environment.appId)
+      .set('response_type', 'code')
+      .set('mobilePlatform', environment.mobilePlatform)
+      .set('code_challenge_method', 'S256')
+      .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
+      .set('correlationId', sessionStorage.getItem('correlationId') || '')
+      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
+      .set('redirect_uri', environment.redirectUrl)
+      .set('state', uuidv4())
+      .set('env', 'localhost')
+      .toString();
+    window.location.href = `${environment.loginUrl}?${params}`;
   }
 
   hasCredentials(): boolean {
@@ -72,7 +78,7 @@ export class AuthService {
     return sessionStorage.getItem('authUserId') || '';
   }
 
-  grantAuthorization(code: string, userId: string): Observable<AccessToken> {
+  getToken(code: string, userId: string): Observable<AccessToken> {
     const httpOptionsforauth = {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -116,12 +122,5 @@ export class AuthService {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
-  }
-  generateCodeChallenge(codeVerifier: string): string {
-    const codeVerifierHash = sha256(codeVerifier).toString(Base64);
-    return codeVerifierHash
-      .replace(/=/g, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_');
   }
 }

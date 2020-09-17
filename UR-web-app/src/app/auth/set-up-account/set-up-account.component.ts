@@ -5,7 +5,7 @@ import {ToastrService} from 'ngx-toastr';
 import {SetUpUser} from '../../entity/user';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {SetUpAccountService} from 'src/app/auth/shared/set-up-account.service';
-import {getMessage} from 'src/app/shared/success.codes.enum';
+import {getMessage, getSuccessMessage} from 'src/app/shared/success.codes.enum';
 import {AuthService} from 'src/app/service/auth.service';
 import {SetUpResponse} from '../shared/set-up-account';
 
@@ -14,7 +14,8 @@ import {SetUpResponse} from '../shared/set-up-account';
   templateUrl: './set-up-account.component.html',
   styleUrls: ['./set-up-account.component.scss'],
 })
-export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
+export class SetUpAccountComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   user = {} as SetUpUser;
   setUpCode = '';
@@ -51,12 +52,15 @@ export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
       this.setUpAccountService
         .setUpAccount(this.form.value)
         .subscribe((successResponse: SetUpResponse) => {
-          if (getMessage(successResponse.code)) {
-            this.toastr.success(getMessage(successResponse.code));
-          } else {
-            this.toastr.success('Success');
-            this.authService.grantAutoSignIn();
-          }
+          this.toastr.success(
+            getSuccessMessage(successResponse.code, successResponse.message),
+          );
+          sessionStorage.setItem('tempRegId', successResponse.tempRegId);
+          sessionStorage.setItem('userId', successResponse.userId);
+          this.authService.initSessionStorage();
+          setTimeout(() => {
+            this.authService.beginLoginConsentFlow();
+          }, 1000);
         }),
     );
   }
