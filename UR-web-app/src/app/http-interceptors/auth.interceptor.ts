@@ -43,12 +43,9 @@ export class AuthInterceptor implements HttpInterceptor {
       const headers = req.headers
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .set('Accept', 'application/json')
-        .set(
-          'correlationId',
-          `${sessionStorage.getItem('correlationId') || ''} `,
-        )
-        .set('appId', `${environment.appId}`)
-        .set('mobilePlatform', `${environment.mobilePlatform}`)
+        .set('correlationId', sessionStorage.getItem('correlationId') || '')
+        .set('appId', this.authService.appId)
+        .set('mobilePlatform', this.authService.mobilePlatform)
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
@@ -64,7 +61,7 @@ export class AuthInterceptor implements HttpInterceptor {
     } else {
       const headers = req.headers
         .set('Content-Type', 'application/json')
-        .set('userId', `${sessionStorage.getItem('userId') || ''} `)
+        .set('userId', sessionStorage.getItem('userId') || '')
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,

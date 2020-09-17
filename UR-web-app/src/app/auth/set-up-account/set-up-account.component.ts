@@ -1,6 +1,7 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {NgForm} from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
+import {Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {SetUpUser} from '../../entity/user';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
@@ -8,6 +9,7 @@ import {SetUpAccountService} from 'src/app/auth/shared/set-up-account.service';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {AuthService} from 'src/app/service/auth.service';
 import {SetUpResponse} from '../shared/set-up-account';
+import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
 
 @Component({
   selector: 'app-set-up-account',
@@ -19,18 +21,50 @@ export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
   user = {} as SetUpUser;
   setUpCode = '';
   tempRegId = '';
-  @ViewChild('setupaccount')
-  form!: NgForm;
+  setupaccountForm: FormGroup;
 
   constructor(
+    private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,
     private readonly authService: AuthService,
     private readonly route: ActivatedRoute,
     private readonly toastr: ToastrService,
   ) {
     super();
+    this.setupaccountForm = fb.group(
+      {
+        // eslint-disable-next-line @typescript-eslint/unbound-method
+        email: ['', Validators.required],
+        firstName: [
+          '',
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+          [Validators.required],
+        ],
+        lastName: [
+          '',
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+          [Validators.required],
+        ],
+        password: [
+          '',
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+          [Validators.required, passwordValidator()],
+        ],
+        confirmPassword: [
+          '',
+          // eslint-disable-next-line @typescript-eslint/unbound-method
+          [Validators.required],
+        ],
+      },
+      {
+        validator: [mustMatch('password', 'confirmPassword')],
+      },
+    );
   }
 
+  get f() {
+    return this.setupaccountForm.controls;
+  }
   ngOnInit(): void {
     this.subs.add(
       this.route.params.subscribe((params) => {
@@ -42,14 +76,20 @@ export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
 
   getPreStoredDetails(): void {
     this.setUpAccountService.get(this.setUpCode).subscribe((user) => {
-      this.user = user;
+      this.setupaccountForm.patchValue(user);
     });
   }
 
   registerUser(): void {
+    const updatedUser: SetUpUser = {
+      firstName: String(this.setupaccountForm.controls['firstName'].value),
+      lastName: String(this.setupaccountForm.controls['lastName'].value),
+      email: String(this.setupaccountForm.controls['email'].value),
+      password: String(this.setupaccountForm.controls['password'].value),
+    };
     this.subs.add(
       this.setUpAccountService
-        .setUpAccount(this.form.value)
+        .setUpAccount(updatedUser)
         .subscribe((successResponse: SetUpResponse) => {
           this.toastr.success(getMessage(successResponse.code));
           sessionStorage.setItem('tempRegId', successResponse.tempRegId);

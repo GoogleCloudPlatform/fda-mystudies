@@ -1,6 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AuthService} from 'src/app/service/auth.service';
+import {ToastrModule} from 'ngx-toastr';
 import {HttpClientModule} from '@angular/common/http';
 import {EntityService} from 'src/app/service/entity.service';
 import {LoginCallbackComponent} from './login-callback.component';
@@ -12,7 +13,15 @@ describe('LoginCallbackComponent', () => {
   beforeEach(async(async () => {
     await TestBed.configureTestingModule({
       declarations: [LoginCallbackComponent],
-      imports: [RouterTestingModule.withRoutes([]), HttpClientModule],
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        ToastrModule.forRoot({
+          positionClass: 'toast-top-center',
+          preventDuplicates: true,
+          enableHtml: true,
+        }),
+        HttpClientModule,
+      ],
       providers: [AuthService, EntityService],
     }).compileComponents();
   }));

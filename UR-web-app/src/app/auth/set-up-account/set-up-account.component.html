@@ -11,7 +11,11 @@
 </header>
 <ng-container>
   <section class="max__w__850 add__location">
-    <form #setupaccount="ngForm" autocomplete="off">
+    <form
+      [formGroup]="setupaccountForm"
+      (ngSubmit)="registerUser()"
+      autocomplete="off"
+    >
       <h2 class="subheader__title mb-sm mt-lg">Set Up Account</h2>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="mt-lg">
@@ -24,9 +28,7 @@
                   class="form-control"
                   id="email"
                   placeholder="Enter Email"
-                  [(ngModel)]="user.email"
-                  name="email"
-                  #email="ngModel"
+                  formControlName="email"
                   readonly
                 />
               </div>
@@ -41,29 +43,22 @@
                   class="form-control"
                   id="fname"
                   placeholder="Enter First Name"
-                  [(ngModel)]="user.firstName"
-                  name="firstName"
-                  #firstName="ngModel"
-                  pattern="^[A-Za-z]{3,15}$"
+                  formControlName="firstName"
+                  maxlength="15"
                   required
                 />
                 <div
                   class="validation-error"
                   *ngIf="
-                    firstName.invalid && (firstName.dirty || firstName.touched)
+                    f.firstName.invalid &&
+                    (f.firstName.dirty || f.firstName.touched)
                   "
                 >
                   <span
                     class="help-block with-errors error__msg"
-                    *ngIf="firstName.errors?.required"
+                    *ngIf="f.firstName.errors?.required"
                   >
                     Please fill out this field.
-                  </span>
-                  <span
-                    class="help-block with-errors error__msg"
-                    *ngIf="firstName.errors?.pattern"
-                  >
-                    Please enter atleast 3 - 15 alphabets with no space.
                   </span>
                 </div>
               </div>
@@ -76,29 +71,22 @@
                   class="form-control"
                   id="lname"
                   placeholder="Enter Last Name"
-                  [(ngModel)]="user.lastName"
-                  name="lastName"
-                  #lastName="ngModel"
-                  pattern="^[A-Za-z]{3,15}$"
+                  formControlName="lastName"
+                  maxlength="15"
                   required
                 />
                 <div
                   class="validation-error"
                   *ngIf="
-                    lastName.invalid && (lastName.dirty || lastName.touched)
+                    f.lastName.invalid &&
+                    (f.lastName.dirty || f.lastName.touched)
                   "
                 >
                   <span
                     class="help-block with-errors error__msg"
-                    *ngIf="lastName.errors?.required"
+                    *ngIf="f.lastName.errors?.required"
                   >
                     Please fill out this field.
-                  </span>
-                  <span
-                    class="help-block with-errors error__msg"
-                    *ngIf="lastName.errors?.pattern"
-                  >
-                    Please enter atleast 3 - 15 alphabets with no space.
                   </span>
                 </div>
               </div>
@@ -118,27 +106,21 @@
                 class="form-control"
                 id="password"
                 placeholder="Enter Password"
-                [(ngModel)]="user.password"
-                #password="ngModel"
-                name="password"
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$"
+                formControlName="password"
                 required
               />
+
               <div
                 class="validation-error"
-                *ngIf="password.invalid && (password.dirty || password.touched)"
+                *ngIf="
+                  f.password.invalid && (f.password.dirty || f.password.touched)
+                "
               >
                 <span
                   class="help-block with-errors error__msg"
-                  *ngIf="password.errors?.required"
+                  *ngIf="f.password.errors?.validPassword"
                 >
-                  Please fill out this field.
-                </span>
-                <span
-                  class="help-block with-errors error__msg"
-                  *ngIf="password.errors?.pattern"
-                >
-                  Does not match Password criteria
+                  Please enter valid password
                 </span>
               </div>
             </div>
@@ -151,44 +133,27 @@
                 class="form-control"
                 id="confirmPassword"
                 placeholder="Enter Confirm Password"
-                [(ngModel)]="user.confirmPassword"
-                #confirmPassword="ngModel"
-                name="confirmPassword"
-                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$"
+                formControlName="confirmPassword"
                 required
               />
               <div
                 class="validation-error"
                 *ngIf="
-                  confirmPassword.invalid &&
-                  (confirmPassword.dirty || confirmPassword.touched)
+                  f.confirmPassword.invalid &&
+                  (f.confirmPassword.dirty || f.confirmPassword.touched)
                 "
               >
                 <span
                   class="help-block with-errors error__msg"
-                  *ngIf="confirmPassword.errors?.required"
+                  *ngIf="f.confirmPassword.errors?.required"
                 >
-                  Please fill out this field.
+                  Please confirm password.
                 </span>
                 <span
                   class="help-block with-errors error__msg"
-                  *ngIf="confirmPassword.errors?.pattern"
+                  *ngIf="f.confirmPassword.errors?.mustMatch"
                 >
-                  Does not match Password criteria.
-                </span>
-              </div>
-              <div
-                class="validation-error"
-                *ngIf="
-                  !confirmPassword.invalid &&
-                  (confirmPassword.dirty || confirmPassword.touched)
-                "
-              >
-                <span
-                  class="help-block with-errors error__msg"
-                  *ngIf="user.confirmPassword !== user.password"
-                >
-                  Entered Password does not match.
+                  Passwords must match.
                 </span>
               </div>
             </div>
@@ -201,10 +166,7 @@
             type="submit"
             name="save"
             class="btn bt__add mr-sm"
-            [disabled]="
-              setupaccount.form.invalid || user.confirmPassword != user.password
-            "
-            (click)="registerUser()"
+            [disabled]="!setupaccountForm.valid"
           >
             Submit
           </button>

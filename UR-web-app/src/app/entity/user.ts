@@ -54,5 +54,4 @@ export interface SetUpUser {
   firstName: string;
   lastName: string;
   password: string;
-  confirmPassword: string;
 }
