@@ -10,4 +10,7 @@ RUN ng build --aot --prod
 #Stage2
 #copying and running the application in the nginx with the dist file created in stage 1(Angular Build)
 FROM nginx
+COPY --from=compile-image /app/certificates/default.conf /etc/nginx/conf.d/
+COPY --from=compile-image /app/certificates/server.crt /etc/ssl/
+COPY --from=compile-image /app/certificates/server.key /etc/ssl/
 COPY --from=compile-image /app/dist/userRegistrationWeb /usr/share/nginx/html
