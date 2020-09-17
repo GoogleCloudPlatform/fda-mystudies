@@ -5,7 +5,7 @@ export const environment = {
   loginUrl: 'https://35.193.185.224:9000/oauth2/auth',
   authServerUrl: 'http://35.193.185.224:8087/oauth-scim-service',
   redirectUrl: 'http://35.193.185.224:8087/oauth-scim-service/login',
-  appId: 'PARTICIPANT-MANAGER',
+  appId: 'PARTICIPANT MANAGER',
   client_id: 'oauth-scim-client-id',
   appVersion: 'v0.1',
   mobilePlatform: 'DESKTOP',
