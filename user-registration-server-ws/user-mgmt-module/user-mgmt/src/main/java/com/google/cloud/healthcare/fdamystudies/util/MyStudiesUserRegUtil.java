@@ -271,7 +271,7 @@ public class MyStudiesUserRegUtil {
     if (emailId != null) {
       return emailId.matches("([A-Za-z0-9-_.]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
     } else {
-      logger.info("invalid emailId formate");
+      logger.info("invalid emailId format");
       return false;
     }
   }

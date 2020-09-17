@@ -85,13 +85,13 @@ public class UserProfileController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(userId);
 
-    UserProfileRespBean userPrlofileRespBean = null;
+    UserProfileRespBean userProfileRespBean = null;
 
-    userPrlofileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0);
-    if (userPrlofileRespBean != null) {
+    userProfileRespBean = userManagementProfService.getParticipantInfoDetails(userId, 0);
+    if (userProfileRespBean != null) {
       userMgmntAuditHelper.logEvent(READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE, auditRequest);
 
-      userPrlofileRespBean.setMessage(
+      userProfileRespBean.setMessage(
           MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
 
     } else {
@@ -105,7 +105,7 @@ public class UserProfileController {
     }
 
     logger.info("UserProfileController getUserProfile() - Ends ");
-    return new ResponseEntity<>(userPrlofileRespBean, HttpStatus.OK);
+    return new ResponseEntity<>(userProfileRespBean, HttpStatus.OK);
   }
 
   @PostMapping(

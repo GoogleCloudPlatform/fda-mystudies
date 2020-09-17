@@ -22,12 +22,7 @@ public final class ResponseUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ResponseUtil.class);
 
   public static ResponseBean prepareBadRequestResponse(
-      HttpServletResponse response, String errorType) {
-    return prepareBadRequestResponse(response, null, errorType);
-  }
-
-  public static ResponseBean prepareBadRequestResponse(
-      HttpServletResponse response, Exception e, String... errorTypes) {
+      HttpServletResponse response, String... errorTypes) {
     String errorType = errorTypes[0];
     ResponseBean responseBean = new ResponseBean();
     // Default error code for missing required parameter and InvalidRequestException
