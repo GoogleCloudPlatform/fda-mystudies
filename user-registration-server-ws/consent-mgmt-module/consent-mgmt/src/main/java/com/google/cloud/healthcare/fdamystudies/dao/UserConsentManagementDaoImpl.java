@@ -59,7 +59,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
     StudyEntity studyInfo = null;
 
-    Root<ParticipantStudyEntity> participantStudiesBoRoot = null;
     Predicate[] predicates = new Predicate[2];
     List<ParticipantStudyEntity> participantStudiesBoList = null;
 
@@ -78,7 +77,8 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     List<StudyEntity> studiesBoList = session.createQuery(studiesBoCriteria).getResultList();
     CriteriaQuery<ParticipantStudyEntity> participantStudiesBoCriteria =
         criteriaBuilder.createQuery(ParticipantStudyEntity.class);
-    participantStudiesBoRoot = participantStudiesBoCriteria.from(ParticipantStudyEntity.class);
+    Root<ParticipantStudyEntity> participantStudiesBoRoot =
+        participantStudiesBoCriteria.from(ParticipantStudyEntity.class);
 
     if (!StringUtils.isEmpty(userId)) {
       userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
