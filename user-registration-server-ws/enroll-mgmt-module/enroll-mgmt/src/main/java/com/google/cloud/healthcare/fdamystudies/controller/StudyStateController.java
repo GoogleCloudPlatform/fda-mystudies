@@ -23,9 +23,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
@@ -72,13 +72,12 @@ public class StudyStateController {
     logger.info("StudyStateController updateStudyState() - Starts ");
     StudyStateRespBean studyStateRespBean = null;
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-
     if (studyStateReqBean != null && userId != null && !StringUtils.isEmpty(userId)) {
       if (studyStateReqBean.getStudies() != null && !studyStateReqBean.getStudies().isEmpty()) {
         List<StudiesBean> studiesBeenList = studyStateReqBean.getStudies();
-        UserDetailsBO user = commonService.getUserInfoDetails(userId);
+        UserDetailsEntity user = commonService.getUserInfoDetails(userId);
         if (user != null) {
-          List<ParticipantStudiesBO> existParticipantStudies =
+          List<ParticipantStudyEntity> existParticipantStudies =
               studyStateService.getParticipantStudiesList(user);
           studyStateRespBean =
               studyStateService.saveParticipantStudies(
@@ -122,7 +121,8 @@ public class StudyStateController {
   public ResponseEntity<?> getStudyState(
       @RequestHeader(USER_ID) String userId,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     try {
