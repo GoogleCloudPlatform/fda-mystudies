@@ -8,12 +8,18 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_RESPONSE_DATA_DELETION_FAILED;
+
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityValueGroupBean;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStepsBean;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.common.ResponseServerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.ResponsesDao;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
@@ -30,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -46,13 +53,16 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
 
   @Autowired private ApplicationConfiguration appConfig;
 
+  @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
+
   private static final Logger logger =
       LoggerFactory.getLogger(ActivityResponseProcessorServiceImpl.class);
 
   @Override
   public void saveActivityResponseDataForParticipant(
       QuestionnaireActivityStructureBean activityMetadataBeanFromWcp,
-      ActivityResponseBean questionnaireActivityResponseBean)
+      ActivityResponseBean questionnaireActivityResponseBean,
+      AuditLogEventRequest auditRequest)
       throws Exception {
     if (activityMetadataBeanFromWcp == null) {
       throw new ProcessResponseException("QuestionnaireActivityStructureBean is null.");
@@ -83,6 +93,13 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         .getActivityId()
         .equalsIgnoreCase(activityMetadataBeanFromWcp.getMetadata().getActivityId())) {
       processActivityResponses(questionnaireResponses, questionnaireMetadata);
+      Map<String, String> map = new HashedMap<>();
+      map.put("activity_type", questionnaireActivityResponseBean.getType());
+      map.put("activity_id", activityMetadataBeanFromWcp.getMetadata().getActivityId());
+      map.put("activity_version", activityMetadataBeanFromWcp.getMetadata().getVersion());
+      map.put("run_id", activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      responseServerAuditLogHelper.logEvent(
+          ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA, auditRequest, map);
       String rawResponseData = null;
       if (appConfig.getSaveRawResponseData().equalsIgnoreCase(AppConstants.TRUE_STR)) {
         rawResponseData = getRawJsonInputData(questionnaireActivityResponseBean);
@@ -98,15 +115,25 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               + "\n"
               + "Activity Id in metadata: "
               + activityMetadataBeanFromWcp.getMetadata().getActivityId());
+      Map<String, String> map = new HashedMap<>();
+      map.put("activity_type", questionnaireActivityResponseBean.getType());
+      map.put("activity_id", activityMetadataBeanFromWcp.getMetadata().getActivityId());
+      map.put("activity_version", activityMetadataBeanFromWcp.getMetadata().getVersion());
+      map.put("run_id", activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      responseServerAuditLogHelper.logEvent(
+          ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED, auditRequest);
       throw new ProcessResponseException(
           "The activity ID in the response does not match activity ID in the metadata provided.");
     }
   }
 
   @Override
-  public void deleteActivityResponseDataForParticipant(String studyId, String participantId)
+  public void deleteActivityResponseDataForParticipant(
+      String studyId, String participantId, AuditLogEventRequest auditRequest)
       throws ProcessResponseException {
     if (Strings.isBlank(studyId) || Strings.isBlank(participantId)) {
+      responseServerAuditLogHelper.logEvent(
+          PARTICIPANT_RESPONSE_DATA_DELETION_FAILED, auditRequest);
       throw new ProcessResponseException("Required input parameter is blank or null");
     } else {
 
