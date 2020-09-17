@@ -8,9 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import javax.transaction.SystemException;
 
 public interface UserRegAdminUserDao {
 
-  UserDetailsBO getRecord(String userId);
+  UserDetailsEntity getRecord(String userId) throws SystemException;
 }

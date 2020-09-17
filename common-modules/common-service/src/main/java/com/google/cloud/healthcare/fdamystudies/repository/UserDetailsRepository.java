@@ -42,4 +42,7 @@ public interface UserDetailsRepository extends JpaRepository<UserDetailsEntity, 
   Optional<UserDetailsEntity> findByEmailAndAppId(String email, String appId);
 
   public List<UserDetailsEntity> findByLastName(String lastname);
+  
+  @Query("SELECT ud FROM UserDetailsEntity ud WHERE ud.userId = :userId")
+  public Optional<UserDetailsEntity> findByUserId(String userId);
 }
