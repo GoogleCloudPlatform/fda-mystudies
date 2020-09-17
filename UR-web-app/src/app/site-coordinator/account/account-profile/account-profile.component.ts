@@ -15,7 +15,8 @@ import {StateService} from 'src/app/service/state.service';
   templateUrl: './account-profile.component.html',
   styleUrls: ['./account-profile.component.scss'],
 })
-export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
+export class AccountProfileComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   profileForm: FormGroup;
   constructor(
@@ -94,8 +95,9 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
         void this.router.navigate(['/']);
       },
       (errorResponse: ApiResponse) => {
+        console.log(errorResponse);
         if (getMessage(errorResponse.code)) {
-          this.toastr.success(getMessage(errorResponse.code));
+          this.toastr.error(getMessage(errorResponse.code));
         }
       },
     );

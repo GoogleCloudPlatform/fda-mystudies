@@ -14,15 +14,9 @@ export class LoginComponent {
   ) {}
 
   ngOnInit(): void {
-    this.redirectToAuth();
-  }
-
-  redirectToAuth(): void {
-    if (this.authService.getUserAccessToken() === '') {
-      this.authService.storeDefaultsValues();
-      this.authService.grantAutoSignIn();
-    } else {
-      void this.router.navigate(['/login/']);
-    }
+    this.authService.initSessionStorage();
+    setTimeout(() => {
+      this.authService.beginLoginConsentFlow();
+    }, 1000);
   }
 }

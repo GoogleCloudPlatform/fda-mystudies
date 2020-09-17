@@ -15,9 +15,9 @@ export class LoginCallbackComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     public authService: AuthService,
     private readonly router: Router,
-      private readonly accountService: AccountService,
-        private readonly userState: StateService,
-            private readonly toastr: ToastrService,
+    private readonly accountService: AccountService,
+    private readonly userState: StateService,
+    private readonly toastr: ToastrService,
   ) {}
   ngOnInit(): void {
     this.redirect();
@@ -28,28 +28,29 @@ export class LoginCallbackComponent implements OnInit {
       sessionStorage.setItem('code', params.code);
       sessionStorage.setItem('authUserId', params.userId);
       if (params.code && params.userId) {
-        this.authService
-          .grantAuthorization(params.code, params.userId)
-          .subscribe(
-            (res) => {
-              sessionStorage.setItem('accessToken', res.access_token);
-              sessionStorage.setItem('refreshToken', res.refresh_token);
-       this.accountService.fetchProfile().subscribe((data:Profile)=>{
-        this.userState.setCurrentUserName(data.firstName);
-       sessionStorage.setItem('userId', params.userId);
-       if (params.accountStatus === 3) {
-                void this.router.navigate(['/change-password']);
-              } else {
-                 void this.router.navigate(['/coordinator']);
-              }
-               }, (error) => {
-            this.toastr.error(error);
-            })
-            },
-            () => {
-              void this.router.navigate(['/login']);
-            },
-          );
+        this.authService.getToken(params.code, params.userId).subscribe(
+          (res) => {
+            sessionStorage.setItem('accessToken', res.access_token);
+            sessionStorage.setItem('refreshToken', res.refresh_token);
+            this.accountService.fetchProfile().subscribe(
+              (data: Profile) => {
+                this.userState.setCurrentUserName(data.firstName);
+                sessionStorage.setItem('userId', data.userId);
+                if (params.accountStatus === 3) {
+                  void this.router.navigate(['/change-password']);
+                } else {
+                  void this.router.navigate(['/coordinator']);
+                }
+              },
+              (error) => {
+                this.toastr.error(error);
+              },
+            );
+          },
+          () => {
+            void this.router.navigate(['/login']);
+          },
+        );
       }
     });
   }

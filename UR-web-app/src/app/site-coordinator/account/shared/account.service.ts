@@ -11,21 +11,23 @@ import {AuthService} from '../../../service/auth.service';
   providedIn: 'root',
 })
 export class AccountService {
-    authUserId='';
+  authUserId = '';
   constructor(
     private readonly entityService: EntityService<Profile>,
     private readonly http: HttpClient,
     private readonly authService: AuthService,
-  ) {
-  this.authUserId= this.authService.getAuthUserId();
-  }
+  ) {}
 
   fetchProfile(): Observable<Profile> {
-    return this.entityService.get(`/users/${encodeURIComponent( this.authUserId)}`);
+    this.authUserId = this.authService.getAuthUserId();
+    return this.entityService.get(
+      `/users/${encodeURIComponent(this.authUserId)}`,
+    );
   }
   updateUserProfile(
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
+    this.authUserId = this.authService.getAuthUserId();
     return this.http.put<ApiResponse>(
       `${environment.baseUrl}/users/${encodeURIComponent(
         this.authUserId,
@@ -37,7 +39,7 @@ export class AccountService {
   logout(): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(
       `${environment.authServerUrl}/users/${encodeURIComponent(
-         this.authUserId,
+        this.authUserId,
       )}/logout`,
       '',
     );
