@@ -17,7 +17,8 @@ import {OnboardingStatus} from 'src/app/shared/enums';
   templateUrl: './site-details.component.html',
   styleUrls: ['./site-details.component.scss'],
 })
-export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
+export class SiteDetailsComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
