@@ -18,8 +18,6 @@ public interface StudyMetadataService {
       throws ProcessResponseException;
 
   QuestionnaireActivityStructureBean getStudyActivityMetadata(
-      String applicationId,
-      String orgId,
-      StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
+      String applicationId, StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
       throws ProcessResponseException;
 }

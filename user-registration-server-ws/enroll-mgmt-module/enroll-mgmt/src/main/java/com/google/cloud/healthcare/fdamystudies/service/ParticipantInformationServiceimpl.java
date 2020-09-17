@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ParticipantInformationServiceimpl implements ParticipantInformationService {
@@ -26,17 +27,14 @@ public class ParticipantInformationServiceimpl implements ParticipantInformation
   @Autowired CommonDao commonDao;
 
   @Override
+  @Transactional(readOnly = true)
   public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId) {
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - starts ");
     ParticipantInfoRespBean participantInforespBean = null;
-    Integer studyInfoId = 0;
-    try {
-      studyInfoId = commonDao.getStudyId(studyId);
-      participantInforespBean =
-          participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
-    } catch (Exception e) {
-      logger.error("ParticipantInformationServiceimpl getParticipantInfoDetails() - error ", e);
-    }
+    String studyInfoId = String.valueOf(0);
+    studyInfoId = commonDao.getStudyId(studyId);
+    participantInforespBean =
+        participantInfoDao.getParticipantInfoDetails(particpinatId, studyInfoId);
 
     logger.info("ParticipantInformationServiceimpl getParticipantDetails() - ends ");
     return participantInforespBean;

@@ -1,99 +1,101 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-prototype-builtins */
 import {Injectable} from '@angular/core';
-import {NgxSpinnerService} from 'ngx-spinner';
-import {
-  HttpInterceptor,
-  HttpHandler,
-  HttpRequest,
-  HttpEvent,
-  HttpErrorResponse,
-} from '@angular/common/http';
-import {finalize} from 'rxjs/operators';
-import {Observable, OperatorFunction, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {ToastrService} from 'ngx-toastr';
-import {getMessage} from '../shared/error.codes.enum';
-import {AuthService} from '../service/auth.service';
-import {ApiResponse} from '../entity/api.response.model';
-import {environment} from 'src/environments/environment';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
+import {User} from '../entity/user';
+import {EntityService} from '../service/entity.service';
+import {Router, ActivatedRoute} from '@angular/router';
+import {AccessToken} from '../entity/access-token';
+import {environment} from 'src/environments/environment';
+import {UserService} from '../service/user.service';
+import {v4 as uuidv4} from 'uuid';
+import getPkce from 'oauth-pkce';
+import {Observable} from 'rxjs';
+@Injectable({providedIn: 'root'})
+export class AuthService {
   constructor(
-    private readonly spinner: NgxSpinnerService,
-    private readonly toasterService: ToastrService,
-    private readonly authService: AuthService,
+    private readonly http: HttpClient,
     public cookieService: CookieService,
+    public entityService: EntityService<AccessToken>,
+    public router: Router,
+    public activatedRoute: ActivatedRoute,
+    private readonly userService: UserService,
   ) {}
 
-  intercept(
-    req: HttpRequest<unknown>,
-    next: HttpHandler,
-  ): Observable<HttpEvent<unknown>> {
-    void this.spinner.show();
-
-    if (!this.authService.hasCredentials()) {
-      return next.handle(req).pipe(
-        this.handleError(),
-        finalize(() => {
-          void this.spinner.hide();
-        }),
-      );
-    }
-    if (req.url.includes(`${environment.authServerUrl}`)) {
-      const headers = req.headers
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .set('Accept', 'application/json')
-        .set(
-          'correlationId',
-          `${sessionStorage.getItem('correlationId') || ''} `,
-        )
-        .set('appId', `${environment.appId}`)
-        .set('mobilePlatform', `${environment.mobilePlatform}`);
-      const authReq = req.clone({headers});
-      return next.handle(authReq).pipe(
-        this.handleError(),
-        finalize(() => {
-          void this.spinner.hide();
-        }),
-      );
-    } else {
-      const headers = req.headers
-        .set('Content-Type', 'application/json')
-        .set('userId', `${sessionStorage.getItem('userId') || ''} `)
-        .set(
-          'Authorization',
-          `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
-        );
-      const authReq = req.clone({headers});
-      return next.handle(authReq).pipe(
-        this.handleError(),
-        finalize(() => {
-          void this.spinner.hide();
-        }),
-      );
-    }
+  initSessionStorage(): void {
+    sessionStorage.setItem('correlationId', uuidv4());
+    getPkce(43, (error, {verifier, challenge}) => {
+      if (!error) {
+        sessionStorage.setItem('pkceVerifier', verifier);
+        sessionStorage.setItem('pkceChallenge', challenge);
+      }
+    });
   }
-  handleError<T>(): OperatorFunction<T, T> {
-    return catchError(
-      (err: unknown): Observable<T> => {
-        if (err instanceof HttpErrorResponse) {
-          if (err.error instanceof ErrorEvent) {
-            this.toasterService.error(err.error.message);
-          } else {
-            const customError = err.error as ApiResponse;
-            if (getMessage(customError.error_code)) {
-              this.toasterService.error(getMessage(customError.error_code));
-            } else {
-              this.toasterService.error(
-                `Error Code: ${err.status}\nMessage: ${err.message}`,
-              );
-            }
-          }
-        } else {
-          this.toasterService.error('An error occurred');
-        }
-        return throwError(err);
-      },
+
+  beginLoginConsentFlow(): void {
+    const params = new HttpParams()
+      .set('client_id', environment.clientId)
+      .set('scope', 'offline_access')
+      .set('appId', environment.appId)
+      .set('response_type', 'code')
+      .set('mobilePlatform', environment.mobilePlatform)
+      .set('code_challenge_method', 'S256')
+      .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
+      .set('correlationId', sessionStorage.getItem('correlationId') || '')
+      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
+      .set('redirect_uri', environment.redirectUrl)
+      .set('state', uuidv4())
+      .set('env', 'localhost')
+      .toString();
+    window.location.href = `${environment.loginUrl}?${params}`;
+  }
+
+  hasCredentials(): boolean {
+    return sessionStorage.hasOwnProperty('accessToken');
+  }
+
+  getUserAccessToken(): string {
+    return sessionStorage.getItem('accessToken') || '';
+  }
+  getAuthUserId(): string {
+    return sessionStorage.getItem('authUserId') || '';
+  }
+
+  getToken(code: string, userId: string): Observable<AccessToken> {
+    const httpOptionsforauth = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+        'correlationId': `${sessionStorage.getItem('correlationId') || ''}`,
+        'appId': `${environment.appId}`,
+        'mobilePlatform': `${environment.mobilePlatform}`,
+      }),
+    };
+    const payLoad = new HttpParams()
+      .set(`grant_type`, 'authorization_code')
+      .set('scope', 'openid offline offline_access')
+      .set('code', code)
+      .set('redirect_uri', `${environment.redirectUrl}`)
+      .set('userId', userId)
+      .set('code_verifier', `${sessionStorage.getItem('pkceVerifier') || ''}`);
+    return this.http.post<AccessToken>(
+      `${environment.authServerUrl}/oauth2/token`,
+      payLoad.toString(),
+      httpOptionsforauth,
     );
+  }
+
+  getUserDetails(): void {
+    this.userService.getUserDetails().subscribe((user: User) => {
+      this.cookieService.set('user', JSON.stringify(user));
+      void this.router.navigate(['/coordinator/']);
+    });
+  }
+
+  logOutUser(): void {
+    sessionStorage.clear();
+    this.cookieService.deleteAll();
   }
 }

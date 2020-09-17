@@ -10,7 +10,7 @@ import {AuthGuard} from './service/auth.guard';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
-  {path: 'forgot-password', component: ForgotPasswordComponent},
+  {path: 'forgotPassword', component: ForgotPasswordComponent},
   {path: 'set-up-account/:securityCode', component: SetUpAccountComponent},
   {
     path: 'callback',
