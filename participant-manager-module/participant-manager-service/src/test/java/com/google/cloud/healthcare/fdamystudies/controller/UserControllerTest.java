@@ -723,11 +723,6 @@ public class UserControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnUsersForPagination() throws Exception {
     // Step 1: 1 user already added in @BeforeEach, Add 20 new users
-    /*for (int i = 1; i <= 20; i++) {
-      UserRegAdminEntity userRegAdminEntity = testDataHelper.newNonSuperAdmin();
-      userRegAdminEntity.setEmail(String.valueOf(i) + NON_SUPER_ADMIN_EMAIL_ID);
-      userRegAdminRepository.saveAndFlush(userRegAdminEntity);
-    }*/
     for (int i = 1; i <= 20; i++) {
       userRegAdminEntity = testDataHelper.createSuperAdmin();
       userRegAdminEntity.setEmail(String.valueOf(i) + EMAIL_VALUE);
