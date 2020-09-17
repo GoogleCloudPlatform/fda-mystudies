@@ -16,13 +16,13 @@ import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCA
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -35,7 +35,6 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.OrgInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
@@ -96,8 +95,6 @@ public class TestDataHelper {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
-
-  @Autowired private OrgInfoRepository orgInfoRepository;
 
   public HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
@@ -264,7 +261,7 @@ public class TestDataHelper {
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
-    participantStudyEntity.setSharing(true);
+    participantStudyEntity.setSharing(DataSharingStatus.PERMITTED.value());
     return participantStudyRepository.saveAndFlush(participantStudyEntity);
   }
 
@@ -294,13 +291,6 @@ public class TestDataHelper {
     studyConsent.setVersion("1.0");
     studyConsent.setParticipantStudy(participantStudy);
     return studyConsentRepository.saveAndFlush(studyConsent);
-  }
-
-  public OrgInfoEntity createOrgInfo() {
-    OrgInfoEntity orgInfoEntity = new OrgInfoEntity();
-    orgInfoEntity.setName("OrgName");
-    orgInfoEntity.setOrgId("OrgName");
-    return orgInfoRepository.saveAndFlush(orgInfoEntity);
   }
 
   public SiteEntity createSiteEntityForManageUsers(
@@ -376,6 +366,5 @@ public class TestDataHelper {
     getUserRegAdminRepository().deleteAll();
     getLocationRepository().deleteAll();
     getUserDetailsRepository().deleteAll();
-    getOrgInfoRepository().deleteAll();
   }
 }
