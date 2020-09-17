@@ -3,9 +3,11 @@ import {Profile, UpdateProfile} from './profile.model';
 import {EntityService} from '../../../service/entity.service';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+
+import {AuthService} from '../../../service/auth.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {environment} from '@environment';
-import {AuthService} from '../../../service/auth.service';
+
 @Injectable({
   providedIn: 'root',
 })

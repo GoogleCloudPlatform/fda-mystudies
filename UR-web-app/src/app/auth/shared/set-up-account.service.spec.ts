@@ -21,7 +21,7 @@ import {
 import {environment} from '@environment';
 
 describe('SetUpAccountService', () => {
-  let setUpAccountServices: SetUpAccountService;
+  let setUpAccountService: SetUpAccountService;
   let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;
 
   beforeEach(() =>
@@ -48,24 +48,24 @@ describe('SetUpAccountService', () => {
       'EntityService',
       {get: of(expectedUserDetails)},
     );
-    setUpAccountServices = new SetUpAccountService(
+    setUpAccountService = new SetUpAccountService(
       entityServiceSpy,
       httpServiceSpyObj,
     );
 
-    setUpAccountServices
+    setUpAccountService
       .get(expectedSetUpCode.code)
       .subscribe((user) => expect(user).toEqual(expectedUserDetails), fail);
     expect(entityServiceSpy.get).toHaveBeenCalledTimes(1);
   }));
 
   it('should post the expected User Details', fakeAsync(() => {
-    setUpAccountServices = TestBed.inject<SetUpAccountService>(
+    setUpAccountService = TestBed.inject<SetUpAccountService>(
       SetUpAccountService,
     );
     const httpTest = TestBed.inject(HttpTestingController);
 
-    setUpAccountServices
+    setUpAccountService
       .setUpAccount(expectedUpdateSetUp)
       .subscribe((successResponse: ApiResponse) =>
         expect(successResponse).toEqual(expectedsetUpResponse),
@@ -87,13 +87,13 @@ describe('SetUpAccountService', () => {
       'EntityService',
       {get: throwError(errorResponses)},
     );
-    setUpAccountServices = new SetUpAccountService(
+    setUpAccountService = new SetUpAccountService(
       entityServicespy,
       httpServiceSpyObj,
     );
 
     tick(40);
-    setUpAccountServices.get(expectedSetUpCode.code).subscribe(
+    setUpAccountService.get(expectedSetUpCode.code).subscribe(
       () => fail('expected an error'),
       (error: ApiResponse) => {
         expect(error.message).toBe('Bad Request');

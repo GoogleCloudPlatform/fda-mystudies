@@ -20,15 +20,9 @@ export class SetUpAccountService {
   }
 
   setUpAccount(userUpdate: SetUpUser): Observable<SetUpResponse> {
-    const updatedUser = {
-      firstName: userUpdate.firstName,
-      lastName: userUpdate.lastName,
-      email: userUpdate.email,
-      password: userUpdate.password,
-    };
     return this.http.post<SetUpResponse>(
       `${environment.baseUrl}/users/`,
-      updatedUser,
+      userUpdate,
     );
   }
 }

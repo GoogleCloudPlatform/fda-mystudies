@@ -6,7 +6,6 @@ import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {EntityService} from '../../../service/entity.service';
 import {AuthService} from '../../../service/auth.service';
-
 describe('AccountService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
