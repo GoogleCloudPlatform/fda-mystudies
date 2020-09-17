@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.beans;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +18,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginBean {
+public class ResetPasswordBean {
   @NotBlank private String emailId;
-  // TODO: no longer used.
-  @NotNull private String password;
 }

@@ -18,7 +18,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
@@ -180,7 +180,7 @@ public class UserProfileController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resendConfirmation(
       @RequestHeader("appId") String appId,
-      @Valid @RequestBody LoginBean loginBean,
+      @Valid @RequestBody ResetPasswordBean resetPasswordBean,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
     logger.info("UserProfileController resendConfirmation() - Starts ");
@@ -191,14 +191,14 @@ public class UserProfileController {
     ResponseBean responseBean = new ResponseBean();
     try {
       String isValidAppMsg =
-          commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+          commonService.validatedUserAppDetailsByAllApi("", resetPasswordBean.getEmailId(), appId);
       if (!StringUtils.isEmpty(isValidAppMsg)) {
         AppOrgInfoBean appOrgInfoBean =
-            commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+            commonService.getUserAppDetailsByAllApi("", resetPasswordBean.getEmailId(), appId);
         if (appOrgInfoBean != null) {
           participantDetails =
               userManagementProfService.getParticipantDetailsByEmail(
-                  loginBean.getEmailId(), appOrgInfoBean.getAppInfoId());
+                  resetPasswordBean.getEmailId(), appOrgInfoBean.getAppInfoId());
         }
         if (participantDetails != null) {
           if (participantDetails.getStatus() == 2) {

@@ -40,7 +40,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.InfoBean;
-import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
@@ -254,7 +254,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // without email
-    String requestJson = getLoginBean("", Constants.PASSWORD);
+    String requestJson = getLoginBean("");
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
@@ -265,7 +265,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     // invalid email
-    requestJson = getLoginBean(Constants.INVALID_EMAIL, Constants.PASSWORD);
+    requestJson = getLoginBean(Constants.INVALID_EMAIL);
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
@@ -277,7 +277,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     // without appId
     headers.set(Constants.APP_ID_HEADER, "");
-    requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
+    requestJson = getLoginBean(Constants.EMAIL_ID);
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
@@ -302,7 +302,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
-    String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
+    String requestJson = getLoginBean(Constants.VALID_EMAIL);
 
     mockMvc
         .perform(
@@ -332,8 +332,8 @@ public class UserProfileControllerTest extends BaseMockIT {
     verifyAuditEventCall(auditEventMap, VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED);
   }
 
-  private String getLoginBean(String emailId, String password) throws JsonProcessingException {
-    LoginBean loginBean = new LoginBean(emailId, password);
+  private String getLoginBean(String emailId) throws JsonProcessingException {
+    ResetPasswordBean loginBean = new ResetPasswordBean(emailId);
     return getObjectMapper().writeValueAsString(loginBean);
   }
 
