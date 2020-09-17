@@ -698,14 +698,14 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
                 .headers(headers)
                 .contextPath(getContextPath())
-                .param("studyId", Constants.INVALID_STUDY_ID)
-                .param("consentVersion", Constants.VERSION_1_0))
+                .param("studyId", Constants.STUDYOF_HEALTH)
+                .param("consentVersion", Constants.INVALID_CONSENT_VERSION))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.INVALID_STUDY_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(

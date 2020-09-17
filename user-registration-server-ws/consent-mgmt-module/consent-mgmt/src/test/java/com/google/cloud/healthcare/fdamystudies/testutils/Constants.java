@@ -54,4 +54,5 @@ public class Constants {
   public static final String SHARING_VALUE = "Permitted";
   public static final String INVALID_USER_ID = "invalid userId";
   public static final String INVALID_STUDY_ID = "invalid studyId";
+  public static final String INVALID_CONSENT_VERSION = "1.5";
 }

@@ -4,7 +4,7 @@ INSERT INTO `study_info` (`id`, `custom_id`, `app_info_id`, `name`, `description
 
 INSERT INTO `locations` (`id`, `created_time`, `created_by`, `custom_id`, `description`, `is_default`, `name`, `status`) VALUES (2, '2020-03-17 18:59:15', '1', '-customId130.53', 'location-descp-updated', 'N', 'name -1-updated000', 1);
 	
-INSERT INTO `sites` (`id`, `study_id`, `location_id`, `status`, `target_enrollment`, `name`, `created_time`, `created_by`) VALUES (1, 1, 2, 1, 10, 'test-site', '2020-03-17 20:19:42', '0'),(2, 2, 2, 0, 15, 'test-site', '2020-03-12 15:19:38', '0'), (3, 2, 2, 1, 45, 'test site', '2020-03-13 15:26:56', '0');
+INSERT INTO `sites` (`id`, `study_id`, `location_id`, `status`, `target_enrollment`, `name`, `created_time`, `created_by`) VALUES (1, 1, 2, 1, 10, 'test-site', '2020-03-17 20:19:42', '0'), (2, 2, 2, 0, 15, 'test-site', '2020-03-12 15:19:38', '0'), (3, 2, 2, 1, 45, 'test site', '2020-03-13 15:26:56', '0');
 
 INSERT INTO `user_details` (`id`, `user_id`, `app_info_id`, `email`, `status`, `first_name`, `last_name`, `local_notification_flag`, `remote_notification_flag`,`touch_id`, `use_pass_code`, `verification_time`) VALUES (44, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCg', 1, 'cdash93@gmail.com', 1, 'test', 'user', 0, 0,  0, 0, '2020-01-30 20:21:28'), (45, 'kR2g5m2pJPP0P31-WNFYK8Al7jBP0mJ-cTSFJJHJ4DewuCj', 1, 'abc@xy', 2, 'test', 'user', 0, 0, 0, 0, '2020-01-30 20:21:28');
 	
