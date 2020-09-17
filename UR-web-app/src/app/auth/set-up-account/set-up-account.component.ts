@@ -5,7 +5,7 @@ import {ToastrService} from 'ngx-toastr';
 import {SetUpUser} from '../../entity/user';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {SetUpAccountService} from 'src/app/auth/shared/set-up-account.service';
-import {getMessage, getSuccessMessage} from 'src/app/shared/success.codes.enum';
+import {getSuccessMessage} from 'src/app/shared/success.codes.enum';
 import {AuthService} from 'src/app/service/auth.service';
 import {SetUpResponse} from '../shared/set-up-account';
 

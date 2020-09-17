@@ -11,7 +11,6 @@ import {AccessToken} from '../entity/access-token';
 import {environment} from 'src/environments/environment';
 import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
-import getPkce from 'oauth-pkce';
 import {Observable} from 'rxjs';
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -27,7 +26,7 @@ export class AuthService {
   initSessionStorage(): void {
     sessionStorage.setItem('correlationId', uuidv4());
 
-    //TODO(Prakash) uncomment getPkce method once https enabled in test enviornment
+    // TODO(Prakash) uncomment getPkce method once https enabled in test enviornment
 
     // getPkce(43, (error, {verifier, challenge}) => {
     //   if (!error) {
@@ -36,7 +35,7 @@ export class AuthService {
     //   }
     // });
 
-    //TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
+    // TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
 
     sessionStorage.setItem(
       'pkceVerifier',
