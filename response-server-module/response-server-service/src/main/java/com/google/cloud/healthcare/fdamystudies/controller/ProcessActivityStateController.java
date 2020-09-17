@@ -12,6 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ActivitiesBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
+import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
@@ -51,7 +52,8 @@ public class ProcessActivityStateController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getActivityState(
       @RequestParam(name = "studyId") String studyId,
-      @RequestParam("participantId") String participantId) {
+      @RequestParam("participantId") String participantId)
+      throws ProcessActivityStateException {
 
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       ErrorBean errorBean =
@@ -64,21 +66,9 @@ public class ProcessActivityStateController {
           "ProcessActivityStateController getActivityState() failed. studyId or participantId missing.");
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
-      try {
-        ActivitiesBean activitiesBean =
-            participantActivityStateResponseService.getParticipantActivities(
-                studyId, participantId);
-        return new ResponseEntity<>(activitiesBean, HttpStatus.OK);
-      } catch (Exception e) {
-        logger.warn("ProcessActivityStateController getActivityState() failed ", e);
-        ErrorBean errorBean =
-            AppUtil.dynamicResponse(
-                ErrorCode.EC_713.code(),
-                ErrorCode.EC_713.errorMessage(),
-                AppConstants.ERROR_STR,
-                e.getMessage());
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
-      }
+      ActivitiesBean activitiesBean =
+          participantActivityStateResponseService.getParticipantActivities(studyId, participantId);
+      return new ResponseEntity<>(activitiesBean, HttpStatus.OK);
     }
   }
 
