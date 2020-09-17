@@ -57,10 +57,8 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     Root<StudyEntity> studiesBoRoot = null;
     Predicate[] studiesBoPredicates = new Predicate[1];
 
-    List<StudyEntity> studiesBoList = null;
     StudyEntity studyInfo = null;
 
-    CriteriaQuery<ParticipantStudyEntity> participantStudiesBoCriteria = null;
     Root<ParticipantStudyEntity> participantStudiesBoRoot = null;
     Predicate[] predicates = new Predicate[2];
     List<ParticipantStudyEntity> participantStudiesBoList = null;
@@ -77,8 +75,9 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     studiesBoRoot = studiesBoCriteria.from(StudyEntity.class);
     studiesBoPredicates[0] = criteriaBuilder.equal(studiesBoRoot.get("id"), studyId);
     studiesBoCriteria.select(studiesBoRoot).where(studiesBoPredicates);
-    studiesBoList = session.createQuery(studiesBoCriteria).getResultList();
-    participantStudiesBoCriteria = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
+    List<StudyEntity> studiesBoList = session.createQuery(studiesBoCriteria).getResultList();
+    CriteriaQuery<ParticipantStudyEntity> participantStudiesBoCriteria =
+        criteriaBuilder.createQuery(ParticipantStudyEntity.class);
     participantStudiesBoRoot = participantStudiesBoCriteria.from(ParticipantStudyEntity.class);
 
     if (!StringUtils.isEmpty(userId)) {
@@ -117,7 +116,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     CriteriaBuilder criteriaBuilder = null;
     CriteriaUpdate<ParticipantStudyEntity> criteriaUpdate = null;
-    Root<ParticipantStudyEntity> participantStudiesBoRoot = null;
     Integer isSaved = 0;
     int isUpdated = 0;
 
@@ -125,7 +123,8 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       if (participantStudies.getStudy() != null) {
         criteriaBuilder = session.getCriteriaBuilder();
         criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
-        participantStudiesBoRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
+        Root<ParticipantStudyEntity> participantStudiesBoRoot =
+            criteriaUpdate.from(ParticipantStudyEntity.class);
         criteriaUpdate.set("eligibility", participantStudies.getEligibility());
         criteriaUpdate.set("sharing", participantStudies.getSharing());
         criteriaUpdate.set("bookmark", participantStudies.getBookmark());
@@ -155,7 +154,6 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<StudyConsentEntity> criteriaQuery = null;
-    Root<StudyConsentEntity> studyConsentBoRoot = null;
     Predicate[] predicates;
     List<StudyConsentEntity> studyConsentBoList = null;
     CriteriaQuery<UserDetailsEntity> userDetailsBoCriteria = null;
@@ -179,7 +177,7 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
       }
     }
     criteriaQuery = criteriaBuilder.createQuery(StudyConsentEntity.class);
-    studyConsentBoRoot = criteriaQuery.from(StudyConsentEntity.class);
+    Root<StudyConsentEntity> studyConsentBoRoot = criteriaQuery.from(StudyConsentEntity.class);
     if ((consentVersion != null) && !StringUtils.isEmpty(consentVersion)) {
       predicates = new Predicate[3];
       predicates[0] =
