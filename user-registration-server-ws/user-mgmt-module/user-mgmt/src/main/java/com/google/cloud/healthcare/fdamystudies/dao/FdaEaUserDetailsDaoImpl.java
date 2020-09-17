@@ -44,7 +44,10 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
     try {
       UserDetailsEntity userDetails = null;
       if (userId != null) {
-        userDetails = repository.findByUserId(userId);
+        Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
+        if (optUserDetails.isPresent()) {
+          userDetails = optUserDetails.get();
+        }
       }
       logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
       return userDetails;
@@ -76,7 +79,10 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
     try {
       UserDetailsEntity dbResponse = null;
       if (userId != null) {
-        dbResponse = repository.findByUserId(userId);
+        Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
+        if (optUserDetails.isPresent()) {
+          dbResponse = optUserDetails.get();
+        }
         logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
         return dbResponse;
       } else {
