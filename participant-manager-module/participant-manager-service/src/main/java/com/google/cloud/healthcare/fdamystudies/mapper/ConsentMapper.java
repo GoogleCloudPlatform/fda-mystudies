@@ -28,8 +28,7 @@ public final class ConsentMapper {
     String consentDate = DateTimeUtils.format(studyConsent.getParticipantStudy().getEnrolledDate());
     consentHistory.setConsentedDate(StringUtils.defaultIfEmpty(consentDate, NOT_APPLICABLE));
 
-    consentHistory.setDataSharingPermissions(
-        studyConsent.getParticipantStudy().getSharing().toString());
+    consentHistory.setDataSharingPermissions(studyConsent.getParticipantStudy().getSharing());
     return consentHistory;
   }
 }

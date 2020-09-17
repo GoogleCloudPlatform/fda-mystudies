@@ -180,7 +180,7 @@ export class UpdateUserComponent extends UnsubscribeOnDestroyAdapter
         this.user.apps = this.selectedApps;
       }
 
-      this.removeUnwantedAttributes();
+      this.removeExtraAttributesFromApiRequest();
 
       this.userService
         .update(this.user, this.adminId)
@@ -213,7 +213,7 @@ export class UpdateUserComponent extends UnsubscribeOnDestroyAdapter
             : this.userStatus.Deactivated;
       });
   }
-  removeUnwantedAttributes(): void {
+  removeExtraAttributesFromApiRequest(): void {
     delete this.user.status;
 
     this.user.apps.map((app) => {
