@@ -30,7 +30,7 @@ struct HydraAPI {
       "tempRegId": User.currentUser.tempRegID ?? "",
       "code_challenge_method": "S256",
       "code_challenge": SessionService.instance.codeChallenge,
-      "correlationId": SessionService.instance.correlationID,
+      "correlationId": SessionService.correlationID,
       "redirect_uri": AuthRouter.redirectURL,
       "state": String.randomString(length: 21),
     ]
@@ -49,10 +49,7 @@ struct HydraAPI {
   ) {
 
     let headers: [String: String] = [
-      "Content-Type": "application/x-www-form-urlencoded",
-      "correlationId": SessionService.instance.correlationID,
-      "appId": AppConfiguration.appID,
-      "mobilePlatform": Utilities.currentDevicePlatform(),
+      "Content-Type": "application/x-www-form-urlencoded"
     ]
 
     let params: JSONDictionary = [

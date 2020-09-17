@@ -78,7 +78,14 @@ class VerificationViewController: UIViewController {
 
   /// Navigate to previous screen.
   @IBAction func buttonActionBack(_ sender: UIButton) {
-    _ = self.navigationController?.popViewController(animated: true)
+    if viewLoadFrom == .login,
+      let homeVC = self.navigationController?.viewControllers
+        .first(where: { $0.isKind(of: HomeViewController.self) })
+    {
+      self.navigationController?.popToViewController(homeVC, animated: true)
+    } else {
+      self.navigationController?.popViewController(animated: true)
+    }
   }
 
   /// Used to send the verification mail to registered mail id.

@@ -11,6 +11,8 @@ enum RequestError: Error {
   case invalidBaseURL
 }
 
+typealias StringDictionary = [String: String]
+
 enum AuthRouter: URLRequestConvertible {
 
   private struct Request {
@@ -37,6 +39,14 @@ enum AuthRouter: URLRequestConvertible {
 
   }
 
+  private struct JSONKey {
+    static let correlationID = "correlationId"
+    static let appID = "appId"
+    static let platform = "mobilePlatform"
+  }
+
+  case logout(userID: String)
+  case forgotPassword(params: JSONDictionary)
   case auth(params: JSONDictionary)
   case codeGrant(params: JSONDictionary, headers: [String: String])
 
@@ -51,6 +61,8 @@ enum AuthRouter: URLRequestConvertible {
       return "\(AuthRouter.baseHostPath)\(AuthRouter.oauthVersion)"
     case .codeGrant:
       return "\(AuthRouter.baseHostPath)\(AuthRouter.oauthPath)\(AuthRouter.oauthVersion)"
+    default:
+      return "\(AuthRouter.baseHostPath)\(AuthRouter.oauthPath)"
     }
   }
 
@@ -72,6 +84,34 @@ enum AuthRouter: URLRequestConvertible {
         parameters: params,
         headers: headers
       )
+
+    case .forgotPassword(let parameters):
+      return Request(
+        method: .post,
+        path: "/user/reset_password",
+        encoding: JSONEncoding.default,
+        parameters: parameters
+      )
+
+    case .logout(let userID):
+      return Request(
+        method: .post,
+        path: "/users/\(userID)/logout",
+        encoding: JSONEncoding.default
+      )
+    }
+  }
+
+  private var defaultHeaders: StringDictionary {
+    switch self {
+    case .logout, .forgotPassword, .codeGrant:
+      return [
+        JSONKey.correlationID: SessionService.correlationID,
+        JSONKey.appID: AppConfiguration.appID,
+        JSONKey.platform: Utilities.currentDevicePlatform(),
+      ]
+    default:
+      return [:]
     }
   }
 
@@ -88,6 +128,10 @@ enum AuthRouter: URLRequestConvertible {
 
     for i in request.headers {
       mutableUrlRequest.setValue(i.value, forHTTPHeaderField: i.key)
+    }
+
+    for header in defaultHeaders {
+      mutableUrlRequest.setValue(header.value, forHTTPHeaderField: header.key)
     }
 
     if let encoding = request.encoding {

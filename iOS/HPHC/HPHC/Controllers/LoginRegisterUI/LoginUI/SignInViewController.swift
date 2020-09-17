@@ -150,10 +150,12 @@ class SignInViewController: UIViewController {
   }
 
   private func addCloseBarBtn() {
-    let closeBtn = UIBarButtonItem(image: UIImage(named: "close_1"),
-                                   style: .plain,
-                                   target: self,
-                                   action: #selector(dismissSignUpNavigation))
+    let closeBtn = UIBarButtonItem(
+      image: UIImage(named: "close_1"),
+      style: .plain,
+      target: self,
+      action: #selector(dismissSignUpNavigation)
+    )
     self.navigationItem.leftBarButtonItem = closeBtn
   }
 
@@ -276,9 +278,12 @@ class SignInViewController: UIViewController {
 
   /// Closes the navigation of Auto Login In.
   @objc private func dismissSignUpNavigation() {
-    self.navigationController?.dismiss(animated: true, completion: {
-      self.delegate?.didFailLogIn() // User closes while auto login with temp ID.
-    })
+    self.navigationController?.dismiss(
+      animated: true,
+      completion: {
+        self.delegate?.didFailLogIn()  // User closes while auto login with temp ID.
+      }
+    )
   }
 
   /// Dismiss key board when clicked on Background.

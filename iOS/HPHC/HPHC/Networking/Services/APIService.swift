@@ -29,7 +29,17 @@ class APIService {
           completion(nil, false, .defaultError)
         }
       case .failure:
-        completion(nil, false, ApiError.defaultError)  // TODO: Parse errors.
+        if let error = ApiError(data: response.data) {
+          if let code = error.code,
+            code == .tokenExpired
+          {
+            // TODO: Refresh the token
+          } else {
+            completion(nil, false, error)
+          }
+        } else {
+          completion(nil, false, ApiError.unwrapError)
+        }
       }
     }
   }

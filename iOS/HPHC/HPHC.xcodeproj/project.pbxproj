@@ -147,6 +147,8 @@
 		6FD4F67A244F2EE900584C0C /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4F679244F2EE900584C0C /* DateHelper.swift */; };
 		6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */; };
 		6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
+		6FEFEEB82510DE7A007BF1CE /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */; };
+		782AF87C221D247D000025CF /* StudyTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 782AF87B221D247D000025CF /* StudyTest.swift */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
 		7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B31C2216C6E20052FC23 /* HPHCTests.swift */; };
 		847A25102518C93800BCB50A /* UtilitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A250F2518C93800BCB50A /* UtilitiesTest.swift */; };
@@ -437,6 +439,7 @@
 		6FD4F679244F2EE900584C0C /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AnonymousFilterData.plist; sourceTree = "<group>"; };
 		6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySchedules.swift; sourceTree = "<group>"; };
+		6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
 		7878B31A2216C6E10052FC23 /* HPHCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HPHCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1459,6 +1462,7 @@
 				89AD25AB23D7295A00F9450C /* AuthServices.swift */,
 				6F2392DD2423E0F300013AC0 /* EnrollServices.swift */,
 				6F55B9BD250239DA00A052A9 /* HydraAPI.swift */,
+				6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */,
 			);
 			path = APIs;
 			sourceTree = "<group>";
@@ -2108,6 +2112,7 @@
 				6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */,
 				6F99755F242387300044944E /* AppConfiguration.swift in Sources */,
 				6ED86F641EA6498D00365AF0 /* RepeatableFormStepViewController.m in Sources */,
+				6FEFEEB82510DE7A007BF1CE /* UserAPI.swift in Sources */,
 				9491F7F81E825F5D0018C15E /* DBHandler.swift in Sources */,
 				6ED134361E5EB0370090C976 /* ConsentStep.swift in Sources */,
 				6EE93DCA1E93C8850027A5DC /* ActivitiesTableViewCell.swift in Sources */,
