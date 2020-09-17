@@ -51,12 +51,10 @@ export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
       this.setUpAccountService
         .setUpAccount(this.form.value)
         .subscribe((successResponse: SetUpResponse) => {
-          if (getMessage(successResponse.code)) {
-            this.toastr.success(getMessage(successResponse.code));
-          } else {
-            this.toastr.success('Success');
-            this.authService.grantAutoSignIn();
-          }
+          this.toastr.success(getMessage(successResponse.code));
+          sessionStorage.setItem('tempRegId', successResponse.tempRegId);
+          sessionStorage.setItem('userId', successResponse.userId);
+          this.authService.beginLoginConsentFlow();
         }),
     );
   }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-prototype-builtins */
 import {Injectable} from '@angular/core';
@@ -13,7 +12,6 @@ import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
 import getPkce from 'oauth-pkce';
 import {Observable} from 'rxjs';
-
 @Injectable({providedIn: 'root'})
 export class AuthService {
   constructor(
@@ -25,46 +23,46 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  storeDefaultsValues(): void {
-    sessionStorage.setItem('tempRegId', '');
-    if (!sessionStorage.hasOwnProperty('correlationId')) {
-      sessionStorage.setItem('correlationId', uuidv4());
-      getPkce(43, (error, {verifier, challenge}) => {
-        if (!error) {
-          sessionStorage.setItem('pkceVerifier', verifier);
-          sessionStorage.setItem('pkceChallenge', challenge);
-        }
-      });
-    }
+  initSessionStorage(): void {
+    sessionStorage.setItem('correlationId', uuidv4());
+    getPkce(43, (error, {verifier, challenge}) => {
+      if (!error) {
+        sessionStorage.setItem('pkceVerifier', verifier);
+        sessionStorage.setItem('pkceChallenge', challenge);
+      }
+    });
   }
 
-  grantAutoSignIn(): void {
-    window.location.href = `${environment.loginUrl}?client_id=${
-      environment.client_id
-    }&scope=offline_access&response_type=code&appId=${
-      environment.appId
-    }&mobilePlatform=${environment.mobilePlatform}&tempRegId=${
-      sessionStorage.getItem('tempRegId') || ''
-    }&code_challenge_method=S256&code_challenge=${
-      sessionStorage.getItem('pkceChallenge') || ''
-    }&correlationId=${
-      sessionStorage.getItem('correlationId') || ''
-    }&redirect_uri=${environment.redirectUrl}&state=${uuidv4()}`;
+  beginLoginConsentFlow(): void {
+    const params = new HttpParams()
+      .set('client_id', environment.clientId)
+      .set('scope', 'offline_access')
+      .set('appId', environment.appId)
+      .set('response_type', 'code')
+      .set('mobilePlatform', environment.mobilePlatform)
+      .set('code_challenge_method', 'S256')
+      .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
+      .set('correlationId', sessionStorage.getItem('correlationId') || '')
+      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
+      .set('redirect_uri', environment.redirectUrl)
+      .set('state', uuidv4())
+      .set('env', 'localhost')
+      .toString();
+    window.location.href = `${environment.loginUrl}?${params}`;
   }
 
   hasCredentials(): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return sessionStorage.hasOwnProperty('accessToken') !== null;
+    return sessionStorage.hasOwnProperty('accessToken');
   }
 
   getUserAccessToken(): string {
     return sessionStorage.getItem('accessToken') || '';
   }
   getAuthUserId(): string {
-    return sessionStorage.getItem('userId') || '';
+    return sessionStorage.getItem('authUserId') || '';
   }
 
-  grantAuthorization(code: string, userId: string): Observable<AccessToken> {
+  getToken(code: string, userId: string): Observable<AccessToken> {
     const httpOptionsforauth = {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
