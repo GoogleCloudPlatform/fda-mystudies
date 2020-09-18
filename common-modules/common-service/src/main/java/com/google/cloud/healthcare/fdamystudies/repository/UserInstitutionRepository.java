@@ -8,20 +8,22 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserInstitutionEntity;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @ConditionalOnProperty(
     value = "participant.manager.repository.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public interface AppRepository extends JpaRepository<AppEntity, String> {
+@Transactional
+public interface UserInstitutionRepository extends JpaRepository<UserInstitutionEntity, String> {
 
-  @Query("SELECT app from AppEntity app where app.appId=:appId")
-  public Optional<AppEntity> findByAppId(String appId);
+  @Query("SELECT ud FROM UserInstitutionEntity ud WHERE ud.id = :userId")
+  Optional<UserInstitutionEntity> findByUserUserId(String userId);
 }

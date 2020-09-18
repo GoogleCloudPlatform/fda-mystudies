@@ -25,12 +25,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +53,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -70,12 +71,6 @@ public class UserProfileController {
 
   @Value("${email.code.expire_time}")
   private long expireTime;
-
-  @RequestMapping(value = "/ping")
-  public String ping() {
-    logger.info(" UserProfileController - ping()  ");
-    return "Mystudies UserRegistration Webservice User Management Bundle Started !!!";
-  }
 
   @GetMapping(value = "/userProfile", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserProfile(
@@ -194,7 +189,7 @@ public class UserProfileController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setAppId(appId);
 
-    UserDetailsBO participantDetails = null;
+    UserDetailsEntity participantDetails = null;
     ResponseBean responseBean = new ResponseBean();
     try {
       String isValidAppMsg =
@@ -211,9 +206,10 @@ public class UserProfileController {
           if (participantDetails.getStatus() == 2) {
             String code = RandomStringUtils.randomAlphanumeric(6);
             participantDetails.setEmailCode(code);
-            participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
-            participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-            UserDetailsBO updParticipantDetails =
+            participantDetails.setCodeExpireDate(
+                Timestamp.valueOf(LocalDateTime.now().plusMinutes(expireTime)));
+            participantDetails.setVerificationDate(Timestamp.from(Instant.now()));
+            UserDetailsEntity updParticipantDetails =
                 userManagementProfService.saveParticipant(participantDetails);
             if (updParticipantDetails != null) {
               int isSent =

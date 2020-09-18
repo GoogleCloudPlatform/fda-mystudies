@@ -18,8 +18,7 @@ public class CommonServiceImpl implements CommonService {
   @Autowired CommonDao commonDao;
 
   @Override
-  public Integer getUserDetailsId(String userId) {
-
+  public String getUserDetailsId(String userId) {
     return commonDao.getUserDetailsId(userId);
   }
 }

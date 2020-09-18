@@ -12,5 +12,5 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantInfoRespBean;
 
 public interface ParticipantInformationDao {
 
-  public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, Integer studyId);
+  public ParticipantInfoRespBean getParticipantInfoDetails(String particpinatId, String studyId);
 }
