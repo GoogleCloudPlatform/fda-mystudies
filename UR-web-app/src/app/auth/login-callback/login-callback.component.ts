@@ -36,6 +36,7 @@ export class LoginCallbackComponent implements OnInit {
               (data: Profile) => {
                 this.userState.setCurrentUserName(data.firstName);
                 sessionStorage.setItem('userId', data.userId);
+                sessionStorage.setItem('user', JSON.stringify(data));
                 if (params.accountStatus === 3) {
                   void this.router.navigate(['/change-password']);
                 } else {
