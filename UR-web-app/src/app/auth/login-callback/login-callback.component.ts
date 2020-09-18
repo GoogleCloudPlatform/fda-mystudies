@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
+import {switchMap} from 'rxjs/operators';
 import {AuthService} from 'src/app/service/auth.service';
 import {StateService} from 'src/app/service/state.service';
 import {AccountService} from 'src/app/site-coordinator/account/shared/account.service';
@@ -22,37 +23,44 @@ export class LoginCallbackComponent implements OnInit {
   ngOnInit(): void {
     this.redirect();
   }
-
   redirect(): void {
-    this.activatedRoute.queryParams.subscribe((params) => {
-      sessionStorage.setItem('code', params.code);
-      sessionStorage.setItem('authUserId', params.userId);
-      if (params.code && params.userId) {
-        this.authService.getToken(params.code, params.userId).subscribe(
-          (res) => {
-            sessionStorage.setItem('accessToken', res.access_token);
-            sessionStorage.setItem('refreshToken', res.refresh_token);
-            this.accountService.fetchProfile().subscribe(
-              (data: Profile) => {
-                this.userState.setCurrentUserName(data.firstName);
-                sessionStorage.setItem('userId', data.userId);
-                sessionStorage.setItem('user', JSON.stringify(data));
+    this.activatedRoute.queryParams.subscribe(
+      (params) => {
+        if (params.code && params.userId) {
+          this.authService
+            .getToken(params.code, params.userId)
+            .pipe(
+              switchMap(() => {
+                sessionStorage.setItem('code', params.code);
+                sessionStorage.setItem('authUserId', params.userId);
+                sessionStorage.setItem('accessToken', params.access_token);
+                sessionStorage.setItem('refreshToken', params.refresh_token);
+                return this.accountService.fetchUserProfile();
+              }),
+            )
+            .subscribe(
+              (userProfile: Profile) => {
+                this.userState.setCurrentUserName(userProfile.firstName);
+                sessionStorage.setItem('userId', userProfile.userId);
+               sessionStorage.setItem('user', JSON.stringify(userProfile));
+
                 if (params.accountStatus === 3) {
                   void this.router.navigate(['/change-password']);
                 } else {
                   void this.router.navigate(['/coordinator']);
+                  console.log('profile:', userProfile);
+                  console.log('params:', params);
                 }
               },
               (error) => {
                 this.toastr.error(error);
               },
             );
-          },
-          () => {
-            void this.router.navigate(['/login']);
-          },
-        );
-      }
-    });
+        }
+      },
+      () => {
+        void this.router.navigate(['/login']);
+      },
+    );
   }
 }

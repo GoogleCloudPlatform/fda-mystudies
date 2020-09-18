@@ -16,14 +16,13 @@ import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
   templateUrl: './set-up-account.component.html',
   styleUrls: ['./set-up-account.component.scss'],
 })
-export class SetUpAccountComponent
-  extends UnsubscribeOnDestroyAdapter
+export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   user = {} as SetUpUser;
   setUpCode = '';
   tempRegId = '';
   setupAccountForm: FormGroup;
-
+  passCriteria = '';
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,
