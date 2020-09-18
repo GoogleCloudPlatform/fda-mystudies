@@ -23,5 +23,6 @@ public interface ManageUserService {
 
   public GetAdminDetailsResponse getAdminDetails(String userId, String adminId);
 
-  public GetUsersResponse getUsers(String superAdminUserId, AuditLogEventRequest auditRequest);
+  public GetUsersResponse getUsers(
+      String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest);
 }

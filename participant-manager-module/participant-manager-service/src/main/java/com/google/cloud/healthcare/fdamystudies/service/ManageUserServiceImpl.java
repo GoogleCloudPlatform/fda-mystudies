@@ -66,6 +66,9 @@ import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -722,7 +725,8 @@ public class ManageUserServiceImpl implements ManageUserService {
   }
 
   @Override
-  public GetUsersResponse getUsers(String superAdminUserId, AuditLogEventRequest auditRequest) {
+  public GetUsersResponse getUsers(
+      String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest) {
     logger.entry("getUsers()");
     ErrorCode errorCode = validateUserRequest(superAdminUserId);
     if (errorCode != null) {
@@ -730,15 +734,15 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     List<User> users = new ArrayList<>();
-    List<UserRegAdminEntity> adminList = userAdminRepository.findAll();
+    Page<UserRegAdminEntity> adminList =
+        userAdminRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
     adminList
         .stream()
         .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
         .collect(Collectors.toList());
 
     participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
-
-    logger.exit(String.format("total users=%d", adminList.size()));
-    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users);
+    logger.exit(String.format("total users=%d", adminList.getSize()));
+    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, userAdminRepository.count());
   }
 }
