@@ -60,10 +60,7 @@ public class ApplicationPropertyConfiguration {
   @Value("${register.url}")
   private String authServerRegisterStatusUrl;
 
-  @Value("${AUTH_KEY_FCM}")
-  private String authKeyFcm;
-
-  @Value("${API_URL_FCM}")
+  @Value("${messaging.fcm.url}")
   private String apiUrlFcm;
 
   @Value("${response.server.url.participant.withdraw}")
