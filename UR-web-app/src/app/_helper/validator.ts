@@ -4,11 +4,12 @@ export function emailValiadtor(): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
     const emailFilter = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
     const validEmail = emailFilter.test(control.value);
-    return control.value === ''
-      ? {emptyError: true}
-      : validEmail
-      ? null
-      : {invalidEmailid: true};
+    if (control.value === '') {
+      return {emptyError: true};
+    } else if (!validEmail) {
+      return {invalidEmailid: true};
+    }
+    return null;
   };
 }
 export function passwordValidator(): ValidatorFn {
@@ -17,22 +18,19 @@ export function passwordValidator(): ValidatorFn {
     const lowercasePattern = /[a-z]/g;
     const numericPattern = /[0-9]/g;
     const specialCharsPattern = /^[\w&.-]+$/;
-    let validPassword: boolean;
+
+    const value = control.value as string;
     if (
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      control.value.length < 8 ||
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      control.value.length > 64 ||
+      value.length < 8 ||
+      value.length > 64 ||
       !uppercasePattern.test(control.value) ||
       !lowercasePattern.test(control.value) ||
       specialCharsPattern.test(control.value) ||
       !numericPattern.test(control.value)
     ) {
-      validPassword = false;
-    } else {
-      validPassword = true;
+      return {validPassword: true};
     }
-    return validPassword ? null : {validPassword: true};
+    return null;
   };
 }
 export function mustMatch(controlName: string, matchingControlName: string) {

@@ -12,7 +12,7 @@
 <ng-container>
   <section class="max__w__850 add__location">
     <form
-      [formGroup]="setupaccountForm"
+      [formGroup]="setupAccountForm"
       (ngSubmit)="registerUser()"
       autocomplete="off"
     >
@@ -22,7 +22,7 @@
           <div class="row border-bottom__c4d1e6">
             <div class="col-xs-12 col-md-12 p-none">
               <div class="form-group">
-                <label for="email">Email ID</label>
+                <label for="email">Email</label>
                 <input
                   type="text"
                   class="form-control"
@@ -44,8 +44,6 @@
                   id="fname"
                   placeholder="Enter First Name"
                   formControlName="firstName"
-                  maxlength="15"
-                  required
                 />
                 <div
                   class="validation-error"
@@ -72,8 +70,6 @@
                   id="lname"
                   placeholder="Enter Last Name"
                   formControlName="lastName"
-                  maxlength="15"
-                  required
                 />
                 <div
                   class="validation-error"
@@ -107,7 +103,6 @@
                 id="password"
                 placeholder="Enter Password"
                 formControlName="password"
-                required
               />
 
               <div
@@ -120,7 +115,8 @@
                   class="help-block with-errors error__msg"
                   *ngIf="f.password.errors?.validPassword"
                 >
-                  Please enter valid password
+                  Your password must be 8 to 64 characters long with lower
+                  case,upper case,number and special character.
                 </span>
               </div>
             </div>
@@ -134,7 +130,6 @@
                 id="confirmPassword"
                 placeholder="Enter Confirm Password"
                 formControlName="confirmPassword"
-                required
               />
               <div
                 class="validation-error"
@@ -166,7 +161,7 @@
             type="submit"
             name="save"
             class="btn bt__add mr-sm"
-            [disabled]="!setupaccountForm.valid"
+            [disabled]="!setupAccountForm.valid"
           >
             Submit
           </button>

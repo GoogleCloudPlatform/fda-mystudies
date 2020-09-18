@@ -65,10 +65,10 @@ describe('SetUpAccountComponent', () => {
     fixture = TestBed.createComponent(SetUpAccountComponent);
     component = fixture.componentInstance;
     updateUser = fixture.debugElement.query(By.css('[name="save"]'));
-    firstName = component.setupaccountForm.controls['firstName'];
-    lastName = component.setupaccountForm.controls['lastName'];
-    password = component.setupaccountForm.controls['password'];
-    confirmPassword = component.setupaccountForm.controls['confirmPassword'];
+    firstName = component.setupAccountForm.controls['firstName'];
+    lastName = component.setupAccountForm.controls['lastName'];
+    password = component.setupAccountForm.controls['password'];
+    confirmPassword = component.setupAccountForm.controls['confirmPassword'];
     fixture.detectChanges();
     await fixture.whenStable();
   });
@@ -78,19 +78,19 @@ describe('SetUpAccountComponent', () => {
   });
 
   it('should get userDetails on setup code', () => {
-    expect(component.setupaccountForm.controls['email'].value).toEqual(
+    expect(component.setupAccountForm.controls['email'].value).toEqual(
       'superadmin@grr.la',
     );
-    expect(component.setupaccountForm.controls['firstName'].value).toEqual(
+    expect(component.setupAccountForm.controls['firstName'].value).toEqual(
       'kamin',
     );
-    expect(component.setupaccountForm.controls['lastName'].value).toEqual(
+    expect(component.setupAccountForm.controls['lastName'].value).toEqual(
       'Dsouza',
     );
   });
 
   it('should validate the form when input is not provided', () => {
-    expect(component.setupaccountForm.invalid).toBe(true);
+    expect(component.setupAccountForm.invalid).toBe(true);
   });
 
   it('should register the user when button is submitted', fakeAsync(async () => {
@@ -108,28 +108,24 @@ describe('SetUpAccountComponent', () => {
   it('should setup account with valid inputs', fakeAsync(async () => {
     fixture.detectChanges();
     component.user.password = 'Abcd@123456';
-    const firstNameInputs = firstName;
-    const lastNameInputs = lastName;
     const submitButton = updateUser.nativeElement as HTMLInputElement;
-    const passwordInputs = password;
-    const confirmPasswordInputs = confirmPassword;
-    firstNameInputs.setValue('kamin');
-    lastNameInputs.setValue('Dsouza');
-    passwordInputs.setValue('Abcd@123456');
-    confirmPasswordInputs.setValue('Abcd@123456');
+    firstName.setValue('kamin');
+    lastName.setValue('Dsouza');
+    password.setValue('Abcd@123456');
+    confirmPassword.setValue('Abcd@123456');
     dispatchEvent(new Event('input'));
     fixture.detectChanges();
     tick();
     submitButton.click();
     fixture.detectChanges();
     await fixture.whenStable();
-    expect(component.setupaccountForm.controls['firstName'].value).toEqual(
+    expect(component.setupAccountForm.controls['firstName'].value).toEqual(
       expectedUserDetails.firstName,
     );
-    expect(component.setupaccountForm.controls['lastName'].value).toEqual(
+    expect(component.setupAccountForm.controls['lastName'].value).toEqual(
       expectedUserDetails.lastName,
     );
-    expect(component.setupaccountForm.controls['password'].value).toEqual(
+    expect(component.setupAccountForm.controls['password'].value).toEqual(
       'Abcd@123456',
     );
   }));

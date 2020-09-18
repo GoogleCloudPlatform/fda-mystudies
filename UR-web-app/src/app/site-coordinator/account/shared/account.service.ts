@@ -10,7 +10,6 @@ import {AuthService} from '../../../service/auth.service';
   providedIn: 'root',
 })
 export class AccountService {
-  authUserId = '';
   constructor(
     private readonly entityService: EntityService<Profile>,
     private readonly http: HttpClient,
@@ -18,16 +17,16 @@ export class AccountService {
   ) {}
 
   fetchUserProfile(): Observable<Profile> {
-    this.authUserId = this.authService.getAuthUserId();
     return this.entityService.get(
-      `/users/${encodeURIComponent(this.authUserId)}`,
+      `/users/${encodeURIComponent(this.authService.getAuthUserId())}`,
     );
   }
 
   changePassword(changePassword: ChangePassword): Observable<ApiResponse> {
-    this.authUserId = this.authService.getAuthUserId();
     return this.http.put<ApiResponse>(
-      `${environment.authServerUrl}/users/${this.authUserId}/change_password`,
+      `${environment.authServerUrl}/users/${encodeURIComponent(
+        this.authService.getAuthUserId(),
+      )}/change_password`,
       changePassword,
     );
   }

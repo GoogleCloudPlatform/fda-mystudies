@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 @Injectable({providedIn: 'root'})
 export class StateService {
-  currentUserNameStore = new BehaviorSubject<string>('');
-  currentUserName$: Observable<string> = of('');
+  private readonly currentUserNameStore = new BehaviorSubject<string>('');
+  currentUserName$: Observable<string>;
   constructor() {
     this.currentUserName$ = this.currentUserNameStore.asObservable();
   }
