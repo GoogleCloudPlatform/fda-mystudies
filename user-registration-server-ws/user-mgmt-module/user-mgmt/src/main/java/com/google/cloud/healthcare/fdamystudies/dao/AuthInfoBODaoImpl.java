@@ -9,9 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoBORepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.util.HashMap;
 import java.util.List;
@@ -27,12 +27,13 @@ import org.springframework.stereotype.Service;
 public class AuthInfoBODaoImpl implements AuthInfoBODao {
 
   private static final Logger logger = LoggerFactory.getLogger(AuthInfoBODaoImpl.class);
-  @Autowired AuthInfoBORepository authInfoRepository;
+
+  @Autowired AuthInfoRepository authInfoRepository;
 
   @Override
-  public AuthInfoBO save(AuthInfoBO authInfo) throws SystemException {
+  public AuthInfoEntity save(AuthInfoEntity authInfo) throws SystemException {
     logger.info("AuthInfoBODaoImpl save() - starts");
-    AuthInfoBO dbResponse = null;
+    AuthInfoEntity dbResponse = null;
     if (authInfo != null) {
       try {
         dbResponse = authInfoRepository.save(authInfo);
@@ -46,23 +47,23 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
   }
 
   @Override
-  public Map<String, JSONArray> getDeviceTokenOfAllUsers(List<AppInfoDetailsBO> appInfos) {
+  public Map<String, JSONArray> getDeviceTokenOfAllUsers(List<AppEntity> appInfos) {
     logger.info("AuthInfoBODaoImpl.getDeviceTokenOfAllUsers()-Start");
     JSONArray androidJsonArray = null;
     JSONArray iosJsonArray = null;
     Map<String, JSONArray> deviceMap = new HashMap<>();
     try {
-      List<Integer> appInfoIds =
-          appInfos.stream().map(a -> a.getAppInfoId()).distinct().collect(Collectors.toList());
+      List<String> appInfoIds =
+          appInfos.stream().map(a -> a.getAppId()).distinct().collect(Collectors.toList());
 
       if (appInfoIds != null && !appInfoIds.isEmpty()) {
-        List<AuthInfoBO> authInfos = authInfoRepository.findDevicesTokens(appInfoIds);
+        List<AuthInfoEntity> authInfos = authInfoRepository.findDevicesTokens(appInfoIds);
         if (authInfos != null && !authInfos.isEmpty()) {
           androidJsonArray = new JSONArray();
           iosJsonArray = new JSONArray();
-          for (AuthInfoBO authInfoBO : authInfos) {
-            String devicetoken = authInfoBO.getDeviceToken();
-            String devicetype = authInfoBO.getDeviceType();
+          for (AuthInfoEntity authInfo : authInfos) {
+            String devicetoken = authInfo.getDeviceToken();
+            String devicetype = authInfo.getDeviceType();
             if (devicetoken != null && devicetype != null) {
               if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_ANDROID)) {
                 androidJsonArray.put(devicetoken.trim());
