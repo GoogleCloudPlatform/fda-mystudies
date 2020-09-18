@@ -28,6 +28,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoReposito
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
 import java.util.UUID;
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -39,6 +40,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureTestDatabase
+@FixMethodOrder
 public class ParticipantIdControllerTest extends BaseMockIT {
   @Autowired private ParticipantBoRepository repository;
 

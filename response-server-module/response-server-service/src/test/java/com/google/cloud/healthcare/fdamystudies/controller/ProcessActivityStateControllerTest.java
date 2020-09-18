@@ -26,6 +26,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivities
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,6 +43,7 @@ import org.springframework.util.LinkedMultiValueMap;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureTestDatabase
+@FixMethodOrder
 public class ProcessActivityStateControllerTest extends BaseMockIT {
   @Autowired ParticipantActivitiesRepository participantActivitiesRepository;
   @Autowired ParticipantActivityStateResponseService participantActivitiesResponseService;
