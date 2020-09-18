@@ -32,7 +32,7 @@ export class LoginCallbackComponent implements OnInit {
           (res) => {
             sessionStorage.setItem('accessToken', res.access_token);
             sessionStorage.setItem('refreshToken', res.refresh_token);
-            this.accountService.fetchProfile().subscribe(
+            this.accountService.fetchUserProfile().subscribe(
               (data: Profile) => {
                 this.userState.setCurrentUserName(data.firstName);
                 sessionStorage.setItem('userId', data.userId);
