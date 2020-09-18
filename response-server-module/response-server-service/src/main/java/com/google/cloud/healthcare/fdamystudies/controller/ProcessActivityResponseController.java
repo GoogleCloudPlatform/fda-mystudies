@@ -306,10 +306,11 @@ public class ProcessActivityResponseController {
                       + "\n Particpant Id: "
                       + participantId);
           Map<String, String> notSaveMap = new HashedMap<>();
-          map.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
-          map.put(ACTIVITY_ID, activityId);
-          map.put(ACTIVITY_VERSION, activityVersion);
-          map.put("submission_timestamp", questionnaireActivityResponseBean.getCreatedTimestamp());
+          notSaveMap.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
+          notSaveMap.put(ACTIVITY_ID, activityId);
+          notSaveMap.put(ACTIVITY_VERSION, activityVersion);
+          notSaveMap.put(
+              "submission_timestamp", questionnaireActivityResponseBean.getCreatedTimestamp());
           responseServerAuditLogHelper.logEvent(
               ACTIVITY_RESPONSE_NOT_SAVED, auditRequest, notSaveMap);
           logger.error(
