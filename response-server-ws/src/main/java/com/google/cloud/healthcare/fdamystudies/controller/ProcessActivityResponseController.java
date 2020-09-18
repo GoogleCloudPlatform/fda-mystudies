@@ -10,7 +10,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +22,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantStudyInformation;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
@@ -61,7 +60,7 @@ public class ProcessActivityResponseController {
 
   @PostMapping("/participant/process-response")
   public ResponseEntity<?> processActivityResponseForParticipant(
-      @RequestBody ActivityResponseBean questionnaireActivityResponseBean,
+      @RequestBody ParticipantActivityResponseBean participantActivityResponseBean,
       @RequestHeader String userId) {
     String orgId = null;
     String applicationId = null;
@@ -71,8 +70,10 @@ public class ProcessActivityResponseController {
     String participantId = null;
     String secureEnrollmentToken = null;
     String brandId = null;
+    String activityRunId = null;
     boolean savedResponseData = false;
     try {
+      ActivityResponseBean questionnaireActivityResponseBean=participantActivityResponseBean.getActivityResponse();
       orgId = questionnaireActivityResponseBean.getOrgId();
       applicationId = questionnaireActivityResponseBean.getApplicationId();
       studyId = questionnaireActivityResponseBean.getMetadata().getStudyId();
@@ -81,6 +82,7 @@ public class ProcessActivityResponseController {
       participantId = questionnaireActivityResponseBean.getParticipantId();
       secureEnrollmentToken = questionnaireActivityResponseBean.getTokenIdentifier();
       brandId = questionnaireActivityResponseBean.getBrandId();
+      activityRunId = questionnaireActivityResponseBean.getMetadata().getActivityRunId();
       logger.debug(
           "Input values are :\n Study Id: "
               + studyId
@@ -213,6 +215,8 @@ public class ProcessActivityResponseController {
           participantActivityBean.setActivityId(activityId);
           participantActivityBean.setActivityVersion(activityVersion);
           participantActivityBean.setActivityState(AppConstants.COMPLETED);
+          participantActivityBean.setActivityRunId(activityRunId);
+          participantActivityBean.setActivityRun(participantActivityResponseBean.getActivityState().getActivityRun());
           List<ParticipantActivityBean> activity = new ArrayList<>();
           activity.add(participantActivityBean);
           activityStateRequestBean.setActivity(activity);

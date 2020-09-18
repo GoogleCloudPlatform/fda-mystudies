@@ -74,7 +74,8 @@ public enum ErrorCode {
           + " but could not delete participant activity state data."),
 
   EC_718(718, "UNAUTHORIZED"),
-  EC_719(719, "Invalid clientId or secretKey");
+  EC_719(719, "Invalid clientId or secretKey"),
+  EC_720(720, "Invalid activity state status value .");
 
   private final int code;
   private final String errorMessage;
