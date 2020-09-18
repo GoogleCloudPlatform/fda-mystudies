@@ -27,4 +27,19 @@ struct UserAPI {
     }
   }
 
+  /// Creates a request to logout the `User`
+  /// - Parameters:
+  ///   - completion: Request status handler
+  static func logout(
+    completion: @escaping StatusHandler
+  ) {
+    let userID = User.currentUser.userId ?? ""
+    APIService.instance.requestForData(with: AuthRouter.logout(userID: userID)) { (_, status, error) in
+      if status {
+        DBHandler.logout()
+      }
+      completion(status, error)
+    }
+  }
+
 }

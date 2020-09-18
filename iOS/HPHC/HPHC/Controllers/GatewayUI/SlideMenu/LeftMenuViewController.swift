@@ -507,7 +507,19 @@ class LeftMenuViewController: UIViewController, LeftMenuProtocol {
 
   /// Call webservice to logout current user.
   func sendRequestToSignOut() {
-    AuthServices().logoutUser(self as NMWebServiceDelegate)
+    UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
+    UserAPI.logout { (status, error) in
+      if status {
+        self.signout()
+      } else if let error = error {
+        self.presentDefaultAlertWithError(
+          error: error,
+          animated: true,
+          action: nil,
+          completion: nil
+        )
+      }
+    }
   }
 
   /// As the user is Signed out Remove passcode from the keychain

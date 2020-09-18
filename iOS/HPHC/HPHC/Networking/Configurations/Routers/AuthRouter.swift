@@ -134,6 +134,10 @@ enum AuthRouter: URLRequestConvertible {
       mutableUrlRequest.setValue(header.value, forHTTPHeaderField: header.key)
     }
 
+    if let accessToken = User.currentUser.authToken {
+      mutableUrlRequest.setValue(accessToken, forHTTPHeaderField: "Authorization")
+    }
+
     if let encoding = request.encoding {
       let finalRequest = try encoding.encode(
         mutableUrlRequest,
