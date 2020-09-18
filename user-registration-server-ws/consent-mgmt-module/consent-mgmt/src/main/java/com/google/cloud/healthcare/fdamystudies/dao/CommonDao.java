@@ -14,5 +14,5 @@ public interface CommonDao {
 
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId);
 
-  public Integer getUserDetailsId(String userId);
+  public String getUserDetailsId(String userId);
 }

@@ -47,13 +47,18 @@ import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -91,6 +96,8 @@ public class LoginControllerTest extends BaseMockIT {
   @Autowired private UserRepository userRepository;
 
   @Autowired private UserService userService;
+
+  @Autowired private AppPropertyConfig appPropertyConfig;
 
   @Test
   public void shouldReturnLoginPage() throws Exception {
@@ -441,6 +448,24 @@ public class LoginControllerTest extends BaseMockIT {
     userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
     assertTrue(
         UserAccountStatus.ACCOUNT_LOCKED.equals(UserAccountStatus.valueOf(userEntity.getStatus())));
+
+    String subject = getMailAccountLockedSubject();
+    String body =
+        String.join(
+            "<br/>",
+            "This is to inform you that, as a security measure, your user account for MyStudies app",
+            "has been temporarily locked for a period of 15 minutes, due to multiple consecutive failed sign-in",
+            "attempts with incorrect password.");
+
+    MimeMessage mail =
+        verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
+    verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@", "@appId");
+  }
+
+  private String getMailAccountLockedSubject() {
+    Map<String, String> templateArgs = new HashMap<>();
+    return PlaceholderReplacer.replaceNamedPlaceholders(
+        appPropertyConfig.getMailAccountLockedSubject(), templateArgs);
   }
 
   @AfterEach

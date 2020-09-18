@@ -8,8 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import java.util.List;
+import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -25,21 +28,28 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
 
   @Autowired private SessionFactory sessionFactory;
 
+  @Autowired private UserDetailsRepository userDetailsRepository;
+
   @Override
   @SuppressWarnings("unchecked")
-  public List<ParticipantStudiesBO> getParticipantStudiesInfo(Integer userDetailsId) {
+  public List<ParticipantStudyEntity> getParticipantStudiesInfo(String userDetailsId) {
 
-    List<ParticipantStudiesBO> participantStudiesList = null;
+    List<ParticipantStudyEntity> participantStudiesList = null;
     logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Started");
     if (userDetailsId != null) {
-
       Session session = this.sessionFactory.getCurrentSession();
-      Query<ParticipantStudiesBO> query =
-          session.createQuery(
-              "from ParticipantStudiesBO where userDetails.userDetailsId = :userDetailsId");
-      query.setParameter("userDetailsId", userDetailsId);
+
+      Optional<UserDetailsEntity> optUserDetails =
+          userDetailsRepository.findByUserId(userDetailsId);
+      UserDetailsEntity userDetails = optUserDetails.get();
+
+      Query<ParticipantStudyEntity> query =
+          session.createQuery("from ParticipantStudyEntity where userDetails = :userDetails");
+
+      query.setParameter("userDetails", userDetails);
       participantStudiesList = query.getResultList();
       return participantStudiesList;
+
     } else {
       logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Ended");
       return null;

@@ -197,18 +197,6 @@ public class MyStudiesUserRegUtil {
     }
   }
 
-  public static Date getCurrentUtilDateTime() {
-    Date date = new Date();
-    Calendar currentDate = Calendar.getInstance();
-    String dateNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDate.getTime());
-    try {
-      date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
-    } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
-    }
-    return date;
-  }
-
   public static Date addMinutes(String currentDate, int minutes) {
     Date futureDate = null;
     try {
