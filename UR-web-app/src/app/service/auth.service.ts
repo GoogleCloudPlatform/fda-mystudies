@@ -9,6 +9,7 @@ import {environment} from 'src/environments/environment';
 import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
 import {Observable} from 'rxjs';
+import getPkce from 'oauth-pkce';
 @Injectable({providedIn: 'root'})
 export class AuthService {
   pkceLength = 43;
@@ -27,26 +28,23 @@ export class AuthService {
 
   initSessionStorage(): void {
     sessionStorage.setItem('correlationId', uuidv4());
-
-    // TODO(Prakash) uncomment getPkce method once https enabled in test enviornment
-
-    // getPkce(43, (error, {verifier, challenge}) => {
-    //   if (!error) {
-    //     sessionStorage.setItem('pkceVerifier', verifier);
-    //     sessionStorage.setItem('pkceChallenge', challenge);
-    //   }
-    // });
+    getPkce(43, (error, {verifier, challenge}) => {
+      if (!error) {
+        sessionStorage.setItem('pkceVerifier', verifier);
+        sessionStorage.setItem('pkceChallenge', challenge);
+      }
+    });
 
     // TODO(Prakash) remove hardcoded pkce values once https issue resolved in test enviornment
 
-    sessionStorage.setItem(
-      'pkceVerifier',
-      'IIZLcGtmuoCgXhazHneHoXVMmPRM1tkjfUs2yJ4uXvv3nVswiv',
-    );
-    sessionStorage.setItem(
-      'pkceChallenge',
-      'wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4',
-    );
+    // sessionStorage.setItem(
+    //   'pkceVerifier',
+    //   'IIZLcGtmuoCgXhazHneHoXVMmPRM1tkjfUs2yJ4uXvv3nVswiv',
+    // );
+    // sessionStorage.setItem(
+    //   'pkceChallenge',
+    //   'wR4RMz7BGMNNXf6H9lWjV-2l8OiUQ47UOU8wHWOxVC4',
+    // );
   }
 
   beginLoginConsentFlow(): void {
@@ -62,7 +60,7 @@ export class AuthService {
       .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.redirectUrl)
       .set('state', uuidv4())
-      .set('env', 'localhost')
+      //.set('env', 'localhost')
       .toString();
     window.location.href = `${environment.loginUrl}?${params}`;
   }
