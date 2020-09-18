@@ -21,5 +21,5 @@ public interface ManageUserService {
 
   public GetAdminDetailsResponse getAdminDetails(String userId, String adminId);
 
-  public GetUsersResponse getUsers(String superAdminUserId);
+  public GetUsersResponse getUsers(String superAdminUserId, Integer page, Integer limit);
 }

@@ -180,7 +180,7 @@ public class LocationServiceImpl implements LocationService {
         siteRepository.findByLocationIdAndStatus(locationRequest.getLocationId(), ACTIVE_STATUS);
     if (INACTIVE_STATUS.equals(locationRequest.getStatus())
         && CollectionUtils.isNotEmpty(listOfSite)) {
-      return ErrorCode.CANNOT_DECOMMISSIONED;
+      return ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS;
     }
 
     if (ACTIVE_STATUS.equals(locationRequest.getStatus())
@@ -263,7 +263,7 @@ public class LocationServiceImpl implements LocationService {
     LocationDetailsResponse locationResponse =
         LocationMapper.toLocationDetailsResponse(locationEntity, MessageCode.GET_LOCATION_SUCCESS);
     if (!StringUtils.isEmpty(studyNames)) {
-      locationResponse.getStudies().addAll(Arrays.asList(studyNames.split(",")));
+      locationResponse.getStudyNames().addAll(Arrays.asList(studyNames.split(",")));
     }
 
     logger.exit(String.format("locationId=%s", locationEntity.getId()));

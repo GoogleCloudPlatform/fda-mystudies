@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 Google LLC
+ *
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
+ */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_SEND_FAILED_EXCEPTION;
@@ -18,9 +26,12 @@ import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +55,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   private XLogger logger = XLoggerFactory.getXLogger(UserRegistrationServiceImpl.class.getName());
 
-  @Autowired private UserDetailsBORepository userDetailsRepository;
+  @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Autowired private CommonDao commonDao;
 
@@ -57,6 +68,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   @Autowired private EmailService emailService;
 
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
+
+  @Autowired private AppRepository appRepository;
 
   @Value("${register.url}")
   private String authRegisterUrl;
@@ -74,15 +87,15 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     // find appInfoId using appId
     AppOrgInfoBean appOrgInfoBean =
-        commonDao.getUserAppDetailsByAllApi(user.getUserId(), user.getAppId(), user.getOrgId());
+        commonDao.getUserAppDetailsByAllApi(user.getUserId(), user.getAppId());
 
     // find user by email and appId
-    Optional<UserDetailsBO> optUserDetails =
-        userDetailsRepository.findByEmailAndAppInfoId(
-            user.getEmailId(), appOrgInfoBean.getAppInfoId());
+
+    Optional<UserDetailsEntity> optUserDetails =
+        userDetailsRepository.findByEmailAndAppId(user.getEmailId(), appOrgInfoBean.getAppInfoId());
 
     // Return USER_ALREADY_EXISTS error code if user account already exists for the given email
-    UserDetailsBO existingUserDetails = new UserDetailsBO();
+    UserDetailsEntity existingUserDetails = new UserDetailsEntity();
     if (optUserDetails.isPresent()) {
       existingUserDetails = optUserDetails.get();
       if (StringUtils.isNotEmpty(existingUserDetails.getUserId())) {
@@ -96,26 +109,28 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     // save user details
-    UserDetailsBO userDetailsBO = fromUserRegistrationForm(user);
-    userDetailsBO.setUserDetailsId(existingUserDetails.getUserDetailsId());
-    userDetailsBO.setAppInfoId(appOrgInfoBean.getAppInfoId());
-    userDetailsBO = userDetailsRepository.saveAndFlush(userDetailsBO);
+    UserDetailsEntity userDetails = fromUserRegistrationForm(user);
+    Optional<AppEntity> app = appRepository.findByAppId(appOrgInfoBean.getAppInfoId());
+    if (app.isPresent()) {
+      userDetails.setApp(app.get());
+    }
+    userDetails = userDetailsRepository.saveAndFlush(userDetails);
 
     // Call POST /users API to create a user account in oauth-scim-server
     UserResponse authUserResponse = registerUserInAuthServer(user);
 
     // save authUserId and verfication code
-    userDetailsBO.setUserId(authUserResponse.getUserId());
-    userDetailsBO = userDetailsRepository.saveAndFlush(userDetailsBO);
+    userDetails.setUserId(authUserResponse.getUserId());
+    userDetails = userDetailsRepository.saveAndFlush(userDetails);
 
-    auditRequest.setUserId(userDetailsBO.getUserId());
+    auditRequest.setUserId(userDetails.getUserId());
     userMgmntAuditHelper.logEvent(UserMgmntEvent.USER_CREATED, auditRequest);
 
     // generate save and email the verification code
-    userDetailsBO = generateAndSaveVerificationCode(userDetailsBO);
+    userDetails = generateAndSaveVerificationCode(userDetails);
 
     // verification code is empty if send email is failed
-    if (StringUtils.isEmpty(userDetailsBO.getEmailCode())) {
+    if (StringUtils.isEmpty(userDetails.getEmailCode())) {
       userMgmntAuditHelper.logEvent(UserMgmntEvent.VERIFICATION_EMAIL_FAILED, auditRequest);
 
       throw new ErrorCodeException(EMAIL_SEND_FAILED_EXCEPTION);
@@ -129,34 +144,34 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         authUserResponse.getUserId(), authUserResponse.getTempRegId());
   }
 
-  private boolean generateVerificationCode(UserDetailsBO userDetailsBO) {
-    return UserAccountStatus.PENDING_CONFIRMATION.getStatus() == userDetailsBO.getStatus()
-        && (StringUtils.isEmpty(userDetailsBO.getEmailCode())
-            || LocalDateTime.now().isAfter(userDetailsBO.getCodeExpireDate()));
+  private boolean generateVerificationCode(UserDetailsEntity userDetails) {
+    return UserAccountStatus.PENDING_CONFIRMATION.getStatus() == userDetails.getStatus()
+        && (StringUtils.isEmpty(userDetails.getEmailCode())
+            || Timestamp.from(Instant.now()).after(userDetails.getCodeExpireDate()));
   }
 
-  private UserDetailsBO generateAndSaveVerificationCode(UserDetailsBO userDetailsBO) {
+  private UserDetailsEntity generateAndSaveVerificationCode(UserDetailsEntity userDetails) {
     String verificationCode = RandomStringUtils.randomAlphanumeric(VERIFICATION_CODE_LENGTH);
-    EmailResponse emailResponse = sendConfirmationEmail(userDetailsBO, verificationCode);
+    EmailResponse emailResponse = sendConfirmationEmail(userDetails, verificationCode);
     if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
-      userDetailsBO.setEmailCode(verificationCode);
-      userDetailsBO.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
-      userDetailsBO = userDetailsRepository.saveAndFlush(userDetailsBO);
+      userDetails.setEmailCode(verificationCode);
+      userDetails.setCodeExpireDate(Timestamp.valueOf(LocalDateTime.now().plusMinutes(expireTime)));
+      userDetails = userDetailsRepository.saveAndFlush(userDetails);
     }
-    return userDetailsBO;
+    return userDetails;
   }
 
-  private UserDetailsBO fromUserRegistrationForm(UserRegistrationForm user) {
-    UserDetailsBO userDetailsBO = new UserDetailsBO();
-    userDetailsBO.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
-    userDetailsBO.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-    userDetailsBO.setUserId(user.getUserId());
-    userDetailsBO.setEmail(user.getEmailId());
-    userDetailsBO.setUsePassCode(user.isUsePassCode());
-    userDetailsBO.setLocalNotificationFlag(user.isLocalNotification());
-    userDetailsBO.setRemoteNotificationFlag(user.isRemoteNotification());
-    userDetailsBO.setTouchId(user.isTouchId());
-    return userDetailsBO;
+  private UserDetailsEntity fromUserRegistrationForm(UserRegistrationForm user) {
+    UserDetailsEntity userDetails = new UserDetailsEntity();
+    userDetails.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userDetails.setVerificationDate(new Timestamp(System.currentTimeMillis()));
+    userDetails.setUserId(user.getUserId());
+    userDetails.setEmail(user.getEmailId());
+    userDetails.setUsePassCode(user.isUsePassCode());
+    userDetails.setLocalNotificationFlag(user.isLocalNotification());
+    userDetails.setRemoteNotificationFlag(user.isRemoteNotification());
+    userDetails.setTouchId(user.isTouchId());
+    return userDetails;
   }
 
   private UserResponse registerUserInAuthServer(UserRegistrationForm user) {
@@ -178,14 +193,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   }
 
   private EmailResponse sendConfirmationEmail(
-      UserDetailsBO userDetailsBO, String verificationCode) {
+      UserDetailsEntity userDetails, String verificationCode) {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", verificationCode);
     templateArgs.put("orgName", appConfig.getOrgName());
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmailAddress(),
-            new String[] {userDetailsBO.getEmail()},
+            new String[] {userDetails.getEmail()},
             null,
             null,
             appConfig.getConfirmationMailSubject(),

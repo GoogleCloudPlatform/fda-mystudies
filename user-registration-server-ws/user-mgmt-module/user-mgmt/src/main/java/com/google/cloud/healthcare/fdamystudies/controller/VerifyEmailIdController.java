@@ -24,14 +24,15 @@ import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsService;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.ResponseUtil;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -64,7 +65,6 @@ public class VerifyEmailIdController {
   public ResponseEntity<?> verifyEmailId(
       @Valid @RequestBody EmailIdVerificationForm verificationForm,
       @RequestHeader("appId") String appId,
-      @RequestHeader("orgId") String orgId,
       @Context HttpServletResponse response,
       HttpServletRequest request) {
     logger.info("VerifyEmailIdController verifyEmailId() - starts");
@@ -73,12 +73,11 @@ public class VerifyEmailIdController {
 
     VerifyEmailIdResponse verifyEmailIdResponse = null;
     String isValidAppMsg = "";
-    UserDetailsBO participantDetails = null;
+    UserDetailsEntity participantDetails = null;
 
     try {
       isValidAppMsg =
-          commonService.validatedUserAppDetailsByAllApi(
-              "", verificationForm.getEmailId(), appId, orgId);
+          commonService.validatedUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId);
 
       if (!StringUtils.isNotEmpty(isValidAppMsg)) {
 
@@ -90,7 +89,7 @@ public class VerifyEmailIdController {
         return null;
       }
       AppOrgInfoBean appOrgInfoBean =
-          commonService.getUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId, orgId);
+          commonService.getUserAppDetailsByAllApi("", verificationForm.getEmailId(), appId);
       if (appOrgInfoBean != null) {
         participantDetails = getParticipantDetails(verificationForm, appOrgInfoBean);
       }
@@ -108,7 +107,7 @@ public class VerifyEmailIdController {
       if (!verificationForm.getCode().trim().equals(participantDetails.getEmailCode())) {
         userMgmntAuditHelper.logEvent(
             ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_WRONG_CODE, auditRequest);
-      } else if (LocalDateTime.now().isAfter(participantDetails.getCodeExpireDate())) {
+      } else if (Timestamp.from(Instant.now()).after(participantDetails.getCodeExpireDate())) {
         userMgmntAuditHelper.logEvent(
             ACCOUNT_ACTIVATION_USER_EMAIL_VERIFICATION_FAILED_EXPIRED_CODE, auditRequest);
       }
@@ -150,14 +149,12 @@ public class VerifyEmailIdController {
     }
   }
 
-  private UserDetailsBO getParticipantDetails(
+  private UserDetailsEntity getParticipantDetails(
       EmailIdVerificationForm verificationForm, AppOrgInfoBean appOrgInfoBean) {
-    UserDetailsBO participantDetails = null;
+    UserDetailsEntity participantDetails = null;
     participantDetails =
         userManagementProfService.getParticipantDetailsByEmail(
-            verificationForm.getEmailId(),
-            appOrgInfoBean.getAppInfoId(),
-            appOrgInfoBean.getOrgInfoId());
+            verificationForm.getEmailId(), appOrgInfoBean.getAppInfoId());
     return participantDetails;
   }
 }
