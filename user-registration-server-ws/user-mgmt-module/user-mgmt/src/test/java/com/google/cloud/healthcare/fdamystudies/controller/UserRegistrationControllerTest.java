@@ -36,15 +36,16 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.Map;
+import java.util.Optional;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -73,7 +74,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Autowired private JavaMailSender emailSender;
 
-  @Autowired private UserDetailsBORepository userDetailsRepository;
+  @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Autowired private EmailNotification emailNotification;
 
@@ -180,7 +181,11 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
     // find userDetails by userId and assert email
-    UserDetailsBO userDetails = userDetailsRepository.findByUserId(userId);
+    Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
+    UserDetailsEntity userDetails = null;
+    if (optUserDetails.isPresent()) {
+      userDetails = optUserDetails.get();
+    }
 
     assertEquals(Constants.EMAIL, userDetails.getEmail());
 

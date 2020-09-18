@@ -44,11 +44,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
@@ -199,7 +199,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(1);
 
-    UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
+    UserDetailsEntity daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
     assertEquals(3, daoResp.getStatus());
 
     verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
