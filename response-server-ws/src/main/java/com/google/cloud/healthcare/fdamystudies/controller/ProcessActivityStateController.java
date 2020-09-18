@@ -61,7 +61,7 @@ public class ProcessActivityStateController {
               ErrorCode.EC_701.errorMessage(),
               AppConstants.ERROR_STR,
               ErrorCode.EC_701.errorMessage());
-      logger.warn(
+      logger.error(
           "ProcessActivityStateController getActivityState() failed. studyId or participantId missing.");
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
