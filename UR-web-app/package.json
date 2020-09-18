@@ -36,6 +36,7 @@
     "classlist.js": "1.1.20150312",
     "core-js": "^2.5.4",
     "crypto-js": "^4.0.0",
+    "dotenv": "^8.2.0",
     "glyphicons": "^0.2.0",
     "jquery": "^3.4.1",
     "ng-connection-service": "^1.0.4",
@@ -53,7 +54,9 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.901.1",
+    "@angular-builders/custom-webpack": "^10.0.1",
+    "@angular-builders/dev-server": "^7.3.1",
+    "@angular-devkit/build-angular": "^0.901.12",
     "@angular-eslint/builder": "0.0.1-alpha.32",
     "@angular-eslint/eslint-plugin": "0.0.1-alpha.32",
     "@angular-eslint/eslint-plugin-template": "0.0.1-alpha.32",
