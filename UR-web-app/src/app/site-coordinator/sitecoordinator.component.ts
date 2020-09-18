@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {SearchService} from '../shared/search.service';
 import {SearchBar} from '../shared/search-bar';
+import {Profile} from './account/shared/profile.model';
 
 @Component({
   selector: 'site-coordinator',
@@ -12,10 +13,14 @@ export class SiteCoordinatorComponent implements OnInit {
   showSearchBar = false;
   filterQuery = '';
   searchBar: SearchBar | undefined;
+  user = {} as Profile;
 
   constructor(private readonly searchService: SearchService) {}
 
   ngOnInit(): void {
+    const userObject = sessionStorage.getItem('user');
+    if (userObject) this.user = JSON.parse(userObject) as Profile;
+
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
         this.showSearchBar = true;

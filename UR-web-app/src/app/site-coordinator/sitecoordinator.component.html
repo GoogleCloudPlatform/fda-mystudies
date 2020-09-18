@@ -30,6 +30,10 @@
                 Dashboard
               </a>
               <a
+                *ngIf="
+                  (user && user.manageLocations !== null) ||
+                  (user && user.superAdmin)
+                "
                 routerLink="/coordinator/locations"
                 routerLinkActive="active"
                 class="nav-item nav-link"
@@ -37,6 +41,7 @@
                 Locations
               </a>
               <a
+                *ngIf="user && user.superAdmin"
                 routerLink="/coordinator/users"
                 routerLinkActive="active"
                 class="nav-item nav-link"
