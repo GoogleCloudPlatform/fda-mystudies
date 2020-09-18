@@ -394,13 +394,14 @@ public class UserServiceImpl implements UserService {
     loginAttempts += 1;
     userInfo.put(LOGIN_ATTEMPTS, loginAttempts);
 
+    long systemTime = Instant.now().toEpochMilli();
     if (userInfo.get(LOGIN_ATTEMPTS).intValue() >= appConfig.getMaxInvalidLoginAttempts()) {
       String tempPassword = PasswordGenerator.generate(12);
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       sendAccountLockedEmail(userEntity, tempPassword);
       userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
-      userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, Instant.now().toEpochMilli());
+      userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, systemTime);
 
       Map<String, String> placeHolders = new HashMap<>();
       placeHolders.put("lock_time", Instant.now().toString());

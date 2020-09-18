@@ -293,8 +293,6 @@ public class LoginController {
     if (StringUtils.isNotEmpty(tempRegId)) {
       Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
       if (optUser.isPresent()) {
-        // log TEMPORARY_PASSWORD_SUCCEEDED audit log event
-
         UserEntity user = optUser.get();
         logger.exit("tempRegId is valid, return to auto login page");
         cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
