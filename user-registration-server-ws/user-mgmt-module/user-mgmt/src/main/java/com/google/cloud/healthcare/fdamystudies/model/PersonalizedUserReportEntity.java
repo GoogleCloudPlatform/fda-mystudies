@@ -5,7 +5,8 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package com.google.cloud.healthcare.fdamystudies.usermgmt.model;
+
+package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -31,7 +32,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @NoArgsConstructor
 @Table(name = "personalized_user_report")
-public class PersonalizedUserReportBO implements Serializable {
+public class PersonalizedUserReportEntity implements Serializable {
 
   private static final long serialVersionUID = -3019529323339411129L;
 
@@ -42,11 +43,11 @@ public class PersonalizedUserReportBO implements Serializable {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private UserDetailsBO userDetails;
+  private UserDetailsEntity userDetails;
 
   @ManyToOne
   @JoinColumn(name = "study_info_id")
-  private StudyInfoBO studyInfo;
+  private StudyEntity studyInfo;
 
   @Column(name = "report_title")
   private String reportTitle;

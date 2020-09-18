@@ -6,10 +6,10 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.usermgmt.model;
+package com.google.cloud.healthcare.fdamystudies.model;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,22 +22,22 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "user_app_details")
-public class UserAppDetailsBO implements Serializable {
+@Table(name = "login_attempts")
+public class LoginAttemptsEntity implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "user_app_details_id")
-  private Integer userAppDetailsId;
+  @Column(name = "id")
+  private String id;
 
-  @Column(name = "app_info_id")
-  private Integer appInfoId;
+  @Column(name = "email")
+  private String email;
 
-  @Column(name = "user_details_id")
-  private Integer userDetailsId;
+  @Column(name = "last_modified")
+  private Date lastModified;
 
-  @Column(name = "created_on")
-  private LocalDateTime createdOn;
+  @Column(name = "no_of_attempts")
+  private Integer attempts;
 }
