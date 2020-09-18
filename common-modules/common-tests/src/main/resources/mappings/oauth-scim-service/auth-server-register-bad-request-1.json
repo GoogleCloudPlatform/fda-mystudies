@@ -1,0 +1,21 @@
+{
+	"request": {
+		"method": "POST",
+		"url": "/AuthServer/register",
+		"bodyPatterns": [
+			{
+				"contains": "abc@gmail.com"
+			}
+		]
+	},
+	"response": {
+		"status": 400,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8",
+			"status": "400",
+			"title": "invalidPassword",
+			"StatusMessage": "Invalid Password"
+		},
+		"bodyFileName": "oauth-scim-service/auth-server-register-response-bad-request.json"
+	}
+}
