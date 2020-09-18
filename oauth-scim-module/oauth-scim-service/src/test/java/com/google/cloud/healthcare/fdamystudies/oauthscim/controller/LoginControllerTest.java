@@ -22,6 +22,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -42,6 +43,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
@@ -63,6 +65,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -204,16 +207,91 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add(LOGIN_CHALLENGE, AUTO_LOGIN_LOGIN_CHALLENGE_VALUE);
 
+    MvcResult result =
+        mockMvc
+            .perform(
+                get(ApiEndpoint.LOGIN_PAGE.getPath())
+                    .contextPath(getContextPath())
+                    .queryParams(queryParams))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(view().name(AUTO_LOGIN_VIEW_NAME))
+            .andExpect(content().string(containsString("<title>Please wait</title>")))
+            .andReturn();
+
+    String accountStatus = result.getResponse().getCookie(ACCOUNT_STATUS_COOKIE).getValue();
+    assertTrue(UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus));
+  }
+
+  @Test
+  public void shouldRedirectToConsentPageForAutoSignIn() throws Exception {
+    // Step-1 user registration
+    UserEntity user = new UserEntity();
+    user.setEmail("mockit_email@grr.la");
+    user.setAppId("MyStudies");
+    user.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    user.setTempRegId(TEMP_REG_ID_VALUE);
+    // UserInfo JSON contains password hash & salt, password history etc
+    ObjectNode userInfo = JsonUtils.getObjectNode().put("password", PasswordGenerator.generate(12));
+    user.setUserInfo(userInfo);
+    userRepository.saveAndFlush(user);
+
+    // Step-2 redirect to auto login page after signup
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie tempRegId = new Cookie(TEMP_REG_ID_COOKIE, TEMP_REG_ID_VALUE);
+
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.LOGIN_PAGE.getPath())
+                    .contextPath(getContextPath())
+                    .params(queryParams)
+                    .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId))
+            .andDo(print())
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()))
+            .andReturn();
+
+    String accountStatus = result.getResponse().getCookie(ACCOUNT_STATUS_COOKIE).getValue();
+    assertTrue(UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus));
+  }
+
+  @Test
+  public void shouldRedirectToLoginPageForInvalidTempRegIdForAutoSignIn() throws Exception {
+    // Step-1 user registration
+    UserEntity user = new UserEntity();
+    user.setEmail("mockit_email@grr.la");
+    user.setAppId("MyStudies");
+    user.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    user.setTempRegId(IdGenerator.id());
+    // UserInfo JSON contains password hash & salt, password history etc
+    ObjectNode userInfo = JsonUtils.getObjectNode().put("password", PasswordGenerator.generate(12));
+    user.setUserInfo(userInfo);
+    userRepository.saveAndFlush(user);
+
+    // Step-2 redirect to auto login page after signup
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+
+    Cookie appIdCookie = new Cookie(APP_ID_COOKIE, "MyStudies");
+    Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
+    Cookie mobilePlatformCookie =
+        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie tempRegId = new Cookie(TEMP_REG_ID_COOKIE, TEMP_REG_ID_VALUE);
+
     mockMvc
         .perform(
-            get(ApiEndpoint.LOGIN_PAGE.getPath())
+            post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
-                .queryParams(queryParams))
+                .params(queryParams)
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId))
         .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(view().name(AUTO_LOGIN_VIEW_NAME))
-        .andExpect(content().string(containsString("<title>Please wait</title>")))
-        .andReturn();
+        .andExpect(status().is2xxSuccessful())
+        .andExpect(view().name(LOGIN_VIEW_NAME));
   }
 
   @ParameterizedTest
