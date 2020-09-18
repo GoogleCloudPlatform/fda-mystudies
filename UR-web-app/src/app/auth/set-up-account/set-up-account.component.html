@@ -12,7 +12,7 @@
 <ng-container>
   <section class="max__w__850 add__location">
     <form
-      [formGroup]="setupaccountForm"
+      [formGroup]="setupAccountForm"
       (ngSubmit)="registerUser()"
       autocomplete="off"
     >
@@ -44,8 +44,6 @@
                   id="fname"
                   placeholder="Enter First Name"
                   formControlName="firstName"
-                  maxlength="15"
-                  required
                 />
                 <div
                   class="validation-error"
@@ -72,8 +70,6 @@
                   id="lname"
                   placeholder="Enter Last Name"
                   formControlName="lastName"
-                  maxlength="15"
-                  required
                 />
                 <div
                   class="validation-error"
@@ -107,7 +103,6 @@
                 id="password"
                 placeholder="Enter Password"
                 formControlName="password"
-                required
               />
 
               <div
@@ -134,7 +129,6 @@
                 id="confirmPassword"
                 placeholder="Enter Confirm Password"
                 formControlName="confirmPassword"
-                required
               />
               <div
                 class="validation-error"
@@ -166,7 +160,7 @@
             type="submit"
             name="save"
             class="btn bt__add mr-sm"
-            [disabled]="!setupaccountForm.valid"
+            [disabled]="!setupAccountForm.valid"
           >
             Submit
           </button>

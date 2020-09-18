@@ -16,12 +16,13 @@ import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
   templateUrl: './set-up-account.component.html',
   styleUrls: ['./set-up-account.component.scss'],
 })
-export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
+export class SetUpAccountComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   user = {} as SetUpUser;
   setUpCode = '';
   tempRegId = '';
-  setupaccountForm: FormGroup;
+  setupAccountForm: FormGroup;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -31,7 +32,7 @@ export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
     private readonly toastr: ToastrService,
   ) {
     super();
-    this.setupaccountForm = fb.group(
+    this.setupAccountForm = fb.group(
       {
         // eslint-disable-next-line @typescript-eslint/unbound-method
         email: ['', Validators.required],
@@ -63,7 +64,7 @@ export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
   }
 
   get f() {
-    return this.setupaccountForm.controls;
+    return this.setupAccountForm.controls;
   }
   ngOnInit(): void {
     this.subs.add(
@@ -76,16 +77,16 @@ export class SetUpAccountComponent extends UnsubscribeOnDestroyAdapter
 
   getPreStoredDetails(): void {
     this.setUpAccountService.get(this.setUpCode).subscribe((user) => {
-      this.setupaccountForm.patchValue(user);
+      this.setupAccountForm.patchValue(user);
     });
   }
 
   registerUser(): void {
     const updatedUser: SetUpUser = {
-      firstName: String(this.setupaccountForm.controls['firstName'].value),
-      lastName: String(this.setupaccountForm.controls['lastName'].value),
-      email: String(this.setupaccountForm.controls['email'].value),
-      password: String(this.setupaccountForm.controls['password'].value),
+      firstName: String(this.setupAccountForm.controls['firstName'].value),
+      lastName: String(this.setupAccountForm.controls['lastName'].value),
+      email: String(this.setupAccountForm.controls['email'].value),
+      password: String(this.setupAccountForm.controls['password'].value),
     };
     this.subs.add(
       this.setUpAccountService
