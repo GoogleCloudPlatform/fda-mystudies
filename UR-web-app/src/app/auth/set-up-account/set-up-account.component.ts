@@ -6,7 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {SetUpUser} from '../../entity/user';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {SetUpAccountService} from 'src/app/auth/shared/set-up-account.service';
-import {getSuccessMessage} from 'src/app/shared/success.codes.enum';
+import {getMessage, getSuccessMessage} from 'src/app/shared/success.codes.enum';
 import {AuthService} from 'src/app/service/auth.service';
 import {SetUpResponse} from '../shared/set-up-account';
 import {mustMatch, passwordValidator} from 'src/app/_helper/validator';
@@ -92,22 +92,10 @@ export class SetUpAccountComponent
       this.setUpAccountService
         .setUpAccount(updatedUser)
         .subscribe((successResponse: SetUpResponse) => {
-<<<<<<< HEAD
-          this.toastr.success(
-            getSuccessMessage(successResponse.code, successResponse.message),
-          );
-          sessionStorage.setItem('tempRegId', successResponse.tempRegId);
-          sessionStorage.setItem('userId', successResponse.userId);
-          this.authService.initSessionStorage();
-          setTimeout(() => {
-            this.authService.beginLoginConsentFlow();
-          }, 1000);
-=======
           this.toastr.success(getMessage(successResponse.code));
           sessionStorage.setItem('tempRegId', successResponse.tempRegId);
           sessionStorage.setItem('userId', successResponse.userId);
           this.authService.beginLoginConsentFlow();
->>>>>>> 8882b47c9deb4b4d7e48df672e5095c5d9a694f8
         }),
     );
   }
