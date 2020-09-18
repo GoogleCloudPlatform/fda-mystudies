@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class BeanConfig extends CommonModuleConfiguration {
-  
+
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Bean

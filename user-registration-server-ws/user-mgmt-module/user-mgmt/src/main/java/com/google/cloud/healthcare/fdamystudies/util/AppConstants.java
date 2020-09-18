@@ -14,16 +14,15 @@ public class AppConstants {
 
   public static final String SERVER_TIMEZONE = "America/New_York";
   public static final String USER_EMAILID = "userEmail";
-  public static final String APPLICATION_ID = "appInfoId";
+  public static final String APPLICATION_ID = "id";
   public static final String APP_ID = "appId";
   public static final String TITLE = "title";
 
-  public static final String ORGANIZATION_ID = "orgId";
   public static final String KEY_USERID = "userId";
   public static final String STUDY_INFO_ID = "studyInfoId";
   public static final String EMAIL = "email";
   public static final String CUSTOM_APPLICATION_ID = "appId";
-  public static final String USER_DETAILS_ID = "userDetailsId";
+  public static final String USER_DETAILS_ID = "id";
   public static final String STUDY_LEVEL = "ST";
   public static final String GATEWAY_LEVEL = "GT";
   public static final String USER_REGISTRATION_CONTROLLER_ENDS_MESSAGE =

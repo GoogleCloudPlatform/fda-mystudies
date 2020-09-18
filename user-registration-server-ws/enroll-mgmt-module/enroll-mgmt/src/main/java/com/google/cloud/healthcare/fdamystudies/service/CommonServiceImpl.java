@@ -9,12 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommonServiceImpl implements CommonService {
@@ -24,17 +25,14 @@ public class CommonServiceImpl implements CommonService {
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
-  public UserDetailsBO getUserInfoDetails(String userId) {
+  @Transactional(readOnly = true)
+  public UserDetailsEntity getUserInfoDetails(String userId) {
     logger.info("CommonServiceImpl getUserInfoDetails() - Starts ");
-    UserDetailsBO userDetailsBO = null;
-    try {
-      if (!StringUtils.isEmpty(userId)) {
-        userDetailsBO = commonDao.getUserInfoDetails(userId);
-      }
-    } catch (Exception e) {
-      logger.error("CommonServiceImpl getUserInfoDetails() - error ", e);
+    UserDetailsEntity userDetailsEntity = null;
+    if (!StringUtils.isEmpty(userId)) {
+      userDetailsEntity = commonDao.getUserInfoDetails(userId);
     }
     logger.info("CommonServiceImpl getUserInfoDetails() - Ends ");
-    return userDetailsBO;
+    return userDetailsEntity;
   }
 }

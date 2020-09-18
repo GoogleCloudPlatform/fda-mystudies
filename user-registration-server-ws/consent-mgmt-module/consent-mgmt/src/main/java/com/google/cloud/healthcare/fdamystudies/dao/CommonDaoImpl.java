@@ -10,10 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.consent.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.consent.model.OrgInfo;
-import com.google.cloud.healthcare.fdamystudies.consent.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -39,60 +37,38 @@ public class CommonDaoImpl implements CommonDao {
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
-  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId) {
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
     logger.info("UserConsentManagementDaoImpl validatedUserAppDetailsByAllApi() - Started ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<AppInfoDetailsBO> appDetailsBoCriteria = null;
-    Root<AppInfoDetailsBO> appDetailsBoRoot = null;
+    CriteriaQuery<AppEntity> appDetailsBoCriteria = null;
+    Root<AppEntity> appDetailsBoRoot = null;
     Predicate[] appDetailsPredicates = new Predicate[1];
-    List<AppInfoDetailsBO> appDetailsList = null;
-    AppInfoDetailsBO appDetailsBO = null;
+    List<AppEntity> appDetailsList = null;
+    AppEntity appEntity = null;
 
-    CriteriaQuery<OrgInfo> orgDetailsBoCriteria = null;
-    Root<OrgInfo> orgDetailsBoRoot = null;
-    Predicate[] orgDetailsBoPredicates = new Predicate[1];
-    List<OrgInfo> orgDetailsBoList = null;
-    OrgInfo orgDetailsBo = null;
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     String message = "";
-    int appInfoId = 0;
-    int orgInfoId = 0;
+    String appInfoId = String.valueOf(0);
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
 
       if (!StringUtils.isEmpty(appId)) {
-        appDetailsBoCriteria = criteriaBuilder.createQuery(AppInfoDetailsBO.class);
-        appDetailsBoRoot = appDetailsBoCriteria.from(AppInfoDetailsBO.class);
+        appDetailsBoCriteria = criteriaBuilder.createQuery(AppEntity.class);
+        appDetailsBoRoot = appDetailsBoCriteria.from(AppEntity.class);
         appDetailsPredicates[0] = criteriaBuilder.equal(appDetailsBoRoot.get("appId"), appId);
         appDetailsBoCriteria.select(appDetailsBoRoot).where(appDetailsPredicates);
         appDetailsList = session.createQuery(appDetailsBoCriteria).getResultList();
         if (!appDetailsList.isEmpty()) {
-          appDetailsBO = appDetailsList.get(0);
-          appInfoId = appDetailsBO.getAppInfoId();
+          appEntity = appDetailsList.get(0);
+          appInfoId = appEntity.getId();
         }
       }
 
-      if (!StringUtils.isEmpty(orgId)) {
-
-        orgDetailsBoCriteria = criteriaBuilder.createQuery(OrgInfo.class);
-        orgDetailsBoRoot = orgDetailsBoCriteria.from(OrgInfo.class);
-        orgDetailsBoPredicates[0] = criteriaBuilder.equal(orgDetailsBoRoot.get("orgId"), orgId);
-        orgDetailsBoCriteria.select(orgDetailsBoRoot).where(orgDetailsBoPredicates);
-        orgDetailsBoList = session.createQuery(orgDetailsBoCriteria).getResultList();
-
-        if (!orgDetailsBoList.isEmpty()) {
-          orgDetailsBo = orgDetailsBoList.get(0);
-          orgInfoId = orgDetailsBo.getId();
-        }
-      }
       appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
-
     } catch (Exception e) {
       appOrgInfoBean.setAppInfoId(appInfoId);
-      appOrgInfoBean.setOrgInfoId(orgInfoId);
       logger.error("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - error ", e);
     }
     logger.info("UserConsentManagementDaoImpl getUserAppDetailsByAllApi() - Ends ");
@@ -100,35 +76,34 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public Integer getUserDetailsId(String userId) {
+  public String getUserDetailsId(String userId) {
     logger.info("UserConsentManagementDaoImpl getStudyInfoId() - Starts ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<UserDetailsBO> userDetailsBoCriteria = null;
-    Root<UserDetailsBO> userDetailsBoRoot = null;
-    List<UserDetailsBO> userDetailsBoList = null;
+    CriteriaQuery<UserDetailsEntity> userDetailsBoCriteria = null;
+    Root<UserDetailsEntity> userDetailsBoRoot = null;
+    List<UserDetailsEntity> userDetailsBoList = null;
     Predicate[] userDetailspredicates = new Predicate[1];
-    UserDetailsBO userDetailsBO = null;
-    Integer userDetailsId = 0;
+    UserDetailsEntity userDetailsEntity = null;
+    String userDetailsId = String.valueOf(0);
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
       if (!StringUtils.isEmpty(userId)) {
 
-        userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsBO.class);
-        userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsBO.class);
+        userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
+        userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
 
-        userDetailspredicates[0] =
-            criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
+        userDetailspredicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(userId), userId);
         userDetailsBoCriteria.select(userDetailsBoRoot).where(userDetailspredicates);
         userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
 
         if (!userDetailsBoList.isEmpty()) {
-          userDetailsBO = userDetailsBoList.get(0);
-          userDetailsId = userDetailsBO.getUserDetailsId();
+          userDetailsEntity = userDetailsBoList.get(0);
+          userDetailsId = userDetailsEntity.getId();
         }
       }
     } catch (Exception e) {
-      userDetailsId = 0;
+      userDetailsId = String.valueOf(0);
       logger.error("UserProfileManagementDaoImpl validatedUserAppDetailsByAllApi() - error ", e);
     }
 
