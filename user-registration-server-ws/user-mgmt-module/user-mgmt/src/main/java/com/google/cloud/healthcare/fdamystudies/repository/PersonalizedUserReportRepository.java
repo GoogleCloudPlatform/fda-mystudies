@@ -5,17 +5,18 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.PersonalizedUserReportBO;
+import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PersonalizedUserReportRepository
-    extends JpaRepository<PersonalizedUserReportBO, Integer> {
+    extends JpaRepository<PersonalizedUserReportEntity, Integer> {
 
-  public List<PersonalizedUserReportBO> findByUserDetailsUserIdAndStudyInfoCustomId(
+  public List<PersonalizedUserReportEntity> findByUserDetailsUserIdAndStudyInfoCustomId(
       String userId, String studyCustomId);
 }

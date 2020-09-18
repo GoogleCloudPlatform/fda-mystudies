@@ -236,7 +236,9 @@ public enum ErrorCode {
       400, "EC_0055", Constants.BAD_REQUEST, "emailId or password is blank in request"),
 
   APPLICATION_ID_MISSING(
-      400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header");
+      400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header"),
+
+  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status.");
 
   private final int status;
   private final String code;

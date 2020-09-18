@@ -8,15 +8,15 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface FdaEaUserDetailsService {
 
-  UserDetailsBO saveUser(UserDetailsBO userDetailsBO);
+  UserDetailsEntity saveUser(UserDetailsEntity userDetails);
 
-  UserDetailsBO loadUserDetailsByUserId(String userId);
+  UserDetailsEntity loadUserDetailsByUserId(String userId);
 
-  boolean verifyCode(String code, UserDetailsBO participantDetails);
+  boolean verifyCode(String code, UserDetailsEntity participantDetails);
 
-  String updateStatus(UserDetailsBO participantDetails);
+  String updateStatus(UserDetailsEntity participantDetails);
 }

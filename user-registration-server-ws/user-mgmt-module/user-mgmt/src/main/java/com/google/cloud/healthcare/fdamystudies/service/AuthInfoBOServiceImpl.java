@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ public class AuthInfoBOServiceImpl implements AuthInfoBOService {
   @Autowired AuthInfoBODao authInfoDao;
 
   @Override
-  public AuthInfoBO save(AuthInfoBO authInfo) {
+  public AuthInfoEntity save(AuthInfoEntity authInfo) {
     logger.info("AuthInfoBOServiceImpl save() - starts");
-    AuthInfoBO dbResponse = null;
+    AuthInfoEntity dbResponse = null;
     if (authInfo != null) {
       dbResponse = authInfoDao.save(authInfo);
     }

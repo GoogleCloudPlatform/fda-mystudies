@@ -8,8 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,11 @@ public class UserAppDetailsDaoImpl implements UserAppDetailsDao {
   @Autowired private UserAppDetailsRepository userAppDetailsRepository;
 
   @Override
-  public UserAppDetailsBO save(UserAppDetailsBO userAppDetails) {
+  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) {
     logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - starts");
     if (userAppDetails != null) {
 
-      UserAppDetailsBO dbResponse = userAppDetailsRepository.save(userAppDetails);
+      UserAppDetailsEntity dbResponse = userAppDetailsRepository.save(userAppDetails);
       logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - ends");
       return dbResponse;
     }

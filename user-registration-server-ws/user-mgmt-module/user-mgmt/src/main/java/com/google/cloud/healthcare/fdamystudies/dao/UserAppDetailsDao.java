@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 
 public interface UserAppDetailsDao {
 
-  UserAppDetailsBO save(UserAppDetailsBO userAppDetails);
+  UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails);
 }

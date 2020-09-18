@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 
 public interface AuthInfoBOService {
 
-  AuthInfoBO save(AuthInfoBO authInfo);
+  AuthInfoEntity save(AuthInfoEntity authInfo);
 }

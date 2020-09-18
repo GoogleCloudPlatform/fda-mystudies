@@ -24,8 +24,8 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudiesDao;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.notnoop.apns.APNS;
@@ -61,7 +61,7 @@ public class StudiesServicesImpl implements StudiesServices {
 
   @Autowired private StudiesDao studiesDao;
 
-  @Autowired private AuthInfoBODao authInfoBODao;
+  @Autowired private AuthInfoBODao authInfoBoDao;
 
   @Autowired private CommonDao commonDao;
 
@@ -86,9 +86,9 @@ public class StudiesServicesImpl implements StudiesServices {
     HashSet<String> studySet = new HashSet<>();
     HashSet<String> appSet = new HashSet<>();
     Map<Integer, Map<String, JSONArray>> studiesMap = null;
-    Map<Object, StudyInfoBO> studyInfobyStudyCustomId = new HashMap<>();
+    Map<Object, StudyEntity> studyInfobyStudyCustomId = new HashMap<>();
     Map<String, JSONArray> allDeviceTokens = new HashMap<>();
-    Map<Object, AppInfoDetailsBO> appInfobyAppCustomId = new HashMap<>();
+    Map<Object, AppEntity> appInfobyAppCustomId = new HashMap<>();
     logger.info("StudiesServicesImpl.SendNotificationAction() - starts");
 
     for (NotificationBean notificationBean : notificationForm.getNotifications()) {
@@ -102,24 +102,22 @@ public class StudiesServicesImpl implements StudiesServices {
       logger.debug("appset is empty return bad request");
       return new ErrorBean(ErrorCode.EC_400.code(), ErrorCode.EC_400.errorMessage());
     } else {
-      List<AppInfoDetailsBO> appInfos = commonDao.getAppInfoSet(appSet);
+      List<AppEntity> appInfos = commonDao.getAppInfoSet(appSet);
       logger.debug(String.format("hasAppInfos=%b", (appInfos != null && !appInfos.isEmpty())));
       if (appInfos != null && !appInfos.isEmpty()) {
-        allDeviceTokens = authInfoBODao.getDeviceTokenOfAllUsers(appInfos);
+        allDeviceTokens = authInfoBoDao.getDeviceTokenOfAllUsers(appInfos);
         appInfobyAppCustomId =
-            appInfos
-                .stream()
-                .collect(Collectors.toMap(AppInfoDetailsBO::getAppId, Function.identity()));
+            appInfos.stream().collect(Collectors.toMap(AppEntity::getAppId, Function.identity()));
       }
       logger.debug(String.format("hasStudiesSet=%b", (studySet != null && !studySet.isEmpty())));
       if (studySet != null && !studySet.isEmpty()) {
-        List<StudyInfoBO> studyInfos = commonDao.getStudyInfoSet(studySet);
+        List<StudyEntity> studyInfos = commonDao.getStudyInfoSet(studySet);
         if (studyInfos != null && !studyInfos.isEmpty()) {
           studiesMap = commonDao.getStudyLevelDeviceToken(studyInfos);
           studyInfobyStudyCustomId =
               studyInfos
                   .stream()
-                  .collect(Collectors.toMap(StudyInfoBO::getCustomId, Function.identity()));
+                  .collect(Collectors.toMap(StudyEntity::getCustomId, Function.identity()));
         }
       }
       PushNotificationResponse fcmNotificationResponse = null;
@@ -198,10 +196,11 @@ public class StudiesServicesImpl implements StudiesServices {
 
   private PushNotificationResponse sendStudyLevelNotification(
       Map<Integer, Map<String, JSONArray>> studiesMap,
-      Map<Object, StudyInfoBO> studyInfobyStudyCustomId,
-      Map<Object, AppInfoDetailsBO> appInfobyAppCustomId,
+      Map<Object, StudyEntity> studyInfobyStudyCustomId,
+      Map<Object, AppEntity> appInfobyAppCustomId,
       NotificationBean notificationBean)
       throws IOException {
+
     Map<String, JSONArray> deviceTokensMap =
         studiesMap.get(studyInfobyStudyCustomId.get(notificationBean.getCustomStudyId()).getId());
     notificationBean.setNotificationType(AppConstants.STUDY);
@@ -221,9 +220,10 @@ public class StudiesServicesImpl implements StudiesServices {
 
   private PushNotificationResponse sendGatewaylevelNotification(
       Map<String, JSONArray> allDeviceTokens,
-      Map<Object, AppInfoDetailsBO> appInfobyAppCustomId,
+      Map<Object, AppEntity> appInfobyAppCustomId,
       NotificationBean notificationBean)
       throws IOException {
+
     notificationBean.setNotificationType(AppConstants.GATEWAY);
     if (allDeviceTokens.get(AppConstants.DEVICE_ANDROID) != null
         && allDeviceTokens.get(AppConstants.DEVICE_ANDROID).length() != 0) {
@@ -239,7 +239,8 @@ public class StudiesServicesImpl implements StudiesServices {
   }
 
   public PushNotificationResponse pushFCMNotification(
-      NotificationBean notification, AppInfoDetailsBO appPropertiesDetails) throws IOException {
+      NotificationBean notification, AppEntity appPropertiesDetails) throws IOException {
+
     String authKey = "";
     logger.info("StudiesServicesImpl - pushFCMNotification() : starts");
 
@@ -293,8 +294,9 @@ public class StudiesServicesImpl implements StudiesServices {
     return new PushNotificationResponse(null, HttpStatus.OK.value(), "SUCCESS");
   }
 
-  public void pushNotification(
-      NotificationBean notificationBean, AppInfoDetailsBO appPropertiesDetails) throws IOException {
+  public void pushNotification(NotificationBean notificationBean, AppEntity appPropertiesDetails)
+      throws IOException {
+
     logger.info("StudiesServicesImpl - pushNotification() : starts");
     String certificatePassword = "";
     String iosNotificationType = applicationPropertyConfiguration.getIosPushNotificationType();
