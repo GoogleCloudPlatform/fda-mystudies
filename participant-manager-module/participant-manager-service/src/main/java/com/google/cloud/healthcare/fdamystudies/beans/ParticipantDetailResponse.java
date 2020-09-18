@@ -20,8 +20,14 @@ public class ParticipantDetailResponse extends BaseResponse {
 
   private ParticipantDetail participantDetails;
 
-  public ParticipantDetailResponse(MessageCode messageCode, ParticipantDetail participantDetails) {
+  private long totalConsentHistoryCount;
+
+  public ParticipantDetailResponse(
+      MessageCode messageCode,
+      ParticipantDetail participantDetails,
+      long totalConsentHistoryCount) {
     super(messageCode);
     this.participantDetails = participantDetails;
+    this.totalConsentHistoryCount = totalConsentHistoryCount;
   }
 }

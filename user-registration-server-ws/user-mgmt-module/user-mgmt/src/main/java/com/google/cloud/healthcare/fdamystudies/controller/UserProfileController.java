@@ -50,7 +50,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -69,12 +68,6 @@ public class UserProfileController {
 
   @Value("${email.code.expire_time}")
   private long expireTime;
-
-  @RequestMapping(value = "/ping")
-  public String ping() {
-    logger.info(" UserProfileController - ping()  ");
-    return "Mystudies UserRegistration Webservice User Management Bundle Started !!!";
-  }
 
   @GetMapping(value = "/userProfile", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUserProfile(

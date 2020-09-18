@@ -117,6 +117,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -562,7 +565,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional(readOnly = true)
   public ParticipantDetailResponse getParticipantDetails(
-      String participantRegistrySiteId, String userId) {
+      String participantRegistrySiteId, String userId, int page, int limit) {
     logger.entry("begin getParticipantDetails()");
 
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
@@ -578,6 +581,7 @@ public class SiteServiceImpl implements SiteService {
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantsEnrollment(participantRegistrySiteId);
 
+    ParticipantDetailResponse participantDetailResponse = new ParticipantDetailResponse();
     if (CollectionUtils.isEmpty(participantsEnrollments)) {
       Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
       participantDetail.getEnrollments().add(enrollment);
@@ -589,12 +593,18 @@ public class SiteServiceImpl implements SiteService {
               .map(ParticipantStudyEntity::getId)
               .collect(Collectors.toList());
 
-      List<StudyConsentEntity> studyConsents =
-          studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+      Page<StudyConsentEntity> consentHistoryPage =
+          studyConsentRepository.findByParticipantRegistrySiteId(
+              participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
+      List<StudyConsentEntity> studyConsents = consentHistoryPage.getContent();
 
       List<ConsentHistory> consentHistories =
           studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
       participantDetail.getConsentHistory().addAll(consentHistories);
+
+      Long participantConsentCount =
+          studyConsentRepository.countByParticipantRegistrySiteId(participantStudyIds);
+      participantDetailResponse.setTotalConsentHistoryCount(participantConsentCount);
     }
 
     logger.exit(
@@ -604,7 +614,9 @@ public class SiteServiceImpl implements SiteService {
             participantDetail.getConsentHistory().size()));
 
     return new ParticipantDetailResponse(
-        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS, participantDetail);
+        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS,
+        participantDetail,
+        participantDetailResponse.getTotalConsentHistoryCount());
   }
 
   private ErrorCode validateParticipantDetailsRequest(
@@ -735,10 +747,10 @@ public class SiteServiceImpl implements SiteService {
     templateArgs.put("study name", siteEntity.getStudy().getName());
     templateArgs.put("org name", appPropertyConfig.getOrgName());
     templateArgs.put("enrolment token", participantRegistrySiteEntity.getEnrollmentToken());
-    templateArgs.put("contact email address", appPropertyConfig.getFromEmailAddress());
+    templateArgs.put("contact email address", appPropertyConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
-            appPropertyConfig.getFromEmailAddress(),
+            appPropertyConfig.getFromEmail(),
             new String[] {participantRegistrySiteEntity.getEmail()},
             null,
             null,
