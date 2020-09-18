@@ -48,9 +48,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +57,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class UserRegistrationControllerTest extends BaseMockIT {
 
   private static final String REGISTER_PATH = "/myStudiesUserMgmtWS/register";
