@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.AuthInfoBODao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class AuthInfoBOServiceImpl implements AuthInfoBOService {
   @Autowired AuthInfoBODao authInfoDao;
 
   @Override
-  public AuthInfoEntity save(AuthInfoEntity authInfo) throws SystemException {
+  public AuthInfoEntity save(AuthInfoEntity authInfo) {
     logger.info("AuthInfoBOServiceImpl save() - starts");
     AuthInfoEntity dbResponse = null;
     if (authInfo != null) {

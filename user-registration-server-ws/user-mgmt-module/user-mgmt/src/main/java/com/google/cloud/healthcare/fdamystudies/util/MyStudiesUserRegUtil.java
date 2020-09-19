@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -254,18 +253,14 @@ public class MyStudiesUserRegUtil {
     return emailContent;
   }
 
-  public static boolean isValidEmailId(String emailId) throws SystemException {
+  public static boolean isValidEmailId(String emailId) {
     logger.info("isValidEmailId() called");
-    try {
-      if (emailId != null) {
-        return emailId.matches("([A-Za-z0-9-_.]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
-      } else {
-        logger.info("invalid emailId formate");
-        return false;
-      }
-    } catch (Exception e) {
-      logger.error("System Exception Found");
-      throw new SystemException();
+
+    if (emailId != null) {
+      return emailId.matches("([A-Za-z0-9-_.]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
+    } else {
+      logger.info("invalid emailId format");
+      return false;
     }
   }
 

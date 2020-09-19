@@ -8,10 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +22,14 @@ public class UserAppDetailsDaoImpl implements UserAppDetailsDao {
   @Autowired private UserAppDetailsRepository userAppDetailsRepository;
 
   @Override
-  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) throws SystemException {
+  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) {
     logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - starts");
     if (userAppDetails != null) {
-      UserAppDetailsEntity dbResponse = null;
-      try {
-        dbResponse = userAppDetailsRepository.save(userAppDetails);
-        logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - ends");
-        return dbResponse;
-      } catch (Exception e) {
-        logger.error("UserAppDetailsDaoImpl loadEmailCodeByUserId(): ", e);
-        throw new SystemException();
-      }
-    } else return null;
+
+      UserAppDetailsEntity dbResponse = userAppDetailsRepository.save(userAppDetails);
+      logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - ends");
+      return dbResponse;
+    }
+    return null;
   }
 }

@@ -12,12 +12,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 
 public interface UserSupportService {
 
-  public boolean feedback(String subject, String body, AuditLogEventRequest auditRequest);
+  public boolean feedback(String subject, String body, AuditLogEventRequest auditRequest)
+      throws Exception;
 
   public boolean contactUsDetails(
       String subject,
       String body,
       String firstName,
       String email,
-      AuditLogEventRequest auditRequest);
+      AuditLogEventRequest auditRequest)
+      throws Exception;
 }
