@@ -8,19 +8,16 @@
 
 package com.harvard.webservicemodule.apihelper;
 
+import com.harvard.utils.Logger;
+
 public class ApiCallSyncronizer {
   public void doWait(long l) {
     synchronized (this) {
       try {
         this.wait(l);
       } catch (InterruptedException e) {
+        Logger.log(e);
       }
-    }
-  }
-
-  public void doNotify() {
-    synchronized (this) {
-      this.notify();
     }
   }
 
@@ -29,7 +26,14 @@ public class ApiCallSyncronizer {
       try {
         this.wait();
       } catch (InterruptedException e) {
+        Logger.log(e);
       }
+    }
+  }
+
+  public void doNotify() {
+    synchronized (this) {
+      this.notify();
     }
   }
 }

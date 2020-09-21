@@ -8,21 +8,29 @@
 
 package com.harvard.webservicemodule.apihelper;
 
+import static org.junit.Assert.assertNotNull;
+
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.usermodule.webservicemodel.ForgotPasswordData;
 import com.harvard.utils.Urls;
+import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import java.util.HashMap;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class ApiCallTest {
   private ApiCallSyncronizer async = null;
+  private static final String SERVER_TYPE_WCP = "WCP";
+  private static final String SERVER_TYPE_AUTH_SERVER = "AuthServer";
+  private static final int RESULT_CODE = 100;
+  private static final String PARAMS_EMAIL_KEY = "email";
+  private static final String PARAMS_EMAIL_VALUE = "test@grr.la";
+  private static final String PARAMS_APPID_KEY = "appId";
+  private static final String PARAMS_APPID_VALUE = "GCPMS001";
 
   @Test
   public void apiCallGetTest() {
@@ -35,7 +43,7 @@ public class ApiCallTest {
         studyListUrl.toString(),
         new HashMap<String, String>(),
         Study.class,
-        100,
+        RESULT_CODE,
         new ApiCall.OnAsyncRequestComplete() {
           @Override
           public <T> void asyncResponse(T response, int responseCode) {
@@ -51,7 +59,7 @@ public class ApiCallTest {
           }
         },
         false,
-        "WCP");
+        SERVER_TYPE_WCP);
     async.doWait();
   }
 
@@ -62,15 +70,15 @@ public class ApiCallTest {
     forgotPasswordUrl.append(Urls.FORGOT_PASSWORD);
     async = new ApiCallSyncronizer();
     HashMap<String, String> params = new HashMap<>();
-    params.put("email", "naveenr@grr.la");
-    params.put("appId", "GCPMS001");
+    params.put(PARAMS_EMAIL_KEY, PARAMS_EMAIL_VALUE);
+    params.put(PARAMS_APPID_KEY, PARAMS_APPID_VALUE);
     ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());
     apiCall.apiCallPostHashmap(
         forgotPasswordUrl.toString(),
         new HashMap<String, String>(),
         ForgotPasswordData.class,
         params,
-        100,
+        RESULT_CODE,
         new ApiCall.OnAsyncRequestComplete() {
           @Override
           public <T> void asyncResponse(T response, int responseCode) {
@@ -84,7 +92,7 @@ public class ApiCallTest {
           }
         },
         false,
-        "AuthServer");
+        SERVER_TYPE_AUTH_SERVER);
     async.doWait();
   }
 
@@ -96,8 +104,8 @@ public class ApiCallTest {
     async = new ApiCallSyncronizer();
     JSONObject params = new JSONObject();
     try {
-      params.put("email", "naveenr@grr.la");
-      params.put("appId", "GCPMS001");
+      params.put(PARAMS_EMAIL_KEY, PARAMS_EMAIL_VALUE);
+      params.put(PARAMS_APPID_KEY, PARAMS_APPID_VALUE);
     } catch (JSONException e) {
       e.printStackTrace();
     }
@@ -107,7 +115,7 @@ public class ApiCallTest {
         new HashMap<String, String>(),
         ForgotPasswordData.class,
         params,
-        100,
+        RESULT_CODE,
         new ApiCall.OnAsyncRequestComplete() {
           @Override
           public <T> void asyncResponse(T response, int responseCode) {
@@ -121,7 +129,7 @@ public class ApiCallTest {
           }
         },
         false,
-        "AuthServer");
+        SERVER_TYPE_AUTH_SERVER);
     async.doWait();
   }
 }
