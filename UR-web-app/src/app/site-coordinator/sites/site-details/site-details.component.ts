@@ -12,6 +12,7 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {OnboardingStatus} from 'src/app/shared/enums';
+import {SearchService} from 'src/app/shared/search.service';
 @Component({
   selector: 'app-site-details',
   templateUrl: './site-details.component.html',
@@ -21,6 +22,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   query$ = new BehaviorSubject('');
   siteParticipants$: Observable<SiteParticipants> = of();
+  siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
   sendResend = '';
   enableDisable = '';
@@ -36,6 +38,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
     private readonly toastr: ToastrService,
     private readonly modalService: BsModalService,
     public modalRef: BsModalRef,
+    private readonly sharedService: SearchService,
   ) {
     super();
   }
@@ -43,6 +46,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
     this.modalRef = this.modalService.show(templateRef);
   }
   ngOnInit(): void {
+    this.sharedService.updateSearchPlaceHolder('Search Participant Email');
     this.subs.add(
       this.route.params.subscribe((params) => {
         if (params.siteId) {
@@ -61,11 +65,12 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.query$,
     ).pipe(
       map(([siteDetails, query]) => {
-        siteDetails.participantRegistryDetail.registryParticipants = siteDetails.participantRegistryDetail.registryParticipants.filter(
+        this.siteDetailsBackup = {...siteDetails};
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),
         );
-        return siteDetails;
+        return this.siteDetailsBackup;
       }),
     );
   }
