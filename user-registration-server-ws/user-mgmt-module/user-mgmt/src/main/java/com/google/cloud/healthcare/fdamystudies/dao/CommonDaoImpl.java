@@ -10,11 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.ArrayList;
@@ -48,42 +48,43 @@ public class CommonDaoImpl implements CommonDao {
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
-  public String validatedUserAppDetailsByAllApi(String userId, String email, int appId) {
+  public String validatedUserAppDetailsByAllApi(String userId, String email, String appId) {
+
     logger.info("CommonDaoImpl validatedUserAppDetailsByAllApi() - Starts ");
     Transaction transaction = null;
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<UserDetailsBO> userDetailsBoCriteria = null;
-    CriteriaQuery<UserAppDetailsBO> userAppDetailsBoCriteria = null;
-    Root<UserDetailsBO> userDetailsBoRoot = null;
-    Root<UserAppDetailsBO> userAppDetailsBoRoot = null;
+    CriteriaQuery<UserDetailsEntity> userDetailsBoCriteria = null;
+    CriteriaQuery<UserAppDetailsEntity> userAppDetailsBoCriteria = null;
+    Root<UserDetailsEntity> userDetailsBoRoot = null;
+    Root<UserAppDetailsEntity> userAppDetailsBoRoot = null;
     Predicate[] predicates = new Predicate[2];
     Predicate[] userAppDetailsPredicates = new Predicate[2];
-    List<UserDetailsBO> userDetailsBoList = null;
+    List<UserDetailsEntity> userDetailsBoList = null;
     String message = "";
-    List<UserAppDetailsBO> userAppDetailsList = null;
-    UserDetailsBO userDetailsBO = null;
-    Integer userDetailsId = 0;
+    List<UserAppDetailsEntity> userAppDetailsList = null;
+    UserDetailsEntity userDetails = null;
+    String userDetailsId = String.valueOf(0);
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       transaction = session.beginTransaction();
       criteriaBuilder = session.getCriteriaBuilder();
 
       if (!StringUtils.isEmpty(email)) {
-        userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsBO.class);
-        userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsBO.class);
+        userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
+        userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
         predicates[0] = criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.EMAIL), email);
         predicates[1] =
             criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.APPLICATION_ID), appId);
         userDetailsBoCriteria.select(userDetailsBoRoot).where(predicates);
         userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
         if (!userDetailsBoList.isEmpty()) {
-          userDetailsBO = userDetailsBoList.get(0);
-          userDetailsId = userDetailsBO.getUserDetailsId();
+          userDetails = userDetailsBoList.get(0);
+          userDetailsId = userDetails.getId();
         }
       }
 
       if (!StringUtils.isEmpty(userId)) {
-        userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsBO.class);
-        userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsBO.class);
+        userDetailsBoCriteria = criteriaBuilder.createQuery(UserDetailsEntity.class);
+        userDetailsBoRoot = userDetailsBoCriteria.from(UserDetailsEntity.class);
         predicates[0] =
             criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
         predicates[1] =
@@ -91,10 +92,10 @@ public class CommonDaoImpl implements CommonDao {
         userDetailsBoCriteria.select(userDetailsBoRoot).where(predicates);
         userDetailsBoList = session.createQuery(userDetailsBoCriteria).getResultList();
         if (!userDetailsBoList.isEmpty()) {
-          userDetailsBO = userDetailsBoList.get(0);
-          userDetailsId = userDetailsBO.getUserDetailsId();
-          userAppDetailsBoCriteria = criteriaBuilder.createQuery(UserAppDetailsBO.class);
-          userAppDetailsBoRoot = userAppDetailsBoCriteria.from(UserAppDetailsBO.class);
+          userDetails = userDetailsBoList.get(0);
+          userDetailsId = userDetails.getId();
+          userAppDetailsBoCriteria = criteriaBuilder.createQuery(UserAppDetailsEntity.class);
+          userAppDetailsBoRoot = userAppDetailsBoCriteria.from(UserAppDetailsEntity.class);
           userAppDetailsPredicates[0] =
               criteriaBuilder.equal(userAppDetailsBoRoot.get("userDetailsId"), userDetailsId);
           userAppDetailsPredicates[1] =
@@ -127,27 +128,28 @@ public class CommonDaoImpl implements CommonDao {
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId) {
     logger.info("CommonDaoImpl validatedUserAppDetailsByAllApi() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<AppInfoDetailsBO> appDetailsBoCriteria = null;
-    Root<AppInfoDetailsBO> appDetailsBoRoot = null;
+    CriteriaQuery<AppEntity> appDetailsBoCriteria = null;
+    Root<AppEntity> appDetailsBoRoot = null;
     Predicate[] appDetailsPredicates = new Predicate[1];
-    List<AppInfoDetailsBO> appDetailsList = null;
-    AppInfoDetailsBO appDetailsBO = null;
+    List<AppEntity> appDetailsList = null;
+    AppEntity appDetails = null;
 
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    int appInfoId = 0;
+    String appInfoId = String.valueOf(0);
+    String orgInfoId = String.valueOf(0);
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
 
       if (!StringUtils.isEmpty(appId)) {
-        appDetailsBoCriteria = criteriaBuilder.createQuery(AppInfoDetailsBO.class);
-        appDetailsBoRoot = appDetailsBoCriteria.from(AppInfoDetailsBO.class);
+        appDetailsBoCriteria = criteriaBuilder.createQuery(AppEntity.class);
+        appDetailsBoRoot = appDetailsBoCriteria.from(AppEntity.class);
         appDetailsPredicates[0] = criteriaBuilder.equal(appDetailsBoRoot.get("appId"), appId);
         appDetailsBoCriteria.select(appDetailsBoRoot).where(appDetailsPredicates);
         appDetailsList = session.createQuery(appDetailsBoCriteria).getResultList();
         if (!appDetailsList.isEmpty()) {
-          appDetailsBO = appDetailsList.get(0);
-          appInfoId = appDetailsBO.getAppInfoId();
+          appDetails = appDetailsList.get(0);
+          appInfoId = appDetails.getAppId();
         }
       }
 
@@ -162,26 +164,26 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public Integer getUserInfoDetails(String userId) {
+  public String getUserInfoDetails(String userId) {
     logger.info("CommonDaoImpl getUserInfoDetails() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
-    Integer userDetailsId = null;
-    CriteriaQuery<UserDetailsBO> userDetailsCriteriaQuery = null;
-    Root<UserDetailsBO> userDetailsBoRoot = null;
+    String userDetailsId = null;
+    CriteriaQuery<UserDetailsEntity> userDetailsCriteriaQuery = null;
+    Root<UserDetailsEntity> userDetailsBoRoot = null;
     Predicate[] userDetailspredicates = new Predicate[1];
-    List<UserDetailsBO> userDetailsBoList = null;
-    UserDetailsBO userDetailsBO = null;
+    List<UserDetailsEntity> userDetailsBoList = null;
+    UserDetailsEntity userDetails = null;
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
-      userDetailsBoRoot = userDetailsCriteriaQuery.from(UserDetailsBO.class);
+      userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsEntity.class);
+      userDetailsBoRoot = userDetailsCriteriaQuery.from(UserDetailsEntity.class);
       userDetailspredicates[0] =
           criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.KEY_USERID), userId);
       userDetailsCriteriaQuery.select(userDetailsBoRoot).where(userDetailspredicates);
       userDetailsBoList = session.createQuery(userDetailsCriteriaQuery).getResultList();
       if (!userDetailsBoList.isEmpty()) {
-        userDetailsBO = userDetailsBoList.get(0);
-        userDetailsId = userDetailsBO.getUserDetailsId();
+        userDetails = userDetailsBoList.get(0);
+        userDetailsId = userDetails.getId();
       }
     } catch (Exception e) {
       logger.error("CommonDaoImpl getUserInfoDetails() - error ", e);
@@ -191,9 +193,9 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public List<AppInfoDetailsBO> getAppInfoSet(HashSet<String> appIds) {
+  public List<AppEntity> getAppInfoSet(HashSet<String> appIds) {
     logger.info("CommonDaoImpl getAppInfoIds() - start ");
-    List<AppInfoDetailsBO> appInfos = new ArrayList();
+    List<AppEntity> appInfos = new ArrayList();
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       appInfos =
           session
@@ -210,13 +212,13 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public List<StudyInfoBO> getStudyInfoSet(HashSet<String> studyIdSet) {
+  public List<StudyEntity> getStudyInfoSet(HashSet<String> studyIdSet) {
     logger.info("CommonDaoImpl getStudyInfoIds() - starts ");
-    List<StudyInfoBO> studyInfos = new ArrayList();
+    List<StudyEntity> studyInfos = new ArrayList();
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       studyInfos =
           session
-              .createQuery("From StudyInfoBO where customId in :studyIdSet")
+              .createQuery("From StudyEntity where customId in :studyIdSet")
               .setParameterList("studyIdSet", studyIdSet)
               .getResultList();
 
@@ -230,7 +232,7 @@ public class CommonDaoImpl implements CommonDao {
 
   @Override
   public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
-      List<StudyInfoBO> studyInfos) {
+      List<StudyEntity> studyInfos) {
     logger.info("CommonDaoImpl.getStudyLevelDeviceToken() - starts");
 
     Map<Integer, Map<String, JSONArray>> studyDeviceTokenMap = new HashMap<>();
@@ -238,7 +240,7 @@ public class CommonDaoImpl implements CommonDao {
 
       if (studyInfos != null && !studyInfos.isEmpty()) {
 
-        List<Integer> studyInfoIds =
+        List<String> studyInfoIds =
             studyInfos.stream().map(a -> a.getId()).distinct().collect(Collectors.toList());
         List<Object[]> rs =
             session
@@ -295,39 +297,39 @@ public class CommonDaoImpl implements CommonDao {
     return studyDeviceTokenMap;
   }
 
-  public String getParticicpantId(Integer id, String customStudyId) {
+  public String getParticipantId(String id, String customStudyId) {
     logger.info("CommonDaoImpl getParticicpantId() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
     String participantId = null;
-    CriteriaQuery<StudyInfoBO> criteriaQuery = null;
-    Root<StudyInfoBO> root = null;
+    CriteriaQuery<StudyEntity> criteriaQuery = null;
+    Root<StudyEntity> root = null;
     Predicate[] predicates = new Predicate[1];
-    List<StudyInfoBO> list = null;
-    StudyInfoBO studyInfo = null;
+    List<StudyEntity> list = null;
+    StudyEntity studyInfo = null;
 
-    CriteriaQuery<ParticipantStudiesBO> criteriaQuery1 = null;
-    Root<ParticipantStudiesBO> root1 = null;
+    CriteriaQuery<ParticipantStudyEntity> criteriaQuery1 = null;
+    Root<ParticipantStudyEntity> root1 = null;
     Predicate[] predicates1 = new Predicate[2];
-    List<ParticipantStudiesBO> list1 = null;
-    ParticipantStudiesBO participantStudyBo = null;
+    List<ParticipantStudyEntity> list1 = null;
+    ParticipantStudyEntity participantStudyBo = null;
 
     try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
       criteriaBuilder = session.getCriteriaBuilder();
-      criteriaQuery = criteriaBuilder.createQuery(StudyInfoBO.class);
-      root = criteriaQuery.from(StudyInfoBO.class);
+      criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
+      root = criteriaQuery.from(StudyEntity.class);
       predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
       criteriaQuery.select(root).where(predicates);
       list = session.createQuery(criteriaQuery).getResultList();
       if (!list.isEmpty()) {
         studyInfo = list.get(0);
-        UserDetailsBO userDetails = session.get(UserDetailsBO.class, id);
-        criteriaQuery1 = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
-        root1 = criteriaQuery1.from(ParticipantStudiesBO.class);
-        predicates1[0] = criteriaBuilder.equal(root1.get("studyInfo"), studyInfo);
+        UserDetailsEntity userDetails = session.get(UserDetailsEntity.class, id);
+        criteriaQuery1 = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
+        root1 = criteriaQuery1.from(ParticipantStudyEntity.class);
+        predicates1[0] = criteriaBuilder.equal(root1.get("study"), studyInfo);
         predicates1[1] = criteriaBuilder.equal(root1.get("userDetails"), userDetails);
         criteriaQuery1.select(root1).where(predicates1);
         list1 = session.createQuery(criteriaQuery1).getResultList();
-        if (!list.isEmpty()) {
+        if (!list1.isEmpty()) {
           participantStudyBo = list1.get(0);
           participantId = participantStudyBo.getParticipantId();
         }

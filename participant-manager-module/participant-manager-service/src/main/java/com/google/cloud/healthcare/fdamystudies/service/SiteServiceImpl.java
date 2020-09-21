@@ -579,7 +579,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional(readOnly = true)
   public ParticipantDetailResponse getParticipantDetails(
-      String participantRegistrySiteId, String userId) {
+      String participantRegistrySiteId, String userId, int page, int limit) {
     logger.entry("begin getParticipantDetails()");
 
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
@@ -595,6 +595,7 @@ public class SiteServiceImpl implements SiteService {
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantsEnrollment(participantRegistrySiteId);
 
+    ParticipantDetailResponse participantDetailResponse = new ParticipantDetailResponse();
     if (CollectionUtils.isEmpty(participantsEnrollments)) {
       Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
       participantDetail.getEnrollments().add(enrollment);
@@ -606,12 +607,18 @@ public class SiteServiceImpl implements SiteService {
               .map(ParticipantStudyEntity::getId)
               .collect(Collectors.toList());
 
-      List<StudyConsentEntity> studyConsents =
-          studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+      Page<StudyConsentEntity> consentHistoryPage =
+          studyConsentRepository.findByParticipantRegistrySiteId(
+              participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
+      List<StudyConsentEntity> studyConsents = consentHistoryPage.getContent();
 
       List<ConsentHistory> consentHistories =
           studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
       participantDetail.getConsentHistory().addAll(consentHistories);
+
+      Long participantConsentCount =
+          studyConsentRepository.countByParticipantRegistrySiteId(participantStudyIds);
+      participantDetailResponse.setTotalConsentHistoryCount(participantConsentCount);
     }
 
     logger.exit(
@@ -621,7 +628,9 @@ public class SiteServiceImpl implements SiteService {
             participantDetail.getConsentHistory().size()));
 
     return new ParticipantDetailResponse(
-        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS, participantDetail);
+        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS,
+        participantDetail,
+        participantDetailResponse.getTotalConsentHistoryCount());
   }
 
   private ErrorCode validateParticipantDetailsRequest(

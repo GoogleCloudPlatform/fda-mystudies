@@ -9,10 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidEmailCodeException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidUserIdException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil.ErrorCodes;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -26,13 +22,8 @@ public final class ResponseUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ResponseUtil.class);
 
   public static ResponseBean prepareBadRequestResponse(
-      HttpServletResponse response, String errorType) {
-    return prepareBadRequestResponse(response, null, errorType);
-  }
-
-  public static ResponseBean prepareBadRequestResponse(
-      HttpServletResponse response, Exception e, String... errorTypes) {
-    String errorType = e != null ? mapExceptionToErrorType(e) : errorTypes[0];
+      HttpServletResponse response, String... errorTypes) {
+    String errorType = errorTypes[0];
     ResponseBean responseBean = new ResponseBean();
     // Default error code for missing required parameter and InvalidRequestException
     ErrorCodes errorMsg = MyStudiesUserRegUtil.ErrorCodes.INVALID_INPUT_ERROR_MSG;
@@ -85,18 +76,5 @@ public final class ResponseUtil {
     responseBean.setCode(HttpStatus.OK.value());
     responseBean.setMessage(ErrorCode.EC_200.errorMessage());
     return responseBean;
-  }
-
-  private static String mapExceptionToErrorType(Exception e) {
-    if (e instanceof InvalidRequestException) {
-      return AppConstants.INVALID_REQUEST_EXCEPTION;
-    } else if (e instanceof InvalidEmailCodeException) {
-      return AppConstants.INVALID_EMAIL_CODE_EXCEPTION;
-    } else if (e instanceof InvalidUserIdException) {
-      return AppConstants.INVALID_USERID_EXCEPTION;
-    } else if (e instanceof SystemException) {
-      return AppConstants.SYSTEM_EXCEPTION;
-    }
-    return AppConstants.MISSING_REQUIRED_PARAMETER;
   }
 }

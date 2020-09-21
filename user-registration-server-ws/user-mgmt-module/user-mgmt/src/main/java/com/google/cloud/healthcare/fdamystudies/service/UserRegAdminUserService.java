@@ -8,10 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserRegAdminUser;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 
 public interface UserRegAdminUserService {
 
-  UserRegAdminUser save(UserRegAdminUser adminUser) throws SystemException;
+  UserRegAdminEntity save(UserRegAdminEntity adminUser);
 }
