@@ -22,7 +22,7 @@ public interface UserProfileManagementDao {
   public ErrorBean updateUserProfile(
       String userId, UserDetailsEntity userDetail, AuthInfoEntity authInfo);
 
-  public AuthInfoEntity getAuthInfo(String id);
+  public AuthInfoEntity getAuthInfo(UserDetailsEntity userDetailsEntity);
 
   public UserDetailsEntity getParticipantDetailsByEmail(String email, AppEntity app);
 

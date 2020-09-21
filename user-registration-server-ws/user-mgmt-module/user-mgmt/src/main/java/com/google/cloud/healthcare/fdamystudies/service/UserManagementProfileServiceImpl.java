@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
@@ -75,6 +76,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
 
   @Override
+  @Transactional(readOnly = true)
   public UserProfileRespBean getParticipantInfoDetails(String userId, Integer appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
     UserDetailsEntity userDetails = null;
@@ -100,6 +102,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional()
   public ErrorBean updateUserProfile(String userId, UserRequestBean user) {
     logger.info("UserManagementProfileServiceImpl updateUserProfile() - Starts ");
     ErrorBean errorBean = null;
@@ -112,7 +115,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         if (user.getSettings().getRemoteNotifications() != null) {
           userDetails.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
 
-          authInfo = userProfileManagementDao.getAuthInfo(userDetails.getId());
+          authInfo = userProfileManagementDao.getAuthInfo(userDetails);
           if (authInfo != null) {
             authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
 
@@ -161,6 +164,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDetailsEntity getParticipantDetailsByEmail(String email, String appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
     UserDetailsEntity userDetails = null;
@@ -175,6 +179,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public LoginAttemptsEntity getLoginAttempts(String email) {
     logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Starts ");
     LoginAttemptsEntity loginAttempts = null;
@@ -186,6 +191,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public void resetLoginAttempts(String email) {
     logger.info("UserManagementProfileServiceImpl resetLoginAttempts() - Started ");
 
@@ -195,6 +201,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDetailsEntity getParticipantDetails(String id) {
     logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Starts");
 
@@ -205,6 +212,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional()
   public UserDetailsEntity saveParticipant(UserDetailsEntity participant) {
     logger.info("UserManagementProfileServiceImpl - saveParticipant() - Starts");
 
@@ -215,6 +223,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional()
   public String deactivateAccount(
       String userId, DeactivateAcctBean deactivateAcctBean, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
@@ -303,6 +312,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  @Transactional()
   public int resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId) throws Exception {
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");

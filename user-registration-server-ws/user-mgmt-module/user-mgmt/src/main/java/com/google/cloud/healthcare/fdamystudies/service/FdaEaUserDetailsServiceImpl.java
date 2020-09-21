@@ -19,12 +19,12 @@ import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
 import java.time.Instant;
-import javax.transaction.Transactional;
 import org.apache.commons.lang3.SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
@@ -63,6 +63,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDetailsEntity loadUserDetailsByUserId(String userId) {
     // call dao layer to get the user details using userId
     logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - starts");
@@ -75,6 +76,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public boolean verifyCode(String code, UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl verifyCode() - starts");
     boolean result = code == null || participantDetails == null;
@@ -91,6 +93,7 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
   }
 
   @Override
+  @Transactional()
   public String updateStatus(UserDetailsEntity participantDetails) {
     logger.info("FdaEaUserDetailsServiceImpl updateStatus() - starts");
 
