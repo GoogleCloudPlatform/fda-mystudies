@@ -34,10 +34,9 @@ export class AccountService {
   updateUserProfile(
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
-    this.authUserId = this.authService.getAuthUserId();
     return this.http.put<ApiResponse>(
       `${environment.baseUrl}/users/${encodeURIComponent(
-        this.authUserId,
+        this.authService.getAuthUserId(),
       )}/profile`,
       profileToBeUpdated,
     );
@@ -46,7 +45,7 @@ export class AccountService {
   logout(): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(
       `${environment.authServerUrl}/users/${encodeURIComponent(
-        this.authUserId,
+        this.authService.getAuthUserId(),
       )}/logout`,
       '',
     );

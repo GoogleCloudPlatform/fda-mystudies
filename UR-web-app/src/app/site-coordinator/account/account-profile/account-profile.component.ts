@@ -53,7 +53,7 @@ export class AccountProfileComponent
   }
 
   getProfileDetails(): void {
-    this.accountService.fetchProfile().subscribe(
+    this.accountService.fetchUserProfile().subscribe(
       (data) => {
         this.profileForm.patchValue(data);
       },
