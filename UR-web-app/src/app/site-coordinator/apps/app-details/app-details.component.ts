@@ -14,8 +14,7 @@ import {SearchService} from 'src/app/shared/search.service';
   templateUrl: './app-details.component.html',
   styleUrls: ['./app-details.component.scss'],
 })
-export class AppDetailsComponent
-  extends UnsubscribeOnDestroyAdapter
+export class AppDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   appId = '';
   query$ = new BehaviorSubject('');

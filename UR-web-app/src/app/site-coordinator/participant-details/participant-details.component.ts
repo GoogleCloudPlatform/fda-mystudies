@@ -14,8 +14,7 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
   templateUrl: './participant-details.component.html',
   styleUrls: ['./participant-details.component.scss'],
 })
-export class ParticipantDetailsComponent
-  extends UnsubscribeOnDestroyAdapter
+export class ParticipantDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   participantId = '';
   sendResend = '';

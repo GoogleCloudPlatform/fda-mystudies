@@ -10,8 +10,7 @@ import {Permission} from 'src/app/shared/permission-enums';
   selector: 'user-details',
   templateUrl: './user-details.component.html',
 })
-export class UserDetailsComponent
-  extends UnsubscribeOnDestroyAdapter
+export class UserDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   adminId = '';
   user = {} as User;

@@ -21,8 +21,7 @@ import {SearchService} from 'src/app/shared/search.service';
   templateUrl: './study-details.component.html',
   styleUrls: ['./study-details.component.scss'],
 })
-export class StudyDetailsComponent
-  extends UnsubscribeOnDestroyAdapter
+export class StudyDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   studyId = '';
   query$ = new BehaviorSubject('');
