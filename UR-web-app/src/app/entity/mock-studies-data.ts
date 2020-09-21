@@ -171,6 +171,7 @@ export const expectedStudiesDetails = {
       E: 1,
       I: 12,
       N: 21,
+      /* eslint-disable @typescript-eslint/naming-convention */
     },
   },
 

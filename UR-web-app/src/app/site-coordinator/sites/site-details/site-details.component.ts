@@ -18,6 +18,7 @@ import {SearchService} from 'src/app/shared/search.service';
   templateUrl: './site-details.component.html',
   styleUrls: ['./site-details.component.scss'],
 })
+const MAXIMUM_USER_COUNT = 10;
 export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   query$ = new BehaviorSubject('');
@@ -72,7 +73,6 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),
         );
-        console.log(this.siteDetailsBackup);
         return this.siteDetailsBackup;
       }),
     );
@@ -118,7 +118,6 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
     );
   }
   sendInvitation(): void {
-    const MAXIMUM_USER_COUNT = 10;
     if (this.userIds.length > 0) {
       if (this.userIds.length > MAXIMUM_USER_COUNT) {
         this.toastr.error('Please select less than 10 participants');
@@ -145,7 +144,6 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   }
 
   toggleInvitation(): void {
-    const MAXIMUM_USER_COUNT = 10;
     if (this.userIds.length > 0) {
       if (this.userIds.length > MAXIMUM_USER_COUNT) {
         this.toastr.error('Please select less than 10 participants');
