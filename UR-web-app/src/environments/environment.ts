@@ -10,8 +10,6 @@ export const environment = {
   redirectUrl: 'https://34.69.210.52/qa/oauth-scim-service/login',
   clientId: 'oauth-scim-client-id',
   appVersion: 'v0.1',
-
-  server: processEnv.env.SERVER,
 };
 
 /*

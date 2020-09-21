@@ -2,7 +2,6 @@
 #Installing all the dependencies and creating Dist file or building angular application  
 FROM node:latest AS compile-image
 WORKDIR /app
-ENV SERVER=bennettnotes.com
 COPY . ./
 RUN npm install
 RUN npm install -g @angular/cli

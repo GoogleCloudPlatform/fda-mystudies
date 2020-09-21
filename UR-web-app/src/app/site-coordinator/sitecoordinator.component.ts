@@ -3,7 +3,6 @@ import {SearchService} from '../shared/search.service';
 import {SearchBar} from '../shared/search-bar';
 import {StateService} from '../service/state.service';
 import {Profile} from './account/shared/profile.model';
-import {environment} from '@environment';
 
 @Component({
   selector: 'site-coordinator',
@@ -17,16 +16,13 @@ export class SiteCoordinatorComponent implements OnInit {
   searchBar: SearchBar | undefined;
   user = {} as Profile;
   userName = '';
-  serverEnvironment='';
+  serverEnvironment = '';
   constructor(
     private readonly searchService: SearchService,
     private readonly userState: StateService,
   ) {}
 
   ngOnInit(): void {
-    console.log("inside site coordinator")
-    console.log(environment.server)
-    this.serverEnvironment=environment.server;
     const userObject = sessionStorage.getItem('user');
     if (userObject) this.user = JSON.parse(userObject) as Profile;
 

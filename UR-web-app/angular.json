@@ -15,11 +15,8 @@
       },
       "architect": {
         "build": {
-         "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "customWebpackConfig":{
-              "path": "./extra-webpack.config.js"
-            },
             "aot": true,
             "outputPath": "dist/userRegistrationWeb",
             "index": "src/index.html",
@@ -76,7 +73,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-builders/dev-server:generic",
+          "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "userRegistrationWeb:build"
           },
