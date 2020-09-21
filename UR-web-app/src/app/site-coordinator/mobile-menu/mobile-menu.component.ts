@@ -1,4 +1,5 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import {UserService} from 'src/app/service/user.service';
 import {Profile} from '../account/shared/profile.model';
 
 @Component({
@@ -14,10 +15,9 @@ export class MobileMenuComponent implements OnInit {
   @Output() keyDown: EventEmitter<KeyboardEvent> = new EventEmitter();
   user = {} as Profile;
   showSearchOnClick = false;
-
+  constructor(private readonly userService: UserService) {}
   ngOnInit(): void {
-    const userObject = sessionStorage.getItem('user');
-    if (userObject) this.user = JSON.parse(userObject) as Profile;
+    this.user = this.userService.getUserProfile();
   }
   toggleNav(): void {
     this.navIsOpen = !this.navIsOpen;
