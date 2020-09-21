@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,7 @@ public class UserRegAdminUserServiceImpl implements UserRegAdminUserService {
 
   @Override
   @Transactional()
-  public UserRegAdminEntity save(UserRegAdminEntity adminUser) throws SystemException {
+  public UserRegAdminEntity save(UserRegAdminEntity adminUser) {
 
     logger.info("UserRegAdminUserServiceImpl save() - starts");
     UserRegAdminEntity userRegAdminUser = null;

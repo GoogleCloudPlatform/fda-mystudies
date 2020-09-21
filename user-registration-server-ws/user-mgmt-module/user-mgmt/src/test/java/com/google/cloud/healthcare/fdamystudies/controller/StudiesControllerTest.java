@@ -93,8 +93,7 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.STUDY_ENROLLING,
         Constants.APP_ID_VALUE,
         Constants.APP_NAME,
-        Constants.APP_DESCRIPTION,
-        Constants.ORG_ID_VALUE);
+        Constants.APP_DESCRIPTION);
   }
 
   @Test
@@ -229,21 +228,6 @@ public class StudiesControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest());
 
     verifyTokenIntrospectRequest(3);
-
-    // without orgId
-    metadataBean = createStudyMetadataBean();
-    metadataBean.setOrgId("");
-    requestJson = getObjectMapper().writeValueAsString(metadataBean);
-    mockMvc
-        .perform(
-            post(STUDY_METADATA_PATH)
-                .content(requestJson)
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
-
-    verifyTokenIntrospectRequest(4);
   }
 
   @Test

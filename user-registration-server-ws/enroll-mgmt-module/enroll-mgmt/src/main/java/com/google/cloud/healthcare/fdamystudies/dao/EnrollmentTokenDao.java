@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import javax.validation.constraints.NotNull;
 import org.springframework.lang.Nullable;
 
@@ -26,7 +26,7 @@ public interface EnrollmentTokenDao {
   public EnrollmentResponseBean enrollParticipant(
       @NotNull String shortName,
       @Nullable String tokenValue,
-      UserDetailsBO userDetailsBO,
+      UserDetailsEntity userDetailsEntity,
       boolean isTokenRequired,
       String participantId);
 }

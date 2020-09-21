@@ -65,8 +65,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
 
-  private static final String PING_PATH = "/ping";
-
   private static final String USER_PROFILE_PATH = "/myStudiesUserMgmtWS/userProfile";
 
   private static final String UPDATE_USER_PROFILE_PATH = "/myStudiesUserMgmtWS/updateUserProfile";
@@ -94,14 +92,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertNotNull(mockMvc);
     assertNotNull(profileService);
     assertNotNull(service);
-  }
-
-  @Test
-  public void ping() throws Exception {
-    mockMvc
-        .perform(get(PING_PATH).headers(TestUtils.getCommonHeaders(Constants.USER_ID_HEADER)))
-        .andDo(print())
-        .andExpect(status().isOk());
   }
 
   @Test
@@ -239,10 +229,10 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void deactivateAccountBadRequest() throws Exception {
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.INVALID_USER_ID);
+  public void deactivateAccountIsNotFound() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
-    // invalid userId
+    // invalid userId, expect user not found error from auth server
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
     DeactivateAcctBean acctBean = new DeactivateAcctBean();
     String requestJson = getObjectMapper().writeValueAsString(acctBean);
@@ -253,7 +243,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isNotFound());
 
     verifyTokenIntrospectRequest(1);
   }
@@ -261,8 +251,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Test
   public void resendConfirmationBadRequest() throws Exception {
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // without email
     String requestJson = getLoginBean("", Constants.PASSWORD);
@@ -311,8 +300,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 Mockito.any()))
         .thenReturn(true);
 
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
 

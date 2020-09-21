@@ -31,35 +31,28 @@ public class CommonServiceImpl implements CommonService {
 
   @Override
   @Transactional(readOnly = true)
-  public String validatedUserAppDetailsByAllApi(
-      String userId, String email, String appId, String orgId) {
+  public String validatedUserAppDetailsByAllApi(String userId, String email, String appId) {
+
     logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - starts");
     String message = "";
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    try {
-      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId, orgId);
-      message =
-          commonDao.validatedUserAppDetailsByAllApi(
-              userId, email, appOrgInfoBean.getAppInfoId(), appOrgInfoBean.getOrgInfoId());
-    } catch (Exception e) {
-      logger.error(
-          "UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - error ", e);
-    }
+
+    appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId);
+    message =
+        commonDao.validatedUserAppDetailsByAllApi(userId, email, appOrgInfoBean.getAppInfoId());
+
     logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - ends");
     return message;
   }
 
   @Override
   @Transactional(readOnly = true)
-  public AppOrgInfoBean getUserAppDetailsByAllApi(
-      String userId, String emailId, String appId, String orgId) {
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String emailId, String appId) {
+
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - starts");
-    try {
-      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId, orgId);
-    } catch (Exception e) {
-      logger.error("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - error() ", e);
-    }
+
+    appOrgInfoBean = commonDao.getUserAppDetailsByAllApi(userId, appId);
 
     logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - ends");
     return appOrgInfoBean;

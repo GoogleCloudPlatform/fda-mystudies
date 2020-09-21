@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserAppDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,7 @@ public class UserAppDetailsServiceImpl implements UserAppDetailsService {
 
   @Override
   @Transactional()
-  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) throws SystemException {
-
+  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) {
     logger.info("UserAppDetailsServiceImpl save() - starts");
 
     UserAppDetailsEntity dbResponse = null;

@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.FdaEaUserDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
@@ -42,34 +41,30 @@ public class FdaEaUserDetailsServiceImpl implements FdaEaUserDetailsService {
 
   @Override
   @Transactional
-  public UserDetailsEntity saveUser(UserDetailsEntity userDetails) throws SystemException {
+  public UserDetailsEntity saveUser(UserDetailsEntity userDetails) {
     logger.info("FdaEaUserDetailsServiceImpl saveUser() - starts");
     UserDetailsEntity daoResp = null;
-    try {
-      if (userDetails != null) {
-        daoResp = userDetailsDao.saveUser(userDetails);
-        AuthInfoEntity authInfo = new AuthInfoEntity();
-        authInfo.setApp(daoResp.getApp());
-        authInfo.setUserDetails(daoResp);
-        authInfo.setCreated(Timestamp.from(Instant.now()));
-        authInfoService.save(authInfo);
-        UserAppDetailsEntity userAppDetails = new UserAppDetailsEntity();
-        userAppDetails.setApp(daoResp.getApp());
-        userAppDetails.setCreated(Timestamp.from(Instant.now()));
-        userAppDetails.setUserDetails(daoResp);
-        userAppDetailsService.save(userAppDetails);
-      }
-      logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsServiceImpl saveUser(): ", e);
-      throw new SystemException();
+    if (userDetails != null) {
+      daoResp = userDetailsDao.saveUser(userDetails);
+      AuthInfoEntity authInfo = new AuthInfoEntity();
+      authInfo.setApp(daoResp.getApp());
+      authInfo.setUserDetails(daoResp);
+      authInfo.setCreated(Timestamp.from(Instant.now()));
+      authInfoService.save(authInfo);
+      UserAppDetailsEntity userAppDetails = new UserAppDetailsEntity();
+      userAppDetails.setApp(daoResp.getApp());
+      userAppDetails.setCreated(Timestamp.from(Instant.now()));
+      userAppDetails.setUserDetails(daoResp);
+      userAppDetailsService.save(userAppDetails);
     }
+    logger.info("FdaEaUserDetailsServiceImpl saveUser() - ends");
+
     return daoResp;
   }
 
   @Override
   @Transactional(readOnly = true)
-  public UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadUserDetailsByUserId(String userId) {
     // call dao layer to get the user details using userId
     logger.info("FdaEaUserDetailsServiceImpl loadUserDetailsByUserId() - starts");
     UserDetailsEntity daoResp = null;

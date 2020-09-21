@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
@@ -31,7 +30,7 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
   @Autowired AuthInfoRepository authInfoRepository;
 
   @Override
-  public AuthInfoEntity save(AuthInfoEntity authInfo) throws SystemException {
+  public AuthInfoEntity save(AuthInfoEntity authInfo) {
     logger.info("AuthInfoBODaoImpl save() - starts");
     AuthInfoEntity dbResponse = null;
     if (authInfo != null) {
@@ -72,6 +71,7 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
         deviceMap.put(AppConstants.DEVICE_IOS, iosJsonArray);
       }
     }
+
     logger.info("AuthInfoBODaoImpl.getDeviceTokenOfAllUsers()-end ");
     return deviceMap;
   }

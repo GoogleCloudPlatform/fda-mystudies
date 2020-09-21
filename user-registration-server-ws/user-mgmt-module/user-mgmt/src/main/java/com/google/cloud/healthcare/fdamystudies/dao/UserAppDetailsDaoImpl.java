@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import org.slf4j.Logger;
@@ -23,13 +22,14 @@ public class UserAppDetailsDaoImpl implements UserAppDetailsDao {
   @Autowired private UserAppDetailsRepository userAppDetailsRepository;
 
   @Override
-  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) throws SystemException {
+  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) {
     logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - starts");
     if (userAppDetails != null) {
-      UserAppDetailsEntity dbResponse = null;
-      dbResponse = userAppDetailsRepository.save(userAppDetails);
+
+      UserAppDetailsEntity dbResponse = userAppDetailsRepository.save(userAppDetails);
       logger.info("UserAppDetailsDaoImpl loadEmailCodeByUserId() - ends");
       return dbResponse;
-    } else return null;
+    }
+    return null;
   }
 }

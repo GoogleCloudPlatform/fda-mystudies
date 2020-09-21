@@ -22,14 +22,7 @@ public final class PlaceholderReplacer {
   private static XLogger logger = XLoggerFactory.getXLogger(PlaceholderReplacer.class.getName());
 
   public static String replaceNamedPlaceholders(
-      String textWithNamedPlaceholders, Map<String, String> values) {
-    PropertyPlaceholderHelper helper;
-    if (StringUtils.contains(textWithNamedPlaceholders, "${")
-        && StringUtils.contains(textWithNamedPlaceholders, '}')) {
-      helper = new PropertyPlaceholderHelper("${", "}");
-    } else {
-      helper = new PropertyPlaceholderHelper("@", "@");
-    }
+      final String textWithNamedPlaceholders, Map<String, String> values) {
 
     PlaceholderResolver placeholderResolver =
         placeholderName -> {
@@ -42,7 +35,11 @@ public final class PlaceholderReplacer {
           }
           return result;
         };
+    PropertyPlaceholderHelper helper = new PropertyPlaceholderHelper("${", "}");
+    String replacedTextResult =
+        helper.replacePlaceholders(textWithNamedPlaceholders, placeholderResolver);
 
-    return helper.replacePlaceholders(textWithNamedPlaceholders, placeholderResolver);
+    helper = new PropertyPlaceholderHelper("{{", "}}");
+    return helper.replacePlaceholders(replacedTextResult, placeholderResolver);
   }
 }

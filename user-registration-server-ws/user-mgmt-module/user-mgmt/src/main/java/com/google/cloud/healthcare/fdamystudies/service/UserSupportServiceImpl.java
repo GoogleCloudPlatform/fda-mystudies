@@ -41,30 +41,28 @@ public class UserSupportServiceImpl implements UserSupportService {
 
   @Override
   @Transactional()
-  public boolean feedback(String subject, String body, AuditLogEventRequest auditRequest) {
+  public boolean feedback(String subject, String body, AuditLogEventRequest auditRequest)
+      throws Exception {
     logger.info("UserManagementProfileServiceImpl - feedback() :: Starts");
     boolean isEmailSent = false;
-    try {
-      String feedbackSubject = appConfig.getFeedbackMailSubject() + subject;
-      String feedbackBody = appConfig.getFeedbackMailBody();
-      Map<String, String> emailMap = new HashMap<String, String>();
-      emailMap.put("$body", body);
-      String dynamicContent = MyStudiesUserRegUtil.generateEmailContent(feedbackBody, emailMap);
-      isEmailSent =
-          emailNotification.sendEmailNotification(
-              feedbackSubject, dynamicContent, appConfig.getFeedbackToEmail(), null, null);
 
-      Map<String, String> map =
-          Collections.singletonMap(
-              "feedback_destination_email_address", appConfig.getFeedbackToEmail());
+    String feedbackSubject = appConfig.getFeedbackMailSubject() + subject;
+    String feedbackBody = appConfig.getFeedbackMailBody();
+    Map<String, String> emailMap = new HashMap<String, String>();
+    emailMap.put("$body", body);
+    String dynamicContent = MyStudiesUserRegUtil.generateEmailContent(feedbackBody, emailMap);
+    isEmailSent =
+        emailNotification.sendEmailNotification(
+            feedbackSubject, dynamicContent, appConfig.getFeedbackToEmail(), null, null);
 
-      AuditLogEvent auditEvent =
-          isEmailSent ? FEEDBACK_CONTENT_EMAILED : FEEDBACK_CONTENT_EMAIL_FAILED;
-      userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
+    Map<String, String> map =
+        Collections.singletonMap(
+            "feedback_destination_email_address", appConfig.getFeedbackToEmail());
 
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - feedback() - error() ", e);
-    }
+    AuditLogEvent auditEvent =
+        isEmailSent ? FEEDBACK_CONTENT_EMAILED : FEEDBACK_CONTENT_EMAIL_FAILED;
+    userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
+
     logger.info("UserManagementProfileServiceImpl - feedback() :: Ends");
     return isEmailSent;
   }
@@ -76,33 +74,31 @@ public class UserSupportServiceImpl implements UserSupportService {
       String body,
       String firstName,
       String email,
-      AuditLogEventRequest auditRequest) {
+      AuditLogEventRequest auditRequest)
+      throws Exception {
     logger.info("AppMetaDataOrchestration - contactUsDetails() :: Starts");
     boolean isEmailSent = false;
-    try {
-      String contactUsSubject = appConfig.getContactusMailSubject() + subject;
-      String contactUsContent = appConfig.getContactusMailBody();
-      Map<String, String> emailMap = new HashMap<String, String>();
-      emailMap.put("$firstName", firstName);
-      emailMap.put("$email", email);
-      emailMap.put("$subject", subject);
-      emailMap.put("$body", body);
-      String dynamicContent = MyStudiesUserRegUtil.generateEmailContent(contactUsContent, emailMap);
-      isEmailSent =
-          emailNotification.sendEmailNotification(
-              contactUsSubject, dynamicContent, appConfig.getContactusToEmail(), null, null);
 
-      Map<String, String> map =
-          Collections.singletonMap(
-              "contactus_destination_email_address", appConfig.getContactusToEmail());
+    String contactUsSubject = appConfig.getContactusMailSubject() + subject;
+    String contactUsContent = appConfig.getContactusMailBody();
+    Map<String, String> emailMap = new HashMap<String, String>();
+    emailMap.put("$firstName", firstName);
+    emailMap.put("$email", email);
+    emailMap.put("$subject", subject);
+    emailMap.put("$body", body);
+    String dynamicContent = MyStudiesUserRegUtil.generateEmailContent(contactUsContent, emailMap);
+    isEmailSent =
+        emailNotification.sendEmailNotification(
+            contactUsSubject, dynamicContent, appConfig.getContactusToEmail(), null, null);
 
-      AuditLogEvent auditEvent =
-          isEmailSent ? CONTACT_US_CONTENT_EMAILED : CONTACT_US_CONTENT_EMAIL_FAILED;
-      userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
+    Map<String, String> map =
+        Collections.singletonMap(
+            "contactus_destination_email_address", appConfig.getContactusToEmail());
 
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - contactUsDetails() - error() ", e);
-    }
+    AuditLogEvent auditEvent =
+        isEmailSent ? CONTACT_US_CONTENT_EMAILED : CONTACT_US_CONTENT_EMAIL_FAILED;
+    userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
+
     logger.info("UserManagementProfileServiceImpl - contactUsDetails() :: Ends");
     return isEmailSent;
   }

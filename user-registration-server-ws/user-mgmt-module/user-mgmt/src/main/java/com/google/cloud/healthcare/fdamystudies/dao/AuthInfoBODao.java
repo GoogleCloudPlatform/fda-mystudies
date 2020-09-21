@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.Map;
 import org.json.JSONArray;
 
 public interface AuthInfoBODao {
-  AuthInfoEntity save(AuthInfoEntity authInfo) throws SystemException;
+  AuthInfoEntity save(AuthInfoEntity authInfo);
 
   Map<String, JSONArray> getDeviceTokenOfAllUsers(List<AppEntity> appInfos);
 }

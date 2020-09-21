@@ -12,7 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EN
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_EXISTS;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ENROLLED_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_ONBOARDING_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.OPEN_STUDY;
@@ -70,7 +69,6 @@ import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
-import com.google.cloud.healthcare.fdamystudies.model.OrgInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -82,6 +80,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.service.SiteService;
 import com.jayway.jsonpath.JsonPath;
 import java.io.File;
@@ -118,6 +117,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Autowired private ParticipantStudyRepository participantStudyRepository;
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
   @Autowired private JavaMailSender emailSender;
+  @Autowired private StudyConsentRepository studyConsentRepository;
 
   private UserRegAdminEntity userRegAdminEntity;
   private StudyEntity studyEntity;
@@ -128,7 +128,6 @@ public class SiteControllerTest extends BaseMockIT {
   private ParticipantStudyEntity participantStudyEntity;
   private SitePermissionEntity sitePermissionEntity;
   private StudyConsentEntity studyConsentEntity;
-  private OrgInfoEntity orgInfoEntity;
 
   private static final String IMPORT_EMAIL_1 = "mockitoimport01@grr.la";
 
@@ -138,7 +137,6 @@ public class SiteControllerTest extends BaseMockIT {
 
   @BeforeEach
   public void setUp() {
-    orgInfoEntity = testDataHelper.createOrgInfo();
     locationEntity = testDataHelper.createLocation();
     userRegAdminEntity = testDataHelper.createUserRegAdminEntity();
     appEntity = testDataHelper.createAppEntity(userRegAdminEntity);
@@ -287,31 +285,6 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(status().isBadRequest())
         .andExpect(
             jsonPath("$.error_description", is(SITE_NOT_EXIST_OR_INACTIVE.getDescription())));
-
-    verifyTokenIntrospectRequest();
-  }
-
-  @Test
-  public void shouldReturnEnrolledParticipantForAddNewParticipant() throws Exception {
-    // Step 1: set participantStudy status to enrolled
-    siteEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(ENROLLED_STATUS);
-    participantRegistrySiteEntity.setEmail(newParticipantRequest().getEmail());
-    participantStudyRepository.saveAndFlush(participantStudyEntity);
-
-    // Step 2: Call API to return ENROLLED_PARTICIPANT error
-    HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.ADD_NEW_PARTICIPANT.getPath(), siteEntity.getId())
-                .headers(headers)
-                .content(asJsonString(newParticipantRequest()))
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.error_description", is(ENROLLED_PARTICIPANT.getDescription())));
 
     verifyTokenIntrospectRequest();
   }
@@ -775,6 +748,116 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnParticipantDetailsForPagination() throws Exception {
+    // Step 1: Set data needed to get Participant details
+    participantRegistrySiteEntity.getStudy().setApp(appEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: 1 Participant for Consent already added in @BeforeEach, add 20 new Participant for
+    // Consent
+    for (int i = 1; i <= 20; i++) {
+      studyConsentEntity = testDataHelper.createStudyConsentEntity(participantStudyEntity);
+      studyConsentEntity.setVersion(CONSENT_VERSION + String.valueOf(i));
+      studyConsentRepository.saveAndFlush(studyConsentEntity);
+    }
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 3: Call API and expect GET_PARTICIPANT_DETAILS message and fetch only 3 data out of 21
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .queryParam("page", "0")
+                .queryParam("limit", "3")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantDetails", notNullValue()))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.participantRegistrySiteid",
+                is(participantRegistrySiteEntity.getId())))
+        .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
+        .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(3)))
+        .andExpect(jsonPath("$.totalConsentHistoryCount", is(21)))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.consentHistory[0].consentVersion",
+                is(CONSENT_VERSION + String.valueOf(20))))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+    verifyTokenIntrospectRequest(1);
+
+    // page index starts with 0, get consent history for 6th page
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .queryParam("page", "5")
+                .queryParam("limit", "4")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantDetails", notNullValue()))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.participantRegistrySiteid",
+                is(participantRegistrySiteEntity.getId())))
+        .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
+        .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(1)))
+        .andExpect(jsonPath("$.totalConsentHistoryCount", is(21)))
+        .andExpect(
+            jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+    verifyTokenIntrospectRequest(2);
+
+    // get consent history for default page (0), limit (5) and sort by created timestamp in
+    // descending order
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantDetails", notNullValue()))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.participantRegistrySiteid",
+                is(participantRegistrySiteEntity.getId())))
+        .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
+        .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(5)))
+        .andExpect(jsonPath("$.totalConsentHistoryCount", is(21)))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.consentHistory[0].consentVersion",
+                is(CONSENT_VERSION + String.valueOf(20))))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+    verifyTokenIntrospectRequest(3);
+  }
+
+  @Test
   public void shouldReturnParticipantRegistryNotFoundError() throws Exception {
     // Call API and expect PARTICIPANT_REGISTRY_SITE_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -843,7 +926,6 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
-    appEntity.setOrgInfo(orgInfoEntity);
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);
@@ -912,7 +994,6 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldInviteParticipant() throws Exception {
-    appEntity.setOrgInfo(orgInfoEntity);
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestDataHelper.EMAIL_VALUE);

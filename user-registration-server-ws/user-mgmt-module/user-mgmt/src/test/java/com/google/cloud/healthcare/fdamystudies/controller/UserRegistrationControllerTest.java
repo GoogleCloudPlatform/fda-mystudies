@@ -45,11 +45,10 @@ import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.Map;
+import java.util.Optional;
 import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +57,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
-@TestMethodOrder(OrderAnnotation.class)
 public class UserRegistrationControllerTest extends BaseMockIT {
 
   private static final String REGISTER_PATH = "/myStudiesUserMgmtWS/register";
@@ -94,8 +92,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForRegisterUser() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     UserRegistrationForm userRegistrationForm = new UserRegistrationForm();
     MvcResult result =
@@ -119,8 +116,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   public void shouldReturnBadRequestForInvalidPassword() throws Exception {
 
     // invalid  password
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // invalid  password
     String requestJson = getRegisterUser("mockito123@gmail.com", Constants.INVALID_PASSWORD);
@@ -138,8 +134,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnBadRequestForEmailExists() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // user exists
     String requestJson = getRegisterUser(Constants.EMAIL_ID, Constants.PASSWORD);
@@ -166,8 +161,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Test
   public void shouldRegisterUser() throws Exception {
-    HttpHeaders headers =
-        TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.ORG_ID_HEADER);
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     String requestJson = getRegisterUser(Constants.EMAIL, Constants.PASSWORD);
     MvcResult result =
@@ -184,7 +178,11 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
     // find userDetails by userId and assert email
-    UserDetailsEntity userDetails = userDetailsRepository.findByUserId(userId);
+    Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
+    UserDetailsEntity userDetails = null;
+    if (optUserDetails.isPresent()) {
+      userDetails = optUserDetails.get();
+    }
 
     assertEquals(Constants.EMAIL, userDetails.getEmail());
 

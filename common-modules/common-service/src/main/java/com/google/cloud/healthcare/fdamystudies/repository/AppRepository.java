@@ -23,5 +23,5 @@ import org.springframework.stereotype.Repository;
 public interface AppRepository extends JpaRepository<AppEntity, String> {
 
   @Query("SELECT app from AppEntity app where app.appId=:appId")
-  public Optional<AppEntity> findByCustomId(String appId);
+  public Optional<AppEntity> findByAppId(String appId);
 }

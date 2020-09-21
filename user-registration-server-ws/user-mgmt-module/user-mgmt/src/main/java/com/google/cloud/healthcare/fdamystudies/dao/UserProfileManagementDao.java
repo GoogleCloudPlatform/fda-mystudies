@@ -24,8 +24,7 @@ public interface UserProfileManagementDao {
 
   public AuthInfoEntity getAuthInfo(String id);
 
-  public UserDetailsEntity getParticipantDetailsByEmail(
-      String email, AppEntity app, String orgInfoId);
+  public UserDetailsEntity getParticipantDetailsByEmail(String email, AppEntity app);
 
   public LoginAttemptsEntity getLoginAttempts(String email);
 

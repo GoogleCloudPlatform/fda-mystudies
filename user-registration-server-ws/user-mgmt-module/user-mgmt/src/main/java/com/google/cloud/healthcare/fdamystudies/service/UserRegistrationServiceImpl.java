@@ -89,7 +89,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     // find appInfoId using appId
     AppOrgInfoBean appOrgInfoBean =
-        commonDao.getUserAppDetailsByAllApi(user.getUserId(), user.getAppId(), user.getOrgId());
+        commonDao.getUserAppDetailsByAllApi(user.getUserId(), user.getAppId());
 
     // find user by email and appId
 
@@ -112,7 +112,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     // save user details
     UserDetailsEntity userDetails = fromUserRegistrationForm(user);
-    Optional<AppEntity> app = appRepository.findById(appOrgInfoBean.getAppInfoId());
+    Optional<AppEntity> app = appRepository.findByAppId(appOrgInfoBean.getAppInfoId());
     if (app.isPresent()) {
       userDetails.setApp(app.get());
     }
