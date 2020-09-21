@@ -39,7 +39,7 @@ export class ChangePasswordComponent extends UnsubscribeOnDestroyAdapter
     );
   }
   passCriteria = '';
-  get ressetPassword() {
+  get resetPassword() {
     return this.resetPasswordForm.controls;
   }
   ngOnInit(): void {

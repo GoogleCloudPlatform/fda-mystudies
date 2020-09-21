@@ -46,8 +46,6 @@ export class LoginCallbackComponent implements OnInit {
                   void this.router.navigate(['/change-password']);
                 } else {
                   void this.router.navigate(['/coordinator']);
-                  console.log('profile:', userProfile);
-                  console.log('params:', params);
                 }
               },
               (error) => {
