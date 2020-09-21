@@ -147,8 +147,6 @@ public class CommonDaoImpl implements CommonDao {
 
     appOrgInfoBean.setAppInfoId(appInfoId);
 
-    appOrgInfoBean.setAppInfoId(appInfoId);
-
     logger.info("CommonDaoImpl getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
   }
