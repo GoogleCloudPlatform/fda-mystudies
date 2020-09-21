@@ -43,7 +43,7 @@ public class FdaApplication extends Application {
   private static FdaApplication instance;
   private FdaEventBusRegistry registry;
   private static String randomString;
-  private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   public static final String NOTIFICATION_CHANNEL_ID_SERVICE = AppConfig.PackageName + ".service";
   public static final String NOTIFICATION_CHANNEL_ID_INFO = AppConfig.PackageName + ".general";
@@ -63,46 +63,46 @@ public class FdaApplication extends Application {
     startEventProcessing();
 
     AppVisibilityDetector.init(
-            FdaApplication.this,
-            new AppVisibilityDetector.AppVisibilityCallback() {
-              @Override
-              public void onAppGotoForeground() {
-                if (AppController.getHelperSharedPreference()
-                        .readPreference(
-                                getApplicationContext(), getResources().getString(R.string.usepasscode), "")
-                        .equalsIgnoreCase("yes")) {
-                  AppController.getHelperSharedPreference()
-                          .writePreference(getApplicationContext(), "passcodeAnswered", "no");
-                  Intent intent = new Intent(getApplicationContext(), PasscodeSetupActivity.class);
-                  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                  startActivity(intent);
-                }
-              }
+        FdaApplication.this,
+        new AppVisibilityDetector.AppVisibilityCallback() {
+          @Override
+          public void onAppGotoForeground() {
+            if (AppController.getHelperSharedPreference()
+                .readPreference(
+                    getApplicationContext(), getResources().getString(R.string.usepasscode), "")
+                .equalsIgnoreCase("yes")) {
+              AppController.getHelperSharedPreference()
+                  .writePreference(getApplicationContext(), "passcodeAnswered", "no");
+              Intent intent = new Intent(getApplicationContext(), PasscodeSetupActivity.class);
+              intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+              startActivity(intent);
+            }
+          }
 
-              @Override
-              public void onAppGotoBackground() {
-                // app is from foreground to background
+          @Override
+          public void onAppGotoBackground() {
+            // app is from foreground to background
 
-              }
-            });
+          }
+        });
   }
 
   private void dbInitialize() {
     Realm.init(this);
     RealmEncryptionHelper realmEncryptionHelper =
-            RealmEncryptionHelper.initHelper(this, getString(R.string.app_name));
+        RealmEncryptionHelper.initHelper(this, getString(R.string.app_name));
     byte[] key = realmEncryptionHelper.getEncryptKey();
 
-    //Remove for release builds
+    // Remove for release builds
     Stetho.initialize(
-            Stetho.newInitializerBuilder(this)
-                    .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                    .enableWebKitInspector(
-                            RealmInspectorModulesProvider.builder(this)
-                                    .withLimit(10000)
-                                    .withDefaultEncryptionKey(key)
-                                    .build())
-                    .build());
+        Stetho.newInitializerBuilder(this)
+            .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+            .enableWebKitInspector(
+                RealmInspectorModulesProvider.builder(this)
+                    .withLimit(10000)
+                    .withDefaultEncryptionKey(key)
+                    .build())
+            .build());
   }
 
   private void startEventProcessing() {
@@ -131,16 +131,15 @@ public class FdaApplication extends Application {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
       nm.createNotificationChannel(
-              new NotificationChannel(
-                      NOTIFICATION_CHANNEL_ID_SERVICE,
-                      "App Service",
-                      NotificationManager.IMPORTANCE_DEFAULT));
+          new NotificationChannel(
+              NOTIFICATION_CHANNEL_ID_SERVICE,
+              "App Service",
+              NotificationManager.IMPORTANCE_DEFAULT));
       nm.createNotificationChannel(
-              new NotificationChannel(
-                      NOTIFICATION_CHANNEL_ID_INFO, "General", NotificationManager.IMPORTANCE_HIGH));
+          new NotificationChannel(
+              NOTIFICATION_CHANNEL_ID_INFO, "General", NotificationManager.IMPORTANCE_HIGH));
     }
   }
-
 
   public static void randomAlphaNumeric(int count) {
     StringBuilder builder = new StringBuilder();

@@ -60,23 +60,23 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   /**
    * To make a POST Hashmap request.
    *
-   * @param url          url path
+   * @param url url path
    * @param genericClass model class to parse
-   * @param headers      null if no header to pass
-   * @param hashMap      params
-   * @param resultCode   call back code
-   * @param v            Activity context
-   * @param showAlert    wherever to show alert
+   * @param headers null if no header to pass
+   * @param hashMap params
+   * @param resultCode call back code
+   * @param v Activity context
+   * @param showAlert wherever to show alert
    */
   public void apiCallPostHashmap(
-          String url,
-          HashMap<String, String> headers,
-          Class<T> genericClass,
-          HashMap<String, String> hashMap,
-          int resultCode,
-          V v,
-          boolean showAlert,
-          String serverType) {
+      String url,
+      HashMap<String, String> headers,
+      Class<T> genericClass,
+      HashMap<String, String> hashMap,
+      int resultCode,
+      V v,
+      boolean showAlert,
+      String serverType) {
     this.urlPassed = url;
     this.genericClass = genericClass;
     this.headersData = headers;
@@ -92,23 +92,23 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   /**
    * To make a POST Json request.
    *
-   * @param url          url path
+   * @param url url path
    * @param genericClass model class to parse
-   * @param headers      null if no header to pass
-   * @param jsonData     json object params
-   * @param resultCode   call back code
-   * @param v            activity context
-   * @param showAlert    wherever to show alert
+   * @param headers null if no header to pass
+   * @param jsonData json object params
+   * @param resultCode call back code
+   * @param v activity context
+   * @param showAlert wherever to show alert
    */
   public void apiCallPostJson(
-          String url,
-          HashMap<String, String> headers,
-          Class<T> genericClass,
-          JSONObject jsonData,
-          int resultCode,
-          V v,
-          boolean showAlert,
-          String serverType) {
+      String url,
+      HashMap<String, String> headers,
+      Class<T> genericClass,
+      JSONObject jsonData,
+      int resultCode,
+      V v,
+      boolean showAlert,
+      String serverType) {
     this.urlPassed = url;
     this.genericClass = genericClass;
     this.headersData = headers;
@@ -124,23 +124,23 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   /**
    * To make a PUT Json request.
    *
-   * @param url          url path
+   * @param url url path
    * @param genericClass model class to parse
-   * @param headers      null if no header to pass
-   * @param jsonData     json object params
-   * @param resultCode   call back code
-   * @param v            activity context
-   * @param showAlert    wherever to show alert
+   * @param headers null if no header to pass
+   * @param jsonData json object params
+   * @param resultCode call back code
+   * @param v activity context
+   * @param showAlert wherever to show alert
    */
   public void apiCallPutJson(
-          String url,
-          HashMap<String, String> headers,
-          Class<T> genericClass,
-          JSONObject jsonData,
-          int resultCode,
-          V v,
-          boolean showAlert,
-          String serverType) {
+      String url,
+      HashMap<String, String> headers,
+      Class<T> genericClass,
+      JSONObject jsonData,
+      int resultCode,
+      V v,
+      boolean showAlert,
+      String serverType) {
     this.urlPassed = url;
     this.genericClass = genericClass;
     this.headersData = headers;
@@ -156,23 +156,23 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   /**
    * To make a DELETE Json request.
    *
-   * @param url          url path
+   * @param url url path
    * @param genericClass model class to parse
-   * @param headers      null if no header to pass
-   * @param jsonData     json object params
-   * @param resultCode   call back code
-   * @param v            activity context
-   * @param showAlert    wherever to show alert
+   * @param headers null if no header to pass
+   * @param jsonData json object params
+   * @param resultCode call back code
+   * @param v activity context
+   * @param showAlert wherever to show alert
    */
   public void apiCallDeleteJson(
-          String url,
-          HashMap<String, String> headers,
-          Class<T> genericClass,
-          JSONObject jsonData,
-          int resultCode,
-          V v,
-          boolean showAlert,
-          String serverType) {
+      String url,
+      HashMap<String, String> headers,
+      Class<T> genericClass,
+      JSONObject jsonData,
+      int resultCode,
+      V v,
+      boolean showAlert,
+      String serverType) {
     this.urlPassed = url;
     this.genericClass = genericClass;
     this.headersData = headers;
@@ -188,21 +188,21 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   /**
    * To make a GET request.
    *
-   * @param url          url path
-   * @param headers      null if no header to pass
+   * @param url url path
+   * @param headers null if no header to pass
    * @param genericClass model class to parse
-   * @param resultCode   call back code
-   * @param v            activity context
-   * @param showAlert    wherever to show alert
+   * @param resultCode call back code
+   * @param v activity context
+   * @param showAlert wherever to show alert
    */
   public void apiCallGet(
-          String url,
-          HashMap<String, String> headers,
-          Class<T> genericClass,
-          int resultCode,
-          V v,
-          boolean showAlert,
-          String serverType) {
+      String url,
+      HashMap<String, String> headers,
+      Class<T> genericClass,
+      int resultCode,
+      V v,
+      boolean showAlert,
+      String serverType) {
     this.urlPassed = url;
     this.headersData = headers;
     this.genericClass = genericClass;
@@ -217,15 +217,15 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   // Interface to be implemented by calling activity
   public interface OnAsyncRequestComplete {
     /**
-     * @param response     --> web service response
+     * @param response --> web service response
      * @param responseCode --> call back code
-     * @param <T>          --> Generic class
+     * @param <T> --> Generic class
      */
     <T> void asyncResponse(T response, int responseCode);
 
     /**
      * @param responseCode --> response code call back
-     * @param errormsg     --> error msg
+     * @param errormsg --> error msg
      */
     void asyncResponseFailure(int responseCode, String errormsg, String statusCode);
   }
@@ -244,22 +244,19 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
           break;
         case "put_json":
           responseModel =
-                  HttpRequest.makePutRequestWithJson(
-                          urlPassed, jsonData, headersData, serverType);
+              HttpRequest.makePutRequestWithJson(urlPassed, jsonData, headersData, serverType);
           break;
         case "post_hashmap":
           responseModel =
-                  HttpRequest.postRequestsWithHashmap(
-                          urlPassed, hashmapData, headersData, serverType);
+              HttpRequest.postRequestsWithHashmap(urlPassed, hashmapData, headersData, serverType);
           break;
         case "post_json":
           responseModel =
-                  HttpRequest.makePostRequestWithJson(urlPassed, jsonData, headersData, serverType);
+              HttpRequest.makePostRequestWithJson(urlPassed, jsonData, headersData, serverType);
           break;
         case "delete_json":
           responseModel =
-                  HttpRequest.makeDeleteRequestWithJson(
-                          urlPassed, jsonData, headersData, serverType);
+              HttpRequest.makeDeleteRequestWithJson(urlPassed, jsonData, headersData, serverType);
           break;
       }
       responseCode = responseModel.getResponseCode();
@@ -268,12 +265,6 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         response = "timeout";
       } else if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("")) {
         response = "error";
-      } else if (Integer.parseInt(responseCode) >= 400
-              && Integer.parseInt(responseCode) < 500) {
-        response = "client error";
-      } else if (Integer.parseInt(responseCode) >= 500
-              && Integer.parseInt(responseCode) < 600) {
-        response = "server error";
       } else if (Integer.parseInt(responseCode) == HttpURLConnection.HTTP_UNAUTHORIZED) {
         response = "session expired";
 
@@ -281,20 +272,16 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
 
           HashMap<String, String> refreshTokenJsonData = new HashMap();
           refreshTokenJsonData.put(
-                  "refresh_token",
-                  AppController.getHelperSharedPreference()
-                          .readPreference(context, context.getString(R.string.refreshToken), ""));
+              "refresh_token",
+              AppController.getHelperSharedPreference()
+                  .readPreference(context, context.getString(R.string.refreshToken), ""));
           refreshTokenJsonData.put(
-                  "userId",
-                  SharedPreferenceHelper.readPreference(
-                          context, context.getString(R.string.userid), ""));
-          refreshTokenJsonData.put(
-                  "redirect_uri", BuildConfig.AUTH_SERVER_REDIRECT_URL);
-          refreshTokenJsonData.put(
-                  "client_id", "oauth-scim-client-id");
-          refreshTokenJsonData.put(
-                  "grant_type", "refresh_token");
-
+              "userId",
+              SharedPreferenceHelper.readPreference(
+                  context, context.getString(R.string.userid), ""));
+          refreshTokenJsonData.put("redirect_uri", BuildConfig.AUTH_SERVER_REDIRECT_URL);
+          refreshTokenJsonData.put("client_id", "oauth-scim-client-id");
+          refreshTokenJsonData.put("grant_type", "refresh_token");
 
           HashMap<String, String> refreshTokenHeader = new HashMap<>();
           refreshTokenHeader.put("Content-Type", "application/x-www-form-urlencoded");
@@ -303,15 +290,15 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
 
           String refreshTokenUrl = Urls.BASE_URL_AUTH_SERVER + Urls.TOKENS;
           responseModel =
-                  HttpRequest.postRequestsWithHashmap(
-                          refreshTokenUrl, refreshTokenJsonData, refreshTokenHeader, "");
+              HttpRequest.postRequestsWithHashmap(
+                  refreshTokenUrl, refreshTokenJsonData, refreshTokenHeader, "");
           String s = checkResponse(true, responseModel, HttpURLConnection.HTTP_FORBIDDEN);
           if (s.equalsIgnoreCase("success")) {
             if (headersData != null
-                    && (headersData.containsKey("Authorization") || headersData.containsKey("auth"))) {
+                && (headersData.containsKey("Authorization") || headersData.containsKey("auth"))) {
               String s1 =
-                      AppController.getHelperSharedPreference()
-                              .readPreference(context, context.getString(R.string.auth), "");
+                  AppController.getHelperSharedPreference()
+                      .readPreference(context, context.getString(R.string.auth), "");
               headersData.put("Authorization", "Bearer " + s1);
             }
             switch (webserviceType) {
@@ -320,38 +307,39 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
                 break;
               case "put_json":
                 responseModel =
-                        HttpRequest.makePutRequestWithJson(
-                                urlPassed, jsonData, headersData, serverType);
+                    HttpRequest.makePutRequestWithJson(
+                        urlPassed, jsonData, headersData, serverType);
                 break;
               case "post_hashmap":
                 responseModel =
-                        HttpRequest.postRequestsWithHashmap(
-                                urlPassed, hashmapData, headersData, serverType);
+                    HttpRequest.postRequestsWithHashmap(
+                        urlPassed, hashmapData, headersData, serverType);
                 break;
               case "post_json":
                 responseModel =
-                        HttpRequest.makePostRequestWithJson(
-                                urlPassed, jsonData, headersData, serverType);
+                    HttpRequest.makePostRequestWithJson(
+                        urlPassed, jsonData, headersData, serverType);
                 break;
               case "delete_json":
                 responseModel =
-                        HttpRequest.makeDeleteRequestWithJson(
-                                urlPassed, jsonData, headersData, serverType);
+                    HttpRequest.makeDeleteRequestWithJson(
+                        urlPassed, jsonData, headersData, serverType);
                 break;
             }
             response = checkResponse(false, responseModel, HttpURLConnection.HTTP_UNAUTHORIZED);
           } else if (s.equalsIgnoreCase("session expired")
-                  || s.equalsIgnoreCase("Unknown error")
-                  || s.equalsIgnoreCase("server error")
-                  || s.equalsIgnoreCase("client error")
-                  || s.equalsIgnoreCase("")
-                  || s.equalsIgnoreCase("No data")) {
+              || s.equalsIgnoreCase("Unknown error")
+              || s.equalsIgnoreCase("server error")
+              || s.equalsIgnoreCase("client error")
+              || s.equalsIgnoreCase("")
+              || s.equalsIgnoreCase("No data")) {
             responseModel.setResponseCode("401");
             responseModel.setServermsg("session expired");
           }
         }
-      } else if (Integer.parseInt(responseCode) >= HttpURLConnection.HTTP_OK && Integer.parseInt(responseCode) < HttpURLConnection.HTTP_MULT_CHOICE
-              && !response.equalsIgnoreCase("")) {
+      } else if (Integer.parseInt(responseCode) >= HttpURLConnection.HTTP_OK
+          && Integer.parseInt(responseCode) < HttpURLConnection.HTTP_MULT_CHOICE
+          && !response.equalsIgnoreCase("")) {
         response = "success";
 
         obj = parseJson(responseModel, genericClass);
@@ -386,17 +374,17 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
               }
               for (int k = 0; k < activityInfoData.getActivity().getSteps().size(); k++) {
                 if (activityInfoData
-                        .getActivity()
-                        .getSteps()
-                        .get(k)
-                        .getKey()
-                        .equalsIgnoreCase(key)) {
+                    .getActivity()
+                    .getSteps()
+                    .get(k)
+                    .getKey()
+                    .equalsIgnoreCase(key)) {
                   activityInfoData
-                          .getActivity()
-                          .getSteps()
-                          .get(k)
-                          .getFormat()
-                          .setDefaultValue(defaultString);
+                      .getActivity()
+                      .getSteps()
+                      .get(k)
+                      .getFormat()
+                      .setDefaultValue(defaultString);
                 }
               }
             }
@@ -406,6 +394,10 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
             Logger.log(e);
           }
         }
+      } else if (Integer.parseInt(responseCode) >= 400 && Integer.parseInt(responseCode) < 500) {
+        response = "client error";
+      } else if (Integer.parseInt(responseCode) >= 500 && Integer.parseInt(responseCode) < 600) {
+        response = "server error";
       } else {
         response = "";
       }
@@ -415,8 +407,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
     return response;
   }
 
-  public void onPreExecute() {
-  }
+  public void onPreExecute() {}
 
   public void onPostExecute(String response) {
     String msg;
@@ -430,7 +421,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         msg = responseModel.getServermsg();
         setShowalert(msg);
         onAsyncRequestComplete.asyncResponseFailure(
-                resultCode, msg, responseModel.getResponseCode());
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "No network":
         msg = context.getResources().getString(R.string.check_internet);
@@ -441,12 +432,12 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         msg = context.getResources().getString(R.string.unknown_error);
         setShowalert(msg);
         onAsyncRequestComplete.asyncResponseFailure(
-                resultCode, msg, responseModel.getResponseCode());
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "session expired":
         msg = responseModel.getServermsg();
         onAsyncRequestComplete.asyncResponseFailure(
-                resultCode, msg, responseModel.getResponseCode());
+            resultCode, msg, responseModel.getResponseCode());
         break;
       case "success":
         onAsyncRequestComplete.asyncResponse(obj, resultCode);
@@ -455,7 +446,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   }
 
   private String checkResponse(
-          boolean forRefreshToken, Responsemodel responseModel, int httpUnauthorized) {
+      boolean forRefreshToken, Responsemodel responseModel, int httpUnauthorized) {
     String responseCode = responseModel.getResponseCode();
     String response = responseModel.getResponseData();
 
@@ -463,16 +454,11 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       response = "timeout";
     } else if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("")) {
       response = "error";
-    } else if (Integer.parseInt(responseCode) >= 400
-            && Integer.parseInt(responseCode) < 500) {
-      response = "client error";
-    } else if (Integer.parseInt(responseCode) >= 500
-            && Integer.parseInt(responseCode) < 600) {
-      response = "server error";
     } else if (Integer.parseInt(responseCode) == httpUnauthorized) {
       response = "session expired";
-    } else if (Integer.parseInt(responseCode) >= HttpURLConnection.HTTP_OK && Integer.parseInt(responseCode) < HttpURLConnection.HTTP_MULT_CHOICE
-            && !response.equalsIgnoreCase("")) {
+    } else if (Integer.parseInt(responseCode) >= HttpURLConnection.HTTP_OK
+        && Integer.parseInt(responseCode) < HttpURLConnection.HTTP_MULT_CHOICE
+        && !response.equalsIgnoreCase("")) {
       response = "success";
 
       if (forRefreshToken) {
@@ -480,12 +466,12 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         RefreshToken refreshToken = (RefreshToken) obj;
         if (refreshToken != null) {
           AppController.getHelperSharedPreference()
-                  .writePreference(context, context.getString(R.string.auth), refreshToken.getAuth());
+              .writePreference(context, context.getString(R.string.auth), refreshToken.getAuth());
           AppController.getHelperSharedPreference()
-                  .writePreference(
-                          context,
-                          context.getString(R.string.refreshToken),
-                          refreshToken.getRefreshToken());
+              .writePreference(
+                  context,
+                  context.getString(R.string.refreshToken),
+                  refreshToken.getRefreshToken());
         } else {
           response = "error";
         }
@@ -522,17 +508,17 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
               }
               for (int k = 0; k < activityInfoData.getActivity().getSteps().size(); k++) {
                 if (activityInfoData
-                        .getActivity()
-                        .getSteps()
-                        .get(k)
-                        .getKey()
-                        .equalsIgnoreCase(key)) {
+                    .getActivity()
+                    .getSteps()
+                    .get(k)
+                    .getKey()
+                    .equalsIgnoreCase(key)) {
                   activityInfoData
-                          .getActivity()
-                          .getSteps()
-                          .get(k)
-                          .getFormat()
-                          .setDefaultValue(defaultString);
+                      .getActivity()
+                      .getSteps()
+                      .get(k)
+                      .getFormat()
+                      .setDefaultValue(defaultString);
                 }
               }
             }
@@ -543,6 +529,10 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
           }
         }
       }
+    } else if (Integer.parseInt(responseCode) >= 400 && Integer.parseInt(responseCode) < 500) {
+      response = "client error";
+    } else if (Integer.parseInt(responseCode) >= 500 && Integer.parseInt(responseCode) < 600) {
+      response = "server error";
     }
     return response;
   }
@@ -550,20 +540,20 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
   private void setShowalert(String msg) {
     if (showAlert) {
       AlertDialog.Builder alertDialogBuilder =
-              new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
+          new AlertDialog.Builder(context, R.style.MyAlertDialogStyle);
       alertDialogBuilder.setTitle(
-              context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
+          context.getApplicationInfo().loadLabel(context.getPackageManager()).toString());
 
       alertDialogBuilder
-              .setMessage(msg)
-              .setCancelable(false)
-              .setPositiveButton(
-                      context.getResources().getString(R.string.ok),
-                      new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                          dialog.dismiss();
-                        }
-                      });
+          .setMessage(msg)
+          .setCancelable(false)
+          .setPositiveButton(
+              context.getResources().getString(R.string.ok),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                  dialog.dismiss();
+                }
+              });
       AlertDialog alertDialog = alertDialogBuilder.create();
       alertDialog.show();
     }

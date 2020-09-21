@@ -58,34 +58,38 @@ public class HttpRequest {
   private static String errorDescKey = "error_description";
   private static String headerErrorKey = "StatusMessage";
   private static String SERVER_TYPE_WCP = "WCP";
+  private static String CONTENT_TYPE_KEY = "Content-Type";
+  private static String APPLICATION_X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
+  private static String APPLICATION_JSON = "application/json";
 
   /**
    * To make a Get request.
    *
-   * @param url         --> url path
+   * @param url --> url path
    * @param headersData --> null if no header
    * @return Responsemodel
    */
   public static Responsemodel getRequest(
-          String url, HashMap<String, String> headersData, String serverType) {
+      String url, HashMap<String, String> headersData, String serverType) {
     return getResponse(url, "GET", serverType, headersData, null);
   }
 
   /**
    * To make post request using hashmap.
    *
-   * @param url         --> url path
-   * @param params      --> Hashmap params
+   * @param url --> url path
+   * @param params --> Hashmap params
    * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel postRequestsWithHashmap(
-          String url,
-          HashMap<String, String> params,
-          HashMap<String, String> headersData,
-          String serverType) {
+      String url,
+      HashMap<String, String> params,
+      HashMap<String, String> headersData,
+      String serverType) {
     String bodyParams;
-    if (headersData.containsKey("Content-Type") && headersData.get("Content-Type").equalsIgnoreCase("application/x-www-form-urlencoded")) {
+    if (headersData.containsKey(CONTENT_TYPE_KEY)
+        && headersData.get(CONTENT_TYPE_KEY).equalsIgnoreCase(APPLICATION_X_WWW_FORM_URLENCODED)) {
       bodyParams = getDataString(params);
     } else {
       bodyParams = getPostDataString(params);
@@ -96,16 +100,13 @@ public class HttpRequest {
   /**
    * To make post request using json object.
    *
-   * @param url         -->url path
-   * @param jsonObject  -->json object
+   * @param url -->url path
+   * @param jsonObject -->json object
    * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel makePostRequestWithJson(
-          String url,
-          JSONObject jsonObject,
-          HashMap<String, String> headersData,
-          String serverType) {
+      String url, JSONObject jsonObject, HashMap<String, String> headersData, String serverType) {
 
     return getResponse(url, "POST", serverType, headersData, jsonObject.toString());
   }
@@ -113,16 +114,13 @@ public class HttpRequest {
   /**
    * To make put request using json object.
    *
-   * @param url         -->url path
-   * @param jsonObject  -->json object
+   * @param url -->url path
+   * @param jsonObject -->json object
    * @param headersData --> null if no header
    * @return Responsemodel
    */
   static Responsemodel makePutRequestWithJson(
-          String url,
-          JSONObject jsonObject,
-          HashMap<String, String> headersData,
-          String serverType) {
+      String url, JSONObject jsonObject, HashMap<String, String> headersData, String serverType) {
     return getResponse(url, "PUT", serverType, headersData, jsonObject.toString());
   }
 
@@ -157,10 +155,7 @@ public class HttpRequest {
   }
 
   static Responsemodel makeDeleteRequestWithJson(
-          String url,
-          JSONObject jsonObject,
-          HashMap<String, String> headersData,
-          String serverType) {
+      String url, JSONObject jsonObject, HashMap<String, String> headersData, String serverType) {
     Responsemodel responseModel = new Responsemodel();
     String responseData = "";
     int responseCode = 0;
@@ -183,7 +178,7 @@ public class HttpRequest {
             httppost.addHeader(keyValue, value);
           }
         }
-        httppost.addHeader("Content-Type", "application/json");
+        httppost.addHeader(CONTENT_TYPE_KEY, APPLICATION_JSON);
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
         httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
@@ -195,11 +190,10 @@ public class HttpRequest {
         HttpResponse response1 = httpclient.execute(httppost);
         responseCode = response1.getStatusLine().getStatusCode();
 
-
-        if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
+        if (isSuccessfull(responseCode)) {
           responseData = getResponseData(response1);
           responseModel.setServermsg("success");
-        } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+        } else if (isUnauthorized(responseCode)) {
           responseData = "session expired";
         } else {
           if (response1.getFirstHeader(headerErrorKey) != null) {
@@ -237,7 +231,6 @@ public class HttpRequest {
     if (entity != null) {
       InputStream instream = entity.getContent();
       try {
-        // do something useful
         BufferedReader br = new BufferedReader(new InputStreamReader(instream));
         while ((line = br.readLine()) != null) {
           responseData.append(line);
@@ -270,7 +263,12 @@ public class HttpRequest {
     }
   }
 
-  private static Responsemodel getResponse(String url, String methodType, String serverType, HashMap<String, String> headersData, String bodyParams) {
+  private static Responsemodel getResponse(
+      String url,
+      String methodType,
+      String serverType,
+      HashMap<String, String> headersData,
+      String bodyParams) {
     Responsemodel responseModel = new Responsemodel();
     StringBuilder response = new StringBuilder();
     String responseData = "";
@@ -281,7 +279,7 @@ public class HttpRequest {
       conn.setRequestMethod(methodType);
       conn.setReadTimeout(TimeoutInterval);
       conn.setConnectTimeout(TimeoutInterval);
-      conn.setRequestProperty("Content-Type", "application/json");
+      conn.setRequestProperty(CONTENT_TYPE_KEY, APPLICATION_JSON);
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
       conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
@@ -305,7 +303,8 @@ public class HttpRequest {
       if (!methodType.equalsIgnoreCase("get")) {
         conn.setDoOutput(true);
         OutputStream os = conn.getOutputStream();
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
+        BufferedWriter writer =
+            new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
         writer.write(bodyParams);
         writer.flush();
         writer.close();
@@ -320,7 +319,7 @@ public class HttpRequest {
         responseCode = conn.getResponseCode();
       }
 
-      if (responseCode >= HttpURLConnection.HTTP_OK && responseCode < HttpURLConnection.HTTP_MULT_CHOICE) {
+      if (isSuccessfull(responseCode)) {
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String inputLine;
 
@@ -331,7 +330,7 @@ public class HttpRequest {
         conn.disconnect();
         responseData = response.toString();
         responseModel.setServermsg("success");
-      } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+      } else if (isUnauthorized(responseCode)) {
         responseData = "session expired";
       } else {
         if (conn.getHeaderField(headerErrorKey) != null) {
@@ -368,5 +367,14 @@ public class HttpRequest {
     responseModel.setResponseCode(String.valueOf(responseCode));
     responseModel.setResponseData(responseData);
     return responseModel;
+  }
+
+  private static boolean isUnauthorized(int responseCode) {
+    return responseCode == HttpURLConnection.HTTP_UNAUTHORIZED;
+  }
+
+  private static boolean isSuccessfull(int responseCode) {
+    return responseCode >= HttpURLConnection.HTTP_OK
+        && responseCode < HttpURLConnection.HTTP_MULT_CHOICE;
   }
 }
