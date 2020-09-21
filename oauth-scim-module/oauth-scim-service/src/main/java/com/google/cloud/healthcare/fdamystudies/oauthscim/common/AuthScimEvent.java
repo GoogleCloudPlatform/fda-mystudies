@@ -65,13 +65,6 @@ public enum AuthScimEvent implements AuditLogEvent {
       "Sign-in with temporary password failed.",
       "SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED"),
 
-  SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Sign-in failure due to invalid temporary password.",
-      "SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD"),
-
   SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD(
       null,
       SCIM_AUTH_SERVER,

@@ -41,7 +41,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -404,7 +403,7 @@ public class UserServiceImpl implements UserService {
       userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, systemTime);
 
       Map<String, String> placeHolders = new HashMap<>();
-      placeHolders.put("lock_time", Instant.now().toString());
+      placeHolders.put("lock_time", String.valueOf(systemTime));
       placeHolders.put("failed_attempts", String.valueOf(loginAttempts));
       auditHelper.logEvent(ACCOUNT_LOCKED, auditRequest, placeHolders);
     }
@@ -422,9 +421,16 @@ public class UserServiceImpl implements UserService {
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
       UserEntity userEntity, JsonNode userInfoJsonNode, AuditLogEventRequest auditRequest) {
-    int accountStatus = userEntity.getStatus();
     ObjectNode passwordNode = (ObjectNode) userInfoJsonNode.get(PASSWORD);
+    UserAccountStatus status = UserAccountStatus.valueOf(userEntity.getStatus());
     passwordNode.remove(EXPIRE_TIMESTAMP);
+    if (UserAccountStatus.PASSWORD_RESET.equals(status)
+        || UserAccountStatus.ACCOUNT_LOCKED.equals(status)) {
+      passwordNode.remove(EXPIRE_TIMESTAMP);
+      passwordNode.put(OTP_USED, true);
+    } else {
+      passwordNode.remove(OTP_USED);
+    }
 
     ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
@@ -434,10 +440,6 @@ public class UserServiceImpl implements UserService {
 
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
-
-    if (UserAccountStatus.ACTIVE.getStatus() != accountStatus) {
-      auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED, auditRequest);
-    }
 
     AuthenticationResponse authenticationResponse = new AuthenticationResponse();
     authenticationResponse.setUserId(userEntity.getUserId());

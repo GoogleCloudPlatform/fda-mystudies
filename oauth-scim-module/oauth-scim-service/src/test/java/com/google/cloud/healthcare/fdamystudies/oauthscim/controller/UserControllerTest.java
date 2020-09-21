@@ -86,7 +86,6 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserControllerTest extends BaseMockIT {
@@ -110,8 +109,6 @@ public class UserControllerTest extends BaseMockIT {
   private static UserEntity userEntity;
 
   @Autowired private UserRepository userRepository;
-
-  @Autowired private JavaMailSender emailSender;
 
   @Autowired private AppPropertyConfig appPropertyConfig;
 
@@ -216,7 +213,6 @@ public class UserControllerTest extends BaseMockIT {
     // Step-1 call API to create an user account in oauth scim database
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
-    headers.add("correlationId", IdGenerator.id());
 
     UserRequest request = newUserRequest();
 
@@ -484,7 +480,6 @@ public class UserControllerTest extends BaseMockIT {
     // Step-1 call API to change the password
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
-    headers.add("correlationId", IdGenerator.id());
 
     ChangePasswordRequest request = new ChangePasswordRequest();
     request.setCurrentPassword(NEW_PASSWORD_VALUE);
@@ -541,6 +536,7 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnAccountNotVerifiedForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
@@ -557,8 +553,6 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isForbidden())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.ACCOUNT_NOT_VERIFIED.getDescription()));
-    
-    verifyTokenIntrospectRequest();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
@@ -571,6 +565,8 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnDeactivatedForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
+    // headers.add("Authorization", VALID_BEARER_TOKEN);
+
     userEntity.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
     userRepository.saveAndFlush(userEntity);
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
@@ -588,8 +584,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isForbidden())
         .andExpect(
             jsonPath("$.error_description").value(ErrorCode.ACCOUNT_DEACTIVATED.getDescription()));
-    
-    verifyTokenIntrospectRequest();
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
@@ -601,7 +596,7 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldSendPasswordResetEmailAndUpdateThePassword()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
-    headers.add("correlationId", "CorrelationIdValue_For_2XX_Success");
+    headers.add("Authorization", VALID_BEARER_TOKEN);
 
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
@@ -642,11 +637,6 @@ public class UserControllerTest extends BaseMockIT {
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
 
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
- 
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());
@@ -664,7 +654,7 @@ public class UserControllerTest extends BaseMockIT {
         PASSWORD_RESET_SUCCEEDED,
         PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
   }
-  
+
   private String getMailResetSubject() {
     Map<String, String> templateArgs = new HashMap<>();
     return PlaceholderReplacer.replaceNamedPlaceholders(
@@ -699,7 +689,6 @@ public class UserControllerTest extends BaseMockIT {
         PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME.getEventCode(), auditRequest);
     verifyAuditEventCall(
         auditEventMap, PASSWORD_HELP_REQUESTED, PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME);
-
   }
 
   @Test
@@ -874,9 +863,9 @@ public class UserControllerTest extends BaseMockIT {
     HttpHeaders headers = new HttpHeaders();
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.add(CORRELATION_ID, VALID_CORRELATION_ID);
+    headers.add(CORRELATION_ID, IdGenerator.id());
     headers.add("appVersion", "1.0");
-    headers.add("appId", "GCPMS001");
+    headers.add("appId", "SCIM AUTH SERVER");
     headers.add("userId", userEntity.getUserId());
     headers.add("studyId", "MyStudies");
     headers.add("source", "IntegrationTests");

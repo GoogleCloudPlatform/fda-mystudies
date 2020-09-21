@@ -32,8 +32,8 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -302,7 +302,6 @@ public class LoginController {
       logger.exit("tempRegId is invalid, return to login page");
       return LOGIN_VIEW_NAME;
     }
-    auditHelper.logEvent(SIGNIN_FAILED_INVALID_TEMPORARY_PASSWORD, auditRequest);
     return LOGIN_VIEW_NAME;
   }
 
@@ -321,7 +320,11 @@ public class LoginController {
             "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
 
     logger.exit(String.format("redirect to %s from /login", callbackUrl));
-    auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
+    if (UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus)) {
+      auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
+    } else {
+      auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED, auditRequest);
+    }
     return redirect(response, redirectUrl);
   }
 

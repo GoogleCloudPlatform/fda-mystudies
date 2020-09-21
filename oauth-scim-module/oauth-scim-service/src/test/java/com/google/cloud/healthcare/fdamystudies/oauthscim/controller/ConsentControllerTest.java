@@ -100,7 +100,7 @@ public class ConsentControllerTest extends BaseMockIT {
     headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
     headers.add("appVersion", "1.0");
-    headers.add("appId", "GCPMS001");
+    headers.add("appId", "SCIM AUTH SERVER");
     headers.add("studyId", "MyStudies");
     headers.add("source", "IntegrationTests");
     headers.add("correlationId", IdGenerator.id());
