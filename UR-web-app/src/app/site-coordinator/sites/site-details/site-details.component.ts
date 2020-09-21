@@ -65,11 +65,13 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.query$,
     ).pipe(
       map(([siteDetails, query]) => {
-        this.siteDetailsBackup = {...siteDetails};
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this.siteDetailsBackup = JSON.parse(JSON.stringify(siteDetails));
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),
         );
+        console.log(this.siteDetailsBackup);
         return this.siteDetailsBackup;
       }),
     );
