@@ -24,6 +24,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
+
   sendResend = '';
   enableDisable = '';
   toggleDisplay = false;
@@ -117,8 +118,9 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
     );
   }
   sendInvitation(): void {
+    const MAXIMUM_USER_COUNT = 10;
     if (this.userIds.length > 0) {
-      if (this.userIds.length > 11) {
+      if (this.userIds.length > MAXIMUM_USER_COUNT) {
         this.toastr.error('Please select less than 10 participants');
       } else {
         const sendInvitations = {
