@@ -22,6 +22,25 @@ export class AccountService {
     );
   }
 
+  updateUserProfile(
+    profileToBeUpdated: UpdateProfile,
+  ): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(
+      `${environment.baseUrl}/users/${encodeURIComponent(
+        this.authService.getAuthUserId(),
+      )}/profile`,
+      profileToBeUpdated,
+    );
+  }
+
+  logout(): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.authServerUrl}/users/${encodeURIComponent(
+        this.authService.getAuthUserId(),
+      )}/logout`,
+      '',
+    );
+  }
   changePassword(changePassword: ChangePassword): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
       `${environment.authServerUrl}/users/${encodeURIComponent(

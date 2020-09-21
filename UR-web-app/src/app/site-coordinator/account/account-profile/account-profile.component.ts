@@ -52,7 +52,7 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
   }
 
   getProfileDetails(): void {
-    this.accountService.fetchProfile().subscribe(
+    this.accountService.fetchUserProfile().subscribe(
       (data) => {
         this.profileForm.patchValue(data);
       },
@@ -90,12 +90,16 @@ export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
   signOut(): void {
     this.accountService.logout().subscribe(
       (successResponse: ApiResponse) => {
-        this.toastr.success(successResponse.message);
+        if (getMessage(successResponse.code)) {
+          this.toastr.error(getMessage(successResponse.code));
+        }
+        sessionStorage.clear();
         void this.router.navigate(['/']);
       },
       (errorResponse: ApiResponse) => {
+        console.log(errorResponse);
         if (getMessage(errorResponse.code)) {
-          this.toastr.success(getMessage(errorResponse.code));
+          this.toastr.error(getMessage(errorResponse.code));
         }
       },
     );
