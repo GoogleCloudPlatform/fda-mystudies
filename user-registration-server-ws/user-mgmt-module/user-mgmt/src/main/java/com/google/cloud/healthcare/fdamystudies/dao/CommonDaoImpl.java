@@ -186,7 +186,7 @@ public class CommonDaoImpl implements CommonDao {
     Session session = this.sessionFactory.getCurrentSession();
     appInfos =
         session
-            .createQuery("From AppInfoDetailsBO where appId in :appIds")
+            .createQuery("From AppEntity where appId in :appIds")
             .setParameterList("appIds", appIds)
             .getResultList();
 

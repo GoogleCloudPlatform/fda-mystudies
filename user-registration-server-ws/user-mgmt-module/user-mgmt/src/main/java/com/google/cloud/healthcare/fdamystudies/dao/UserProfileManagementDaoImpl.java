@@ -73,7 +73,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public AuthInfoEntity getAuthInfo(String userDetailsId) {
+  public AuthInfoEntity getAuthInfo(UserDetailsEntity userDetailsId) {
     logger.info("UserProfileManagementDaoImpl getAuthInfo() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
     CriteriaQuery<AuthInfoEntity> criteriaQuery = null;
@@ -85,8 +85,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     criteriaBuilder = session.getCriteriaBuilder();
     criteriaQuery = criteriaBuilder.createQuery(AuthInfoEntity.class);
     authInfoBoRoot = criteriaQuery.from(AuthInfoEntity.class);
-    predicates[0] =
-        criteriaBuilder.equal(authInfoBoRoot.get(AppConstants.KEY_USERID), userDetailsId);
+    predicates[0] = criteriaBuilder.equal(authInfoBoRoot.get("userDetails"), userDetailsId);
     criteriaQuery.select(authInfoBoRoot).where(predicates);
     authInfoBoList = session.createQuery(criteriaQuery).getResultList();
     if (!authInfoBoList.isEmpty()) {

@@ -115,7 +115,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         if (user.getSettings().getRemoteNotifications() != null) {
           userDetails.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
 
-          authInfo = userProfileManagementDao.getAuthInfo(userDetails.getId());
+          authInfo = userProfileManagementDao.getAuthInfo(userDetails);
           if (authInfo != null) {
             authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
 
