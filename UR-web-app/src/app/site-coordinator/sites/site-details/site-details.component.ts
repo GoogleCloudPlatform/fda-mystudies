@@ -75,7 +75,7 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
     );
   }
   search(query: string): void {
-    this.query$.next(query.trim());
+    this.query$.next(query.trim().toLowerCase());
   }
   changeTab(tab: OnboardingStatus): void {
     this.sendResend =

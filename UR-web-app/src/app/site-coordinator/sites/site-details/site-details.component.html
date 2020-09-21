@@ -390,17 +390,9 @@
                 >
                   Sort By:
                 </span>
-                <th *ngIf="activeTab != onBoardingStatus.New">
+                <th>
                   <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
                 </th>
-                <th *ngIf="activeTab == onBoardingStatus.New">
-                  <mfDefaultSorter by="name">
-                    <div class="form-group mb-none">
-                      <label for="css">Participant Email</label>
-                    </div>
-                  </mfDefaultSorter>
-                </th>
-
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
                     Onboarding Status
