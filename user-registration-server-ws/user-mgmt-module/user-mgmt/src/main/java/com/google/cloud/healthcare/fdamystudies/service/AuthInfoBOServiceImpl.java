@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthInfoBOServiceImpl implements AuthInfoBOService {
@@ -22,7 +23,9 @@ public class AuthInfoBOServiceImpl implements AuthInfoBOService {
   @Autowired AuthInfoBODao authInfoDao;
 
   @Override
+  @Transactional
   public AuthInfoEntity save(AuthInfoEntity authInfo) {
+
     logger.info("AuthInfoBOServiceImpl save() - starts");
     AuthInfoEntity dbResponse = null;
     if (authInfo != null) {
