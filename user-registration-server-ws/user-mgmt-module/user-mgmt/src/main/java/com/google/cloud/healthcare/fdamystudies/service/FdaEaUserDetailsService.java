@@ -8,14 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface FdaEaUserDetailsService {
 
-  UserDetailsEntity saveUser(UserDetailsEntity userDetails) throws SystemException;
+  UserDetailsEntity saveUser(UserDetailsEntity userDetails);
 
-  UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException;
+  UserDetailsEntity loadUserDetailsByUserId(String userId);
 
   boolean verifyCode(String code, UserDetailsEntity participantDetails);
 

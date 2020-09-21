@@ -179,7 +179,7 @@ public class LoginController {
     model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
 
     if (StringUtils.isNotEmpty(tempRegId)) {
-      return autoLoginOrReturnLoginPage(tempRegId, loginChallenge, request, response);
+      return redirectToLoginOrConsentPage(tempRegId, loginChallenge, request, response);
     }
 
     // validate login credentials
@@ -223,7 +223,7 @@ public class LoginController {
         loginChallenge, authenticationResponse.getUserId(), request, response);
   }
 
-  private String autoLoginOrReturnLoginPage(
+  private String redirectToLoginOrConsentPage(
       String tempRegId,
       String loginChallenge,
       HttpServletRequest request,
@@ -237,6 +237,7 @@ public class LoginController {
       UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
       cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
+      cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
       userService.resetTempRegId(user.getUserId());
       return redirectToConsentPage(loginChallenge, user.getUserId(), request, response);
     }
@@ -297,6 +298,7 @@ public class LoginController {
         logger.exit("tempRegId is valid, return to auto login page");
         cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
         cookieHelper.addCookie(response, TEMP_REG_ID_COOKIE, tempRegId);
+        cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
         return AUTO_LOGIN_VIEW_NAME;
       }
       logger.exit("tempRegId is invalid, return to login page");

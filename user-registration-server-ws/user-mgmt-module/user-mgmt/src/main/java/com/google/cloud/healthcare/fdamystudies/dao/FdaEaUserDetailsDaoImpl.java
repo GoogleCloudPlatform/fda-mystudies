@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
@@ -39,59 +38,40 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   @Transactional
-  public UserDetailsEntity loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadUserDetailsByUserId(String userId) {
     logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - starts");
-    try {
-      UserDetailsEntity userDetails = null;
-      if (userId != null) {
-        Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
-        if (optUserDetails.isPresent()) {
-          userDetails = optUserDetails.get();
-        }
+
+    UserDetailsEntity userDetails = null;
+    if (userId != null) {
+      Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
+      if (optUserDetails.isPresent()) {
+        userDetails = optUserDetails.get();
       }
-      logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
-      return userDetails;
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl.loadUserDetailsByUserId(): ", e);
-      throw new SystemException();
     }
+    logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
+    return userDetails;
   }
 
   @Override
-  public UserDetailsEntity saveUser(UserDetailsEntity userDetails) throws SystemException {
-    logger.info("FdaEaUserDetailsDaoImpl saveUser() - starts");
-    try {
-      UserDetailsEntity savedUserDetails = null;
-      if (userDetails != null) {
-        savedUserDetails = repository.save(userDetails);
-      }
-      logger.info("FdaEaUserDetailsDaoImpl saveUser() - ends");
-      return savedUserDetails;
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl.saveUser(): ", e);
-      throw new SystemException();
-    }
+  public UserDetailsEntity saveUser(UserDetailsEntity userDetails) {
+    return repository.save(userDetails);
   }
 
   @Override
-  public UserDetailsEntity loadEmailCodeByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadEmailCodeByUserId(String userId) {
     logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() - starts");
-    try {
-      UserDetailsEntity dbResponse = null;
-      if (userId != null) {
-        Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
-        if (optUserDetails.isPresent()) {
-          dbResponse = optUserDetails.get();
-        }
-        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
-        return dbResponse;
-      } else {
-        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
-        return dbResponse;
+
+    UserDetailsEntity dbResponse = null;
+    if (userId != null) {
+      Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
+      if (optUserDetails.isPresent()) {
+        dbResponse = optUserDetails.get();
       }
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId(): ", e);
-      throw new SystemException();
+      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      return dbResponse;
+    } else {
+      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      return dbResponse;
     }
   }
 
@@ -109,8 +89,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
   @Override
   public boolean saveAllRecords(
-      UserDetailsEntity userDetails, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails)
-      throws SystemException {
+      UserDetailsEntity userDetails, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails) {
 
     logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - starts");
     if (userDetails != null && authInfo != null && userAppDetails != null) {
@@ -139,7 +118,7 @@ public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
             logger.error("FdaEaUserDetailsDaoImpl saveAllRecords(): ", e);
           }
         }
-        throw new SystemException();
+        throw e;
       }
     } else {
       logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - ends");

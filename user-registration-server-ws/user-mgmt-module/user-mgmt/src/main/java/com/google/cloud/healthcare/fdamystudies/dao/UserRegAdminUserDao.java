@@ -8,9 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 
 public interface UserRegAdminUserDao {
-  UserRegAdminEntity save(UserRegAdminEntity adminUser) throws SystemException;
+  UserRegAdminEntity save(UserRegAdminEntity adminUser);
 }
