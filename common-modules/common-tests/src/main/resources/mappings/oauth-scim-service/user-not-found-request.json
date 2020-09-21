@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "PUT",
+		"url": "/oauth-scim-service/users/5bef76a5-8361-43a2-9634-c991e2eeecda"
+	},
+	"response": {
+		"status": 404,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "oauth-scim-service/user-not-found-response.json"
+	}
+}

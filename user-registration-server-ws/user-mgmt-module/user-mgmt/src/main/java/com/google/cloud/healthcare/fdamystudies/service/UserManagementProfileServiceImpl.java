@@ -31,20 +31,22 @@ import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,33 +69,32 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
+  @Autowired private AppRepository appRepository;
+
   private static final Logger logger =
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
 
   @Override
   public UserProfileRespBean getParticipantInfoDetails(String userId, Integer appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Starts ");
-    UserDetailsBO userDetailsBO = null;
+    UserDetailsEntity userDetails = null;
     UserProfileRespBean userProfileRespBean = null;
-    try {
-      userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
-      if (userDetailsBO != null) {
-        userProfileRespBean = new UserProfileRespBean();
-        userProfileRespBean.getProfile().setEmailId(userDetailsBO.getEmail());
-        userProfileRespBean
-            .getSettings()
-            .setRemoteNotifications(userDetailsBO.getRemoteNotificationFlag());
-        userProfileRespBean
-            .getSettings()
-            .setLocalNotifications(userDetailsBO.getLocalNotificationFlag());
-        userProfileRespBean.getSettings().setTouchId(userDetailsBO.getTouchId());
-        userProfileRespBean.getSettings().setPasscode(userDetailsBO.getUsePassCode());
-        userProfileRespBean.getSettings().setLocale(userDetailsBO.getLocale());
-      }
 
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl getParticipantInfoDetails() - error ", e);
+    userDetails = userProfileManagementDao.getParticipantInfoDetails(userId);
+    if (userDetails != null) {
+      userProfileRespBean = new UserProfileRespBean();
+      userProfileRespBean.getProfile().setEmailId(userDetails.getEmail());
+      userProfileRespBean
+          .getSettings()
+          .setRemoteNotifications(userDetails.getRemoteNotificationFlag());
+      userProfileRespBean
+          .getSettings()
+          .setLocalNotifications(userDetails.getLocalNotificationFlag());
+      userProfileRespBean.getSettings().setTouchId(userDetails.getTouchId());
+      userProfileRespBean.getSettings().setPasscode(userDetails.getUsePassCode());
+      userProfileRespBean.getSettings().setLocale(userDetails.getLocale());
     }
+
     logger.info("UserManagementProfileServiceImpl getParticipantInfoDetails() - Ends ");
     return userProfileRespBean;
   }
@@ -102,94 +103,83 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   public ErrorBean updateUserProfile(String userId, UserRequestBean user) {
     logger.info("UserManagementProfileServiceImpl updateUserProfile() - Starts ");
     ErrorBean errorBean = null;
-    UserDetailsBO userDetailsBO = null;
-    AuthInfoBO authInfo = null;
-    try {
-      userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
-      if (user != null && userDetailsBO != null) {
-        if (user.getSettings() != null) {
-          if (user.getSettings().getRemoteNotifications() != null) {
-            userDetailsBO.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
-            try {
-              authInfo = userProfileManagementDao.getAuthInfo(userDetailsBO.getUserDetailsId());
-              if (authInfo != null) {
-                authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
+    UserDetailsEntity userDetails = null;
+    AuthInfoEntity authInfo = null;
 
-                if ((user.getInfo().getOs() != null)
-                    && !StringUtils.isEmpty(user.getInfo().getOs())) {
-                  authInfo.setDeviceType(user.getInfo().getOs());
-                }
-                if ((user.getInfo().getOs() != null)
-                    && !StringUtils.isEmpty(user.getInfo().getOs())
-                    && (user.getInfo().getOs().equalsIgnoreCase("IOS")
-                        || user.getInfo().getOs().equalsIgnoreCase("I"))) {
-                  authInfo.setIosAppVersion(user.getInfo().getAppVersion());
-                } else {
-                  authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
-                }
-                if ((user.getInfo().getDeviceToken() != null)
-                    && !StringUtils.isEmpty(user.getInfo().getDeviceToken())) {
-                  authInfo.setDeviceToken(user.getInfo().getDeviceToken());
-                }
+    userDetails = userProfileManagementDao.getParticipantInfoDetails(userId);
+    if (user != null && userDetails != null) {
+      if (user.getSettings() != null) {
+        if (user.getSettings().getRemoteNotifications() != null) {
+          userDetails.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
 
-                authInfo.setModifiedOn(new Date());
-              }
-            } catch (Exception e) {
-              logger.error("UserManagementProfileServiceImpl - updateUserProfile() - Error", e);
+          authInfo = userProfileManagementDao.getAuthInfo(userDetails.getId());
+          if (authInfo != null) {
+            authInfo.setRemoteNotificationFlag(user.getSettings().getRemoteNotifications());
+
+            if ((user.getInfo().getOs() != null) && !StringUtils.isEmpty(user.getInfo().getOs())) {
+              authInfo.setDeviceType(user.getInfo().getOs());
             }
-          }
-          if (user.getSettings().getLocalNotifications() != null) {
-            userDetailsBO.setLocalNotificationFlag(user.getSettings().getLocalNotifications());
-          }
-          if (user.getSettings().getPasscode() != null) {
-            userDetailsBO.setUsePassCode(user.getSettings().getPasscode());
-          }
-          if (user.getSettings().getTouchId() != null) {
-            userDetailsBO.setTouchId(user.getSettings().getTouchId());
-          }
-          if ((user.getSettings().getReminderLeadTime() != null)
-              && !StringUtils.isEmpty(user.getSettings().getReminderLeadTime())) {
-            userDetailsBO.setReminderLeadTime(user.getSettings().getReminderLeadTime());
-          }
-          if ((user.getSettings().getLocale() != null)
-              && !StringUtils.isEmpty(user.getSettings().getLocale())) {
-            userDetailsBO.setLocale(user.getSettings().getLocale());
+            if ((user.getInfo().getOs() != null)
+                && !StringUtils.isEmpty(user.getInfo().getOs())
+                && (user.getInfo().getOs().equalsIgnoreCase("IOS")
+                    || user.getInfo().getOs().equalsIgnoreCase("I"))) {
+              authInfo.setIosAppVersion(user.getInfo().getAppVersion());
+            } else {
+              authInfo.setAndroidAppVersion(user.getInfo().getAppVersion());
+            }
+            if ((user.getInfo().getDeviceToken() != null)
+                && !StringUtils.isEmpty(user.getInfo().getDeviceToken())) {
+              authInfo.setDeviceToken(user.getInfo().getDeviceToken());
+            }
+
+            authInfo.setModified(Timestamp.from(Instant.now()));
           }
         }
-        errorBean = userProfileManagementDao.updateUserProfile(userId, userDetailsBO, authInfo);
+        if (user.getSettings().getLocalNotifications() != null) {
+          userDetails.setLocalNotificationFlag(user.getSettings().getLocalNotifications());
+        }
+        if (user.getSettings().getPasscode() != null) {
+          userDetails.setUsePassCode(user.getSettings().getPasscode());
+        }
+        if (user.getSettings().getTouchId() != null) {
+          userDetails.setTouchId(user.getSettings().getTouchId());
+        }
+        if ((user.getSettings().getReminderLeadTime() != null)
+            && !StringUtils.isEmpty(user.getSettings().getReminderLeadTime())) {
+          userDetails.setReminderLeadTime(user.getSettings().getReminderLeadTime());
+        }
+        if ((user.getSettings().getLocale() != null)
+            && !StringUtils.isEmpty(user.getSettings().getLocale())) {
+          userDetails.setLocale(user.getSettings().getLocale());
+        }
       }
-
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - updateUserProfile() - Error", e);
-      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+      errorBean = userProfileManagementDao.updateUserProfile(userId, userDetails, authInfo);
     }
+
     logger.info("UserManagementProfileServiceImpl updateUserProfile() - Ends ");
     return errorBean;
   }
 
   @Override
-  public UserDetailsBO getParticipantDetailsByEmail(String email, Integer appInfoId) {
+  public UserDetailsEntity getParticipantDetailsByEmail(String email, String appInfoId) {
     logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Starts ");
-    UserDetailsBO userDetailsBO = null;
-    try {
-      userDetailsBO = userProfileManagementDao.getParticipantDetailsByEmail(email, appInfoId);
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - getParticipantDetailsByEmail() - Error", e);
+    UserDetailsEntity userDetails = null;
+
+    Optional<AppEntity> optApp = appRepository.findByAppId(appInfoId);
+    if (optApp.isPresent()) {
+      userDetails = userProfileManagementDao.getParticipantDetailsByEmail(email, optApp.get());
     }
 
     logger.info("UserManagementProfileServiceImpl getParticipantDetailsByEmail() - Ends ");
-    return userDetailsBO;
+    return userDetails;
   }
 
   @Override
-  public LoginAttemptsBO getLoginAttempts(String email) {
+  public LoginAttemptsEntity getLoginAttempts(String email) {
     logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Starts ");
-    LoginAttemptsBO loginAttempts = null;
-    try {
-      loginAttempts = userProfileManagementDao.getLoginAttempts(email);
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - getLoginAttempts() - Error", e);
-    }
+    LoginAttemptsEntity loginAttempts = null;
+
+    loginAttempts = userProfileManagementDao.getLoginAttempts(email);
 
     logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Ends ");
     return loginAttempts;
@@ -198,42 +188,30 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Override
   public void resetLoginAttempts(String email) {
     logger.info("UserManagementProfileServiceImpl resetLoginAttempts() - Started ");
-    try {
-      userProfileManagementDao.resetLoginAttempts(email);
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - resetLoginAttempts() - Error", e);
-    }
+
+    userProfileManagementDao.resetLoginAttempts(email);
 
     logger.info("UserManagementProfileServiceImpl getLoginAttempts() - Ends ");
   }
 
   @Override
-  public UserDetailsBO getParticipantDetails(String id) {
+  public UserDetailsEntity getParticipantDetails(String id) {
     logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Starts");
-    UserDetailsBO userDetailsBO = null;
-    try {
-      userDetailsBO = userProfileManagementDao.getParticipantDetails(id);
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - getParticipantDetails() - error() ", e);
-    }
+
+    UserDetailsEntity userDetails = userProfileManagementDao.getParticipantDetails(id);
 
     logger.info("UserManagementProfileServiceImpl - getParticipantDetails() - Ends");
-    return userDetailsBO;
+    return userDetails;
   }
 
   @Override
-  public UserDetailsBO saveParticipant(UserDetailsBO participant) {
+  public UserDetailsEntity saveParticipant(UserDetailsEntity participant) {
     logger.info("UserManagementProfileServiceImpl - saveParticipant() - Starts");
-    UserDetailsBO userDetailsBO = null;
 
-    try {
-      userDetailsBO = userProfileManagementDao.saveParticipant(participant);
-    } catch (Exception e) {
-      logger.error("UserManagementProfileServiceImpl - getPasswordHistory() - error() ", e);
-    }
+    UserDetailsEntity userDetails = userProfileManagementDao.saveParticipant(participant);
 
     logger.info("UserManagementProfileServiceImpl - saveParticipant() - Ends");
-    return userDetailsBO;
+    return userDetails;
   }
 
   @Override
@@ -241,98 +219,94 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       String userId, DeactivateAcctBean deactivateAcctBean, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    Integer userDetailsId = 0;
+    String userDetailsId = String.valueOf(0);
     boolean returnVal = false;
     WithdrawFromStudyBean studyBean = null;
     WithdrawFromStudyRespFromServer resp = null;
     String participantId = "";
     String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     List<String> deleteData = new ArrayList<String>();
-    try {
-      userDetailsId = commonDao.getUserInfoDetails(userId);
-      UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
-      updateEmailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
-      UpdateEmailStatusResponse updateStatusResponse =
-          userManagementUtil.updateUserInfoInAuthServer(updateEmailStatusRequest, userId);
 
-      if (HttpStatus.OK.value() == updateStatusResponse.getHttpStatusCode()) {
-        if (deactivateAcctBean != null
-            && deactivateAcctBean.getDeleteData() != null
-            && !deactivateAcctBean.getDeleteData().isEmpty()) {
-          for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
-            studyBean = new WithdrawFromStudyBean();
-            participantId = commonDao.getParticicpantId(userDetailsId, studyReqBean.getStudyId());
-            studyReqBean.setStudyId(studyReqBean.getStudyId());
-            if (participantId != null && !participantId.isEmpty())
-              studyBean.setParticipantId(participantId);
-            studyBean.setDelete(studyReqBean.getDelete());
-            studyBean.setStudyId(studyReqBean.getStudyId());
-            deleteData.add(studyReqBean.getStudyId());
+    userDetailsId = commonDao.getUserInfoDetails(userId);
+    UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
+    updateEmailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
+    UpdateEmailStatusResponse updateStatusResponse =
+        userManagementUtil.updateUserInfoInAuthServer(updateEmailStatusRequest, userId);
 
-            auditRequest.setStudyId(studyBean.getStudyId());
-            auditRequest.setParticipantId(studyBean.getParticipantId());
-            auditRequest.setUserId(userId);
+    if (HttpStatus.OK.value() == updateStatusResponse.getHttpStatusCode()) {
+      if (deactivateAcctBean != null
+          && deactivateAcctBean.getDeleteData() != null
+          && !deactivateAcctBean.getDeleteData().isEmpty()) {
+        for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
+          studyBean = new WithdrawFromStudyBean();
+          participantId = commonDao.getParticipantId(userDetailsId, studyReqBean.getStudyId());
+          studyReqBean.setStudyId(studyReqBean.getStudyId());
+          if (participantId != null && !participantId.isEmpty())
+            studyBean.setParticipantId(participantId);
+          studyBean.setDelete(studyReqBean.getDelete());
+          studyBean.setStudyId(studyReqBean.getStudyId());
+          deleteData.add(studyReqBean.getStudyId());
 
-            retVal =
-                userManagementUtil.withdrawParticipantFromStudy(
-                    studyBean.getParticipantId(),
-                    studyBean.getStudyId(),
-                    studyBean.getDelete(),
-                    auditRequest);
+          auditRequest.setStudyId(studyBean.getStudyId());
+          auditRequest.setParticipantId(studyBean.getParticipantId());
+          auditRequest.setUserId(userId);
 
-            if (Boolean.valueOf(studyReqBean.getDelete())) {
+          retVal =
+              userManagementUtil.withdrawParticipantFromStudy(
+                  studyBean.getParticipantId(),
+                  studyBean.getStudyId(),
+                  studyBean.getDelete(),
+                  auditRequest);
 
-              Map<String, String> map =
-                  Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
+          if (Boolean.valueOf(studyReqBean.getDelete())) {
 
-              userMgmntAuditHelper.logEvent(
-                  DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
+            Map<String, String> map =
+                Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
 
-              if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-                userMgmntAuditHelper.logEvent(PARTICIPANT_DATA_DELETED, auditRequest);
-              }
+            userMgmntAuditHelper.logEvent(
+                DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
 
-            } else {
-
-              Map<String, String> map =
-                  Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
-
-              userMgmntAuditHelper.logEvent(
-                  DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
+            if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+              userMgmntAuditHelper.logEvent(PARTICIPANT_DATA_DELETED, auditRequest);
             }
-          }
-        } else {
-          retVal = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-        }
-        if (retVal != null
-            && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-          returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
 
-          if (returnVal) {
-            message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
           } else {
-            message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+
+            Map<String, String> map =
+                Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
+
+            userMgmntAuditHelper.logEvent(
+                DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
           }
         }
+      } else {
+        retVal = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+      }
+      if (retVal != null
+          && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+        returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
 
-        AuditLogEvent auditEvent =
-            returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
-        userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
+        if (returnVal) {
+          message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+        } else {
+          message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+        }
       }
 
-    } catch (Exception e) {
-      message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-      logger.error("UserManagementProfileServiceImpl - deActivateAcct() - error() ", e);
+      AuditLogEvent auditEvent =
+          returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
+      userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
     }
+
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");
     return message;
   }
 
   @Override
   public int resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId) {
+      String applicationId, String securityToken, String emailId) throws Exception {
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");
-    AppInfoDetailsBO appPropertiesDetails = null;
+    AppEntity appPropertiesDetails = null;
     String dynamicContent = "";
     String content = "";
     Map<String, String> emailMap = new HashMap<String, String>();
@@ -340,37 +314,32 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     int isEmailSent = 0;
     String subject = "";
     AppOrgInfoBean appOrgInfoBean = null;
-    try {
-      appOrgInfoBean = commonDao.getUserAppDetailsByAllApi("", applicationId);
-      appPropertiesDetails =
-          userProfileManagementDao.getAppPropertiesDetailsByAppId(appOrgInfoBean.getAppInfoId());
-      if ((appPropertiesDetails == null)
-          || (appPropertiesDetails.getRegEmailSub() == null)
-          || (appPropertiesDetails.getRegEmailBody() == null)
-          || appPropertiesDetails.getRegEmailBody().equalsIgnoreCase("")
-          || appPropertiesDetails.getRegEmailSub().equalsIgnoreCase("")) {
-        subject = appConfig.getConfirmationMailSubject();
-        content = appConfig.getConfirmationMail();
-        emailMap.put("$securitytoken", securityToken);
-      } else {
-        content =
-            appPropertiesDetails.getRegEmailBody().replace("<<< TOKEN HERE >>>", securityToken);
-        subject = appPropertiesDetails.getRegEmailSub();
-      }
-      // TODO(#496): replace with actual study's org name.
-      emailMap.put("$orgName", "Test Org");
-      dynamicContent = MyStudiesUserRegUtil.generateEmailContent(content, emailMap);
-      isSent =
-          emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
-      if (!isSent) {
-        isEmailSent = 1;
-      } else {
-        isEmailSent = 2;
-      }
-    } catch (Exception e) {
-      logger.error(
-          "UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - error() ", e);
+
+    appOrgInfoBean = commonDao.getUserAppDetailsByAllApi("", applicationId);
+    appPropertiesDetails =
+        userProfileManagementDao.getAppPropertiesDetailsByAppId(appOrgInfoBean.getAppInfoId());
+    if ((appPropertiesDetails == null)
+        || (appPropertiesDetails.getRegEmailSub() == null)
+        || (appPropertiesDetails.getRegEmailBody() == null)
+        || appPropertiesDetails.getRegEmailBody().equalsIgnoreCase("")
+        || appPropertiesDetails.getRegEmailSub().equalsIgnoreCase("")) {
+      subject = appConfig.getConfirmationMailSubject();
+      content = appConfig.getConfirmationMail();
+      emailMap.put("$securitytoken", securityToken);
+    } else {
+      content = appPropertiesDetails.getRegEmailBody().replace("<<< TOKEN HERE >>>", securityToken);
+      subject = appPropertiesDetails.getRegEmailSub();
     }
+    // TODO(#496): replace with actual study's org name.
+    emailMap.put("$orgName", "Test Org");
+    dynamicContent = MyStudiesUserRegUtil.generateEmailContent(content, emailMap);
+    isSent = emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
+    if (!isSent) {
+      isEmailSent = 1;
+    } else {
+      isEmailSent = 2;
+    }
+
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
     return isEmailSent;
   }

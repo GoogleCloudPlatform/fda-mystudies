@@ -9,8 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserRegAdminUser;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,10 @@ public class UserRegAdminUserServiceImpl implements UserRegAdminUserService {
   @Autowired private UserRegAdminUserDao adminUserDao;
 
   @Override
-  public UserRegAdminUser save(UserRegAdminUser adminUser) throws SystemException {
+  public UserRegAdminEntity save(UserRegAdminEntity adminUser) {
 
     logger.info("UserRegAdminUserServiceImpl save() - starts");
-    UserRegAdminUser userRegAdminUser = null;
+    UserRegAdminEntity userRegAdminUser = null;
     if (adminUser != null) {
       userRegAdminUser = adminUserDao.save(adminUser);
     }
