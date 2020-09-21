@@ -124,6 +124,13 @@ class ResponseServerConfiguration: NetworkConfiguration {
     if let code = errorResponse["status"] as? Int {
       let message = errorResponse["error"] as? String ?? ""
       error = NSError(domain: message, code: code, userInfo: errorResponse)
+    } else if let code = errorResponse["appErrorCode"] as? Int {
+      let message = errorResponse["userMessage"] as? String ?? ""
+      return NSError(
+        domain: NSURLErrorDomain,
+        code: code,
+        userInfo: [NSLocalizedDescriptionKey: message]
+      )
     }
 
     return error

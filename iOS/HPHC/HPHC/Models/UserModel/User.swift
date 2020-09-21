@@ -969,4 +969,12 @@ class UserActivityStatus {
 
     return studyDetail
   }
+
+  func runDetails() -> JSONDictionary {
+    return [
+      "total": self.totalRuns,
+      "completed": self.compeltedRuns,
+      "missed": self.incompletedRuns,
+    ]
+  }
 }

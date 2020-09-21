@@ -466,15 +466,13 @@ class ActivitiesViewController: UIViewController {
     self.checkIfFetalKickCountRunning()
   }
 
-  /// Updates Activity Run Status.
-  /// - Parameter status: Status of the Activity.
-  func updateActivityRun(status: UserActivityStatus.ActivityStatus) {
-
-    let activity = Study.currentActivity!
-
+  fileprivate func updatedActivityStatus(
+    for activity: Activity,
+    status: UserActivityStatus.ActivityStatus
+  ) -> UserActivityStatus {
     let activityStatus = User.currentUser.updateActivityStatus(
-      studyId: activity.studyId!,
-      activityId: activity.actvityId!,
+      studyId: activity.studyId ?? "",
+      activityId: activity.actvityId ?? "",
       runId: String(activity.currentRunId),
       status: status
     )
@@ -482,15 +480,23 @@ class ActivitiesViewController: UIViewController {
     activityStatus.incompletedRuns = activity.incompletedRuns
     activityStatus.totalRuns = activity.totalRuns
     activityStatus.activityVersion = activity.version
+    return activityStatus
+  }
 
-    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-      guard let strongSelf = self else { return }
+  /// Updates Activity Run Status.
+  /// - Parameter status: Status of the Activity.
+  func updateActivityRun(status: UserActivityStatus.ActivityStatus) {
+
+    guard let activity = Study.currentActivity else { return }
+    let activityStatus = updatedActivityStatus(for: activity, status: status)
+
+    if activityStatus.status != .completed {
       // Update participationStatus to server
       ResponseServices().updateUserActivityParticipatedStatus(
         studyId: activity.studyId!,
         participantId: Study.currentStudy?.userParticipateState.participantId ?? "",
         activityStatus: activityStatus,
-        delegate: strongSelf
+        delegate: self
       )
     }
 
@@ -514,7 +520,7 @@ class ActivitiesViewController: UIViewController {
     var totalRuns = 0
     var totalCompletedRuns = 0
     var totalIncompletedRuns = 0
-    let activities = Study.currentStudy?.activities.filter({$0.state == "active"})
+    let activities = Study.currentStudy?.activities.filter({ $0.state == "active" })
 
     /// Calculate Runs
     for activity in activities! {
@@ -584,7 +590,7 @@ class ActivitiesViewController: UIViewController {
     if ud.object(forKey: missedKey) == nil {
       ud.set(totalIncompletedRuns, forKey: missedKey)
 
-    } else if let previousMissed = ud.object(forKey: missedKey) as? Int{
+    } else if let previousMissed = ud.object(forKey: missedKey) as? Int {
       ud.set(totalIncompletedRuns, forKey: missedKey)
       if previousMissed < totalIncompletedRuns {
         // show alert
@@ -643,7 +649,6 @@ class ActivitiesViewController: UIViewController {
       let studyID = currentActivity.studyId
     else { return }
 
-    currentActivity.compeltedRuns += 1
     DBHandler.updateRunToComplete(
       runId: currentActivity.currentRunId,
       activityId: activityID,
@@ -1107,6 +1112,8 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       if error.code == kNoNetworkErrorCode {
         self.updateRunStatusToComplete()
       } else {
+        self.view.makeToast(error.localizedDescription)
+        Study.currentActivity?.compeltedRuns -= 1
         self.lastActivityResponse = nil
       }
 
@@ -1156,6 +1163,19 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
         }
       }
     }
+  }
+
+  fileprivate func process(_ response: [String: Any]?) {
+    guard let activity = Study.currentActivity else { return }
+    activity.compeltedRuns += 1
+    let activityStatus = updatedActivityStatus(for: activity, status: .inProgress)
+    self.lastActivityResponse = response
+    // Save response to server.
+    ResponseServices().processResponse(
+      responseData: response ?? [:],
+      activityStatus: activityStatus,
+      delegate: self
+    )
   }
 
   public func taskViewController(
@@ -1356,17 +1376,12 @@ extension ActivitiesViewController: ORKTaskViewControllerDelegate {
                   fkDuration: Int(0),
                   date: Date()
                 )
-
-                break
               default: break
               }
             }
           }
         }
-        self.lastActivityResponse = response
-        // Save response to server.
-        ResponseServices().processResponse(responseData: response ?? [:], delegate: self)
-
+        process(response)
       }
     }
     taskViewController.dismiss(

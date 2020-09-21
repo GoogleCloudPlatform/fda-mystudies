@@ -539,7 +539,7 @@ extension UserServices: NMWebServiceDelegate {
     case AuthServerMethods.getRefreshedToken.description as String:
       self.handleUpdateTokenResponse()
       return
-      
+
     default: break
     }
 

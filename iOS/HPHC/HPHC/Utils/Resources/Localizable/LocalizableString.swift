@@ -32,7 +32,7 @@ enum LocalizableString: String {
 
   // MARK: - Errors
   case sessionExpired = "Your Session is Expired"
-  
+
   // MARK: - Force Upgrade
   case blockerScreenLabelText = "Please update the app to the latest version to continue."
   case appStoreUpdateText = "Please go to App Store to update the app to the latest version."

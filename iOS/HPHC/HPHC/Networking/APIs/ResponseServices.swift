@@ -93,7 +93,11 @@ class ResponseServices: NSObject {
   /// - Parameters:
   ///   - responseData: Response in form of `JSONDictionary`
   ///   - delegate: Class object to receive response
-  func processResponse(responseData: [String: Any], delegate: NMWebServiceDelegate) {
+  func processResponse(
+    responseData: [String: Any],
+    activityStatus: UserActivityStatus,
+    delegate: NMWebServiceDelegate
+  ) {
     self.delegate = delegate
 
     let method = ResponseMethods.processResponse.method
@@ -122,7 +126,7 @@ class ResponseServices: NSObject {
 
       let activityType = Study.currentActivity?.type?.rawValue
 
-      let params =
+      let responseParams =
         [
           kActivityType: activityType!,
           kActivityInfoMetaData: info,
@@ -134,6 +138,13 @@ class ResponseServices: NSObject {
           JSONKey.applicationId: AppConfiguration.appID,
           JSONKey.orgID: AppConfiguration.orgID,
         ] as [String: Any]
+
+      let statusParams = ["activityRun": activityStatus.runDetails()]
+
+      let params = [
+        "activityResponse": responseParams,
+        "activityState": statusParams,
+      ]
 
       let headers: [String: String] = [
         JSONKey.userID: currentUser.userId ?? "",
@@ -469,7 +480,8 @@ extension ResponseServices: NMWebServiceDelegate {
 
       // handle failed request due to network connectivity
       if requestName as String == ResponseMethods.processResponse.description
-        || requestName as String == ResponseMethods.updateActivityState.description {
+        || requestName as String == ResponseMethods.updateActivityState.description
+      {
 
         if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
           // save in database
