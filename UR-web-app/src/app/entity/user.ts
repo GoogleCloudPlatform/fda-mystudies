@@ -1,8 +1,9 @@
 import {App} from '../site-coordinator/user/shared/app-details';
 import {Permission} from '../shared/permission-enums';
 import {Status} from '../shared/enums';
+import {ApiResponse} from './api.response.model';
 
-export interface User {
+export interface User extends ApiResponse {
   id: string;
 
   email: string;
@@ -35,7 +36,22 @@ export interface User {
 
   confirmPassword: string;
 
+  appId: string;
+
+  userId: string;
+
+  tempRegId: string;
+
+  authUserId: string;
+
   apps: App[];
 
   manageLocationsSelected: boolean;
+}
+
+export interface SetUpUser {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
 }
