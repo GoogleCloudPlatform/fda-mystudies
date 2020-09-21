@@ -12,17 +12,15 @@ import {environment} from '@environment';
   providedIn: 'root',
 })
 export class AccountService {
-  authUserId = '';
   constructor(
     private readonly entityService: EntityService<Profile>,
     private readonly http: HttpClient,
     private readonly authService: AuthService,
   ) {}
 
-  fetchProfile(): Observable<Profile> {
-    this.authUserId = this.authService.getAuthUserId();
+  fetchUserProfile(): Observable<Profile> {
     return this.entityService.get(
-      `/users/${encodeURIComponent(this.authUserId)}`,
+      `/users/${encodeURIComponent(this.authService.getAuthUserId())}`,
     );
   }
   updateUserProfile(

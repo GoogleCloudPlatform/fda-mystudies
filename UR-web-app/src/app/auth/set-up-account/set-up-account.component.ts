@@ -23,7 +23,7 @@ export class SetUpAccountComponent
   setUpCode = '';
   tempRegId = '';
   setupAccountForm: FormGroup;
-
+  passCriteria = '';
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,

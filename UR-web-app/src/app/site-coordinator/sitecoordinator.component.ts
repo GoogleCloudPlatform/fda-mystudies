@@ -3,6 +3,7 @@ import {SearchService} from '../shared/search.service';
 import {SearchBar} from '../shared/search-bar';
 import {StateService} from '../service/state.service';
 import {Profile} from './account/shared/profile.model';
+import {UserService} from '../service/user.service';
 
 @Component({
   selector: 'site-coordinator',
@@ -20,12 +21,11 @@ export class SiteCoordinatorComponent implements OnInit {
   constructor(
     private readonly searchService: SearchService,
     private readonly userState: StateService,
+    private readonly userService: UserService,
   ) {}
 
   ngOnInit(): void {
-    const userObject = sessionStorage.getItem('user');
-    if (userObject) this.user = JSON.parse(userObject) as Profile;
-
+    this.user = this.userService.getUserProfile();
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
         this.showSearchBar = true;

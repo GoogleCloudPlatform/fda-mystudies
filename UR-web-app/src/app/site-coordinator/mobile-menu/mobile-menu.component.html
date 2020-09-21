@@ -75,10 +75,7 @@
         </li>
         <li>
           <a
-            *ngIf="
-              (user && user.manageLocations !== null) ||
-              (user && user.superAdmin)
-            "
+            *ngIf="user?.manageLocations !== null || user?.superAdmin"
             routerLink="/coordinator/locations"
             routerLinkActive="active"
             class="nav-item nav-link"
@@ -88,7 +85,7 @@
         </li>
         <li>
           <a
-            *ngIf="user && user.superAdmin"
+            *ngIf="user?.superAdmin"
             routerLink="/coordinator/users"
             routerLinkActive="active"
             class="nav-item nav-link"
