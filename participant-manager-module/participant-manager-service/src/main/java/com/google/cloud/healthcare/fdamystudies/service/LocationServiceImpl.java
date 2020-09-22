@@ -196,7 +196,7 @@ public class LocationServiceImpl implements LocationService {
 
   @Override
   @Transactional
-  public LocationResponse getLocations(String userId, int page, int limit) {
+  public LocationResponse getLocations(String userId, Integer page, Integer limit) {
     logger.entry("begin getLocations()");
 
     Optional<UserRegAdminEntity> optUserRegAdminUser = userRegAdminRepository.findById(userId);
@@ -204,11 +204,14 @@ public class LocationServiceImpl implements LocationService {
     if (Permission.NO_PERMISSION == Permission.fromValue(adminUser.getLocationPermission())) {
       throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
-
-    Page<LocationEntity> locationsPage =
-        locationRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
-    List<LocationEntity> locations =
-        (List<LocationEntity>) CollectionUtils.emptyIfNull(locationsPage.getContent());
+    List<LocationEntity> locations = null;
+    if (page != null && limit != null) {
+      Page<LocationEntity> locationsPage =
+          locationRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
+      locations = (List<LocationEntity>) CollectionUtils.emptyIfNull(locationsPage.getContent());
+    } else {
+      locations = locationRepository.findAll();
+    }
 
     List<String> locationIds =
         locations.stream().map(LocationEntity::getId).distinct().collect(Collectors.toList());

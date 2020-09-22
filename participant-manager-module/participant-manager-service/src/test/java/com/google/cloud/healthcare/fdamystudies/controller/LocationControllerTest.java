@@ -417,11 +417,7 @@ public class LocationControllerTest extends BaseMockIT {
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_LOCATIONS.getPath())
-                .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
-                .contextPath(getContextPath()))
+            get(ApiEndpoint.GET_LOCATIONS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isForbidden())
         .andExpect(jsonPath("$.error_description", is(LOCATION_ACCESS_DENIED.getDescription())));
@@ -443,11 +439,7 @@ public class LocationControllerTest extends BaseMockIT {
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
-            get(ApiEndpoint.GET_LOCATIONS.getPath())
-                .headers(headers)
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
-                .contextPath(getContextPath()))
+            get(ApiEndpoint.GET_LOCATIONS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locations").isArray())
@@ -493,7 +485,8 @@ public class LocationControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(1);
 
-    // page index starts with 0, get locations for 3rd page
+    // page index starts with 0, get locations for 3rd page and sort by created timestamp in
+    // descending order
     mockMvc
         .perform(
             get(ApiEndpoint.GET_LOCATIONS.getPath())
@@ -512,8 +505,7 @@ public class LocationControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(2);
 
-    // get locations for default page (0), limit (10) and sort by created timestamp in descending
-    // order
+    // get all locations if page and limit values are null
     mockMvc
         .perform(
             get(ApiEndpoint.GET_LOCATIONS.getPath()).headers(headers).contextPath(getContextPath()))
@@ -521,11 +513,10 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locations").isArray())
         .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
-        .andExpect(jsonPath("$.locations", hasSize(10)))
+        .andExpect(jsonPath("$.locations", hasSize(21)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.totalLocationsCount", is(21)))
-        .andExpect(
-            jsonPath("$.locations[0].customId", is(String.valueOf(20) + CUSTOM_LOCATION_ID)));
+        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
 
     verifyTokenIntrospectRequest(3);
   }
@@ -542,8 +533,6 @@ public class LocationControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             get(ApiEndpoint.GET_LOCATIONS.getPath())
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
                 .queryParam("excludeStudyId", studyEntity.getId())
                 .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
                 .content(asJsonString(getLocationRequest()))
@@ -572,8 +561,6 @@ public class LocationControllerTest extends BaseMockIT {
             get(ApiEndpoint.GET_LOCATIONS.getPath())
                 .queryParam("excludeStudyId", studyEntity.getId())
                 .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
-                .queryParam("page", PAGE_NO)
-                .queryParam("limit", NO_OF_RECORDS)
                 .content(asJsonString(getLocationRequest()))
                 .headers(headers)
                 .contextPath(getContextPath()))
@@ -603,7 +590,6 @@ public class LocationControllerTest extends BaseMockIT {
             get(ApiEndpoint.GET_LOCATIONS.getPath())
                 .queryParam("excludeStudyId", studyEntity.getId())
                 .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
-                .queryParam("page", PAGE_NO)
                 .queryParam("limit", NO_OF_RECORDS)
                 .content(asJsonString(getLocationRequest()))
                 .headers(headers)

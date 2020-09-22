@@ -93,8 +93,8 @@ public class LocationController {
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @RequestParam(required = false) Integer status,
       @RequestParam(required = false) String excludeStudyId,
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int limit,
+      @RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer limit,
       HttpServletRequest request) {
     logger.entry(
         String.format(
@@ -105,6 +105,7 @@ public class LocationController {
     if (status != null && StringUtils.isNotEmpty(excludeStudyId)) {
       locationResponse = locationService.getLocationsForSite(userId, status, excludeStudyId);
     } else {
+
       locationResponse = locationService.getLocations(userId, page, limit);
     }
 
