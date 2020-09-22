@@ -253,7 +253,11 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public ParticipantRegistryResponse getStudyParticipants(
-      String userId, String studyId, AuditLogEventRequest auditRequest, int page, int limit) {
+      String userId,
+      String studyId,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
@@ -285,8 +289,8 @@ public class StudyServiceImpl implements StudyService {
       AppEntity app,
       String userId,
       AuditLogEventRequest auditRequest,
-      int page,
-      int limit) {
+      Integer page,
+      Integer limit) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
 
@@ -303,11 +307,16 @@ public class StudyServiceImpl implements StudyService {
       }
     }
 
-    Page<ParticipantStudyEntity> participantStudyPage =
-        participantStudyRepository.findParticipantsByStudy(
-            study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
+    List<ParticipantStudyEntity> participantStudiesList = null;
+    if (page != null || limit != null) {
+      Page<ParticipantStudyEntity> participantStudyPage =
+          participantStudyRepository.findParticipantsByStudyForPage(
+              study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
+      participantStudiesList = participantStudyPage.getContent();
+    } else {
+      participantStudiesList = participantStudyRepository.findParticipantsByStudy(study.getId());
+    }
 
-    List<ParticipantStudyEntity> participantStudiesList = participantStudyPage.getContent();
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     if (CollectionUtils.isNotEmpty(participantStudiesList)) {

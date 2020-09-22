@@ -30,8 +30,11 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
       @Param("siteIds") List<String> usersSiteIds);
 
   @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId")
-  public Page<ParticipantStudyEntity> findParticipantsByStudy(
+  public Page<ParticipantStudyEntity> findParticipantsByStudyForPage(
       @Param("studyId") String studyId, Pageable page);
+
+  @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId")
+  public List<ParticipantStudyEntity> findParticipantsByStudy(@Param("studyId") String studyId);
 
   @Query("SELECT COUNT(ps) FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId")
   public Long countbyStudyId(String studyId);

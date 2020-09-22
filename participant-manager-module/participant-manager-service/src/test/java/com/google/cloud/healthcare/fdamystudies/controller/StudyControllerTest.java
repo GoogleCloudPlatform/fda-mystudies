@@ -334,8 +334,7 @@ public class StudyControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(2);
 
-    // get locations for default page (0), limit (10) and sort by created timestamp in descending
-    // order
+    // get study participant if page and limit values are null
     mockMvc
         .perform(
             get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
@@ -346,7 +345,7 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(10)))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)))
         .andExpect(jsonPath("$.totalParticipantCount", is(21)));
 
     verifyTokenIntrospectRequest(3);

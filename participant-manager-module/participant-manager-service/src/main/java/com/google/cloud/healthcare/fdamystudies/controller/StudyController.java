@@ -63,8 +63,8 @@ public class StudyController {
   public ResponseEntity<ParticipantRegistryResponse> getStudyParticipants(
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @PathVariable String studyId,
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "10") int limit,
+      @RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer limit,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
