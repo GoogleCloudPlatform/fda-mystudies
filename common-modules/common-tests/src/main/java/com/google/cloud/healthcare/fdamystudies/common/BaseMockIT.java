@@ -306,7 +306,8 @@ public class BaseMockIT {
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
-  protected void verifyMimeMessage(String toEmail, String fromEmail, String subject, String body)
+  protected MimeMessage verifyMimeMessage(
+      String toEmail, String fromEmail, String subject, String body)
       throws MessagingException, IOException {
     ArgumentCaptor<MimeMessage> mailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
     verify(emailSender, atLeastOnce()).send(mailCaptor.capture());
@@ -323,5 +324,6 @@ public class BaseMockIT {
 
     assertThat(mail.getDataHandler().getContentType())
         .isEqualToIgnoringCase("text/html; charset=utf-8");
+    return mail;
   }
 }
