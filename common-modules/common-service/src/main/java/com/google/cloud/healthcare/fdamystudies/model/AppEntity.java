@@ -39,7 +39,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(
     name = "app_info",
-    indexes = {@Index(name = "custom_app_id_index", columnList = "custom_app_id", unique = true)})
+    indexes = {@Index(name = "custom_app_id_index", columnList = "custom_app_id")})
 public class AppEntity implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;
