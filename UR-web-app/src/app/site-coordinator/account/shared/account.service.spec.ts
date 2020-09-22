@@ -60,7 +60,7 @@ describe('AccountService', () => {
       put: of(expectedResult.expectedUpdateResponse),
     });
     const authServiceSpy = jasmine.createSpyObj<AuthService>('AuthService', {
-      getAuthUserId: expectedResult.expectedAuthUserId,
+      getUserId: expectedResult.expectedAuthUserId,
     });
     accountService = new AccountService(
       entityServiceSpy,
