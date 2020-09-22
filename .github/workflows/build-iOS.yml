@@ -6,7 +6,7 @@ on:
     - '.github/workflows/build-iOS.yml'
 jobs:
   test:
-    name: Build
+    name: Build and test
     runs-on: macOS-latest
     strategy:
         matrix:
