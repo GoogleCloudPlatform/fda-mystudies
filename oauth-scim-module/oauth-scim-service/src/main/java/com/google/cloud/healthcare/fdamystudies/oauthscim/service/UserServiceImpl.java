@@ -325,12 +325,10 @@ public class UserServiceImpl implements UserService {
   public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
-    // check if the email present in the database
     Optional<UserEntity> optUserEntity =
         repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
 
     if (!optUserEntity.isPresent()) {
-      // log SIGNIN_FAILED_UNREGISTERED_USER event
       auditHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }

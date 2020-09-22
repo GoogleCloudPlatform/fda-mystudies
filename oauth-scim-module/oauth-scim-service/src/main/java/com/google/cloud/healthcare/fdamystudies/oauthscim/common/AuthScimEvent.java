@@ -23,11 +23,7 @@ public enum AuthScimEvent implements AuditLogEvent {
   SIGNIN_FAILED(null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_FAILED"),
 
   SIGNIN_FAILED_UNREGISTERED_USER(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Sign-in failure due to unregistered username.",
-      "SIGNIN_FAILED_UNREGISTERED_USER"),
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_FAILED_UNREGISTERED_USER"),
 
   SIGNIN_FAILED_INVALID_PASSWORD(
       null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_FAILED_INVALID_PASSWORD"),
@@ -55,15 +51,11 @@ public enum AuthScimEvent implements AuditLogEvent {
       null,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
-      "User signed in with temporary password.",
+      null,
       "SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED"),
 
   SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED(
-      null,
-      SCIM_AUTH_SERVER,
-      PARTICIPANT_DATASTORE,
-      "Sign-in with temporary password failed.",
-      "SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED"),
+      null, SCIM_AUTH_SERVER, PARTICIPANT_DATASTORE, null, "SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED"),
 
   SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD(
       null,
