@@ -8,7 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
@@ -31,18 +30,13 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
   @Autowired AuthInfoRepository authInfoRepository;
 
   @Override
-  public AuthInfoEntity save(AuthInfoEntity authInfo) throws SystemException {
+  public AuthInfoEntity save(AuthInfoEntity authInfo) {
     logger.info("AuthInfoBODaoImpl save() - starts");
     AuthInfoEntity dbResponse = null;
     if (authInfo != null) {
-      try {
-        dbResponse = authInfoRepository.save(authInfo);
-        logger.info("AuthInfoBODaoImpl save() - ends");
-        return dbResponse;
-      } catch (Exception e) {
-        logger.error("AuthInfoBODaoImpl save(): ", e);
-        throw new SystemException();
-      }
+      dbResponse = authInfoRepository.save(authInfo);
+      logger.info("AuthInfoBODaoImpl save() - ends");
+      return dbResponse;
     } else return null;
   }
 
@@ -52,35 +46,32 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
     JSONArray androidJsonArray = null;
     JSONArray iosJsonArray = null;
     Map<String, JSONArray> deviceMap = new HashMap<>();
-    try {
-      List<String> appInfoIds =
-          appInfos.stream().map(a -> a.getAppId()).distinct().collect(Collectors.toList());
+    List<String> appInfoIds =
+        appInfos.stream().map(a -> a.getAppId()).distinct().collect(Collectors.toList());
 
-      if (appInfoIds != null && !appInfoIds.isEmpty()) {
-        List<AuthInfoEntity> authInfos = authInfoRepository.findDevicesTokens(appInfoIds);
-        if (authInfos != null && !authInfos.isEmpty()) {
-          androidJsonArray = new JSONArray();
-          iosJsonArray = new JSONArray();
-          for (AuthInfoEntity authInfo : authInfos) {
-            String devicetoken = authInfo.getDeviceToken();
-            String devicetype = authInfo.getDeviceType();
-            if (devicetoken != null && devicetype != null) {
-              if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_ANDROID)) {
-                androidJsonArray.put(devicetoken.trim());
-              } else if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_IOS)) {
-                iosJsonArray.put(devicetoken.trim());
-              } else {
-                logger.error("Invalid Device Type");
-              }
+    if (appInfoIds != null && !appInfoIds.isEmpty()) {
+      List<AuthInfoEntity> authInfos = authInfoRepository.findDevicesTokens(appInfoIds);
+      if (authInfos != null && !authInfos.isEmpty()) {
+        androidJsonArray = new JSONArray();
+        iosJsonArray = new JSONArray();
+        for (AuthInfoEntity authInfo : authInfos) {
+          String devicetoken = authInfo.getDeviceToken();
+          String devicetype = authInfo.getDeviceType();
+          if (devicetoken != null && devicetype != null) {
+            if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_ANDROID)) {
+              androidJsonArray.put(devicetoken.trim());
+            } else if (devicetype.equalsIgnoreCase(AppConstants.DEVICE_IOS)) {
+              iosJsonArray.put(devicetoken.trim());
+            } else {
+              logger.error("Invalid Device Type");
             }
           }
-          deviceMap.put(AppConstants.DEVICE_ANDROID, androidJsonArray);
-          deviceMap.put(AppConstants.DEVICE_IOS, iosJsonArray);
         }
+        deviceMap.put(AppConstants.DEVICE_ANDROID, androidJsonArray);
+        deviceMap.put(AppConstants.DEVICE_IOS, iosJsonArray);
       }
-    } catch (Exception e) {
-      logger.error("AuthInfoBODaoImpl.getDeviceTokenOfAllUsers()-error", e);
     }
+
     logger.info("AuthInfoBODaoImpl.getDeviceTokenOfAllUsers()-end ");
     return deviceMap;
   }

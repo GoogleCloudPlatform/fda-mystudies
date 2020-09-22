@@ -44,30 +44,24 @@ public class UserSupportController {
   public ResponseEntity<?> feedbackDetails(
       @Valid @RequestBody FeedbackReqBean reqBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.info("INFO: UserSupportController - feedbackDetails() :: Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
-    try {
-      isEmailSent = supportService.feedback(reqBean.getSubject(), reqBean.getBody(), auditRequest);
-      if (isEmailSent) {
-        responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-      } else {
-        ErrorBean errorBean = new ErrorBean();
-        errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.FEEDBACK_ERROR_MESSAGE.getValue());
-        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-    } catch (Exception e) {
-      logger.error("UserSupportController - feedbackDetails() :: ERROR", e);
-      MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-          response);
+
+    isEmailSent = supportService.feedback(reqBean.getSubject(), reqBean.getBody(), auditRequest);
+    if (isEmailSent) {
+      responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+    } else {
+      ErrorBean errorBean = new ErrorBean();
+      errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+      errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.FEEDBACK_ERROR_MESSAGE.getValue());
+      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     logger.info("INFO: UserSupportController - feedbackDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
@@ -79,36 +73,30 @@ public class UserSupportController {
   public ResponseEntity<?> contactUsDetails(
       @RequestBody ContactUsReqBean reqBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.info("INFO: UserSupportController - contactUsDetails() :: Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
-    try {
-      isEmailSent =
-          supportService.contactUsDetails(
-              reqBean.getSubject(),
-              reqBean.getBody(),
-              reqBean.getFirstName(),
-              reqBean.getEmail(),
-              auditRequest);
-      if (isEmailSent) {
-        responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-      } else {
-        ErrorBean errorBean = new ErrorBean();
-        errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.CONTACTUS_ERROR_MESSAGE.getValue());
-        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-    } catch (Exception e) {
-      logger.error("UserSupportController - contactUsDetails() :: ERROR", e);
-      MyStudiesUserRegUtil.getFailureResponse(
-          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.EC_500.getValue(),
-          MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
-          response);
+
+    isEmailSent =
+        supportService.contactUsDetails(
+            reqBean.getSubject(),
+            reqBean.getBody(),
+            reqBean.getFirstName(),
+            reqBean.getEmail(),
+            auditRequest);
+    if (isEmailSent) {
+      responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
+    } else {
+      ErrorBean errorBean = new ErrorBean();
+      errorBean.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+      errorBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.CONTACTUS_ERROR_MESSAGE.getValue());
+      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     logger.info("INFO: UserSupportController - contactUsDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
