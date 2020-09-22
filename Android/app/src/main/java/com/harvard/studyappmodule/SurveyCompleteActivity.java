@@ -164,7 +164,9 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
   private JSONObject getResponseDataJson(
       ActivityObj activityObj, Activities activities, Studies studies) {
+    JSONObject responseJson = new JSONObject();
     JSONObject processResponsejson = new JSONObject();
+    JSONObject activityState = new JSONObject();
     try {
       processResponsejson.put("type", activityObj.getType());
       processResponsejson.put("participantId", studies.getParticipantId());
@@ -186,11 +188,23 @@ public class SurveyCompleteActivity extends AppCompatActivity
       processResponsejson.put("metadata", infoJson);
       processResponsejson.put(
           "data", generateresult(activityObj, getIntent().getStringExtra(EXTRA_STUDYID)));
+      responseJson.put("activityResponse", processResponsejson);
+
+      int completedRun = getIntent().getIntExtra(CustomSurveyViewTaskActivity.COMPLETED_RUN, 0);
+      completedRun = completedRun + 1;
+      int currentRun = getIntent().getIntExtra(CustomSurveyViewTaskActivity.RUNID, 0);
+      int missedRun = currentRun - completedRun;
+      JSONObject activityRun = new JSONObject();
+      activityRun.put("total", getIntent().getIntExtra(CustomSurveyViewTaskActivity.TOTAL_RUN, 0));
+      activityRun.put("completed", completedRun);
+      activityRun.put("missed", missedRun);
+      activityState.put("activityRun", activityRun);
+      responseJson.put("activityState", activityState);
     } catch (JSONException e) {
       Logger.log(e);
     }
 
-    return processResponsejson;
+    return responseJson;
   }
 
   private JSONObject generateresult(ActivityObj activityObj, String stringExtra) {
@@ -665,46 +679,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
   @Override
   public <T> void asyncResponse(T response, int responseCode) {
-    if (responseCode == UPDATE_USERPREFERENCE_RESPONSECODE) {
-      LoginData loginData = (LoginData) response;
-      if (loginData != null) {
-
-        // calculate completion and adherence
-        int completed =
-            Integer.parseInt(
-                AppController.getHelperSharedPreference()
-                    .readPreference(
-                        SurveyCompleteActivity.this,
-                        getResources().getString(R.string.completedRuns),
-                        ""));
-        int missed =
-            Integer.parseInt(
-                AppController.getHelperSharedPreference()
-                    .readPreference(
-                        SurveyCompleteActivity.this,
-                        getResources().getString(R.string.missedRuns),
-                        ""));
-        int total =
-            Integer.parseInt(
-                AppController.getHelperSharedPreference()
-                    .readPreference(
-                        SurveyCompleteActivity.this,
-                        getResources().getString(R.string.totalRuns),
-                        ""));
-
-        if ((double) total > 0) {
-          completion = (((double) completed + (double) missed + 1d) / (double) total) * 100d;
-        }
-        if (((double) completed + (double) missed + 1d) > 0) {
-          adherence =
-              (((double) completed + 1d) / ((double) completed + (double) missed + 1d)) * 100d;
-        }
-        updateStudyState("" + (int) completion, "" + (int) adherence);
-      } else {
-        AppController.getHelperProgressDialog().dismissDialog();
-        Toast.makeText(this, R.string.unable_to_parse, Toast.LENGTH_SHORT).show();
-      }
-    } else if (responseCode == UPDATE_STUDY_PREFERENCE) {
+    if (responseCode == UPDATE_STUDY_PREFERENCE) {
       AppController.getHelperProgressDialog().dismissDialog();
       String surveyId = getIntent().getStringExtra(CustomSurveyViewTaskActivity.EXTRA_STUDYID);
       surveyId = surveyId.substring(0, surveyId.lastIndexOf("_"));
@@ -750,7 +725,36 @@ public class SurveyCompleteActivity extends AppCompatActivity
     } else if (responseCode == PROCESS_RESPONSE_RESPONSECODE) {
       LoginData loginData = (LoginData) response;
       if (loginData != null) {
-        updateUserPreference();
+        int completed =
+                Integer.parseInt(
+                        AppController.getHelperSharedPreference()
+                                .readPreference(
+                                        SurveyCompleteActivity.this,
+                                        getResources().getString(R.string.completedRuns),
+                                        ""));
+        int missed =
+                Integer.parseInt(
+                        AppController.getHelperSharedPreference()
+                                .readPreference(
+                                        SurveyCompleteActivity.this,
+                                        getResources().getString(R.string.missedRuns),
+                                        ""));
+        int total =
+                Integer.parseInt(
+                        AppController.getHelperSharedPreference()
+                                .readPreference(
+                                        SurveyCompleteActivity.this,
+                                        getResources().getString(R.string.totalRuns),
+                                        ""));
+
+        if ((double) total > 0) {
+          completion = (((double) completed + (double) missed + 1d) / (double) total) * 100d;
+        }
+        if (((double) completed + (double) missed + 1d) > 0) {
+          adherence =
+                  (((double) completed + 1d) / ((double) completed + (double) missed + 1d)) * 100d;
+        }
+        updateStudyState("" + (int) completion, "" + (int) adherence);
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
       }
@@ -814,30 +818,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
       }
 
       // offline data storing for response server finish
-
-      // offline data storing activity preference
-      try {
-        int number = dbServiceSubscriber.getUniqueID(realm);
-        if (number == 0) {
-          number = 1;
-        } else {
-          number += 1;
-        }
-        AppController.pendingService(
-            this,
-            number,
-            "post_object",
-            Urls.UPDATE_ACTIVITY_PREFERENCE,
-            "",
-            getActivityPreferenceJson().toString(),
-            "ResponseServer",
-            "",
-            "",
-            "");
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-      // offline data storing activity preference finish
 
       // offline data storing study preference
       try {
@@ -921,32 +901,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
       setResult(RESULT_OK, intent);
       finish();
     } else {
-
-      // offline data storing activity preference
-      try {
-        if (responseCode == UPDATE_USERPREFERENCE_RESPONSECODE) {
-          int number = dbServiceSubscriber.getUniqueID(realm);
-          if (number == 0) {
-            number = 1;
-          } else {
-            number += 1;
-          }
-          AppController.pendingService(
-              this,
-              number,
-              "post_object",
-              Urls.UPDATE_ACTIVITY_PREFERENCE,
-              "",
-              getActivityPreferenceJson().toString(),
-              "ResponseServer",
-              "",
-              "",
-              "");
-        }
-      } catch (Exception e) {
-        Logger.log(e);
-      }
-      // offline data storing activity preference finish
 
       // offline data storing study preference
       try {
