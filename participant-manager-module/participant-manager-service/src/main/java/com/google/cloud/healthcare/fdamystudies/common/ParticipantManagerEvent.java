@@ -178,28 +178,28 @@ public enum ParticipantManagerEvent implements AuditLogEvent {
       null,
       PARTICIPANT_DATASTORE,
       null,
-      "New user created (user ID - {new_user_id}, access level - {new_user_access_level}).",
+      "New user created (user ID - ${new_user_id}, access level - ${new_user_access_level}).",
       "NEW_USER_CREATED"),
 
   NEW_USER_INVITATION_EMAIL_SENT(
       null,
       PARTICIPANT_DATASTORE,
       null,
-      "Account setup invitation email sent to user (user ID -{new_user_id})",
+      "Account setup invitation email sent to user (user ID -${new_user_id})",
       "NEW_USER_INVITATION_EMAIL_SENT"),
 
   NEW_USER_INVITATION_EMAIL_FAILED(
       null,
       PARTICIPANT_DATASTORE,
       null,
-      "Account setup invitation email could not be sent to user (user ID -{new_user_id}).",
+      "Account setup invitation email could not be sent to user (user ID -${new_user_id}).",
       "NEW_USER_INVITATION_EMAIL_FAILED"),
 
   USER_RECORD_UPDATED(
       null,
       PARTICIPANT_DATASTORE,
       null,
-      "User record updated (user id - {edited_user_id}, access level - {edited_user_access_level}).",
+      "User record updated (user id - ${edited_user_id}, access level - ${edited_user_access_level}).",
       "USER_RECORD_UPDATED"),
 
   ACCOUNT_UPDATE_EMAIL_SENT(

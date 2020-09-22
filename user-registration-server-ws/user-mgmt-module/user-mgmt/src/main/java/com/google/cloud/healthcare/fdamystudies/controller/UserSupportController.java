@@ -46,11 +46,13 @@ public class UserSupportController {
   public ResponseEntity<?> feedbackDetails(
       @Valid @RequestBody FeedbackReqBean reqBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.info("INFO: UserSupportController - feedbackDetails() :: Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ResponseBean responseBean = new ResponseBean();
+
     try {
       EmailResponse emailResponse =
           supportService.feedback(reqBean.getSubject(), reqBean.getBody(), auditRequest);
@@ -72,6 +74,7 @@ public class UserSupportController {
           MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
           response);
     }
+
     logger.info("INFO: UserSupportController - feedbackDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
@@ -83,7 +86,8 @@ public class UserSupportController {
   public ResponseEntity<?> contactUsDetails(
       @RequestBody ContactUsReqBean reqBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.info("INFO: UserSupportController - contactUsDetails() :: Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -114,6 +118,7 @@ public class UserSupportController {
           MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
           response);
     }
+
     logger.info("INFO: UserSupportController - contactUsDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }

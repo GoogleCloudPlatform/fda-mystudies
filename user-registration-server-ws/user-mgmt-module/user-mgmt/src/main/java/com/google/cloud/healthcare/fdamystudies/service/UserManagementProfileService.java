@@ -14,8 +14,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface UserManagementProfileService {
 
@@ -23,19 +23,20 @@ public interface UserManagementProfileService {
 
   public ErrorBean updateUserProfile(String userId, UserRequestBean user);
 
-  public UserDetailsBO getParticipantDetailsByEmail(String email, Integer appInfoId);
+  public UserDetailsEntity getParticipantDetailsByEmail(String email, String appInfoId);
 
-  public LoginAttemptsBO getLoginAttempts(String email);
+  public LoginAttemptsEntity getLoginAttempts(String email);
 
   public void resetLoginAttempts(String email);
 
-  public UserDetailsBO getParticipantDetails(String id);
+  public UserDetailsEntity getParticipantDetails(String id);
 
-  public UserDetailsBO saveParticipant(UserDetailsBO participant);
+  public UserDetailsEntity saveParticipant(UserDetailsEntity participant);
 
   public String deactivateAccount(
       String userId, DeactivateAcctBean deactivateBean, AuditLogEventRequest auditRequest);
 
   public EmailResponse resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId);
+
 }

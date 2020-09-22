@@ -20,5 +20,6 @@ public interface UserSupportService {
       String body,
       String firstName,
       String email,
-      AuditLogEventRequest auditRequest);
+      AuditLogEventRequest auditRequest)
+      throws Exception;
 }

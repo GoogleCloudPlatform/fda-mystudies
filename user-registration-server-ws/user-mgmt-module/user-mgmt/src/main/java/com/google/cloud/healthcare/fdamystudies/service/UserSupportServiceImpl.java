@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserSupportServiceImpl implements UserSupportService {
@@ -40,6 +41,7 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Autowired private EmailService emailService;
 
   @Override
+  @Transactional()
   public EmailResponse feedback(String subject, String body, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - feedback() :: Starts");
     String feedbackSubject = appConfig.getFeedbackMailSubject() + subject;
@@ -67,19 +69,22 @@ public class UserSupportServiceImpl implements UserSupportService {
         MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())
             ? FEEDBACK_CONTENT_EMAILED
             : FEEDBACK_CONTENT_EMAIL_FAILED;
+
     userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
 
     logger.info("UserManagementProfileServiceImpl - feedback() :: Ends");
     return emailResponse;
   }
 
+  @Transactional()
   @Override
   public EmailResponse contactUsDetails(
       String subject,
       String body,
       String firstName,
       String email,
-      AuditLogEventRequest auditRequest) {
+      AuditLogEventRequest auditRequest)
+      throws Exception {
     logger.info("AppMetaDataOrchestration - contactUsDetails() :: Starts");
     String contactUsSubject = appConfig.getContactusMailSubject() + subject;
     String contactUsContent = appConfig.getContactusMailBody();
@@ -112,5 +117,6 @@ public class UserSupportServiceImpl implements UserSupportService {
     userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
 
     return emailResponse;
+
   }
 }
