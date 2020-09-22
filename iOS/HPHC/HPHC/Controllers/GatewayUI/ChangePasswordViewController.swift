@@ -115,11 +115,18 @@ class ChangePasswordViewController: UIViewController {
 
   /// Api Call to Change Password.
   func requestToChangePassword() {
-    AuthServices().changePassword(
+    self.addProgressIndicator()
+    UserAPI.changePassword(
       oldPassword: self.oldPassword,
-      newPassword: self.newPassword,
-      delegate: self
-    )
+      newPassword: self.newPassword
+    ) { (status, error) in
+      self.removeProgressIndicator()
+      if status {
+        self.changePasswordSuccess()
+      } else if let error = error {
+        self.changePasswordfailed(with: error)
+      }
+    }
   }
 
   /// Seting menu View using `FDASlideMenuViewController` and Gateway Storyboard.
@@ -254,15 +261,9 @@ extension ChangePasswordViewController: UITextFieldDelegate {
   }
 }
 
-// MARK: - Webservice delegates
-extension ChangePasswordViewController: NMWebServiceDelegate {
+extension ChangePasswordViewController {
 
-  func startedRequest(_ manager: NetworkManager, requestName: NSString) {
-    self.addProgressIndicator()
-  }
-
-  func finishedRequest(_ manager: NetworkManager, requestName: NSString, response: AnyObject?) {
-    self.removeProgressIndicator()
+  func changePasswordSuccess() {
 
     if viewLoadFrom == .profile {
 
@@ -306,23 +307,23 @@ extension ChangePasswordViewController: NMWebServiceDelegate {
     }
   }
 
-  func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
-    self.removeProgressIndicator()
+  func changePasswordfailed(with error: ApiError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
-      UIUtilities.showAlertMessageWithActionHandler(
-        kErrorTitle,
-        message: error.localizedDescription,
-        buttonTitle: kTitleOk,
-        viewControllerUsed: self,
+    if error.code == .forbidden {  //unauthorized
+      self.presentDefaultAlertWithError(
+        error: error,
+        animated: true,
         action: {
           self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-        }
+        },
+        completion: nil
       )
     } else {
-      UIUtilities.showAlertWithTitleAndMessage(
-        title: NSLocalizedString(kErrorTitle, comment: "") as NSString,
-        message: error.localizedDescription as NSString
+      self.presentDefaultAlertWithError(
+        error: error,
+        animated: true,
+        action: nil,
+        completion: nil
       )
     }
   }

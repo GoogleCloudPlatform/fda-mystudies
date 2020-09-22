@@ -45,6 +45,7 @@ enum AuthRouter: URLRequestConvertible {
     static let platform = "mobilePlatform"
   }
 
+  case changePassword(params: JSONDictionary, userID: String)
   case logout(userID: String)
   case forgotPassword(params: JSONDictionary)
   case auth(params: JSONDictionary)
@@ -99,12 +100,20 @@ enum AuthRouter: URLRequestConvertible {
         path: "/users/\(userID)/logout",
         encoding: JSONEncoding.default
       )
+
+    case .changePassword(let parameters, let userID):
+      return Request(
+        method: .post,
+        path: "/users/\(userID)/change_password",
+        encoding: JSONEncoding.default,
+        parameters: parameters
+      )
     }
   }
 
   private var defaultHeaders: StringDictionary {
     switch self {
-    case .logout, .forgotPassword, .codeGrant:
+    case .logout, .forgotPassword, .codeGrant, .changePassword:
       return [
         JSONKey.correlationID: SessionService.correlationID,
         JSONKey.appID: AppConfiguration.appID,
