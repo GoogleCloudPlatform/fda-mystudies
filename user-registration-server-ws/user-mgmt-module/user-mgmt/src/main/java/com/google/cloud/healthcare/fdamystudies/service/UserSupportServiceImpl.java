@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserSupportServiceImpl implements UserSupportService {
@@ -39,6 +40,7 @@ public class UserSupportServiceImpl implements UserSupportService {
   @Autowired UserMgmntAuditHelper userMgmntAuditHelper;
 
   @Override
+  @Transactional()
   public boolean feedback(String subject, String body, AuditLogEventRequest auditRequest)
       throws Exception {
     logger.info("UserManagementProfileServiceImpl - feedback() :: Starts");
@@ -66,6 +68,7 @@ public class UserSupportServiceImpl implements UserSupportService {
   }
 
   @Override
+  @Transactional()
   public boolean contactUsDetails(
       String subject,
       String body,

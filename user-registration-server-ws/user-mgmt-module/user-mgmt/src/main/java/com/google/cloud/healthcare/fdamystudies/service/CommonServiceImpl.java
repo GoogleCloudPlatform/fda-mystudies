@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -29,7 +30,9 @@ public class CommonServiceImpl implements CommonService {
   private static Logger logger = LoggerFactory.getLogger(CommonServiceImpl.class);
 
   @Override
+  @Transactional(readOnly = true)
   public String validatedUserAppDetailsByAllApi(String userId, String email, String appId) {
+
     logger.info("UserManagementProfileServiceImpl validatedUserAppDetailsByAllApi() - starts");
     String message = "";
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
@@ -43,7 +46,9 @@ public class CommonServiceImpl implements CommonService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String emailId, String appId) {
+
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
     logger.info("MyStudiesUserRegUtil getUserAppDetailsByAllApi() - starts");
 
