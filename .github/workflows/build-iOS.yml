@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Force XCode 11.7
-        run: sudo xcode-select -switch /Applications/Xcode_11.7.app
       - name: Build
         run: |
           cd iOS/HPHC
