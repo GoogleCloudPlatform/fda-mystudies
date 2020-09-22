@@ -203,7 +203,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),
-            new String[] {userDetailsBO.getEmail()},
+            new String[] {userDetails.getEmail()},
             null,
             null,
             appConfig.getConfirmationMailSubject(),

@@ -181,38 +181,37 @@ public class UserProfileController {
 
     UserDetailsEntity participantDetails = null;
     ResponseBean responseBean = new ResponseBean();
-    try {
-      String isValidAppMsg =
-          commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
-      if (!StringUtils.isEmpty(isValidAppMsg)) {
-        AppOrgInfoBean appOrgInfoBean =
-            commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
-        if (appOrgInfoBean != null) {
-          participantDetails =
-              userManagementProfService.getParticipantDetailsByEmail(
-                  loginBean.getEmailId(), appOrgInfoBean.getAppInfoId());
-        }
-        if (participantDetails != null) {
-          if (participantDetails.getStatus() == 2) {
-            String code = RandomStringUtils.randomAlphanumeric(6);
-            participantDetails.setEmailCode(code);
-            participantDetails.setCodeExpireDate(LocalDateTime.now().plusMinutes(expireTime));
-            participantDetails.setVerificationDate(MyStudiesUserRegUtil.getCurrentUtilDateTime());
-            UserDetailsBO updParticipantDetails =
-                userManagementProfService.saveParticipant(participantDetails);
-            if (updParticipantDetails != null) {
-              EmailResponse emailResponse =
-                  userManagementProfService.resendConfirmationthroughEmail(
-                      appId, participantDetails.getEmailCode(), participantDetails.getEmail());
-              if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
-                  .getMessage()
-                  .equals(emailResponse.getMessage())) {
-                auditRequest.setUserId(updParticipantDetails.getUserId());
-                userMgmntAuditHelper.logEvent(
-                    VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
-                responseBean.setMessage(
-                    MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
-              }
+    String isValidAppMsg =
+        commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+    if (!StringUtils.isEmpty(isValidAppMsg)) {
+      AppOrgInfoBean appOrgInfoBean =
+          commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+      if (appOrgInfoBean != null) {
+        participantDetails =
+            userManagementProfService.getParticipantDetailsByEmail(
+                loginBean.getEmailId(), appOrgInfoBean.getAppInfoId());
+      }
+      if (participantDetails != null) {
+        if (participantDetails.getStatus() == 2) {
+          String code = RandomStringUtils.randomAlphanumeric(6);
+          participantDetails.setEmailCode(code);
+          participantDetails.setCodeExpireDate(
+              Timestamp.valueOf(LocalDateTime.now().plusMinutes(expireTime)));
+          participantDetails.setVerificationDate(Timestamp.from(Instant.now()));
+          UserDetailsEntity updParticipantDetails =
+              userManagementProfService.saveParticipant(participantDetails);
+          if (updParticipantDetails != null) {
+            EmailResponse emailResponse =
+                userManagementProfService.resendConfirmationthroughEmail(
+                    appId, participantDetails.getEmailCode(), participantDetails.getEmail());
+            if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+                .getMessage()
+                .equals(emailResponse.getMessage())) {
+              auditRequest.setUserId(updParticipantDetails.getUserId());
+              userMgmntAuditHelper.logEvent(
+                  VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
+              responseBean.setMessage(
+                  MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
             }
           }
 

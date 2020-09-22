@@ -43,14 +43,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,7 +88,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
-  @Autowired private UserDetailsBORepository userDetailsBORepository;
+  @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Test
   public void contextLoads() {
@@ -310,8 +308,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.SUCCESS)));
 
-    List<UserDetailsBO> listOfUserDetails =
-        userDetailsBORepository.findByEmail(Constants.VALID_EMAIL);
+    List<UserDetailsEntity> listOfUserDetails =
+        userDetailsRepository.findByEmail(Constants.VALID_EMAIL);
     String subject = appConfig.getConfirmationMailSubject();
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("securitytoken", listOfUserDetails.get(0).getEmailCode());

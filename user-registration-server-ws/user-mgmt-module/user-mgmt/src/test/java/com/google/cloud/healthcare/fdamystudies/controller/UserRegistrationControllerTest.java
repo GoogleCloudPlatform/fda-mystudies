@@ -35,19 +35,15 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -67,7 +63,7 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Autowired private ObjectMapper objectMapper;
 
-  @Autowired private UserDetailsBORepository userDetailsRepository;
+  @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 

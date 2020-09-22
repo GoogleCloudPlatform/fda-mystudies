@@ -33,17 +33,11 @@ import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
@@ -76,7 +70,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
   @Autowired private EmailService emailService;
-  
+
   @Autowired private AppRepository appRepository;
 
   private static final Logger logger =
@@ -323,7 +317,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   public EmailResponse resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId) {
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");
-    AppInfoDetailsBO appPropertiesDetails = null;
+    AppEntity appPropertiesDetails = null;
 
     String content = "";
     String subject = "";
