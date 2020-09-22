@@ -2,9 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {SearchService} from '../shared/search.service';
 import {SearchBar} from '../shared/search-bar';
 import {StateService} from '../service/state.service';
-import {Profile} from './account/shared/profile.model';
-import {UserService} from '../service/user.service';
-
 @Component({
   selector: 'site-coordinator',
   templateUrl: './sitecoordinator.component.html',
@@ -15,13 +12,10 @@ export class SiteCoordinatorComponent implements OnInit {
   showSearchBar = false;
   filterQuery = '';
   searchBar: SearchBar | undefined;
-  user = {} as Profile;
   userName = '';
-  serverEnvironment = '';
   constructor(
     private readonly searchService: SearchService,
     private readonly userState: StateService,
-    private readonly userService: UserService,
   ) {}
 
   ngOnInit(): void {

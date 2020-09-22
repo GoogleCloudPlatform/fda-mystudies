@@ -28,7 +28,7 @@ describe('ChangePasswordComponent', () => {
     const accountServiceSpy = jasmine.createSpyObj<AccountService>(
       'AccountService',
       {
-        fetchProfile: of(expectedProfiledataResposnse),
+        fetchUserProfile: of(expectedProfiledataResposnse),
         updateUserProfile: of(expectedUpdateResponse),
       },
     );

@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import static com.google.cloud.healthcare.fdamystudies.matchers.HasLastName.hasLastName;
@@ -12,7 +13,8 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertThat;
 
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.GregorianCalendar;
@@ -43,41 +45,41 @@ public class UserDetailsRepositoryTest {
 
   @Test
   public void FindsUsersWithLastName() {
-    UserDetailsBO user1 =
-        UserDetailsBO.builder()
+    UserDetailsEntity user1 =
+        UserDetailsEntity.builder()
             .userId("user_id")
             .email("email1@example.com")
             .firstName("Given name")
             .lastName("Surname")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
-            .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
-            .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
+            .verificationDate(
+                new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
+            .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
             .build();
-    UserDetailsBO user2 =
-        UserDetailsBO.builder()
+    UserDetailsEntity user2 =
+        UserDetailsEntity.builder()
             .userId("user_id")
             .email("email2@example.com")
             .firstName("Given name 2")
             .lastName("Surname")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
-            .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
-            .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
+            .verificationDate(
+                new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
+            .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
             .build();
-    UserDetailsBO user3 =
-        UserDetailsBO.builder()
+    UserDetailsEntity user3 =
+        UserDetailsEntity.builder()
             .userId("user_id")
             .email("email2@example.com")
             .firstName("Given name 2")
             .lastName("NotSurname")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
-            .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
-            .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
+            .verificationDate(
+                new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
+            .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
             .build();
     userDetailsRepository.save(user1);
     userDetailsRepository.save(user2);
     userDetailsRepository.save(user3);
 
-    List<UserDetailsBO> users = userDetailsRepository.findByLastName("Surname");
+    List<UserDetailsEntity> users = userDetailsRepository.findByLastName("Surname");
     assertThat(users, hasItems(hasLastName("Surname"), hasLastName("Surname")));
   }
 }

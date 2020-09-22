@@ -36,8 +36,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.controller.UserConsentManagementController;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.service.FileStorageService;
 import com.google.cloud.healthcare.fdamystudies.service.UserConsentManagementServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -593,7 +593,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     // with empty version
     consent = new ConsentReqBean("", Constants.STATUS_COMPLETE, Constants.CONTENT_1_0);
-    consentRequest = new ConsentStatusBean(Constants.STUDYOF_HEALTH, false, consent, null);
+    consentRequest =
+        new ConsentStatusBean(Constants.STUDYOF_HEALTH, false, consent, Constants.SHARING_VALUE);
     requestJson = getObjectMapper().writeValueAsString(consentRequest);
 
     headers.remove(Constants.USER_ID_HEADER);
@@ -678,7 +679,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     StudyInfoBean studyInfoBean =
         userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
 
-    StudyConsentBO studyConsent =
+    StudyConsentEntity studyConsent =
         userConsentManagementService.getStudyConsent(
             Constants.VALID_USER_ID,
             studyInfoBean.getStudyInfoId(),
@@ -697,14 +698,14 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
                 .headers(headers)
                 .contextPath(getContextPath())
-                .param("studyId", Constants.INVALID_STUDY_ID)
-                .param("consentVersion", Constants.VERSION_1_0))
+                .param("studyId", Constants.STUDYOF_HEALTH)
+                .param("consentVersion", Constants.INVALID_CONSENT_VERSION))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
-    auditRequest.setStudyId(Constants.INVALID_STUDY_ID);
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(

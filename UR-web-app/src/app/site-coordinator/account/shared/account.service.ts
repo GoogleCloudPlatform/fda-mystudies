@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Profile, UpdateProfile} from './profile.model';
-import {ChangePassword} from './profile.model';
+import {Profile, UpdateProfile, ChangePassword} from './profile.model';
 import {EntityService} from '../../../service/entity.service';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -23,20 +22,12 @@ export class AccountService {
     );
   }
 
-  changePassword(changePassword: ChangePassword): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(
-      `${environment.authServerUrl}/users/${encodeURIComponent(
-        this.authService.getAuthUserId(),
-      )}/change_password`,
-      changePassword,
-    );
-  }
   updateUserProfile(
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
     return this.http.put<ApiResponse>(
       `${environment.baseUrl}/users/${encodeURIComponent(
-        this.authService.getAuthUserId(),
+        this.authService.getUserId(),
       )}/profile`,
       profileToBeUpdated,
     );
@@ -48,6 +39,14 @@ export class AccountService {
         this.authService.getAuthUserId(),
       )}/logout`,
       '',
+    );
+  }
+  changePassword(changePassword: ChangePassword): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(
+      `${environment.authServerUrl}/users/${encodeURIComponent(
+        this.authService.getAuthUserId(),
+      )}/change_password`,
+      changePassword,
     );
   }
 }

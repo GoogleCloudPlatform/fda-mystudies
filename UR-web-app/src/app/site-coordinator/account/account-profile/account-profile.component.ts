@@ -15,8 +15,7 @@ import {StateService} from 'src/app/service/state.service';
   templateUrl: './account-profile.component.html',
   styleUrls: ['./account-profile.component.scss'],
 })
-export class AccountProfileComponent
-  extends UnsubscribeOnDestroyAdapter
+export class AccountProfileComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   profileForm: FormGroup;
   constructor(
@@ -91,7 +90,10 @@ export class AccountProfileComponent
   signOut(): void {
     this.accountService.logout().subscribe(
       (successResponse: ApiResponse) => {
-        this.toastr.success(successResponse.message);
+        if (getMessage(successResponse.code)) {
+          this.toastr.error(getMessage(successResponse.code));
+        }
+        sessionStorage.clear();
         void this.router.navigate(['/']);
       },
       (errorResponse: ApiResponse) => {

@@ -32,7 +32,6 @@ export const expectedUserResposnse = {
 
 export const expectedUpdateResponse = {
   message: 'Profile upadted successfully',
-  code: 'MSG_001',
 } as ApiResponse;
 
 export const expectedChangePasswordResponse = {
