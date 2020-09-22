@@ -14,12 +14,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Force XCode 11.7
+        run: sudo xcode-select -switch /Applications/Xcode_11.7.app
       - name: Build
         run: |
           cd iOS/HPHC
           xcodebuild clean build -workspace HPHC.xcworkspace -scheme HPHC -destination "${destination}" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO ONLY_ACTIVE_ARCH=YES
+        env: 
+         destination: ${{ matrix.destination }}
       - name: Test
         run: |
+          cd iOS/HPHC
           xcodebuild test -workspace HPHC.xcworkspace -scheme HPHC -destination "${destination}"
         env: 
          destination: ${{ matrix.destination }}
