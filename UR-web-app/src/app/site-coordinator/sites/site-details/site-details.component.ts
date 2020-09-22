@@ -67,8 +67,9 @@ export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
       this.query$,
     ).pipe(
       map(([siteDetails, query]) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        this.siteDetailsBackup = JSON.parse(JSON.stringify(siteDetails));
+        this.siteDetailsBackup = JSON.parse(
+          JSON.stringify(siteDetails),
+        ) as SiteParticipants;
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),
