@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		041AEB90AC42096B113333ED /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		041AEB90AC42096B113333ED /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		1BCAAEB875BE8171187D8775 /* Pods_HPHCTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AED899D94E99F517623A905 /* Pods_HPHCTests.framework */; };
 		481DFA4C1E6EEB70004C39EF /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 481DFA4B1E6EEB70004C39EF /* WebViewController.swift */; };
 		482062521E68532300C7A7AF /* UIUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 482062511E68532300C7A7AF /* UIUtilities.swift */; };
@@ -149,6 +149,8 @@
 		6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
 		7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B31C2216C6E20052FC23 /* HPHCTests.swift */; };
+		847A25102518C93800BCB50A /* UtilitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A250F2518C93800BCB50A /* UtilitiesTest.swift */; };
+		84FCC8D12514DCA70012904C /* AuthTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FCC8D02514DCA70012904C /* AuthTest.swift */; };
 		89055913230148FD005FB284 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89055912230148FD005FB284 /* Branding.plist */; };
 		8905592A23016852005FB284 /* UITestingHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8905592923016852005FB284 /* UITestingHelpers.swift */; };
 		8923429122B122DF0059F910 /* LoginAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 94B3DD2D1E6ED8E500327AE5 /* LoginAssets.xcassets */; };
@@ -423,6 +425,7 @@
 		6F99755E242387300044944E /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		6F9975612423B7EA0044944E /* EnrollmentServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnrollmentServerConfiguration.swift; sourceTree = "<group>"; };
 		6FA10A1724374DC200932622 /* Branding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Branding.swift; sourceTree = "<group>"; };
+		6FA930DF2519CC6E00611C3E /* Hydra.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Hydra.xcconfig; path = ../../../../../../Desktop/Endpoints/Hydra.xcconfig; sourceTree = "<group>"; };
 		6FB89C1A225F40EA00420A7B /* TextChoiceQuestionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceQuestionController.swift; sourceTree = "<group>"; };
 		6FB89C20225F410500420A7B /* OtherTextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OtherTextChoiceCell.swift; sourceTree = "<group>"; };
 		6FB89C21225F410500420A7B /* TextChoiceCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextChoiceCell.swift; sourceTree = "<group>"; };
@@ -440,6 +443,8 @@
 		7878B31C2216C6E20052FC23 /* HPHCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPHCTests.swift; sourceTree = "<group>"; };
 		7878B31E2216C6E20052FC23 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7BDC002620C7855C409516D3 /* Pods-HPHC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HPHC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HPHC/Pods-HPHC.debug.xcconfig"; sourceTree = "<group>"; };
+		847A250F2518C93800BCB50A /* UtilitiesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilitiesTest.swift; sourceTree = "<group>"; };
+		84FCC8D02514DCA70012904C /* AuthTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTest.swift; sourceTree = "<group>"; };
 		89055912230148FD005FB284 /* Branding.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Branding.plist; sourceTree = "<group>"; };
 		8905592923016852005FB284 /* UITestingHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITestingHelpers.swift; sourceTree = "<group>"; };
 		8926D7E92383F25C00558F4E /* KeyChain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
@@ -532,7 +537,7 @@
 				6EEBA47A1F25FAA100FB0258 /* HealthKit.framework in Frameworks */,
 				972663AD23F7242B537B8E82 /* Pods_HPHC.framework in Frameworks */,
 				89EDB46C2271EFDF0070F16C /* ResearchKit.framework in Frameworks */,
-				041AEB90AC42096B113333ED /* BuildFile in Frameworks */,
+				041AEB90AC42096B113333ED /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -653,6 +658,7 @@
 		6E7D2D581E433E8700763D4C /* HPHC */ = {
 			isa = PBXGroup;
 			children = (
+				6FA930DF2519CC6E00611C3E /* Hydra.xcconfig */,
 				6F07148824279452002749DA /* Default.xcconfig */,
 				6F10BB15234DDFDA006388E2 /* Branding */,
 				6FE00CD5238FEDE80067A7B8 /* Utils */,
@@ -1465,6 +1471,8 @@
 				7878B31E2216C6E20052FC23 /* Info.plist */,
 				6E5287B02237EB820083DF33 /* ActivityTest.swift */,
 				89CD64B92244CAA600008178 /* ResourceAnchorTest.swift */,
+				84FCC8D02514DCA70012904C /* AuthTest.swift */,
+				847A250F2518C93800BCB50A /* UtilitiesTest.swift */,
 			);
 			path = HPHCTests;
 			sourceTree = "<group>";
@@ -1785,7 +1793,7 @@
 					};
 					7878B3192216C6E10052FC23 = {
 						CreatedOnToolsVersion = 10.1;
-						DevelopmentTeam = T5N3W5L4HF;
+						DevelopmentTeam = 3485DDCN2M;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 6E7D2D551E433E8700763D4C;
 					};
@@ -2234,6 +2242,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */,
+				84FCC8D12514DCA70012904C /* AuthTest.swift in Sources */,
+				847A25102518C93800BCB50A /* UtilitiesTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2462,7 +2472,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T5N3W5L4HF;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HPHCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
@@ -2488,7 +2498,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = T5N3W5L4HF;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				INFOPLIST_FILE = HPHCTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
