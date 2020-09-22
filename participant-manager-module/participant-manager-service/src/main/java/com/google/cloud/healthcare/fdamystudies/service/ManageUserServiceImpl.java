@@ -742,6 +742,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     } else {
       adminList = userAdminRepository.findAll();
     }
+
     adminList
         .stream()
         .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
