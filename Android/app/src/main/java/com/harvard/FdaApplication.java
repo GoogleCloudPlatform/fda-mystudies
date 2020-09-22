@@ -43,7 +43,8 @@ public class FdaApplication extends Application {
   private static FdaApplication instance;
   private FdaEventBusRegistry registry;
   private static String randomString;
-  private static final String ALPHA_NUMERIC_STRING = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  private static final String ALPHA_NUMERIC_STRING =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   public static final String NOTIFICATION_CHANNEL_ID_SERVICE = AppConfig.PackageName + ".service";
   public static final String NOTIFICATION_CHANNEL_ID_INFO = AppConfig.PackageName + ".general";
@@ -159,7 +160,11 @@ public class FdaApplication extends Application {
     try {
       MessageDigest md = MessageDigest.getInstance("SHA-256");
       byte[] digest = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
-      codeChallenge = Base64.encodeToString(digest, Base64.NO_PADDING);
+      codeChallenge =
+          Base64.encodeToString(digest, Base64.NO_PADDING)
+              .replace("+", "-")
+              .replace("/", "_")
+              .replace("=", "");
     } catch (Exception e) {
       Logger.log(e);
     }
