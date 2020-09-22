@@ -5,6 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import static org.hamcrest.Matchers.contains;
@@ -14,12 +15,12 @@ import static org.junit.Assert.assertThat;
 
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.StudyInfoRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.PersonalizedUserReportBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -53,7 +54,7 @@ public class PersonalizedUserReportServiceTest {
 
   @Resource private UserDetailsRepository userDetailsRepository;
 
-  @Resource private StudyInfoRepository studyInfoRepository;
+  @Resource private StudyRepository studyInfoRepository;
 
   @Autowired private PersonalizedUserReportService personalizedUserReportService;
   @Autowired private ApplicationContext ctx;
@@ -63,38 +64,38 @@ public class PersonalizedUserReportServiceTest {
 
   @Test
   public void GetsMostRecentReportsForUserAndStudy() {
-    UserDetailsBO user1 =
-        UserDetailsBO.builder()
+    UserDetailsEntity user1 =
+        UserDetailsEntity.builder()
             .userId("user_id1")
             .email("email1@example.com")
             .firstName("First name1")
             .lastName("Last name1")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
-            .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
-            .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
+            .verificationDate(
+                new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
+            .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
             .build();
-    UserDetailsBO user2 =
-        UserDetailsBO.builder()
+    UserDetailsEntity user2 =
+        UserDetailsEntity.builder()
             .userId("user_id2")
             .email("email2@example.com")
             .firstName("First name2")
             .lastName("Last name2")
-            ._ts(new GregorianCalendar(2000, 1, 1).getTime())
-            .verificationDate(new GregorianCalendar(2000, 1, 2).getTime())
-            .codeExpireDate(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0))
+            .verificationDate(
+                new Timestamp((new GregorianCalendar(2000, 1, 2).getTime()).getTime()))
+            .codeExpireDate(Timestamp.valueOf(LocalDateTime.of(2000, Month.JUNE, 1, 20, 0, 0)))
             .build();
     userDetailsRepository.save(user1);
     userDetailsRepository.save(user2);
 
-    StudyInfoBO study1 = StudyInfoBO.builder().customId("study 1").name("Study 1").build();
+    StudyEntity study1 = StudyEntity.builder().customId("study 1").name("Study 1").build();
 
-    StudyInfoBO study2 = StudyInfoBO.builder().customId("study 2").name("Study 2").build();
+    StudyEntity study2 = StudyEntity.builder().customId("study 2").name("Study 2").build();
     studyInfoRepository.save(study1);
     studyInfoRepository.save(study2);
 
     // This is the report that should be retrieved.
-    PersonalizedUserReportBO report1 =
-        PersonalizedUserReportBO.builder()
+    PersonalizedUserReportEntity report1 =
+        PersonalizedUserReportEntity.builder()
             .id(1)
             .userDetails(user1)
             .studyInfo(study1)
@@ -102,8 +103,8 @@ public class PersonalizedUserReportServiceTest {
             .reportContent("Report 1 content 1 for user 1")
             .creationTime(new Timestamp(1590031332001L))
             .build();
-    PersonalizedUserReportBO report2 =
-        PersonalizedUserReportBO.builder()
+    PersonalizedUserReportEntity report2 =
+        PersonalizedUserReportEntity.builder()
             .id(2)
             .userDetails(user1)
             .studyInfo(study1)
@@ -111,8 +112,8 @@ public class PersonalizedUserReportServiceTest {
             .reportContent("Report 1 content 2 for user 1")
             .creationTime(new Timestamp(1590031332002L))
             .build();
-    PersonalizedUserReportBO report3 =
-        PersonalizedUserReportBO.builder()
+    PersonalizedUserReportEntity report3 =
+        PersonalizedUserReportEntity.builder()
             .id(3)
             .userDetails(user1)
             .studyInfo(study1)
@@ -120,8 +121,8 @@ public class PersonalizedUserReportServiceTest {
             .reportContent("Report 1 content 3 for user 1")
             .creationTime(new Timestamp(1590031332003L))
             .build();
-    PersonalizedUserReportBO report4 =
-        PersonalizedUserReportBO.builder()
+    PersonalizedUserReportEntity report4 =
+        PersonalizedUserReportEntity.builder()
             .id(4)
             .userDetails(user1)
             .studyInfo(study1)
@@ -129,8 +130,8 @@ public class PersonalizedUserReportServiceTest {
             .reportContent("Report 3 content for user 1")
             .creationTime(new Timestamp(1590031332004L))
             .build();
-    PersonalizedUserReportBO report5 =
-        PersonalizedUserReportBO.builder()
+    PersonalizedUserReportEntity report5 =
+        PersonalizedUserReportEntity.builder()
             .id(5)
             .userDetails(user2)
             .studyInfo(study1)
@@ -138,8 +139,8 @@ public class PersonalizedUserReportServiceTest {
             .reportContent("Report 1 content for user 2")
             .creationTime(new Timestamp(1590031332005L))
             .build();
-    PersonalizedUserReportBO report6 =
-        PersonalizedUserReportBO.builder()
+    PersonalizedUserReportEntity report6 =
+        PersonalizedUserReportEntity.builder()
             .id(6)
             .userDetails(user1)
             .studyInfo(study2)
@@ -147,8 +148,8 @@ public class PersonalizedUserReportServiceTest {
             .reportContent("Report 3 content for user 1")
             .creationTime(new Timestamp(1590031332006L))
             .build();
-    PersonalizedUserReportBO report7 =
-        PersonalizedUserReportBO.builder()
+    PersonalizedUserReportEntity report7 =
+        PersonalizedUserReportEntity.builder()
             .id(7)
             .userDetails(user1)
             .studyInfo(study1)

@@ -59,6 +59,7 @@ export const expectedSiteParticipantDetails = {
       E: 1,
       I: 12,
       N: 21,
+      /* eslint-disable @typescript-eslint/naming-convention */
     },
   },
   status: 200,

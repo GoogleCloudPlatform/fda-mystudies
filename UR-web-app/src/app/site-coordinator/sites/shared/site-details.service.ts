@@ -21,15 +21,20 @@ export class SiteDetailsService {
     private readonly entityService: EntityService<SiteParticipants>,
     private readonly http: HttpClient,
   ) {}
+
   get(
     siteId: string,
     fetchingOption: OnboardingStatus,
   ): Observable<SiteParticipants> {
     const fetchingOptions = this.getInvitationType(fetchingOption);
     if (fetchingOption !== OnboardingStatus.All) {
-      return this.entityService.get(
-        `sites/${encodeURIComponent(siteId)}/participants?onboardingStatus=` +
-          fetchingOptions,
+      return this.http.get<SiteParticipants>(
+        `${environment.baseUrl}/sites/${encodeURIComponent(
+          siteId,
+        )}/participants`,
+        {
+          params: {onboardingStatus: fetchingOptions},
+        },
       );
     } else {
       return this.entityService.get(
@@ -56,6 +61,7 @@ export class SiteDetailsService {
       participantToBeUpdated,
     );
   }
+
   sendInvitation(
     siteId: string,
     invitationToSend: InviteSend,
@@ -77,17 +83,16 @@ export class SiteDetailsService {
     );
   }
 
-  private getInvitationType(fetchingOption: string): string {
+  private getInvitationType(fetchingOption: OnboardingStatus): string {
     switch (fetchingOption) {
-      case 'All':
-        return '';
-      case 'New':
+      case OnboardingStatus.New:
         return 'N';
-      case 'Invited':
+      case OnboardingStatus.Invited:
         return 'I';
-      case 'Disabled':
+      case OnboardingStatus.Disabled:
         return 'D';
+      default:
+        return '';
     }
-    return '';
   }
 }

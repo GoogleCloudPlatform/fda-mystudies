@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
 @SpringBootApplication
-@EntityScan("com.google.cloud.healthcare.fdamystudies.enroll.model")
+@EntityScan("com.google.cloud.healthcare.fdamystudies.model")
 @EnableAutoConfiguration(exclude = HibernateJpaAutoConfiguration.class)
 public class UserEnrollmentTokenMgmtServiceWsApplication {
 

@@ -80,7 +80,7 @@
                       <div class="mr-sm">
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(addEmail)"
+                          (click)="openModal(addParticipants)"
                         >
                           Add Email
                         </button>
@@ -88,7 +88,7 @@
                       <div>
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(importParticipant)"
+                          (click)="openModal(addParticipants)"
                         >
                           Import Email List
                         </button>
@@ -148,7 +148,7 @@
                   <div class="mr-sm">
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(addEmail)"
+                      (click)="openModal(addParticipants)"
                     >
                       Add Email
                     </button>
@@ -156,7 +156,7 @@
                   <div>
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(importParticipant)"
+                      (click)="openModal(addParticipants)"
                     >
                       Import Email List
                     </button>
@@ -390,17 +390,9 @@
                 >
                   Sort By:
                 </span>
-                <th *ngIf="activeTab != onBoardingStatus.New">
+                <th>
                   <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
                 </th>
-                <th *ngIf="activeTab == onBoardingStatus.New">
-                  <mfDefaultSorter by="name">
-                    <div class="form-group mb-none">
-                      <label for="css">Participant Email</label>
-                    </div>
-                  </mfDefaultSorter>
-                </th>
-
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
                     Onboarding Status
@@ -561,11 +553,7 @@
       </div>
     </div>
 
-    <ng-template #addEmail>
-      <div class="modal-body modal__body"></div>
-    </ng-template>
-
-    <ng-template #importParticipant>
+    <ng-template #addParticipants>
       <div class="modal-body modal__body"></div>
     </ng-template>
   </div>
