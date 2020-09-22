@@ -37,6 +37,7 @@ public class Urls {
   public static String CHANGE_PASSWORD = "/change_password";
   public static String FORGOT_PASSWORD = "user/reset_password";
   public static String LOGOUT = "/logout";
+  public static String AUTH_SERVER_REDIRECT_URL = BuildConfig.BASE_URL_AUTH_SERVER + "callback";
   public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "auth"
           + "?client_id=oauth-scim-client-id"
           + "&scope=offline_access"
@@ -47,7 +48,7 @@ public class Urls {
           + "&code_challenge_method=S256"
           + "&code_challenge=" + FdaApplication.getCodeChallenge(FdaApplication.getRandomString())
           + "&correlationId=" + FdaApplication.getRandomString()
-          + "&redirect_uri=" + BuildConfig.AUTH_SERVER_REDIRECT_URL
+          + "&redirect_uri=" + AUTH_SERVER_REDIRECT_URL
           + "&state=" + FdaApplication.getRandomString();
 
   // Registration Server

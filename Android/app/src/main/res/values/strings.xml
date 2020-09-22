@@ -2,6 +2,13 @@
 <resources>
     <!--Shared Preference-->
     <string name="auth">authentication</string>
+    <string name="filter_signup">signup</string>
+    <string name="filter_callback">callback</string>
+    <string name="filter_activation">activation</string>
+    <string name="filter_error">error</string>
+    <string name="filter_forgotPassword">forgotPassword</string>
+    <string name="filter_privacy">privacy</string>
+    <string name="filter_terms">terms</string>
     <string name="userid">UserId</string>
     <string name="verified">Verified</string>
     <string name="join">Join</string>
@@ -557,6 +564,9 @@
     <string name="visit_website">Visit Website</string>
     <string name="join_study">Join Study</string>
     <string name="clientToken">clientToken</string>
+    <string name="server_connect_error">Couldn\'t connect to server. Please try again later.</string>
+    <string name="loginflow">loginflow</string>
+    <string name="logintype">logintype</string>
 
 
     <!--must change strings-->
