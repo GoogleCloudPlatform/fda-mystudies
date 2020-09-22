@@ -32,12 +32,13 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@AutoConfigureTestDatabase
 public class StudyMetadataControllerTest extends BaseMockIT {
 
   private static final String APP_ID_VALUE = "TEST_APP_ID";
@@ -53,6 +54,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   @Captor ArgumentCaptor<Map<String, Object>> dataToStoreCaptor;
 
   @Test
+  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   void testStudyMetadataSavedContent() throws Exception {
     Map<String, Object> dataToStore = new HashMap<>();
     dataToStore.put(APP_ID, APP_ID_VALUE);
@@ -87,6 +89,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
   }
 
   @Test
+  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   void testStudyMetadataSavedContentInvalidStudyId() throws Exception {
     HttpHeaders headers = TestUtils.newCommonHeaders();
     // Step 1: set empty studyId
