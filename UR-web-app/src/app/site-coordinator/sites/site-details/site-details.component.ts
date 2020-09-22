@@ -13,12 +13,12 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {OnboardingStatus} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
+const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
   templateUrl: './site-details.component.html',
   styleUrls: ['./site-details.component.scss'],
 })
-const MAXIMUM_USER_COUNT = 10;
 export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   query$ = new BehaviorSubject('');
