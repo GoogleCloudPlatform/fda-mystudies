@@ -497,7 +497,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           if let errorBody = responseDict {
             error1 = self.configuration.parseError(errorResponse: errorBody)
           } else {
-            error1 = error ?? NSError(domain: "", code: -101, userInfo: [:])
+            error1 = error ?? NSError(domain: "", code: statusCode, userInfo: [:])
           }
         } else {
           error1 = NSError(
