@@ -25,6 +25,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -38,7 +39,13 @@ import org.springframework.data.annotation.Transient;
 @Getter
 @Setter
 @Entity
-@Table(name = "ur_admin_user")
+@Table(
+    name = "ur_admin_user",
+    indexes = {
+      @Index(name = "email_index", columnList = "email", unique = true),
+      @Index(name = "ur_admin_auth_id_index", columnList = "ur_admin_auth_id", unique = true),
+      @Index(name = "security_code_index", columnList = "security_code", unique = true)
+    })
 public class UserRegAdminEntity implements Serializable {
 
   private static final long serialVersionUID = 8686769972691178223L;

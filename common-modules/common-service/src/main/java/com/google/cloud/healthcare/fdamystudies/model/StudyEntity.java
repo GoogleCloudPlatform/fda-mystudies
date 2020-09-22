@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -53,6 +54,10 @@ import org.hibernate.annotations.UpdateTimestamp;
       @UniqueConstraint(
           columnNames = {"custom_id", "app_info_id"},
           name = "study_info_custom_id_app_info_id_uidx")
+    },
+    indexes = {
+      @Index(name = "app_info_id_index", columnList = "app_info_id"),
+      @Index(name = "name_index", columnList = "name"),
     })
 public class StudyEntity implements Serializable {
 

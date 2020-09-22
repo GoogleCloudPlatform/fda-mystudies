@@ -22,6 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -36,7 +37,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Getter
 @Entity
-@Table(name = "app_info")
+@Table(
+    name = "app_info",
+    indexes = {@Index(name = "custom_app_id_index", columnList = "custom_app_id", unique = true)})
 public class AppEntity implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;

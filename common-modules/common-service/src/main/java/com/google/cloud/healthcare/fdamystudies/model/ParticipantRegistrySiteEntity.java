@@ -24,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -41,10 +42,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(
     name = "participant_registry_site",
+    indexes = {
+      @Index(name = "site_id_index", columnList = "site_id"),
+      @Index(name = "email_index", columnList = "email"),
+      @Index(name = "study_info_id_index", columnList = "study_info_id"),
+      @Index(name = "onboarding_status_index", columnList = "onboarding_status")
+    },
     uniqueConstraints = {
       @UniqueConstraint(
           columnNames = {"email", "study_info_id"},
-          name = "participant_registry_site_email_study_info_id_uidx")
+          name = "participant_registry_site_email_study_info_id_uidx"),
     })
 public class ParticipantRegistrySiteEntity implements Serializable {
   private static final long serialVersionUID = 1L;

@@ -17,6 +17,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -31,7 +32,17 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Getter
 @Entity
-@Table(name = "auth_info")
+@Table(
+    name = "auth_info",
+    indexes = {
+      @Index(name = "user_details_id_index", columnList = "user_details_id", unique = true),
+      @Index(
+          name = "remote_notification_flag_index",
+          columnList = "remote_notification_flag",
+          unique = false),
+      @Index(name = "device_token_index", columnList = "device_token", unique = true),
+      @Index(name = "device_type_index", columnList = "device_type")
+    })
 public class AuthInfoEntity implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;

@@ -21,6 +21,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -37,7 +38,14 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "sites_permissions")
+@Table(
+    name = "sites_permissions",
+    indexes = {
+      @Index(name = "site_id_index", columnList = "site_id"),
+      @Index(name = "ur_admin_user_id_index", columnList = "ur_admin_user_id"),
+      @Index(name = "study_id_index", columnList = "study_id"),
+      @Index(name = "app_info_id_index", columnList = "app_info_id")
+    })
 public class SitePermissionEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;

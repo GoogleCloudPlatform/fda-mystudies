@@ -19,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -39,6 +40,16 @@ import org.hibernate.annotations.GenericGenerator;
       @UniqueConstraint(
           columnNames = {"user_details_id", "study_info_id"},
           name = "participant_study_info_user_details_id_study_info_id__uidx")
+    },
+    indexes = {
+      @Index(name = "site_id_index", columnList = "site_id", unique = false),
+      @Index(
+          name = "participant_registry_site_id_index",
+          columnList = "participant_registry_site_id",
+          unique = false),
+      @Index(name = "study_info_id_index", columnList = "study_info_id", unique = true),
+      @Index(name = "user_details_id_index", columnList = "user_details_id", unique = true),
+      @Index(name = "status_index", columnList = "status")
     })
 public class ParticipantStudyEntity implements Serializable {
 
