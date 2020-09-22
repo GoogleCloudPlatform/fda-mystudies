@@ -61,9 +61,10 @@ describe('AddEmailComponent', () => {
 
   it('should bind input email value to Component property', () => {
     const emailInputs = emailInput.nativeElement as HTMLInputElement;
-    fixture.detectChanges();
     emailInputs.value = 'prak@grr.la';
     emailInputs.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(emailInputs.value).toBe('prak@grr.la');
   });
 
   it('should add the particpants when add participants clicked', fakeAsync(async () => {
