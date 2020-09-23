@@ -31,10 +31,9 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(
     name = "users",
     indexes = {
-      @Index(name = "id_index", columnList = "id", unique = true),
-      @Index(name = "user_id_index", columnList = "user_id", unique = true),
-      @Index(name = "temp_reg_id_index", columnList = "temp_reg_id", unique = true),
-      @Index(name = "app_id_email_index", columnList = "app_id,email")
+      @Index(name = "users_user_id_idx", columnList = "user_id", unique = true),
+      @Index(name = "users_temp_reg_id_idx", columnList = "temp_reg_id", unique = true),
+      @Index(name = "users_app_id_email_idx", columnList = "app_id,email")
     })
 public class UserEntity {
 
