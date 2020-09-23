@@ -35,13 +35,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(
     name = "auth_info",
     indexes = {
-      @Index(name = "user_details_id_index", columnList = "user_details_id"),
       @Index(
-          name = "remote_notification_flag_index",
+          name = "auth_info_remote_notification_flag_idx",
           columnList = "remote_notification_flag",
           unique = false),
-      @Index(name = "device_token_index", columnList = "device_token"),
-      @Index(name = "device_type_index", columnList = "device_type")
+      @Index(name = "auth_info_device_token_idx", columnList = "device_token"),
+      @Index(name = "auth_info_device_type_idx", columnList = "device_type")
     })
 public class AuthInfoEntity implements Serializable {
 

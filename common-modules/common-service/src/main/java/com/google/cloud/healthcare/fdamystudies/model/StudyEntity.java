@@ -56,8 +56,7 @@ import org.hibernate.annotations.UpdateTimestamp;
           name = "study_info_custom_id_app_info_id_uidx")
     },
     indexes = {
-      @Index(name = "app_info_id_index", columnList = "app_info_id"),
-      @Index(name = "name_index", columnList = "name"),
+      @Index(name = "study_info_name_idx", columnList = "name"),
     })
 public class StudyEntity implements Serializable {
 

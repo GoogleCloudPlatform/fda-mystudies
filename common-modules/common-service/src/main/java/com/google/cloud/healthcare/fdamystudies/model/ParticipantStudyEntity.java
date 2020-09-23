@@ -41,16 +41,7 @@ import org.hibernate.annotations.GenericGenerator;
           columnNames = {"user_details_id", "study_info_id"},
           name = "participant_study_info_user_details_id_study_info_id__uidx")
     },
-    indexes = {
-      @Index(name = "site_id_index", columnList = "site_id"),
-      @Index(
-          name = "participant_registry_site_id_index",
-          columnList = "participant_registry_site_id",
-          unique = false),
-      @Index(name = "study_info_id_index", columnList = "study_info_id"),
-      @Index(name = "user_details_id_index", columnList = "user_details_id"),
-      @Index(name = "status_index", columnList = "status")
-    })
+    indexes = {@Index(name = "participant_study_info_status_idx", columnList = "status")})
 public class ParticipantStudyEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;

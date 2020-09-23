@@ -40,11 +40,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Entity
 @Table(
     name = "sites",
-    indexes = {
-      @Index(name = "location_id_index", columnList = "location_id"),
-      @Index(name = "study_id_index", columnList = "study_id"),
-      @Index(name = "status_index", columnList = "status")
-    })
+    indexes = {@Index(name = "sites_status_idx", columnList = "status")})
 public class SiteEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;

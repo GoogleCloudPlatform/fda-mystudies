@@ -18,7 +18,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,9 +31,7 @@ import org.hibernate.annotations.Type;
 @Setter
 @Getter
 @Entity
-@Table(
-    name = "study_consent",
-    indexes = {@Index(name = "participant_study_id_index", columnList = "participant_study_id")})
+@Table(name = "study_consent")
 public class StudyConsentEntity implements Serializable {
 
   private static final long serialVersionUID = 6218229749598633153L;

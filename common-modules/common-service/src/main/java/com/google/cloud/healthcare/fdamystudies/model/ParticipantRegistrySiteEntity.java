@@ -43,10 +43,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(
     name = "participant_registry_site",
     indexes = {
-      @Index(name = "site_id_index", columnList = "site_id"),
-      @Index(name = "email_index", columnList = "email"),
-      @Index(name = "study_info_id_index", columnList = "study_info_id"),
-      @Index(name = "onboarding_status_index", columnList = "onboarding_status")
+      @Index(name = "participant_registry_site_email_idx", columnList = "email"),
+      @Index(
+          name = "participant_registry_site_onboarding_status_idx",
+          columnList = "onboarding_status")
     },
     uniqueConstraints = {
       @UniqueConstraint(

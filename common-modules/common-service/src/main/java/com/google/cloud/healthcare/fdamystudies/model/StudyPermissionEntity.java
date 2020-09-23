@@ -20,7 +20,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -34,13 +33,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Getter
 @ToString
 @Entity
-@Table(
-    name = "study_permissions",
-    indexes = {
-      @Index(name = "ur_admin_user_id_index", columnList = "ur_admin_user_id"),
-      @Index(name = "app_info_id_index", columnList = "app_info_id"),
-      @Index(name = "study_id_index", columnList = "study_id")
-    })
+@Table(name = "study_permissions")
 public class StudyPermissionEntity implements Serializable {
 
   private static final long serialVersionUID = -9223143734827095684L;
