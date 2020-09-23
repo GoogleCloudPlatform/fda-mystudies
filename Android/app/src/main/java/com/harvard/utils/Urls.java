@@ -70,8 +70,8 @@ public class Urls {
   public static String VERSION_INFO = "versionInfo";
 
   // Response server
-  public static String PROCESS_RESPONSE = "participant/process-response";
+  public static String PROCESS_RESPONSE = "v2/participant/process-response";
   public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_SERVER + "participant/getresponse?";
-  public static String UPDATE_ACTIVITY_PREFERENCE = "participant/update-activity-state";
+  public static String UPDATE_ACTIVITY_PREFERENCE = "v2/participant/update-activity-state";
   public static String ACTIVITY_STATE = "participant/get-activity-state";
 }
