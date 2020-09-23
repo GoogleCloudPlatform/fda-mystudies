@@ -16,10 +16,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "participant_info")
+@Table(
+    name = "participant_info",
+    indexes = {
+      @Index(name = "participant_identifier_index", columnList = "participant_identifier"),
+      @Index(name = "token_identifier_index", columnList = "token_identifier", unique = true)
+    })
 public class ParticipantBo implements Serializable {
 
   private static final long serialVersionUID = -8669517487080184697L;

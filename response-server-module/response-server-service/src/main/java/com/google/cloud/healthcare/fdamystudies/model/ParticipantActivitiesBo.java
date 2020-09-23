@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name = "participant_activities")
+@Table(
+    name = "participant_activities",
+    indexes = {
+      @Index(name = "participant_identifier_index", columnList = "participant_identifier"),
+      @Index(name = "study_id_index", columnList = "study_id")
+    })
 public class ParticipantActivitiesBo implements Serializable {
 
   private static final long serialVersionUID = 1005603353927628403L;
