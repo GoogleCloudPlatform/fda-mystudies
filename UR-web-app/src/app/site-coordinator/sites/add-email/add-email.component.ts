@@ -12,10 +12,8 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
-
   @Output() addEmail = new EventEmitter();
   @Input() siteId = '';
-  submitted = false;
   model: AddEmail;
   constructor(
     private readonly siteDetailedService: SiteDetailsService,
@@ -26,7 +24,6 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
   }
 
   addParticipant(): void {
-    this.submitted = true;
     this.subs.add(
       this.siteDetailedService
         .addParticipants(this.siteId, this.model)
