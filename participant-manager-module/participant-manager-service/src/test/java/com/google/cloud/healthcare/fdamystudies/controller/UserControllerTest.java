@@ -848,20 +848,19 @@ public class UserControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(2);
 
-    // get users for default page (0), limit (10) and sort by created timestamp in descending
-    // order
+    // get all locations if page and limit values are null
     mockMvc
         .perform(
             get(ApiEndpoint.GET_USERS.getPath()).headers(headers).contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.users").isArray())
-        .andExpect(jsonPath("$.users", hasSize(10)))
+        .andExpect(jsonPath("$.users", hasSize(21)))
         .andExpect(jsonPath("$.totalUsersCount", is(21)))
         .andExpect(jsonPath("$.users[0].apps").isArray())
         .andExpect(jsonPath("$.users[0].apps").isEmpty())
         .andExpect(jsonPath("$.message", is(MessageCode.GET_USERS_SUCCESS.getMessage())))
-        .andExpect(jsonPath("$.users[0].email", is(String.valueOf(20) + EMAIL_VALUE)));
+        .andExpect(jsonPath("$.users..email", hasItem(String.valueOf(20) + EMAIL_VALUE)));
 
     verifyTokenIntrospectRequest(3);
   }
