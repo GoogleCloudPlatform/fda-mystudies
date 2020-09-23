@@ -60,6 +60,7 @@ export class AuthService {
       .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.redirectUrl)
       .set('state', uuidv4())
+      // .set('env', 'localhost')
       .toString();
     window.location.href = `${environment.loginUrl}?${params}`;
   }
