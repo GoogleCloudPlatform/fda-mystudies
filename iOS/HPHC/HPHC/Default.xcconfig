@@ -40,13 +40,6 @@ AUTH_URL = xxxxxx
 // e.g. mystudiesdeployment.com
 HYDRA_REST_BASE_URL = xxxxx
 
-// Hydra URL to load web login page.
-// e.g. mystudieshydradeployment.com
-HYDRA_WEB_BASE_URL = xxxxxx
-
-// Hydra redirect URL
-AUTH_REDIRECT_BASE_URL = xxxx
-
 // This is used to generate base64 basic Authorization token for WCP WS validation.
 AUTH_USERNAME = xxxxx
 AUTH_PASSWORD = xxxxxxxxxxxx

@@ -21,7 +21,7 @@ struct HydraAPI {
   static func loginRequest(tempRegID: String = "") -> URLRequest? {
 
     let parameters: JSONDictionary = [
-      "client_id": "oauth-scim-client-id",
+      "client_id": "MYSTUDIES_IOS_MOBILE_APP",
       "scope": "offline_access",
       "response_type": "code",
       "appId": AppConfiguration.appID,
@@ -31,7 +31,7 @@ struct HydraAPI {
       "code_challenge_method": "S256",
       "code_challenge": SessionService.instance.codeChallenge,
       "correlationId": SessionService.instance.correlationID,
-      "redirect_uri": AuthRouter.redirectURL + AuthRouter.oauthPath + "/login",
+      "redirect_uri": AuthRouter.redirectURL,
       "state": String.randomString(length: 21),
     ]
     return try?
@@ -54,12 +54,11 @@ struct HydraAPI {
       "appId": AppConfiguration.appID,
       "mobilePlatform": Utilities.currentDevicePlatform(),
     ]
-    let verifier = SessionService.instance.codeVerifier
 
     let params: JSONDictionary = [
       "grant_type": "authorization_code",
       "scope": "openid offline",
-      "redirect_uri": AuthRouter.redirectURL + AuthRouter.oauthPath + "/login",
+      "redirect_uri": AuthRouter.redirectURL,
       "code_verifier": SessionService.instance.codeVerifier,
       "userId": user.userId ?? "",
       "code": code,

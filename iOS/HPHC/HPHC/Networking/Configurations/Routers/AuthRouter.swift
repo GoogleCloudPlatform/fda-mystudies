@@ -40,16 +40,15 @@ enum AuthRouter: URLRequestConvertible {
   case auth(params: JSONDictionary)
   case codeGrant(params: JSONDictionary, headers: [String: String])
 
-  static let webBaseHostPath = API.hydraWebURL
   static let baseHostPath = API.hydraRestURL
-  static let redirectURL = API.hydraRedirectURL
+  static let redirectURL = "app://gcp/mystudies/callback"
   static let oauthPath = "/oauth-scim-service"
   static let oauthVersion = "/oauth2"
 
   var baseURLPath: String {
     switch self {
     case .auth:
-      return "\(AuthRouter.webBaseHostPath)\(AuthRouter.oauthVersion)"
+      return "\(AuthRouter.baseHostPath)\(AuthRouter.oauthVersion)"
     case .codeGrant:
       return "\(AuthRouter.baseHostPath)\(AuthRouter.oauthPath)\(AuthRouter.oauthVersion)"
     }

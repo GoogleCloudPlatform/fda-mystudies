@@ -86,10 +86,10 @@ class AuthServices: NSObject {
     user.refreshToken = response[kRefreshToken] as? String ?? ""
 
     if let isTempPassword = response[kUserIsTempPassword] as? Bool {
-      user.isLoginWithTempPassword = isTempPassword
+      user.isLoggedInWithTempPassword = isTempPassword
     }
 
-    if user.verified && !user.isLoginWithTempPassword {
+    if user.verified && !user.isLoggedInWithTempPassword {
 
       // Set user type & save current user to DB
       user.userType = UserType.loggedInUser

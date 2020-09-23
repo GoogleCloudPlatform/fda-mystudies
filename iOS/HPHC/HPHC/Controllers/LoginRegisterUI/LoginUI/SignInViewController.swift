@@ -179,7 +179,7 @@ class SignInViewController: UIViewController {
         User.currentUser.verified = false
         navigateToVerifyController()
       case .tempPassword:
-        User.currentUser.isLoginWithTempPassword = true
+        User.currentUser.isLoggedInWithTempPassword = true
         self.userDidLoggedIn()
       }
     }
@@ -331,7 +331,7 @@ extension SignInViewController {
 
     ORKPasscodeViewController.removePasscodeFromKeychain()
 
-    if User.currentUser.isLoginWithTempPassword {
+    if User.currentUser.isLoggedInWithTempPassword {
       self.navigateToChangePassword()
     } else {
 

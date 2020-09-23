@@ -93,7 +93,7 @@ class User {
   var participatedStudies: [UserStudyStatus]! = []
   var participatedActivites: [UserActivityStatus]! = []
   var logoutReason: LogoutReason = .userAction
-  var isLoginWithTempPassword: Bool = false
+  var isLoggedInWithTempPassword: Bool = false
 
   /// sharedInstance
   private static var _currentUser: User?
@@ -493,7 +493,7 @@ class User {
     authToken = tokenType.capitalized + " " + accessToken
     refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
 
-    if self.verified && !self.isLoginWithTempPassword {
+    if self.verified && !self.isLoggedInWithTempPassword {
 
       // Set user type & save current user to DB
       userType = UserType.loggedInUser
