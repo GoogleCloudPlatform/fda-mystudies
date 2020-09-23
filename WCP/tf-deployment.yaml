@@ -28,7 +28,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                # The "mystudies-demo-my-studies-fda-resources" should be changed to the name os the fda-resources
+                # The "mystudies-demo-my-studies-fda-resources" should be changed to the name of the fda-resources
                 # GCS bucket set up in the data project.
                 command: ["gcsfuse", "-o", "nonempty", "mystudies-demo-my-studies-fda-resources", "/usr/local/tomcat/webapps/fdaResources"]
             preStop:
