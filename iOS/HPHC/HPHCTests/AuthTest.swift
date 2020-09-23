@@ -4,38 +4,37 @@
 //  license that can be found in the LICENSE file or at
 //  https://opensource.org/licenses/MIT.
 
-import XCTest
-@testable import FDA_MyStudies
 import Mockingjay
+import XCTest
 
+@testable import FDA_MyStudies
 
 class LoginTest: XCTestCase {
-  
+
   func testGrantCode() {
     guard let url = try? AuthRouter.codeGrant(params: [:], headers: [:]).asURLRequest().url
-      else { return XCTFail() }
-    
+    else { return XCTFail() }
+
     let responseDict: JSONDictionary = [
-      User.JSONKey.accessToken : "accesstoken-12345",
-      User.JSONKey.refreshToken : "FXm_WOcEddMDzumj",
-      User.JSONKey.tokenType: "bearer"
+      User.JSONKey.accessToken: "accesstoken-12345",
+      User.JSONKey.refreshToken: "FXm_WOcEddMDzumj",
+      User.JSONKey.tokenType: "bearer",
     ]
-    
+
     guard let responseData = Utilities.dictionaryToData(value: responseDict)
-      else { return XCTFail()}
-    
+    else { return XCTFail() }
+
     // Mock the response.
-    stub(http(.post,uri: url?.absoluteString ?? ""), jsonData(responseData))
+    stub(http(.post, uri: url?.absoluteString ?? ""), jsonData(responseData))
     let expection = XCTestExpectation(description: "Api call")
-    
+
     let router = AuthRouter.codeGrant(params: [:], headers: [:])
-    
+
     APIService.instance.requestForData(with: router) { (data, status, error) in
       if let authDict = data?.toJSONDictionary() {
         User.currentUser.authenticate(with: authDict)
         expection.fulfill()
-      }
-      else {
+      } else {
         XCTFail()
       }
     }
@@ -48,7 +47,10 @@ class LoginTest: XCTestCase {
   func testCodeVerifier() {
     let verifier = SessionService.instance.codeVerifier
     let verifierCount = verifier.count
-    XCTAssertTrue(verifierCount > 43 && verifierCount < 128, "Code verifier should be greater than 43 and less than 128")
+    XCTAssertTrue(
+      verifierCount > 43 && verifierCount < 128,
+      "Code verifier should be greater than 43 and less than 128"
+    )
     SessionService.resetSession()
   }
 
@@ -65,4 +67,3 @@ class LoginTest: XCTestCase {
   }
 
 }
-
