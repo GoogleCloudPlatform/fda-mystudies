@@ -82,6 +82,9 @@ export class AuthInterceptor implements HttpInterceptor {
         .set('userId', user.id.toString())
         .set('authToken', this.authService.getUserAccessToken())
         .set('authUserId', user.urAdminAuthId);
+      if (!req.headers.has('Content-Type')) {
+        req.headers.set('Content-Type', 'application/json');
+      }
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
         this.handleError(),
