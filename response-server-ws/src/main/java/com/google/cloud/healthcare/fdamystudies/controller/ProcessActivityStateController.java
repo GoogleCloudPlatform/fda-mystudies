@@ -100,6 +100,72 @@ public class ProcessActivityStateController {
               ErrorCode.EC_701.errorMessage());
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
+      try {
+        participantActivityStateResponseService.saveParticipantActivities(activityStateRequestBean);
+        SuccessResponseBean srBean = new SuccessResponseBean();
+        srBean.setMessage(AppConstants.SUCCESS_MSG);
+        String activityIds =
+            activityStateRequestBean
+                .getActivity()
+                .stream()
+                .map(s -> s.getActivityId())
+                .collect(Collectors.joining(", "));
+        commonService.createActivityLog(
+            userId,
+            "Activity State Update -success",
+            "Activity state update successful for partcipant "
+                + activityStateRequestBean.getParticipantId()
+                + " and activityIds "
+                + activityIds
+                + " .",
+            null);
+
+        return new ResponseEntity<>(srBean, HttpStatus.OK);
+      } catch (Exception e) {
+        logger.warn("ProcessActivityStateController updateActivityState() failed ", e);
+        String activityIds =
+            activityStateRequestBean
+                .getActivity()
+                .stream()
+                .map(s -> s.getActivityId())
+                .collect(Collectors.joining(", "));
+        commonService.createActivityLog(
+            userId,
+            "Activity State Update -failure",
+            "Activity state update unsuccessful for partcipant "
+                + activityStateRequestBean.getParticipantId()
+                + " and activityIds "
+                + activityIds
+                + " .",
+            null);
+        ErrorBean errorBean =
+            AppUtil.dynamicResponse(
+                ErrorCode.EC_714.code(),
+                ErrorCode.EC_714.errorMessage(),
+                AppConstants.ERROR_STR,
+                e.getMessage());
+        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+      }
+    }
+  }
+  
+  @PostMapping("/v2/participant/update-activity-state")
+  public ResponseEntity<?> updateActivityStateV2(
+      @RequestBody ActivityStateRequestBean activityStateRequestBean,
+      @Context HttpServletResponse response,
+      @RequestHeader String userId) {
+
+    if (activityStateRequestBean == null
+        || Strings.isBlank(activityStateRequestBean.getParticipantId())
+        || Strings.isBlank(activityStateRequestBean.getStudyId())) {
+      ErrorBean errorBean =
+          AppUtil.dynamicResponse(
+              ErrorCode.EC_701.code(),
+              ErrorCode.EC_701.errorMessage(),
+              AppConstants.ERROR_STR,
+              ErrorCode.EC_701.errorMessage());
+      return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+    } else {
       if (activityStateRequestBean.getActivity() != null) {
         for (ParticipantActivityBean participantActivityBean :
             activityStateRequestBean.getActivity()) {
