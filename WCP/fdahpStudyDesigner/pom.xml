@@ -31,19 +31,6 @@
 					<!-- <warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory> -->
 				</configuration>
 			</plugin>
-			<!-- <plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1.1</version>
-				<configuration>
-					<packagingExcludes>WEB-INF/web.xml,META-INF/context.xml,studylogo/,studypages/,studyResources/,questionnaire/</packagingExcludes>
-					<encoding>UTF-8</encoding>
-					<webResources>
-						<resource>
-							<directory>${project.build.directory}/${project.build.finalName}/</directory>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin> -->
 			<!-- Maven compiler plugin -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -72,6 +59,16 @@
 					<nosuffix>true</nosuffix>
 				</configuration>
 			</plugin>
+			<plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>2.5.2</version>
+        <configuration>
+          <to>
+            <image>${image_path}</image>
+          </to>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
 	<!-- Shared version number properties -->
