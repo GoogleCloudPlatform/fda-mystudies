@@ -16,4 +16,4 @@ jobs:
     - name: Build with Maven
       run: |
           cd audit-log-module
-          mvn -B package --file pom.xml        
+          mvn -B package --file pom.xml

@@ -1,6 +1,4 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/study-meta-data', '.']
-  dir: "WCP-WS"
-
-images: ['gcr.io/$PROJECT_ID/study-meta-data']
+  - name: 'maven'
+    args: ['mvn', '-B', 'package', 'com.google.cloud.tools:jib-maven-plugin:2.5.2:build', '-Dimage_path=gcr.io/$PROJECT_ID/study-meta-data']
+    dir: "WCP-WS"

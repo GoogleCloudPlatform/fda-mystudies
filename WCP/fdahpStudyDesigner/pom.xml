@@ -59,16 +59,6 @@
 					<nosuffix>true</nosuffix>
 				</configuration>
 			</plugin>
-			<plugin>
-        <groupId>com.google.cloud.tools</groupId>
-        <artifactId>jib-maven-plugin</artifactId>
-        <version>2.5.2</version>
-        <configuration>
-          <to>
-            <image>${image_path}</image>
-          </to>
-        </configuration>
-      </plugin>
 		</plugins>
 	</build>
 	<!-- Shared version number properties -->
