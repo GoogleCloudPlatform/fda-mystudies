@@ -51,9 +51,9 @@ public class ParticipantIdControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 post(ApiEndpoint.ADD_PARTICIPANT.getPath())
-                    .contextPath(getContextPath())
                     .content(asJsonString(enrollmentTokenIdentifierBeanRequest))
-                    .headers(headers))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").isNotEmpty())
@@ -82,9 +82,9 @@ public class ParticipantIdControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_PARTICIPANT.getPath())
-                .contextPath(getContextPath())
                 .content(asJsonString(createValidEnrollmentTokenIdentifierBean()))
-                .headers(headers))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andReturn();
@@ -103,9 +103,9 @@ public class ParticipantIdControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 post(ApiEndpoint.ADD_PARTICIPANT.getPath())
-                    .contextPath(getContextPath())
                     .content(asJsonString(enrollTokenIdentifierBeanInvalidStudyId))
-                    .headers(headers))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.appErrorCode").isNumber())
@@ -130,9 +130,9 @@ public class ParticipantIdControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 post(ApiEndpoint.ADD_PARTICIPANT.getPath())
-                    .contextPath(getContextPath())
                     .content(asJsonString(enrollTokenIdentifierBeanInvalidStudyId))
-                    .headers(headers))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.appErrorCode").isNumber())

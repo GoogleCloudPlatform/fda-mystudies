@@ -64,9 +64,9 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 get(ApiEndpoint.GET_ACTIVITY_STATE.getPath())
-                    .contextPath(getContextPath())
                     .params(requestParams)
-                    .headers(headers))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
@@ -100,9 +100,9 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 get(ApiEndpoint.GET_ACTIVITY_STATE.getPath())
-                    .contextPath(getContextPath())
                     .params(requestParams)
-                    .headers(headers))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.activities").isArray())
@@ -131,9 +131,9 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 get(ApiEndpoint.GET_ACTIVITY_STATE.getPath())
-                    .contextPath(getContextPath())
                     .params(requestParams)
-                    .headers(headers))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andReturn();
@@ -151,9 +151,9 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
-                .contextPath(getContextPath())
                 .content(inputJsonContent)
-                .headers(headers))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 
@@ -195,9 +195,9 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.UPDATE_ACTIVITY_STATE.getPath())
-                .contextPath(getContextPath())
                 .content(inputJsonContent)
-                .headers(headers))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 

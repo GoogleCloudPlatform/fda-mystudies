@@ -115,9 +115,9 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.PROCESS_ACTIVITY_RESPONSE.getPath())
-                .contextPath(getContextPath())
                 .content(JsonUtils.asJsonString(activityResponseBean))
-                .headers(headers))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(SUCCESS)));
@@ -167,9 +167,9 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.PROCESS_ACTIVITY_RESPONSE.getPath())
-                .contextPath(getContextPath())
                 .content(JsonUtils.asJsonString(activityResponseBean))
-                .headers(headers))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.userMessage", is(EC_701.errorMessage())));
@@ -183,9 +183,9 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.PROCESS_ACTIVITY_RESPONSE.getPath())
-                .contextPath(getContextPath())
                 .content(JsonUtils.asJsonString(activityResponseBean))
-                .headers(headers))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.detailMessage", is(PARTICIPANT_ID_NOT_EXISTS_MESSAGE)));
@@ -213,7 +213,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 get(ApiEndpoint.GET_PROCESS_ACTIVITY_RESPONSE.getPath())
-                    .contextPath(getContextPath())
                     .headers(headers)
                     .queryParam("appId", "appId")
                     .queryParam("studyId", STUDY_ID_VALUE)
@@ -222,7 +221,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                     .queryParam(
                         PARTICIPANT_TOKEN_IDENTIFIER_KEY, participantBo.getTokenIdentifier())
                     .queryParam("activityId", ACTIVITY_ID_VALUE)
-                    .queryParam("questionKey", QUESTION_KEY_VALUE))
+                    .queryParam("questionKey", QUESTION_KEY_VALUE)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
@@ -254,7 +254,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             get(ApiEndpoint.GET_PROCESS_ACTIVITY_RESPONSE.getPath())
-                .contextPath(getContextPath())
                 .headers(headers)
                 .queryParam("appId", "")
                 .queryParam("studyId", "")
@@ -262,7 +261,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .queryParam("participantId", "")
                 .queryParam(PARTICIPANT_TOKEN_IDENTIFIER_KEY, "")
                 .queryParam("activityId", "")
-                .queryParam(QUESTION_KEY_VALUE, ""))
+                .queryParam(QUESTION_KEY_VALUE, "")
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.userMessage", is(EC_701.errorMessage())));
@@ -283,12 +283,12 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.WITHDRAW.getPath())
-                .contextPath(getContextPath())
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers)
                 .queryParam("deleteResponses", "")
                 .queryParam("participantId", participantBo.getParticipantIdentifier())
-                .queryParam("studyId", STUDY_ID_VALUE))
+                .queryParam("studyId", STUDY_ID_VALUE)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(SUCCESS)));
@@ -329,12 +329,12 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.WITHDRAW.getPath())
-                .contextPath(getContextPath())
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers)
                 .queryParam("deleteResponses", "true")
                 .queryParam("participantId", participantBo.getParticipantIdentifier())
-                .queryParam("studyId", STUDY_ID_VALUE))
+                .queryParam("studyId", STUDY_ID_VALUE)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(SUCCESS)));
@@ -367,12 +367,12 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.WITHDRAW.getPath())
-                .contextPath(getContextPath())
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers)
                 .queryParam("deleteResponses", "")
                 .queryParam("participantId", "")
-                .queryParam("studyId", ""))
+                .queryParam("studyId", "")
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.userMessage", is(EC_701.errorMessage())));

@@ -68,9 +68,9 @@ public class StudyMetadataControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(ApiEndpoint.STUDYMETADATA.getPath())
-                .contextPath(getContextPath())
                 .content(asJsonString(studyMetadataBeanRequest))
-                .headers(headers))
+                .headers(headers)
+                .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk());
 
@@ -97,9 +97,9 @@ public class StudyMetadataControllerTest extends BaseMockIT {
         mockMvc
             .perform(
                 post(ApiEndpoint.STUDYMETADATA.getPath())
-                    .contextPath(getContextPath())
                     .content(asJsonString(studyMetadataBeanRequest))
-                    .headers(headers))
+                    .headers(headers)
+                    .contextPath(getContextPath()))
             .andDo(print())
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.appErrorCode").isNumber())
