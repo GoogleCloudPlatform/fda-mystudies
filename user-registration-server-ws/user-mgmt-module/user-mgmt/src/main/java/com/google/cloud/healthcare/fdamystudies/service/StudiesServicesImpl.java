@@ -53,6 +53,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StudiesServicesImpl implements StudiesServices {
@@ -70,6 +71,7 @@ public class StudiesServicesImpl implements StudiesServices {
   @Autowired UserMgmntAuditHelper userMgmntAuditLogHelper;
 
   @Override
+  @Transactional()
   public ErrorBean saveStudyMetadata(StudyMetadataBean studyMetadataBean) {
     logger.info("StudiesServicesImpl - saveStudyMetadata() : starts");
     ErrorBean errorBean = null;
@@ -81,6 +83,7 @@ public class StudiesServicesImpl implements StudiesServices {
   }
 
   @Override
+  @Transactional()
   public ErrorBean SendNotificationAction(
       NotificationForm notificationForm, AuditLogEventRequest auditRequest) throws IOException {
     HashSet<String> studySet = new HashSet<>();

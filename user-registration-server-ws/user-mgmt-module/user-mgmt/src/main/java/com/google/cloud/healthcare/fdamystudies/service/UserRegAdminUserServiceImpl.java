@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserRegAdminUserServiceImpl implements UserRegAdminUserService {
@@ -22,6 +23,7 @@ public class UserRegAdminUserServiceImpl implements UserRegAdminUserService {
   @Autowired private UserRegAdminUserDao adminUserDao;
 
   @Override
+  @Transactional()
   public UserRegAdminEntity save(UserRegAdminEntity adminUser) {
 
     logger.info("UserRegAdminUserServiceImpl save() - starts");

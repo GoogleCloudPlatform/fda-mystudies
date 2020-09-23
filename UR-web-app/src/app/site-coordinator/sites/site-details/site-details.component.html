@@ -1,0 +1,560 @@
+<ng-container *ngIf="siteParticipants$ | async as siteParticipants">
+  <div>
+    <div class="subheader p-none pl-none">
+      <div class="max__w__1280 m-none">
+        <div class="flex__justify__space-between">
+          <div
+            class="subheader__title flex__justify__space-between align__items__baseline"
+          >
+            <div>
+              <a routerLink="/coordinator/studies/sites">
+                <img src="assets/svgs/back-arrow.svg" alt="" />
+              </a>
+            </div>
+            <div>
+              <div class="mb-xs">
+                Site Participant Registry
+                <span
+                  *ngIf="siteParticipants.participantRegistryDetail.siteStatus"
+                  class="active__"
+                >
+                  {{
+                    siteParticipants.participantRegistryDetail.siteStatus === 1
+                      ? "Active"
+                      : "Inactive"
+                  }}
+                </span>
+              </div>
+              <div class="display-inline-flex overflow__auto">
+                <div class="pr-xlg">
+                  <div class="banner__label">
+                    {{
+                      siteParticipants.participantRegistryDetail
+                        .customLocationId
+                    }}
+                  </div>
+                  <div class="banner__text">
+                    {{
+                      siteParticipants.participantRegistryDetail.locationName
+                    }}
+                  </div>
+                </div>
+                <div class="pr-xlg">
+                  <div class="banner__label">
+                    {{
+                      siteParticipants.participantRegistryDetail.customStudyId
+                    }}
+                  </div>
+                  <div class="banner__text">
+                    {{ siteParticipants.participantRegistryDetail.studyName }}
+                  </div>
+                </div>
+                <div>
+                  <div class="banner__label">
+                    {{ siteParticipants.participantRegistryDetail.customAppId }}
+                  </div>
+                  <div class="banner__text">
+                    {{ siteParticipants.participantRegistryDetail.appName }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="desk__view">
+            <div class="flex__justify__space-between">
+              <div>
+                <div class="dropdown">
+                  <button
+                    name="btnToggleParticipant"
+                    class="dropbtn btn banner__primary__btn mr-sm tnsb"
+                    (click)="toggleParticipant()"
+                  >
+                    Add Participants
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                  <div
+                    [ngClass]="toggleDisplay ? 'show' : ''"
+                    class="dropdown-content participantSlideDown"
+                  >
+                    <div class="flex__justify__space-between mb-xs">
+                      <div class="mr-sm">
+                        <button
+                          class="primary__btn font__bold"
+                          (click)="openModal(addParticipants)"
+                        >
+                          Add Email
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          class="primary__btn font__bold"
+                          (click)="openModal(addParticipants)"
+                        >
+                          Import Email List
+                        </button>
+                      </div>
+                    </div>
+                    <div class="flex__row__reverse">
+                      <a
+                        download="Email_Import_Template"
+                        target="_blank"
+                        href="/assets/Email_Import_Template.xlsx"
+                        class="p-none"
+                      >
+                        <div class="download__text">Download Template</div>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <button
+                  name="buttonDecommision"
+                  class="btn banner__default__btn flex__row__reverse pad__5__13"
+                  (click)="decommissionSite()"
+                >
+                  {{
+                    siteParticipants.participantRegistryDetail.siteStatus === 1
+                      ? "Decommission Site for Study"
+                      : "Activate Site for Study"
+                  }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ForMobile View  -->
+    <div class="mobile__view yel__tabs">
+      <div class="p-md pb-none">
+        <div class="flex__ flex__justify__center">
+          <div>
+            <div class="dropdown">
+              <button
+                name="btnToggleParticipant"
+                class="dropbtn btn banner__primary__btn mr-sm font12"
+                (click)="toggleParticipant()"
+              >
+                Add Participants
+                <i class="fa fa-caret-down"></i>
+              </button>
+              <div
+                [ngClass]="toggleDisplay ? 'show' : ''"
+                lass="dropdown-content participantSlideDown"
+              >
+                <div class="flex__justify__space-between mb-xs">
+                  <div class="mr-sm">
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(addParticipants)"
+                    >
+                      Add Email
+                    </button>
+                  </div>
+                  <div>
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(addParticipants)"
+                    >
+                      Import Email List
+                    </button>
+                  </div>
+                </div>
+                <div class="flex__row__reverse">
+                  <a
+                    download="Email_Import_Template"
+                    target="_blank"
+                    href="/assets/Email_Import_Template.xlsx"
+                    class="p-none"
+                  >
+                    <div class="download__text">Download Template</div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <button
+              name="buttonDecommision"
+              class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
+              (click)="decommissionSite()"
+            >
+              Decommission Site for Study
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <ul class="nav nav-tabs">
+          <li [ngClass]="{active: activeTab == onBoardingStatus.All}">
+            <a data-toggle="tab" (click)="changeTab(onBoardingStatus.All)">
+              All
+              <span class="font11">
+                ({{
+                  siteParticipants.participantRegistryDetail.countByStatus.A
+                }})
+              </span>
+            </a>
+          </li>
+          <li [ngClass]="{active: activeTab == onBoardingStatus.New}">
+            <a
+              class="classNew"
+              data-toggle="tab"
+              (click)="changeTab(onBoardingStatus.New)"
+            >
+              New
+              <span class="font11">
+                ({{
+                  siteParticipants.participantRegistryDetail.countByStatus.N
+                }})
+              </span>
+            </a>
+          </li>
+          <li [ngClass]="{active: activeTab == onBoardingStatus.Invited}">
+            <a data-toggle="tab" (click)="changeTab(onBoardingStatus.Invited)">
+              Invited
+              <span class="font11">
+                ({{
+                  siteParticipants.participantRegistryDetail.countByStatus.I
+                }})
+              </span>
+            </a>
+          </li>
+          <li [ngClass]="{active: activeTab == onBoardingStatus.Disabled}">
+            <a data-toggle="tab" (click)="changeTab(onBoardingStatus.Disabled)">
+              Disabled
+              <span class="font11">
+                ({{
+                  siteParticipants.participantRegistryDetail.countByStatus.D
+                }})
+              </span>
+            </a>
+          </li>
+          <li></li>
+        </ul>
+      </div>
+      <div class="sred">
+        <div class="flex__ flex__justify__center">
+          <div
+            *ngIf="
+              activeTab == onBoardingStatus.New ||
+              activeTab == onBoardingStatus.Invited
+            "
+            class="mr-sm"
+          >
+            <button
+              class="dropbtn btn banner__primary__btn white__text bt__font12__pad113"
+              (click)="sendInvitation()"
+            >
+              {{ sendResend }}
+            </button>
+          </div>
+
+          <div
+            class="sendResendActiveClass"
+            *ngIf="
+              activeTab == onBoardingStatus.New ||
+              activeTab == onBoardingStatus.Invited ||
+              activeTab == onBoardingStatus.Disabled
+            "
+          >
+            <button
+              class="btn banner__default__btn flex__row__reverse pad__5__13 bt__font12__pad113"
+              (click)="toggleInvitation()"
+            >
+              {{ enableDisable }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max__w__1280 p-none site__participant">
+      <div class="desk__view">
+        <div
+          class="flex__justify__space-between bg__white yel__tabs border-bottom__dee2e6"
+        >
+          <div>
+            <ul class="nav nav-tabs">
+              <li [ngClass]="{active: activeTab == onBoardingStatus.All}">
+                <a data-toggle="tab" (click)="changeTab(onBoardingStatus.All)">
+                  All
+                  <span class="font11">
+                    ({{
+                      siteParticipants.participantRegistryDetail.countByStatus
+                        .A
+                    }})
+                  </span>
+                </a>
+              </li>
+              <li [ngClass]="{active: activeTab == onBoardingStatus.New}">
+                <a
+                  class="classNew"
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.New)"
+                >
+                  New
+                  <span class="font11">
+                    ({{
+                      siteParticipants.participantRegistryDetail.countByStatus
+                        .N
+                    }})
+                  </span>
+                </a>
+              </li>
+              <li [ngClass]="{active: activeTab == onBoardingStatus.Invited}">
+                <a
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.Invited)"
+                >
+                  Invited
+                  <span class="font11">
+                    ({{
+                      siteParticipants.participantRegistryDetail.countByStatus
+                        .I
+                    }})
+                  </span>
+                </a>
+              </li>
+              <li [ngClass]="{active: activeTab == onBoardingStatus.Disabled}">
+                <a
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.Disabled)"
+                >
+                  Disabled
+                  <span class="font11">
+                    ({{
+                      siteParticipants.participantRegistryDetail.countByStatus
+                        .D
+                    }})
+                  </span>
+                </a>
+              </li>
+              <li></li>
+            </ul>
+          </div>
+          <div class="pr-xlg">
+            <div class="flex__justify__space-between mb-xs">
+              <div
+                *ngIf="
+                  activeTab == onBoardingStatus.New ||
+                  activeTab == onBoardingStatus.Invited
+                "
+                class="mr-sm"
+              >
+                <button
+                  name="sendInvite"
+                  class="dropbtn btn banner__primary__btn white__text bt__font12__pad113"
+                  (click)="sendInvitation()"
+                >
+                  {{ sendResend }}
+                </button>
+              </div>
+              <div
+                class="sendResendActiveClass"
+                *ngIf="
+                  activeTab == onBoardingStatus.New ||
+                  activeTab == onBoardingStatus.Invited ||
+                  activeTab == onBoardingStatus.Disabled
+                "
+              >
+                <button
+                  name="toggleInvite"
+                  class="btn banner__default__btn flex__row__reverse pad__5__13 bt__font12__pad113"
+                  (click)="toggleInvitation()"
+                >
+                  {{ enableDisable }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content site__table">
+        <div>
+          <table
+            class="table table-striped"
+            [mfData]="
+              siteParticipants.participantRegistryDetail.registryParticipants
+            "
+            #mf="mfDataTable"
+            [mfRowsOnPage]="10"
+          >
+            <thead>
+              <tr>
+                <span
+                  class="sort__by__text mobile__view mr-sm"
+                  style="background: transparent;"
+                >
+                  Sort By:
+                </span>
+                <th>
+                  <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
+                </th>
+                <th *ngIf="activeTab == onBoardingStatus.All">
+                  <mfDefaultSorter by="onboardingStatus">
+                    Onboarding Status
+                  </mfDefaultSorter>
+                </th>
+                <th *ngIf="activeTab == onBoardingStatus.Invited">
+                  <mfDefaultSorter by="invitedDate">
+                    Last Invited On
+                  </mfDefaultSorter>
+                </th>
+                <th *ngIf="activeTab == onBoardingStatus.Disabled">
+                  <mfDefaultSorter by="invitedDate">
+                    Date Disabled
+                  </mfDefaultSorter>
+                </th>
+                <th *ngIf="activeTab != onBoardingStatus.New">
+                  <mfDefaultSorter by="enrollmentStatus">
+                    Enrollment Status
+                  </mfDefaultSorter>
+                </th>
+                <th *ngIf="activeTab == onBoardingStatus.All">
+                  <mfDefaultSorter by="enrollmentDate">
+                    Enrollment Date
+                  </mfDefaultSorter>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let participant of mf.data">
+                <!-- for all Selected -->
+                <td
+                  *ngIf="activeTab == onBoardingStatus.All"
+                  (click)="redirectParticipant(participant.id)"
+                >
+                  <span class="no_st_en">{{ participant.email }}</span>
+                </td>
+
+                <!-- for New Selected -->
+                <td *ngIf="activeTab == onBoardingStatus.New">
+                  <div>
+                    <div class="form-group mb-none">
+                      <input
+                        type="checkbox"
+                        id="{{ participant.id }}"
+                        (change)="rowCheckBoxChange($event)"
+                      />
+                      <label for="{{ participant.id }}">
+                        <span
+                          class="no_st_en"
+                          (click)="redirectParticipant(participant.id)"
+                        >
+                          {{ participant.email }}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="activeTab == onBoardingStatus.All">
+                  <div
+                    [ngClass]="{
+                      participant__label:
+                        participant.onboardingStatus ==
+                        onBoardingStatus.Invited,
+                      inactive__text:
+                        participant.onboardingStatus ==
+                        onBoardingStatus.Disabled
+                    }"
+                  >
+                    {{ participant.onboardingStatus }}
+                  </div>
+                </td>
+
+                <!-- For Invited  -->
+                <td *ngIf="activeTab == onBoardingStatus.Invited">
+                  <div>
+                    <div class="form-group mb-none">
+                      <div
+                        *ngIf="participant.enrollmentStatus == 'Yet to Enroll'"
+                      >
+                        <input
+                          type="checkbox"
+                          id="{{ participant.id }}"
+                          (change)="rowCheckBoxChange($event)"
+                        />
+                        <label for="{{ participant.id }}">
+                          <span
+                            class="no_st_en"
+                            (click)="redirectParticipant(participant.id)"
+                          >
+                            {{ participant.email }}
+                          </span>
+                        </label>
+                      </div>
+                      <div
+                        *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
+                      >
+                        <span (click)="redirectParticipant(participant.id)">
+                          {{ participant.email }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="activeTab == onBoardingStatus.Invited">
+                  {{ participant.invitedDate }}
+                </td>
+                <!-- For Disabled -->
+                <td *ngIf="activeTab === onBoardingStatus.Disabled">
+                  <div>
+                    <div class="form-group mb-none">
+                      <input
+                        type="checkbox"
+                        id="{{ participant.id }}"
+                        (change)="rowCheckBoxChange($event)"
+                      />
+                      <label for="{{ participant.id }}">
+                        <span
+                          class="no_st_en"
+                          (click)="redirectParticipant(participant.id)"
+                        >
+                          {{ participant.email }}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </td>
+                <td *ngIf="activeTab === onBoardingStatus.Disabled">
+                  {{ participant.invitedDate }}
+                </td>
+                <!-- Belongs to all and invited and disabled  -->
+                <td *ngIf="activeTab != onBoardingStatus.New">
+                  <div
+                    [ngClass]="{
+                      participant__label:
+                        participant.enrollmentStatus == 'Enrolled',
+                      inactive__text:
+                        participant.enrollmentStatus == 'Withdrawn'
+                    }"
+                  >
+                    {{ participant.enrollmentStatus }}
+                  </div>
+                </td>
+                <!-- Belongs to all -->
+                <td *ngIf="activeTab == onBoardingStatus.All">
+                  {{ participant.enrollmentDate }}
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">
+                  <mfBootstrapPaginator></mfBootstrapPaginator>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #addParticipants>
+      <div class="modal-body modal__body"></div>
+    </ng-template>
+  </div>
+</ng-container>
