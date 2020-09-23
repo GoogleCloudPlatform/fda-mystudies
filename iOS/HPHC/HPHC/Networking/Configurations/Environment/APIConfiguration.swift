@@ -58,18 +58,10 @@ enum API {
     return AppProtocol.value + ((try? Configuration.value(for: "AUTH_URL")) ?? "")
   }
 
-  static var hydraRedirectURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "AUTH_REDIRECT_BASE_URL")) ?? "")
-  }
-
   static var hydraRestURL: String {
     return AppProtocol.value + ((try? Configuration.value(for: "HYDRA_REST_BASE_URL")) ?? "")
   }
-
-  static var hydraWebURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "HYDRA_WEB_BASE_URL")) ?? "")
-  }
-
+  
   static var enrollmentURL: String {
     return AppProtocol.value + ((try? Configuration.value(for: "ENROLLMENT_URL")) ?? "")
   }
