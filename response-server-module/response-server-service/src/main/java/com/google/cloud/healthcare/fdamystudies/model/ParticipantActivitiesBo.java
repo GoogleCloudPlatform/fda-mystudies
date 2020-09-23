@@ -26,8 +26,10 @@ import lombok.Setter;
 @Table(
     name = "participant_activities",
     indexes = {
-      @Index(name = "participant_identifier_index", columnList = "participant_identifier"),
-      @Index(name = "study_id_index", columnList = "study_id")
+      @Index(
+          name = "participant_activities_participant_identifier_idx",
+          columnList = "participant_identifier"),
+      @Index(name = "participant_activities_study_id_idx", columnList = "study_id")
     })
 public class ParticipantActivitiesBo implements Serializable {
 

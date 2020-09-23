@@ -23,8 +23,13 @@ import javax.persistence.Table;
 @Table(
     name = "participant_info",
     indexes = {
-      @Index(name = "participant_identifier_index", columnList = "participant_identifier"),
-      @Index(name = "token_identifier_index", columnList = "token_identifier", unique = true)
+      @Index(
+          name = "participant_info_participant_identifier_idx",
+          columnList = "participant_identifier"),
+      @Index(
+          name = "participant_info_token_identifier_idx",
+          columnList = "token_identifier",
+          unique = true)
     })
 public class ParticipantBo implements Serializable {
 
