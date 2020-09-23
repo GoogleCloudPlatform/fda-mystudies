@@ -55,6 +55,7 @@ import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,6 +70,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@Ignore
 public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
   @Autowired private TestDataHelper testDataHelper;
