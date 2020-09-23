@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {SiteParticipants} from './site-detail.model';
 import {EntityService} from '../../../service/entity.service';
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '@environment';
 import {
   InviteSend,
@@ -48,7 +48,6 @@ export class SiteDetailsService {
       '',
     );
   }
-
   toggleInvitation(
     siteId: string,
     participantToBeUpdated: StatusUpdate,
@@ -60,7 +59,6 @@ export class SiteDetailsService {
       participantToBeUpdated,
     );
   }
-
   sendInvitation(
     siteId: string,
     invitationToSend: InviteSend,
@@ -84,5 +82,20 @@ export class SiteDetailsService {
       default:
         return '';
     }
+  }
+  importParticipants(
+    siteId: string,
+    formData: FormData,
+  ): Observable<ApiResponse> {
+    const httpOptionsForUpload = {
+      headers: new HttpHeaders({}),
+    };
+    return this.http.post<ApiResponse>(
+      `${environment.baseUrl}/sites/${encodeURIComponent(
+        siteId,
+      )}/participants/import`,
+      formData,
+      httpOptionsForUpload,
+    );
   }
 }
