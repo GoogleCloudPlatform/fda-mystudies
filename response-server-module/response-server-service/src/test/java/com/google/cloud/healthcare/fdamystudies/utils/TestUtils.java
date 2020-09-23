@@ -11,8 +11,9 @@ package com.google.cloud.healthcare.fdamystudies.utils;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
 
-import javax.ws.rs.core.MediaType;
+import java.util.Collections;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 public class TestUtils {
 
@@ -20,8 +21,8 @@ public class TestUtils {
 
   public static HttpHeaders newCommonHeaders() {
     HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", VALID_BEARER_TOKEN);
     return headers;
   }
@@ -30,8 +31,8 @@ public class TestUtils {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
     headers.add(USER_ID_HEADER, VALID_USER_ID);
-    headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
-    headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.setContentType(MediaType.APPLICATION_JSON);
     return headers;
   }
 }
