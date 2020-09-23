@@ -60,13 +60,12 @@ import org.mockito.Captor;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 
-@AutoConfigureTestDatabase
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
   @Autowired private TestDataHelper testDataHelper;
@@ -94,7 +93,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldSaveProcessActivityResponse() throws Exception {
     Map<String, Object> dataToStore = new HashMap<>();
     dataToStore.put(PARTICIPANT_ID_KEY, participantBo.getParticipantIdentifier());
@@ -147,7 +145,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldReturnBadRequestForEmptyInputsOfProccessActivityResponse() throws Exception {
     ActivityResponseBean activityResponseBean = new ActivityResponseBean();
     HttpHeaders headers = TestUtils.newHeadersUser();
@@ -163,7 +160,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldReturnBadRequestForInvalidParticipant() throws Exception {
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
     activityResponseBean.setParticipantId(IdGenerator.id());
@@ -180,7 +176,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldGetActivityResponse() throws Exception {
     String inputJsonContent = readJsonFile("/get_activity_response_data_for_participant.json");
     StoredResponseBean storedResponseBean =
@@ -238,7 +233,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldReturnBadRequestsGetActivityResponse() throws Exception {
     HttpHeaders headers = TestUtils.newHeadersUser();
     mockMvc
@@ -259,7 +253,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldUpdateWithdrawStatusParticipantFromStudy() throws Exception {
     // Step-1 updateWithdrawalStatusForParticipant
     doNothing()
@@ -303,7 +296,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldDeleteParticipantFromStudy() throws Exception {
     // Step-1 deleteActivityResponseDataForParticipant
     doNothing()
@@ -352,7 +344,6 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
   public void shouldReturnBadRequestForEmptyInputsOfWithdraw() throws Exception {
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
     HttpHeaders headers = TestUtils.newCommonHeaders();
