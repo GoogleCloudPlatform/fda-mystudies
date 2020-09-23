@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import {RegistryParticipant} from './participant';
 import {Permission} from './permission-enums';
 import {StudyType} from './enums';

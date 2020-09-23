@@ -67,9 +67,6 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
-      if (!req.headers.has('Content-Type')) {
-        req.headers.set('Content-Type', 'application/json');
-      }
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
         this.handleError(),

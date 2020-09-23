@@ -554,13 +554,7 @@
     </div>
 
     <ng-template #addParticipants>
-      <div class="modal-body modal__body">
-        <app-import-email-list
-          [siteId]="siteId"
-          (import)="onFileImportSuccess()"
-          (cancel)="modalRef.hide()"
-        ></app-import-email-list>
-      </div>
+      <div class="modal-body modal__body"></div>
     </ng-template>
   </div>
 </ng-container>
