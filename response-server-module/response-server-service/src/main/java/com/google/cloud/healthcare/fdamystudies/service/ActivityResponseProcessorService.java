@@ -11,20 +11,23 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStructureBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 
 public interface ActivityResponseProcessorService {
 
   void saveActivityResponseDataForParticipant(
       QuestionnaireActivityStructureBean activityMetadatFromWcp,
-      ActivityResponseBean questionnaireActivityResponseBean)
+      ActivityResponseBean questionnaireActivityResponseBean,
+      AuditLogEventRequest auditRequest)
       throws ProcessResponseException, Exception;
 
   StoredResponseBean getActivityResponseDataForParticipant(
       String studyId, String siteId, String participantId, String activityId, String questionKey)
       throws ProcessResponseException;
 
-  void deleteActivityResponseDataForParticipant(String studyId, String participantId)
+  void deleteActivityResponseDataForParticipant(
+      String studyId, String participantId, AuditLogEventRequest auditRequest)
       throws ProcessResponseException;
 
   void updateWithdrawalStatusForParticipant(String studyId, String participantId)

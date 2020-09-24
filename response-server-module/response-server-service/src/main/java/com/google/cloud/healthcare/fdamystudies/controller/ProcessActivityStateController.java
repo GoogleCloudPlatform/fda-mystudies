@@ -8,19 +8,33 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_ID;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_STATE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.RUN_ID;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_STATE_SAVED_OR_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_STATE_SAVE_OR_UPDATE_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_ACTIVITY_STATE_INFO_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_ACTIVITY_STATE_INFO_SUCCEEDED;
+
 import com.google.cloud.healthcare.fdamystudies.bean.ActivitiesBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityBean;
 import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.common.ResponseServerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
-import java.util.stream.Collectors;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -41,7 +55,7 @@ public class ProcessActivityStateController {
   @Autowired
   private ParticipantActivityStateResponseService participantActivityStateResponseService;
 
-  @Autowired private CommonService commonService;
+  @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
   private static final Logger logger =
       LoggerFactory.getLogger(ProcessActivityStateController.class);
@@ -52,8 +66,10 @@ public class ProcessActivityStateController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getActivityState(
       @RequestParam(name = "studyId") String studyId,
-      @RequestParam("participantId") String participantId)
+      @RequestParam("participantId") String participantId,
+      HttpServletRequest request)
       throws ProcessActivityStateException {
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     if (StringUtils.isBlank(studyId) || StringUtils.isBlank(participantId)) {
       ErrorBean errorBean =
@@ -64,10 +80,17 @@ public class ProcessActivityStateController {
               ErrorCode.EC_701.errorMessage());
       logger.warn(
           "ProcessActivityStateController getActivityState() failed. studyId or participantId missing.");
+      responseServerAuditLogHelper.logEvent(
+          READ_OPERATION_FOR_ACTIVITY_STATE_INFO_FAILED, auditRequest);
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     } else {
       ActivitiesBean activitiesBean =
           participantActivityStateResponseService.getParticipantActivities(studyId, participantId);
+
+      auditRequest.setStudyId(studyId);
+      auditRequest.setParticipantId(participantId);
+      responseServerAuditLogHelper.logEvent(
+          READ_OPERATION_FOR_ACTIVITY_STATE_INFO_SUCCEEDED, auditRequest);
       return new ResponseEntity<>(activitiesBean, HttpStatus.OK);
     }
   }
@@ -76,8 +99,10 @@ public class ProcessActivityStateController {
   public ResponseEntity<?> updateActivityState(
       @RequestBody ActivityStateRequestBean activityStateRequestBean,
       @Context HttpServletResponse response,
-      @RequestHeader String userId) {
-
+      @RequestHeader String userId,
+      HttpServletRequest request) {
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setUserId(userId);
     if (activityStateRequestBean == null
         || Strings.isBlank(activityStateRequestBean.getParticipantId())
         || Strings.isBlank(activityStateRequestBean.getStudyId())) {
@@ -93,38 +118,28 @@ public class ProcessActivityStateController {
         participantActivityStateResponseService.saveParticipantActivities(activityStateRequestBean);
         SuccessResponseBean srBean = new SuccessResponseBean();
         srBean.setMessage(AppConstants.SUCCESS_MSG);
-        String activityIds =
-            activityStateRequestBean
-                .getActivity()
-                .stream()
-                .map(s -> s.getActivityId())
-                .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
-            userId,
-            "Activity State Update -success",
-            "Activity state update successful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
-                + activityIds
-                + " .");
+        auditRequest.setStudyId(activityStateRequestBean.getStudyId());
+        auditRequest.setParticipantId(activityStateRequestBean.getParticipantId());
+        for (ParticipantActivityBean activity : activityStateRequestBean.getActivity()) {
+          Map<String, String> map = new HashedMap<>();
+          map.put(ACTIVITY_STATE, activity.getActivityState());
+          map.put(ACTIVITY_ID, activity.getActivityId());
+          map.put(ACTIVITY_VERSION, activity.getActivityVersion());
+          map.put(RUN_ID, activity.getActivityRunId());
+          responseServerAuditLogHelper.logEvent(ACTIVITY_STATE_SAVED_OR_UPDATED, auditRequest, map);
+        }
 
         return new ResponseEntity<>(srBean, HttpStatus.OK);
       } catch (Exception e) {
         logger.warn("ProcessActivityStateController updateActivityState() failed ", e);
-        String activityIds =
-            activityStateRequestBean
-                .getActivity()
-                .stream()
-                .map(s -> s.getActivityId())
-                .collect(Collectors.joining(", "));
-        commonService.createActivityLog(
-            userId,
-            "Activity State Update -failure",
-            "Activity state update unsuccessful for partcipant "
-                + activityStateRequestBean.getParticipantId()
-                + " and activityIds "
-                + activityIds
-                + " .");
+        for (ParticipantActivityBean activity : activityStateRequestBean.getActivity()) {
+          Map<String, String> map = new HashedMap<>();
+          map.put(ACTIVITY_STATE, activity.getActivityState());
+          map.put(ACTIVITY_ID, activity.getActivityId());
+          map.put(ACTIVITY_VERSION, activity.getActivityVersion());
+          map.put(RUN_ID, activity.getActivityRunId());
+          responseServerAuditLogHelper.logEvent(ACTIVITY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest);
+        }
         ErrorBean errorBean =
             AppUtil.dynamicResponse(
                 ErrorCode.EC_714.code(),
