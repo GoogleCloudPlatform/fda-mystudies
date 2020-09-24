@@ -205,7 +205,7 @@ public class LocationServiceImpl implements LocationService {
       throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
     List<LocationEntity> locations = null;
-    if (page != null || limit != null) {
+    if (page != null && limit != null) {
       Page<LocationEntity> locationsPage =
           locationRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
       locations = (List<LocationEntity>) CollectionUtils.emptyIfNull(locationsPage.getContent());
