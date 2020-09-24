@@ -23,6 +23,19 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bo.MasterDataBO;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.DashBoardAndProfileService;
+import com.fdahpstudydesigner.service.LoginServiceImpl;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -38,17 +51,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import com.fdahpstudydesigner.bo.MasterDataBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.service.DashBoardAndProfileService;
-import com.fdahpstudydesigner.service.LoginServiceImpl;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.SessionObject;
 
 @Controller
 public class LoginController {
@@ -56,6 +62,8 @@ public class LoginController {
   private static Logger logger = Logger.getLogger(LoginController.class.getName());
 
   @Autowired private DashBoardAndProfileService dashBoardAndProfileService;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
 
   private LoginServiceImpl loginService;
 
@@ -322,20 +330,24 @@ public class LoginController {
       @RequestParam(value = "msg", required = false) String msg,
       @RequestParam(value = "sucMsg", required = false) String sucMsg) {
     logger.info("LoginController - sessionOut() - Starts");
-    SessionObject sesObj;
+    SessionObject sesObj =
+        (SessionObject)
+            request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setCorrelationId(sesObj.getSessionId());
+    auditRequest.setUserId(sesObj.getEmail());
     try {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       if (auth != null) {
-        sesObj =
-            (SessionObject)
-                request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
         loginService.logUserLogOut(sesObj);
         new SecurityContextLogoutHandler().logout(request, response, auth);
+        auditLogEvEntHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
       }
       request.getSession(true).setAttribute("errMsg", msg);
       request.getSession(true).setAttribute("sucMsg", sucMsg);
     } catch (Exception e) {
       logger.error("LoginController - sessionOut() - ERROR ", e);
+      auditLogEvEntHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
     }
     logger.info("LoginController - sessionOut() - Ends");
     return new ModelAndView("redirect:login.do");
