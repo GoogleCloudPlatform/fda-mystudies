@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  PING_PATH("http://localhost:8080/myStudiesEnrollmentMgmt/ping"),
 
   UPDATE_STUDY_STATE_PATH("http://localhost:8080/myStudiesEnrollmentMgmt/updateStudyState"),
 

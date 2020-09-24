@@ -59,7 +59,6 @@ export const expectedSitesList = {
   code: 'MSG-0018',
 } as StudyResponse;
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const expectedStudyList = {
   studies: [
     {
@@ -165,7 +164,17 @@ export const expectedStudiesDetails = {
         consentHistory: [],
       },
     ],
+    countByStatus: {
+      /* eslint-disable @typescript-eslint/naming-convention */
+      A: 34,
+      D: 0,
+      E: 1,
+      I: 12,
+      N: 21,
+      /* eslint-disable @typescript-eslint/naming-convention */
+    },
   },
+
   status: 200,
   message: 'Get participant registry successfully',
   code: 'MSG-0013',

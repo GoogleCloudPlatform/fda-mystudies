@@ -44,11 +44,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
 import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
@@ -64,8 +64,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
-
-  private static final String PING_PATH = "/ping";
 
   private static final String USER_PROFILE_PATH = "/myStudiesUserMgmtWS/userProfile";
 
@@ -94,14 +92,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertNotNull(mockMvc);
     assertNotNull(profileService);
     assertNotNull(service);
-  }
-
-  @Test
-  public void ping() throws Exception {
-    mockMvc
-        .perform(get(PING_PATH).headers(TestUtils.getCommonHeaders(Constants.USER_ID_HEADER)))
-        .andDo(print())
-        .andExpect(status().isOk());
   }
 
   @Test
@@ -209,7 +199,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(1);
 
-    UserDetailsBO daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
+    UserDetailsEntity daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
     assertEquals(3, daoResp.getStatus());
 
     verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
@@ -239,10 +229,10 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void deactivateAccountBadRequest() throws Exception {
-    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.INVALID_USER_ID);
+  public void deactivateAccountIsNotFound() throws Exception {
+    HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
 
-    // invalid userId
+    // invalid userId, expect user not found error from auth server
     headers.set(Constants.USER_ID_HEADER, Constants.INVALID_USER_ID);
     DeactivateAcctBean acctBean = new DeactivateAcctBean();
     String requestJson = getObjectMapper().writeValueAsString(acctBean);
@@ -253,7 +243,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isNotFound());
 
     verifyTokenIntrospectRequest(1);
   }
