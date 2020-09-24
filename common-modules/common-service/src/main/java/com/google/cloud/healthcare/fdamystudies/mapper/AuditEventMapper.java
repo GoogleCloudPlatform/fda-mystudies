@@ -38,20 +38,17 @@ public final class AuditEventMapper {
     auditRequest.setUserId(getValue(request, USER_ID));
 
     String source = getValue(request, SOURCE);
-    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
-    if (platformComponent == null) {
-      throw new ErrorCodeException(ErrorCode.INVALID_SOURCE_NAME);
+    if (StringUtils.isNotEmpty(source)) {
+      PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+      if (platformComponent == null) {
+        throw new ErrorCodeException(ErrorCode.INVALID_SOURCE_NAME);
+      }
+      auditRequest.setSource(source);
     }
-    auditRequest.setSource(source);
 
     auditRequest.setUserIp(getUserIP(request));
 
     MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
-
-    if (mobilePlatform == null) {
-      throw new ErrorCodeException(ErrorCode.INVALID_MOBILE_PLATFORM);
-    }
-
     auditRequest.setMobilePlatform(mobilePlatform.getValue());
     return auditRequest;
   }
