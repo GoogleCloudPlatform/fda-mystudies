@@ -8,6 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonNodeConverter;
 import java.sql.Timestamp;
@@ -51,7 +53,7 @@ public class UserEntity {
   private String tempRegId;
 
   @ToString.Exclude
-  @Column(name = "email", nullable = false, length = 320)
+  @Column(name = "email", nullable = false, length = EMAIL_LENGTH)
   private String email;
 
   @Column(name = "app_id", nullable = false, length = 100)

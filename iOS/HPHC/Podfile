@@ -24,14 +24,8 @@ target 'HPHC' do
   
 end
 
-target 'HPHCUITests' do
-  use_frameworks!
-  pod 'Embassy'
-  pod 'EnvoyAmbassador'
-end
-
 target 'HPHCTests' do
-  # inherit! :search_paths
-  
+  use_frameworks!
+  inherit! :search_paths
   pod 'Mockingjay', '3.0.0-alpha.1'
 end

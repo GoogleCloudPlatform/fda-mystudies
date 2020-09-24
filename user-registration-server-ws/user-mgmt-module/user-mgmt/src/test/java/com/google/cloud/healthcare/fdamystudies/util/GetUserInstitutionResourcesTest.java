@@ -16,9 +16,9 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import com.google.cloud.healthcare.fdamystudies.TestApplicationContextInitializer;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.UserInstitutionEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserInstitution;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +64,8 @@ public class GetUserInstitutionResourcesTest {
   public void noInstitutionResourcesFound() {
     String fakeInstitution = "fake_institution";
     Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
-        .thenReturn(Optional.of(UserInstitution.builder().institutionId(fakeInstitution).build()));
+        .thenReturn(
+            Optional.of(UserInstitutionEntity.builder().institutionId(fakeInstitution).build()));
     Mockito.when(cloudStorageService.getAllInstitutionResources("fake_institution"))
         .thenReturn(new ArrayList<>());
 
@@ -77,7 +78,8 @@ public class GetUserInstitutionResourcesTest {
   public void returnsInstitution() throws IOException {
     String fakeInstitution = "fake_institution";
     Mockito.when(userInstitutionRepository.findByUserUserId("fake_user_id"))
-        .thenReturn(Optional.of(UserInstitution.builder().institutionId(fakeInstitution).build()));
+        .thenReturn(
+            Optional.of(UserInstitutionEntity.builder().institutionId(fakeInstitution).build()));
     String html = "<p>fake html</p>\n";
     URL path = ClassLoader.getSystemResource("fake_html.html");
     File f = new File(path.getFile());

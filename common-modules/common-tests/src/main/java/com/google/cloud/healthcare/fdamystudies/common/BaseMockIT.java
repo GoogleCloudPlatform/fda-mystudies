@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.common;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,12 +32,18 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.config.CommonModuleConfiguration;
 import com.google.cloud.healthcare.fdamystudies.config.WireMockInitializer;
 import com.google.cloud.healthcare.fdamystudies.service.AuditEventService;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import org.apache.commons.lang3.SerializationUtils;
@@ -53,9 +60,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -105,7 +114,16 @@ public class BaseMockIT {
 
   @Autowired protected AuditEventService mockAuditService;
 
+  @Autowired protected JavaMailSender emailSender;
+
   protected List<AuditLogEventRequest> auditRequests = new ArrayList<>();
+
+  @LocalServerPort int randomServerPort;
+
+  @PostConstruct
+  public void logServerPort() {
+    logger.debug(String.format("server port=%d", randomServerPort));
+  }
 
   protected WireMockServer getWireMockServer() {
     return wireMockServer;
@@ -243,6 +261,33 @@ public class BaseMockIT {
 
   protected void clearAuditRequests() {
     auditRequests.clear();
+  }
+
+  protected MimeMessage verifyMimeMessage(
+      String toEmail, String fromEmail, String subject, String body)
+      throws MessagingException, IOException {
+    ArgumentCaptor<MimeMessage> mailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+    verify(emailSender, atLeastOnce()).send(mailCaptor.capture());
+
+    MimeMessage mail = mailCaptor.getValue();
+
+    assertThat(mail.getFrom()).containsExactly(new InternetAddress(fromEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.TO))
+        .containsExactly(new InternetAddress(toEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.CC)).isNull();
+
+    assertThat(mail.getSubject()).isEqualTo(subject);
+    assertThat(mail.getContent().toString()).contains(body);
+
+    assertThat(mail.getDataHandler().getContentType()).isEqualTo("text/html; charset=utf-8");
+
+    return mail;
+  }
+
+  protected void verifyDoesNotContain(String text, String... searchValues) {
+    for (String value : searchValues) {
+      assertFalse(StringUtils.contains(text, value));
+    }
   }
 
   @BeforeEach

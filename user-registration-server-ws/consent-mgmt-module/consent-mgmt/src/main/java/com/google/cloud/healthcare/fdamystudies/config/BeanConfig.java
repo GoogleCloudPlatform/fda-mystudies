@@ -9,6 +9,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.config;
 
+import com.google.cloud.storage.Storage;
+import com.google.cloud.storage.StorageOptions;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -20,6 +22,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebMvc
 public class BeanConfig extends CommonModuleConfiguration {
+
+  @Bean
+  public Storage storageService() {
+    return StorageOptions.getDefaultInstance().getService();
+  }
 
   @Bean
   public WebMvcConfigurer corsConfigurer() {

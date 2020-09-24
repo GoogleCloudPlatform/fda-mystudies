@@ -12,7 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.AppOrgInfoBean;
 
 public interface CommonDao {
 
-  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId, String orgId);
+  public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId);
 
-  public Integer getUserDetailsId(String userId);
+  public String getUserDetailsId(String userId);
 }
