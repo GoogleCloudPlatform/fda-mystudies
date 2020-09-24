@@ -63,7 +63,7 @@ public class LoginController {
 
   @Autowired private DashBoardAndProfileService dashBoardAndProfileService;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   private LoginServiceImpl loginService;
 
@@ -341,13 +341,13 @@ public class LoginController {
       if (auth != null) {
         loginService.logUserLogOut(sesObj);
         new SecurityContextLogoutHandler().logout(request, response, auth);
-        auditLogEvEntHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
+        auditLogEventHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
       }
       request.getSession(true).setAttribute("errMsg", msg);
       request.getSession(true).setAttribute("sucMsg", sucMsg);
     } catch (Exception e) {
       logger.error("LoginController - sessionOut() - ERROR ", e);
-      auditLogEvEntHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
+      auditLogEventHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
     }
     logger.info("LoginController - sessionOut() - Ends");
     return new ModelAndView("redirect:login.do");
