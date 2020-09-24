@@ -735,7 +735,7 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     List<User> users = new ArrayList<>();
     List<UserRegAdminEntity> adminList = null;
-    if (page != null || limit != null) {
+    if (page != null && limit != null) {
       Page<UserRegAdminEntity> adminPage =
           userAdminRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
       adminList = (List<UserRegAdminEntity>) CollectionUtils.emptyIfNull(adminPage.getContent());
