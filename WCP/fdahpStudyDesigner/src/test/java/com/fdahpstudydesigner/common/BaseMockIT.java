@@ -160,6 +160,7 @@ public class BaseMockIT {
     headers.add("appVersion", applicationVersion);
     headers.add("appId", "STUDY BUILDER");
     headers.add("source", "STUDY BUILDER");
+    headers.add("mobilePlatform", "UNKNOWN");
     return headers;
   }
 

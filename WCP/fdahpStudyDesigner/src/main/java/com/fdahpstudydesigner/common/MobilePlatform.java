@@ -27,7 +27,7 @@ public enum MobilePlatform {
         return platform;
       }
     }
-    return UNKNOWN;
+    return null;
   }
 
   public static boolean isMobileDevice(String mobilePlatform) {

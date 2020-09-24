@@ -9,6 +9,8 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,5 +36,25 @@ public class LoginControllerTest extends BaseMockIT {
         .andExpect(view().name("redirect:login.do"));
 
     verifyAuditEventCall(USER_SIGNOUT_SUCCEEDED);
+  }
+
+  @Test
+  public void shouldThrowBadRequestException() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.set("source", "INVALID STUDY BUILDER");
+    try {
+      mockMvc
+          .perform(
+              get(PathMappingUri.SESSION_OUT.getPath())
+                  .headers(headers)
+                  .sessionAttrs(getSessionAttributes()))
+          .andDo(print())
+          .andExpect(status().isFound())
+          .andExpect(view().name("redirect:login.do"));
+      fail(
+          "shouldThrowBadRequestException() didn't throw BadRequestException when I expected it to");
+    } catch (Exception e) {
+      assertTrue(e.getMessage().contains("Invalid 'source' value"));
+    }
   }
 }

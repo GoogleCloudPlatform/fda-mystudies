@@ -9,7 +9,9 @@
 package com.fdahpstudydesigner.mapper;
 
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.common.BadRequestException;
 import com.fdahpstudydesigner.common.MobilePlatform;
+import com.fdahpstudydesigner.common.PlatformComponent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import java.sql.Timestamp;
@@ -41,11 +43,27 @@ public final class AuditEventMapper {
     auditRequest.setAppVersion(getValue(request, APP_VERSION));
     auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
     auditRequest.setUserId(getValue(request, USER_ID));
-    auditRequest.setSource(getValue(request, SOURCE));
+
+    String source = getValue(request, SOURCE);
+    if (StringUtils.isNotEmpty(source)) {
+      PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+      if (platformComponent == null) {
+        throw new BadRequestException(String.format("Invalid '%s' value.", SOURCE));
+      }
+      auditRequest.setSource(platformComponent.getValue());
+    }
+
     auditRequest.setUserIp(getUserIP(request));
 
-    MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
-    auditRequest.setMobilePlatform(mobilePlatform.getValue());
+    String mobilePlatform = getValue(request, MOBILE_PLATFORM);
+    if (StringUtils.isNotEmpty(mobilePlatform)) {
+      MobilePlatform mobilePlatformEnum = MobilePlatform.fromValue(mobilePlatform);
+      if (mobilePlatformEnum == null) {
+        throw new BadRequestException(String.format("Invalid '%s' value.", MOBILE_PLATFORM));
+      }
+      auditRequest.setMobilePlatform(mobilePlatform);
+    }
+
     return auditRequest;
   }
 
