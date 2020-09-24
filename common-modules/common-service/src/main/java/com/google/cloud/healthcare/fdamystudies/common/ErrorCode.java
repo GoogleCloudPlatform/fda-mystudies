@@ -238,7 +238,9 @@ public enum ErrorCode {
   APPLICATION_ID_MISSING(
       400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header"),
 
-  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status.");
+  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status."),
+
+  INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value");
 
   private final int status;
   private final String code;
