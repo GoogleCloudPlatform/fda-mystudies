@@ -31,7 +31,12 @@ public interface SiteService {
   public SiteResponse addSite(SiteRequest siteRequest);
 
   public ParticipantRegistryResponse getParticipants(
-      String userId, String siteId, String onboardingStatus, AuditLogEventRequest auditRequest);
+      String userId,
+      String siteId,
+      String onboardingStatus,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit);
 
   public ParticipantResponse addNewParticipant(
       ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest);

@@ -18,6 +18,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALI
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -248,6 +249,7 @@ public class TestDataHelper {
         new ParticipantRegistrySiteEntity();
     participantRegistrySiteEntity.setEnrollmentToken(RandomStringUtils.randomAlphanumeric(8));
     participantRegistrySiteEntity.setInvitationCount(2L);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
     participantRegistrySiteEntity.setSite(siteEntity);
     participantRegistrySiteEntity.setStudy(studyEntity);
     return participantRegistrySiteRepository.saveAndFlush(participantRegistrySiteEntity);

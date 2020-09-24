@@ -31,7 +31,13 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
 
   @Override
   public AuthInfoEntity save(AuthInfoEntity authInfo) {
-    return authInfoRepository.save(authInfo);
+    logger.info("AuthInfoBODaoImpl save() - starts");
+    AuthInfoEntity dbResponse = null;
+    if (authInfo != null) {
+      dbResponse = authInfoRepository.save(authInfo);
+      logger.info("AuthInfoBODaoImpl save() - ends");
+      return dbResponse;
+    } else return null;
   }
 
   @Override
@@ -40,7 +46,6 @@ public class AuthInfoBODaoImpl implements AuthInfoBODao {
     JSONArray androidJsonArray = null;
     JSONArray iosJsonArray = null;
     Map<String, JSONArray> deviceMap = new HashMap<>();
-
     List<String> appInfoIds =
         appInfos.stream().map(a -> a.getAppId()).distinct().collect(Collectors.toList());
 
