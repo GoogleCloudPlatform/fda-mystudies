@@ -1,0 +1,28 @@
+{
+	"rowCount": 2,
+	"schemaName": [
+		"MobileAppResponse"
+	],
+	"rows": [
+		{
+			"data": [
+				{
+					"ParticipantId": {
+						"value": "5380823d-f92e-41a8-b4eb-e362398a1c68"
+					}
+				},
+				{
+					"Created": {
+						"value": "2020-08-28T08:50:12:666+0000"
+					}
+				},
+				{
+					"testchart01": {
+						"value": 76
+					}
+				}
+			]
+		}
+	],
+	"queryName": "firestore_response_query"
+}

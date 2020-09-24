@@ -16,13 +16,6 @@ public enum ApiEndpoint {
 
   ADD("http://localhost:8004/mystudies-response-server/participant/add"),
 
-  PROCESS_RESPONSE("http://localhost:8004/mystudies-response-server/participant/process-response"),
-
-  PARTICIPANT_GET_RESPONSE(
-      "http://localhost:8004/mystudies-response-server/participant/getresponse"),
-
-  WITHDRAW("http://localhost:8004/mystudies-response-server/participant/withdraw"),
-
   STUDYMETADATA("http://localhost:8004/mystudies-response-server/studymetadata"),
 
   ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add"),
@@ -31,7 +24,15 @@ public enum ApiEndpoint {
       "http://localhost:8004/mystudies-response-server/participant/update-activity-state"),
 
   GET_ACTIVITY_STATE(
-      "http://localhost:8004/mystudies-response-server/participant/get-activity-state");
+      "http://localhost:8004/mystudies-response-server/participant/get-activity-state"),
+
+  PROCESS_ACTIVITY_RESPONSE(
+      "http://localhost:8004/mystudies-response-server/participant/process-response"),
+
+  GET_PROCESS_ACTIVITY_RESPONSE(
+      "http://localhost:8004/mystudies-response-server/participant/getresponse"),
+
+  WITHDRAW("http://localhost:8004/mystudies-response-server/participant/withdraw");
   private String url;
 
   private ApiEndpoint(String url) {
