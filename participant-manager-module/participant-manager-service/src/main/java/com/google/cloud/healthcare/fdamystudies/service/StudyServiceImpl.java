@@ -308,7 +308,7 @@ public class StudyServiceImpl implements StudyService {
     }
 
     List<ParticipantStudyEntity> participantStudiesList = null;
-    if (page != null || limit != null) {
+    if (page != null && limit != null) {
       Page<ParticipantStudyEntity> participantStudyPage =
           participantStudyRepository.findParticipantsByStudyForPage(
               study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
