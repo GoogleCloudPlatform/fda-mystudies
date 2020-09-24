@@ -8,7 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ACCOUNT_UPDATE_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_RECORD_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.USER_REGISTRY_VIEWED;
+
 import com.google.cloud.healthcare.fdamystudies.beans.AdminUserResponse;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.GetAdminDetailsResponse;
@@ -24,6 +33,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -43,6 +53,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionReposi
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +62,13 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,9 +95,11 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Autowired private EmailService emailService;
 
+  @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
   @Override
   @Transactional
-  public AdminUserResponse createUser(UserRequest user) {
+  public AdminUserResponse createUser(UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry(String.format("createUser() with isSuperAdmin=%b", user.isSuperAdmin()));
     ErrorCode errorCode = validateUserRequest(user);
     if (errorCode != null) {
@@ -90,7 +107,17 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     AdminUserResponse userResponse =
-        user.isSuperAdmin() ? saveSuperAdminDetails(user) : saveAdminDetails(user);
+        user.isSuperAdmin()
+            ? saveSuperAdminDetails(user, auditRequest)
+            : saveAdminDetails(user, auditRequest);
+
+    String accessLevel = user.isSuperAdmin() ? CommonConstants.SUPER_ADMIN : CommonConstants.ADMIN;
+    if (userResponse.getUserId() != null) {
+      Map<String, String> map = new HashMap<>();
+      map.put(CommonConstants.NEW_USER_ID, userResponse.getUserId());
+      map.put("new_user_access_level", accessLevel);
+      participantManagerHelper.logEvent(NEW_USER_CREATED, auditRequest, map);
+    }
 
     logger.exit(String.format(CommonConstants.STATUS_LOG, userResponse.getHttpStatusCode()));
     return userResponse;
@@ -175,7 +202,7 @@ public class ManageUserServiceImpl implements ManageUserService {
     return false;
   }
 
-  private AdminUserResponse saveAdminDetails(UserRequest user) {
+  private AdminUserResponse saveAdminDetails(UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("saveAdminDetails()");
     UserRegAdminEntity adminDetails =
         UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
@@ -207,6 +234,14 @@ public class ManageUserServiceImpl implements ManageUserService {
     EmailResponse emailResponse = sendInvitationEmail(user, adminDetails.getSecurityCode());
     logger.debug(
         String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
+
+    Map<String, String> map =
+        Collections.singletonMap(CommonConstants.NEW_USER_ID, adminDetails.getId());
+    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
+      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_SENT, auditRequest, map);
+    } else {
+      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, map);
+    }
 
     logger.exit("Successfully saved admin details.");
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, adminDetails.getId());
@@ -287,7 +322,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     logger.exit("Successfully saved site permissions.");
   }
 
-  private AdminUserResponse saveSuperAdminDetails(UserRequest user) {
+  private AdminUserResponse saveSuperAdminDetails(
+      UserRequest user, AuditLogEventRequest auditRequest) {
     logger.entry("saveSuperAdminDetails()");
     UserRegAdminEntity superAdminDetails =
         UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
@@ -309,6 +345,14 @@ public class ManageUserServiceImpl implements ManageUserService {
     EmailResponse emailResponse = sendInvitationEmail(user, superAdminDetails.getSecurityCode());
     logger.debug(
         String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
+
+    Map<String, String> map =
+        Collections.singletonMap(CommonConstants.NEW_USER_ID, superAdminDetails.getId());
+    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
+      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_SENT, auditRequest, map);
+    } else {
+      participantManagerHelper.logEvent(NEW_USER_INVITATION_EMAIL_FAILED, auditRequest, map);
+    }
 
     logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.ADD_NEW_USER_SUCCESS));
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, superAdminDetails.getId());
@@ -363,7 +407,8 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   @Override
   @Transactional
-  public AdminUserResponse updateUser(UserRequest user, String superAdminUserId) {
+  public AdminUserResponse updateUser(
+      UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
     logger.entry(String.format("updateUser() with isSuperAdmin=%b", user.isSuperAdmin()));
     ErrorCode errorCode = validateUpdateUserRequest(user, superAdminUserId);
     if (errorCode != null) {
@@ -372,8 +417,15 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     AdminUserResponse userResponse =
         user.isSuperAdmin()
-            ? updateSuperAdminDetails(user, superAdminUserId)
-            : updateAdminDetails(user, superAdminUserId);
+            ? updateSuperAdminDetails(user, superAdminUserId, auditRequest)
+            : updateAdminDetails(user, superAdminUserId, auditRequest);
+    String accessLevel = user.isSuperAdmin() ? CommonConstants.SUPER_ADMIN : CommonConstants.ADMIN;
+    if (MessageCode.UPDATE_USER_SUCCESS.getMessage().equals(userResponse.getMessage())) {
+      Map<String, String> map = new HashedMap<>();
+      map.put(CommonConstants.EDITED_USER_ID, user.getId());
+      map.put("edited_user_access_level", accessLevel);
+      participantManagerHelper.logEvent(USER_RECORD_UPDATED, auditRequest, map);
+    }
 
     logger.exit(String.format(CommonConstants.STATUS_LOG, userResponse.getHttpStatusCode()));
     return userResponse;
@@ -398,7 +450,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     return null;
   }
 
-  private AdminUserResponse updateSuperAdminDetails(UserRequest user, String superAdminUserId) {
+  private AdminUserResponse updateSuperAdminDetails(
+      UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
     logger.entry("updateSuperAdminDetails()");
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getId());
 
@@ -429,6 +482,14 @@ public class ManageUserServiceImpl implements ManageUserService {
     EmailResponse emailResponse = sendUserUpdatedEmail(user);
     logger.debug(String.format("send update email status=%s", emailResponse.getHttpStatusCode()));
 
+    Map<String, String> map =
+        Collections.singletonMap(CommonConstants.EDITED_USER_ID, adminDetails.getId());
+    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
+      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_SENT, auditRequest, map);
+    } else {
+      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_FAILED, auditRequest, map);
+    }
+
     logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.UPDATE_USER_SUCCESS));
     return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
   }
@@ -450,7 +511,8 @@ public class ManageUserServiceImpl implements ManageUserService {
     return emailService.sendMimeMail(emailRequest);
   }
 
-  private AdminUserResponse updateAdminDetails(UserRequest user, String superAdminUserId) {
+  private AdminUserResponse updateAdminDetails(
+      UserRequest user, String superAdminUserId, AuditLogEventRequest auditRequest) {
     logger.entry("updateAdminDetails()");
 
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(user.getId());
@@ -492,6 +554,14 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     EmailResponse emailResponse = sendUserUpdatedEmail(user);
     logger.debug(String.format("send update email status=%s", emailResponse.getHttpStatusCode()));
+
+    Map<String, String> map =
+        Collections.singletonMap(CommonConstants.EDITED_USER_ID, adminDetails.getId());
+    if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER.getMessage().equals(emailResponse.getMessage())) {
+      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_SENT, auditRequest, map);
+    } else {
+      participantManagerHelper.logEvent(ACCOUNT_UPDATE_EMAIL_FAILED, auditRequest, map);
+    }
 
     logger.exit("Successfully updated admin details.");
     return new AdminUserResponse(MessageCode.UPDATE_USER_SUCCESS, adminDetails.getId());
@@ -655,7 +725,8 @@ public class ManageUserServiceImpl implements ManageUserService {
   }
 
   @Override
-  public GetUsersResponse getUsers(String superAdminUserId) {
+  public GetUsersResponse getUsers(
+      String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest) {
     logger.entry("getUsers()");
     ErrorCode errorCode = validateUserRequest(superAdminUserId);
     if (errorCode != null) {
@@ -663,13 +734,22 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     List<User> users = new ArrayList<>();
-    List<UserRegAdminEntity> adminList = userAdminRepository.findAll();
+    List<UserRegAdminEntity> adminList = null;
+    if (page != null || limit != null) {
+      Page<UserRegAdminEntity> adminPage =
+          userAdminRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
+      adminList = (List<UserRegAdminEntity>) CollectionUtils.emptyIfNull(adminPage.getContent());
+    } else {
+      adminList = userAdminRepository.findAll();
+    }
+
     adminList
         .stream()
         .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
         .collect(Collectors.toList());
 
+    participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
     logger.exit(String.format("total users=%d", adminList.size()));
-    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users);
+    return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, userAdminRepository.count());
   }
 }

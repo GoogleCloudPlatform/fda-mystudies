@@ -11,7 +11,6 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationResponse;
-import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserRegistrationService;
 import javax.servlet.http.HttpServletRequest;
@@ -36,8 +35,6 @@ public class UserRegistrationController {
   @Autowired private UserRegistrationService userRegistrationService;
 
   private static final String BEGIN_REQUEST_LOG = "%s request";
-
-  @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
   @Value("${email.code.expire_time}")
   private long expireTime;

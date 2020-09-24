@@ -28,9 +28,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -53,15 +50,19 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserRepository;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.AfterEach;
@@ -98,6 +99,8 @@ public class UserControllerTest extends BaseMockIT {
   @Autowired private UserRepository userRepository;
 
   @Autowired private JavaMailSender emailSender;
+
+  @Autowired private AppPropertyConfig appPropertyConfig;
 
   @BeforeEach
   public void setUp() {
@@ -560,7 +563,12 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    String subject = getMailResetSubject();
+    String body = "Thank you for reaching out for password help for your account";
+
+    MimeMessage mail =
+        verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
+    verifyDoesNotContain(mail.getContent().toString(), "@tempPassword@");
     // Step-2 Find UserEntity by userId and then compare the password hash values
     userEntity = repository.findByUserId(userEntity.getUserId()).get();
     assertNotNull(userEntity);
@@ -577,6 +585,12 @@ public class UserControllerTest extends BaseMockIT {
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
 
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).size() == 2);
+  }
+
+  private String getMailResetSubject() {
+    Map<String, String> templateArgs = new HashMap<>();
+    return PlaceholderReplacer.replaceNamedPlaceholders(
+        appPropertyConfig.getMailResetPasswordSubject(), templateArgs);
   }
 
   @Test

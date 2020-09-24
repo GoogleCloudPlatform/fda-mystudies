@@ -8,17 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsBORepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
+import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,108 +24,85 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class FdaEaUserDetailsDaoImpl implements FdaEaUserDetailsDao {
 
-  @Autowired private UserDetailsBORepository repository;
+  @Autowired private UserDetailsRepository repository;
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
-
-  @PersistenceContext private EntityManager entityManager;
+  @Autowired private SessionFactory sessionFactory;
 
   private static final Logger logger = LoggerFactory.getLogger(FdaEaUserDetailsDaoImpl.class);
 
   @Override
   @Transactional
-  public UserDetailsBO loadUserDetailsByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadUserDetailsByUserId(String userId) {
     logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - starts");
-    try {
-      UserDetailsBO userDetailsBO = null;
-      if (userId != null) {
-        userDetailsBO = repository.findByUserId(userId);
+
+    UserDetailsEntity userDetails = null;
+    if (userId != null) {
+      Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
+      if (optUserDetails.isPresent()) {
+        userDetails = optUserDetails.get();
       }
-      logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
-      return userDetailsBO;
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl.loadUserDetailsByUserId(): ", e);
-      throw new SystemException();
     }
+    logger.info("FdaEaUserDetailsDaoImpl loadUserDetailsByUserId() - ends");
+    return userDetails;
   }
 
   @Override
-  public UserDetailsBO saveUser(UserDetailsBO userDetailsBO) throws SystemException {
-    logger.info("FdaEaUserDetailsDaoImpl saveUser() - starts");
-    try {
-      UserDetailsBO savedUserDetails = null;
-      if (userDetailsBO != null) {
-        savedUserDetails = repository.save(userDetailsBO);
-      }
-      logger.info("FdaEaUserDetailsDaoImpl saveUser() - ends");
-      return savedUserDetails;
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl.saveUser(): ", e);
-      throw new SystemException();
-    }
+  public UserDetailsEntity saveUser(UserDetailsEntity userDetails) {
+    return repository.save(userDetails);
   }
 
   @Override
-  public UserDetailsBO loadEmailCodeByUserId(String userId) throws SystemException {
+  public UserDetailsEntity loadEmailCodeByUserId(String userId) {
     logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() - starts");
-    try {
-      UserDetailsBO dbResponse = null;
-      if (userId != null) {
-        dbResponse = repository.findByUserId(userId);
-        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
-        return dbResponse;
-      } else {
-        logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
-        return dbResponse;
+
+    UserDetailsEntity dbResponse = null;
+    if (userId != null) {
+      Optional<UserDetailsEntity> optUserDetails = repository.findByUserId(userId);
+      if (optUserDetails.isPresent()) {
+        dbResponse = optUserDetails.get();
       }
-    } catch (Exception e) {
-      logger.error("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId(): ", e);
-      throw new SystemException();
+      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      return dbResponse;
+    } else {
+      logger.info("FdaEaUserDetailsDaoImpl loadEmailCodeByUserId() -ends");
+      return dbResponse;
     }
   }
 
   @Override
   @Transactional
-  public boolean updateStatus(UserDetailsBO participantDetails) {
+  public boolean updateStatus(UserDetailsEntity participantDetails) {
 
     logger.info("FdaEaUserDetailsDaoImpl updateStatus() - starts");
+    Session session = this.sessionFactory.getCurrentSession();
+
     if (participantDetails == null) {
       throw new IllegalArgumentException();
     }
-    entityManager.merge(participantDetails);
+    session.merge(participantDetails);
     return true;
   }
 
   @Override
   public boolean saveAllRecords(
-      UserDetailsBO userDetailsBO, AuthInfoBO authInfo, UserAppDetailsBO userAppDetails)
-      throws SystemException {
+      UserDetailsEntity userDetails, AuthInfoEntity authInfo, UserAppDetailsEntity userAppDetails) {
 
     logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - starts");
-    if (userDetailsBO != null && authInfo != null && userAppDetails != null) {
-      Transaction transaction = null;
-      try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-        transaction = session.beginTransaction();
+    if (userDetails != null && authInfo != null && userAppDetails != null) {
+      Session session = this.sessionFactory.getCurrentSession();
 
-        Integer userDetailsId = (Integer) session.save(userDetailsBO);
-        authInfo.setUserId(userDetailsId);
-        session.save(authInfo);
-        userAppDetails.setUserDetailsId(userDetailsId);
-        session.save(userAppDetails);
+      String userDetailsId = (String) session.save(userDetails);
 
-        transaction.commit();
-        return true;
-      } catch (Exception e) {
-        logger.error("FdaEaUserDetailsDaoImpl saveAllRecords(): ", e);
-        if (transaction != null) {
-          try {
-            transaction.rollback();
-          } catch (Exception e1) {
-            logger.error("FdaEaUserDetailsDaoImpl saveAllRecords(): ", e);
-          }
-        }
-        throw new SystemException();
+      Optional<UserDetailsEntity> optUserDetail = repository.findById(userDetailsId);
+
+      if (optUserDetail.isPresent()) {
+        authInfo.setUserDetails(optUserDetail.get());
+        userAppDetails.setUserDetails(optUserDetail.get());
       }
+      session.save(authInfo);
+      session.save(userAppDetails);
+      return true;
+
     } else {
       logger.info("FdaEaUserDetailsDaoImpl saveAllRecords() - ends");
       return false;

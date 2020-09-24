@@ -50,7 +50,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
   }
 
   @ExceptionHandler(ErrorCodeException.class)
-  public ResponseEntity<ErrorCode> handleHttpMessageNotReadableException(ErrorCodeException e) {
+  public ResponseEntity<ErrorCode> handleErrorCodeException(ErrorCodeException e) {
     logger.error("request failed with ErrorCode", e);
     return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getErrorCode());
   }

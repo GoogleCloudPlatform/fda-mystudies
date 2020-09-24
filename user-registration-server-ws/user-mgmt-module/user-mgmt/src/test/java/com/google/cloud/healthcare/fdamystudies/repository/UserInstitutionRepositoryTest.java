@@ -13,8 +13,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertTrue;
 
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserInstitution;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserInstitutionEntity;
 import java.util.Optional;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -33,32 +33,38 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Ignore
 public class UserInstitutionRepositoryTest {
   private static Logger logger = LoggerFactory.getLogger(UserInstitutionRepositoryTest.class);
-  @Autowired private UserDetailsBORepository userRepository;
+  @Autowired private UserDetailsRepository userRepository;
   @Autowired private UserInstitutionRepository institutionRepository;
 
   @Test
   public void saveUserInstitution() {
-    UserDetailsBO user1 = new UserDetailsBO();
+    UserDetailsEntity user1 = new UserDetailsEntity();
     user1.setUserId("user_id");
     user1 = userRepository.save(user1);
     institutionRepository.save(
-        UserInstitution.builder().user(user1).institutionId("fake_institution").build());
-    UserDetailsBO user2 = new UserDetailsBO();
+        UserInstitutionEntity.builder()
+            .userDetails(user1)
+            .institutionId("fake_institution")
+            .build());
+    UserDetailsEntity user2 = new UserDetailsEntity();
     user2.setUserId("user_id2");
     user2 = userRepository.save(user2);
-    Optional<UserInstitution> institution = institutionRepository.findByUserUserId("user_id");
+    Optional<UserInstitutionEntity> institution = institutionRepository.findByUserUserId("user_id");
     assertTrue(institution.isPresent());
-    assertThat(institution.get().getUser(), equalTo(user1));
+    assertThat(institution.get().getUserDetails(), equalTo(user1));
     assertThat(institution.get().getInstitutionId(), equalTo("fake_institution"));
   }
 
   @Test
   public void deletesUserInstitutionIfUserIsDeleted() {
-    UserDetailsBO user = new UserDetailsBO();
+    UserDetailsEntity user = new UserDetailsEntity();
     user.setUserId("fake_user_2");
     user = userRepository.save(user);
     institutionRepository.save(
-        UserInstitution.builder().user(user).institutionId("fake_institution_2").build());
+        UserInstitutionEntity.builder()
+            .userDetails(user)
+            .institutionId("fake_institution_2")
+            .build());
     assertThat(institutionRepository.findAll(), hasSize(1));
     userRepository.delete(user);
     userRepository.flush();
