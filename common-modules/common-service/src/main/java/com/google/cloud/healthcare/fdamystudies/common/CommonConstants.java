@@ -93,5 +93,7 @@ public final class CommonConstants {
 
   public static final String ACTIVITY_TYPE = "activity_type";
 
+  public static final String ACTIVITY_STATE = "activity_state";
+
   public static final String PAGE_NO = "0";
 }

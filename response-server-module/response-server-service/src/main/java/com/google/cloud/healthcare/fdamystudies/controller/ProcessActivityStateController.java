@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_ID;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_STATE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.RUN_ID;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_STATE_SAVED_OR_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_STATE_SAVE_OR_UPDATE_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_ACTIVITY_STATE_INFO_FAILED;
@@ -118,10 +122,10 @@ public class ProcessActivityStateController {
         auditRequest.setParticipantId(activityStateRequestBean.getParticipantId());
         for (ParticipantActivityBean activity : activityStateRequestBean.getActivity()) {
           Map<String, String> map = new HashedMap<>();
-          map.put("activity_state", activity.getActivityState());
-          map.put("activity_id", activity.getActivityId());
-          map.put("activity_version", activity.getActivityVersion());
-          map.put("run_id", activity.getActivityRunId());
+          map.put(ACTIVITY_STATE, activity.getActivityState());
+          map.put(ACTIVITY_ID, activity.getActivityId());
+          map.put(ACTIVITY_VERSION, activity.getActivityVersion());
+          map.put(RUN_ID, activity.getActivityRunId());
           responseServerAuditLogHelper.logEvent(ACTIVITY_STATE_SAVED_OR_UPDATED, auditRequest, map);
         }
 
@@ -130,10 +134,10 @@ public class ProcessActivityStateController {
         logger.warn("ProcessActivityStateController updateActivityState() failed ", e);
         for (ParticipantActivityBean activity : activityStateRequestBean.getActivity()) {
           Map<String, String> map = new HashedMap<>();
-          map.put("activity_state", activity.getActivityState());
-          map.put("activity_id", activity.getActivityId());
-          map.put("version", activity.getActivityVersion());
-          map.put("run_id", activity.getActivityRunId());
+          map.put(ACTIVITY_STATE, activity.getActivityState());
+          map.put(ACTIVITY_ID, activity.getActivityId());
+          map.put(ACTIVITY_VERSION, activity.getActivityVersion());
+          map.put(RUN_ID, activity.getActivityRunId());
           responseServerAuditLogHelper.logEvent(ACTIVITY_STATE_SAVE_OR_UPDATE_FAILED, auditRequest);
         }
         ErrorBean errorBean =
