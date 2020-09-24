@@ -33,6 +33,7 @@ class ResponseServices: NSObject {
   var keys: String!
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
+  var method: Method!
 
   private(set) var isOfflineSyncRequest = false
 
@@ -92,7 +93,11 @@ class ResponseServices: NSObject {
   /// - Parameters:
   ///   - responseData: Response in form of `JSONDictionary`
   ///   - delegate: Class object to receive response
-  func processResponse(responseData: [String: Any], delegate: NMWebServiceDelegate) {
+  func processResponse(
+    responseData: [String: Any],
+    activityStatus: UserActivityStatus,
+    delegate: NMWebServiceDelegate
+  ) {
     self.delegate = delegate
 
     let method = ResponseMethods.processResponse.method
@@ -121,7 +126,7 @@ class ResponseServices: NSObject {
 
       let activityType = Study.currentActivity?.type?.rawValue
 
-      let params =
+      let responseParams =
         [
           kActivityType: activityType!,
           kActivityInfoMetaData: info,
@@ -133,6 +138,13 @@ class ResponseServices: NSObject {
           JSONKey.applicationId: AppConfiguration.appID,
           JSONKey.orgID: AppConfiguration.orgID,
         ] as [String: Any]
+
+      let statusParams = ["activityRun": activityStatus.runDetails()]
+
+      let params = [
+        "activityResponse": responseParams,
+        "activityState": statusParams,
+      ]
 
       let headers: [String: String] = [
         JSONKey.userID: currentUser.userId ?? "",
@@ -398,6 +410,14 @@ class ResponseServices: NSObject {
     }
   }
 
+  func handleUpdateTokenResponse() {
+    self.sendRequestWith(
+      method: self.method,
+      params: self.requestParams ?? [:],
+      headers: self.headerParams
+    )
+  }
+
   /// Sends request
   /// - Parameters:
   ///   - method: instance of `Method`
@@ -407,6 +427,7 @@ class ResponseServices: NSObject {
 
     self.requestParams = params
     self.headerParams = headers
+    self.method = method
 
     networkManager.composeRequest(
       ResponseServerConfiguration.configuration,
@@ -427,7 +448,9 @@ extension ResponseServices: NMWebServiceDelegate {
     switch requestName {
     case ResponseMethods.getParticipantResponse.description as String:
       self.handleGetParticipantResponse(response: response as! [String: Any])
-
+    case AuthServerMethods.getRefreshedToken.description as String:
+      self.handleUpdateTokenResponse()
+      return
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.updateActivityState.description as String: break
     case ResponseMethods.activityState.description as String:
@@ -442,22 +465,35 @@ extension ResponseServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    delegate?.failedRequest(manager, requestName: requestName, error: error)
-
-    // handle failed request due to network connectivity
-    if requestName as String == ResponseMethods.processResponse.description
-      || requestName as String == ResponseMethods.updateActivityState.description
-    {
-
-      if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
-        // save in database
-        DBHandler.saveRequestInformation(
-          params: self.requestParams,
-          headers: self.headerParams,
-          method: requestName as String,
-          server: SyncUpdate.ServerType.response.rawValue
-        )
+    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // Unauthorized
+      delegate?.failedRequest(manager, requestName: requestName, error: error)
+    } else if error.code == 401 {
+      // Update Refresh Token
+      AuthServices().updateToken(delegate: self)
+    } else {
+      var errorInfo = error.userInfo
+      var localError = error
+      if error.code == 403 {
+        errorInfo = ["NSLocalizedDescription": LocalizableString.sessionExpired.localizedString]
+        localError = NSError(domain: error.domain, code: 403, userInfo: errorInfo)
       }
+
+      // handle failed request due to network connectivity
+      if requestName as String == ResponseMethods.processResponse.description
+        || requestName as String == ResponseMethods.updateActivityState.description
+      {
+
+        if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
+          // save in database
+          DBHandler.saveRequestInformation(
+            params: self.requestParams,
+            headers: self.headerParams,
+            method: requestName as String,
+            server: SyncUpdate.ServerType.response.rawValue
+          )
+        }
+      }
+      delegate?.failedRequest(manager, requestName: requestName, error: localError)
     }
   }
 }

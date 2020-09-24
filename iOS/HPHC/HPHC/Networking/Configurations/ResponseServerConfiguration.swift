@@ -26,6 +26,10 @@ enum ResponseMethods: String {
   case updateActivityState = "update-activity-state"
   case activityState = "get-activity-state"
 
+  // Deprecated
+  case processResp = "participant/process-response"
+  case updateState = "participant/update-activity-state"
+
   var description: String {
     switch self {
     default:
@@ -35,6 +39,8 @@ enum ResponseMethods: String {
 
   var base: String {
     switch self {
+    case .processResponse, .updateActivityState:
+      return "v2/participant/"
     default:
       return "participant/"
     }
@@ -42,6 +48,8 @@ enum ResponseMethods: String {
 
   var path: String {
     switch self {
+    case .processResp, .updateState:
+      return self.rawValue
     default:
       return base + self.rawValue
     }
@@ -124,6 +132,13 @@ class ResponseServerConfiguration: NetworkConfiguration {
     if let code = errorResponse["status"] as? Int {
       let message = errorResponse["error"] as? String ?? ""
       error = NSError(domain: message, code: code, userInfo: errorResponse)
+    } else if let code = errorResponse["appErrorCode"] as? Int {
+      let message = errorResponse["userMessage"] as? String ?? ""
+      return NSError(
+        domain: NSURLErrorDomain,
+        code: code,
+        userInfo: [NSLocalizedDescriptionKey: message]
+      )
     }
 
     return error

@@ -87,9 +87,14 @@ class SyncUpdate {
         )
       }
     } else if server == SyncUpdate.ServerType.response.rawValue {
-      let methodName = methodString?.components(separatedBy: "/").last ?? ""
-      let registrationMethod = ResponseMethods(rawValue: methodName)
-      if let method = registrationMethod?.method {
+      let responseMethod: ResponseMethods?
+      if let method = ResponseMethods(rawValue: methodString ?? "") {
+        responseMethod = method
+      } else {
+        let methodName = methodString?.components(separatedBy: "/").last ?? ""
+        responseMethod = ResponseMethods(rawValue: methodName)
+      }
+      if let method = responseMethod?.method {
         ResponseServices().syncOfflineSavedData(
           method: method,
           params: params,

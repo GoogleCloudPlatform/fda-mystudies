@@ -711,9 +711,9 @@ class StudyListViewController: UIViewController {
 
   @objc func loadStudyDetails() {
     guard let study = Study.currentStudy
-      else {
-        self.removeProgressIndicator()
-        return
+    else {
+      self.removeProgressIndicator()
+      return
     }
     DBHandler.loadStudyDetailsToUpdate(
       studyId: study.studyId,
