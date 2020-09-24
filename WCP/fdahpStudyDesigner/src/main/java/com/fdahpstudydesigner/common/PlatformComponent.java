@@ -52,7 +52,7 @@ public enum PlatformComponent {
 
   public static PlatformComponent fromValue(String value) {
     for (PlatformComponent type : PlatformComponent.values()) {
-      if (value == type.getValue()) {
+      if (type.getValue().equals(value)) {
         return type;
       }
     }
