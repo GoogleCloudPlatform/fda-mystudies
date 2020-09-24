@@ -29,7 +29,6 @@ import lombok.ToString;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 @Setter
 @Getter
@@ -89,8 +88,8 @@ public class ParticipantStudyEntity implements Serializable {
   @CreationTimestamp
   private Timestamp enrolledDate;
 
-  @Type(type = "java.lang.Boolean")
-  private Boolean sharing;
+  @Column(name = "data_sharing_status", length = SMALL_LENGTH)
+  private String sharing;
 
   private Integer completion;
 

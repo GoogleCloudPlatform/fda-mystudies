@@ -35,7 +35,6 @@ public final class AuditEventMapper {
     auditRequest.setUserId(getValue(request, USER_ID));
     auditRequest.setSource(getValue(request, SOURCE));
     auditRequest.setUserIp(getUserIP(request));
-    auditRequest.setSource(getValue(request, SOURCE));
 
     MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
     auditRequest.setMobilePlatform(mobilePlatform.getValue());

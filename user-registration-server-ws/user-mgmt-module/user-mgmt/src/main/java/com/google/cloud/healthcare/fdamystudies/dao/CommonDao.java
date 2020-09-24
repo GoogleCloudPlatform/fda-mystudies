@@ -9,8 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,18 +18,18 @@ import org.json.JSONArray;
 
 public interface CommonDao {
 
-  public String validatedUserAppDetailsByAllApi(String userId, String email, int appId);
+  public String validatedUserAppDetailsByAllApi(String userId, String email, String appId);
 
   public AppOrgInfoBean getUserAppDetailsByAllApi(String userId, String appId);
 
-  public Integer getUserInfoDetails(String userId);
+  public String getUserInfoDetails(String userId);
 
-  public List<AppInfoDetailsBO> getAppInfoSet(HashSet<String> appIds);
+  public List<AppEntity> getAppInfoSet(HashSet<String> appIds);
 
-  public List<StudyInfoBO> getStudyInfoSet(HashSet<String> studyInfoSet);
+  public List<StudyEntity> getStudyInfoSet(HashSet<String> studyInfoSet);
 
   public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
-      List<StudyInfoBO> studyInfoIds);
+      List<StudyEntity> studyInfoIds);
 
-  public String getParticicpantId(Integer id, String customeStudyId);
+  public String getParticipantId(String id, String customStudyId);
 }

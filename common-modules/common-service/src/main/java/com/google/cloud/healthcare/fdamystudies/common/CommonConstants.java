@@ -69,9 +69,31 @@ public final class CommonConstants {
 
   public static final int EMAIL_LENGTH = 320;
 
+  public static final String SUPER_ADMIN = "Super Admin";
+
+  public static final String ADMIN = "Admin";
+
+  public static final String EDITED_USER_ID = "edited_user_id";
+
+  public static final String NEW_USER_ID = "new_user_id";
+
+  public static final double DEFAULT_PERCENTAGE = 100.00;
+
   public static final String DELETE = "delete";
 
   public static final String RETAIN = "retain";
 
-  public static final double DEFAULT_PERCENTAGE = 100.00;
+  public static final String NO_OF_RECORDS = "5";
+
+  public static final String RUN_ID = "run_id";
+
+  public static final String ACTIVITY_VERSION = "activity_version";
+
+  public static final String ACTIVITY_ID = "activity_id";
+
+  public static final String ACTIVITY_TYPE = "activity_type";
+
+  public static final String ACTIVITY_STATE = "activity_state";
+
+  public static final String PAGE_NO = "0";
 }

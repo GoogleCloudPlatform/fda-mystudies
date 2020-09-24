@@ -9,8 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -34,46 +34,44 @@ public class CommonDaoImpl implements CommonDao {
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Override
-  public UserDetailsBO getUserInfoDetails(String userId) {
+  public UserDetailsEntity getUserInfoDetails(String userId) {
     logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<UserDetailsBO> userDetailsCriteriaQuery = null;
-    Root<UserDetailsBO> userDetailsBoRoot = null;
+    CriteriaQuery<UserDetailsEntity> userDetailsCriteriaQuery = null;
+    Root<UserDetailsEntity> userDetailsEntityRoot = null;
     Predicate[] userDetailspredicates = new Predicate[1];
-    List<UserDetailsBO> userDetailsBoList = null;
-    UserDetailsBO userDetailsBO = null;
-
+    List<UserDetailsEntity> userDetailsList = null;
+    UserDetailsEntity userDetailsEntity = null;
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
-    userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsBO.class);
-    userDetailsBoRoot = userDetailsCriteriaQuery.from(UserDetailsBO.class);
+    userDetailsCriteriaQuery = criteriaBuilder.createQuery(UserDetailsEntity.class);
+    userDetailsEntityRoot = userDetailsCriteriaQuery.from(UserDetailsEntity.class);
     userDetailspredicates[0] =
-        criteriaBuilder.equal(userDetailsBoRoot.get(AppConstants.USER_ID), userId);
-    userDetailsCriteriaQuery.select(userDetailsBoRoot).where(userDetailspredicates);
-    userDetailsBoList = session.createQuery(userDetailsCriteriaQuery).getResultList();
-    if (!userDetailsBoList.isEmpty()) {
-      userDetailsBO = userDetailsBoList.get(0);
+        criteriaBuilder.equal(userDetailsEntityRoot.get(AppConstants.USER_ID), userId);
+    userDetailsCriteriaQuery.select(userDetailsEntityRoot).where(userDetailspredicates);
+    userDetailsList = session.createQuery(userDetailsCriteriaQuery).getResultList();
+    if (!userDetailsList.isEmpty()) {
+      userDetailsEntity = userDetailsList.get(0);
     }
 
     logger.info("CommonDaoImpl getUserInfoDetails() - Ends ");
-    return userDetailsBO;
+    return userDetailsEntity;
   }
 
   @Override
-  public Integer getStudyId(String customStudyId) {
+  public String getStudyId(String customStudyId) {
     logger.info("CommonDaoImpl getStudyId() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
-    Integer studyInfoId = null;
-    CriteriaQuery<StudyInfoBO> criteriaQuery = null;
-    Root<StudyInfoBO> root = null;
+    String studyInfoId = "";
+    CriteriaQuery<StudyEntity> criteriaQuery = null;
+    Root<StudyEntity> root = null;
     Predicate[] predicates = new Predicate[1];
-    List<StudyInfoBO> studyList = null;
-    StudyInfoBO studyInfo = null;
-
+    List<StudyEntity> studyList = null;
+    StudyEntity studyInfo = null;
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
-    criteriaQuery = criteriaBuilder.createQuery(StudyInfoBO.class);
-    root = criteriaQuery.from(StudyInfoBO.class);
+    criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
+    root = criteriaQuery.from(StudyEntity.class);
     predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
     criteriaQuery.select(root).where(predicates);
     studyList = session.createQuery(criteriaQuery).getResultList();
@@ -87,19 +85,18 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public StudyInfoBO getStudyDetails(String customStudyId) {
+  public StudyEntity getStudyDetails(String customStudyId) {
     logger.info("CommonDaoImpl getStudyDetails() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<StudyInfoBO> criteriaQuery = null;
-    Root<StudyInfoBO> root = null;
+    CriteriaQuery<StudyEntity> criteriaQuery = null;
+    Root<StudyEntity> root = null;
     Predicate[] predicates = new Predicate[1];
-    List<StudyInfoBO> studyList = null;
-    StudyInfoBO studyInfo = null;
-
+    List<StudyEntity> studyList = null;
+    StudyEntity studyInfo = null;
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
-    criteriaQuery = criteriaBuilder.createQuery(StudyInfoBO.class);
-    root = criteriaQuery.from(StudyInfoBO.class);
+    criteriaQuery = criteriaBuilder.createQuery(StudyEntity.class);
+    root = criteriaQuery.from(StudyEntity.class);
     predicates[0] = criteriaBuilder.equal(root.get("customId"), customStudyId);
     criteriaQuery.select(root).where(predicates);
     studyList = session.createQuery(criteriaQuery).getResultList();

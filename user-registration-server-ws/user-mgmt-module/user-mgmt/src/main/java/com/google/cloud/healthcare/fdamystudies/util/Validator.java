@@ -9,7 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.beans.UserBean;
-import com.google.cloud.healthcare.fdamystudies.exceptions.BadRequest;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 
 public class Validator {
 
@@ -17,14 +18,14 @@ public class Validator {
 
   public static boolean isValid(UserBean user) {
     if ((user.getEmailId() == null) || (user.getPassword() == null)) {
-      throw new BadRequest("emailId or password is blank in request");
+      throw new ErrorCodeException(ErrorCode.EMAIL_ID_OR_PASSWORD_NULL);
     }
     return true;
   }
 
   public static boolean isValid(String applicationId) {
     if ((applicationId == null)) {
-      throw new BadRequest("applicationId is missing in request header");
+      throw new ErrorCodeException(ErrorCode.APPLICATION_ID_MISSING);
     }
     return true;
   }
