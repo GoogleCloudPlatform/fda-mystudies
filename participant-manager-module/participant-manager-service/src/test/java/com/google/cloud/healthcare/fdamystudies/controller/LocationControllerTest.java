@@ -663,9 +663,9 @@ public class LocationControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.locationId", is(locationEntity.getId())))
-        .andExpect(jsonPath("$.studies").isArray())
-        .andExpect(jsonPath("$.studies", hasSize(1)))
-        .andExpect(jsonPath("$.studies[0]", is("LIMITJP001")))
+        .andExpect(jsonPath("$.studyNames").isArray())
+        .andExpect(jsonPath("$.studyNames", hasSize(1)))
+        .andExpect(jsonPath("$.studyNames[0]", is("LIMITJP001")))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();

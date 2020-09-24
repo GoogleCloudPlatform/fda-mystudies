@@ -17,8 +17,20 @@ export interface ParticipantRegistryDetail {
   locationStatus?: string;
   sitePermission?: Permission;
   openStudySitePermission?: Permission;
-  siteStatus?: string;
+  siteStatus?: number;
   registryParticipants: RegistryParticipant[];
-  countByStatus?: string;
+  countByStatus: CountByStatus;
   status?: string;
+}
+export interface CountByStatus {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  A?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  D?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  E?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  I?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  N?: number;
 }
