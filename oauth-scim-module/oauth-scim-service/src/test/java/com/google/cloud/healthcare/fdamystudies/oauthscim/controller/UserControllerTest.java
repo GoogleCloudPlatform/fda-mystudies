@@ -868,7 +868,7 @@ public class UserControllerTest extends BaseMockIT {
     headers.add("appId", "SCIM AUTH SERVER");
     headers.add("userId", userEntity.getUserId());
     headers.add("studyId", "MyStudies");
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "SCIM AUTH SERVER");
     return headers;
   }
 

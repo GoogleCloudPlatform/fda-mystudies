@@ -760,7 +760,7 @@ public class LoginControllerTest extends BaseMockIT {
     headers.add("appVersion", "1.0");
     headers.add("appId", "SCIM AUTH SERVER");
     headers.add("studyId", "MyStudies");
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "SCIM AUTH SERVER");
     headers.add("correlationId", IdGenerator.id());
     return headers;
   }
