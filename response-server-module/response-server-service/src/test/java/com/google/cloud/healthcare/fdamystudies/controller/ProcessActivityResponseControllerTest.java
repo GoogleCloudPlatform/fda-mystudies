@@ -13,6 +13,20 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_RESPONSE_RECEIVED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_RESPONSE_SAVED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_STATE_SAVED_OR_UPDATED_AFTER_RESPONSE_SUBMISSION;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVTY_METADATA_RETRIEVED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.DATA_SHARING_CONSENT_VALUE_CONJOINED_WITH_ACTIVITY_RESPONSE_DATA;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.DATA_SHARING_CONSENT_VALUE_RETRIEVED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ACTIVITY_DATA_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ID_INVALID;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_RESPONSE_DATA_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.WITHDRAWAL_INFORMATION_RETRIEVED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.WITHDRAWAL_INFORMATION_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_ID_KEY;
 import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_TOKEN_IDENTIFIER_KEY;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.ACTIVITY_COLLECTION_NAME_VALUE;
@@ -41,6 +55,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StoredResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
@@ -51,10 +66,12 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
+import com.google.cloud.healthcare.fdamystudies.utils.Constants;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -159,6 +176,35 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(
         participantBo.getParticipantIdentifier(),
         dataToStoreCaptor.getValue().get(PARTICIPANT_ID_KEY));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(activityResponseBean.getMetadata().getStudyId());
+    auditRequest.setParticipantId(activityResponseBean.getParticipantId());
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(ACTIVITY_RESPONSE_RECEIVED.getEventCode(), auditRequest);
+    auditEventMap.put(ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA.getEventCode(), auditRequest);
+    auditEventMap.put(
+        DATA_SHARING_CONSENT_VALUE_CONJOINED_WITH_ACTIVITY_RESPONSE_DATA.getEventCode(),
+        auditRequest);
+    auditEventMap.put(ACTIVITY_RESPONSE_SAVED.getEventCode(), auditRequest);
+    auditEventMap.put(DATA_SHARING_CONSENT_VALUE_RETRIEVED.getEventCode(), auditRequest);
+    auditEventMap.put(ACTIVTY_METADATA_RETRIEVED.getEventCode(), auditRequest);
+    auditEventMap.put(WITHDRAWAL_INFORMATION_RETRIEVED.getEventCode(), auditRequest);
+    auditEventMap.put(
+        ACTIVITY_STATE_SAVED_OR_UPDATED_AFTER_RESPONSE_SUBMISSION.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        ACTIVITY_RESPONSE_RECEIVED,
+        ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA,
+        DATA_SHARING_CONSENT_VALUE_CONJOINED_WITH_ACTIVITY_RESPONSE_DATA,
+        ACTIVITY_RESPONSE_SAVED,
+        DATA_SHARING_CONSENT_VALUE_RETRIEVED,
+        ACTIVTY_METADATA_RETRIEVED,
+        WITHDRAWAL_INFORMATION_RETRIEVED,
+        ACTIVITY_STATE_SAVED_OR_UPDATED_AFTER_RESPONSE_SUBMISSION);
   }
 
   @Test
@@ -190,6 +236,16 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.detailMessage", is(PARTICIPANT_ID_NOT_EXISTS_MESSAGE)));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(VALID_USER_ID);
+    auditRequest.setStudyId(activityResponseBean.getMetadata().getStudyId());
+    auditRequest.setParticipantId(activityResponseBean.getParticipantId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_ID_INVALID.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PARTICIPANT_ID_INVALID);
   }
 
   @Test
@@ -247,6 +303,18 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
     assertEquals(ACTIVITY_ID_VALUE, activityIdCaptor.getValue());
     assertEquals(QUESTION_KEY_VALUE, questionKeyCaptor.getValue());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setAppId("appId");
+    auditRequest.setSiteId(SITE_ID_VALUE);
+    auditRequest.setStudyId(STUDY_ID_VALUE);
+    auditRequest.setParticipantId(participantBo.getParticipantIdentifier());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED);
   }
 
   @Test
@@ -310,6 +378,23 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
     assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(VALID_USER_ID);
+    auditRequest.setStudyId(STUDY_ID_VALUE);
+    auditRequest.setParticipantId(participantBo.getParticipantIdentifier());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(
+        PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE.getEventCode(), auditRequest);
+    auditEventMap.put(WITHDRAWAL_INFORMATION_UPDATED.getEventCode(), auditRequest);
+    auditEventMap.put(PARTICIPANT_ACTIVITY_DATA_DELETED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap,
+        PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE,
+        WITHDRAWAL_INFORMATION_UPDATED,
+        PARTICIPANT_ACTIVITY_DATA_DELETED);
   }
 
   @Test
@@ -358,6 +443,18 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
     assertEquals(ACTIVITY_COLLECTION_NAME_VALUE, activityCollectionNameCaptor.getValue());
     assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(STUDY_ID_VALUE);
+    auditRequest.setParticipantId(participantBo.getParticipantIdentifier());
+    auditRequest.setUserId(VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_RESPONSE_DATA_DELETED.getEventCode(), auditRequest);
+    auditEventMap.put(PARTICIPANT_ACTIVITY_DATA_DELETED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(
+        auditEventMap, PARTICIPANT_RESPONSE_DATA_DELETED, PARTICIPANT_ACTIVITY_DATA_DELETED);
   }
 
   @Test
@@ -391,6 +488,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     activityResponseBean.getMetadata().setActivityId(ACTIVITY_ID_VALUE);
     activityResponseBean.getMetadata().setVersion("1.0");
     activityResponseBean.getMetadata().setStudyId(STUDY_ID_VALUE);
+    activityResponseBean.setType("questionnaire");
     activityResponseBean.setTokenIdentifier(participantBo.getTokenIdentifier());
     return activityResponseBean;
   }
