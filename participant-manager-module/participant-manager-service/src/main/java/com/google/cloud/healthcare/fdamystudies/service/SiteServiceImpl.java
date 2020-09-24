@@ -608,7 +608,7 @@ public class SiteServiceImpl implements SiteService {
               .collect(Collectors.toList());
 
       List<StudyConsentEntity> studyConsents = null;
-      if (page != null || limit != null) {
+      if (page != null && limit != null) {
         Page<StudyConsentEntity> consentHistoryPage =
             studyConsentRepository.findByParticipantRegistrySiteIdForPagination(
                 participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
