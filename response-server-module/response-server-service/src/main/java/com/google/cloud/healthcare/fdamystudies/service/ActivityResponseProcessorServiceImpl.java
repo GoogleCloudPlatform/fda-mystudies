@@ -121,7 +121,7 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
       map.put("activity_version", activityMetadataBeanFromWcp.getMetadata().getVersion());
       map.put("run_id", activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
       responseServerAuditLogHelper.logEvent(
-          ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED, auditRequest);
+          ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED, auditRequest, map);
       throw new ProcessResponseException(
           "The activity ID in the response does not match activity ID in the metadata provided.");
     }

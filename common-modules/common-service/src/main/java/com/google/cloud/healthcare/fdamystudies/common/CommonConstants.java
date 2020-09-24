@@ -74,4 +74,12 @@ public final class CommonConstants {
   public static final String RETAIN = "retain";
 
   public static final double DEFAULT_PERCENTAGE = 100.00;
+
+  public static final String RUN_ID = "run_id";
+
+  public static final String ACTIVITY_VERSION = "activity_version";
+
+  public static final String ACTIVITY_ID = "activity_id";
+
+  public static final String ACTIVITY_TYPE = "activity_type";
 }
