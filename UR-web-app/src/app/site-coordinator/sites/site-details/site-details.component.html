@@ -554,7 +554,15 @@
     </div>
 
     <ng-template #addParticipants>
-      <div class="modal-body modal__body"></div>
+      <div class="modal-body modal__body">
+        <div class="modal-body modal__body">
+          <app-add-email
+            [siteId]="siteId"
+            (addEmail)="onSucceedAddEmail()"
+            (cancel)="modalRef.hide()"
+          ></app-add-email>
+        </div>
+      </div>
     </ng-template>
   </div>
 </ng-container>
