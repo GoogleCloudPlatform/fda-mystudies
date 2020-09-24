@@ -82,10 +82,8 @@ public final class CommonConstants {
   public static final String DELETE = "delete";
 
   public static final String RETAIN = "retain";
-  
-  public static final String NO_OF_RECORDS = "5";
 
-  public static final double DEFAULT_PERCENTAGE = 100.00;
+  public static final String NO_OF_RECORDS = "5";
 
   public static final String RUN_ID = "run_id";
 
