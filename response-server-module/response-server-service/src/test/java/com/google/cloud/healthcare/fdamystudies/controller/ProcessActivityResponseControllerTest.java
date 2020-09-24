@@ -8,6 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.utils.AppConstants.PARTICIPANT_ID_KEY;
@@ -60,14 +63,12 @@ import org.mockito.Captor;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MvcResult;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@AutoConfigureTestDatabase
 public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
   @Autowired private TestDataHelper testDataHelper;
@@ -135,6 +136,20 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             studyCollectionNameCaptor.capture(),
             activityCollectionNameCaptor.capture(),
             dataToStoreCaptor.capture());
+
+    verify(
+        1,
+        getRequestedFor(
+            urlEqualTo(
+                "/myStudiesEnrollmentMgmt/participantInfo?studyId=ASignature01&participantId="
+                    + participantBo.getParticipantIdentifier())));
+
+    verify(
+        1,
+        getRequestedFor(
+            urlEqualTo(
+                "/StudyMetaData/activity?studyId=ASignature01"
+                    + "&activityId=Activity&activityVersion=1.0")));
 
     // Step-4: assert argument capture
 

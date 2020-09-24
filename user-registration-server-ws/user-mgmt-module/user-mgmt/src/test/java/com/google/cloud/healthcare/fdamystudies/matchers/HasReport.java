@@ -5,14 +5,15 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
+
 package com.google.cloud.healthcare.fdamystudies.matchers;
 
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.PersonalizedUserReportBO;
+import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportEntity;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public class HasReport extends TypeSafeMatcher<PersonalizedUserReportBO> {
+public class HasReport extends TypeSafeMatcher<PersonalizedUserReportEntity> {
 
   private String reportTitle;
   private String reportContent;
@@ -23,7 +24,7 @@ public class HasReport extends TypeSafeMatcher<PersonalizedUserReportBO> {
   }
 
   @Override
-  protected boolean matchesSafely(PersonalizedUserReportBO report) {
+  protected boolean matchesSafely(PersonalizedUserReportEntity report) {
     return report.getReportTitle() == this.reportTitle
         && report.getReportContent() == reportContent;
   }
@@ -34,7 +35,7 @@ public class HasReport extends TypeSafeMatcher<PersonalizedUserReportBO> {
         "has report with title " + reportTitle + " and content " + reportContent);
   }
 
-  public static Matcher<PersonalizedUserReportBO> hasReport(
+  public static Matcher<PersonalizedUserReportEntity> hasReport(
       String reportTitle, String reportContent) {
     return new HasReport(reportTitle, reportContent);
   }
