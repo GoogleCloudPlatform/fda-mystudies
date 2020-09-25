@@ -50,6 +50,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -250,7 +253,11 @@ public class StudyServiceImpl implements StudyService {
 
   @Override
   public ParticipantRegistryResponse getStudyParticipants(
-      String userId, String studyId, AuditLogEventRequest auditRequest) {
+      String userId,
+      String studyId,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
     // validations
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
@@ -273,11 +280,17 @@ public class StudyServiceImpl implements StudyService {
 
     Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
-    return prepareRegistryParticipantResponse(optStudy.get(), optApp.get(), userId, auditRequest);
+    return prepareRegistryParticipantResponse(
+        optStudy.get(), optApp.get(), userId, auditRequest, page, limit);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
-      StudyEntity study, AppEntity app, String userId, AuditLogEventRequest auditRequest) {
+      StudyEntity study,
+      AppEntity app,
+      String userId,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit) {
     ParticipantRegistryDetail participantRegistryDetail =
         ParticipantMapper.fromStudyAndApp(study, app);
 
@@ -294,8 +307,16 @@ public class StudyServiceImpl implements StudyService {
       }
     }
 
-    List<ParticipantStudyEntity> participantStudiesList =
-        participantStudyRepository.findParticipantsByStudy(study.getId());
+    List<ParticipantStudyEntity> participantStudiesList = null;
+    if (page != null && limit != null) {
+      Page<ParticipantStudyEntity> participantStudyPage =
+          participantStudyRepository.findParticipantsByStudyForPage(
+              study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
+      participantStudiesList = participantStudyPage.getContent();
+    } else {
+      participantStudiesList = participantStudyRepository.findParticipantsByStudy(study.getId());
+    }
+
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
     if (CollectionUtils.isNotEmpty(participantStudiesList)) {
@@ -319,6 +340,8 @@ public class StudyServiceImpl implements StudyService {
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
+    Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(study.getId());
+    participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
 
     auditRequest.setUserId(userId);
     auditRequest.setStudyId(study.getId());

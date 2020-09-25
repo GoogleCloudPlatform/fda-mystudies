@@ -12,9 +12,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.CON
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.FEEDBACK_CONTENT_EMAILED;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -26,15 +23,15 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
@@ -47,8 +44,6 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Autowired private UserSupportController controller;
 
   @Autowired private UserSupportService service;
-
-  @Autowired private EmailNotification emailNotification;
 
   @Autowired private ApplicationPropertyConfiguration appConfig;
 
@@ -64,14 +59,6 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Test
   public void shouldSendFeedbackEmail() throws Exception {
     appConfig.setFeedbackToEmail("feedback_app_test@grr.la");
-    Mockito.when(
-            emailNotification.sendEmailNotification(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                eq(appConfig.getFeedbackToEmail()),
-                Mockito.any(),
-                Mockito.any()))
-        .thenReturn(true);
 
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
     String requestJson = getFeedBackDetails(Constants.SUBJECT, Constants.BODY);
@@ -83,13 +70,14 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
-    verify(emailNotification, times(1))
-        .sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            eq(appConfig.getFeedbackToEmail()),
-            Mockito.any(),
-            Mockito.any());
+    String subject = appConfig.getFeedbackMailSubject() + Constants.SUBJECT;
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("body", Constants.BODY);
+    templateArgs.put("orgName", appConfig.getOrgName());
+    String body =
+        PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getFeedbackMailBody(), templateArgs);
+
+    verifyMimeMessage(appConfig.getFeedbackToEmail(), appConfig.getFromEmail(), subject, body);
 
     verifyTokenIntrospectRequest(1);
 
@@ -105,14 +93,6 @@ public class UserSupportControllerTest extends BaseMockIT {
   @Test
   public void shouldSendEmailForContactUs() throws Exception {
     appConfig.setContactusToEmail("contactus_app_test@grr.la");
-    Mockito.when(
-            emailNotification.sendEmailNotification(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                eq(appConfig.getContactusToEmail()),
-                Mockito.any(),
-                Mockito.any()))
-        .thenReturn(true);
 
     HttpHeaders headers =
         TestUtils.getCommonHeaders(Constants.APP_ID_HEADER, Constants.USER_ID_HEADER);
@@ -131,13 +111,18 @@ public class UserSupportControllerTest extends BaseMockIT {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(Constants.SUCCESS)));
 
-    verify(emailNotification, times(1))
-        .sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            eq(appConfig.getContactusToEmail()),
-            Mockito.any(),
-            Mockito.any());
+    String subject = appConfig.getContactusMailSubject() + Constants.SUBJECT;
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("firstName", Constants.FIRST_NAME);
+    templateArgs.put("email", Constants.EMAIL_ID);
+    templateArgs.put("subject", Constants.SUBJECT);
+    templateArgs.put("body", Constants.BODY);
+    templateArgs.put("orgName", appConfig.getOrgName());
+    String body =
+        PlaceholderReplacer.replaceNamedPlaceholders(
+            appConfig.getContactusMailBody(), templateArgs);
+
+    verifyMimeMessage(appConfig.getContactusToEmail(), appConfig.getFromEmail(), subject, body);
 
     verifyTokenIntrospectRequest(1);
 
