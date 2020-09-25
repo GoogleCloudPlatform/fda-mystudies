@@ -23,6 +23,20 @@
 
 package com.fdahpstudydesigner.controller;
 
+
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.APP_LEVEL_NOTIFICATION_LIST_VIEWED;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bo.NotificationBO;
+import com.fdahpstudydesigner.bo.NotificationHistoryBO;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.bo.NotificationBO;
+import com.fdahpstudydesigner.bo.NotificationHistoryBO;
+import com.fdahpstudydesigner.service.NotificationService;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +47,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import com.fdahpstudydesigner.bo.NotificationBO;
-import com.fdahpstudydesigner.bo.NotificationHistoryBO;
-import com.fdahpstudydesigner.service.NotificationService;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.SessionObject;
 
 @Controller
 public class NotificationController {
@@ -46,6 +54,8 @@ public class NotificationController {
   private static Logger logger = Logger.getLogger(NotificationController.class);
 
   @Autowired private NotificationService notificationService;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @RequestMapping("/adminNotificationEdit/deleteNotification.do")
   public ModelAndView deleteNotification(HttpServletRequest request) {
@@ -335,6 +345,7 @@ public class NotificationController {
     List<NotificationBO> notificationList = null;
     ModelAndView mav = new ModelAndView("login", map);
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       if (null != request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG)) {
         sucMsg = (String) request.getSession().getAttribute(FdahpStudyDesignerConstants.SUC_MSG);
         map.addAttribute(FdahpStudyDesignerConstants.SUC_MSG, sucMsg);
@@ -366,6 +377,12 @@ public class NotificationController {
         }
       }
       map.addAttribute("notificationList", notificationList);
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
+      auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
+      auditLogEventHelper.logEvent(APP_LEVEL_NOTIFICATION_LIST_VIEWED, auditRequest);
       mav = new ModelAndView("notificationListPage", map);
     } catch (Exception e) {
       logger.error("NotificationController - viewNotificationList() - ERROR ", e);

@@ -23,7 +23,6 @@
 
 package com.fdahpstudydesigner.util;
 
-import java.util.Map;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -77,7 +76,6 @@ public class Mail {
   // rather rely on the SMTP service's configured IP whitelist. If false we
   // will authenticate with the provided fromEmailAddress and fromEmailPass.
   private Boolean useIpWhitelist = false;
-
 
   public String getAttachmentPath() {
     return attachmentPath;
@@ -279,8 +277,7 @@ public class Mail {
     return Session.getInstance(props, null);
   }
 
-  private Session makeSession(Properties props, final String username,
-      final String password) {
+  private Session makeSession(Properties props, final String username, final String password) {
     return Session.getInstance(
         props,
         new javax.mail.Authenticator() {

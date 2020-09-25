@@ -12,6 +12,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
@@ -24,9 +25,6 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,33 +32,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.InfoBean;
-import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserProfileControllerTest extends BaseMockIT {
@@ -79,12 +79,16 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Autowired private FdaEaUserDetailsServiceImpl service;
 
-  @Autowired private EmailNotification emailNotification;
-
   @Autowired private ObjectMapper objectMapper;
+
+  @Autowired private JavaMailSender emailSender;
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawUrl;
+
+  @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Test
   public void contextLoads() {
@@ -254,22 +258,20 @@ public class UserProfileControllerTest extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
 
     // without email
-    String requestJson = getLoginBean("", Constants.PASSWORD);
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(requestJson)
+                .content(asJsonString(new ResetPasswordBean("")))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
     // invalid email
-    requestJson = getLoginBean(Constants.INVALID_EMAIL, Constants.PASSWORD);
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(requestJson)
+                .content(asJsonString(new ResetPasswordBean(Constants.INVALID_EMAIL)))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -277,11 +279,10 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     // without appId
     headers.set(Constants.APP_ID_HEADER, "");
-    requestJson = getLoginBean(Constants.EMAIL_ID, Constants.PASSWORD);
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(requestJson)
+                .content(asJsonString(new ResetPasswordBean(Constants.EMAIL_ID)))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
@@ -290,37 +291,29 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void resendConfirmationSuccess() throws Exception {
-
-    Mockito.when(
-            emailNotification.sendEmailNotification(
-                Mockito.anyString(),
-                Mockito.anyString(),
-                eq(Constants.VALID_EMAIL),
-                Mockito.any(),
-                Mockito.any()))
-        .thenReturn(true);
-
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.APP_ID_HEADER);
-
-    String requestJson = getLoginBean(Constants.VALID_EMAIL, Constants.PASSWORD);
 
     mockMvc
         .perform(
             post(RESEND_CONFIRMATION_PATH)
-                .content(requestJson)
+                .content(asJsonString(new ResetPasswordBean(Constants.VALID_EMAIL)))
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string(containsString(Constants.SUCCESS)));
 
-    verify(emailNotification, times(1))
-        .sendEmailNotification(
-            Mockito.anyString(),
-            Mockito.anyString(),
-            eq(Constants.VALID_EMAIL),
-            Mockito.any(),
-            Mockito.any());
+    List<UserDetailsEntity> listOfUserDetails =
+        userDetailsRepository.findByEmail(Constants.VALID_EMAIL);
+    String subject = appConfig.getConfirmationMailSubject();
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("securitytoken", listOfUserDetails.get(0).getEmailCode());
+    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    String body =
+        PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
+
+    verifyMimeMessage(Constants.VALID_EMAIL, appConfig.getFromEmail(), subject, body);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);
@@ -330,11 +323,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditEventMap.put(VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED);
-  }
-
-  private String getLoginBean(String emailId, String password) throws JsonProcessingException {
-    LoginBean loginBean = new LoginBean(emailId, password);
-    return getObjectMapper().writeValueAsString(loginBean);
   }
 
   protected ObjectMapper getObjectMapper() {

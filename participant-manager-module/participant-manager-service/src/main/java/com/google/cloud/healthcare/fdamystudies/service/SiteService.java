@@ -45,7 +45,7 @@ public interface SiteService {
       String userId, String siteId, AuditLogEventRequest auditRequest);
 
   public ParticipantDetailResponse getParticipantDetails(
-      String participantRegistrySiteId, String userId, int page, int limit);
+      String participantRegistrySiteId, String userId, Integer page, Integer limit);
 
   public InviteParticipantResponse inviteParticipants(
       InviteParticipantRequest inviteparticipantBean, AuditLogEventRequest auditRequest);

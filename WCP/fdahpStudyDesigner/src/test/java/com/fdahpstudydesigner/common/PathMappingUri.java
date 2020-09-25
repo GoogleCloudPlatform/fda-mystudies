@@ -11,7 +11,21 @@ package com.fdahpstudydesigner.common;
 public enum PathMappingUri {
   ACTIVATE_OR_DEACTIVATE_USER("/adminUsersEdit/activateOrDeactivateUser.do"),
 
-  SESSION_OUT("/sessionOut.do");
+  SESSION_OUT("/sessionOut.do"),
+
+
+  VIEW_NOTIFICATION_LIST("/adminNotificationView/viewNotificationList.do"),
+
+  SAVE_OR_UPDATE_NOTIFICATION("/adminNotificationEdit/saveOrUpdateNotification.do"),
+
+  SAVE_OR_UPDATE_STUDY_NOTIFICATION("/adminStudies/saveOrUpdateStudyNotification.do"),
+
+  CHANGE_PASSWORD("/adminDashboard/changePassword.do"),
+
+  UPDATE_PROFILE_DETAILS("/adminDashboard/updateUserDetails.do"),
+
+  VIEW_USER_DETAILS("/adminDashboard/viewUserDetails.do");
+
 
   private final String path;
 
