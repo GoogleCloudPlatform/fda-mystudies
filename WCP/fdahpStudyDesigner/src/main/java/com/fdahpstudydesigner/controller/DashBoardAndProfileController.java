@@ -65,7 +65,7 @@ public class DashBoardAndProfileController {
 
   @Autowired private UsersService usersService;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -229,7 +229,7 @@ public class DashBoardAndProfileController {
             }
             auditRequest.setUserId(String.valueOf(userSession.getUserId()));
             auditRequest.setCorrelationId(userSession.getSessionId());
-            auditLogEvEntHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
+            auditLogHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
           }
         }
         map.addAttribute("studyAndPermissionList", studyAndPermissionList);

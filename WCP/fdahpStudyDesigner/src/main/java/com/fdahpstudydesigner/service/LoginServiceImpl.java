@@ -62,7 +62,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Autowired private AuditLogDAO auditLogDAO;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
   @Autowired private HttpServletRequest request;
 
@@ -258,7 +258,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
             } else {
               eventEnum = PASSWORD_CHANGE_FAILED;
             }
-            auditLogEvEntHelper.logEvent(eventEnum, auditRequest);
+            auditLogHelper.logEvent(eventEnum, auditRequest);
           } else {
             message = oldPasswordError.replace("$countPass", passwordCount);
           }
