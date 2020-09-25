@@ -8,8 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateServiceImpl;
 import java.util.List;
 import org.hibernate.Session;
@@ -29,14 +28,15 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
 
   @Override
   @SuppressWarnings("unchecked")
-  public UserDetailsBO getRecord(String userId) throws SystemException {
+  public UserDetailsEntity getRecord(String userId) {
     logger.info("(Service)...UserRegAdminUserDaoImpl.getRecord()...Started");
-    List<UserDetailsBO> userList = null;
-    UserDetailsBO user = null;
+    List<UserDetailsEntity> userList = null;
+    UserDetailsEntity user = null;
 
     if (userId != null) {
       Session session = this.sessionFactory.getCurrentSession();
-      Query<UserDetailsBO> query = session.createQuery("from UserDetailsBO where userId = :userId");
+      Query<UserDetailsEntity> query =
+          session.createQuery("from UserDetailsEntity where userId = :userId");
       query.setParameter("userId", userId);
       userList = query.getResultList();
 
@@ -45,6 +45,7 @@ public class UserRegAdminUserDaoImpl implements UserRegAdminUserDao {
       }
       logger.info("(DAO)...UserRegAdminUserDaoImpl.getRecord()...Ended ");
       return user;
+
     } else {
       logger.error("(DAO)...UserRegAdminUserDaoImpl - getRecord Ended");
       return null;

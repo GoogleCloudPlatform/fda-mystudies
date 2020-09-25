@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantRegistrySite;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.util.ArrayList;
@@ -36,18 +36,17 @@ public class StudyStateDaoImpl implements StudyStateDao {
   @Autowired private SessionFactory sessionFactory;
 
   @Override
-  public List<ParticipantStudiesBO> getParticipantStudiesList(UserDetailsBO user) {
+  public List<ParticipantStudyEntity> getParticipantStudiesList(UserDetailsEntity user) {
     logger.info("StudyStateDaoImpl getParticipantStudiesList() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<ParticipantStudiesBO> criteriaQuery = null;
-    Root<ParticipantStudiesBO> root = null;
+    CriteriaQuery<ParticipantStudyEntity> criteriaQuery = null;
+    Root<ParticipantStudyEntity> root = null;
     Predicate[] predicates = new Predicate[1];
-    List<ParticipantStudiesBO> participantStudiesList = null;
-
+    List<ParticipantStudyEntity> participantStudiesList = null;
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
-    criteriaQuery = criteriaBuilder.createQuery(ParticipantStudiesBO.class);
-    root = criteriaQuery.from(ParticipantStudiesBO.class);
+    criteriaQuery = criteriaBuilder.createQuery(ParticipantStudyEntity.class);
+    root = criteriaQuery.from(ParticipantStudyEntity.class);
     predicates[0] = criteriaBuilder.equal(root.get("userDetails"), user);
     criteriaQuery.select(root).where(predicates);
     participantStudiesList = session.createQuery(criteriaQuery).getResultList();
@@ -57,13 +56,12 @@ public class StudyStateDaoImpl implements StudyStateDao {
   }
 
   @Override
-  public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
+  public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
     logger.info("StudyStateDaoImpl saveParticipantStudies() - Starts ");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     boolean isUpdated = false;
-
     Session session = this.sessionFactory.getCurrentSession();
-    for (ParticipantStudiesBO participantStudies : participantStudiesList) {
+    for (ParticipantStudyEntity participantStudies : participantStudiesList) {
       session.saveOrUpdate(participantStudies);
       isUpdated = true;
     }
@@ -77,20 +75,20 @@ public class StudyStateDaoImpl implements StudyStateDao {
   }
 
   @Override
-  public String getEnrollTokenForParticipant(Integer participantRegistryId) {
+  public String getEnrollTokenForParticipant(String participantRegistryId) {
     logger.info("StudyStateDaoImpl getEnrollTokenForParticipant() - Starts ");
     String enrolledToken = "";
     CriteriaBuilder criteriaBuilder = null;
-    CriteriaQuery<ParticipantRegistrySite> criteriaQuery = null;
-    Root<ParticipantRegistrySite> root = null;
+    CriteriaQuery<ParticipantRegistrySiteEntity> criteriaQuery = null;
+    Root<ParticipantRegistrySiteEntity> root = null;
     Predicate[] predicates = new Predicate[1];
-    List<ParticipantRegistrySite> participantRegistryList = null;
-    ParticipantRegistrySite participantRegistrySite = null;
+    List<ParticipantRegistrySiteEntity> participantRegistryList = null;
+    ParticipantRegistrySiteEntity participantRegistrySite = null;
 
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
-    criteriaQuery = criteriaBuilder.createQuery(ParticipantRegistrySite.class);
-    root = criteriaQuery.from(ParticipantRegistrySite.class);
+    criteriaQuery = criteriaBuilder.createQuery(ParticipantRegistrySiteEntity.class);
+    root = criteriaQuery.from(ParticipantRegistrySiteEntity.class);
     predicates[0] = criteriaBuilder.equal(root.get("id"), participantRegistryId);
     criteriaQuery.select(root).where(predicates);
     participantRegistryList = session.createQuery(criteriaQuery).getResultList();
@@ -109,33 +107,33 @@ public class StudyStateDaoImpl implements StudyStateDao {
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     CriteriaBuilder criteriaBuilder = null;
 
-    CriteriaQuery<StudyInfoBO> studiesBoCriteria = null;
-    Root<StudyInfoBO> studiesBoRoot = null;
-    Predicate[] studiesBoPredicates = new Predicate[1];
-    List<StudyInfoBO> studiesBoList = null;
-    StudyInfoBO studyInfo = null;
+    CriteriaQuery<StudyEntity> studyEntityCriteria = null;
+    Root<StudyEntity> studyEntityRoot = null;
+    Predicate[] studyEntityPredicates = new Predicate[1];
+    List<StudyEntity> studiesBoList = null;
+    StudyEntity studyEntity = null;
 
-    CriteriaUpdate<ParticipantStudiesBO> criteriaUpdate = null;
-    Root<ParticipantStudiesBO> participantStudiesBoRoot = null;
+    CriteriaUpdate<ParticipantStudyEntity> criteriaUpdate = null;
+    Root<ParticipantStudyEntity> participantStudyRoot = null;
     List<Predicate> predicates = new ArrayList<>();
     int isUpdated = 0;
-
     Session session = this.sessionFactory.getCurrentSession();
+
     criteriaBuilder = session.getCriteriaBuilder();
 
-    studiesBoCriteria = criteriaBuilder.createQuery(StudyInfoBO.class);
-    studiesBoRoot = studiesBoCriteria.from(StudyInfoBO.class);
-    studiesBoPredicates[0] = criteriaBuilder.equal(studiesBoRoot.get("customId"), studyId);
-    studiesBoCriteria.select(studiesBoRoot).where(studiesBoPredicates);
-    studiesBoList = session.createQuery(studiesBoCriteria).getResultList();
+    studyEntityCriteria = criteriaBuilder.createQuery(StudyEntity.class);
+    studyEntityRoot = studyEntityCriteria.from(StudyEntity.class);
+    studyEntityPredicates[0] = criteriaBuilder.equal(studyEntityRoot.get("customId"), studyId);
+    studyEntityCriteria.select(studyEntityRoot).where(studyEntityPredicates);
+    studiesBoList = session.createQuery(studyEntityCriteria).getResultList();
     if (!studiesBoList.isEmpty()) {
-      studyInfo = studiesBoList.get(0);
-      criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudiesBO.class);
-      participantStudiesBoRoot = criteriaUpdate.from(ParticipantStudiesBO.class);
+      studyEntity = studiesBoList.get(0);
+      criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
+      participantStudyRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
       criteriaUpdate.set("status", AppConstants.WITHDRAWN);
       predicates.add(
-          criteriaBuilder.equal(participantStudiesBoRoot.get("participantId"), participantId));
-      predicates.add(criteriaBuilder.equal(participantStudiesBoRoot.get("studyInfo"), studyInfo));
+          criteriaBuilder.equal(participantStudyRoot.get("participantId"), participantId));
+      predicates.add(criteriaBuilder.equal(participantStudyRoot.get("study"), studyEntity));
       criteriaUpdate.where(predicates.toArray(new Predicate[predicates.size()]));
       isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
       if (isUpdated > 0) {

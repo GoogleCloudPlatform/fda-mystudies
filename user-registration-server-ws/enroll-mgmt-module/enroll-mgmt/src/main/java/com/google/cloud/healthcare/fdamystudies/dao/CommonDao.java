@@ -8,16 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CommonDao {
 
-  public UserDetailsBO getUserInfoDetails(String userId);
+  public UserDetailsEntity getUserInfoDetails(String userId);
 
-  public Integer getStudyId(String customStudyId);
+  public String getStudyId(String customStudyId);
 
-  public StudyInfoBO getStudyDetails(String customStudyId);
+  public StudyEntity getStudyDetails(String customStudyId);
 }

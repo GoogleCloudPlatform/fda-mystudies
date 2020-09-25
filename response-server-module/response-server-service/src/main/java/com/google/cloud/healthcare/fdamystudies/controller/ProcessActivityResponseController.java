@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_ID;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_TYPE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.RUN_ID;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_DATA_DELETION_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_RESPONSE_DATA_PROCESSING_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_RESPONSE_NOT_SAVED;
@@ -75,10 +79,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ProcessActivityResponseController {
-  private static final String RUN_ID = "run_id";
-  private static final String ACTIVITY_VERSION = "activity_version";
-  private static final String ACTIVITY_ID = "activity_id";
-  private static final String ACTIVITY_TYPE = "activity_type";
   @Autowired private ParticipantService participantService;
   @Autowired private StudyMetadataService studyMetadataService;
   @Autowired private ParticipantStudyInfoService partStudyInfoService;

@@ -8,6 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_ID;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_TYPE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ACTIVITY_VERSION;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.RUN_ID;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_RESPONSE_DATA_DELETION_FAILED;
@@ -94,10 +98,10 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
         .equalsIgnoreCase(activityMetadataBeanFromWcp.getMetadata().getActivityId())) {
       processActivityResponses(questionnaireResponses, questionnaireMetadata);
       Map<String, String> map = new HashedMap<>();
-      map.put("activity_type", questionnaireActivityResponseBean.getType());
-      map.put("activity_id", activityMetadataBeanFromWcp.getMetadata().getActivityId());
-      map.put("activity_version", activityMetadataBeanFromWcp.getMetadata().getVersion());
-      map.put("run_id", activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      map.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
+      map.put(ACTIVITY_ID, activityMetadataBeanFromWcp.getMetadata().getActivityId());
+      map.put(ACTIVITY_VERSION, activityMetadataBeanFromWcp.getMetadata().getVersion());
+      map.put(RUN_ID, activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
       responseServerAuditLogHelper.logEvent(
           ACTIVITY_METADATA_CONJOINED_WITH_RESPONSE_DATA, auditRequest, map);
       String rawResponseData = null;
@@ -116,12 +120,12 @@ public class ActivityResponseProcessorServiceImpl implements ActivityResponsePro
               + "Activity Id in metadata: "
               + activityMetadataBeanFromWcp.getMetadata().getActivityId());
       Map<String, String> map = new HashedMap<>();
-      map.put("activity_type", questionnaireActivityResponseBean.getType());
-      map.put("activity_id", activityMetadataBeanFromWcp.getMetadata().getActivityId());
-      map.put("activity_version", activityMetadataBeanFromWcp.getMetadata().getVersion());
-      map.put("run_id", activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
+      map.put(ACTIVITY_TYPE, questionnaireActivityResponseBean.getType());
+      map.put(ACTIVITY_ID, activityMetadataBeanFromWcp.getMetadata().getActivityId());
+      map.put(ACTIVITY_VERSION, activityMetadataBeanFromWcp.getMetadata().getVersion());
+      map.put(RUN_ID, activityMetadataBeanFromWcp.getMetadata().getActivityRunId());
       responseServerAuditLogHelper.logEvent(
-          ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED, auditRequest);
+          ACTIVITY_METADATA_CONJOINING_WITH_RESPONSE_DATA_FAILED, auditRequest, map);
       throw new ProcessResponseException(
           "The activity ID in the response does not match activity ID in the metadata provided.");
     }
