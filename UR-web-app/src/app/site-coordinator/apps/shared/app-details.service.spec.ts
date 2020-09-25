@@ -4,9 +4,12 @@ import {SiteCoordinatorModule} from '../../site-coordinator.module';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {RouterTestingModule} from '@angular/router/testing';
 import {EntityService} from '../../../service/entity.service';
-import {ApiResponse} from 'src/app/entity/api.response.model';
+import {ApiResponse} from '../../../entity/api.response.model';
 import {throwError, of} from 'rxjs';
-import {expectedAppDetails, expectedAppId} from 'src/app/entity/mock-apps-data';
+import {
+  expectedAppDetails,
+  expectedAppId,
+} from '../../../entity/mock-apps-data';
 import {AppDetailsService} from './app-details.service';
 import {AppDetails} from './app-details';
 
