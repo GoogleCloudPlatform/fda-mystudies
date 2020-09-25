@@ -579,7 +579,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional(readOnly = true)
   public ParticipantDetailResponse getParticipantDetails(
-      String participantRegistrySiteId, String userId, int page, int limit) {
+      String participantRegistrySiteId, String userId, Integer page, Integer limit) {
     logger.entry("begin getParticipantDetails()");
 
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
@@ -607,10 +607,15 @@ public class SiteServiceImpl implements SiteService {
               .map(ParticipantStudyEntity::getId)
               .collect(Collectors.toList());
 
-      Page<StudyConsentEntity> consentHistoryPage =
-          studyConsentRepository.findByParticipantRegistrySiteId(
-              participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
-      List<StudyConsentEntity> studyConsents = consentHistoryPage.getContent();
+      List<StudyConsentEntity> studyConsents = null;
+      if (page != null && limit != null) {
+        Page<StudyConsentEntity> consentHistoryPage =
+            studyConsentRepository.findByParticipantRegistrySiteIdForPagination(
+                participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
+        studyConsents = consentHistoryPage.getContent();
+      } else {
+        studyConsents = studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+      }
 
       List<ConsentHistory> consentHistories =
           studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
