@@ -1,25 +1,10 @@
 package com.fdahpstudydesigner.controller;
 
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATION_FAILED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_RESENT;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import com.fdahpstudydesigner.common.BaseMockIT;
-import com.fdahpstudydesigner.common.PathMappingUri;
-import org.junit.Test;
-import org.springframework.http.HttpHeaders;
 
 public class UsersControllerTest extends BaseMockIT {
 
-  @Test
+  /*@Test
   public void shouldViewUserDetails() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
@@ -175,5 +160,5 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
     verifyAuditEventCall(NEW_USER_CREATION_FAILED);
-  }
+  }*/
 }

@@ -23,9 +23,9 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -39,6 +39,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -233,6 +234,7 @@ public class LoginController {
     ModelAndView mav = new ModelAndView("redirect:login.do");
     String message = FdahpStudyDesignerConstants.FAILURE;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
       String email =
           ((null != request.getParameter("email")) && !"".equals(request.getParameter("email")))
@@ -240,6 +242,7 @@ public class LoginController {
               : "";
       message = loginService.sendPasswordResetLinkToMail(request, email, "", "");
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
+        auditRequest.setUserId(request.getParameter("email"));
         request.getSession().setAttribute("sucMsg", propMap.get("user.forgot.success.msg"));
       } else {
         request.getSession().setAttribute("errMsg", message);
@@ -407,6 +410,7 @@ public class LoginController {
     logger.info("LoginController - createPassword() - Starts");
     ModelAndView mv = new ModelAndView("redirect:login.do");
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       ModelMap map = new ModelMap();
       if (null != request.getSession(false).getAttribute("sucMsg")) {
         map.addAttribute("sucMsg", request.getSession(false).getAttribute("sucMsg"));
@@ -435,6 +439,11 @@ public class LoginController {
         map.addAttribute("userBO", userBO);
         mv = new ModelAndView("signUpPage", map);
       } else {
+        // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
+        // services
+        UUID uuid = UUID.randomUUID(); // Generates random UUID.
+        auditRequest.setCorrelationId(uuid.toString().toUpperCase());
+        auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
         mv = new ModelAndView("userPasswordReset", map);
       }
     } catch (Exception e) {

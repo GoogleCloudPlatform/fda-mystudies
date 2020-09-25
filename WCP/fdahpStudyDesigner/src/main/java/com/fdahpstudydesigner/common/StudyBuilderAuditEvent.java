@@ -35,36 +35,76 @@ public enum StudyBuilderAuditEvent {
       null,
       "Account activation failed for new user due to invalid access code (user ID - ${new_user_id}).",
       "NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE"),
-  
+
   ACCOUNT_DETAILS_VIEWED(
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
       "Account details viewed in My Account section.",
       "ACCOUNT_DETAILS_VIEWED"),
-  
+
   USER_RECORD_VIEWED(
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
       "User record for user ID '${viewed_user_id}' viewed.",
       "USER_RECORD_VIEWED"),
-  
+
   NEW_USER_INVITATION_RESENT(
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
       "Account setup invitation email re-sent to user (user ID - ${new_user_id}).",
       "NEW_USER_INVITATION_RESENT"),
-  
+
   PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS(
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
       "Password change enforced for all users by signed-in user.",
       "PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS"),
-  
-  
+
+  USER_RECORD_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "User record updated (user id - ${edited_user_id}, access level - ${edited_user_access_level}).",
+      "USER_RECORD_UPDATED"),
+
+  NEW_USER_CREATION_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "NEW_USER_CREATION_FAILED"),
+
+  NEW_USER_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New user created (user ID - ${new_user_id}, access level - ${new_user_access_level}).",
+      "NEW_USER_CREATED"),
+
+  NEW_USER_INVITATION_EMAIL_SENT(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Account setup invitation email sent to user (user ID -${new_user_id}).",
+      "NEW_USER_INVITATION_EMAIL_SENT"),
+
+  PASSWORD_HELP_EMAIL_FAILED(
+      STUDY_DATASTORE, STUDY_DATASTORE, null, null, "PASSWORD_HELP_EMAIL_FAILED"),
+
+  NEW_USER_ACCOUNT_ACTIVATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "NEW_USER_ACCOUNT_ACTIVATED"),
+
+  PASSWORD_RESET_SUCCEEDED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_RESET_SUCCEEDED"),
+
+  NEW_USER_ACCOUNT_ACTIVATION_FAILED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Account activation failed for new user (user ID - ${new_user_id}, access level - ${new_user_access_level}).",
+      "NEW_USER_ACCOUNT_ACTIVATION_FAILED"),
+
+  PASSWORD_RESET_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_RESET_FAILED"),
+
+  PASSWORD_HELP_REQUESTED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_HELP_REQUESTED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;
@@ -83,5 +123,13 @@ public enum StudyBuilderAuditEvent {
     this.resourceServer = resourceServer;
     this.description = description;
     this.eventCode = eventCode;
+  }
+
+  public static class Constants {
+
+    private Constants() {}
+
+    public static final String USER_ID = "new_user_id";
+    public static final String ACCESS_LEVEL = "new_user_access_level";
   }
 }

@@ -134,9 +134,6 @@ public class BaseMockIT {
     SessionObject session = new SessionObject();
     session.setSessionId(UUID.randomUUID().toString());
     session.setEmail(SESSION_USER_EMAIL);
-    session.setFirstName("Account");
-    session.setLastName("Manager");
-    session.setUserId(1);
     return session;
   }
 

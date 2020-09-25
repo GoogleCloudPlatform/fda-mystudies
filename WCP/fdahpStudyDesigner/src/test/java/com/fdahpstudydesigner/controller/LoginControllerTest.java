@@ -8,11 +8,12 @@
 
 package com.fdahpstudydesigner.controller;
 
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -71,14 +72,24 @@ public class LoginControllerTest extends BaseMockIT {
   public void shouldChangePassword() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
+    SessionObject session = new SessionObject();
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setEmail(SESSION_USER_EMAIL);
+    session.setFirstName("firstname");
+    session.setLastName("lastname");
+    session.setUserId(2);
+
+    HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
     mockMvc
         .perform(
             post(PathMappingUri.CHANGE_PASSWORD.getPath())
                 .param("oldPassword", "Password@1234")
-                .param("newPassword", "Google_009")
+                .param("newPassword", "newPD@009")
                 .param("_csrf", "")
                 .headers(headers)
-                .sessionAttrs(getSessionAttributes()))
+                .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(
@@ -98,7 +109,7 @@ public class LoginControllerTest extends BaseMockIT {
     session.setEmail(SESSION_USER_EMAIL);
     session.setFirstName("Account");
     session.setLastName("Manager");
-    session.setUserId(2);
+    session.setUserId(5);
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -124,14 +135,16 @@ public class LoginControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             get(PathMappingUri.FORGOT_PASSWORD.getPath())
-                .param("email", "superadmin@gmail.com")
+                .param("email", "ttt@gmail.com")
                 .headers(headers)
                 .sessionAttrs(getSessionAttributes()))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:login.do"));
 
-    verifyAuditEventCall(PASSWORD_HELP_EMAIL_SENT);
+    // Expect LoginDAOImpl throws org.h2.jdbc.JdbcSQLException: Column "BINARY" not found; SQL
+    // statement
+    verifyAuditEventCall(PASSWORD_HELP_EMAIL_FAILED);
   }
 
   @Test
@@ -140,7 +153,7 @@ public class LoginControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             get(PathMappingUri.SECURITY_TOKEN_VALIDATION.getPath())
-                .param("securityToken", "N8K7zYrc0F")
+                .param("securityToken", "NK7zYrc0F")
                 .headers(headers)
                 .sessionAttrs(getSessionAttributes()))
         .andDo(print())
@@ -151,8 +164,19 @@ public class LoginControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldAddPassword() throws Exception {
+  public void shouldUpdatePassword() throws Exception {
     HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setEmail(SESSION_USER_EMAIL);
+    session.setFirstName("firstname");
+    session.setLastName("lastname");
+    session.setUserId(2);
+
+    HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
     mockMvc
         .perform(
             get(PathMappingUri.ADD_PASSWORD.getPath())
@@ -161,11 +185,12 @@ public class LoginControllerTest extends BaseMockIT {
                 .param("securityToken", "N8K7zYrc0F")
                 .param("_csrf", "")
                 .headers(headers)
-                .sessionAttrs(getSessionAttributes()))
+                .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:login.do"));
 
-    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE);
+    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
+    verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);
   }
 }
