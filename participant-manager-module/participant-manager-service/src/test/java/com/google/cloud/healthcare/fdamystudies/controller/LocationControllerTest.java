@@ -26,6 +26,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManager
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.NO_OF_RECORDS;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.PAGE_NO;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.UPDATE_LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.UPDATE_LOCATION_NAME_VALUE;
 import static org.hamcrest.CoreMatchers.is;
@@ -446,9 +448,77 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)))
         .andExpect(jsonPath("$.locations[0].studyNames").isArray())
         .andExpect(jsonPath("$.locations[0].studyNames[0]", is("LIMITJP001")))
+        .andExpect(jsonPath("$.totalLocationsCount", is(1)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnLocationsForPagination() throws Exception {
+    // Step 1: 1 location already added in @BeforeEach, add 20 new locations
+    for (int i = 1; i <= 20; i++) {
+      locationEntity = testDataHelper.createLocation();
+      locationEntity.setCustomId(String.valueOf(i) + CUSTOM_ID_VALUE);
+      locationRepository.saveAndFlush(locationEntity);
+    }
+
+    // Step 2: Call API and expect GET_LOCATION_SUCCESS message and fetch only 5 data out of 21
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .headers(headers)
+                .queryParam("page", PAGE_NO)
+                .queryParam("limit", NO_OF_RECORDS)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.locations").isArray())
+        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
+        .andExpect(jsonPath("$.locations", hasSize(5)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.totalLocationsCount", is(21)))
+        .andExpect(
+            jsonPath("$.locations[0].customId", is(String.valueOf(20) + CUSTOM_LOCATION_ID)));
+
+    verifyTokenIntrospectRequest(1);
+
+    // page index starts with 0, get locations for 3rd page and sort by created timestamp in
+    // descending order
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_LOCATIONS.getPath())
+                .headers(headers)
+                .queryParam("page", "2")
+                .queryParam("limit", "9")
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.locations").isArray())
+        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
+        .andExpect(jsonPath("$.locations", hasSize(3)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.totalLocationsCount", is(21)))
+        .andExpect(jsonPath("$.locations[0].customId", is(String.valueOf(2) + CUSTOM_LOCATION_ID)));
+
+    verifyTokenIntrospectRequest(2);
+
+    // get all locations if page and limit values are null
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_LOCATIONS.getPath()).headers(headers).contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.locations").isArray())
+        .andExpect(jsonPath("$.locations[0].locationId", notNullValue()))
+        .andExpect(jsonPath("$.locations", hasSize(21)))
+        .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
+        .andExpect(jsonPath("$.totalLocationsCount", is(21)))
+        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID)));
+
+    verifyTokenIntrospectRequest(3);
   }
 
   @Test
@@ -520,6 +590,7 @@ public class LocationControllerTest extends BaseMockIT {
             get(ApiEndpoint.GET_LOCATIONS.getPath())
                 .queryParam("excludeStudyId", studyEntity.getId())
                 .queryParam("status", String.valueOf(CommonConstants.ACTIVE_STATUS))
+                .queryParam("limit", NO_OF_RECORDS)
                 .content(asJsonString(getLocationRequest()))
                 .headers(headers)
                 .contextPath(getContextPath()))
