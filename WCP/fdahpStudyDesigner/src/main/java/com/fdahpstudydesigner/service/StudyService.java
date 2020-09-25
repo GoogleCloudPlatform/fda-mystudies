@@ -22,8 +22,6 @@
 
 package com.fdahpstudydesigner.service;
 
-import java.util.List;
-import java.util.Map;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
@@ -44,6 +42,8 @@ import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.util.List;
+import java.util.Map;
 
 public interface StudyService {
 

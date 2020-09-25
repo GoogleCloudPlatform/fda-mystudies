@@ -19,6 +19,7 @@ public enum StudyBuilderAuditEvent {
 
   USER_SIGNOUT_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "USER_SIGNOUT_FAILED"),
 
+
   STUDY_NEW_NOTIFICATION_CREATED(
       STUDY_BUILDER,
       STUDY_DATASTORE,
@@ -55,7 +56,34 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       "App-level notification replicated for resend, by user. Existing notification ID : '${old_notification_id}', new notification ID : '${new_notification_id}'.",
-      "APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND");
+      "APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND"),
+
+  PASSWORD_CHANGE_SUCCEEDED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_CHANGE_SUCCEEDED"),
+
+  PASSWORD_CHANGE_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_CHANGE_FAILED"),
+
+  USER_ACCOUNT_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Account details updated in My Account section.",
+      "USER_ACCOUNT_UPDATED"),
+
+  USER_ACCOUNT_UPDATED_FAILED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Attempt to update account details failed for user in My Account section.",
+      "USER_ACCOUNT_UPDATED_FAILED"),
+
+  ACCOUNT_DETAILS_VIEWED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Account details viewed in My Account section.",
+      "ACCOUNT_DETAILS_VIEWED");
+
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

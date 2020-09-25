@@ -22,11 +22,6 @@
 
 package com.fdahpstudydesigner.dao;
 
-import java.util.HashMap;
-/** @author BTC */
-import java.util.List;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import com.fdahpstudydesigner.bean.StudyIdBean;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bean.StudyPageBean;
@@ -46,6 +41,10 @@ import com.fdahpstudydesigner.bo.StudyPageBo;
 import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.util.HashMap;
+import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public interface StudyDAO {
 
