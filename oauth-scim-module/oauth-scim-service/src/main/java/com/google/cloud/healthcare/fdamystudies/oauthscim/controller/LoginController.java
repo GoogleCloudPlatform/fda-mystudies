@@ -31,9 +31,13 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
@@ -42,9 +46,10 @@ import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
@@ -89,7 +94,7 @@ public class LoginController {
 
   @Autowired private CookieHelper cookieHelper;
 
-  @Autowired private AppPropertyConfig appConfig;
+  @Autowired private AuthScimAuditHelper auditHelper;
 
   /**
    * @param loginChallenge is optional. ORY Hydra sends this field as query param when login/consent
@@ -110,6 +115,7 @@ public class LoginController {
       HttpServletResponse response,
       Model model) {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     model.addAttribute("loginRequest", new LoginRequest());
 
@@ -117,11 +123,12 @@ public class LoginController {
     if (StringUtils.isNotBlank(code)) {
       logger.exit(
           "login/consent flow completed, redirect to callbackUrl with auth code and userId");
-      return redirectToCallbackUrl(request, code, accountStatus, response);
+      return redirectToCallbackUrl(request, code, accountStatus, response, auditRequest);
     }
 
     // login/consent flow initiated
     if (StringUtils.isEmpty(loginChallenge)) {
+      auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
       return ERROR_VIEW_NAME;
     }
 
@@ -133,11 +140,13 @@ public class LoginController {
       JsonNode responseBody = loginResponse.getBody();
       if (skipLogin(responseBody)) {
         logger.exit("skip login, return to callback URL");
-        return redirectToCallbackUrl(request, code, accountStatus, response);
+        return redirectToCallbackUrl(request, code, accountStatus, response, auditRequest);
       }
-      return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
+      return redirectToLoginOrAutoLoginPage(
+          response, responseBody, model, loginChallenge, auditRequest);
     }
 
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
     return ERROR_VIEW_NAME;
   }
 
@@ -165,11 +174,12 @@ public class LoginController {
       HttpServletResponse response)
       throws JsonProcessingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
 
     if (StringUtils.isNotEmpty(tempRegId)) {
-      return autoLoginOrReturnLoginPage(tempRegId, loginChallenge, request, response);
+      return redirectToLoginOrConsentPage(tempRegId, loginChallenge, request, response);
     }
 
     // validate login credentials
@@ -190,7 +200,7 @@ public class LoginController {
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
 
-    AuthenticationResponse authenticationResponse = userService.authenticate(user);
+    AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 
     if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
         == authenticationResponse.getAccountStatus()) {
@@ -213,7 +223,7 @@ public class LoginController {
         loginChallenge, authenticationResponse.getUserId(), request, response);
   }
 
-  private String autoLoginOrReturnLoginPage(
+  private String redirectToLoginOrConsentPage(
       String tempRegId,
       String loginChallenge,
       HttpServletRequest request,
@@ -227,6 +237,7 @@ public class LoginController {
       UserEntity user = optUser.get();
       logger.exit("tempRegId is valid, return to consent page");
       cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
+      cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
       userService.resetTempRegId(user.getUserId());
       return redirectToConsentPage(loginChallenge, user.getUserId(), request, response);
     }
@@ -250,7 +261,11 @@ public class LoginController {
   }
 
   private String redirectToLoginOrAutoLoginPage(
-      HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
+      HttpServletResponse response,
+      JsonNode responseBody,
+      Model model,
+      String loginChallenge,
+      AuditLogEventRequest auditRequest) {
 
     String requestUrl = responseBody.get("request_url").textValue();
     MultiValueMap<String, String> qsParams =
@@ -283,9 +298,9 @@ public class LoginController {
         logger.exit("tempRegId is valid, return to auto login page");
         cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
         cookieHelper.addCookie(response, TEMP_REG_ID_COOKIE, tempRegId);
+        cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
         return AUTO_LOGIN_VIEW_NAME;
       }
-
       logger.exit("tempRegId is invalid, return to login page");
       return LOGIN_VIEW_NAME;
     }
@@ -293,7 +308,11 @@ public class LoginController {
   }
 
   private String redirectToCallbackUrl(
-      HttpServletRequest request, String code, String accountStatus, HttpServletResponse response) {
+      HttpServletRequest request,
+      String code,
+      String accountStatus,
+      HttpServletResponse response,
+      AuditLogEventRequest auditRequest) {
     String userId = WebUtils.getCookie(request, USER_ID_COOKIE).getValue();
     String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM_COOKIE).getValue();
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
@@ -303,6 +322,11 @@ public class LoginController {
             "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
 
     logger.exit(String.format("redirect to %s from /login", callbackUrl));
+    if (UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus)) {
+      auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
+    } else {
+      auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED, auditRequest);
+    }
     return redirect(response, redirectUrl);
   }
 
@@ -317,6 +341,10 @@ public class LoginController {
     logger.error(String.format("Request %s failed with an exception", req.getRequestURL()), ex);
     ModelAndView modelView = new ModelAndView();
     modelView.setViewName(ERROR_VIEW_NAME);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return modelView;
   }
 
@@ -328,6 +356,10 @@ public class LoginController {
     modelView.addObject("loginRequest", new LoginRequest());
     modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
     modelView.setViewName(LOGIN_VIEW_NAME);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return modelView;
   }
 }

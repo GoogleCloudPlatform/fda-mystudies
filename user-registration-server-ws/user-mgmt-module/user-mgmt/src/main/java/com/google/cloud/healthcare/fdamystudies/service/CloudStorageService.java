@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -49,13 +48,9 @@ public class CloudStorageService {
 
   public List<InstitutionResource> getAllInstitutionResources(String institutionId) {
     Bucket bucket = null;
-    try {
-      bucket = storageService.get(appConfig.getInstitutionBucketName());
-    } catch (StorageException e) {
-      logger.error(e.getMessage());
-    } finally {
-      if (bucket == null) return new ArrayList<>();
-    }
+
+    bucket = storageService.get(appConfig.getInstitutionBucketName());
+
     Page<Blob> blobs = bucket.list(Storage.BlobListOption.prefix(institutionId));
 
     ArrayList<InstitutionResource> resources = new ArrayList<>();

@@ -9,10 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint.CONSENT_PAGE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CONSENT_CHALLENGE_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,12 +23,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
+import java.util.Collections;
 import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -65,9 +73,37 @@ public class ConsentControllerTest extends BaseMockIT {
         .andReturn();
   }
 
+  @Test
+  public void shouldReturnErrorPage() throws Exception {
+    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+    mockMvc
+        .perform(
+            get(ApiEndpoint.CONSENT_PAGE.getPath())
+                .headers(getCommonHeaders())
+                .contextPath(getContextPath())
+                .queryParams(queryParams))
+        .andDo(print())
+        .andExpect(view().name(ERROR_VIEW_NAME));
+
+    verifyAuditEventCall(SIGNIN_FAILED);
+  }
+
   private MultiValueMap<String, String> getConsentQSParams() {
     MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
     requestParams.add(CONSENT_CHALLENGE, CONSENT_CHALLENGE_VALUE);
     return requestParams;
+  }
+
+  private HttpHeaders getCommonHeaders() {
+    HttpHeaders headers = new HttpHeaders();
+    headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+    headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "SCIM AUTH SERVER");
+    headers.add("studyId", "MyStudies");
+    headers.add("source", "SCIM AUTH SERVER");
+    headers.add("correlationId", IdGenerator.id());
+    return headers;
   }
 }

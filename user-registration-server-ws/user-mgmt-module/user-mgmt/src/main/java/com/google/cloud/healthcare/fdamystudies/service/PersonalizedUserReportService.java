@@ -9,8 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.PersonalizedUserReportRepository;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.PersonalizedUserReportBO;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -34,17 +34,17 @@ public class PersonalizedUserReportService {
         .stream()
         .collect(
             Collectors.toMap(
-                PersonalizedUserReportBO::getReportTitle,
+                PersonalizedUserReportEntity::getReportTitle,
                 Function.identity(),
                 BinaryOperator.maxBy(
-                    Comparator.comparing(PersonalizedUserReportBO::getCreationTime))))
+                    Comparator.comparing(PersonalizedUserReportEntity::getCreationTime))))
         .entrySet()
         .stream()
         .filter(e -> e.getValue().getCreationTime() != null)
         .sorted(
             Comparator.comparing(
                     e ->
-                        ((Map.Entry<String, PersonalizedUserReportBO>) e)
+                        ((Map.Entry<String, PersonalizedUserReportEntity>) e)
                             .getValue()
                             .getCreationTime())
                 .reversed())
