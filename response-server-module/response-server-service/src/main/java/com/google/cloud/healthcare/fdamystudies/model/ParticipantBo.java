@@ -24,9 +24,6 @@ import javax.persistence.Table;
     name = "participant_info",
     indexes = {
       @Index(
-          name = "participant_info_participant_identifier_idx",
-          columnList = "participant_identifier"),
-      @Index(
           name = "participant_info_token_identifier_idx",
           columnList = "token_identifier",
           unique = true)
