@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -62,12 +63,14 @@ public class StudyController {
   public ResponseEntity<ParticipantRegistryResponse> getStudyParticipants(
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @PathVariable String studyId,
+      @RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer limit,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     ParticipantRegistryResponse participantRegistryResponse =
-        studyService.getStudyParticipants(userId, studyId, auditRequest);
+        studyService.getStudyParticipants(userId, studyId, auditRequest, page, limit);
     logger.exit(String.format(STATUS_LOG, participantRegistryResponse.getHttpStatusCode()));
     return ResponseEntity.status(participantRegistryResponse.getHttpStatusCode())
         .body(participantRegistryResponse);

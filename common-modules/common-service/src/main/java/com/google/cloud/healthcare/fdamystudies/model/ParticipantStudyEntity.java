@@ -73,6 +73,10 @@ public class ParticipantStudyEntity implements Serializable {
   @Column(name = "consent_status")
   private Boolean consentStatus = false;
 
+  @Column(name = "created_time")
+  @CreationTimestamp
+  private Timestamp created;
+
   @Column(length = SMALL_LENGTH)
   private String status;
 
