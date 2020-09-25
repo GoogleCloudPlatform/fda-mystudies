@@ -23,7 +23,6 @@
 
 package com.fdahpstudydesigner.util;
 
-import java.util.Map;
 import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
