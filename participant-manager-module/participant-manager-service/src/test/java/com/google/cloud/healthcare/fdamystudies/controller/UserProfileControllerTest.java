@@ -199,7 +199,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add("appId", "GCPMS001");
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "PARTICIPANT MANAGER");
     mockMvc
         .perform(
             get(

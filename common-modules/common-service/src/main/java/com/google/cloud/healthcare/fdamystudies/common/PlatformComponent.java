@@ -49,4 +49,13 @@ public enum PlatformComponent {
   private String value;
 
   private String description;
+
+  public static PlatformComponent fromValue(String value) {
+    for (PlatformComponent type : PlatformComponent.values()) {
+      if (type.getValue().equals(value)) {
+        return type;
+      }
+    }
+    return null;
+  }
 }
