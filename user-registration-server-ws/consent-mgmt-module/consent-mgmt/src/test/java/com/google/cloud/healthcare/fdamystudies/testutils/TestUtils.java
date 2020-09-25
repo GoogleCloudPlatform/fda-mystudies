@@ -26,7 +26,7 @@ public class TestUtils {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add("appId", "GCPMS001");
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "MOBILE APPS");
     headers.add("Authorization", VALID_BEARER_TOKEN);
     return headers;
   }
