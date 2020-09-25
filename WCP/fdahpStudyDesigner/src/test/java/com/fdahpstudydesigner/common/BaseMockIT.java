@@ -15,6 +15,9 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.config.HibernateTestConfig;
 import com.fdahpstudydesigner.config.WebAppTestConfig;
@@ -22,6 +25,7 @@ import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +61,7 @@ import org.springframework.test.context.support.DirtiesContextTestExecutionListe
 import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -135,6 +140,7 @@ public class BaseMockIT {
     SessionObject session = new SessionObject();
     session.setSessionId(UUID.randomUUID().toString());
     session.setEmail(SESSION_USER_EMAIL);
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     return session;
   }
 
@@ -226,6 +232,23 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getAppVersion());
       assertNotNull(auditRequest.getMobilePlatform());
+    }
+  }
+
+  protected void addParams(MockHttpServletRequestBuilder requestBuilder, Object formModel)
+      throws Exception {
+    ObjectMapper objectMapper = JsonUtils.getObjectMapper();
+    objectMapper.setSerializationInclusion(Include.NON_NULL);
+    objectMapper.setSerializationInclusion(Include.NON_EMPTY);
+    objectMapper.setSerializationInclusion(Include.NON_DEFAULT);
+
+    ObjectReader reader = objectMapper.reader(Map.class);
+    Map<String, String> map = reader.readValue(objectMapper.writeValueAsString(formModel));
+    for (Map.Entry<String, String> entry : map.entrySet()) {
+      String value = String.valueOf(entry.getValue());
+      if (StringUtils.isNotEmpty(value) && !StringUtils.equals(value, "null")) {
+        requestBuilder.param(entry.getKey(), value);
+      }
     }
   }
 }

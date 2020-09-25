@@ -78,7 +78,6 @@ public class Mail {
   // will authenticate with the provided fromEmailAddress and fromEmailPass.
   private Boolean useIpWhitelist = false;
 
-
   public String getAttachmentPath() {
     return attachmentPath;
   }
@@ -279,8 +278,7 @@ public class Mail {
     return Session.getInstance(props, null);
   }
 
-  private Session makeSession(Properties props, final String username,
-      final String password) {
+  private Session makeSession(Properties props, final String username, final String password) {
     return Session.getInstance(
         props,
         new javax.mail.Authenticator() {
