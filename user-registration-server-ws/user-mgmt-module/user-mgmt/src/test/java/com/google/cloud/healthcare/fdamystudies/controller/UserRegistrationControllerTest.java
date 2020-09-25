@@ -21,9 +21,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VER
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,17 +33,17 @@ import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.jayway.jsonpath.JsonPath;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import javax.mail.internet.MimeMessage;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -54,14 +51,11 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class UserRegistrationControllerTest extends BaseMockIT {
 
   private static final String REGISTER_PATH = "/myStudiesUserMgmtWS/register";
-
-  @Autowired private FdaEaUserDetailsServiceImpl userDetailsService;
 
   @Autowired private UserRegistrationController controller;
 
@@ -69,11 +63,9 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
   @Autowired private ObjectMapper objectMapper;
 
-  @Autowired private JavaMailSender emailSender;
-
   @Autowired private UserDetailsRepository userDetailsRepository;
 
-  @Autowired private EmailNotification emailNotification;
+  @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Value("${register.url}")
   private String authRegisterUrl;
@@ -186,7 +178,15 @@ public class UserRegistrationControllerTest extends BaseMockIT {
 
     assertEquals(Constants.EMAIL, userDetails.getEmail());
 
-    verify(emailSender, atLeastOnce()).send(isA(MimeMessage.class));
+    String subject = appConfig.getConfirmationMailSubject();
+    Map<String, String> templateArgs = new HashMap<>();
+    templateArgs.put("securitytoken", userDetails.getEmailCode());
+    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    String body =
+        PlaceholderReplacer.replaceNamedPlaceholders(appConfig.getConfirmationMail(), templateArgs);
+
+    verifyMimeMessage(Constants.EMAIL, appConfig.getFromEmail(), subject, body);
 
     verify(
         1,
