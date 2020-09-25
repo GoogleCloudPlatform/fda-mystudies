@@ -8,6 +8,9 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -18,6 +21,9 @@ import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.SessionObject;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
@@ -27,10 +33,17 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
   private static final String STUDY_ID_VALUE = "678574";
 
+  private static final String USER_ID_VALUE = "4878641";
+
   @Test
   public void shouldMarkActiveTaskAsCompleted() throws Exception {
     HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     sessionAttributes.put("0" + FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE);
     sessionAttributes.put("0" + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, STUDY_ID_VALUE);
     sessionAttributes.put(FdahpStudyDesignerConstants.PERMISSION, "View");
