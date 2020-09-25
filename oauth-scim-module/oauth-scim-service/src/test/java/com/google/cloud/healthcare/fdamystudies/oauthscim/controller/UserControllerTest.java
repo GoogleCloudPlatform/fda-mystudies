@@ -643,16 +643,44 @@ public class UserControllerTest extends BaseMockIT {
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(PASSWORD_HELP_REQUESTED.getEventCode(), auditRequest);
-    auditEventMap.put(PASSWORD_HELP_EMAIL_SENT.getEventCode(), auditRequest);
     auditEventMap.put(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT.getEventCode(), auditRequest);
     auditEventMap.put(PASSWORD_RESET_SUCCEEDED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(
         auditEventMap,
         PASSWORD_HELP_REQUESTED,
-        PASSWORD_HELP_EMAIL_SENT,
         PASSWORD_RESET_SUCCEEDED,
         PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
+  }
+
+  @Test
+  public void shouldSendPasswordResetEmail()
+      throws MalformedURLException, JsonProcessingException, Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+    userRequest.setUserId(userEntity.getUserId());
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+    userRepository.saveAndFlush(userEntity);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userEntity.getUserId());
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PASSWORD_HELP_EMAIL_SENT.getEventCode(), auditRequest);
+    verifyAuditEventCall(auditEventMap, PASSWORD_HELP_EMAIL_SENT);
   }
 
   private String getMailResetSubject() {

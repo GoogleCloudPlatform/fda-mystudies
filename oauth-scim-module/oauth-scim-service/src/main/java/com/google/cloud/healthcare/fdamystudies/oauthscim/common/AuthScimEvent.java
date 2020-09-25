@@ -61,7 +61,7 @@ public enum AuthScimEvent implements AuditLogEvent {
       null,
       SCIM_AUTH_SERVER,
       PARTICIPANT_DATASTORE,
-      "Sign-in failure due to expired temporary password.",
+      null,
       "SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD"),
 
   PASSWORD_RESET_SUCCEEDED(

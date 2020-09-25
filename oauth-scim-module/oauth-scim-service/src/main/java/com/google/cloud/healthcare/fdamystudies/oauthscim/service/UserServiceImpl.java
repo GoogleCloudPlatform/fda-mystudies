@@ -215,19 +215,21 @@ public class UserServiceImpl implements UserService {
       setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
       userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
-      auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
       if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
         auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+      } else {
+        auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
       }
 
       logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
       return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
     }
 
-    auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
     auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
     if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
       auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
+    } else {
+      auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
     }
 
     logger.exit(
