@@ -43,7 +43,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(
     name = "participant_registry_site",
     indexes = {
-      @Index(name = "participant_registry_site_email_idx", columnList = "email"),
       @Index(
           name = "participant_registry_site_onboarding_status_idx",
           columnList = "onboarding_status")

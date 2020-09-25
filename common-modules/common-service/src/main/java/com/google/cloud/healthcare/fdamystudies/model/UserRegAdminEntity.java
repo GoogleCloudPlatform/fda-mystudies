@@ -41,11 +41,7 @@ import org.springframework.data.annotation.Transient;
 @Entity
 @Table(
     name = "ur_admin_user",
-    indexes = {
-      @Index(name = "ur_admin_user_email_idx", columnList = "email"),
-      @Index(name = "ur_admin_user_ur_admin_auth_id_idx", columnList = "ur_admin_auth_id"),
-      @Index(name = "ur_admin_user_security_code_idx", columnList = "security_code")
-    })
+    indexes = {@Index(name = "ur_admin_user_security_code_idx", columnList = "security_code")})
 public class UserRegAdminEntity implements Serializable {
 
   private static final long serialVersionUID = 8686769972691178223L;
