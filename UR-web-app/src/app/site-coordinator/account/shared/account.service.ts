@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {ChangePassword, Profile} from './profile.model';
+import {ChangePassword, Profile, UpdateProfile} from './profile.model';
 import {EntityService} from '../../../service/entity.service';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -28,6 +28,25 @@ export class AccountService {
         this.authService.getAuthUserId(),
       )}/change_password`,
       changePassword,
+    );
+  }
+  updateUserProfile(
+    profileToBeUpdated: UpdateProfile,
+  ): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(
+      `${environment.baseUrl}/users/${encodeURIComponent(
+        this.authService.getUserId(),
+      )}/profile`,
+      profileToBeUpdated,
+    );
+  }
+
+  logout(): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.authServerUrl}/users/${encodeURIComponent(
+        this.authService.getAuthUserId(),
+      )}/logout`,
+      '',
     );
   }
 }
