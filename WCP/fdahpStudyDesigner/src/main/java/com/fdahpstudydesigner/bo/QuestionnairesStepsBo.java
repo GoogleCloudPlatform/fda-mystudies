@@ -23,6 +23,7 @@
 
 package com.fdahpstudydesigner.bo;
 
+import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import java.io.Serializable;
 import java.util.List;
 import java.util.SortedMap;
@@ -36,7 +37,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 
 @Entity
 @Table(name = "questionnaires_steps")
