@@ -127,6 +127,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class SiteServiceImpl implements SiteService {
 
+  private static final String CREATED = "created";
+
   private static final int EMAIL_ADDRESS_COLUMN = 1;
 
   private XLogger logger = XLoggerFactory.getXLogger(SiteServiceImpl.class.getName());
@@ -336,23 +338,36 @@ public class SiteServiceImpl implements SiteService {
 
     Page<ParticipantRegistrySiteEntity> participantRegistrySitesPage = null;
     Long totalParticipantsCount = null;
+    List<ParticipantRegistrySiteEntity> participantRegistrySites = null;
+
     if (StringUtils.isEmpty(onboardingStatus)) {
       totalParticipantsCount = participantRegistrySiteRepository.countbysiteId(siteId);
-      participantRegistrySitesPage =
-          participantRegistrySiteRepository.findBySiteId(
-              siteId, PageRequest.of(page, limit, Sort.by("created").descending()));
+
+      if (page != null && limit != null) {
+        participantRegistrySitesPage =
+            participantRegistrySiteRepository.findBySiteIdForPage(
+                siteId, PageRequest.of(page, limit, Sort.by(CREATED).descending()));
+        participantRegistrySites = participantRegistrySitesPage.getContent();
+      } else {
+        participantRegistrySites = participantRegistrySiteRepository.findBySiteId(siteId);
+      }
     } else {
       totalParticipantsCount =
           participantRegistrySiteRepository.countBySiteIdAndStatus(siteId, onboardingStatus);
-      participantRegistrySitesPage =
-          participantRegistrySiteRepository.findBySiteIdAndStatus(
-              siteId,
-              onboardingStatus,
-              PageRequest.of(page, limit, Sort.by("created").descending()));
+
+      if (page != null && limit != null) {
+        participantRegistrySitesPage =
+            participantRegistrySiteRepository.findBySiteIdAndStatusForPage(
+                siteId,
+                onboardingStatus,
+                PageRequest.of(page, limit, Sort.by(CREATED).descending()));
+        participantRegistrySites = participantRegistrySitesPage.getContent();
+      } else {
+        participantRegistrySites =
+            participantRegistrySiteRepository.findBySiteIdAndStatus(siteId, onboardingStatus);
+      }
     }
 
-    List<ParticipantRegistrySiteEntity> participantRegistrySites =
-        participantRegistrySitesPage.getContent();
     addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
 
     ParticipantRegistryResponse participantRegistryResponse =
@@ -579,7 +594,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional(readOnly = true)
   public ParticipantDetailResponse getParticipantDetails(
-      String participantRegistrySiteId, String userId, int page, int limit) {
+      String participantRegistrySiteId, String userId, Integer page, Integer limit) {
     logger.entry("begin getParticipantDetails()");
 
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
@@ -607,10 +622,16 @@ public class SiteServiceImpl implements SiteService {
               .map(ParticipantStudyEntity::getId)
               .collect(Collectors.toList());
 
-      Page<StudyConsentEntity> consentHistoryPage =
-          studyConsentRepository.findByParticipantRegistrySiteId(
-              participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
-      List<StudyConsentEntity> studyConsents = consentHistoryPage.getContent();
+
+      List<StudyConsentEntity> studyConsents = null;
+      if (page != null && limit != null) {
+        Page<StudyConsentEntity> consentHistoryPage =
+            studyConsentRepository.findByParticipantRegistrySiteIdForPagination(
+                participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
+        studyConsents = consentHistoryPage.getContent();
+      } else {
+        studyConsents = studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+      }
 
       List<ConsentHistory> consentHistories =
           studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
