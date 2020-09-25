@@ -72,6 +72,7 @@ public class LoginCallbackActivity extends AppCompatActivity
       Uri uri = intent.getData();
       if (uri != null) {
         userId = uri.getQueryParameter("userId");
+        emailId = uri.getQueryParameter("email");
         if (uri.getPath().equalsIgnoreCase("/mystudies/callback")) {
           code = uri.getQueryParameter("code");
           accountStatus = uri.getQueryParameter("accountStatus");
@@ -108,7 +109,6 @@ public class LoginCallbackActivity extends AppCompatActivity
           UserModulePresenter userModulePresenter = new UserModulePresenter();
           userModulePresenter.performLogin(loginEvent);
         } else if (uri.getPath().equalsIgnoreCase("/mystudies/activation")) {
-          emailId = uri.getQueryParameter("email");
           Intent verificationIntent =
               new Intent(LoginCallbackActivity.this, VerificationStepActivity.class);
           verificationIntent.putExtra("email", uri.getQueryParameter("email"));
@@ -135,10 +135,12 @@ public class LoginCallbackActivity extends AppCompatActivity
               getString(R.string.refreshToken),
               tokenData.getRefresh_token());
       if (accountStatus != null && accountStatus.equalsIgnoreCase("3")) {
+        AppController.getHelperProgressDialog().dismissDialog();
         Intent changePasswordIntent =
             new Intent(LoginCallbackActivity.this, ChangePasswordActivity.class);
         changePasswordIntent.putExtra("userid", userId);
         changePasswordIntent.putExtra("auth", userAuth);
+        changePasswordIntent.putExtra("email", emailId);
         startActivity(changePasswordIntent);
         finish();
       } else {
@@ -158,6 +160,7 @@ public class LoginCallbackActivity extends AppCompatActivity
       userProfileData = (UserProfileData) response;
       if (userProfileData != null) {
         if (userProfileData.getSettings().isPasscode()) {
+          AppController.getHelperProgressDialog().dismissDialog();
           AppController.getHelperSharedPreference()
               .writePreference(
                   LoginCallbackActivity.this, getString(R.string.initialpasscodeset), "no");

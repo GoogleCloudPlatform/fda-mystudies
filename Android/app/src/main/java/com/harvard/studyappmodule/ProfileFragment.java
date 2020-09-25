@@ -33,6 +33,8 @@ import android.widget.Switch;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.harvard.AppConfig;
+import com.harvard.BuildConfig;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
 import com.harvard.offlinemodule.model.OfflineData;
@@ -124,9 +126,10 @@ public class ProfileFragment extends Fragment
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, context.getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -324,20 +327,21 @@ public class ProfileFragment extends Fragment
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("reason", "user_action");
+
     HashMap<String, String> header = new HashMap<String, String>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getString(R.string.auth), ""));
-    header.put(
-        "userId",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getString(R.string.userid), ""));
+        "Authorization",
+        "Bearer " + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+    header.put("correlationId", "" + FdaApplication.getRandomString());
+    header.put("appId", "" + BuildConfig.APP_ID);
+    header.put("mobilePlatform", "ANDROID");
+
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
-            "delete",
-            Urls.LOGOUT,
+            "post",
+            Urls.AUTH_SERVICE
+                + SharedPreferenceHelper.readPreference(context, getString(R.string.userid), "")
+                + Urls.LOGOUT,
             LOGOUT_REPSONSECODE,
             context,
             LoginData.class,
@@ -623,9 +627,10 @@ public class ProfileFragment extends Fragment
 
       HashMap<String, String> header = new HashMap<>();
       header.put(
-          "accessToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(context, getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + AppController.getHelperSharedPreference()
+                  .readPreference(context, getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()

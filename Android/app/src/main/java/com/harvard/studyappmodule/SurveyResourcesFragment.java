@@ -523,12 +523,14 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                       .getResourcesId()
                       .equalsIgnoreCase(arrayList.get(j).getTargetActivityId())) {
                     startCalender.setTime(
-                        AppController.getDateFormatForApi().parse(arrayList.get(j).getAnchorDate()));
+                        AppController.getDateFormatForApi()
+                            .parse(arrayList.get(j).getAnchorDate()));
                     startCalender.add(
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getStartDays());
 
                     endCalender.setTime(
-                        AppController.getDateFormatForApi().parse(arrayList.get(j).getAnchorDate()));
+                        AppController.getDateFormatForApi()
+                            .parse(arrayList.get(j).getAnchorDate()));
                     endCalender.add(
                         Calendar.DATE, resourceArrayList.get(i).getAvailability().getEndDays());
                     break;
@@ -654,8 +656,9 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             getString(R.string.clientToken),
             SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
         header.put(
-            "accessToken",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+            "Authorization",
+            "Bearer "
+                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
@@ -893,9 +896,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   public void updateuserpreference() {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -987,9 +991,10 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
   public void deactivateAccount() {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()

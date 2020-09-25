@@ -164,9 +164,10 @@ public class PdfDisplayActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()

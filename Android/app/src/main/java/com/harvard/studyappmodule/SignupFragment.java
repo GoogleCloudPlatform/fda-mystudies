@@ -41,6 +41,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.harvard.AppConfig;
 import com.harvard.BuildConfig;
 import com.harvard.R;
+import com.harvard.usermodule.SignupActivity;
 import com.harvard.usermodule.TermsPrivacyPolicyActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.VerificationStepActivity;
@@ -302,7 +303,6 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       HashMap<String, String> params = new HashMap<>();
       params.put("emailId", email.getText().toString());
       params.put("password", password.getText().toString());
-      params.put("appId", BuildConfig.APPLICATION_ID);
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
               "post",
@@ -336,17 +336,10 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     if (responseCode == REGISTRATION_REQUEST) {
       registrationData = (RegistrationData) response;
       if (registrationData != null) {
-        userID = registrationData.getUserId();
-        userAuth = registrationData.getAuth();
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                context, getString(R.string.refreshToken), registrationData.getRefreshToken());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                context,
-                context.getString(R.string.clientToken),
-                registrationData.getClientToken());
-        new GetFcmRefreshToken().execute();
+        Intent intent = new Intent(context, VerificationStepActivity.class);
+        intent.putExtra("email", email.getText().toString());
+        intent.putExtra("type", "signup");
+        startActivity(intent);
       } else {
         Toast.makeText(
                 context,
@@ -440,7 +433,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", userAuth);
+    params.put("Authorization", "Bearer " + userAuth);
     params.put("userId", userID);
 
     JSONObject jsonObjBody = new JSONObject();

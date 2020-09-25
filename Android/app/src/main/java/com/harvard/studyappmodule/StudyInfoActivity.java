@@ -16,14 +16,18 @@
 package com.harvard.studyappmodule;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -42,6 +46,7 @@ import com.harvard.WebViewActivity;
 import com.harvard.eligibilitymodule.CustomViewTaskActivity;
 import com.harvard.eligibilitymodule.StepsBuilder;
 import com.harvard.gatewaymodule.CircleIndicator;
+import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.Steps;
@@ -51,8 +56,10 @@ import com.harvard.studyappmodule.events.GetUserStudyInfoEvent;
 import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
+import com.harvard.usermodule.LoginCallbackActivity;
 import com.harvard.usermodule.SignInActivity;
 import com.harvard.usermodule.UserModulePresenter;
+import com.harvard.usermodule.VerificationStepActivity;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
@@ -60,6 +67,7 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
@@ -190,12 +198,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Intent intent = new Intent();
-            intent.putExtra("position", position);
-            intent.putExtra("bookmark", bookmarked);
-            intent.putExtra("action", "refresh");
-            setResult(Activity.RESULT_OK, intent);
-            finish();
+            backClicked();
           }
         });
 
@@ -220,9 +223,61 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 .readPreference(
                     StudyInfoActivity.this, getResources().getString(R.string.userid), "")
                 .equalsIgnoreCase("")) {
-              Intent intent = new Intent(StudyInfoActivity.this, SignInActivity.class);
-              intent.putExtra("from", "StudyInfo");
-              startActivityForResult(intent, JOIN_ACTION_SIGIN);
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this, getString(R.string.loginflow), "StudyInfo");
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this, getString(R.string.logintype), "signIn");
+
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_studyId",
+                  getIntent().getStringExtra("studyId"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_status",
+                  getIntent().getStringExtra("status"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_studyStatus",
+                  getIntent().getStringExtra("studyStatus"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_position",
+                  getIntent().getStringExtra("position"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_title",
+                  getIntent().getStringExtra("title"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_bookmark",
+                  "" + getIntent().getBooleanExtra("bookmark", false));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_enroll",
+                  getIntent().getStringExtra("enroll"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_rejoin",
+                  getIntent().getStringExtra("rejoin"));
+              SharedPreferenceHelper.writePreference(
+                  StudyInfoActivity.this,
+                  "login_studyinfo_about_this_study",
+                  "" + getIntent().getBooleanExtra("about_this_study", false));
+
+              CustomTabsIntent customTabsIntent =
+                  new CustomTabsIntent.Builder()
+                      .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                      .setShowTitle(true)
+                      .setCloseButtonIcon(
+                          BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                      .setStartAnimations(
+                          StudyInfoActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+                      .setExitAnimations(
+                          StudyInfoActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+                      .build();
+              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+              startActivity(customTabsIntent.intent);
             } else {
               new CallConsentMetaData(true).execute();
             }
@@ -255,6 +310,34 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             }
           }
         });
+  }
+
+  private void backClicked() {
+    if (getIntent().getStringExtra("flow") != null
+        && getIntent().getStringExtra("flow").equalsIgnoreCase("login_callback")) {
+      if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
+        Intent intent = new Intent(StudyInfoActivity.this, StudyActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        startActivity(mainIntent);
+        finish();
+      } else {
+        Intent intent = new Intent(StudyInfoActivity.this, StandaloneActivity.class);
+        ComponentName cn = intent.getComponent();
+        Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        startActivity(mainIntent);
+        finish();
+      }
+    } else {
+      Intent intent = new Intent();
+      intent.putExtra("position", position);
+      intent.putExtra("bookmark", bookmarked);
+      intent.putExtra("status", status);
+      intent.putExtra("studyId", studyId);
+      intent.putExtra("action", "refresh");
+      setResult(Activity.RESULT_OK, intent);
+      finish();
+    }
   }
 
   private void joinStudy() {
@@ -486,14 +569,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
   @Override
   public void onBackPressed() {
-    Intent intent = new Intent();
-    intent.putExtra("position", position);
-    intent.putExtra("bookmark", bookmarked);
-    intent.putExtra("status", status);
-    intent.putExtra("studyId", studyId);
-    intent.putExtra("action", "refresh");
-    setResult(Activity.RESULT_OK, intent);
-    finish();
+    backClicked();
   }
 
   @Override
@@ -501,41 +577,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == JOIN_ACTION_SIGIN) {
       if (resultCode == RESULT_OK) {
-        AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
-
-        HashMap<String, String> header = new HashMap();
-        header.put(
-            "accessToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StudyInfoActivity.this, getResources().getString(R.string.auth), ""));
-        header.put(
-            "userId",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
-        header.put(
-            "clientToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StudyInfoActivity.this, getResources().getString(R.string.clientToken), ""));
-        RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-            new RegistrationServerEnrollmentConfigEvent(
-                "get",
-                Urls.STUDY_STATE,
-                GET_PREFERENCES,
-                StudyInfoActivity.this,
-                StudyData.class,
-                null,
-                header,
-                null,
-                false,
-                this);
-        GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-        getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-            registrationServerEnrollmentConfigEvent);
-        UserModulePresenter userModulePresenter = new UserModulePresenter();
-        userModulePresenter.performGetUserPreference(getPreferenceEvent);
+        loginCallback();
       }
     } else if (requestCode == 12345) {
       if (resultCode == RESULT_OK) {
@@ -559,6 +601,39 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         }
       }
     }
+  }
+
+  private void loginCallback() {
+    AppController.getHelperProgressDialog().showProgress(StudyInfoActivity.this, "", "", false);
+
+    HashMap<String, String> header = new HashMap();
+    header.put(
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    StudyInfoActivity.this, getResources().getString(R.string.auth), ""));
+    header.put(
+        "userId",
+        AppController.getHelperSharedPreference()
+            .readPreference(StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
+    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
+            "get",
+            Urls.STUDY_STATE,
+            GET_PREFERENCES,
+            StudyInfoActivity.this,
+            StudyData.class,
+            null,
+            header,
+            null,
+            false,
+            this);
+    GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
+    getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
+        registrationServerEnrollmentConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }
 
   @Override
@@ -773,17 +848,14 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -879,6 +951,11 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             }
           }
         });
+
+    if (getIntent().getStringExtra("flow") != null
+        && getIntent().getStringExtra("flow").equalsIgnoreCase("login_callback")) {
+      loginCallback();
+    }
   }
 
   @Override

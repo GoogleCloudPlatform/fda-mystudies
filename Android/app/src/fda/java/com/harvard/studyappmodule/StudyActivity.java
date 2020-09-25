@@ -25,9 +25,12 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -48,6 +51,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.harvard.AppConfig;
 import com.harvard.AppFirebaseMessagingService;
+import com.harvard.BuildConfig;
+import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.notificationmodule.AlarmReceiver;
 import com.harvard.notificationmodule.NotificationModuleSubscriber;
@@ -771,23 +776,24 @@ public class StudyActivity extends AppCompatActivity
         if (AppController.getHelperSharedPreference()
             .readPreference(StudyActivity.this, getString(R.string.userid), "")
             .equalsIgnoreCase("")) {
-          if (previousValue == R.id.mSignInProfileLayout) {
-            closeDrawer();
-          } else {
-            previousValue = R.id.mSignInProfileLayout;
-            titleFdaListens.setText("");
-            title.setText(getResources().getString(R.string.sign_in));
-            editBtnLayout.setVisibility(View.GONE);
-            notificationBtn.setVisibility(View.GONE);
-            filter.setVisibility(View.GONE);
-            searchBtn.setVisibility(View.GONE);
-            infoIcon.setVisibility(View.VISIBLE);
-            closeDrawer();
-            getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.frameLayoutContainer, new SignInFragment(), "fragment")
-                .commit();
-          }
+          closeDrawer();
+          SharedPreferenceHelper.writePreference(
+              StudyActivity.this, getString(R.string.loginflow), "SideMenu");
+          SharedPreferenceHelper.writePreference(
+              StudyActivity.this, getString(R.string.logintype), "signIn");
+          CustomTabsIntent customTabsIntent =
+              new CustomTabsIntent.Builder()
+                  .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                  .setShowTitle(true)
+                  .setCloseButtonIcon(
+                      BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                  .setStartAnimations(
+                      StudyActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+                  .setExitAnimations(
+                      StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+                  .build();
+          customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+          startActivity(customTabsIntent.intent);
         } else {
           if (previousValue == R.id.mSignInProfileLayout) {
             closeDrawer();
@@ -923,20 +929,24 @@ public class StudyActivity extends AppCompatActivity
                 AppController.getHelperProgressDialog()
                     .showProgress(StudyActivity.this, "", "", false);
                 HashMap<String, String> params = new HashMap<>();
-                params.put("reason", "user_action");
+
                 HashMap<String, String> header = new HashMap<String, String>();
                 header.put(
-                    "userId",
-                    AppController.getHelperSharedPreference()
-                        .readPreference(StudyActivity.this, getString(R.string.userid), ""));
-                header.put(
-                    "accessToken",
-                    AppController.getHelperSharedPreference()
-                        .readPreference(StudyActivity.this, getString(R.string.auth), ""));
+                    "Authorization",
+                    "Bearer "
+                        + SharedPreferenceHelper.readPreference(
+                            StudyActivity.this, getString(R.string.auth), ""));
+                header.put("correlationId", "" + FdaApplication.getRandomString());
+                header.put("appId", "" + BuildConfig.APP_ID);
+                header.put("mobilePlatform", "ANDROID");
+
                 AuthServerConfigEvent authServerConfigEvent =
                     new AuthServerConfigEvent(
-                        "delete",
-                        Urls.LOGOUT,
+                        "post",
+                        Urls.AUTH_SERVICE
+                            + SharedPreferenceHelper.readPreference(
+                                StudyActivity.this, getString(R.string.userid), "")
+                            + Urls.LOGOUT,
                         LOGOUT_REPSONSE_CODE,
                         StudyActivity.this,
                         LoginData.class,

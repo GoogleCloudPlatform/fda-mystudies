@@ -328,7 +328,6 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       HashMap<String, String> params = new HashMap<>();
       params.put("emailId", email.getText().toString());
       params.put("password", password.getText().toString());
-      params.put("appId", BuildConfig.APPLICATION_ID);
       RegistrationServerConfigEvent registrationServerConfigEvent =
           new RegistrationServerConfigEvent(
               "post",
@@ -364,19 +363,11 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
     } else if (responseCode == REGISTRATION_REQUEST) {
       registrationData = (RegistrationData) response;
       if (registrationData != null) {
-        userID = registrationData.getUserId();
-        userAuth = registrationData.getAuth();
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                SignupActivity.this,
-                getString(R.string.refreshToken),
-                registrationData.getRefreshToken());
-        AppController.getHelperSharedPreference()
-            .writePreference(
-                SignupActivity.this,
-                getString(R.string.clientToken),
-                registrationData.getClientToken());
-        new GetFcmRefreshToken().execute();
+        Intent intent = new Intent(SignupActivity.this, VerificationStepActivity.class);
+        intent.putExtra("email", email.getText().toString());
+        intent.putExtra("type", "signup");
+        startActivity(intent);
+
       } else {
         Toast.makeText(
                 this, getResources().getString(R.string.unable_to_signup), Toast.LENGTH_SHORT)
@@ -509,7 +500,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
   private void callUpdateProfileWebService(String deviceToken) {
     AppController.getHelperProgressDialog().showProgress(SignupActivity.this, "", "", false);
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", userAuth);
+    params.put("Authorization", "Bearer " + userAuth);
     params.put("userId", userID);
 
     JSONObject jsonObjBody = new JSONObject();

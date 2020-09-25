@@ -144,17 +144,14 @@ public class EligibleActivity extends AppCompatActivity implements ApiCall.OnAsy
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 

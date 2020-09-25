@@ -88,7 +88,8 @@ public class HttpRequest {
       HashMap<String, String> headersData,
       String serverType) {
     String bodyParams;
-    if (headersData.containsKey(CONTENT_TYPE_KEY)
+    if (headersData != null
+        && headersData.containsKey(CONTENT_TYPE_KEY)
         && headersData.get(CONTENT_TYPE_KEY).equalsIgnoreCase(APPLICATION_X_WWW_FORM_URLENCODED)) {
       bodyParams = getDataString(params);
     } else {

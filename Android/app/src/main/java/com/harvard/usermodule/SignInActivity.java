@@ -595,7 +595,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
   private void callUpdateProfileWebService(String deviceToken) {
     AppController.getHelperProgressDialog().showProgress(SignInActivity.this, "", "", false);
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", userAuth);
+    params.put("Authorization", "Bearer " + userAuth);
     params.put("userId", userID);
 
     JSONObject jsonObjBody = new JSONObject();
@@ -630,7 +630,7 @@ public class SignInActivity extends AppCompatActivity implements ApiCall.OnAsync
 
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
-    header.put("accessToken", userAuth);
+    header.put("Authorization", "Bearer " + userAuth);
     header.put("userId", userID);
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
     RegistrationServerConfigEvent registrationServerConfigEvent =

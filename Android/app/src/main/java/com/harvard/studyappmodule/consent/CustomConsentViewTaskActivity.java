@@ -309,11 +309,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
                         k++) {
                       if (((String) objects[j])
                           .equalsIgnoreCase(
-                              comprehensionCorrectAnswers
-                                  .get(i)
-                                  .getAnswer()
-                                  .get(k)
-                                  .getAnswer())) {
+                              comprehensionCorrectAnswers.get(i).getAnswer().get(k).getAnswer())) {
                         answer.add("" + ((String) objects[j]));
                       }
                     }
@@ -489,13 +485,10 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         SharedPreferenceHelper.readPreference(
             CustomConsentViewTaskActivity.this, getString(R.string.userid), ""));
     header.put(
-        "clientToken",
-        SharedPreferenceHelper.readPreference(
-            CustomConsentViewTaskActivity.this, getString(R.string.clientToken), ""));
-    header.put(
-        "accessToken",
-        SharedPreferenceHelper.readPreference(
-            CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + SharedPreferenceHelper.readPreference(
+                CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
 
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(
@@ -521,17 +514,14 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -620,7 +610,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
           this,
           getIntent().getStringExtra(STUDYID),
           StudyFragment.IN_PROGRESS,
-              enrolledDate,
+          enrolledDate,
           participantId,
           siteId,
           hashToken,
@@ -923,9 +913,11 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
 
       HashMap headerparams = new HashMap();
       headerparams.put(
-          "accessToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + AppController.getHelperSharedPreference()
+                  .readPreference(
+                      CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
       headerparams.put(
           "userId",
           AppController.getHelperSharedPreference()
@@ -988,22 +980,18 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private void getStudySate() {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(
-                CustomConsentViewTaskActivity.this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    CustomConsentViewTaskActivity.this,
+                    getResources().getString(R.string.auth),
+                    ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(
                 CustomConsentViewTaskActivity.this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(
-                CustomConsentViewTaskActivity.this,
-                getResources().getString(R.string.clientToken),
-                ""));
 
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(

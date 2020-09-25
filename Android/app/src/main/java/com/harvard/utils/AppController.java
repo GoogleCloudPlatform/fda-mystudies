@@ -864,11 +864,19 @@ public class AppController {
     NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
     notificationManager.cancelAll();
 
-    Intent intent = new Intent(context, SignInActivity.class);
-    ComponentName cn = intent.getComponent();
-    Intent mainIntent = Intent.makeRestartActivityTask(cn);
-    context.startActivity(mainIntent);
-    ((Activity) context).finish();
+    if (AppConfig.AppType.equalsIgnoreCase(context.getString(R.string.app_gateway))) {
+      Intent intent = new Intent(context, StudyActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    } else {
+      Intent intent = new Intent(context, StandaloneActivity.class);
+      ComponentName cn = intent.getComponent();
+      Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      context.startActivity(mainIntent);
+      ((Activity) context).finish();
+    }
   }
 
   public static String getHashedValue(String valueToHash) {

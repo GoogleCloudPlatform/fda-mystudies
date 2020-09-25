@@ -160,6 +160,7 @@ public class StandaloneActivity extends AppCompatActivity
         Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
         ComponentName cn = intent.getComponent();
         Intent mainIntent = Intent.makeRestartActivityTask(cn);
+        mainIntent.putExtra("flow", getIntent().getStringExtra("flow"));
         startActivity(mainIntent);
         finish();
       }
@@ -193,22 +194,16 @@ public class StandaloneActivity extends AppCompatActivity
 
             HashMap<String, String> header = new HashMap();
             header.put(
-                "accessToken",
-                AppController.getHelperSharedPreference()
-                    .readPreference(
-                        StandaloneActivity.this, getResources().getString(R.string.auth), ""));
+                "Authorization",
+                "Bearer "
+                    + AppController.getHelperSharedPreference()
+                        .readPreference(
+                            StandaloneActivity.this, getResources().getString(R.string.auth), ""));
             header.put(
                 "userId",
                 AppController.getHelperSharedPreference()
                     .readPreference(
                         StandaloneActivity.this, getResources().getString(R.string.userid), ""));
-            header.put(
-                "clientToken",
-                AppController.getHelperSharedPreference()
-                    .readPreference(
-                        StandaloneActivity.this,
-                        getResources().getString(R.string.clientToken),
-                        ""));
 
             RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
                 new RegistrationServerEnrollmentConfigEvent(
@@ -338,6 +333,7 @@ public class StandaloneActivity extends AppCompatActivity
                 } else {
                   Intent intent =
                       new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
+                  intent.putExtra("flow", getIntent().getStringExtra("flow"));
                   intent.putExtra("studyId", studyListArrayList.get(j).getStudyId());
                   intent.putExtra("title", studyListArrayList.get(j).getTitle());
                   intent.putExtra("bookmark", studyListArrayList.get(j).isBookmarked());
@@ -361,6 +357,7 @@ public class StandaloneActivity extends AppCompatActivity
             studyListArrayList.get(0).setStudyStatus(YET_TO_JOIN);
 
             Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
+            intent.putExtra("flow", getIntent().getStringExtra("flow"));
             intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
             intent.putExtra("title", studyListArrayList.get(0).getTitle());
             intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
@@ -492,6 +489,7 @@ public class StandaloneActivity extends AppCompatActivity
               "");
         } else {
           Intent intent = new Intent(StandaloneActivity.this, StandaloneStudyInfoActivity.class);
+          intent.putExtra("flow", getIntent().getStringExtra("flow"));
           intent.putExtra("studyId", studyListArrayList.get(0).getStudyId());
           intent.putExtra("title", studyListArrayList.get(0).getTitle());
           intent.putExtra("bookmark", studyListArrayList.get(0).isBookmarked());
@@ -614,6 +612,7 @@ public class StandaloneActivity extends AppCompatActivity
                     } else {
                       Intent intent =
                           new Intent(getApplicationContext(), StandaloneStudyInfoActivity.class);
+                      intent.putExtra("flow", getIntent().getStringExtra("flow"));
                       intent.putExtra("studyId", studyListArrayList.get(i).getStudyId());
                       intent.putExtra("title", studyListArrayList.get(i).getTitle());
                       intent.putExtra("bookmark", studyListArrayList.get(i).isBookmarked());
@@ -844,9 +843,11 @@ public class StandaloneActivity extends AppCompatActivity
     ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(StandaloneActivity.this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    StandaloneActivity.this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -1071,8 +1072,7 @@ public class StandaloneActivity extends AppCompatActivity
     ArrayList<StudyList> closed = new ArrayList<>();
     ArrayList<StudyList> others = new ArrayList<>();
 
-    ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc =
-        new ArrayList<>();
+    ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeYetToJoinCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeOthersCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> upComingCompletionAdherenceCalc = new ArrayList<>();
@@ -1098,15 +1098,13 @@ public class StandaloneActivity extends AppCompatActivity
               dbServiceSubscriber.getStudies(studyListArrayList.get(i).getStudyId(), realm);
           if (studies != null) {
             try {
-              CompletionAdherence completionAdherenceCalculation =
-                  new CompletionAdherence();
+              CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
               completionAdherenceCalculation.setCompletion(studies.getCompletion());
               completionAdherenceCalculation.setAdherence(studies.getAdherence());
               completionAdherenceCalculation.setActivityAvailable(false);
               completionAdherenceCalcSort = completionAdherenceCalculation;
             } catch (Exception e) {
-              CompletionAdherence completionAdherenceCalculation =
-                  new CompletionAdherence();
+              CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
               completionAdherenceCalculation.setAdherence(0);
               completionAdherenceCalculation.setCompletion(0);
               completionAdherenceCalculation.setActivityAvailable(false);
@@ -1114,8 +1112,7 @@ public class StandaloneActivity extends AppCompatActivity
               Logger.log(e);
             }
           } else {
-            CompletionAdherence completionAdherenceCalculation =
-                new CompletionAdherence();
+            CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
             completionAdherenceCalculation.setAdherence(0);
             completionAdherenceCalculation.setCompletion(0);
             completionAdherenceCalculation.setActivityAvailable(false);

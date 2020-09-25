@@ -145,8 +145,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
   // while filtering
   private ArrayList<CompletionAdherence> filteredCompletionAdherenceCalcs = new ArrayList<>();
   // while searching
-  private ArrayList<CompletionAdherence> searchFilteredCompletionAdherenceCalcs =
-      new ArrayList<>();
+  private ArrayList<CompletionAdherence> searchFilteredCompletionAdherenceCalcs = new ArrayList<>();
 
   @Override
   public void onAttach(Context context) {
@@ -220,8 +219,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     ArrayList<StudyList> closed = new ArrayList<>();
     ArrayList<StudyList> others = new ArrayList<>();
 
-    ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc =
-        new ArrayList<>();
+    ArrayList<CompletionAdherence> activeInprogressCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeYetToJoinCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> activeOthersCompletionAdherenceCalc = new ArrayList<>();
     ArrayList<CompletionAdherence> upComingCompletionAdherenceCalc = new ArrayList<>();
@@ -247,15 +245,13 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
               dbServiceSubscriber.getStudies(studyListArrayList.get(i).getStudyId(), realm);
           if (studies != null) {
             try {
-              CompletionAdherence completionAdherenceCalculation =
-                  new CompletionAdherence();
+              CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
               completionAdherenceCalculation.setCompletion(studies.getCompletion());
               completionAdherenceCalculation.setAdherence(studies.getAdherence());
               completionAdherenceCalculation.setActivityAvailable(false);
               completionAdherenceCalcSort = completionAdherenceCalculation;
             } catch (Exception e) {
-              CompletionAdherence completionAdherenceCalculation =
-                  new CompletionAdherence();
+              CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
               completionAdherenceCalculation.setAdherence(0);
               completionAdherenceCalculation.setCompletion(0);
               completionAdherenceCalculation.setActivityAvailable(false);
@@ -263,8 +259,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
               Logger.log(e);
             }
           } else {
-            CompletionAdherence completionAdherenceCalculation =
-                new CompletionAdherence();
+            CompletionAdherence completionAdherenceCalculation = new CompletionAdherence();
             completionAdherenceCalculation.setAdherence(0);
             completionAdherenceCalculation.setCompletion(0);
             completionAdherenceCalculation.setActivityAvailable(false);
@@ -855,17 +850,14 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         } else {
           HashMap<String, String> header = new HashMap();
           header.put(
-              "accessToken",
-              AppController.getHelperSharedPreference()
-                  .readPreference(context, getResources().getString(R.string.auth), ""));
+              "Authorization",
+              "Bearer "
+                  + AppController.getHelperSharedPreference()
+                      .readPreference(context, getResources().getString(R.string.auth), ""));
           header.put(
               "userId",
               AppController.getHelperSharedPreference()
                   .readPreference(context, getResources().getString(R.string.userid), ""));
-          header.put(
-              "clientToken",
-              AppController.getHelperSharedPreference()
-                  .readPreference(context, getResources().getString(R.string.clientToken), ""));
 
           RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
               new RegistrationServerEnrollmentConfigEvent(
@@ -1033,9 +1025,10 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
     HashMap<String, String> header = new HashMap<>();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
@@ -1353,17 +1346,14 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     lastUpdatedStatusStatus = studyStatus;
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(context, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 

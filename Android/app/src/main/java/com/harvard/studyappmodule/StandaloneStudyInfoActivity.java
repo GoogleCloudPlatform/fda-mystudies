@@ -16,10 +16,12 @@
 package com.harvard.studyappmodule;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -59,6 +61,7 @@ import com.harvard.usermodule.webservicemodel.Studies;
 import com.harvard.usermodule.webservicemodel.StudyData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
+import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
@@ -168,14 +171,40 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            Toast.makeText(
-                    StandaloneStudyInfoActivity.this,
-                    "SignIn to Join the Study",
-                    Toast.LENGTH_SHORT)
-                .show();
-            Intent intent = new Intent(StandaloneStudyInfoActivity.this, SignInActivity.class);
-            intent.putExtra("from", "StudyInfo");
-            startActivityForResult(intent, JOIN_ACTION_SIGIN);
+            if (SharedPreferenceHelper.readPreference(
+                    StandaloneStudyInfoActivity.this, getString(R.string.userid), "")
+                .equalsIgnoreCase("")) {
+              Toast.makeText(
+                      StandaloneStudyInfoActivity.this,
+                      "SignIn to Join the Study",
+                      Toast.LENGTH_SHORT)
+                  .show();
+              SharedPreferenceHelper.writePreference(
+                  StandaloneStudyInfoActivity.this,
+                  getString(R.string.loginflow),
+                  "StandaloneStudyInfo");
+              SharedPreferenceHelper.writePreference(
+                  StandaloneStudyInfoActivity.this, getString(R.string.logintype), "signIn");
+              CustomTabsIntent customTabsIntent =
+                  new CustomTabsIntent.Builder()
+                      .setToolbarColor(getResources().getColor(R.color.colorAccent))
+                      .setShowTitle(true)
+                      .setCloseButtonIcon(
+                          BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+                      .setStartAnimations(
+                          StandaloneStudyInfoActivity.this,
+                          R.anim.slide_in_right,
+                          R.anim.slide_out_left)
+                      .setExitAnimations(
+                          StandaloneStudyInfoActivity.this,
+                          R.anim.slide_in_left,
+                          R.anim.slide_out_right)
+                      .build();
+              customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+              startActivity(customTabsIntent.intent);
+            } else {
+              loginCallback();
+            }
           }
         });
 
@@ -666,47 +695,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
     super.onActivityResult(requestCode, resultCode, data);
     if (requestCode == JOIN_ACTION_SIGIN) {
       if (resultCode == RESULT_OK) {
-
-        AppController.getHelperProgressDialog()
-            .showProgress(StandaloneStudyInfoActivity.this, "", "", false);
-
-        HashMap<String, String> header = new HashMap();
-        header.put(
-            "accessToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StandaloneStudyInfoActivity.this, getResources().getString(R.string.auth), ""));
-        header.put(
-            "userId",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StandaloneStudyInfoActivity.this,
-                    getResources().getString(R.string.userid),
-                    ""));
-        header.put(
-            "clientToken",
-            AppController.getHelperSharedPreference()
-                .readPreference(
-                    StandaloneStudyInfoActivity.this,
-                    getResources().getString(R.string.clientToken),
-                    ""));
-        RegistrationServerEnrollmentConfigEvent registrationServerConfigEvent =
-            new RegistrationServerEnrollmentConfigEvent(
-                "get",
-                Urls.STUDY_STATE,
-                GET_PREFERENCES,
-                StandaloneStudyInfoActivity.this,
-                StudyData.class,
-                null,
-                header,
-                null,
-                false,
-                this);
-        GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-        getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-            registrationServerConfigEvent);
-        UserModulePresenter userModulePresenter = new UserModulePresenter();
-        userModulePresenter.performGetUserPreference(getPreferenceEvent);
+        loginCallback();
       }
     } else if (requestCode == 12345) {
       if (resultCode == RESULT_OK) {
@@ -831,5 +820,39 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             }
           }
         });
+  }
+
+  private void loginCallback() {
+    AppController.getHelperProgressDialog()
+        .showProgress(StandaloneStudyInfoActivity.this, "", "", false);
+
+    HashMap<String, String> header = new HashMap();
+    header.put(
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(
+                    StandaloneStudyInfoActivity.this, getResources().getString(R.string.auth), ""));
+    header.put(
+        "userId",
+        AppController.getHelperSharedPreference()
+            .readPreference(
+                StandaloneStudyInfoActivity.this, getResources().getString(R.string.userid), ""));
+    RegistrationServerEnrollmentConfigEvent registrationServerConfigEvent =
+        new RegistrationServerEnrollmentConfigEvent(
+            "get",
+            Urls.STUDY_STATE,
+            GET_PREFERENCES,
+            StandaloneStudyInfoActivity.this,
+            StudyData.class,
+            null,
+            header,
+            null,
+            false,
+            this);
+    GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
+    getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(registrationServerConfigEvent);
+    UserModulePresenter userModulePresenter = new UserModulePresenter();
+    userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }
 }

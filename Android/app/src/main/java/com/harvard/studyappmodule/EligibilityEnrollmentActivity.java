@@ -130,13 +130,10 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
         SharedPreferenceHelper.readPreference(
             EligibilityEnrollmentActivity.this, getString(R.string.userid), ""));
     header.put(
-        "clientToken",
-        SharedPreferenceHelper.readPreference(
-            EligibilityEnrollmentActivity.this, getString(R.string.clientToken), ""));
-    header.put(
-        "accessToken",
-        SharedPreferenceHelper.readPreference(
-            EligibilityEnrollmentActivity.this, getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + SharedPreferenceHelper.readPreference(
+                EligibilityEnrollmentActivity.this, getString(R.string.auth), ""));
 
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(

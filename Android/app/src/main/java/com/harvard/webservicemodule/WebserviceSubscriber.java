@@ -255,6 +255,17 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getV(),
           authServerConfigEvent.isShowAlert(),
           "AuthServer");
+    } else if (authServerConfigEvent.getRequestType().equalsIgnoreCase("put")) {
+      ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
+      apiCall.apiCallPutJson(
+          url,
+          authServerConfigEvent.getHeaders(),
+          authServerConfigEvent.getClassT(),
+          authServerConfigEvent.getRequestParamsJson(),
+          authServerConfigEvent.getResponseCode(),
+          authServerConfigEvent.getV(),
+          authServerConfigEvent.isShowAlert(),
+          "AuthServer");
     } else {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
       apiCall.apiCallPostHashmap(

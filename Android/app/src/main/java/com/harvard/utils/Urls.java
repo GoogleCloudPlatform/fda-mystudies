@@ -38,8 +38,9 @@ public class Urls {
   public static String FORGOT_PASSWORD = "user/reset_password";
   public static String LOGOUT = "/logout";
   public static String AUTH_SERVER_REDIRECT_URL = BuildConfig.BASE_URL_AUTH_SERVER + "callback";
+  public static String AUTH_CLIENT_ID = "MYSTUDIES_OAUTH_CLIENT";
   public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "auth"
-          + "?client_id=oauth-scim-client-id"
+          + "?client_id=" + AUTH_CLIENT_ID
           + "&scope=offline_access"
           + "&response_type=code"
           + "&appId=" + BuildConfig.APP_ID

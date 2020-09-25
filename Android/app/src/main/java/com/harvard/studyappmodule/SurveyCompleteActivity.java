@@ -130,9 +130,10 @@ public class SurveyCompleteActivity extends AppCompatActivity
           SharedPreferenceHelper.readPreference(
               SurveyCompleteActivity.this, getString(R.string.clientToken), ""));
       header.put(
-          "accessToken",
-          SharedPreferenceHelper.readPreference(
-              SurveyCompleteActivity.this, getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + SharedPreferenceHelper.readPreference(
+                  SurveyCompleteActivity.this, getString(R.string.auth), ""));
       header.put(
           "userId",
           SharedPreferenceHelper.readPreference(
@@ -567,17 +568,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
         dbServiceSubscriber.getStudies(
             getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID), realm);
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
     header.put("participantId", studies.getParticipantId());
 
     ResponseServerConfigEvent responseServerConfigEvent =
@@ -1167,17 +1165,14 @@ public class SurveyCompleteActivity extends AppCompatActivity
   public void updateStudyState(String completion, String adherence) {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(this, getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(this, getResources().getString(R.string.clientToken), ""));
 
     RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
         new RegistrationServerEnrollmentConfigEvent(

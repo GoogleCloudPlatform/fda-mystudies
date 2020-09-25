@@ -413,7 +413,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
 
   private void callUserProfileWebService() {
     HashMap<String, String> header = new HashMap<>();
-    header.put("accessToken", userAuth);
+    header.put("Authorization", "Bearer " + userAuth);
     header.put("userId", userId);
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
     RegistrationServerConfigEvent registrationServerConfigEvent =
@@ -486,7 +486,7 @@ public class SignInFragment extends Fragment implements ApiCall.OnAsyncRequestCo
     AppController.getHelperProgressDialog().showProgress(context, "", "", false);
 
     HashMap<String, String> params = new HashMap<>();
-    params.put("accessToken", userAuth);
+    params.put("Authorization", "Bearer " + userAuth);
     params.put("userId", userId);
 
     JSONObject jsonObjBody = new JSONObject();

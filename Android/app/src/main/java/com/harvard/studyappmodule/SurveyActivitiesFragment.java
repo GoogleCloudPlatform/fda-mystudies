@@ -186,6 +186,7 @@ public class SurveyActivitiesFragment extends Fragment
   private ArrayList<AnchorDateSchedulingDetails> arrayList;
   private ActivityData activityDataDB;
   String title = "";
+
   @Override
   public void onAttach(Context context) {
     super.onAttach(context);
@@ -305,7 +306,8 @@ public class SurveyActivitiesFragment extends Fragment
       AppController.getHelperProgressDialog()
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
-      AppController.getHelperProgressDialog().showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
+      AppController.getHelperProgressDialog()
+          .showProgressWithText(getActivity(), "", getString(R.string.activity_loading_msg), false);
     }
 
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
@@ -632,17 +634,14 @@ public class SurveyActivitiesFragment extends Fragment
 
       HashMap<String, String> header = new HashMap();
       header.put(
-          "accessToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(context, context.getResources().getString(R.string.auth), ""));
+          "Authorization",
+          "Bearer "
+              + AppController.getHelperSharedPreference()
+                  .readPreference(context, context.getResources().getString(R.string.auth), ""));
       header.put(
           "userId",
           AppController.getHelperSharedPreference()
               .readPreference(context, context.getResources().getString(R.string.userid), ""));
-      header.put(
-          "clientToken",
-          AppController.getHelperSharedPreference()
-              .readPreference(context, context.getResources().getString(R.string.clientToken), ""));
       Realm realm = AppController.getRealmobj(context);
       Studies studies =
           dbServiceSubscriber.getStudies(((SurveyActivity) context).getStudyId(), realm);
@@ -2354,17 +2353,14 @@ public class SurveyActivitiesFragment extends Fragment
   public void updateStudyState(String completion, String adherence) {
     HashMap<String, String> header = new HashMap();
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(context, context.getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.clientToken), ""));
 
     JSONObject jsonObject = new JSONObject();
 
@@ -2772,17 +2768,14 @@ public class SurveyActivitiesFragment extends Fragment
     Realm realm = AppController.getRealmobj(context);
     Studies studies = dbServiceSubscriber.getStudies(studyId, realm);
     header.put(
-        "accessToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.auth), ""));
+        "Authorization",
+        "Bearer "
+            + AppController.getHelperSharedPreference()
+                .readPreference(context, context.getResources().getString(R.string.auth), ""));
     header.put(
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(context, context.getResources().getString(R.string.userid), ""));
-    header.put(
-        "clientToken",
-        AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.clientToken), ""));
     header.put("participantId", studies.getParticipantId());
     dbServiceSubscriber.closeRealmObj(realm);
     JSONObject jsonObject = new JSONObject();
@@ -2919,8 +2912,9 @@ public class SurveyActivitiesFragment extends Fragment
             getString(R.string.clientToken),
             SharedPreferenceHelper.readPreference(context, getString(R.string.clientToken), ""));
         header.put(
-            "accessToken",
-            SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
+            "Authorization",
+            "Bearer "
+                + SharedPreferenceHelper.readPreference(context, getString(R.string.auth), ""));
         header.put(
             "userId",
             SharedPreferenceHelper.readPreference(context, getString(R.string.userid), ""));
