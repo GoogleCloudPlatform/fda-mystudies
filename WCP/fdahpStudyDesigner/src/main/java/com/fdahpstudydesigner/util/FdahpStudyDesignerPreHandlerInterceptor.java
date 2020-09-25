@@ -23,6 +23,8 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.service.UsersService;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.service.UsersService;
 
 public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorAdapter {
 
