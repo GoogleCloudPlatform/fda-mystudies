@@ -17,6 +17,8 @@ import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
@@ -36,7 +38,6 @@ import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
-import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
@@ -62,13 +63,13 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
-  @Autowired EmailNotification emailNotification;
-
   @Autowired CommonDao commonDao;
 
   @Autowired private UserManagementUtil userManagementUtil;
 
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
+
+  @Autowired private EmailService emailService;
 
   @Autowired private AppRepository appRepository;
 
@@ -311,23 +312,20 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     return message;
   }
 
-  @Override
   @Transactional()
-  public int resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId) throws Exception {
+  @Override
+  public EmailResponse resendConfirmationthroughEmail(
+      String applicationId, String securityToken, String emailId) {
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Starts");
     AppEntity appPropertiesDetails = null;
-    String dynamicContent = "";
+
     String content = "";
-    Map<String, String> emailMap = new HashMap<String, String>();
-    boolean isSent = false;
-    int isEmailSent = 0;
     String subject = "";
     AppOrgInfoBean appOrgInfoBean = null;
-
     appOrgInfoBean = commonDao.getUserAppDetailsByAllApi("", applicationId);
     appPropertiesDetails =
         userProfileManagementDao.getAppPropertiesDetailsByAppId(appOrgInfoBean.getAppInfoId());
+    Map<String, String> templateArgs = new HashMap<>();
     if ((appPropertiesDetails == null)
         || (appPropertiesDetails.getRegEmailSub() == null)
         || (appPropertiesDetails.getRegEmailBody() == null)
@@ -335,22 +333,25 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
         || appPropertiesDetails.getRegEmailSub().equalsIgnoreCase("")) {
       subject = appConfig.getConfirmationMailSubject();
       content = appConfig.getConfirmationMail();
-      emailMap.put("$securitytoken", securityToken);
+      templateArgs.put("securitytoken", securityToken);
     } else {
       content = appPropertiesDetails.getRegEmailBody().replace("<<< TOKEN HERE >>>", securityToken);
       subject = appPropertiesDetails.getRegEmailSub();
     }
-    // TODO(#496): replace with actual study's org name.
-    emailMap.put("$orgName", "Test Org");
-    dynamicContent = MyStudiesUserRegUtil.generateEmailContent(content, emailMap);
-    isSent = emailNotification.sendEmailNotification(subject, dynamicContent, emailId, null, null);
-    if (!isSent) {
-      isEmailSent = 1;
-    } else {
-      isEmailSent = 2;
-    }
 
+    // TODO(#496): replace with actual study's org name.
+    templateArgs.put("orgName", appConfig.getOrgName());
+    templateArgs.put("contactEmail", appConfig.getContactEmail());
+    EmailRequest emailRequest =
+        new EmailRequest(
+            appConfig.getFromEmail(),
+            new String[] {emailId},
+            null,
+            null,
+            subject,
+            content,
+            templateArgs);
     logger.info("UserManagementProfileServiceImpl - resendConfirmationthroughEmail() - Ends");
-    return isEmailSent;
+    return emailService.sendMimeMail(emailRequest);
   }
 }

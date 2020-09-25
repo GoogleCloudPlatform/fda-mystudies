@@ -143,8 +143,8 @@ public class SiteController {
   public ResponseEntity<ParticipantDetailResponse> getParticipantDetails(
       @PathVariable String participantRegistrySiteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
-      @RequestParam(defaultValue = "0") int page,
-      @RequestParam(defaultValue = "5") int limit,
+      @RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer limit,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
 

@@ -264,10 +264,9 @@ public class SiteControllerTest extends BaseMockIT {
     // verify updated values
     Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
     SiteEntity siteEntity = optSiteEntity.get();
-    SitePermissionEntity sitePermissionEntity = siteEntity.getSitePermissions().get(0);
     assertNotNull(siteEntity);
     assertEquals(locationEntity.getId(), siteEntity.getLocation().getId());
-    assertEquals(sitePermissionEntity.getCreatedBy(), userRegAdminEntity.getId());
+    assertEquals(siteEntity.getId(), siteId);
 
     verifyTokenIntrospectRequest();
   }
@@ -934,8 +933,7 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
     verifyTokenIntrospectRequest(2);
 
-    // get consent history for default page (0), limit (5) and sort by created timestamp in
-    // descending order
+    // get all consent history if page and limit values are null
     mockMvc
         .perform(
             get(
@@ -953,12 +951,10 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
         .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
         .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
-        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(5)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(21)))
         .andExpect(jsonPath("$.totalConsentHistoryCount", is(21)))
         .andExpect(
-            jsonPath(
-                "$.participantDetails.consentHistory[0].consentVersion",
-                is(CONSENT_VERSION + String.valueOf(20))))
+            jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
     verifyTokenIntrospectRequest(3);
