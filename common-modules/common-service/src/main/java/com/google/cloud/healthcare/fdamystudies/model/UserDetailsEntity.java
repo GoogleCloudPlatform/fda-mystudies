@@ -54,10 +54,7 @@ import org.hibernate.annotations.GenericGenerator;
           columnNames = {"user_id", "app_info_id"},
           name = "user_details_user_id_app_info_id_uidx")
     },
-    indexes = {
-      @Index(name = "user_details_email_idx", columnList = "email"),
-      @Index(name = "user_details_last_name_idx", columnList = "last_name")
-    })
+    indexes = {@Index(name = "user_details_email_idx", columnList = "email")})
 public class UserDetailsEntity implements Serializable {
 
   private static final long serialVersionUID = -6971868842609206885L;
