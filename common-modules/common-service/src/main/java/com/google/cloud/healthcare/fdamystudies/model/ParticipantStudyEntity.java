@@ -19,6 +19,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -39,6 +40,9 @@ import org.hibernate.annotations.GenericGenerator;
       @UniqueConstraint(
           columnNames = {"user_details_id", "study_info_id"},
           name = "participant_study_info_user_details_id_study_info_id__uidx")
+    },
+    indexes = {
+      @Index(name = "participant_study_info_site_id_status_idx", columnList = "site_id,status")
     })
 public class ParticipantStudyEntity implements Serializable {
 
@@ -72,6 +76,10 @@ public class ParticipantStudyEntity implements Serializable {
 
   @Column(name = "consent_status")
   private Boolean consentStatus = false;
+
+  @Column(name = "created_time")
+  @CreationTimestamp
+  private Timestamp created;
 
   @Column(length = SMALL_LENGTH)
   private String status;

@@ -35,11 +35,10 @@ public class PropertiesUtil {
     Matcher m = p.matcher(value);
     StringBuffer sb = new StringBuffer();
     while (m.find()) {
-        String envVarName = m.group(1);
-        String envVarValue = System.getenv(envVarName);
-        m.appendReplacement(sb,
-            null == envVarValue ? "" : Matcher.quoteReplacement(envVarValue));
-     }
+      String envVarName = m.group(1);
+      String envVarValue = System.getenv(envVarName);
+      m.appendReplacement(sb, null == envVarValue ? "" : Matcher.quoteReplacement(envVarValue));
+    }
     m.appendTail(sb);
     return sb.toString();
   }

@@ -22,6 +22,7 @@
 
 package com.fdahpstudydesigner.bo;
 
+import com.fdahpstudydesigner.bean.StudyListBean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
-import com.fdahpstudydesigner.bean.StudyListBean;
 
 @Entity
 @Table(name = "studies")

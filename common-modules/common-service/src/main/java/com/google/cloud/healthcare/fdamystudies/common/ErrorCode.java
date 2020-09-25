@@ -225,7 +225,7 @@ public enum ErrorCode {
   CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY(
       400, "EC_0051", Constants.BAD_REQUEST, "Cannot decomission site as study type is open"),
 
-  INVALID_USER_STATUS(400, "EC_0052", Constants.BAD_REQUEST, "Invalid user status"),
+  INVALID_USER_STATUS(400, "EC-114", Constants.BAD_REQUEST, "Invalid user status"),
 
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC_0053", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
@@ -238,7 +238,9 @@ public enum ErrorCode {
   APPLICATION_ID_MISSING(
       400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header"),
 
-  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status.");
+  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status."),
+
+  INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value");
 
   private final int status;
   private final String code;
