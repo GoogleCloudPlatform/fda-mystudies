@@ -22,6 +22,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -37,7 +38,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Getter
 @Entity
-@Table(name = "sites")
+@Table(
+    name = "sites",
+    indexes = {@Index(name = "sites_location_id_status_idx", columnList = "location_id,status")})
 public class SiteEntity implements Serializable {
 
   private static final long serialVersionUID = 1L;
