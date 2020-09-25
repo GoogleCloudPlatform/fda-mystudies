@@ -35,9 +35,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(
     name = "auth_info",
     indexes = {
-      @Index(
-          name = "auth_info_remote_notification_flag_idx",
-          columnList = "remote_notification_flag"),
       @Index(name = "auth_info_device_token_idx", columnList = "device_token"),
       @Index(name = "auth_info_device_type_idx", columnList = "device_type")
     })
