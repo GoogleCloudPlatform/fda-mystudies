@@ -9,13 +9,13 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 
 public interface UserSupportService {
 
-  public boolean feedback(String subject, String body, AuditLogEventRequest auditRequest)
-      throws Exception;
+  public EmailResponse feedback(String subject, String body, AuditLogEventRequest auditRequest);
 
-  public boolean contactUsDetails(
+  public EmailResponse contactUsDetails(
       String subject,
       String body,
       String firstName,
