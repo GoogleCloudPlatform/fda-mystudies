@@ -103,6 +103,8 @@ public class SiteController {
       @PathVariable String siteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
       @RequestParam(name = "onboardingStatus", required = false) String onboardingStatus,
+      @RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer limit,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
@@ -113,7 +115,7 @@ public class SiteController {
     }
 
     ParticipantRegistryResponse participants =
-        siteService.getParticipants(userId, siteId, onboardingStatus, auditRequest);
+        siteService.getParticipants(userId, siteId, onboardingStatus, auditRequest, page, limit);
     logger.exit(String.format(STATUS_LOG, participants.getHttpStatusCode()));
     return ResponseEntity.status(participants.getHttpStatusCode()).body(participants);
   }
@@ -141,11 +143,13 @@ public class SiteController {
   public ResponseEntity<ParticipantDetailResponse> getParticipantDetails(
       @PathVariable String participantRegistrySiteId,
       @RequestHeader(name = USER_ID_HEADER) String userId,
+      @RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer limit,
       HttpServletRequest request) {
     logger.entry(BEGIN_REQUEST_LOG, request.getRequestURI());
 
     ParticipantDetailResponse participantDetails =
-        siteService.getParticipantDetails(participantRegistrySiteId, userId);
+        siteService.getParticipantDetails(participantRegistrySiteId, userId, page, limit);
 
     logger.exit(String.format(STATUS_LOG, participantDetails.getHttpStatusCode()));
     return ResponseEntity.status(participantDetails.getHttpStatusCode()).body(participantDetails);

@@ -3,7 +3,7 @@ package com.google.cloud.healthcare.fdamystudies.common;
 public final class TestConstants {
   private TestConstants() {}
 
-  public static final String CUSTOM_ID_VALUE = "OpenStudy02";
+  public static final String CUSTOM_ID_VALUE = "Location@#$02";
 
   public static final String LOCATION_NAME_VALUE = "Marlborough";
 
@@ -36,15 +36,19 @@ public final class TestConstants {
 
   public static final String LAST_NAME = "mockit_user_lastname";
 
-  public static final String EMAIL_ID = "super_admin_test@gmail.com";
+  public static final String EMAIL_ID = "super_admin_test@grr.la";
 
   public static final String UPDATED_FIRST_NAME = "mockit_user_firstname_updated";
 
   public static final String UPDATED_LAST_NAME = "mockit_user_lastname_updated";
 
-  public static final String USER_EMAIL_VALUE = "super_admin_test@gmail.com";
+  public static final String USER_EMAIL_VALUE = "super_admin_test@grr.la";
 
   public static final String CONSENT_VERSION = "1.0";
 
   public static final String SITE_NAME = "siteName";
+
+  public static final String NO_OF_RECORDS = "5";
+
+  public static final String PAGE_NO = "0";
 }

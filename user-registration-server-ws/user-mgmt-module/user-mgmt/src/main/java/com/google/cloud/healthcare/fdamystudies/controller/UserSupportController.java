@@ -10,9 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ContactUsReqBean;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.FeedbackReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.UserSupportService;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -44,15 +46,19 @@ public class UserSupportController {
   public ResponseEntity<?> feedbackDetails(
       @Valid @RequestBody FeedbackReqBean reqBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.info("INFO: UserSupportController - feedbackDetails() :: Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
+
     try {
-      isEmailSent = supportService.feedback(reqBean.getSubject(), reqBean.getBody(), auditRequest);
-      if (isEmailSent) {
+      EmailResponse emailResponse =
+          supportService.feedback(reqBean.getSubject(), reqBean.getBody(), auditRequest);
+      if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+          .getMessage()
+          .equals(emailResponse.getMessage())) {
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
         ErrorBean errorBean = new ErrorBean();
@@ -68,6 +74,7 @@ public class UserSupportController {
           MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
           response);
     }
+
     logger.info("INFO: UserSupportController - feedbackDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }
@@ -79,21 +86,23 @@ public class UserSupportController {
   public ResponseEntity<?> contactUsDetails(
       @RequestBody ContactUsReqBean reqBean,
       @Context HttpServletResponse response,
-      HttpServletRequest request) {
+      HttpServletRequest request)
+      throws Exception {
     logger.info("INFO: UserSupportController - contactUsDetails() :: Starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    boolean isEmailSent = false;
     ResponseBean responseBean = new ResponseBean();
     try {
-      isEmailSent =
+      EmailResponse emailResponse =
           supportService.contactUsDetails(
               reqBean.getSubject(),
               reqBean.getBody(),
               reqBean.getFirstName(),
               reqBean.getEmail(),
               auditRequest);
-      if (isEmailSent) {
+      if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+          .getMessage()
+          .equals(emailResponse.getMessage())) {
         responseBean.setMessage(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue().toLowerCase());
       } else {
         ErrorBean errorBean = new ErrorBean();
@@ -109,6 +118,7 @@ public class UserSupportController {
           MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue(),
           response);
     }
+
     logger.info("INFO: UserSupportController - contactUsDetails() :: Ends");
     return new ResponseEntity<>(responseBean, HttpStatus.OK);
   }

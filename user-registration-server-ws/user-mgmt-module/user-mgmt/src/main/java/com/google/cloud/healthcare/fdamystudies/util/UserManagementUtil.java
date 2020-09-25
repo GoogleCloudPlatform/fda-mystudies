@@ -16,9 +16,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBodyProvider;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.exceptions.InvalidRequestException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.exceptions.UnAuthorizedRequestException;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +34,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -108,49 +104,35 @@ public class UserManagementUtil {
   }
 
   public String withdrawParticipantFromStudy(
-      String participantId, String studyId, String delete, AuditLogEventRequest auditRequest)
-      throws UnAuthorizedRequestException, InvalidRequestException, SystemException {
+      String participantId, String studyId, String delete, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementUtil withDrawParticipantFromStudy() - starts ");
     HttpHeaders headers = null;
     HttpEntity<WithdrawFromStudyBodyProvider> request = null;
 
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    try {
-      headers = new HttpHeaders();
-      headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set(AppConstants.APPLICATION_ID, null);
 
-      request = new HttpEntity<>(null, headers);
+    headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    headers.set(AppConstants.APPLICATION_ID, null);
 
-      String url =
-          appConfig.getWithdrawStudyUrl()
-              + "?studyId="
-              + studyId
-              + "&participantId="
-              + participantId
-              + "&deleteResponses="
-              + String.valueOf(delete);
+    request = new HttpEntity<>(null, headers);
 
-      ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
+    String url =
+        appConfig.getWithdrawStudyUrl()
+            + "?studyId="
+            + studyId
+            + "&participantId="
+            + participantId
+            + "&deleteResponses="
+            + String.valueOf(delete);
 
-      if (response.getStatusCode() == HttpStatus.OK) {
-        userMgmntAuditHelper.logEvent(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE, auditRequest);
-        message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-      }
+    ResponseEntity<?> response = restTemplate.postForEntity(url, request, String.class);
 
-    } catch (RestClientResponseException e) {
-      message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-      if (e.getRawStatusCode() == 401) {
-        logger.error("Invalid client Id or client secret.");
-        throw new UnAuthorizedRequestException();
-      } else if (e.getRawStatusCode() == 400) {
-        logger.error("Client verification ended with Bad Request");
-        throw new InvalidRequestException();
-      } else {
-        logger.error("Client verification ended with Internal Server Error");
-        throw new SystemException();
-      }
+    if (response.getStatusCode() == HttpStatus.OK) {
+      userMgmntAuditHelper.logEvent(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE, auditRequest);
+      message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
+
     logger.info("UserManagementUtil withDrawParticipantFromStudy() - Ends ");
     return message;
   }

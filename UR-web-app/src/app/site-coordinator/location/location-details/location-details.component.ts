@@ -11,7 +11,8 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
   templateUrl: './location-details.component.html',
   styleUrls: ['./location-details.component.scss'],
 })
-export class LocationDetailsComponent extends UnsubscribeOnDestroyAdapter
+export class LocationDetailsComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   location = {} as Location;
   locationBackup = {} as Location;

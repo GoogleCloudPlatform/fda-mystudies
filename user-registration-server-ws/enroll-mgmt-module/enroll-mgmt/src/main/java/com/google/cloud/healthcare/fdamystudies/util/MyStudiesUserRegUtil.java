@@ -48,7 +48,6 @@ public class MyStudiesUserRegUtil {
     STATUS_119("119"), // Password is missing
     STATUS_120("120"), // Connection error msg
     STATUS_126("126"), // appId is missing
-    STATUS_127("127"), // orgId is missing
 
     STATUS_128("128"), // Invalid UserId
     STATUS_129("129"), // Client Id is missing
@@ -73,8 +72,6 @@ public class MyStudiesUserRegUtil {
 
     /* EC_126(126, "appId is missing"), */
 
-    /* EC_127(127, "orgId is missing"), */
-
     /* EC_129(129, "Client Id is missing"), */
 
     /* EC_130(130, "Secret Key is missing"), */
@@ -90,7 +87,6 @@ public class MyStudiesUserRegUtil {
     SECRET_KEY_MISSING("Secret key is missing"),
 
     APP_ID_MISSING("appId is missing"),
-    ORG_ID_MISSING("orgId is missing"),
     ACCESS_TOKEN_MISSING("Access token is missing"),
     CODE_MISSING("Code is missing"),
 
@@ -234,18 +230,6 @@ public class MyStudiesUserRegUtil {
     } catch (Exception e) {
       logger.info("MyStudiesUserRegUtil - getFailureResponse() :: ERROR ", e);
     }
-  }
-
-  public static Date getCurrentUtilDateTime() {
-    Date date = new Date();
-    Calendar currentDate = Calendar.getInstance();
-    String dateNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDate.getTime());
-    try {
-      date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
-    } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
-    }
-    return date;
   }
 
   public static Date addMinutes(String currentDate, int minutes) {

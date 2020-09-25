@@ -12,14 +12,15 @@ import com.google.cloud.healthcare.fdamystudies.bean.QuestionnaireActivityStruct
 import com.google.cloud.healthcare.fdamystudies.bean.StudyActivityMetadataRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 
 public interface StudyMetadataService {
   public void saveStudyMetadata(StudyMetadataBean studyMetadataBean)
-      throws ProcessResponseException;
+      throws ProcessResponseException, IntrospectionException, IllegalAccessException,
+          IllegalArgumentException, InvocationTargetException;
 
   QuestionnaireActivityStructureBean getStudyActivityMetadata(
-      String applicationId,
-      String orgId,
-      StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
+      String applicationId, StudyActivityMetadataRequestBean studyActivityMetadataRequestBean)
       throws ProcessResponseException;
 }

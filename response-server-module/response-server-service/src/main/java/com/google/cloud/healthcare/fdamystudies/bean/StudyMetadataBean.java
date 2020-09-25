@@ -9,13 +9,17 @@
 package com.google.cloud.healthcare.fdamystudies.bean;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Getter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class StudyMetadataBean implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -31,5 +35,4 @@ public class StudyMetadataBean implements Serializable {
   private String appId;
   private String appName;
   private String appDescription;
-  private String orgId;
 }

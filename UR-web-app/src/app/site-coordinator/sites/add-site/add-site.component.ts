@@ -6,7 +6,7 @@ import {ToastrService} from 'ngx-toastr';
 import {Study} from '../../studies/shared/study.model';
 import {AddSiteRequest} from '../shared/add.sites.request';
 import {LocationService} from '../../location/shared/location.service';
-import {Location} from '../../location/shared/location.model';
+import {ManageLocations} from '../../location/shared/location.model';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Observable, of} from 'rxjs';
 @Component({
@@ -14,13 +14,15 @@ import {Observable, of} from 'rxjs';
   templateUrl: './add-site.component.html',
   styleUrls: ['./add-site.component.scss'],
 })
-export class AddSiteComponent extends UnsubscribeOnDestroyAdapter
+export class AddSiteComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   @Input() study = {} as Study;
   @Output() closeModalEvent = new EventEmitter();
   newSite = {} as Study;
   site = {} as AddSiteRequest;
-  location$: Observable<Location[]> = of([]);
+  location$: Observable<ManageLocations> = of();
+
   constructor(
     private readonly siteService: SitesService,
     private readonly toastr: ToastrService,

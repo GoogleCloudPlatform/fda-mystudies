@@ -1,1 +1,175 @@
-<p>set-up-account works!</p>
+<header>
+  <div id="desktop-menu">
+    <div class="bs-example bs__example">
+      <nav class="navbar navbar-expand-md p-none">
+        <a href="#" class="navbar-brand">
+          <img class="mr-sm" src="assets/images/landing-logo.gif" alt="logo" />
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+<ng-container>
+  <section class="max__w__850 add__location">
+    <form
+      [formGroup]="setupAccountForm"
+      (ngSubmit)="registerUser()"
+      autocomplete="off"
+    >
+      <h2 class="subheader__title mb-sm mt-lg">Set Up Account</h2>
+      <section class="bg__white card__inside__pad box__shadow-cmn m-none">
+        <div class="mt-lg">
+          <div class="row border-bottom__c4d1e6">
+            <div class="col-xs-12 col-md-12 p-none">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="email"
+                  placeholder="Enter Email"
+                  formControlName="email"
+                  readonly
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+              <div class="form-group">
+                <label for="fname">First Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="fname"
+                  placeholder="Enter First Name"
+                  formControlName="firstName"
+                />
+                <div
+                  class="validation-error"
+                  *ngIf="
+                    f.firstName.invalid &&
+                    (f.firstName.dirty || f.firstName.touched)
+                  "
+                >
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.firstName.errors?.required"
+                  >
+                    Please fill out this field.
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 col-md-6 p-none">
+              <div class="form-group">
+                <label for="lname">Last Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="lname"
+                  placeholder="Enter Last Name"
+                  formControlName="lastName"
+                />
+                <div
+                  class="validation-error"
+                  *ngIf="
+                    f.lastName.invalid &&
+                    (f.lastName.dirty || f.lastName.touched)
+                  "
+                >
+                  <span
+                    class="help-block with-errors error__msg"
+                    *ngIf="f.lastName.errors?.required"
+                  >
+                    Please fill out this field.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <h2 class="subheader__title mb-sm">Create Password</h2>
+      <section class="bg__white card__inside__pad box__shadow-cmn m-none">
+        <div class="row">
+          <div class="col-xs-12 col-md-6 p-none border-right__c4d1e6">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Enter Password"
+                formControlName="password"
+              />
+
+              <div
+                class="validation-error"
+                *ngIf="
+                  f.password.invalid && (f.password.dirty || f.password.touched)
+                "
+              >
+                <span
+                  class="help-block with-errors error__msg"
+                  *ngIf="f.password.errors?.validPassword"
+                >
+                  Your password must be 8 to 64 characters long with lower
+                  case,upper case,number and special character.
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-md-6 p-none">
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                placeholder="Enter Confirm Password"
+                formControlName="confirmPassword"
+              />
+              <div
+                class="validation-error"
+                *ngIf="
+                  f.confirmPassword.invalid &&
+                  (f.confirmPassword.dirty || f.confirmPassword.touched)
+                "
+              >
+                <span
+                  class="help-block with-errors error__msg"
+                  *ngIf="f.confirmPassword.errors?.required"
+                >
+                  Please confirm password.
+                </span>
+                <span
+                  class="help-block with-errors error__msg"
+                  *ngIf="f.confirmPassword.errors?.mustMatch"
+                >
+                  Passwords must match.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="btn__container flex__justify__space-between mb-xlg">
+        <div>
+          <button
+            type="submit"
+            name="save"
+            class="btn bt__add mr-sm"
+            [disabled]="!setupAccountForm.valid"
+          >
+            Submit
+          </button>
+          <button name="cancel" type="button" class="btn bt__cancel">
+            Cancel
+          </button>
+        </div>
+      </section>
+    </form>
+  </section>
+</ng-container>
