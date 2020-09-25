@@ -20,23 +20,6 @@ import org.springframework.context.annotation.Configuration;
 @ToString
 public class ApplicationPropertyConfiguration {
 
-  @Value("${from.email.address}")
-  private String fromEmailAddress;
-
-  // Password for email address we send communication with. Not needed if we
-  // are not authenticating. See `useIpWhitelist`.
-  @Value("${from.email.password}")
-  private String fromEmailPassword;
-
-  @Value("${factory.value}")
-  private String sslFactoryValue;
-
-  @Value("${smtp.port}")
-  private String smtpPortValue;
-
-  @Value("${smtp.hostname}")
-  private String smtpHostName;
-
   // If true, we do not authenticate with the SMTP server but rather rely on
   // an IP whitelist for the domain `fromDomain`.
   @Value("${from.email.use_ip_whitelist}")
@@ -107,4 +90,10 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${org.name}")
   private String orgName;
+
+  @Value("${mail.contact-email}")
+  private String contactEmail;
+
+  @Value("${mail.from-email}")
+  private String fromEmail;
 }
