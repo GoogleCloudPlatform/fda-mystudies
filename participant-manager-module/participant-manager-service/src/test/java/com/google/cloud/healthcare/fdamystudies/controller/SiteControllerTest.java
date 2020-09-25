@@ -264,10 +264,9 @@ public class SiteControllerTest extends BaseMockIT {
     // verify updated values
     Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
     SiteEntity siteEntity = optSiteEntity.get();
-    SitePermissionEntity sitePermissionEntity = siteEntity.getSitePermissions().get(0);
     assertNotNull(siteEntity);
     assertEquals(locationEntity.getId(), siteEntity.getLocation().getId());
-    assertEquals(sitePermissionEntity.getCreatedBy(), userRegAdminEntity.getId());
+    assertEquals(siteEntity.getId(), siteId);
 
     verifyTokenIntrospectRequest();
   }
