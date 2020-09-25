@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
 
   @Value("${cors.allowed.origins:}")
   private String corsAllowedOrigins;
-  
+
   @Autowired
   private RestTemplateAuthTokenModifierInterceptor restTemplateAuthTokenModifierInterceptor;
 

@@ -9,9 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.beans.UserResourceBean;
+import com.google.cloud.healthcare.fdamystudies.model.UserInstitutionEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserInstitutionRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CloudStorageService;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserInstitution;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,10 +30,10 @@ public class GetUserInstitutionResources {
   // Returns UserResourceBeans for the institution that `userId` belongs to.
   // Can be an empty list.
   public List<UserResourceBean> getInstitutionResourcesForUser(String userId) {
-    Optional<UserInstitution> maybeUserInstitution =
+    Optional<UserInstitutionEntity> maybeUserInstitution =
         userInstitutionRepository.findByUserUserId(userId);
     if (!maybeUserInstitution.isPresent()) return new ArrayList<>();
-    UserInstitution userInstitution = maybeUserInstitution.get();
+    UserInstitutionEntity userInstitution = maybeUserInstitution.get();
 
     List<CloudStorageService.InstitutionResource> streams =
         cloudStorageService.getAllInstitutionResources(userInstitution.getInstitutionId());

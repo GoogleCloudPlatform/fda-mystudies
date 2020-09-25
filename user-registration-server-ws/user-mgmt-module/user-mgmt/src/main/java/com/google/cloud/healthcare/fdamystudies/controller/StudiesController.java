@@ -19,6 +19,7 @@ import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.StudiesServices;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.Logger;
@@ -51,17 +52,8 @@ public class StudiesController {
     auditRequest.setStudyVersion(studyMetadataBean.getStudyVersion());
     auditRequest.setAppId(studyMetadataBean.getAppId());
 
-    ErrorBean errorBean;
-    try {
-      errorBean = studiesServices.saveStudyMetadata(studyMetadataBean);
-
-      if (errorBean.getCode() != ErrorCode.EC_200.code()) {
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
-      }
-
-    } catch (Exception e) {
-      logger.error("StudiesController - addUpdateStudyMetadata() : error ", e);
-      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+    ErrorBean errorBean = studiesServices.saveStudyMetadata(studyMetadataBean);
+    if (errorBean.getCode() != ErrorCode.EC_200.code()) {
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
 
@@ -73,24 +65,21 @@ public class StudiesController {
 
   @PostMapping("/sendNotification")
   public ResponseEntity<?> SendNotification(
-      @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request) {
+      @Valid @RequestBody NotificationForm notificationForm, HttpServletRequest request)
+      throws IOException {
     logger.info("StudiesController - SendNotification() : starts");
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     userMgmntAuditHelper.logEvent(NOTIFICATION_METADATA_RECEIVED, auditRequest);
 
     ErrorBean errorBean = null;
-    try {
-      errorBean = studiesServices.SendNotificationAction(notificationForm, auditRequest);
 
-      if (errorBean.getCode() != ErrorCode.EC_200.code()) {
-        return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
-      }
-    } catch (Exception e) {
-      logger.error("StudiesController - SendNotification() : error", e);
-      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
-      return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+    errorBean = studiesServices.SendNotificationAction(notificationForm, auditRequest);
+
+    if (errorBean.getCode() != ErrorCode.EC_200.code()) {
+      return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
+
     errorBean =
         new ErrorBean(
             ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage(), errorBean.getResponse());

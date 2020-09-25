@@ -1,4 +1,4 @@
-module Pods_HPHCTests {
+framework module Pods_HPHCTests {
   umbrella header "Pods-HPHCTests-umbrella.h"
 
   export *

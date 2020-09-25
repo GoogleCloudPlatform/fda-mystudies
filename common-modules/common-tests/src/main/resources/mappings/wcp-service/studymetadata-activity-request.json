@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "GET",
+		"url": "/StudyMetaData/activity?studyId=ASignature01&activityId=Activity&activityVersion=1.0"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "wcp-service/studymetadata-activity-response.json"
+	}
+}
