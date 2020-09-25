@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-
+import {AddEmailComponent} from './add-email/add-email.component';
 import {SitesRoutingModule} from './sites-routing.module';
 import {SiteListComponent} from './site-list/site-list.component';
 import {AddSiteComponent} from './add-site/add-site.component';
@@ -14,6 +14,7 @@ import {ImportEmailListComponent} from './import-email-list/import-email-list.co
     AddSiteComponent,
     SiteDetailsComponent,
     ImportEmailListComponent,
+    AddEmailComponent,
   ],
   imports: [CommonModule, SitesRoutingModule, FormsModule, NgxDataTableModule],
 })

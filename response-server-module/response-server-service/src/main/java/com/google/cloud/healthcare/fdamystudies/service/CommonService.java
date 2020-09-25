@@ -8,12 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.model.ActivityLog;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
 
 public interface CommonService {
 
   public ParticipantBo getParticipantInfoDetails(String participantId);
-
-  public ActivityLog createActivityLog(String userId, String activityName, String activtyDesc);
 }

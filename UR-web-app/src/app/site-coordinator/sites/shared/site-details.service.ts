@@ -4,6 +4,7 @@ import {EntityService} from '../../../service/entity.service';
 import {Observable} from 'rxjs';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '@environment';
+import {AddEmail} from './add-email';
 import {
   InviteSend,
   StatusUpdate,
@@ -70,6 +71,15 @@ export class SiteDetailsService {
         siteId,
       )}/participants/invite`,
       invitationToSend,
+    );
+  }
+  addParticipants(
+    siteId: string,
+    modelEmail: AddEmail,
+  ): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/participants`,
+      modelEmail,
     );
   }
 
