@@ -11,6 +11,8 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,8 +29,15 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
   public List<ParticipantStudyEntity> findParticipantEnrollmentsBySiteIds(
       @Param("siteIds") List<String> usersSiteIds);
 
-  @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id in (:studyIds)")
-  public List<ParticipantStudyEntity> findParticipantsByStudy(@Param("studyIds") String studyIds);
+  @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId")
+  public Page<ParticipantStudyEntity> findParticipantsByStudyForPage(
+      @Param("studyId") String studyId, Pageable page);
+
+  @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId")
+  public List<ParticipantStudyEntity> findParticipantsByStudy(@Param("studyId") String studyId);
+
+  @Query("SELECT COUNT(ps) FROM ParticipantStudyEntity ps WHERE ps.study.id = :studyId")
+  public Long countbyStudyId(String studyId);
 
   @Query(
       "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.participantRegistrySite.id = :participantRegistrySiteId")
