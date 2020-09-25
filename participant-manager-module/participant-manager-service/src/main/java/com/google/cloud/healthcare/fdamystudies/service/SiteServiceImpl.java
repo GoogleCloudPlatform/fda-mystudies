@@ -117,6 +117,9 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -304,7 +307,12 @@ public class SiteServiceImpl implements SiteService {
 
   @Override
   public ParticipantRegistryResponse getParticipants(
-      String userId, String siteId, String onboardingStatus, AuditLogEventRequest auditRequest) {
+      String userId,
+      String siteId,
+      String onboardingStatus,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit) {
     logger.info("getParticipants()");
     Optional<SiteEntity> optSite = siteRepository.findById(siteId);
 
@@ -326,23 +334,32 @@ public class SiteServiceImpl implements SiteService {
     Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
     participantRegistryDetail.setCountByStatus(statusWithCountMap);
 
-    List<ParticipantRegistrySiteEntity> participantRegistrySites = null;
+    Page<ParticipantRegistrySiteEntity> participantRegistrySitesPage = null;
+    Long totalParticipantsCount = null;
     if (StringUtils.isEmpty(onboardingStatus)) {
-      participantRegistrySites = participantRegistrySiteRepository.findBySiteId(siteId);
+      totalParticipantsCount = participantRegistrySiteRepository.countbysiteId(siteId);
+      participantRegistrySitesPage =
+          participantRegistrySiteRepository.findBySiteId(
+              siteId, PageRequest.of(page, limit, Sort.by("created").descending()));
     } else {
-      participantRegistrySites =
-          (List<ParticipantRegistrySiteEntity>)
-              CollectionUtils.emptyIfNull(
-                  participantRegistrySiteRepository.findBySiteIdAndStatus(
-                      siteId, onboardingStatus));
+      totalParticipantsCount =
+          participantRegistrySiteRepository.countBySiteIdAndStatus(siteId, onboardingStatus);
+      participantRegistrySitesPage =
+          participantRegistrySiteRepository.findBySiteIdAndStatus(
+              siteId,
+              onboardingStatus,
+              PageRequest.of(page, limit, Sort.by("created").descending()));
     }
 
+    List<ParticipantRegistrySiteEntity> participantRegistrySites =
+        participantRegistrySitesPage.getContent();
     addRegistryParticipants(participantRegistryDetail, participantRegistrySites);
 
     ParticipantRegistryResponse participantRegistryResponse =
         new ParticipantRegistryResponse(
             MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS, participantRegistryDetail);
 
+    participantRegistryResponse.setTotalParticipantCount(totalParticipantsCount);
     auditRequest.setSiteId(siteId);
     auditRequest.setStudyId(optSite.get().getStudyId());
     auditRequest.setAppId(optSite.get().getStudy().getAppId());
@@ -562,7 +579,7 @@ public class SiteServiceImpl implements SiteService {
   @Override
   @Transactional(readOnly = true)
   public ParticipantDetailResponse getParticipantDetails(
-      String participantRegistrySiteId, String userId) {
+      String participantRegistrySiteId, String userId, int page, int limit) {
     logger.entry("begin getParticipantDetails()");
 
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
@@ -578,6 +595,7 @@ public class SiteServiceImpl implements SiteService {
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantsEnrollment(participantRegistrySiteId);
 
+    ParticipantDetailResponse participantDetailResponse = new ParticipantDetailResponse();
     if (CollectionUtils.isEmpty(participantsEnrollments)) {
       Enrollment enrollment = new Enrollment(null, "-", YET_TO_ENROLL, "-");
       participantDetail.getEnrollments().add(enrollment);
@@ -589,12 +607,18 @@ public class SiteServiceImpl implements SiteService {
               .map(ParticipantStudyEntity::getId)
               .collect(Collectors.toList());
 
-      List<StudyConsentEntity> studyConsents =
-          studyConsentRepository.findByParticipantRegistrySiteId(participantStudyIds);
+      Page<StudyConsentEntity> consentHistoryPage =
+          studyConsentRepository.findByParticipantRegistrySiteId(
+              participantStudyIds, PageRequest.of(page, limit, Sort.by("created").descending()));
+      List<StudyConsentEntity> studyConsents = consentHistoryPage.getContent();
 
       List<ConsentHistory> consentHistories =
           studyConsents.stream().map(ConsentMapper::toConsentHistory).collect(Collectors.toList());
       participantDetail.getConsentHistory().addAll(consentHistories);
+
+      Long participantConsentCount =
+          studyConsentRepository.countByParticipantRegistrySiteId(participantStudyIds);
+      participantDetailResponse.setTotalConsentHistoryCount(participantConsentCount);
     }
 
     logger.exit(
@@ -604,7 +628,9 @@ public class SiteServiceImpl implements SiteService {
             participantDetail.getConsentHistory().size()));
 
     return new ParticipantDetailResponse(
-        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS, participantDetail);
+        MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS,
+        participantDetail,
+        participantDetailResponse.getTotalConsentHistoryCount());
   }
 
   private ErrorCode validateParticipantDetailsRequest(

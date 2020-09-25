@@ -16,10 +16,10 @@ import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.consent.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.consent.model.StudyConsentBO;
 import com.google.cloud.healthcare.fdamystudies.dao.UserConsentManagementDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.storage.StorageException;
 import java.util.Collections;
 import java.util.List;
@@ -43,36 +43,36 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
   @Override
   @Transactional(readOnly = true)
-  public ParticipantStudiesBO getParticipantStudies(Integer studyId, String userId) {
+  public ParticipantStudyEntity getParticipantStudies(String studyId, String userId) {
     return userConsentManagementDao.getParticipantStudies(studyId, userId);
   }
 
   @Override
   @Transactional
-  public String saveParticipantStudies(List<ParticipantStudiesBO> participantStudiesList) {
+  public String saveParticipantStudies(List<ParticipantStudyEntity> participantStudiesList) {
     return userConsentManagementDao.saveParticipantStudies(participantStudiesList);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public StudyConsentBO getStudyConsent(String userId, Integer studyId, String consentVersion) {
+  public StudyConsentEntity getStudyConsent(String userId, String studyId, String consentVersion) {
     return userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
   }
 
   @Override
   @Transactional
-  public String saveStudyConsent(StudyConsentBO studyConsent) {
+  public String saveStudyConsent(StudyConsentEntity studyConsent) {
     return userConsentManagementDao.saveStudyConsent(studyConsent);
   }
 
   @Override
   @Transactional(readOnly = true)
   public ConsentStudyResponseBean getStudyConsentDetails(
-      String userId, Integer studyId, String consentVersion, AuditLogEventRequest auditRequest) {
+      String userId, String studyId, String consentVersion, AuditLogEventRequest auditRequest) {
 
     logger.info("UserConsentManagementServiceImpl getStudyConsentDetails() - Started ");
-    StudyConsentBO studyConsent = null;
-    ParticipantStudiesBO participantStudiesBO = null;
+    StudyConsentEntity studyConsent = null;
+    ParticipantStudyEntity participantStudiesEntity = null;
     ConsentStudyResponseBean consentStudyResponseBean = new ConsentStudyResponseBean();
 
     studyConsent = userConsentManagementDao.getStudyConsent(userId, studyId, consentVersion);
@@ -91,9 +91,9 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
         downloadConsentDocument(path, consentStudyResponseBean, userId, auditRequest);
       }
       consentStudyResponseBean.getConsent().setType("application/pdf");
-      participantStudiesBO = userConsentManagementDao.getParticipantStudies(studyId, userId);
-      if (participantStudiesBO != null) {
-        consentStudyResponseBean.setSharing(participantStudiesBO.getSharing());
+      participantStudiesEntity = userConsentManagementDao.getParticipantStudies(studyId, userId);
+      if (participantStudiesEntity != null) {
+        consentStudyResponseBean.setSharing(participantStudiesEntity.getSharing());
       }
     }
 
@@ -128,7 +128,7 @@ public class UserConsentManagementServiceImpl implements UserConsentManagementSe
 
   @Override
   @Transactional(readOnly = true)
-  public Integer getUserDetailsId(String userId) {
+  public String getUserDetailsId(String userId) {
     return userConsentManagementDao.getUserDetailsId(userId);
   }
 }

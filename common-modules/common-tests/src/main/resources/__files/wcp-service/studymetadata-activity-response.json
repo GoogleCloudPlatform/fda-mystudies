@@ -1,0 +1,41 @@
+{
+	"message": "SUCCESS",
+	"activity": {
+		"type": "questionnaire",
+		"metadata": {
+			"studyId": "ASignature01",
+			"activityId": "Activity",
+			"name": "Activity",
+			"version": "1.0",
+			"lastModified": "2020-08-14T12:52:24.000+0000",
+			"startDate": "2020-08-14T00:00:00.000+0000",
+			"endDate": ""
+		},
+		"steps": [
+			{
+				"type": "instruction",
+				"resultType": "",
+				"key": "Activity",
+				"title": "Activity",
+				"text": "Activity",
+				"skippable": false,
+				"groupName": "",
+				"repeatable": false,
+				"repeatableText": "",
+				"destinations": [
+					{
+						"condition": "",
+						"operator": "",
+						"destination": ""
+					}
+				],
+				"healthDataKey": "",
+				"format": {
+					
+				},
+				"steps": [],
+				"options": []
+			}
+		]
+	}
+}
