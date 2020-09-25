@@ -17,7 +17,33 @@ import lombok.Getter;
 public enum StudyBuilderAuditEvent {
   USER_SIGNOUT_SUCCEEDED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "USER_SIGNOUT_SUCCEEDED"),
 
-  USER_SIGNOUT_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "USER_SIGNOUT_FAILED");
+  USER_SIGNOUT_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "USER_SIGNOUT_FAILED"),
+
+  PASSWORD_CHANGE_SUCCEEDED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_CHANGE_SUCCEEDED"),
+
+  PASSWORD_CHANGE_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_CHANGE_FAILED"),
+
+  USER_ACCOUNT_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Account details updated in My Account section.",
+      "USER_ACCOUNT_UPDATED"),
+
+  USER_ACCOUNT_UPDATED_FAILED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Attempt to update account details failed for user in My Account section.",
+      "USER_ACCOUNT_UPDATED_FAILED"),
+
+  ACCOUNT_DETAILS_VIEWED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Account details viewed in My Account section.",
+      "ACCOUNT_DETAILS_VIEWED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;
