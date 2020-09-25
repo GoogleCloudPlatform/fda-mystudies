@@ -30,7 +30,8 @@ public interface UserService {
       ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
 
-  public ChangePasswordResponse changePassword(ChangePasswordRequest userRequest)
+  public ChangePasswordResponse changePassword(
+      ChangePasswordRequest userRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
 
   public Optional<UserEntity> findUserByTempRegId(String tempRegId);
@@ -38,15 +39,18 @@ public interface UserService {
   public UpdateEmailStatusResponse updateEmailStatusAndTempRegId(
       UpdateEmailStatusRequest userRequest) throws JsonProcessingException;
 
-  public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException;
+  public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
+      throws JsonProcessingException;
 
   public void resetTempRegId(String userId);
 
   public void removeExpiredTempRegIds();
 
-  public UserResponse logout(String userId) throws JsonProcessingException;
+  public UserResponse logout(String userId, AuditLogEventRequest auditRequest)
+      throws JsonProcessingException;
 
-  public UserResponse revokeAndReplaceRefreshToken(String userId, String refreshToken)
+  public UserResponse revokeAndReplaceRefreshToken(
+      String userId, String refreshToken, AuditLogEventRequest auditRequest)
       throws JsonProcessingException;
 
   public void deleteUserAccount(String userId);

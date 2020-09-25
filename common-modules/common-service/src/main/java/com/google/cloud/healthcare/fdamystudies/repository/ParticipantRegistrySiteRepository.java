@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -40,9 +42,26 @@ public interface ParticipantRegistrySiteRepository
   public List<ParticipantRegistrySiteCount> findStatusCountBySiteId(String siteId);
 
   @Query(
-      "SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
+      "SELECT pr FROM ParticipantRegistrySiteEntity pr "
+          + "where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
+  public Page<ParticipantRegistrySiteEntity> findBySiteIdAndStatusForPage(
+      String siteId, String onboardingStatus, Pageable pageable);
+
+  @Query(
+      "SELECT pr FROM ParticipantRegistrySiteEntity pr "
+          + "where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
   public List<ParticipantRegistrySiteEntity> findBySiteIdAndStatus(
       String siteId, String onboardingStatus);
+
+  @Query("SELECT COUNT(pr) FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id=:siteId")
+  public Long countbysiteId(String siteId);
+
+  @Query(
+      "SELECT COUNT(pr) FROM ParticipantRegistrySiteEntity pr where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus")
+  public Long countBySiteIdAndStatus(String siteId, String onboardingStatus);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id =:siteId")
+  public Page<ParticipantRegistrySiteEntity> findBySiteIdForPage(String siteId, Pageable pageable);
 
   @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id =:siteId")
   public List<ParticipantRegistrySiteEntity> findBySiteId(String siteId);

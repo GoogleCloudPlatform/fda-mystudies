@@ -3,7 +3,10 @@ package com.google.cloud.healthcare.fdamystudies.mapper;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.CommonApplicationPropertyConfig;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
@@ -33,9 +36,17 @@ public final class AuditEventMapper {
     auditRequest.setAppVersion(getValue(request, APP_VERSION));
     auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
     auditRequest.setUserId(getValue(request, USER_ID));
-    auditRequest.setSource(getValue(request, SOURCE));
+
+    String source = getValue(request, SOURCE);
+    if (StringUtils.isNotEmpty(source)) {
+      PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+      if (platformComponent == null) {
+        throw new ErrorCodeException(ErrorCode.INVALID_SOURCE_NAME);
+      }
+      auditRequest.setSource(source);
+    }
+
     auditRequest.setUserIp(getUserIP(request));
-    auditRequest.setSource(getValue(request, SOURCE));
 
     MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
     auditRequest.setMobilePlatform(mobilePlatform.getValue());

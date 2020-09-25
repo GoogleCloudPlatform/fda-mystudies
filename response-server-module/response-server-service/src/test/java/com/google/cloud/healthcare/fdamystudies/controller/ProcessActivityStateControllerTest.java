@@ -10,6 +10,9 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.ACTIVITY_STATE_SAVED_OR_UPDATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_ACTIVITY_STATE_INFO_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.READ_OPERATION_FOR_ACTIVITY_STATE_INFO_SUCCEEDED;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,13 +22,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
+import com.google.cloud.healthcare.fdamystudies.utils.Constants;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
+import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -74,6 +81,17 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/get_activity_state_runs_info_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId("RT3");
+    auditRequest.setParticipantId("567");
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(
+        READ_OPERATION_FOR_ACTIVITY_STATE_INFO_SUCCEEDED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_FOR_ACTIVITY_STATE_INFO_SUCCEEDED);
   }
 
   @ParameterizedTest
@@ -140,6 +158,14 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     String actualResponse = result.getResponse().getContentAsString();
     String expectedResponse = readJsonFile("/invalid_args_expected_bad_request_response.json");
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(READ_OPERATION_FOR_ACTIVITY_STATE_INFO_FAILED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, READ_OPERATION_FOR_ACTIVITY_STATE_INFO_FAILED);
   }
 
   @Test
@@ -183,6 +209,16 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
         resultsList.get(0).getCompleted());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setStudyId(studyId);
+    auditRequest.setParticipantId(participantId);
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(ACTIVITY_STATE_SAVED_OR_UPDATED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, ACTIVITY_STATE_SAVED_OR_UPDATED);
   }
 
   @Test

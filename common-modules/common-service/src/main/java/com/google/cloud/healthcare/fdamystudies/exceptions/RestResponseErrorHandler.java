@@ -11,9 +11,11 @@ import org.slf4j.ext.XLoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.ResponseErrorHandler;
 
+@Component
 public class RestResponseErrorHandler implements ResponseErrorHandler {
   private XLogger logger = XLoggerFactory.getXLogger(RestResponseErrorHandler.class.getName());
 
