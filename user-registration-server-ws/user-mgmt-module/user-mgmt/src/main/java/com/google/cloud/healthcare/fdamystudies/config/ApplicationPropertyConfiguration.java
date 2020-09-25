@@ -20,30 +20,13 @@ import org.springframework.context.annotation.Configuration;
 @ToString
 public class ApplicationPropertyConfiguration {
 
-  @Value("${from.email.address}")
-  private String fromEmailAddress;
-
-  // Password for email address we send communication with. Not needed if we
-  // are not authenticating. See `useIpWhitelist`.
-  @Value("${from.email.password}")
-  private String fromEmailPassword;
-
-  @Value("${factory.value}")
-  private String sslFactoryValue;
-
-  @Value("${smtp.port}")
-  private String smtpPortValue;
-
-  @Value("${smtp.hostname}")
-  private String smtpHostName;
-
   // If true, we do not authenticate with the SMTP server but rather rely on
   // an IP whitelist for the domain `fromDomain`.
   @Value("${from.email.use_ip_whitelist}")
   private Boolean useIpWhitelist;
 
   // Domain to use with the IP whitelist relay.
-  // Must be in the form rocketturtle rather than rocketturtle.net.
+  // Must be in the form domain rather than domain.com.
 
   @Value("${from.email.domain}")
   private String fromDomain;
@@ -60,17 +43,8 @@ public class ApplicationPropertyConfiguration {
   @Value("${register.url}")
   private String authServerRegisterStatusUrl;
 
-  @Value("${interceptor}")
-  private String interceptorUrls;
-
-  @Value("${AUTH_KEY_FCM}")
-  private String authKeyFcm;
-
-  @Value("${API_URL_FCM}")
+  @Value("${messaging.fcm.url}")
   private String apiUrlFcm;
-
-  @Value("${serverApiUrls}")
-  private String serverApiUrls;
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;
@@ -107,4 +81,10 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${org.name}")
   private String orgName;
+
+  @Value("${mail.contact-email}")
+  private String contactEmail;
+
+  @Value("${mail.from-email}")
+  private String fromEmail;
 }

@@ -18,7 +18,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @SpringBootApplication()
 @Import(CommonModuleConfiguration.class)
-@EntityScan(basePackages = {"com.google.cloud.healthcare.fdamystudies.oauthscim.model.oauthscim"})
+@EntityScan(basePackages = {"com.google.cloud.healthcare.fdamystudies.oauthscim.model"})
 public class Application {
 
   public static void main(String[] args) {

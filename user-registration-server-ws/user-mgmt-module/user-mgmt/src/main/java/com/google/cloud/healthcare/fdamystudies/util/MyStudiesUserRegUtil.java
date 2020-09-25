@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.util;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -44,7 +43,6 @@ public class MyStudiesUserRegUtil {
     STATUS_119("119"), // Password is missing
     STATUS_120("120"), // Connection error msg
     STATUS_126("126"), // appId is missing
-    STATUS_127("127"), // orgId is missing
 
     STATUS_128("128"), // User Form is empty
     STATUS_129("129"), // Client Id is missing
@@ -58,7 +56,6 @@ public class MyStudiesUserRegUtil {
     SECRET_KEY_MISSING("Secret key is missing"),
 
     APP_ID_MISSING("appId is missing"),
-    ORG_ID_MISSING("orgId is missing"),
     ACCESS_TOKEN_MISSING("Access token is missing"),
     CODE_MISSING("Code is missing"),
 
@@ -199,18 +196,6 @@ public class MyStudiesUserRegUtil {
     }
   }
 
-  public static Date getCurrentUtilDateTime() {
-    Date date = new Date();
-    Calendar currentDate = Calendar.getInstance();
-    String dateNow = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentDate.getTime());
-    try {
-      date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateNow);
-    } catch (Exception e) {
-      logger.info("MyStudiesUserRegUtil - getCurrentUtilDateTime() :: ERROR ", e);
-    }
-    return date;
-  }
-
   public static Date addMinutes(String currentDate, int minutes) {
     Date futureDate = null;
     try {
@@ -268,18 +253,14 @@ public class MyStudiesUserRegUtil {
     return emailContent;
   }
 
-  public static boolean isValidEmailId(String emailId) throws SystemException {
+  public static boolean isValidEmailId(String emailId) {
     logger.info("isValidEmailId() called");
-    try {
-      if (emailId != null) {
-        return emailId.matches("([A-Za-z0-9-_.]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
-      } else {
-        logger.info("invalid emailId formate");
-        return false;
-      }
-    } catch (Exception e) {
-      logger.error("System Exception Found");
-      throw new SystemException();
+
+    if (emailId != null) {
+      return emailId.matches("([A-Za-z0-9-_.]+@[A-Za-z0-9-_]+(?:\\.[A-Za-z0-9]+)+)");
+    } else {
+      logger.info("invalid emailId format");
+      return false;
     }
   }
 

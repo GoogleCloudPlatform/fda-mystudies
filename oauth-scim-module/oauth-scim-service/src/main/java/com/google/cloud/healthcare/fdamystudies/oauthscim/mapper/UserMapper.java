@@ -12,7 +12,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.model.oauthscim.UserEntity;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 
 public final class UserMapper {
 
