@@ -30,11 +30,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table(
     name = "users",
-    indexes = {
-      @Index(name = "users_user_id_idx", columnList = "user_id", unique = true),
-      @Index(name = "users_temp_reg_id_idx", columnList = "temp_reg_id", unique = true),
-      @Index(name = "users_app_id_email_idx", columnList = "app_id,email")
-    })
+    indexes = {@Index(name = "users_app_id_email_idx", columnList = "app_id,email")})
 public class UserEntity {
 
   @ToString.Exclude
@@ -45,7 +41,7 @@ public class UserEntity {
   private String id;
 
   @ToString.Exclude
-  @Column(name = "user_id", updatable = false, length = 64)
+  @Column(name = "user_id", updatable = false, length = 64, unique = true)
   private String userId;
 
   @Column(
@@ -56,7 +52,7 @@ public class UserEntity {
   private Timestamp created;
 
   @ToString.Exclude
-  @Column(name = "temp_reg_id", nullable = true, length = 64)
+  @Column(name = "temp_reg_id", nullable = true, length = 64, unique = true)
   private String tempRegId;
 
   @ToString.Exclude
