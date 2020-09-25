@@ -52,7 +52,7 @@ public class NotificationController {
 
   @Autowired private NotificationService notificationService;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @RequestMapping("/adminNotificationEdit/deleteNotification.do")
   public ModelAndView deleteNotification(HttpServletRequest request) {
@@ -379,7 +379,7 @@ public class NotificationController {
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
-      auditLogEvEntHelper.logEvent(APP_LEVEL_NOTIFICATION_LIST_VIEWED, auditRequest);
+      auditLogEventHelper.logEvent(APP_LEVEL_NOTIFICATION_LIST_VIEWED, auditRequest);
       mav = new ModelAndView("notificationListPage", map);
     } catch (Exception e) {
       logger.error("NotificationController - viewNotificationList() - ERROR ", e);
