@@ -77,7 +77,7 @@ public class StudyActiveTasksController {
 
   @Autowired private StudyQuestionnaireService studyQuestionnaireService;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @RequestMapping("/adminStudies/activeTAskMarkAsCompleted.do")
   public ModelAndView activeTAskMarkAsCompleted(HttpServletRequest request) {
@@ -127,7 +127,7 @@ public class StudyActiveTasksController {
         map.addAttribute("_S", sessionStudyCount);
         auditRequest.setStudyId(customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
-          auditLogEvEntHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
+          auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
           request
               .getSession()
               .setAttribute(
@@ -505,14 +505,14 @@ public class StudyActiveTasksController {
             values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
-              auditLogEvEntHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
+              auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully.");
               return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
 
             } else {
-              auditLogEvEntHelper.logEvent(
+              auditLogEventHelper.logEvent(
                   STUDY_ACTIVE_TASK_SAVED_OR_UPDATED, auditRequest, values);
               request
                   .getSession()

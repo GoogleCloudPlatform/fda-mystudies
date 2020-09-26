@@ -69,7 +69,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
   private static Logger logger = Logger.getLogger(StudyActiveTasksDAOImpl.class.getName());
   @Autowired private AuditLogDAO auditLogDAO;
   @Autowired private HttpServletRequest request;
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
   HibernateTemplate hibernateTemplate;
   private Query query = null;
   String queryString = "";
@@ -177,7 +177,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         query.executeUpdate();
 
         message = FdahpStudyDesignerConstants.SUCCESS;
-        auditLogEvEntHelper.logEvent(eventEnum, auditRequest, values);
+        auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
         auditLogDAO.saveToAuditLog(
             session,
             transaction,
