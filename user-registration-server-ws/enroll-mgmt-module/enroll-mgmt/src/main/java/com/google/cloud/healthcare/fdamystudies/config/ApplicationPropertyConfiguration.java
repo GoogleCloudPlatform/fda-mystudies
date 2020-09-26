@@ -23,7 +23,7 @@ public class ApplicationPropertyConfiguration {
   @Value("${response.server.url}")
   private String responseServerUrl;
 
-  @Value("${response.server.url.addParticipantId}")
+  @Value("${response.server.url.participant.add}")
   private String addParticipantId;
 
   @Value("${response.server.url.participant.withdraw}")

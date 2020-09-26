@@ -233,8 +233,9 @@ public class BaseMockIT {
       // Use enum value where specified, otherwise, use 'source' header value.
       if (auditEvent.getSource().isPresent()) {
         assertEquals(auditEvent.getSource().get().getValue(), auditRequest.getSource());
-      } else {
-        assertEquals("IntegrationTests", auditRequest.getSource());
+      } else if (StringUtils.isNotEmpty(auditRequest.getSource())) {
+        PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
+        assertNotNull(platformComponent);
       }
 
       if (auditEvent.getResourceServer().isPresent()) {
