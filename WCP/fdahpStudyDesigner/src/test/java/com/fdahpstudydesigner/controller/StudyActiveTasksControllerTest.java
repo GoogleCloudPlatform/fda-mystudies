@@ -43,19 +43,21 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     SessionObject session = new SessionObject();
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
-    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setStudySession(
+        new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put("0" + FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE);
-    sessionAttributes.put("0" + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, STUDY_ID_VALUE);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
     sessionAttributes.put(FdahpStudyDesignerConstants.PERMISSION, "View");
     sessionAttributes.put(FdahpStudyDesignerConstants.IS_LIVE, "isLive");
 
     mockMvc
         .perform(
             post(PathMappingUri.ACTIVE_TASK_MARK_AS_COMPLETED.getPath())
+                .param(STUDY_SESSION_COUNT_PARAM, STUDY_SESSION_COUNT_VALUE)
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
         .andDo(print())
@@ -71,7 +73,8 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
     SessionObject session = new SessionObject();
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
-    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setStudySession(
+        new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
@@ -103,7 +106,8 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
     SessionObject session = new SessionObject();
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
-    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setStudySession(
+        new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
@@ -119,6 +123,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
             .sessionAttrs(sessionAttributes);
 
     addParams(requestBuilder, activeTaskBo);
+
     mockMvc
         .perform(requestBuilder)
         .andDo(print())
@@ -134,12 +139,15 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
     SessionObject session = new SessionObject();
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
-    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setStudySession(
+        new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put("0" + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, CUSTOM_STUDY_ID_VALUE);
+    sessionAttributes.put(
+        STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
+        CUSTOM_STUDY_ID_VALUE);
 
     mockMvc
         .perform(
