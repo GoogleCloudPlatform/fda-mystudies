@@ -34,7 +34,14 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       "Active task saved/updated (activity ID - ${activetask_id}).",
-      "STUDY_ACTIVE_TASK_SAVED_OR_UPDATED");
+      "STUDY_ACTIVE_TASK_SAVED_OR_UPDATED"),
+
+  STUDY_ACTIVE_TASK_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Active task deleted (activity ID - ${activetask_id}).",
+      "STUDY_ACTIVE_TASK_DELETED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

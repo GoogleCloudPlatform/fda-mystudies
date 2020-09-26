@@ -8,6 +8,7 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
@@ -32,6 +33,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 public class StudyActiveTasksControllerTest extends BaseMockIT {
 
   private static final String STUDY_ID_VALUE = "678574";
+
+  private static final String CUSTOM_STUDY_ID_VALUE = "678590";
 
   private static final String USER_ID_VALUE = "4878641";
 
@@ -123,5 +126,31 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
         .andExpect(view().name("redirect:/adminStudies/viewActiveTask.do#"));
 
     verifyAuditEventCall(STUDY_ACTIVE_TASK_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldDeleteStudyActiveTask() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put("0" + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, CUSTOM_STUDY_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.DELETE_ACTIVE_TASK.getPath())
+                .headers(headers)
+                .param("activeTaskInfoId", "28500")
+                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyAuditEventCall(STUDY_ACTIVE_TASK_DELETED);
   }
 }

@@ -15,7 +15,9 @@ public enum PathMappingUri {
 
   ACTIVE_TASK_MARK_AS_COMPLETED("/adminStudies/activeTAskMarkAsCompleted.do"),
 
-  SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT("/adminStudies/saveOrUpdateActiveTaskContent.do");
+  SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT("/adminStudies/saveOrUpdateActiveTaskContent.do"),
+
+  DELETE_ACTIVE_TASK("/adminStudies/deleteActiveTask.do");
 
   private final String path;
 

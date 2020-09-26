@@ -23,7 +23,10 @@
 
 package com.fdahpstudydesigner.dao;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
+
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo;
@@ -38,12 +41,18 @@ import com.fdahpstudydesigner.bo.StatisticImageListBo;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.bo.StudyVersionBo;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -59,6 +68,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
   private static Logger logger = Logger.getLogger(StudyActiveTasksDAOImpl.class.getName());
   @Autowired private AuditLogDAO auditLogDAO;
+  @Autowired private HttpServletRequest request;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
   HibernateTemplate hibernateTemplate;
   private Query query = null;
   String queryString = "";
@@ -77,7 +88,12 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     String deleteQuery = "";
     String activity = "";
     String activityDetails = "";
+    StudyBuilderAuditEvent eventEnum = null;
+    Map<String, String> values = new HashMap<String, String>();
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
+      auditRequest.setStudyId(customStudyId);
       session = hibernateTemplate.getSessionFactory().openSession();
       if (activeTaskBo != null) {
         Integer studyId = activeTaskBo.getStudyId();
@@ -139,6 +155,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
               "delete ActiveTaskAtrributeValuesBo where activeTaskId=" + activeTaskBo.getId();
           deleteQuery = "delete ActiveTaskBo where id=" + activeTaskBo.getId();
 
+          values.put("activetask_id", activeTaskBo.getId().toString());
+          eventEnum = STUDY_ACTIVE_TASK_DELETED;
           activity = "Active Task was deleted.";
           activityDetails =
               "Active Task was deleted. (Active Task Key = "
@@ -159,7 +177,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         query.executeUpdate();
 
         message = FdahpStudyDesignerConstants.SUCCESS;
-
+        auditLogEvEntHelper.logEvent(eventEnum, auditRequest, values);
         auditLogDAO.saveToAuditLog(
             session,
             transaction,
