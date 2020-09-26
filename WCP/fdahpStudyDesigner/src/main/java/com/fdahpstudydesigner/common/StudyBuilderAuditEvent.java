@@ -19,7 +19,6 @@ public enum StudyBuilderAuditEvent {
 
   USER_SIGNOUT_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "USER_SIGNOUT_FAILED"),
 
-
   STUDY_NEW_NOTIFICATION_CREATED(
       STUDY_BUILDER,
       STUDY_DATASTORE,
@@ -82,8 +81,59 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       "Account details viewed in My Account section.",
-      "ACCOUNT_DETAILS_VIEWED");
+      "ACCOUNT_DETAILS_VIEWED"),
 
+  STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE"),
+
+  STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Questionnaire saved/updated (activity ID - ${questionnaire_id}).",
+      "STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED"),
+
+  STUDY_QUESTIONNAIRE_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Questionnaire deleted (activity ID - ${questionnaire_id}).",
+      "STUDY_QUESTIONNAIRE_DELETED"),
+
+  STUDY_QUESTION_STEP_IN_FORM_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Question step in form deleted (activity ID - ${questionnaire_id}, form ID - ${form_id}, step ID - ${step_id}).",
+      "STUDY_QUESTION_STEP_IN_FORM_DELETED"),
+
+  STUDY_NEW_ACTIVE_TASK_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New Active task created (activity ID - ${activetask_id}).",
+      "STUDY_NEW_ACTIVE_TASK_CREATED"),
+
+  STUDY_FORM_STEP_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Form step deleted (activity ID - ${questionnaire_id}, step ID - ${step_id}).",
+      "STUDY_FORM_STEP_DELETED"),
+
+  STUDY_INSTRUCTION_STEP_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Instruction step deleted (activity ID - ${questionnaire_id}, step ID - ${step_id}).",
+      "STUDY_INSTRUCTION_STEP_DELETED"),
+
+  STUDY_QUESTION_STEP_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Question step deleted (activity ID - ${questionnaire_id}, step ID - ${step_id}).",
+      "STUDY_QUESTION_STEP_DELETED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

@@ -1,28 +1,23 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Copyright 2020 Google LLC
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_ACTIVE_TASK_CREATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_IN_FORM_DELETED;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.FORM_ID;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.QUESTION_ID;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.STEP_ID;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
@@ -36,6 +31,9 @@ import com.fdahpstudydesigner.bo.QuestionnairesStepsBo;
 import com.fdahpstudydesigner.bo.QuestionsBo;
 import com.fdahpstudydesigner.bo.StatisticImageListBo;
 import com.fdahpstudydesigner.bo.StudyBo;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
@@ -76,6 +74,8 @@ public class StudyQuestionnaireController {
   @Autowired private StudyQuestionnaireService studyQuestionnaireService;
 
   @Autowired private StudyService studyService;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @RequestMapping("/adminStudies/copyQuestionnaire.do")
   public ModelAndView copyStudyQuestionnaire(
@@ -168,6 +168,7 @@ public class StudyQuestionnaireController {
     JSONObject questionnaireJsonObject = null;
     String customStudyId = "";
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -195,11 +196,19 @@ public class StudyQuestionnaireController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("questionnairesId"))
                 ? ""
                 : request.getParameter("questionnairesId");
+        auditRequest.setCorrelationId(sesObj.getSessionId());
+        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
+        auditRequest.setStudyId(customStudyId);
         if (!formId.isEmpty() && !questionId.isEmpty()) {
           message =
               studyQuestionnaireService.deleteFromStepQuestion(
                   Integer.valueOf(formId), Integer.valueOf(questionId), sesObj, customStudyId);
           if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
+            Map<String, String> values = new HashMap<>();
+            values.put(QUESTION_ID, questionId.toString());
+            values.put(FORM_ID, formId.toString());
+            values.put(STEP_ID, formId.toString());
+            auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_IN_FORM_DELETED, auditRequest, values);
             questionnairesStepsBo =
                 studyQuestionnaireService.getQuestionnaireStep(
                     Integer.valueOf(formId),
@@ -265,9 +274,12 @@ public class StudyQuestionnaireController {
     String customStudyId = "";
     String actMsg = "";
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
+      auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
@@ -290,6 +302,7 @@ public class StudyQuestionnaireController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("questionnaireId"))
                 ? ""
                 : request.getParameter("questionnaireId");
+        auditRequest.setStudyId(customStudyId);
         if (!studyId.isEmpty() && !questionnaireId.isEmpty()) {
           message =
               studyQuestionnaireService.deletQuestionnaire(
@@ -297,6 +310,12 @@ public class StudyQuestionnaireController {
                   Integer.valueOf(questionnaireId),
                   sesObj,
                   customStudyId);
+          if (message == FdahpStudyDesignerConstants.SUCCESS) {
+            Map<String, String> values = new HashMap<>();
+            values.put(QUESTION_ID, questionnaireId);
+            auditLogEventHelper.logEvent(STUDY_QUESTIONNAIRE_DELETED, auditRequest, values);
+          }
+
           questionnaires =
               studyQuestionnaireService.getStudyQuestionnairesByStudyId(studyId, false);
           if ((questionnaires != null) && !questionnaires.isEmpty()) {
@@ -1360,9 +1379,9 @@ public class StudyQuestionnaireController {
         if (StringUtils.isNotEmpty(studyId)) {
           studyBo = studyService.getStudyById(studyId, sesObj.getUserId());
           /*boolean isExists = studyQuestionnaireService
-          		.isAnchorDateExistsForStudy(
-          				Integer.valueOf(studyId),
-          				studyBo.getCustomStudyId());
+                .isAnchorDateExistsForStudy(
+                        Integer.valueOf(studyId),
+                        studyBo.getCustomStudyId());
           map.addAttribute("isAnchorDate", isExists);*/
           map.addAttribute(FdahpStudyDesignerConstants.STUDY_BO, studyBo);
         }
@@ -2055,7 +2074,10 @@ public class StudyQuestionnaireController {
     ModelMap map = new ModelMap();
     QuestionnaireBo addQuestionnaireBo = null;
     String customStudyId = "";
+    StudyBuilderAuditEvent eventEnum = null;
+    Map<String, String> values = new HashMap<>();
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -2066,11 +2088,14 @@ public class StudyQuestionnaireController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
+        auditRequest.setCorrelationId(sesObj.getSessionId());
+        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         customStudyId =
             (String)
                 request
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
+        auditRequest.setStudyId(customStudyId);
         if (questionnaireBo != null) {
           if (questionnaireBo.getId() != null) {
             questionnaireBo.setModifiedBy(sesObj.getUserId());
@@ -2088,12 +2113,18 @@ public class StudyQuestionnaireController {
                   questionnaireBo, sesObj, customStudyId);
           if (addQuestionnaireBo != null) {
             if (questionnaireBo.getId() != null) {
+              values.put(QUESTION_ID, questionnaireBo.getId().toString());
+              eventEnum = STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
+              auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                       "Questionnaire Updated successfully.");
             } else {
+              values.put("activetask_id", addQuestionnaireBo.getId().toString());
+              eventEnum = STUDY_NEW_ACTIVE_TASK_CREATED;
+              auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
@@ -2106,12 +2137,17 @@ public class StudyQuestionnaireController {
                         .getSession()
                         .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID);
             if (StringUtils.isNotEmpty(studyId)) {
-              studyService.markAsCompleted(
-                  Integer.valueOf(studyId),
-                  FdahpStudyDesignerConstants.QUESTIONNAIRE,
-                  false,
-                  sesObj,
-                  customStudyId);
+              String message =
+                  studyService.markAsCompleted(
+                      Integer.valueOf(studyId),
+                      FdahpStudyDesignerConstants.QUESTIONNAIRE,
+                      false,
+                      sesObj,
+                      customStudyId);
+              if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+                eventEnum = STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
+                auditLogEventHelper.logEvent(eventEnum, auditRequest);
+              }
             }
             map.addAttribute("_S", sessionStudyCount);
             mav = new ModelAndView("redirect:/adminStudies/viewStudyQuestionnaires.do", map);
@@ -2126,6 +2162,7 @@ public class StudyQuestionnaireController {
           }
         }
       }
+      // auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Error", e);
     }
@@ -2340,6 +2377,7 @@ public class StudyQuestionnaireController {
     QuestionnaireBo questionnaireBo = null;
     String customStudyId = "";
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -2390,6 +2428,7 @@ public class StudyQuestionnaireController {
                 studyQuestionnaireService.saveOrUpdateQuestionnaire(
                     questionnaireBo, sesObj, customStudyId);
             if (updateQuestionnaireBo != null) {
+              // TODO:STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED
               jsonobject.put("questionnaireId", updateQuestionnaireBo.getId());
               if (updateQuestionnaireBo.getQuestionnairesFrequenciesBo() != null) {
                 jsonobject.put(
