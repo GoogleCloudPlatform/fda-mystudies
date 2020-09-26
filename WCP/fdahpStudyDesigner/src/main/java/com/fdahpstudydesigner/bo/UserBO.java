@@ -142,6 +142,9 @@ public class UserBO implements Serializable {
   @Column(name = "password")
   private String userPassword;
 
+  @Column(name = "access_level")
+  private String accessLevel;
+
   public String getAccessCode() {
     return accessCode;
   }
@@ -356,5 +359,13 @@ public class UserBO implements Serializable {
 
   public void setUserPassword(String userPassword) {
     this.userPassword = userPassword;
+  }
+
+  public String getAccessLevel() {
+    return accessLevel;
+  }
+
+  public void setAccessLevel(String accessLevel) {
+    this.accessLevel = accessLevel;
   }
 }

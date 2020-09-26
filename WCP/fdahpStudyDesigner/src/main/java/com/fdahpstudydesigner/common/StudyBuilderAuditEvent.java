@@ -104,6 +104,48 @@ public enum StudyBuilderAuditEvent {
 
   PASSWORD_RESET_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_RESET_FAILED"),
 
+  PASSWORD_CHANGE_ENFORCED_FOR_USER(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Password change enforced for user (user id - ${edited_user_id}).",
+      "PASSWORD_CHANGE_ENFORCED_FOR_USER"),
+
+  PASSWORD_ENFORCEMENT_EMAIL_SENT(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      "Password change enforcement email sent to user ID- '${edited_user_id}'.",
+      "PASSWORD_ENFORCEMENT_EMAIL_SENT"),
+
+  PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      "Password change enforcement email failed to be sent to User ID '${edited_user_id}'.",
+      "PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED"),
+
+  PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      "Password change enforcement email sent to all users barring superadmin(s).",
+      "PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT"),
+
+  NEW_USER_INVITATION_EMAIL_FAILED(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      "Invitation email failed to be sent to new user (user ID - ${new_user_id}).",
+      "NEW_USER_INVITATION_EMAIL_FAILED"),
+
+  PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      "Password change enforcement email failed to 1 or more users (barring superadmins).",
+      "PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED"),
+
   PASSWORD_HELP_REQUESTED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_HELP_REQUESTED");
 
   private final PlatformComponent source;
@@ -131,5 +173,6 @@ public enum StudyBuilderAuditEvent {
 
     public static final String USER_ID = "new_user_id";
     public static final String ACCESS_LEVEL = "new_user_access_level";
+    public static final String EDITED_USER_ID = "edited_user_id";
   }
 }

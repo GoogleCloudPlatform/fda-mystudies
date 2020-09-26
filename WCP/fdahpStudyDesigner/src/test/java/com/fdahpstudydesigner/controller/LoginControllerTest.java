@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 public class LoginControllerTest extends BaseMockIT {
 
@@ -193,4 +195,60 @@ public class LoginControllerTest extends BaseMockIT {
     verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
     verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);
   }
+
+  @Test
+  public void shouldAddPassword() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    UserBO userBO = new UserBO();
+    userBO.setFirstName("updated_first_name");
+    userBO.setLastName("updated_last_name");
+    userBO.setPhoneNumber("654665146432");
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.ADD_PASSWORD.getPath())
+            .param("accessCode", "ja67Ll")
+            .param("password", "Password@1234")
+            .param("securityToken", "N8K7zYrc0F")
+            .param("_csrf", "")
+            .headers(headers)
+            .sessionAttrs(getSessionAttributes());
+
+    addParams(requestBuilder, userBO);
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:login.do"));
+
+    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
+  }
+
+  /*@Test
+  public void shouldNotAddPasswordForInvalidSerurityToken() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    UserBO userBO = new UserBO();
+    userBO.setFirstName("updated_first_name");
+    userBO.setLastName("updated_last_name");
+    userBO.setPhoneNumber("654665146432");
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.ADD_PASSWORD.getPath())
+            .param("accessCode", "ja67Ll")
+            .param("password", "Password@1234")
+            .param("securityToken", "fn7zYrc0F")
+            .param("_csrf", "")
+            .headers(headers)
+            .sessionAttrs(getSessionAttributes());
+
+    addParams(requestBuilder, userBO);
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:login.do"));
+
+    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE);
+  }*/
 }

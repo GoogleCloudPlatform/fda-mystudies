@@ -23,9 +23,33 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_RESENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_USER;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_ENFORCEMENT_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bean.StudyListBean;
+import com.fdahpstudydesigner.bo.RoleBO;
+import com.fdahpstudydesigner.bo.StudyBo;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent.Constants;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.service.LoginService;
+import com.fdahpstudydesigner.service.StudyService;
+import com.fdahpstudydesigner.service.UsersService;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -40,16 +64,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import com.fdahpstudydesigner.bean.StudyListBean;
-import com.fdahpstudydesigner.bo.RoleBO;
-import com.fdahpstudydesigner.bo.StudyBo;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.service.LoginService;
-import com.fdahpstudydesigner.service.StudyService;
-import com.fdahpstudydesigner.service.UsersService;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.SessionObject;
 
 @Controller
 public class UsersController {
@@ -61,6 +75,8 @@ public class UsersController {
   @Autowired private StudyService studyService;
 
   @Autowired private UsersService usersService;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
@@ -295,10 +311,13 @@ public class UsersController {
     String msg = "";
     List<String> emails = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
       HttpSession session = request.getSession();
       SessionObject userSession =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      auditRequest.setCorrelationId(userSession.getSessionId().toUpperCase());
+      auditRequest.setUserId(String.valueOf(userSession.getUserId()));
       String changePassworduserId =
           FdahpStudyDesignerUtil.isEmpty(request.getParameter("changePassworduserId"))
               ? ""
@@ -312,17 +331,42 @@ public class UsersController {
           msg = usersService.enforcePasswordChange(Integer.parseInt(changePassworduserId), emailId);
           if (StringUtils.isNotEmpty(msg)
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-            loginService.sendPasswordResetLinkToMail(request, emailId, "", "enforcePasswordChange");
+            Map<String, String> values = new HashMap<>();
+            values.put(Constants.EDITED_USER_ID, changePassworduserId);
+            auditLogEvEntHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_USER, auditRequest, values);
+
+            String sent =
+                loginService.sendPasswordResetLinkToMail(
+                    request, emailId, "", "enforcePasswordChange");
+            if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
+              auditLogEvEntHelper.logEvent(PASSWORD_ENFORCEMENT_EMAIL_SENT, auditRequest, values);
+            } else {
+              auditLogEvEntHelper.logEvent(
+                  PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED, auditRequest, values);
+            }
           }
         } else {
           msg = usersService.enforcePasswordChange(null, "");
           if (StringUtils.isNotEmpty(msg)
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
+            auditLogEvEntHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS, auditRequest);
             emails = usersService.getActiveUserEmailIds();
             if ((emails != null) && !emails.isEmpty()) {
+              boolean allSent = false;
               for (String email : emails) {
-                loginService.sendPasswordResetLinkToMail(
-                    request, email, "", "enforcePasswordChange");
+                String sent =
+                    loginService.sendPasswordResetLinkToMail(
+                        request, email, "", "enforcePasswordChange");
+                if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
+                  allSent = true;
+                }
+              }
+              if (allSent) {
+                auditLogEvEntHelper.logEvent(
+                    PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT, auditRequest);
+              } else {
+                auditLogEvEntHelper.logEvent(
+                    PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED, auditRequest);
               }
             }
           }
@@ -394,6 +438,7 @@ public class UsersController {
     String msg = "";
     UserBO userBo = null;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
       HttpSession session = request.getSession();
       SessionObject userSession =
@@ -404,6 +449,8 @@ public class UsersController {
                 ? ""
                 : request.getParameter("userId");
         if (StringUtils.isNotEmpty(userId)) {
+          auditRequest.setCorrelationId(userSession.getSessionId().toUpperCase());
+          auditRequest.setUserId(String.valueOf(userSession.getUserId()));
           userBo = usersService.getUserDetails(Integer.parseInt(userId));
           if (userBo != null) {
             msg =
@@ -416,6 +463,9 @@ public class UsersController {
                 .setAttribute(
                     FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get("resent.link.success.message"));
+            Map<String, String> values = new HashMap<>();
+            values.put(Constants.USER_ID, String.valueOf(userId));
+            auditLogEvEntHelper.logEvent(NEW_USER_INVITATION_RESENT, auditRequest, values);
           } else {
             request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
           }
@@ -441,6 +491,8 @@ public class UsersController {
     String actionPage = FdahpStudyDesignerConstants.VIEW_PAGE;
     List<Integer> permissions = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
       if (FdahpStudyDesignerUtil.isSession(request)) {
         String userId =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("userId"))
@@ -456,6 +508,17 @@ public class UsersController {
             if (null != userBO) {
               studyBOs = studyService.getStudyListByUserId(userBO.getUserId());
               permissions = usersService.getPermissionsByUserId(userBO.getUserId());
+
+              HttpSession session = request.getSession();
+              SessionObject sesObj =
+                  (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+              auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
+              auditRequest.setCorrelationId(sesObj.getSessionId());
+              if (sesObj.getUserId().equals(userBO.getUserId())) {
+                auditLogEvEntHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
+              } else {
+                auditLogEvEntHelper.logEvent(USER_RECORD_VIEWED, auditRequest);
+              }
             }
           }
           roleBOList = usersService.getUserRoleList();

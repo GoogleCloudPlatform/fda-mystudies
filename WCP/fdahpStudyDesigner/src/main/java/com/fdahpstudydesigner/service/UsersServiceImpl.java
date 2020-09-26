@@ -23,21 +23,32 @@
 
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATION_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bo.RoleBO;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent.Constants;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.dao.AuditLogDAO;
+import com.fdahpstudydesigner.dao.UsersDAO;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.util.EmailNotification;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.fdahpstudydesigner.bo.RoleBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
-import com.fdahpstudydesigner.dao.UsersDAO;
-import com.fdahpstudydesigner.util.EmailNotification;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.SessionObject;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -45,6 +56,8 @@ public class UsersServiceImpl implements UsersService {
   private static Logger logger = Logger.getLogger(UsersServiceImpl.class);
 
   @Autowired private AuditLogDAO auditLogDAO;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
   @Autowired LoginService loginService;
 
@@ -145,6 +158,8 @@ public class UsersServiceImpl implements UsersService {
     boolean addFlag = false;
     String activity = "";
     String activityDetail = "";
+    List<StudyBuilderAuditEvent> auditLogEvents = new LinkedList<>();
+    Map<String, String> values = new HashMap<>();
     boolean emailIdChange = false;
     List<String> superAdminEmailList = null;
     Map<String, String> keyValueForSubject = null;
@@ -152,6 +167,9 @@ public class UsersServiceImpl implements UsersService {
     UserBO adminFullNameIfSizeOne = null;
     UserBO userBO3 = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(userSession.getSessionId());
+      auditRequest.setUserId(String.valueOf(userSession.getUserId()));
       if (null == userBO.getUserId()) {
         addFlag = true;
         userBO2 = new UserBO();
@@ -194,34 +212,22 @@ public class UsersServiceImpl implements UsersService {
           usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
       if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         if (addFlag) {
-          activity = "User account created.";
-          activityDetail =
-              "New user created and Invite sent to user to activate account. (Account Details:- First Name = "
-                  + userBO.getFirstName()
-                  + " Last Name = "
-                  + userBO.getLastName()
-                  + ", Email ="
-                  + userBO.getUserEmail()
-                  + ")";
+          values.put(Constants.USER_ID, String.valueOf(userBO.getUserId()));
+          values.put(Constants.ACCESS_LEVEL, userBO.getAccessLevel());
           msg =
               loginService.sendPasswordResetLinkToMail(request, userBO2.getUserEmail(), "", "USER");
+          auditLogEvents.add(NEW_USER_CREATED);
+          if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
+            auditLogEvents.add(NEW_USER_INVITATION_EMAIL_SENT);
+          } else {
+            auditLogEvents.add(NEW_USER_INVITATION_EMAIL_FAILED);
+          }
         }
         if (!addFlag) {
-          activity = "User account updated.";
-          activityDetail =
-              "User account details updated. (Previous Account Details:- First Name = "
-                  + userBO3.getFirstName()
-                  + ", Last Name = "
-                  + userBO3.getLastName()
-                  + ", Email ="
-                  + userBO3.getUserEmail()
-                  + ") (New Account Details:- First Name = "
-                  + userBO.getFirstName()
-                  + ", Last Name = "
-                  + userBO.getLastName()
-                  + ", Email ="
-                  + userBO.getUserEmail()
-                  + ")";
+          values.put(Constants.EDITED_USER_ID, String.valueOf(userSession.getUserId()));
+          values.put(Constants.ACCESS_LEVEL, userSession.getAccessLevel());
+          auditLogEvents.add(USER_RECORD_UPDATED);
+
           if (emailIdChange) {
             msg =
                 loginService.sendPasswordResetLinkToMail(
@@ -232,14 +238,7 @@ public class UsersServiceImpl implements UsersService {
                     request, userBO2.getUserEmail(), "", "USER_UPDATE");
           }
         }
-        auditLogDAO.saveToAuditLog(
-            null,
-            null,
-            userSession,
-            activity,
-            activityDetail,
-            "UsersDAOImpl - addOrUpdateUserDetails()");
-
+        auditLogHelper.logEvent(auditLogEvents, auditRequest, values);
         superAdminEmailList = usersDAO.getSuperAdminList();
         if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)
             && (superAdminEmailList != null)
@@ -282,6 +281,8 @@ public class UsersServiceImpl implements UsersService {
                 "mailForAdminUserUpdateSubject", dynamicContent, null, superAdminEmailList, null);
           }
         }
+      } else {
+        auditLogHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
       }
     } catch (Exception e) {
       logger.error("UsersServiceImpl - addOrUpdateUserDetails() - ERROR", e);
