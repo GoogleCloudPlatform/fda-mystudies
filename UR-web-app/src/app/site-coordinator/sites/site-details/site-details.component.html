@@ -555,13 +555,16 @@
 
     <ng-template #addParticipants>
       <div class="modal-body modal__body">
-        <div class="modal-body modal__body">
-          <app-add-email
-            [siteId]="siteId"
-            (addEmail)="onSucceedAddEmail()"
-            (cancel)="modalRef.hide()"
-          ></app-add-email>
-        </div>
+        <app-add-email
+          [siteId]="siteId"
+          (addEmail)="onSucceedAddEmail()"
+          (cancel)="modalRef.hide()"
+        ></app-add-email>
+        <app-import-email-list
+          [siteId]="siteId"
+          (import)="onFileImportSuccess()"
+          (cancel)="modalRef.hide()"
+        ></app-import-email-list>
       </div>
     </ng-template>
   </div>
