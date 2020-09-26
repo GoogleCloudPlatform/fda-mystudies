@@ -344,6 +344,11 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
 
+    String forgotPasswordRedirectUrl =
+        redirectConfig.getForgotPasswordUrl(MobilePlatform.UNKNOWN.getValue());
+    String termsRedirectUrl = redirectConfig.getTermsUrl(MobilePlatform.UNKNOWN.getValue());
+    String aboutRedirectUrl = redirectConfig.getAboutUrl(MobilePlatform.UNKNOWN.getValue());
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -352,6 +357,9 @@ public class LoginControllerTest extends BaseMockIT {
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(view().name(LOGIN_VIEW_NAME))
+        .andExpect(content().string(containsString(forgotPasswordRedirectUrl)))
+        .andExpect(content().string(containsString(termsRedirectUrl)))
+        .andExpect(content().string(containsString(aboutRedirectUrl)))
         .andExpect(content().string(containsString(INVALID_LOGIN_CREDENTIALS.getDescription())));
   }
 
