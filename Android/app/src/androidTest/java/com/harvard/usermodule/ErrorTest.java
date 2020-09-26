@@ -31,7 +31,7 @@ public class ErrorTest {
   private static final String URL = "app://gcp/mystudies/error";
 
   @Rule
-  public ActivityTestRule<Error> activityRule = new ActivityTestRule<>(Error.class, true, false);
+  public ActivityTestRule<AuthServerErrorHandler> activityRule = new ActivityTestRule<>(AuthServerErrorHandler.class, true, false);
 
   @Test
   public void errorTest() {

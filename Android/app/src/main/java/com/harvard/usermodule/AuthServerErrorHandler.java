@@ -19,19 +19,19 @@ import com.harvard.R;
 import com.harvard.gatewaymodule.GatewayActivity;
 import com.harvard.studyappmodule.StandaloneActivity;
 
-public class Error extends AppCompatActivity {
+public class AuthServerErrorHandler extends AppCompatActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    Toast.makeText(Error.this, getString(R.string.filter_error), Toast.LENGTH_SHORT).show();
+    Toast.makeText(AuthServerErrorHandler.this, getString(R.string.filter_error), Toast.LENGTH_SHORT).show();
     if (AppConfig.AppType.equalsIgnoreCase(getString(R.string.app_gateway))) {
-      Intent intent = new Intent(Error.this, GatewayActivity.class);
+      Intent intent = new Intent(AuthServerErrorHandler.this, GatewayActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
       startActivity(mainIntent);
       finish();
     } else {
-      Intent intent = new Intent(Error.this, StandaloneActivity.class);
+      Intent intent = new Intent(AuthServerErrorHandler.this, StandaloneActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
       startActivity(mainIntent);

@@ -113,7 +113,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".usermodule.Error"
+            android:name=".usermodule.AuthServerErrorHandler"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoActionBar"
