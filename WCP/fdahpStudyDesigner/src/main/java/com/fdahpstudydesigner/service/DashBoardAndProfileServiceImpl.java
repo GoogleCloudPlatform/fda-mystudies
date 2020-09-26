@@ -23,12 +23,19 @@
 
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.DashBoardAndProfileDAO;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +48,10 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
   @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private DashBoardAndProfileDAO dashBoardAndProfiledao;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
+
+  @Autowired private HttpServletRequest request;
 
   @Override
   public MasterDataBO getMasterData(String type) {
@@ -66,27 +77,18 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
     String message = FdahpStudyDesignerConstants.FAILURE;
     String activity = "";
     String activityDetail = "";
+    StudyBuilderAuditEvent auditLogEvent = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setUserId(String.valueOf(userId));
+      auditRequest.setCorrelationId(userSession.getSessionId());
       message = dashBoardAndProfiledao.updateProfileDetails(userBO, userId);
       if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
-        activity = "Profile details updated.";
-        activityDetail =
-            "Profile details updated successfully. (Account Details:- First Name = "
-                + userBO.getFirstName()
-                + ", Last Name = "
-                + userBO.getLastName()
-                + " ,Email = "
-                + userBO.getUserEmail()
-                + ")";
-        // Audit log capturing the action performed
-        auditLogDAO.saveToAuditLog(
-            null,
-            null,
-            userSession,
-            activity,
-            activityDetail,
-            "DashBoardAndProfileDAOImpl - updateProfileDetails()");
+        auditLogEvent = USER_ACCOUNT_UPDATED;
+      } else {
+        auditLogEvent = USER_ACCOUNT_UPDATED_FAILED;
       }
+      auditLogHelper.logEvent(auditLogEvent, auditRequest);
     } catch (Exception e) {
       logger.error("DashBoardAndProfileServiceImpl - updateProfileDetails() - Error", e);
     }

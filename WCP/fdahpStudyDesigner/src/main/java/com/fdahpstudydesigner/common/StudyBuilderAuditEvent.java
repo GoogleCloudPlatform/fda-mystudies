@@ -111,6 +111,51 @@ public enum StudyBuilderAuditEvent {
       "Password change enforced for user (user id - ${edited_user_id}).",
       "PASSWORD_CHANGE_ENFORCED_FOR_USER"),
 
+  STUDY_NEW_NOTIFICATION_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New notification created (notification ID - ${notification_id}).",
+      "STUDY_NEW_NOTIFICATION_CREATED"),
+
+  STUDY_NOTIFICATION_SAVED_OR_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Notification saved/updated (notification ID - ${notification_id}).",
+      "STUDY_NOTIFICATION_SAVED_OR_UPDATED"),
+
+  STUDY_NOTIFICATION_MARKED_COMPLETE(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Notification marked done/complete (notification ID - ${notification_id}).",
+      "STUDY_NOTIFICATION_MARKED_COMPLETE"),
+
+  APP_LEVEL_NOTIFICATION_LIST_VIEWED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "APP_LEVEL_NOTIFICATION_LIST_VIEWED"),
+
+  APP_LEVEL_NOTIFICATION_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "App-level notification created. Notification ID : '${notification_id}'",
+      "APP_LEVEL_NOTIFICATION_CREATED"),
+
+  APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "App-level notification replicated for resend, by user. Existing notification ID : '${old_notification_id}', new notification ID : '${new_notification_id}'.",
+      "APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND"),
+
+  USER_ACCOUNT_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Account details updated in My Account section.",
+      "USER_ACCOUNT_UPDATED"),
+
   USER_ACCOUNT_UPDATED_FAILED(
       STUDY_BUILDER,
       STUDY_DATASTORE,

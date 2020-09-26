@@ -23,9 +23,13 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.StudyService;
@@ -59,6 +63,8 @@ public class DashBoardAndProfileController {
   @Autowired private StudyService studyService;
 
   @Autowired private UsersService usersService;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
   @RequestMapping("/adminDashboard/changePassword.do")
   public void changePassword(HttpServletRequest request, HttpServletResponse response) {
@@ -191,6 +197,7 @@ public class DashBoardAndProfileController {
     Integer userId = 0;
     String accountManager = "";
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       HttpSession session = request.getSession();
       SessionObject userSession =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -219,6 +226,9 @@ public class DashBoardAndProfileController {
             if (null != roleBO) {
               userBO.setRoleName(roleBO.getRoleName());
             }
+            auditRequest.setUserId(String.valueOf(userSession.getUserId()));
+            auditRequest.setCorrelationId(userSession.getSessionId());
+            auditLogHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
           }
         }
         map.addAttribute("studyAndPermissionList", studyAndPermissionList);

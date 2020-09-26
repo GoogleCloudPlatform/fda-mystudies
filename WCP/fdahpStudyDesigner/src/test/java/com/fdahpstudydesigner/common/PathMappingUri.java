@@ -27,7 +27,19 @@ public enum PathMappingUri {
 
   RESEND_ACTIVATE_DETAILS_LINK("/adminUsersEdit/resendActivateDetailsLink.do"),
 
-  VIEW_USER_DETAILS("/adminUsersView/viewUserDetails.do");
+  VIEW_USER_DETAILS("/adminUsersView/viewUserDetails.do"),
+
+  VIEW_NOTIFICATION_LIST("/adminNotificationView/viewNotificationList.do"),
+
+  SAVE_OR_UPDATE_NOTIFICATION("/adminNotificationEdit/saveOrUpdateNotification.do"),
+
+  SAVE_OR_UPDATE_STUDY_NOTIFICATION("/adminStudies/saveOrUpdateStudyNotification.do"),
+
+  ADMIN_DASHBOARD_CHANGE_PASSWORD("/adminDashboard/changePassword.do"),
+
+  UPDATE_PROFILE_DETAILS("/adminDashboard/updateUserDetails.do"),
+
+  ADMIN_DASHBOARD_VIEW_USER_DETAILS("/adminDashboard/viewUserDetails.do");
 
   private final String path;
 

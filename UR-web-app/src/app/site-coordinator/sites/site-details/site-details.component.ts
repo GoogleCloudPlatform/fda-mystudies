@@ -19,7 +19,8 @@ const MAXIMUM_USER_COUNT = 10;
   templateUrl: './site-details.component.html',
   styleUrls: ['./site-details.component.scss'],
 })
-export class SiteDetailsComponent extends UnsubscribeOnDestroyAdapter
+export class SiteDetailsComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   query$ = new BehaviorSubject('');
   siteParticipants$: Observable<SiteParticipants> = of();
