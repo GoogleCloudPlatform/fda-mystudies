@@ -25,7 +25,6 @@ export class ForgotPasswordComponent extends UnsubscribeOnDestroyAdapter {
   ) {
     super();
     this.forgotPasswordForm = fb.group({
-      appId: this.cookieService.get('appId'),
       email: '',
     });
   }

@@ -17,7 +17,19 @@ public enum PathMappingUri {
 
   SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT("/adminStudies/saveOrUpdateActiveTaskContent.do"),
 
-  DELETE_ACTIVE_TASK("/adminStudies/deleteActiveTask.do");
+  DELETE_ACTIVE_TASK("/adminStudies/deleteActiveTask.do"),
+
+  VIEW_NOTIFICATION_LIST("/adminNotificationView/viewNotificationList.do"),
+
+  SAVE_OR_UPDATE_NOTIFICATION("/adminNotificationEdit/saveOrUpdateNotification.do"),
+
+  SAVE_OR_UPDATE_STUDY_NOTIFICATION("/adminStudies/saveOrUpdateStudyNotification.do"),
+
+  CHANGE_PASSWORD("/adminDashboard/changePassword.do"),
+
+  UPDATE_PROFILE_DETAILS("/adminDashboard/updateUserDetails.do"),
+
+  VIEW_USER_DETAILS("/adminDashboard/viewUserDetails.do");
 
   private final String path;
 

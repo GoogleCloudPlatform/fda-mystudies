@@ -9,3 +9,5 @@ INSERT INTO `active_task_frequencies` (`id`, `active_task_id`, `frequency_date`,
 INSERT INTO `active_task_custom_frequencies` (`id`, `frequency_start_date`, `frequency_end_date`, `frequency_time`, `active_task_id`, `study_version`, `is_used`, `time_period_from_days`, `time_period_to_days`, `x_days_sign`, `y_days_sign`) VALUES (28500, '2020-03-24', '2020-03-30', '22:07:00', 2862, NULL, 'N', NULL, NULL, b'0', b'0');
 
 INSERT INTO `study_version` (`version_id`, `activity_version`, `custom_study_id`, `study_version`, `consent_version`) VALUES (1979, 1, 67859, 1, 1);
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `role_id`, `created_by`, `modified_by`, `status`, `accountNonExpired`, `accountNonLocked`, `credentialsNonExpired`, `force_logout`) VALUES ('1', 'abc', 'xyx', 'ttt@gmail.com', '$2a$10$uSKnFqkar9ugqrdD1KElcOcPGEtdpuNMvwlHfRGwX4jovq.sH0e/q', '1', '1', '1', '1', '1', '1', '1', 'N');		

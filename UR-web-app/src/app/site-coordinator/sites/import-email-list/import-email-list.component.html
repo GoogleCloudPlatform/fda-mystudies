@@ -1,0 +1,39 @@
+<div class="modal-body modal__body">
+  <div class="row border__bottom__c4d1e6">
+    <div class="col-xs-12 col-md-12 p-none">
+      <div class="upload-btn-wrapper form-group border-radius__77">
+        <button class="primary__btn font__bold">Choose file</button>
+        <span class="participant__label ml-sm">{{ fileName }}</span>
+        <input
+          type="file"
+          type="hidden"
+          #importedFile
+          type="file"
+          accept=".xlsx"
+          class="btn btn-success"
+          id="import_participant_file"
+          (change)="fileChange($event)"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="p-xlg flex__justify__space-between">
+    <div>
+      <button
+        name="buttonImport"
+        class="primary__btn font__bold btn bt__add mr-sm"
+        (click)="importParticipants()"
+      >
+        Import
+      </button>
+      <button
+        name="buttonCancel"
+        type="button"
+        class="btn bt__cancel"
+        (click)="cancelled()"
+      >
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>

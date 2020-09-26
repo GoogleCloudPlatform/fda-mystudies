@@ -27,7 +27,7 @@ public class TestUtils {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add("appId", "GCPMS001");
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "RESPONSE DATASTORE");
     return headers;
   }
 
@@ -40,7 +40,7 @@ public class TestUtils {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add("appId", "GCPMS001");
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "RESPONSE DATASTORE");
     return headers;
   }
 }

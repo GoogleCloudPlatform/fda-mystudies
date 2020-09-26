@@ -22,11 +22,18 @@
 
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPasswordHistory;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -54,6 +61,10 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   private static Logger logger = Logger.getLogger(LoginServiceImpl.class.getName());
 
   @Autowired private AuditLogDAO auditLogDAO;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
+
+  @Autowired private HttpServletRequest request;
 
   private LoginDAOImpl loginDAO;
 
@@ -197,7 +208,11 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     String activity = "";
     String activityDetail = "";
     int countPassChar = 0;
+    StudyBuilderAuditEvent eventEnum = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
+      auditRequest.setUserId(String.valueOf(userId));
       if ((newPassword != null)
           && (newPassword.contains(sesObj.getFirstName())
               || newPassword.contains(sesObj.getLastName()))) {
@@ -237,11 +252,13 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
             if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
               loginDAO.updatePasswordHistory(
                   userId, FdahpStudyDesignerUtil.getEncryptedPassword(newPassword));
-              activity = "Change password.";
-              activityDetail = "User successfully changed his/her password.";
+              eventEnum = PASSWORD_CHANGE_SUCCEEDED;
               auditLogDAO.saveToAuditLog(
                   null, null, sesObj, activity, activityDetail, "LoginDAOImpl - changePassword");
+            } else {
+              eventEnum = PASSWORD_CHANGE_FAILED;
             }
+            auditLogHelper.logEvent(eventEnum, auditRequest);
           } else {
             message = oldPasswordError.replace("$countPass", passwordCount);
           }
