@@ -30,6 +30,4 @@ public class ResetPasswordRequest {
   @Size(max = 100)
   @NotBlank
   private String appId;
-
-  @ToString.Exclude private String userId;
 }

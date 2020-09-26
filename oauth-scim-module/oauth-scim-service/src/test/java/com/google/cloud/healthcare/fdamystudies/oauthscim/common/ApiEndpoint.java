@@ -36,7 +36,9 @@ public enum ApiEndpoint {
 
   UPDATE_EMAIL_STATUS("http://localhost:8002/oauth-scim-service/users/{userId}"),
 
-  DELETE_USER("http://localhost:8002/oauth-scim-service/users/{userId}");
+  DELETE_USER("http://localhost:8002/oauth-scim-service/users/{userId}"),
+
+  CALLBACK("http://localhost:8002/oauth-scim-service/callback");
 
   private String url;
 
