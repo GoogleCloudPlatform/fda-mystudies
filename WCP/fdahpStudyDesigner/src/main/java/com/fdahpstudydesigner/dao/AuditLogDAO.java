@@ -23,11 +23,11 @@
 
 package com.fdahpstudydesigner.dao;
 
+import com.fdahpstudydesigner.bo.AuditLogBO;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import com.fdahpstudydesigner.bo.AuditLogBO;
-import com.fdahpstudydesigner.util.SessionObject;
 
 public interface AuditLogDAO {
 

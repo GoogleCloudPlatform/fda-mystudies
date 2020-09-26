@@ -111,6 +111,13 @@ public enum StudyBuilderAuditEvent {
       "Password change enforced for user (user id - ${edited_user_id}).",
       "PASSWORD_CHANGE_ENFORCED_FOR_USER"),
 
+  USER_ACCOUNT_UPDATED_FAILED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Attempt to update account details failed for user in My Account section.",
+      "USER_ACCOUNT_UPDATED_FAILED"),
+
   PASSWORD_ENFORCEMENT_EMAIL_SENT(
       STUDY_DATASTORE,
       STUDY_DATASTORE,
@@ -165,14 +172,5 @@ public enum StudyBuilderAuditEvent {
     this.resourceServer = resourceServer;
     this.description = description;
     this.eventCode = eventCode;
-  }
-
-  public static class Constants {
-
-    private Constants() {}
-
-    public static final String USER_ID = "new_user_id";
-    public static final String ACCESS_LEVEL = "new_user_access_level";
-    public static final String EDITED_USER_ID = "edited_user_id";
   }
 }

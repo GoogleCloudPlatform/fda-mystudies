@@ -1,12 +1,12 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATION_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -45,13 +45,24 @@ public class UsersControllerTest extends BaseMockIT {
   public void shouldUserRecordViewed() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
+    SessionObject session = new SessionObject();
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setEmail("super@gmail.com");
+    session.setFirstName("firstname");
+    session.setLastName("lastname");
+    session.setAccessLevel("2");
+    session.setUserId(1);
+
+    HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
     mockMvc
         .perform(
             post(PathMappingUri.VIEW_USER_DETAILS.getPath())
                 .param("userId", "2")
                 .param("checkViewRefreshFlag", "true")
                 .headers(headers)
-                .sessionAttrs(getSession()))
+                .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(view().name("addOrEditUserPage"));
@@ -73,8 +84,8 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
-    // Expect LoginDAOImpl throws org.h2.jdbc.JdbcSQLException: Column "BINARY" not found; SQL
-    // statement
+    // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
+    // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
     verifyAuditEventCall(PASSWORD_HELP_EMAIL_FAILED);
   }
 
@@ -95,9 +106,8 @@ public class UsersControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(PASSWORD_CHANGE_ENFORCED_FOR_USER);
 
-    // This event is called beacause LoginDAOImpl: sendPasswordResetLinkToMail throws
-    // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found; SQL
-    // statement
+    // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
+    // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
     verifyAuditEventCall(PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED);
   }
 
@@ -140,42 +150,18 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
-    verifyAuditEventCall(NEW_USER_CREATED);
-    verifyAuditEventCall(NEW_USER_INVITATION_EMAIL_SENT);
-  }
-
-  /*@Test
-  public void shouldUpdateUserDetails() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-
-    mockMvc
-        .perform(
-            post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())
-                .param("userId", "1")
-                .param("manageUsers", "1")
-                .param("manageNotifications", "1")
-                .param("manageStudies", "1")
-                .param("addingNewStudy", "1")
-                .param("selectedStudies", "1")
-                .param("permissionValues", "1")
-                .param("ownUser", "1")
-                .headers(headers)
-                .sessionAttrs(getSession()))
-        .andDo(print())
-        .andExpect(status().isFound())
-        .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
-
-    verifyAuditEventCall(USER_RECORD_UPDATED);
+    // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
+    // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
+    verifyAuditEventCall(USER_ACCOUNT_UPDATED_FAILED);
   }
 
   @Test
-  public void shouldFailAddOrUpdateUserDetails() throws Exception {
+  public void shouldAddUserDetails() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
     mockMvc
         .perform(
             post(PathMappingUri.ADD_OR_UPDATE_USER_DETAILS.getPath())
-                .param("userId", "1")
                 .param("manageUsers", "1")
                 .param("manageNotifications", "1")
                 .param("manageStudies", "1")
@@ -189,8 +175,10 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
+    // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
+    // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
     verifyAuditEventCall(NEW_USER_CREATION_FAILED);
-  }*/
+  }
 
   protected SessionObject getSessionObject() {
     SessionObject session = new SessionObject();
@@ -205,7 +193,7 @@ public class UsersControllerTest extends BaseMockIT {
     session.setEmail("super@gmail.com");
     session.setFirstName("firstname");
     session.setLastName("lastname");
-    session.setAccessLevel("1");
+    session.setAccessLevel("2");
     session.setUserId(2);
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();

@@ -24,6 +24,7 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_DETAILS_VIEWED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATION_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_RESENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_USER;
@@ -31,14 +32,16 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHAN
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_ENFORCEMENT_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.common.StudyBuilderAuditEvent.Constants;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.common.StudyBuilderConstants;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.service.StudyService;
@@ -293,7 +296,13 @@ public class UsersController {
                     propMap.get("update.user.success.message"));
           }
         } else {
+          AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
           request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
+          if (addFlag) {
+            auditLogEvEntHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
+          } else {
+            auditLogEvEntHelper.logEvent(USER_ACCOUNT_UPDATED_FAILED, auditRequest);
+          }
         }
         mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
       }
@@ -332,7 +341,7 @@ public class UsersController {
           if (StringUtils.isNotEmpty(msg)
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             Map<String, String> values = new HashMap<>();
-            values.put(Constants.EDITED_USER_ID, changePassworduserId);
+            values.put(StudyBuilderConstants.EDITED_USER_ID, changePassworduserId);
             auditLogEvEntHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_USER, auditRequest, values);
 
             String sent =
@@ -464,10 +473,11 @@ public class UsersController {
                     FdahpStudyDesignerConstants.SUC_MSG,
                     propMap.get("resent.link.success.message"));
             Map<String, String> values = new HashMap<>();
-            values.put(Constants.USER_ID, String.valueOf(userId));
+            values.put(StudyBuilderConstants.USER_ID, String.valueOf(userId));
             auditLogEvEntHelper.logEvent(NEW_USER_INVITATION_RESENT, auditRequest, values);
           } else {
             request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
+            auditLogEvEntHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
           }
         }
         mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -490,6 +500,7 @@ public class UsersController {
     List<StudyBo> studyBOList = null;
     String actionPage = FdahpStudyDesignerConstants.VIEW_PAGE;
     List<Integer> permissions = null;
+    Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
@@ -517,7 +528,8 @@ public class UsersController {
               if (sesObj.getUserId().equals(userBO.getUserId())) {
                 auditLogEvEntHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
               } else {
-                auditLogEvEntHelper.logEvent(USER_RECORD_VIEWED, auditRequest);
+                values.put("viewed_user_id", userId);
+                auditLogEvEntHelper.logEvent(USER_RECORD_VIEWED, auditRequest, values);
               }
             }
           }
