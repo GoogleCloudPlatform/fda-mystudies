@@ -31,7 +31,7 @@ All files below are relative to the root of the repo.
         and the Ingress.
     * This is forked from service.yaml with modifications for the Terraform
         setup.
-* response-server-module/response-server-service/
+* response-server-module/
   * same as auth-server-ws
 * WCP/
   * same as auth-server-ws
@@ -132,7 +132,7 @@ In each tf-deployment.yaml file listed below (paths are relative to the
 root of the repo):
 
 1. auth-server-ws/tf-deployment.yaml
-1. response-server-module/response-server-service/tf-deployment.yaml
+1. response-server-module/tf-deployment.yaml
 1. WCP/tf-deployment.yaml
 1. WCP-WS/tf-deployment.yaml
 1. user-registration-server-ws/tf-deployment.yaml
