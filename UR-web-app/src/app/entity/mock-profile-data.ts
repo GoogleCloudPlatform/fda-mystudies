@@ -35,3 +35,7 @@ export const expectedChangePasswordResponse = {
 } as ApiResponse;
 
 export const expectedAuthUserId = 'zdxfsdfsdf1';
+
+export const expectedUpdateResponse = {
+  message: 'Profile upadted successfully',
+} as ApiResponse;
