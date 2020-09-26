@@ -43,17 +43,8 @@ public class ApplicationPropertyConfiguration {
   @Value("${register.url}")
   private String authServerRegisterStatusUrl;
 
-  @Value("${interceptor}")
-  private String interceptorUrls;
-
-  @Value("${AUTH_KEY_FCM}")
-  private String authKeyFcm;
-
-  @Value("${API_URL_FCM}")
+  @Value("${messaging.fcm.url}")
   private String apiUrlFcm;
-
-  @Value("${serverApiUrls}")
-  private String serverApiUrls;
 
   @Value("${response.server.url.participant.withdraw}")
   private String withdrawStudyUrl;

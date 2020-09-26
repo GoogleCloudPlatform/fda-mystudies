@@ -19,11 +19,18 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SCOPE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
+import java.util.Collections;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
@@ -54,6 +61,8 @@ public class OAuthController {
 
   @Autowired private OAuthService oauthService;
 
+  @Autowired private AuthScimAuditHelper auditHelper;
+
   @PostMapping(
       value = "/oauth2/token",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -64,18 +73,20 @@ public class OAuthController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
     String grantType = StringUtils.defaultString(paramMap.getFirst(GRANT_TYPE));
-
     // validate required params
     ValidationErrorResponse errors = null;
     switch (grantType) {
       case REFRESH_TOKEN:
         errors = validateRequiredParams(paramMap, REFRESH_TOKEN, REDIRECT_URI, CLIENT_ID, USER_ID);
+
         break;
       case AUTHORIZATION_CODE:
         errors =
             validateRequiredParams(paramMap, CODE, REDIRECT_URI, SCOPE, USER_ID, CODE_VERIFIER);
+
         break;
       default:
         // client_credentials grant type
@@ -88,7 +99,11 @@ public class OAuthController {
     }
 
     // get token from hydra
-    ResponseEntity<?> response = oauthService.getToken(paramMap, headers);
+    ResponseEntity<?> response = oauthService.getToken(paramMap, headers, auditRequest);
+
+    Map<String, String> values = Collections.singletonMap("grant_type", grantType);
+    auditHelper.logEvent(NEW_ACCESS_TOKEN_GENERATED, auditRequest, values);
+
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
 
     return response;
@@ -126,16 +141,21 @@ public class OAuthController {
       HttpServletRequest request,
       @RequestHeader HttpHeaders headers) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    Map<String, String> placeHolders =
+        Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
 
     // validate required params
     ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
     if (errors.hasErrors()) {
+      auditHelper.logEvent(ACCESS_TOKEN_INVALID_OR_EXPIRED, auditRequest, placeHolders);
       logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     // revoke tokens
     ResponseEntity<JsonNode> response = oauthService.introspectToken(paramMap, headers);
+
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
     return response;
   }

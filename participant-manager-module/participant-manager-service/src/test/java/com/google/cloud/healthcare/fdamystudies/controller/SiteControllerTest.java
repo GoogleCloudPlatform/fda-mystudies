@@ -607,9 +607,7 @@ public class SiteControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(2);
 
-    /*  get participantregistrySites for default page (0), limit (10) and sort by created timestamp
-    in descending
-    order*/
+    // get all participantregistrySites if page and limit values are null
 
     mockMvc
         .perform(
@@ -622,12 +620,12 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
         .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
-        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(10)))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(21)))
         .andExpect(jsonPath("$.totalParticipantCount", is(21)))
         .andExpect(
             jsonPath(
-                "$.participantRegistryDetail.registryParticipants[0].email",
-                is(String.valueOf(20) + TestConstants.EMAIL_ID)))
+                "$.participantRegistryDetail.registryParticipants[1].email",
+                is(String.valueOf(1) + TestConstants.EMAIL_ID)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
