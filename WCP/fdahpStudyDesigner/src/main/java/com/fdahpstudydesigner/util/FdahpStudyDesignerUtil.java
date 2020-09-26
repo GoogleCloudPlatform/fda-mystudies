@@ -22,6 +22,9 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.fdahpstudydesigner.bean.FormulaInfoBean;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.bo.UserPermissions;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,10 +51,10 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -67,11 +70,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.web.multipart.MultipartFile;
-import com.fdahpstudydesigner.bean.FormulaInfoBean;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.bo.UserPermissions;
-import com.fdahpstudydesigner.util.PropertiesUtil;
-import net.objecthunter.exp4j.ExpressionBuilder;
 
 public class FdahpStudyDesignerUtil {
 
@@ -267,7 +265,8 @@ public class FdahpStudyDesignerUtil {
         hm.put(key, value);
       }
       ServletContext context = ServletContextHolder.getServletContext();
-      Properties prop = PropertiesUtil.makePropertiesWithEnvironmentVariables("application_local.properties");
+      Properties prop =
+          PropertiesUtil.makePropertiesWithEnvironmentVariables("application_local.properties");
       objectKeys = prop.keys();
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();

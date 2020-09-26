@@ -22,9 +22,9 @@
 
 package com.fdahpstudydesigner.service;
 
-import javax.servlet.http.HttpServletRequest;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
+import javax.servlet.http.HttpServletRequest;
 
 public interface LoginService {
 
