@@ -9,12 +9,12 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.UserAppDetailsDao;
-import com.google.cloud.healthcare.fdamystudies.exceptions.SystemException;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserAppDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserAppDetailsServiceImpl implements UserAppDetailsService {
@@ -23,11 +23,11 @@ public class UserAppDetailsServiceImpl implements UserAppDetailsService {
   @Autowired private UserAppDetailsDao userAppDetailsDao;
 
   @Override
-  public UserAppDetailsBO save(UserAppDetailsBO userAppDetails) throws SystemException {
-
+  @Transactional()
+  public UserAppDetailsEntity save(UserAppDetailsEntity userAppDetails) {
     logger.info("UserAppDetailsServiceImpl save() - starts");
 
-    UserAppDetailsBO dbResponse = null;
+    UserAppDetailsEntity dbResponse = null;
 
     if (userAppDetails != null) {
       dbResponse = userAppDetailsDao.save(userAppDetails);

@@ -7,11 +7,15 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {SiteCoordinatorModule} from './site-coordinator/site-coordinator.module';
 import {LoginCallbackComponent} from './auth/login-callback/login-callback.component';
 import {AuthGuard} from './service/auth.guard';
+
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
-  {path: 'forgot-password', component: ForgotPasswordComponent},
-  {path: 'set-up-account', component: SetUpAccountComponent},
-  {path: 'callback', component: LoginCallbackComponent},
+  {path: 'forgotPassword', component: ForgotPasswordComponent},
+  {path: 'set-up-account/:securityCode', component: SetUpAccountComponent},
+  {
+    path: 'callback',
+    component: LoginCallbackComponent,
+  },
   {
     path: 'coordinator',
     loadChildren: async (): Promise<SiteCoordinatorModule> =>

@@ -28,7 +28,7 @@ public class LocationDetailsResponse extends BaseResponse {
 
   private Integer status;
 
-  private List<String> studies = new ArrayList<>();
+  private List<String> studyNames = new ArrayList<>();
 
   public LocationDetailsResponse(MessageCode messageCode) {
     super(messageCode);
