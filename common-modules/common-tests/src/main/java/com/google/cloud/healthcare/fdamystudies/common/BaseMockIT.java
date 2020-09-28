@@ -228,7 +228,10 @@ public class BaseMockIT {
       AuditLogEventRequest auditRequest = auditRequestByEventCode.get(auditEvent.getEventCode());
 
       assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());
-      assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
+
+      if (auditEvent.getDestination() != null) {
+        assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
+      }
 
       // Use enum value where specified, otherwise, use 'source' header value.
       if (auditEvent.getSource().isPresent()) {

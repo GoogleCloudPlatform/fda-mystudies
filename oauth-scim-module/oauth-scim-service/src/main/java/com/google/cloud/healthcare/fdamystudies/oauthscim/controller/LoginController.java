@@ -52,6 +52,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import java.util.Optional;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -74,6 +75,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.web.util.WebUtils;
 
 @Controller
 public class LoginController {
@@ -147,7 +149,7 @@ public class LoginController {
     logger.entry(String.format("%s request", request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
+    addAttributesToModel(model, mobilePlatform);
 
     if (StringUtils.isNotEmpty(tempRegId)) {
       return redirectToLoginOrConsentPage(tempRegId, loginChallenge, request, response);
@@ -245,12 +247,7 @@ public class LoginController {
 
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
-    model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform));
-    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
-    model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform));
-    model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
-    model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
-    model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
+    addAttributesToModel(model, mobilePlatform);
 
     // tempRegId for auto login after signup
     String tempRegId = qsParams.getFirst(TEMP_REG_ID);
@@ -268,6 +265,15 @@ public class LoginController {
       return LOGIN_VIEW_NAME;
     }
     return LOGIN_VIEW_NAME;
+  }
+
+  private void addAttributesToModel(Model model, String mobilePlatform) {
+    model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform));
+    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
+    model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform));
+    model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+    model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
+    model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {
@@ -288,14 +294,28 @@ public class LoginController {
     return modelView;
   }
 
+  private String getCookieValue(HttpServletRequest request, String cookieName) {
+    Cookie cookie = WebUtils.getCookie(request, cookieName);
+    return cookie != null ? cookie.getValue() : null;
+  }
+
   @ExceptionHandler(ErrorCodeException.class)
   public ModelAndView handleErrorCodeException(HttpServletRequest req, ErrorCodeException ex) {
     logger.error(
         String.format("Request %s failed with an ErrorCodeException", req.getRequestURL()), ex);
+    String mobilePlatform = getCookieValue(req, MOBILE_PLATFORM_COOKIE);
+    mobilePlatform = StringUtils.defaultIfEmpty(mobilePlatform, MobilePlatform.UNKNOWN.getValue());
+
     ModelAndView modelView = new ModelAndView();
+    modelView.setViewName(LOGIN_VIEW_NAME);
     modelView.addObject("loginRequest", new LoginRequest());
     modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
-    modelView.setViewName(LOGIN_VIEW_NAME);
+    modelView.addObject(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform));
+    modelView.addObject(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
+    modelView.addObject(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform));
+    modelView.addObject(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+    modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
+    modelView.addObject(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
     auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
