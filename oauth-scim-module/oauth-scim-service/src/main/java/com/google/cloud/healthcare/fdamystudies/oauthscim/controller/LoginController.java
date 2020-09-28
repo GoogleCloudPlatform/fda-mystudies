@@ -26,14 +26,11 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -77,7 +74,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.WebUtils;
 
 @Controller
 public class LoginController {
@@ -96,35 +92,15 @@ public class LoginController {
 
   @Autowired private AuthScimAuditHelper auditHelper;
 
-  /**
-   * @param loginChallenge is optional. ORY Hydra sends this field as query param when login/consent
-   *     flow is initiated.
-   * @param code ORY Hydra redirects to this path again when the login/consent flow is completed.
-   *     ORY Hydra sends authorization 'code' and no login challenge in query params.
-   * @param request
-   * @param response
-   * @param model
-   * @return
-   */
   @GetMapping(value = "/login")
   public String login(
-      @RequestParam(name = LOGIN_CHALLENGE, required = false) String loginChallenge,
-      @RequestParam(required = false) String code,
-      @CookieValue(name = ACCOUNT_STATUS_COOKIE, required = false) String accountStatus,
+      @RequestParam(name = LOGIN_CHALLENGE) String loginChallenge,
       HttpServletRequest request,
       HttpServletResponse response,
       Model model) {
     logger.entry(String.format("%s request", request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-
     model.addAttribute("loginRequest", new LoginRequest());
-
-    // login/consent flow completed
-    if (StringUtils.isNotBlank(code)) {
-      logger.exit(
-          "login/consent flow completed, redirect to callbackUrl with auth code and userId");
-      return redirectToCallbackUrl(request, code, accountStatus, response, auditRequest);
-    }
 
     // login/consent flow initiated
     if (StringUtils.isEmpty(loginChallenge)) {
@@ -138,12 +114,7 @@ public class LoginController {
     ResponseEntity<JsonNode> loginResponse = oauthService.requestLogin(paramMap);
     if (loginResponse.getStatusCode().is2xxSuccessful()) {
       JsonNode responseBody = loginResponse.getBody();
-      if (skipLogin(responseBody)) {
-        logger.exit("skip login, return to callback URL");
-        return redirectToCallbackUrl(request, code, accountStatus, response, auditRequest);
-      }
-      return redirectToLoginOrAutoLoginPage(
-          response, responseBody, model, loginChallenge, auditRequest);
+      return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
     }
 
     auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
@@ -243,10 +214,6 @@ public class LoginController {
     }
   }
 
-  private boolean skipLogin(JsonNode responseBody) {
-    return responseBody.has(SKIP) && responseBody.get(SKIP).booleanValue();
-  }
-
   private String redirectToConsentPage(
       String loginChallenge,
       String userId,
@@ -261,11 +228,7 @@ public class LoginController {
   }
 
   private String redirectToLoginOrAutoLoginPage(
-      HttpServletResponse response,
-      JsonNode responseBody,
-      Model model,
-      String loginChallenge,
-      AuditLogEventRequest auditRequest) {
+      HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
 
     String requestUrl = responseBody.get("request_url").textValue();
     MultiValueMap<String, String> qsParams =
@@ -305,29 +268,6 @@ public class LoginController {
       return LOGIN_VIEW_NAME;
     }
     return LOGIN_VIEW_NAME;
-  }
-
-  private String redirectToCallbackUrl(
-      HttpServletRequest request,
-      String code,
-      String accountStatus,
-      HttpServletResponse response,
-      AuditLogEventRequest auditRequest) {
-    String userId = WebUtils.getCookie(request, USER_ID_COOKIE).getValue();
-    String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM_COOKIE).getValue();
-    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
-
-    String redirectUrl =
-        String.format(
-            "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
-
-    logger.exit(String.format("redirect to %s from /login", callbackUrl));
-    if (UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus)) {
-      auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
-    } else {
-      auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_SUCCEEDED, auditRequest);
-    }
-    return redirect(response, redirectUrl);
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {
