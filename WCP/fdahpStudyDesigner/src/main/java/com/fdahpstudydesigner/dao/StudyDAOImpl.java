@@ -26,7 +26,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LAUNCHE
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PAUSED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PUBLISHED_AS_UPCOMING_STUDY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESUMED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_COMPLETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
 
@@ -105,7 +104,7 @@ public class StudyDAOImpl implements StudyDAO {
 
   @Autowired private HttpServletRequest request;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   HibernateTemplate hibernateTemplate;
   private Query query = null;
@@ -3665,7 +3664,7 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
-      auditLogEvEntHelper.logEvent(eventEnum, auditRequest);
+      auditLogEventHelper.logEvent(eventEnum, auditRequest);
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -4218,7 +4217,7 @@ public class StudyDAOImpl implements StudyDAO {
               studyBo.getId());
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
-      auditLogEvEntHelper.logEvent(auditLogEvent, auditRequest);
+      auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
 
       transaction.commit();
     } catch (Exception e) {
@@ -4601,14 +4600,13 @@ public class StudyDAOImpl implements StudyDAO {
           if (studyBo
               .getButtonText()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
-            eventEnum = STUDY_SETTINGS_COMPLETED;
             activity = "Study settings marked as Completed.";
             activitydetails =
                 "Section validated for minimum completion required and marked as Completed. (Study ID = "
                     + study.getCustomStudyId()
                     + ")";
           } else {
-            eventEnum = STUDY_SETTINGS_SAVED_OR_UPDATED;
+            auditLogEventHelper.logEvent(STUDY_SETTINGS_SAVED_OR_UPDATED, auditRequest);
             activity = "Study settings content saved as draft.";
             activitydetails =
                 "Study settings content saved as draft. (Study ID = "
@@ -4616,7 +4614,6 @@ public class StudyDAOImpl implements StudyDAO {
                     + ")";
           }
         }
-        auditLogEvEntHelper.logEvent(eventEnum, auditRequest);
       }
       transaction.commit();
     } catch (Exception e) {
@@ -6017,7 +6014,7 @@ public class StudyDAOImpl implements StudyDAO {
             session.update(studyBo);
           }
         }
-        auditLogEvEntHelper.logEvent(auditLogEvent, auditRequest);
+        auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
       }
       transaction.commit();
     } catch (Exception e) {
