@@ -29,17 +29,17 @@ public class Urls {
   public static String BASE_URL_RESPONSE_SERVER = BuildConfig.BASE_URL_RESPONSE_SERVER;
 
   // Auth Server
-  public static String LOGIN = "login";
+  public static String LOGIN = "/login";
 
   // New Auth Server
-  public static String TOKENS = "oauth2/token";
-  public static String AUTH_SERVICE = "users/";
+  public static String TOKENS = "/oauth2/token";
+  public static String AUTH_SERVICE = "/users/";
   public static String CHANGE_PASSWORD = "/change_password";
-  public static String FORGOT_PASSWORD = "user/reset_password";
+  public static String FORGOT_PASSWORD = "/user/reset_password";
   public static String LOGOUT = "/logout";
-  public static String AUTH_SERVER_REDIRECT_URL = BuildConfig.BASE_URL_AUTH_SERVER + "callback";
-  public static String AUTH_CLIENT_ID = "MYSTUDIES_OAUTH_CLIENT";
-  public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "auth"
+  public static String AUTH_SERVER_REDIRECT_URL = BuildConfig.BASE_URL_AUTH_SERVER + "/callback";
+  public static String AUTH_CLIENT_ID = BuildConfig.AUTH_CLIENT_ID;
+  public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "/auth"
           + "?client_id=" + AUTH_CLIENT_ID
           + "&scope=offline_access"
           + "&response_type=code"
@@ -53,43 +53,43 @@ public class Urls {
           + "&state=" + FdaApplication.getRandomString();
 
   // Registration Server
-  public static String REGISTER_USER = "register";
-  public static String UPDATE_USER_PROFILE = "updateUserProfile";
-  public static String GET_USER_PROFILE = "userProfile";
-  public static String CONFIRM_REGISTER_USER = "verifyEmailId";
-  public static String RESEND_CONFIRMATION = "resendConfirmation";
-  public static String DELETE_ACCOUNT = "deactivate";
-  public static String WITHDRAW = "withdrawfromstudy";
-  public static String CONTACT_US = "contactUs";
-  public static String FEEDBACK = "feedback";
+  public static String REGISTER_USER = "/register";
+  public static String UPDATE_USER_PROFILE = "/updateUserProfile";
+  public static String GET_USER_PROFILE = "/userProfile";
+  public static String CONFIRM_REGISTER_USER = "/verifyEmailId";
+  public static String RESEND_CONFIRMATION = "/resendConfirmation";
+  public static String DELETE_ACCOUNT = "/deactivate";
+  public static String WITHDRAW = "/withdrawfromstudy";
+  public static String CONTACT_US = "/contactUs";
+  public static String FEEDBACK = "/feedback";
 
   // Registration Enrollment Server
-  public static String UPDATE_STUDY_PREFERENCE = "updateStudyState";
-  public static String STUDY_STATE = "studyState";
-  public static String VALIDATE_ENROLLMENT_ID = "validateEnrollmentToken";
-  public static String ENROLL_ID = "enroll";
+  public static String UPDATE_STUDY_PREFERENCE = "/updateStudyState";
+  public static String STUDY_STATE = "/studyState";
+  public static String VALIDATE_ENROLLMENT_ID = "/validateEnrollmentToken";
+  public static String ENROLL_ID = "/enroll";
 
   // Registration consent Server
-  public static String UPDATE_ELIGIBILITY_CONSENT = "updateEligibilityConsentStatus";
-  public static String CONSENTPDF = "consentDocument";
+  public static String UPDATE_ELIGIBILITY_CONSENT = "/updateEligibilityConsentStatus";
+  public static String CONSENTPDF = "/consentDocument";
 
   // WCP server
-  public static String STUDY_INFO = "studyInfo";
-  public static String CONSENT_METADATA = "eligibilityConsent";
-  public static String ACTIVITY = "activity";
-  public static String STUDY_LIST = "studyList";
-  public static String SPECIFIC_STUDY = "study";
-  public static String STUDY_UPDATES = "studyUpdates";
-  public static String ACTIVITY_LIST = "activityList";
-  public static String RESOURCE_LIST = "resources";
-  public static String NOTIFICATIONS = "notifications";
-  public static String DASHBOARD_INFO = "studyDashboard";
-  public static String GET_CONSENT_DOC = "consentDocument";
-  public static String VERSION_INFO = "versionInfo";
+  public static String STUDY_INFO = "/studyInfo";
+  public static String CONSENT_METADATA = "/eligibilityConsent";
+  public static String ACTIVITY = "/activity";
+  public static String STUDY_LIST = "/studyList";
+  public static String SPECIFIC_STUDY = "/study";
+  public static String STUDY_UPDATES = "/studyUpdates";
+  public static String ACTIVITY_LIST = "/activityList";
+  public static String RESOURCE_LIST = "/resources";
+  public static String NOTIFICATIONS = "/notifications";
+  public static String DASHBOARD_INFO = "/studyDashboard";
+  public static String GET_CONSENT_DOC = "/consentDocument";
+  public static String VERSION_INFO = "/versionInfo";
 
   // Response server
-  public static String PROCESS_RESPONSE = "participant/process-response";
-  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_SERVER + "participant/getresponse?";
-  public static String UPDATE_ACTIVITY_PREFERENCE = "participant/update-activity-state";
-  public static String ACTIVITY_STATE = "participant/get-activity-state";
+  public static String PROCESS_RESPONSE = "/participant/process-response";
+  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_SERVER + "/participant/getresponse?";
+  public static String UPDATE_ACTIVITY_PREFERENCE = "/participant/update-activity-state";
+  public static String ACTIVITY_STATE = "/participant/get-activity-state";
 }
