@@ -22,10 +22,11 @@
  */
 package com.hphc.mystudies.util;
 
+import com.hphc.mystudies.bean.FailureResponse;
+import com.sun.jersey.core.util.Base64;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.security.MessageDigest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,8 +44,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import com.hphc.mystudies.bean.FailureResponse;
-import com.sun.jersey.core.util.Base64;
 
 public class StudyMetaDataUtil {
 
@@ -75,7 +74,8 @@ public class StudyMetaDataUtil {
       }
       ServletContext context = ServletContextHolder.getServletContext();
 
-      Properties prop = PropertiesUtil.makePropertiesWithEnvironmentVariables("application.properties");
+      Properties prop =
+          PropertiesUtil.makePropertiesWithEnvironmentVariables("application.properties");
       objectKeys = prop.keys();
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();
