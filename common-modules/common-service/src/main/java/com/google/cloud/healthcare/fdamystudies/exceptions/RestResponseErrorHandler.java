@@ -41,7 +41,7 @@ public class RestResponseErrorHandler implements ResponseErrorHandler {
 
   private @Autowired HttpServletRequest request;
 
-  @Value("${componentName}")
+  @Value("${component.name}")
   private String componentName;
 
   @Override

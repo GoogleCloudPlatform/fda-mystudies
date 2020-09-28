@@ -41,7 +41,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @Autowired private AuditEventHelper auditEventHelper;
 
-  @Value("${componentName}")
+  @Value("${component.name}")
   private String componentName;
 
   @ExceptionHandler(Exception.class)
