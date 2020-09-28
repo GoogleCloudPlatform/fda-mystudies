@@ -74,10 +74,6 @@ class ActivitiesViewController: UIViewController {
     appDelegate.checkConsentStatus(controller: self)
   }
 
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
-
   // MARK: - Viewcontroller Lifecycle
 
   override func viewDidLoad() {

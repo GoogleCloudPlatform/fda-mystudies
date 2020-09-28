@@ -21,7 +21,7 @@ struct HydraAPI {
   static func loginRequest(tempRegID: String = "") -> URLRequest? {
 
     let parameters: JSONDictionary = [
-      "client_id": "MYSTUDIES_IOS_MOBILE_APP",
+      "client_id": API.authClientID,
       "scope": "offline_access",
       "response_type": "code",
       "appId": AppConfiguration.appID,

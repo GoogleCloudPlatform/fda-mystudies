@@ -2,12 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>HYDRA_WEB_BASE_URL</key>
-	<string>$(HYDRA_WEB_BASE_URL)</string>
-	<key>HYDRA_REST_BASE_URL</key>
-	<string>$(HYDRA_REST_BASE_URL)</string>
-	<key>AUTH_REDIRECT_BASE_URL</key>
-	<string>$(AUTH_REDIRECT_BASE_URL)</string>
+	<key>HYDRA_CLIENT_ID</key>
+	<string>$(HYDRA_CLIENT_ID)</string>
 	<key>AUTH_PASSWORD</key>
 	<string>$(AUTH_PASSWORD)</string>
 	<key>AUTH_URL</key>
@@ -38,6 +34,8 @@
 	<string>$(CONSENTMGMT_URL)</string>
 	<key>ENROLLMENT_URL</key>
 	<string>$(ENROLLMENT_URL)</string>
+	<key>HYDRA_BASE_URL</key>
+	<string>$(HYDRA_BASE_URL)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>

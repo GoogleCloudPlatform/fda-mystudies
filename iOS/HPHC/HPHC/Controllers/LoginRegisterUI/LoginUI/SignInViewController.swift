@@ -403,6 +403,13 @@ extension SignInViewController: WKNavigationDelegate {
     withError error: Error
   ) {
     self.view.makeToast(error.localizedDescription)
+    UIView.animate(
+      withDuration: 0.33,
+      animations: {
+        self.progressView.alpha = 0.0
+      },
+      completion: nil
+    )
   }
 
   func webView(

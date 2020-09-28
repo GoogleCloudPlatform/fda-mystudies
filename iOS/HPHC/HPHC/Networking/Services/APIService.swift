@@ -28,7 +28,7 @@ class APIService {
         } else {
           completion(nil, false, .defaultError)
         }
-      case .failure(_):
+      case .failure:
         completion(nil, false, ApiError.defaultError) // TODO: Parse errors.
       }
     }
