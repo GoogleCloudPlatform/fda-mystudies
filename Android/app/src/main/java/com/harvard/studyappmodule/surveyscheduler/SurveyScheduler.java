@@ -163,7 +163,8 @@ public class SurveyScheduler {
             String date = AppController.getDateFormatForDailyRun().format(startDate);
             String startDateString =
                 date + " " + activity.getFrequency().getRuns().get(j).getStartTime();
-            Date startDateDate = AppController.getDateFormatForDailyRunStartAndEnd().parse(startDateString);
+            Date startDateDate =
+                AppController.getDateFormatForDailyRunStartAndEnd().parse(startDateString);
             Calendar calendar1 = Calendar.getInstance();
             calendar1.setTime(startDateDate);
             Calendar calendarStartDate = Calendar.getInstance();
@@ -171,7 +172,8 @@ public class SurveyScheduler {
             String endDateString =
                 date + " " + activity.getFrequency().getRuns().get(j).getEndTime();
 
-            Date endDateDate = AppController.getDateFormatForDailyRunStartAndEnd().parse(endDateString);
+            Date endDateDate =
+                AppController.getDateFormatForDailyRunStartAndEnd().parse(endDateString);
             Calendar calendar2 = Calendar.getInstance();
             calendar2.setTime(endDateDate);
             Calendar calendarEndDate = Calendar.getInstance();
@@ -549,7 +551,11 @@ public class SurveyScheduler {
 
   // if currentRunId = 0 then no need to show the current run in UI
   public ActivityStatus getActivityStatus(
-      ActivityData activityData, String studyId, String activityId, Date currentDate) {
+      ActivityData activityData,
+      String studyId,
+      String activityId,
+      Date currentDate,
+      ActivitiesWS activityListItem) {
     String activityStatus = SurveyActivitiesFragment.YET_To_START;
     int currentRunId = 0;
 
@@ -642,25 +648,70 @@ public class SurveyScheduler {
 
     Activities activities =
         dbServiceSubscriber.getActivityPreferenceBySurveyId(studyId, activityId, realm);
-    if (activities != null && activities.getActivityRun() != null) {
-      completedRun = activities.getActivityRun().getCompleted();
+    int totalRun;
+    SimpleDateFormat startTimeDateFormat = AppController.getDateFormatUtcNoZone();
+    Date starttime = null;
+    try {
+      starttime = startTimeDateFormat.parse(activityListItem.getStartTime().split("\\.")[0]);
+    } catch (ParseException e) {
+      Logger.log(e);
     }
-    if (currentRunId <= 0) {
+    Date endtime = null;
+    try {
+      if (activityListItem.getEndTime() != null
+          && !activityListItem.getEndTime().equalsIgnoreCase("")) {
+        endtime = startTimeDateFormat.parse(activityListItem.getEndTime().split("\\.")[0]);
+      }
+    } catch (ParseException e) {
+      Logger.log(e);
+    }
+    if (starttime != null) {
+      if (AppController.checkafter(starttime)) {
+        missedRun = 0;
+        completedRun = 0;
+        totalRun =
+            getTotalRunsForUpcomingActivities(
+                activityListItem, starttime, endtime, startTimeDateFormat);
+      } else if (AppController.isWithinRange(starttime, endtime)) {
+        if (activities != null && activities.getActivityRun() != null) {
+          completedRun = activities.getActivityRun().getCompleted();
+        }
+        if (currentRunId <= 0) {
+          missedRun = 0;
+          currentRunStartDate = new Date();
+          currentRunEndDate = new Date();
+        } else {
+          missedRun = currentRunId - completedRun;
+        }
+
+        if (runAvailable && !activityStatus.equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED)) {
+          missedRun--;
+        }
+
+        if (missedRun < 0) {
+          missedRun = 0;
+        }
+
+        totalRun = activityRuns.size();
+      } else {
+        if (activities != null && activities.getActivityRun() != null) {
+          completedRun = activities.getActivityRun().getCompleted();
+        }
+        totalRun = activityRuns.size();
+        missedRun = totalRun - completedRun;
+        if (missedRun < 0) {
+          missedRun = 0;
+        }
+      }
+    } else {
+      completedRun = 0;
+      currentRunId = 0;
       missedRun = 0;
+      totalRun = 0;
       currentRunStartDate = new Date();
       currentRunEndDate = new Date();
-    } else {
-      missedRun = currentRunId - completedRun;
+      activityStatus = SurveyActivitiesFragment.YET_To_START;
     }
-
-    if (runAvailable && !activityStatus.equalsIgnoreCase(SurveyActivitiesFragment.COMPLETED)) {
-      missedRun--;
-    }
-
-    if (missedRun < 0) {
-      missedRun = 0;
-    }
-    int totalRun = activityRuns.size();
     ActivityStatus activityStatusData = new ActivityStatus();
     activityStatusData.setCompletedRun(completedRun);
     activityStatusData.setCurrentRunId(currentRunId);
@@ -671,6 +722,63 @@ public class SurveyScheduler {
     activityStatusData.setTotalRun(totalRun);
     activityStatusData.setRunIdAvailable(runAvailable);
     return activityStatusData;
+  }
+
+  private int getTotalRunsForUpcomingActivities(
+      ActivitiesWS activityListItem,
+      Date starttime,
+      Date endtime,
+      SimpleDateFormat startTimeDateFormat) {
+    if (activityListItem.getFrequency().getType().equalsIgnoreCase(FREQUENCY_TYPE_DAILY)) {
+      if (starttime != null) {
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(starttime);
+
+        Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(endtime);
+        int totalRun = 0;
+        while (startCalendar.before(endCalendar)) {
+          startCalendar.add(Calendar.DATE, 1);
+          totalRun = totalRun + 1;
+        }
+        return totalRun * activityListItem.getFrequency().getRuns().size();
+      }
+    } else if (activityListItem.getFrequency().getType().equalsIgnoreCase(FREQUENCY_TYPE_WEEKLY)) {
+      Calendar startCalendar = Calendar.getInstance();
+      startCalendar.setTime(starttime);
+
+      Calendar endCalendar = Calendar.getInstance();
+      endCalendar.setTime(endtime);
+      int totalRun = 0;
+      while (startCalendar.before(endCalendar)) {
+        startCalendar.add(Calendar.DATE, 7);
+        totalRun = totalRun + 1;
+      }
+      return totalRun;
+    } else if (activityListItem.getFrequency().getType().equalsIgnoreCase(FREQUENCY_TYPE_MONTHLY)) {
+      Calendar startCalendar = Calendar.getInstance();
+      startCalendar.setTime(starttime);
+
+      Calendar endCalendar = Calendar.getInstance();
+      endCalendar.setTime(endtime);
+      int totalRun = 0;
+      while (startCalendar.before(endCalendar)) {
+        startCalendar.add(Calendar.MONTH, 1);
+        totalRun = totalRun + 1;
+      }
+      return totalRun;
+    } else if (activityListItem
+        .getFrequency()
+        .getType()
+        .equalsIgnoreCase(FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
+      return activityListItem.getFrequency().getRuns().size();
+    } else if (activityListItem
+        .getFrequency()
+        .getType()
+        .equalsIgnoreCase(FREQUENCY_TYPE_ONE_TIME)) {
+      return 1;
+    }
+    return 0;
   }
 
   private Activities getActivitiesDb(ActivityData activityData, String activityId) {
@@ -685,8 +793,7 @@ public class SurveyScheduler {
     return null;
   }
 
-  public CompletionAdherence completionAndAdherenceCalculation(
-      String studyId, Context context) {
+  public CompletionAdherence completionAndAdherenceCalculation(String studyId, Context context) {
     double completion = 0;
     double adherence = 0;
     boolean activityListAvailable = false;
@@ -702,29 +809,31 @@ public class SurveyScheduler {
 
     Calendar calendarCurrentTime = Calendar.getInstance();
     calendarCurrentTime.setTime(currentDate);
-    calendarCurrentTime.setTimeInMillis(
-        calendarCurrentTime.getTimeInMillis() - getOffset(context));
+    calendarCurrentTime.setTimeInMillis(calendarCurrentTime.getTimeInMillis() - getOffset(context));
 
     if (activityListDataDB != null) {
       activityListAvailable = true;
       for (int i = 0; i < activityListDataDB.getActivities().size(); i++) {
 
         try {
-          ActivityStatus activityStatus =
-              getActivityStatus(
-                  activityData,
-                  studyId,
-                  activityListDataDB.getActivities().get(i).getActivityId(),
-                  calendarCurrentTime.getTime());
-          if (activityStatus != null) {
-            if (activityStatus.getCompletedRun() >= 0) {
-              completed = completed + activityStatus.getCompletedRun();
-            }
-            if (activityStatus.getMissedRun() >= 0) {
-              missed = missed + activityStatus.getMissedRun();
-            }
-            if (activityStatus.getTotalRun() >= 0) {
-              total = total + activityStatus.getTotalRun();
+          if (!activityListDataDB.getActivities().get(i).getState().equalsIgnoreCase("deleted")) {
+            ActivityStatus activityStatus =
+                getActivityStatus(
+                    activityData,
+                    studyId,
+                    activityListDataDB.getActivities().get(i).getActivityId(),
+                    calendarCurrentTime.getTime(),
+                    activityListDataDB.getActivities().get(i));
+            if (activityStatus != null) {
+              if (activityStatus.getCompletedRun() >= 0) {
+                completed = completed + activityStatus.getCompletedRun();
+              }
+              if (activityStatus.getMissedRun() >= 0) {
+                missed = missed + activityStatus.getMissedRun();
+              }
+              if (activityStatus.getTotalRun() >= 0) {
+                total = total + activityStatus.getTotalRun();
+              }
             }
           }
         } catch (Exception e) {

@@ -895,6 +895,19 @@ public class AppController {
     return generatedHash;
   }
 
+  public static boolean checkafter(Date starttime) {
+    return starttime.after(new Date());
+  }
+
+  public static boolean isWithinRange(Date starttime, Date endtime) {
+    if (endtime == null) {
+      return (new Date().after(starttime) || new Date().equals(starttime));
+    } else {
+      return (new Date().after(starttime) || new Date().equals(starttime))
+              && new Date().before(endtime);
+    }
+  }
+
   public static String getSourceActivityId(Resource resource) {
     return resource.getAvailability().getSourceActivityId();
   }
