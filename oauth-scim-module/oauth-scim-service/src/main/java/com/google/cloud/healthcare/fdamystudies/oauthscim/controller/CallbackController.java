@@ -21,6 +21,9 @@ import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import java.util.Optional;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,6 +48,8 @@ public class CallbackController {
   @Autowired private RedirectConfig redirectConfig;
 
   @Autowired private AuthScimAuditHelper auditHelper;
+
+  @Autowired private UserService userService;
 
   @GetMapping(value = "/callback")
   public String login(
@@ -74,9 +79,22 @@ public class CallbackController {
     String accountStatus = getCookieValue(request, ACCOUNT_STATUS_COOKIE);
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
 
-    String redirectUrl =
-        String.format(
-            "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
+    String redirectUrl = null;
+    if (StringUtils.equals(
+        accountStatus, String.valueOf(UserAccountStatus.PASSWORD_RESET.getStatus()))) {
+      Optional<UserEntity> optUserEntity = userService.findByUserId(userId);
+      if (optUserEntity.isPresent()) {
+        UserEntity user = optUserEntity.get();
+        redirectUrl =
+            String.format(
+                "%s?code=%s&userId=%s&accountStatus=%s&email=%s",
+                callbackUrl, code, userId, accountStatus, user.getEmail());
+      }
+    } else {
+      redirectUrl =
+          String.format(
+              "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
+    }
 
     if (UserAccountStatus.ACTIVE.getStatus() == Integer.parseInt(accountStatus)) {
       auditHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
