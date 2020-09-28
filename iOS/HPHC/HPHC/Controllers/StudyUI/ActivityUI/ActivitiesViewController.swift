@@ -572,7 +572,6 @@ class ActivitiesViewController: UIViewController {
       }
 
     }
-    print("alert---\(alert)---\(completion)")
     if completion == 100 && alert ?? true {
 
       if !(ud.bool(forKey: fullCompletionKey)) {
@@ -1045,7 +1044,6 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       self.removeProgressIndicator()
         self.updateRunStatusToComplete(false)
       self.checkForActivitiesUpdates()
-//        self.updateRunStatusToComplete(false)
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
 
