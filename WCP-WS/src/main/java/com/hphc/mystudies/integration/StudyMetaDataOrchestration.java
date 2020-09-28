@@ -22,8 +22,6 @@
  */
 package com.hphc.mystudies.integration;
 
-import java.util.HashMap;
-import org.apache.log4j.Logger;
 import com.hphc.mystudies.bean.ConsentDocumentResponse;
 import com.hphc.mystudies.bean.EligibilityConsentResponse;
 import com.hphc.mystudies.bean.GatewayInfoResponse;
@@ -33,6 +31,8 @@ import com.hphc.mystudies.bean.StudyResponse;
 import com.hphc.mystudies.dao.StudyMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
+import java.util.HashMap;
+import org.apache.log4j.Logger;
 
 public class StudyMetaDataOrchestration {
 
