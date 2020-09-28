@@ -401,7 +401,7 @@ class ResponseServices: NSObject {
   func handleUpdateTokenResponse() {
     self.sendRequestWith(
       method: self.method,
-      params: self.requestParams ?? [:],
+      params: self.requestParams,
       headers: self.headerParams
     )
   }
@@ -411,7 +411,7 @@ class ResponseServices: NSObject {
   ///   - method: instance of `Method`
   ///   - params: request params
   ///   - headers: request headers
-  private func sendRequestWith(method: Method, params: [String: Any], headers: [String: String]?) {
+  private func sendRequestWith(method: Method, params: [String: Any]?, headers: [String: String]?) {
 
     self.requestParams = params
     self.headerParams = headers
