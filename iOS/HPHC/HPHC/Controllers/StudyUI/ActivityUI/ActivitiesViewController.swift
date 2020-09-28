@@ -485,7 +485,7 @@ class ActivitiesViewController: UIViewController {
 
   /// Updates Activity Run Status.
   /// - Parameter status: Status of the Activity.
-    func updateActivityRun(status: UserActivityStatus.ActivityStatus, _ alert: Bool? = true) {
+  func updateActivityRun(status: UserActivityStatus.ActivityStatus, _ alert: Bool? = true) {
     guard let activity = Study.currentActivity else { return }
     let activityStatus = updatedActivityStatus(for: activity, status: status)
 
@@ -641,7 +641,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// Save completed staus in database.
-    func updateRunStatusToComplete(_ alert: Bool? = true) {
+  func updateRunStatusToComplete(_ alert: Bool? = true) {
     guard let currentActivity = Study.currentActivity,
       let activityID = currentActivity.actvityId,
       let studyID = currentActivity.studyId
@@ -652,7 +652,7 @@ class ActivitiesViewController: UIViewController {
       activityId: activityID,
       studyId: studyID
     )
-        self.updateActivityStatusToComplete(alert)
+    self.updateActivityStatusToComplete(alert)
     let activityResponse = self.lastActivityResponse ?? [:]
     lastActivityResponse = [:]
     let isActivitylifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
@@ -870,9 +870,9 @@ extension ActivitiesViewController: UITableViewDataSource {
         availablityStatus: availabilityStatus!
       )
 
-        if availabilityStatus == .upcoming || availabilityStatus == .past {
-            cell.selectionStyle = .none
-        }
+      if availabilityStatus == .upcoming || availabilityStatus == .past {
+        cell.selectionStyle = .none
+      }
  
       return cell
     }
@@ -1042,7 +1042,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
       self.removeProgressIndicator()
-        self.updateRunStatusToComplete(false)
+      self.updateRunStatusToComplete(false)
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
