@@ -544,7 +544,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -575,7 +574,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -604,7 +602,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
     userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -665,7 +662,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
     userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -702,7 +698,7 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId("Invalid");
-    userRequest.setUserId(userEntity.getUserId());
+
     mockMvc
         .perform(
             post(ApiEndpoint.RESET_PASSWORD.getPath())
