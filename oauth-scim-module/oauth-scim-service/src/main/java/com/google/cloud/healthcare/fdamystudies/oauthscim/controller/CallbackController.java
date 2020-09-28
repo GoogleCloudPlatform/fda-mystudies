@@ -74,6 +74,7 @@ public class CallbackController {
       return ERROR_VIEW_NAME;
     }
 
+    // TODO (#1061) use 'source' header value instead of mobilePlatform
     String mobilePlatform = getCookieValue(request, MOBILE_PLATFORM_COOKIE);
     String accountStatus = getCookieValue(request, ACCOUNT_STATUS_COOKIE);
     String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
