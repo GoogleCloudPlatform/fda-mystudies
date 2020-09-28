@@ -22,14 +22,14 @@
  */
 package com.hphc.mystudies.integration;
 
-import java.util.HashMap;
-import org.apache.log4j.Logger;
 import com.hphc.mystudies.bean.ActiveTaskActivityMetaDataResponse;
 import com.hphc.mystudies.bean.ActivityResponse;
 import com.hphc.mystudies.bean.QuestionnaireActivityMetaDataResponse;
 import com.hphc.mystudies.dao.ActivityMetaDataDao;
 import com.hphc.mystudies.exception.OrchestrationException;
 import com.hphc.mystudies.util.StudyMetaDataUtil;
+import java.util.HashMap;
+import org.apache.log4j.Logger;
 
 public class ActivityMetaDataOrchestration {
 
