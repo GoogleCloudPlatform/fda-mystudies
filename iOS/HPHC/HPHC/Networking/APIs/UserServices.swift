@@ -185,7 +185,7 @@ class UserServices: NSObject {
     let headerParams =
       [
         kUserId: user.userId ?? "",
-      ] as [String: String]
+      ] as? [String: String]
 
     let params = [kDeactivateAccountDeleteData: studiesDict]
     let method = RegistrationMethods.deactivate.method
@@ -280,7 +280,7 @@ class UserServices: NSObject {
       [
         kUserId: user.userId!,
         kUserAuthToken: user.authToken,
-      ] as [String: String]
+      ] as? [String: String]
 
     let method = RegistrationMethods.userPreferences.method
 
