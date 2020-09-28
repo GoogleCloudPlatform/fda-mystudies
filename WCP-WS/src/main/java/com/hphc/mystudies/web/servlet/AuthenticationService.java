@@ -22,12 +22,12 @@
  */
 package com.hphc.mystudies.web.servlet;
 
+import com.hphc.mystudies.util.StudyMetaDataUtil;
+import com.sun.jersey.core.util.Base64;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import com.hphc.mystudies.util.StudyMetaDataUtil;
-import com.sun.jersey.core.util.Base64;
 
 public class AuthenticationService {
 
