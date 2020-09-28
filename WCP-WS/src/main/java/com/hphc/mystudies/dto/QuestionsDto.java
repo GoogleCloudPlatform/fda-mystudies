@@ -22,6 +22,7 @@
  */
 package com.hphc.mystudies.dto;
 
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +33,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
-import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 @Entity
 @Table(name = "questions")

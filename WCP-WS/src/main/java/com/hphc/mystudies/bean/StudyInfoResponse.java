@@ -22,9 +22,9 @@
  */
 package com.hphc.mystudies.bean;
 
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import java.util.ArrayList;
 import java.util.List;
-import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 public class StudyInfoResponse {
 
