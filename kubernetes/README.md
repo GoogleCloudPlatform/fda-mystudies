@@ -142,6 +142,7 @@ root of the repo):
 1. user-registration-server-ws/consent-mgmt-module/tf-deployment.yaml
 1. user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml
 1. user-registration-server-ws/user-mgmt-module/tf-deployment.yaml
+1. participant-manager-module/tf-deployment.yaml
 
 Do the following:
 
@@ -228,7 +229,8 @@ $ kubectl apply \
   -f ./user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml \
   -f ./user-registration-server-ws/user-mgmt-module/tf-deployment.yaml \
   -f ./WCP/tf-deployment.yaml \
-  -f ./auth-server-ws/tf-deployment.yaml
+  -f ./auth-server-ws/tf-deployment.yaml \
+  -f ./participant-manager-module/tf-deployment.yaml
 ```
 
 Apply all services:
@@ -241,7 +243,8 @@ $ kubectl apply \
   -f ./user-registration-server-ws/enroll-mgmt-module/tf-service.yaml \
   -f ./user-registration-server-ws/user-mgmt-module/tf-service.yaml \
   -f ./WCP/tf-service.yaml \
-  -f ./auth-server-ws/tf-service.yaml
+  -f ./auth-server-ws/tf-service.yaml \
+  -f ./participant-manager-module/tf-service.yaml
 ```
 
 Apply the certificate and the ingress:

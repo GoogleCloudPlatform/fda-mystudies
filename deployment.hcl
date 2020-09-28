@@ -231,6 +231,14 @@ template "project_secrets" {
           secret_id   = "auto-user-registration-db-user"
           secret_data = "$${random_string.strings[\"user_registration_db_user\"].result}"
         },
+        {
+          secret_id   = "auto-participant-manager-db-password"
+          secret_data = "$${random_password.passwords[\"participant_manager_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-manager-db-user"
+          secret_data = "$${random_string.strings[\"participant_manager_db_user\"].result}"
+        },
       ]
     }
     terraform_addons = {
@@ -246,6 +254,7 @@ resource "random_string" "strings" {
     "study_designer_db_user",
     "study_metadata_db_user",
     "user_registration_db_user",
+    "participant_manager_db_user",
   ])
   length  = 16
   special = true
@@ -263,6 +272,7 @@ resource "random_password" "passwords" {
     "study_designer_db_password",
     "study_metadata_db_password",
     "user_registration_db_password",
+    "participant_manager_db_user",
   ])
   length  = 16
   special = true
@@ -402,6 +412,7 @@ template "project_apps" {
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
         { account_id = "user-registration-gke-sa" },
+        { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
       # Binary Authorization resources.
@@ -452,6 +463,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "user-registration-server-ws/enroll-mgmt-module",
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
+#     "participant-manager-module",
 #   ])
 #
 #   provider = google-beta
@@ -606,6 +618,7 @@ EOF
           "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/bigquery.jobUser" = [
@@ -621,6 +634,9 @@ EOF
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+          },{
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
