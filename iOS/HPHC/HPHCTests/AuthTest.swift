@@ -21,19 +21,14 @@ class LoginTest: XCTestCase {
       User.JSONKey.tokenType: "bearer",
     ]
 
-    guard let responseData = Utilities.dictionaryToData(value: responseDict)
-    else { return XCTFail() }
-
     // Mock the response.
-    stub(http(.post, uri: url?.absoluteString ?? ""), jsonData(responseData))
+    stub(http(.post, uri: url?.absoluteString ?? ""), json(responseDict))
     let expection = XCTestExpectation(description: "Api call")
 
-    let router = AuthRouter.codeGrant(params: [:], headers: [:])
-
-    APIService.instance.requestForData(with: router) { (data, status, error) in
-      if let authDict = data?.toJSONDictionary() {
-        User.currentUser.authenticate(with: authDict)
-        expection.fulfill()
+    let code = "grant_code" // Code from the callback URL.
+    HydraAPI.grant(user: User.currentUser, with: code) { (status, _) in
+      if status {
+         expection.fulfill()
       } else {
         XCTFail()
       }
