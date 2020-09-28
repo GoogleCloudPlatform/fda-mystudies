@@ -23,7 +23,12 @@
 
 package com.fdahpstudydesigner.controller;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
+
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.bo.ActiveTaskListBo;
 import com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo;
@@ -31,6 +36,8 @@ import com.fdahpstudydesigner.bo.ActivetaskFormulaBo;
 import com.fdahpstudydesigner.bo.AnchorDateTypeBo;
 import com.fdahpstudydesigner.bo.StatisticImageListBo;
 import com.fdahpstudydesigner.bo.StudyBo;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.StudyActiveTasksService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
@@ -70,6 +77,8 @@ public class StudyActiveTasksController {
 
   @Autowired private StudyQuestionnaireService studyQuestionnaireService;
 
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
+
   @RequestMapping("/adminStudies/activeTAskMarkAsCompleted.do")
   public ModelAndView activeTAskMarkAsCompleted(HttpServletRequest request) {
     logger.info("StudyActiveTasksController - activeTAskMarkAsCompleted() - Starts");
@@ -79,9 +88,12 @@ public class StudyActiveTasksController {
     String customStudyId = "";
     ModelMap map = new ModelMap();
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
+      auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
@@ -113,7 +125,9 @@ public class StudyActiveTasksController {
                 sesObj,
                 customStudyId);
         map.addAttribute("_S", sessionStudyCount);
+        auditRequest.setStudyId(customStudyId);
         if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+          auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE, auditRequest);
           request
               .getSession()
               .setAttribute(
@@ -436,7 +450,9 @@ public class StudyActiveTasksController {
     String currentPage = null;
     String customStudyId = "";
     ModelMap map = new ModelMap();
+    Map<String, String> values = new HashMap<>();
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
@@ -486,14 +502,18 @@ public class StudyActiveTasksController {
             request
                 .getSession()
                 .setAttribute(sessionStudyCount + "activeTaskInfoId", activeTaskInfoId.toString());
+            values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+              auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(sessionStudyCount + "sucMsg", "Active task updated successfully.");
               return new ModelAndView("redirect:/adminStudies/viewStudyActiveTasks.do", map);
 
             } else {
+              auditLogEventHelper.logEvent(
+                  STUDY_ACTIVE_TASK_SAVED_OR_UPDATED, auditRequest, values);
               request
                   .getSession()
                   .setAttribute(
