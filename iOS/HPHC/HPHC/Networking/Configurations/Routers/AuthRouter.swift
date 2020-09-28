@@ -41,7 +41,7 @@ enum AuthRouter: URLRequestConvertible {
   case codeGrant(params: JSONDictionary, headers: [String: String])
 
   static let baseHostPath = API.hydraURL
-  static let redirectURL = baseHostPath + oauthPath + "/login"
+  static let redirectURL = baseHostPath + oauthPath + "/callback"
   static let oauthPath = "/oauth-scim-service"
   static let oauthVersion = "/oauth2"
 
