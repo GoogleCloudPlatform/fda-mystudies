@@ -28,7 +28,7 @@ import org.springframework.http.HttpHeaders;
 
 public class DashBoardAndProfileControllerTest extends BaseMockIT {
 
-  private static final int USER_ID = 5;
+  private static final int USER_ID = 1;
   private static final String LAST_NAME = "Last-name";
   private static final String FIRST_NAME = "First-name";
 

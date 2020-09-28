@@ -77,7 +77,7 @@ public class LoginControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(PathMappingUri.CHANGE_PASSWORD.getPath())
-                .param("oldPassword", "Password@1234")
+                .param("oldPassword", "Mock-it-Password")
                 .param("newPassword", "newPD@009")
                 .param("_csrf", "")
                 .headers(headers)
@@ -98,10 +98,10 @@ public class LoginControllerTest extends BaseMockIT {
 
     SessionObject session = new SessionObject();
     session.setSessionId(UUID.randomUUID().toString());
-    session.setEmail(SESSION_USER_EMAIL);
+    session.setEmail("superadmin@gmail.com");
     session.setFirstName("Account");
     session.setLastName("Manager");
-    session.setUserId(5);
+    session.setUserId(1);
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -217,7 +217,7 @@ public class LoginControllerTest extends BaseMockIT {
     session.setEmail("super@gmail.com");
     session.setFirstName("firstname");
     session.setLastName("lastname");
-    session.setUserId(2);
+    session.setUserId(3);
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
