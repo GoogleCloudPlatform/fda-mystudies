@@ -72,9 +72,6 @@ class SignInViewController: UIViewController {
     return .default
   }
 
-  deinit {
-    debugPrint("\(self) Gone")
-  }
   // MARK: - ViewController Lifecycle
 
   override func viewDidLoad() {

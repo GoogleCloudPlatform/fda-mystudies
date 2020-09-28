@@ -55,7 +55,7 @@ class LoginTest: XCTestCase {
   }
 
   func testCorrelationId() {
-    let id = SessionService.instance.correlationID
+    let id = SessionService.correlationID
     XCTAssertTrue(!id.isEmpty, "Correlation ID shouldn't be empty")
     SessionService.resetSession()
   }
