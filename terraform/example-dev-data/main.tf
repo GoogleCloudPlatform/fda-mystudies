@@ -75,12 +75,13 @@ module "project_iam_members" {
       "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-metadata-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:user-registration-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:participant-manager-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
     ],
   }
 }
 
-module "example_dev_my_studies_consent_documents" {
+module "example_dev_mystudies_consent_documents" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
@@ -93,10 +94,14 @@ module "example_dev_my_studies_consent_documents" {
       member = "serviceAccount:user-registration-gke-sa@example-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
+    {
+      member = "serviceAccount:participant-manager-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
+    },
   ]
 }
 
-module "example_dev_my_studies_fda_resources" {
+module "example_dev_mystudies_fda_resources" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
@@ -112,7 +117,7 @@ module "example_dev_my_studies_fda_resources" {
   ]
 }
 
-module "example_dev_my_studies_sql_import" {
+module "example_dev_mystudies_sql_import" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
