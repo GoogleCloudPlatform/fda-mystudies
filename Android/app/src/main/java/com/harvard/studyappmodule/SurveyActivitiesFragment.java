@@ -62,6 +62,9 @@ import com.harvard.studyappmodule.activitylistmodel.ActivityListData;
 import com.harvard.studyappmodule.activitylistmodel.AnchorDateSchedulingDetails;
 import com.harvard.studyappmodule.activitylistmodel.Frequency;
 import com.harvard.studyappmodule.activitylistmodel.FrequencyRuns;
+import com.harvard.studyappmodule.activitylistmodel.SchedulingAnchorDate;
+import com.harvard.studyappmodule.activitylistmodel.SchedulingAnchorDateEnd;
+import com.harvard.studyappmodule.activitylistmodel.SchedulingAnchorDateStart;
 import com.harvard.studyappmodule.consent.ConsentBuilder;
 import com.harvard.studyappmodule.consent.CustomConsentViewTaskActivity;
 import com.harvard.studyappmodule.consent.model.Consent;
@@ -235,7 +238,8 @@ public class SurveyActivitiesFragment extends Fragment
     AppCompatImageView backBtnimg = view.findViewById(R.id.backBtnimg);
     AppCompatImageView menubtnimg = view.findViewById(R.id.menubtnimg);
 
-    if (AppConfig.AppType.equalsIgnoreCase(context.getResources().getString(R.string.app_gateway))) {
+    if (AppConfig.AppType.equalsIgnoreCase(
+        context.getResources().getString(R.string.app_gateway))) {
       backBtnimg.setVisibility(View.VISIBLE);
       menubtnimg.setVisibility(View.GONE);
     } else {
@@ -261,7 +265,8 @@ public class SurveyActivitiesFragment extends Fragment
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            if (AppConfig.AppType.equalsIgnoreCase(context.getResources().getString(R.string.app_gateway))) {
+            if (AppConfig.AppType.equalsIgnoreCase(
+                context.getResources().getString(R.string.app_gateway))) {
               Intent intent = new Intent(context, StudyActivity.class);
               ComponentName cn = intent.getComponent();
               Intent mainIntent = Intent.makeRestartActivityTask(cn);
@@ -307,7 +312,11 @@ public class SurveyActivitiesFragment extends Fragment
           .showSwipeListCustomProgress(getActivity(), R.drawable.transparent, false);
     } else {
       AppController.getHelperProgressDialog()
-          .showProgressWithText(getActivity(), "", context.getResources().getString(R.string.activity_loading_msg), false);
+          .showProgressWithText(
+              getActivity(),
+              "",
+              context.getResources().getString(R.string.activity_loading_msg),
+              false);
     }
 
     GetUserStudyListEvent getUserStudyListEvent = new GetUserStudyListEvent();
@@ -484,7 +493,11 @@ public class SurveyActivitiesFragment extends Fragment
         }
       } else {
         AppController.getHelperProgressDialog().dismissDialog();
-        Toast.makeText(context, context.getResources().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                context,
+                context.getResources().getString(R.string.unknown_error),
+                Toast.LENGTH_SHORT)
+            .show();
       }
     }
 
@@ -1557,6 +1570,11 @@ public class SurveyActivitiesFragment extends Fragment
     } else {
       paused = false;
     }
+    SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
+    StudyData studyPreferences = dbServiceSubscriber.getStudyPreference(realm);
+    Date joiningDate =
+        survayScheduler.getJoiningDateOfStudy(
+            studyPreferences, ((SurveyActivity) context).getStudyId());
     filterPos = positon;
     Filter filter = getFilterList();
     studyVideoAdapter =
@@ -1566,7 +1584,8 @@ public class SurveyActivitiesFragment extends Fragment
             filter.getStatus(),
             filter.getCurrentRunStatusForActivities(),
             SurveyActivitiesFragment.this,
-            paused);
+            paused,
+            joiningDate);
     surveyActivitiesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     surveyActivitiesRecyclerView.setAdapter(studyVideoAdapter);
   }
@@ -1658,6 +1677,24 @@ public class SurveyActivitiesFragment extends Fragment
                   .getActivityId()
                   .equalsIgnoreCase(activityListDataDB.getActivities().get(i).getActivityId())) {
                 activityAvailable = true;
+                if (activityListDataDB.getActivities().get(i).getStartTime().equalsIgnoreCase("")
+                    && !activityListData
+                        .getActivities()
+                        .get(j)
+                        .getStartTime()
+                        .equalsIgnoreCase("")) {
+                  dbServiceSubscriber.saveActivityStartTime(
+                      activityListDataDB.getActivities().get(i),
+                      realm,
+                      activityListData.getActivities().get(j).getStartTime());
+                }
+                if (activityListDataDB.getActivities().get(i).getEndTime().equalsIgnoreCase("")
+                    && !activityListData.getActivities().get(j).getEndTime().equalsIgnoreCase("")) {
+                  dbServiceSubscriber.saveActivityEndTime(
+                      activityListDataDB.getActivities().get(i),
+                      realm,
+                      activityListData.getActivities().get(j).getEndTime());
+                }
               }
             }
             if (!activityAvailable) {
@@ -1722,7 +1759,10 @@ public class SurveyActivitiesFragment extends Fragment
         ActivityData activityData =
             dbServiceSubscriber.getActivityPreference(
                 ((SurveyActivity) context).getStudyId(), realm);
-        Date joiningDate = new Date();
+        //        Date joiningDate = new Date();
+        Date joiningDate =
+            survayScheduler.getJoiningDateOfStudy(
+                studyPreferences, ((SurveyActivity) context).getStudyId());
 
         Date currentDate = new Date();
 
@@ -1767,6 +1807,18 @@ public class SurveyActivitiesFragment extends Fragment
                   Logger.log(e);
                 } catch (Exception e1) {
                   Logger.log(e1);
+                }
+              } else {
+                if (activitiesArrayList.get(i).getFrequency().getType().equalsIgnoreCase("One Time")
+                    && activitiesArrayList.get(i).getAnchorDate() != null
+                    && activitiesArrayList.get(i).getAnchorDate().getEnd() == null) {
+                  try {
+                    starttime =
+                        simpleDateFormat.parse(
+                            activitiesArrayList.get(i).getStartTime().split("\\.")[0]);
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
                 }
               }
             }
@@ -1889,7 +1941,8 @@ public class SurveyActivitiesFragment extends Fragment
                     activityData,
                     ((SurveyActivity) context).getStudyId(),
                     activitiesArrayList.get(i).getActivityId(),
-                    calendarCurrentTime.getTime());
+                    calendarCurrentTime.getTime(),
+                    activitiesArrayList.get(i));
             if (activityStatus != null) {
               if (activityStatus.getCompletedRun() >= 0) {
                 completed = completed + activityStatus.getCompletedRun();
@@ -1903,11 +1956,11 @@ public class SurveyActivitiesFragment extends Fragment
             }
             if (!activitiesArrayList.get(i).getState().equalsIgnoreCase("deleted")) {
               if (starttime != null) {
-                if (isWithinRange(starttime, endtime)) {
+                if (AppController.isWithinRange(starttime, endtime)) {
                   currentactivityList.add(activitiesArrayList.get(i));
                   currentActivityStatus.add(activityStatus);
                   currentStatus.add(STATUS_CURRENT);
-                } else if (checkafter(starttime)) {
+                } else if (AppController.checkafter(starttime)) {
                   upcomingactivityList.add(activitiesArrayList.get(i));
                   upcomingActivityStatus.add(activityStatus);
                   upcomingStatus.add(STATUS_UPCOMING);
@@ -2143,6 +2196,41 @@ public class SurveyActivitiesFragment extends Fragment
           activitiesWS.setBranching(activitiesArrayList.get(k).getBranching());
           activitiesWS.setStatus(activitiesArrayList.get(k).getStatus());
           activitiesWS.setTitle(activitiesArrayList.get(k).getTitle());
+          activitiesWS.setSchedulingType(activitiesArrayList.get(k).getSchedulingType());
+          if (activitiesArrayList
+                  .get(k)
+                  .getFrequency()
+                  .getType()
+                  .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)
+              && activitiesArrayList.get(k).getAnchorDate() != null) {
+            SchedulingAnchorDate schedulingAnchorDate = new SchedulingAnchorDate();
+            schedulingAnchorDate.setSourceType(
+                activitiesArrayList.get(k).getAnchorDate().getSourceType());
+            if (activitiesArrayList.get(k).getAnchorDate().getStart() != null) {
+              SchedulingAnchorDateStart schedulingAnchorDateStart = new SchedulingAnchorDateStart();
+              schedulingAnchorDateStart.setAnchorDays(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getAnchorDays());
+              schedulingAnchorDateStart.setDateOfMonth(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getDateOfMonth());
+              schedulingAnchorDateStart.setDayOfWeek(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getDayOfWeek());
+              schedulingAnchorDateStart.setTime(
+                  activitiesArrayList.get(k).getAnchorDate().getStart().getTime());
+              schedulingAnchorDate.setStart(schedulingAnchorDateStart);
+            }
+
+            if (activitiesArrayList.get(k).getAnchorDate().getEnd() != null) {
+              SchedulingAnchorDateEnd schedulingAnchorDateEnd = new SchedulingAnchorDateEnd();
+              schedulingAnchorDateEnd.setAnchorDays(
+                  activitiesArrayList.get(k).getAnchorDate().getEnd().getAnchorDays());
+              schedulingAnchorDateEnd.setRepeatInterval(
+                  activitiesArrayList.get(k).getAnchorDate().getEnd().getRepeatInterval());
+              schedulingAnchorDateEnd.setTime(
+                  activitiesArrayList.get(k).getAnchorDate().getEnd().getTime());
+              schedulingAnchorDate.setEnd(schedulingAnchorDateEnd);
+            }
+            activitiesWS.setAnchorDate(schedulingAnchorDate);
+          }
 
           activitiesArrayList1.add(activitiesWS);
         } else {
@@ -2189,6 +2277,11 @@ public class SurveyActivitiesFragment extends Fragment
       } else {
         paused = false;
       }
+      SurveyScheduler survayScheduler = new SurveyScheduler(dbServiceSubscriber, realm);
+      StudyData studyPreferences = dbServiceSubscriber.getStudyPreference(realm);
+      Date joiningDate =
+          survayScheduler.getJoiningDateOfStudy(
+              studyPreferences, ((SurveyActivity) context).getStudyId());
       title = studyList.getTitle();
       Filter filter = getFilterList();
       studyVideoAdapter =
@@ -2198,7 +2291,8 @@ public class SurveyActivitiesFragment extends Fragment
               filter.getStatus(),
               filter.getCurrentRunStatusForActivities(),
               SurveyActivitiesFragment.this,
-              paused);
+              paused,
+              joiningDate);
 
       activityListDataDB = null;
 
@@ -2248,18 +2342,6 @@ public class SurveyActivitiesFragment extends Fragment
               false,
               context.getResources().getString(R.string.ok),
               context.getResources().getString(R.string.app_name));
-        } else if (completion >= 50) {
-          fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
         } else if (missed > 0) {
           SetDialogHelper.setNeutralDialog(
               context,
@@ -2279,18 +2361,6 @@ public class SurveyActivitiesFragment extends Fragment
                   + title
                   + " "
                   + context.getResources().getString(R.string.percent_complete1),
-              false,
-              context.getResources().getString(R.string.ok),
-              context.getResources().getString(R.string.app_name));
-        } else if (completion >= 50) {
-          fiftyPc = true;
-          SetDialogHelper.setNeutralDialog(
-              context,
-              context.getResources().getString(R.string.study)
-                  + " "
-                  + title
-                  + " "
-                  + context.getResources().getString(R.string.percent_complete2),
               false,
               context.getResources().getString(R.string.ok),
               context.getResources().getString(R.string.app_name));
@@ -2553,19 +2623,6 @@ public class SurveyActivitiesFragment extends Fragment
     databaseEvent.setaClass(EligibilityConsent.class);
     databaseEvent.setOperation(DbServiceSubscriber.INSERT_AND_UPDATE_OPERATION);
     dbServiceSubscriber.insert(context, databaseEvent);
-  }
-
-  boolean isWithinRange(Date starttime, Date endtime) {
-    if (endtime == null) {
-      return (new Date().after(starttime) || new Date().equals(starttime));
-    } else {
-      return (new Date().after(starttime) || new Date().equals(starttime))
-          && new Date().before(endtime);
-    }
-  }
-
-  boolean checkafter(Date starttime) {
-    return starttime.after(new Date());
   }
 
   boolean checkbefore(Date starttime) {
@@ -2930,14 +2987,17 @@ public class SurveyActivitiesFragment extends Fragment
         Realm realm = AppController.getRealmobj(context);
         HashMap<String, String> header = new HashMap<>();
         header.put(
-                context.getResources().getString(R.string.clientToken),
-            SharedPreferenceHelper.readPreference(context, context.getResources().getString(R.string.clientToken), ""));
+            context.getResources().getString(R.string.clientToken),
+            SharedPreferenceHelper.readPreference(
+                context, context.getResources().getString(R.string.clientToken), ""));
         header.put(
             "accessToken",
-            SharedPreferenceHelper.readPreference(context, context.getResources().getString(R.string.auth), ""));
+            SharedPreferenceHelper.readPreference(
+                context, context.getResources().getString(R.string.auth), ""));
         header.put(
             "userId",
-            SharedPreferenceHelper.readPreference(context, context.getResources().getString(R.string.userid), ""));
+            SharedPreferenceHelper.readPreference(
+                context, context.getResources().getString(R.string.userid), ""));
         Studies studies =
             realm
                 .where(Studies.class)
@@ -3088,7 +3148,11 @@ public class SurveyActivitiesFragment extends Fragment
         }
       } else {
         metadataProcess();
-        Toast.makeText(context, context.getResources().getString(R.string.unknown_error), Toast.LENGTH_SHORT).show();
+        Toast.makeText(
+                context,
+                context.getResources().getString(R.string.unknown_error),
+                Toast.LENGTH_SHORT)
+            .show();
       }
     }
   }
