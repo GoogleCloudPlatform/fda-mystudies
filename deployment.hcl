@@ -448,7 +448,9 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "WCP",
 #     "WCP-WS",
 #     "auth-server-ws",
-#     "user-registration-server-ws",
+#     "user-registration-server-ws/consent-mgmt-module",
+#     "user-registration-server-ws/enroll-mgmt-module",
+#     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
 #   ])
 #
