@@ -4,6 +4,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.AUTHORIZATION;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
@@ -21,6 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
@@ -55,6 +57,8 @@ public class CallbackControllerTest extends BaseMockIT {
 
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
     Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
     Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
 
@@ -64,7 +68,7 @@ public class CallbackControllerTest extends BaseMockIT {
                 .headers(getCommonHeaders())
                 .contextPath(getContextPath())
                 .queryParams(queryParams)
-                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
+                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie, sourceCookie))
         .andDo(print())
         .andExpect(view().name(ERROR_VIEW_NAME));
 
@@ -79,6 +83,8 @@ public class CallbackControllerTest extends BaseMockIT {
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -86,7 +92,7 @@ public class CallbackControllerTest extends BaseMockIT {
                 .headers(getCommonHeaders())
                 .contextPath(getContextPath())
                 .queryParams(queryParams)
-                .cookie(mobilePlatformCookie, accountStatusCookie))
+                .cookie(mobilePlatformCookie, accountStatusCookie, sourceCookie))
         .andDo(print())
         .andExpect(view().name(ERROR_VIEW_NAME));
 
@@ -102,10 +108,14 @@ public class CallbackControllerTest extends BaseMockIT {
 
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
     Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
     Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
 
-    String callbackUrl = redirectConfig.getCallbackUrl(MobilePlatform.UNKNOWN.getValue());
+    String callbackUrl =
+        redirectConfig.getCallbackUrl(
+            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
     String expectedRedirectUrl =
         String.format(
             "%s?code=%s&userId=%s&accountStatus=0", callbackUrl, AUTH_CODE_VALUE, USER_ID_VALUE);
@@ -116,7 +126,7 @@ public class CallbackControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .headers(headers)
                 .queryParams(queryParams)
-                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
+                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie, sourceCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(expectedRedirectUrl))
@@ -147,10 +157,14 @@ public class CallbackControllerTest extends BaseMockIT {
 
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
     Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
     Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "3");
 
-    String callbackUrl = redirectConfig.getCallbackUrl(MobilePlatform.UNKNOWN.getValue());
+    String callbackUrl =
+        redirectConfig.getCallbackUrl(
+            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
     String expectedRedirectUrl =
         String.format(
             "%s?code=%s&userId=%s&accountStatus=3&email=%s",
@@ -162,7 +176,7 @@ public class CallbackControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .headers(headers)
                 .queryParams(queryParams)
-                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
+                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie, sourceCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(expectedRedirectUrl))

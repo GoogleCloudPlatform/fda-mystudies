@@ -105,7 +105,11 @@ public final class AuthScimConstants {
 
   public static final String GRANT_SCOPE = "grant_scope";
 
+  public static final String SOURCE = "source";
+
   public static final String MOBILE_PLATFORM_COOKIE = "mystudies_mobilePlatform";
+
+  public static final String SOURCE_COOKIE = "mystudies_source";
 
   public static final String TEMP_REG_ID_COOKIE = "mystudies_tempRegId";
 

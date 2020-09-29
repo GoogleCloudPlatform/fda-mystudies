@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_STATUS_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ERROR_VIEW_NAME;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
@@ -20,11 +21,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import java.io.UnsupportedEncodingException;
 import java.util.Optional;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +40,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.WebUtils;
 
 @Controller
 public class CallbackController {
@@ -51,12 +52,15 @@ public class CallbackController {
 
   @Autowired private UserService userService;
 
+  @Autowired private CookieHelper cookieHelper;
+
   @GetMapping(value = "/callback")
   public String login(
       @RequestParam String code,
       HttpServletRequest request,
       HttpServletResponse response,
-      Model model) {
+      Model model)
+      throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
@@ -67,17 +71,17 @@ public class CallbackController {
       return ERROR_VIEW_NAME;
     }
 
-    String userId = getCookieValue(request, USER_ID_COOKIE);
+    String userId = cookieHelper.getCookieValue(request, USER_ID_COOKIE);
     if (StringUtils.isEmpty(userId)) {
       logger.error("userId cookie value is empty, return error view");
       auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
       return ERROR_VIEW_NAME;
     }
 
-    // TODO (#1061) use 'source' header value instead of mobilePlatform
-    String mobilePlatform = getCookieValue(request, MOBILE_PLATFORM_COOKIE);
-    String accountStatus = getCookieValue(request, ACCOUNT_STATUS_COOKIE);
-    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
+    String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
+    String accountStatus = cookieHelper.getCookieValue(request, ACCOUNT_STATUS_COOKIE);
+    String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
+    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform, source);
 
     String redirectUrl = null;
     if (StringUtils.equals(
@@ -104,11 +108,6 @@ public class CallbackController {
 
     logger.exit(String.format("redirect to %s from /login", callbackUrl));
     return redirect(response, redirectUrl);
-  }
-
-  private String getCookieValue(HttpServletRequest request, String cookieName) {
-    Cookie cookie = WebUtils.getCookie(request, cookieName);
-    return cookie != null ? cookie.getValue() : null;
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {
