@@ -35,6 +35,7 @@ resource "random_string" "strings" {
     "study_designer_db_user",
     "study_metadata_db_user",
     "user_registration_db_user",
+    "participant_manager_db_user",
   ])
   length  = 16
   special = true
@@ -52,6 +53,7 @@ resource "random_password" "passwords" {
     "study_designer_db_password",
     "study_metadata_db_password",
     "user_registration_db_password",
+    "participant_manager_db_user",
   ])
   length  = 16
   special = true
@@ -650,4 +652,48 @@ resource "google_secret_manager_secret_version" "auto_user_registration_db_user_
 
   secret      = google_secret_manager_secret.auto_user_registration_db_user.id
   secret_data = random_string.strings["user_registration_db_user"].result
+}
+
+resource "google_secret_manager_secret" "auto_participant_manager_db_password" {
+  provider = google-beta
+
+  secret_id = "auto-participant-manager-db-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_participant_manager_db_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_participant_manager_db_password.id
+  secret_data = random_password.passwords["participant_manager_db_password"].result
+}
+
+resource "google_secret_manager_secret" "auto_participant_manager_db_user" {
+  provider = google-beta
+
+  secret_id = "auto-participant-manager-db-user"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_participant_manager_db_user_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_participant_manager_db_user.id
+  secret_data = random_string.strings["participant_manager_db_user"].result
 }

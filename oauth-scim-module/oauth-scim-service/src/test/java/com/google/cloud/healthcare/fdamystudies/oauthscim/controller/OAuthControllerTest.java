@@ -11,6 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent.INVALID_CLIENT_ID_OR_SECRET;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent.RESOURCE_ACCESS_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
@@ -42,6 +44,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
@@ -200,6 +203,75 @@ public class OAuthControllerTest extends BaseMockIT {
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(NEW_ACCESS_TOKEN_GENERATED.getEventCode(), auditRequest);
     verifyAuditEventCall(auditEventMap, NEW_ACCESS_TOKEN_GENERATED);
+  }
+
+  @Test
+  public void shouldLogInvalidClientIdOrSecretAuditEvent() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.set("Authorization", "invalid_client_credentials");
+    headers.add("correlationId", IdGenerator.id());
+
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add(GRANT_TYPE, CLIENT_CREDENTIALS);
+    requestParams.add(SCOPE, "openid");
+    requestParams.add(REDIRECT_URI, redirectUri);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.TOKEN.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isInternalServerError());
+
+    verifyAuditEventCall(INVALID_CLIENT_ID_OR_SECRET);
+  }
+
+  @Test
+  public void shouldLogResourceAccessFailedAuditEvent() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.set("Authorization", "resource_access_failed");
+    headers.add("correlationId", IdGenerator.id());
+
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add(GRANT_TYPE, CLIENT_CREDENTIALS);
+    requestParams.add(SCOPE, "openid");
+    requestParams.add(REDIRECT_URI, redirectUri);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.TOKEN.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isInternalServerError());
+
+    verifyAuditEventCall(RESOURCE_ACCESS_FAILED);
+  }
+
+  @Test
+  public void shouldLogInvalidGrantOrInvalidRedreshTokenAuditEvent() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    headers.set("Authorization", "invalid_grant_or_invalid_refresh_token");
+    headers.add("correlationId", IdGenerator.id());
+
+    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
+    requestParams.add(GRANT_TYPE, CLIENT_CREDENTIALS);
+    requestParams.add(SCOPE, "openid");
+    requestParams.add(REDIRECT_URI, redirectUri);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.TOKEN.getPath())
+                .contextPath(getContextPath())
+                .params(requestParams)
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isInternalServerError());
+
+    verifyAuditEventCall(CommonAuditEvent.INVALID_GRANT_OR_INVALID_REFRESH_TOKEN);
   }
 
   @Test
