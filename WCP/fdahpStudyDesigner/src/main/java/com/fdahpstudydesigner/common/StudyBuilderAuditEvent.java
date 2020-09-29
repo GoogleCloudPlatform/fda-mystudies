@@ -223,6 +223,55 @@ public enum StudyBuilderAuditEvent {
 
   PASSWORD_HELP_REQUESTED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "PASSWORD_HELP_REQUESTED"),
 
+  STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Questionnaire saved/updated (activity ID - ${questionnaire_id}).",
+      "STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED"),
+
+  STUDY_QUESTIONNAIRE_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Questionnaire deleted (activity ID - ${questionnaire_id}).",
+      "STUDY_QUESTIONNAIRE_DELETED"),
+
+  STUDY_QUESTION_STEP_IN_FORM_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Question step in form deleted (activity ID - ${questionnaire_id}, form ID - ${form_id}, step ID - ${step_id}).",
+      "STUDY_QUESTION_STEP_IN_FORM_DELETED"),
+
+  STUDY_NEW_QUESTIONNAIRE_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New questionnaire created (activity ID - ${questionnaire_id}).",
+      "STUDY_NEW_QUESTIONNAIRE_CREATED"),
+
+  STUDY_FORM_STEP_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Form step deleted (activity ID - ${questionnaire_id}, step ID - ${step_id}).",
+      "STUDY_FORM_STEP_DELETED"),
+
+  STUDY_INSTRUCTION_STEP_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Instruction step deleted (activity ID - ${questionnaire_id}, step ID - ${step_id}).",
+      "STUDY_INSTRUCTION_STEP_DELETED"),
+
+  STUDY_QUESTION_STEP_DELETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Question step deleted (activity ID - ${questionnaire_id}, step ID - ${step_id}).",
+      "STUDY_QUESTION_STEP_DELETED"),
+
   STUDY_CONSENT_SECTIONS_MARKED_COMPLETE(
       STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_CONSENT_SECTIONS_MARKED_COMPLETE"),
 
