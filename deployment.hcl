@@ -164,6 +164,18 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"auth_server_db_user\"].result}"
         },
         {
+          secret_id   = "auto-hydra-db-password"
+          secret_data = "$${random_password.passwords[\"hydra_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-hydra-db-user"
+          secret_data = "$${random_string.strings[\"hydra_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-hydra-secrets-system"
+          secret_data = "$${random_secret.strings[\"hydra_secrets_key\"].result}"
+        },
+        {
           secret_id   = "auto-mystudies-ma-client-id"
           secret_data = "$${random_string.strings[\"mystudies_ma_client_id\"].result}"
         },
@@ -276,6 +288,13 @@ resource "random_password" "passwords" {
   ])
   length  = 16
   special = true
+}
+
+resource "random_secret" "strings" {
+  for_each = toset([
+    "hydra_secrets_key",
+  ])
+  length  = 32
 }
 EOF
     }
@@ -408,6 +427,7 @@ template "project_apps" {
       # Terraform-generated service account for use by the GKE apps.
       service_accounts = [
         { account_id = "auth-server-gke-sa" },
+        { account_id = "hydra-gke-sa" },
         { account_id = "response-server-gke-sa" },
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
@@ -463,7 +483,11 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "user-registration-server-ws/enroll-mgmt-module",
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
+<<<<<<< HEAD
 #     "participant-manager-module",
+=======
+#     "hydra",
+>>>>>>> 6f1a1e51c (Update terraform files)
 #   ])
 #
 #   provider = google-beta
@@ -614,6 +638,7 @@ EOF
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",
           "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",

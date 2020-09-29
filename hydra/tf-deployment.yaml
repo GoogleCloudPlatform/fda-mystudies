@@ -39,7 +39,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: hydra-secrets
-              key: SECRETS_SYSTEM
+              key: SECRETS_KEY
         - name: BASE_URL
           valueFrom:
             secretKeyRef:
