@@ -15,6 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.MOBILE_PLATFORM_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 
@@ -25,6 +26,7 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHe
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
+import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.ext.XLogger;
@@ -36,7 +38,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,7 +63,8 @@ public class ConsentController {
       @RequestParam(name = CONSENT_CHALLENGE) String consentChallenge,
       HttpServletRequest request,
       HttpServletResponse response,
-      Model model) {
+      Model model)
+      throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
 
     cookieHelper.addCookie(response, CONSENT_CHALLENGE_COOKIE, consentChallenge);
@@ -89,7 +91,8 @@ public class ConsentController {
       HttpServletRequest request, boolean skipConsent, HttpServletResponse response) {
     String userId = WebUtils.getCookie(request, USER_ID_COOKIE).getValue();
     String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM_COOKIE).getValue();
-    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
+    String source = WebUtils.getCookie(request, SOURCE_COOKIE).getValue();
+    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform, source);
 
     String redirectUrl =
         String.format("%s?skip_consent=%b&userId=%s", callbackUrl, skipConsent, userId);
@@ -105,13 +108,11 @@ public class ConsentController {
   }
 
   @PostMapping(value = "/consent")
-  public String authenticate(
-      @CookieValue(name = CONSENT_CHALLENGE_COOKIE) String consentChallenge,
-      @CookieValue(name = USER_ID_COOKIE) String userId,
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Model model) {
+  public String authenticate(HttpServletRequest request, HttpServletResponse response, Model model)
+      throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+
+    String consentChallenge = cookieHelper.getCookieValue(request, CONSENT_CHALLENGE_COOKIE);
 
     MultiValueMap<String, String> paramMap = new LinkedMultiValueMap<>();
     paramMap.add(CONSENT_CHALLENGE, consentChallenge);
