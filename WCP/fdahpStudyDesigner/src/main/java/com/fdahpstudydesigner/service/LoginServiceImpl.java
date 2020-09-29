@@ -72,7 +72,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Autowired private AuditLogDAO auditLogDAO;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Autowired private HttpServletRequest request;
 
@@ -158,19 +158,19 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 SessionObject sessionObject = new SessionObject();
                 sessionObject.setUserId(userBO.getUserId());
 
-                auditLogEvEntHelper.logEvent(NEW_USER_ACCOUNT_ACTIVATED, auditRequest);
-                auditLogEvEntHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
+                auditLogEventHelper.logEvent(NEW_USER_ACCOUNT_ACTIVATED, auditRequest);
+                auditLogEventHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
               } else {
                 if (userBO2 != null) {
                   values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
                   values.put(
                       StudyBuilderConstants.ACCESS_LEVEL,
                       UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
-                  auditLogEvEntHelper.logEvent(
+                  auditLogEventHelper.logEvent(
                       NEW_USER_ACCOUNT_ACTIVATION_FAILED, auditRequest, values);
-                  auditLogEvEntHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
+                  auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
                 } else {
-                  auditLogEvEntHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
+                  auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
                 }
               }
             } else {
@@ -182,7 +182,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
         } else {
           result = invalidAccessCodeError;
           values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
-          auditLogEvEntHelper.logEvent(
+          auditLogEventHelper.logEvent(
               NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE, auditRequest, values);
         }
         if (isIntialPasswordSetUp && isValid) {
@@ -273,7 +273,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
             } else {
               eventEnum = PASSWORD_CHANGE_FAILED;
             }
-            auditLogEvEntHelper.logEvent(eventEnum, auditRequest);
+            auditLogEventHelper.logEvent(eventEnum, auditRequest);
           } else {
             message = oldPasswordError.replace("$countPass", passwordCount);
           }
@@ -443,7 +443,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           auditRequest.setCorrelationId(
               sesObj == null ? uuid.toString().toUpperCase() : sesObj.getSessionId());
           auditRequest.setUserId(String.valueOf(userdetails.getUserId()));
-          auditLogEvEntHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
+          auditLogEventHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
         }
         if ("".equals(type) && userdetails.getEmailChanged()) {
           userdetails = null;
@@ -569,7 +569,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                         "passwordResetLinkSubject", dynamicContent, email, null, null);
                 StudyBuilderAuditEvent auditLogEvent =
                     flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
-                auditLogEvEntHelper.logEvent(auditLogEvent, auditRequest);
+                auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
               }
               if (flag) {
                 message = FdahpStudyDesignerConstants.SUCCESS;
@@ -583,7 +583,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - sendPasswordResetLinkToMail - ERROR ", e);
-      auditLogEvEntHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
+      auditLogEventHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
     }
     logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Ends");
     return message;

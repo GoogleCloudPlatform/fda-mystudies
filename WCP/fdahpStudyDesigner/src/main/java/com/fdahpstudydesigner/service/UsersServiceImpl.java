@@ -37,7 +37,6 @@ import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.common.StudyBuilderConstants;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.EmailNotification;
@@ -57,8 +56,6 @@ import org.springframework.stereotype.Service;
 public class UsersServiceImpl implements UsersService {
 
   private static Logger logger = Logger.getLogger(UsersServiceImpl.class);
-
-  @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
