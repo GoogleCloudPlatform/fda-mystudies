@@ -146,8 +146,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     sessionAttributes.put(
-        STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID,
-        CUSTOM_STUDY_ID_VALUE);
+        STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, "6785");
 
     mockMvc
         .perform(
