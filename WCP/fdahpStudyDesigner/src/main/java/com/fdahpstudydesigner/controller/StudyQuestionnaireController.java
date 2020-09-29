@@ -2162,7 +2162,6 @@ public class StudyQuestionnaireController {
           }
         }
       }
-      // auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
     } catch (Exception e) {
       logger.error("StudyQuestionnaireController - saveorUpdateQuestionnaireSchedule - Error", e);
     }
@@ -2377,7 +2376,6 @@ public class StudyQuestionnaireController {
     QuestionnaireBo questionnaireBo = null;
     String customStudyId = "";
     try {
-      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
