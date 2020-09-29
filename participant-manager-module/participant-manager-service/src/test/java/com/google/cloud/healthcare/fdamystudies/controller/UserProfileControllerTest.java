@@ -163,8 +163,6 @@ public class UserProfileControllerTest extends BaseMockIT {
             jsonPath(
                 "$.message",
                 is(MessageCode.GET_USER_PROFILE_WITH_SECURITY_CODE_SUCCESS.getMessage())));
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -181,8 +179,6 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isNotFound())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.INVALID_SECURITY_CODE.getDescription())));
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -223,7 +219,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     verifyAuditEventCall(
         auditEventMap,
         ParticipantManagerEvent.USER_ACCOUNT_ACTIVATION_FAILED_DUE_TO_EXPIRED_INVITATION);
-    verifyTokenIntrospectRequest();
   }
 
   @Test
