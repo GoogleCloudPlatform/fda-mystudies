@@ -1,28 +1,20 @@
 /*
- * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
- * of the Software, and to permit persons to whom the Software is furnished to do so, subject to the
- * following conditions:
+ * Copyright 2020 Google LLC
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial
- * portions of the Software.
- *
- * Funding Source: Food and Drug Administration ("Funding Agency") effective 18 September 2014 as Contract no.
- * HHSF22320140030I/HHSF22301006T (the "Prime Contract").
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR
- * OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
- * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
+ * Use of this source code is governed by an MIT-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.dao;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_FORM_STEP_DELETED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_INSTRUCTION_STEP_DELETED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_DELETED;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.QUESTION_ID;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.STEP_ID;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
@@ -44,6 +36,9 @@ import com.fdahpstudydesigner.bo.QuestionsBo;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.bo.StudySequenceBo;
 import com.fdahpstudydesigner.bo.StudyVersionBo;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -57,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -74,6 +70,10 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
   private static Logger logger = Logger.getLogger(StudyQuestionnaireDAOImpl.class.getName());
 
   @Autowired private AuditLogDAO auditLogDAO;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
+
+  @Autowired private HttpServletRequest request;
 
   HibernateTemplate hibernateTemplate;
 
@@ -936,10 +936,14 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     Session session = null;
     logger.info("StudyQuestionnaireDAOImpl - deleteFromStepQuestion() - Starts");
     FormMappingBo formMappingBo = null;
-    String activitydetails = "";
-    String activity = "";
     StudyVersionBo studyVersionBo = null;
+    Map<String, String> values = new HashMap<>();
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(sessionObject.getSessionId());
+      auditRequest.setStudyId(customStudyId);
+      auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
+
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
@@ -1034,15 +1038,11 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         }
         message = FdahpStudyDesignerConstants.SUCCESS;
       }
-      activity = "Question of form step was deleted.";
-      activitydetails = "Question of form step was deleted. (Study ID = " + customStudyId + ")";
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - deleteFromStepQuestion");
+
+      values.put(QUESTION_ID, questionId.toString());
+      values.put(STEP_ID, formId.toString());
+      auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_DELETED, auditRequest, values);
+
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -1069,11 +1069,15 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     Session session = null;
     QuestionnairesStepsBo questionnairesStepsBo = null;
     List<QuestionnairesStepsBo> questionnaireStepList = null;
-    String activitydetails = "";
-    String activity = "";
     StudyVersionBo studyVersionBo = null;
     String searchQuery = null;
+    Map<String, String> values = new HashMap<>();
+    StudyBuilderAuditEvent eventEnum = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(sessionObject.getSessionId());
+      auditRequest.setStudyId(customStudyId);
+      auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
@@ -1141,22 +1145,22 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                   .setInteger("stepId", stepId)
                   .setString("steptype", stepType);
           query.executeUpdate();
-
+          values.put(QUESTION_ID, questionnaireId.toString());
+          values.put(STEP_ID, stepId.toString());
           if (questionnairesStepsBo
               .getStepType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.INSTRUCTION_STEP)) {
-            activity = FdahpStudyDesignerConstants.INSTRUCTION_ACTIVITY + " was deleted.";
-            activitydetails = "Instruction step was deleted. (Study ID = " + customStudyId + ")";
+            eventEnum = STUDY_INSTRUCTION_STEP_DELETED;
+
           } else if (questionnairesStepsBo
               .getStepType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.QUESTION_STEP)) {
-            activity = FdahpStudyDesignerConstants.QUESTIONSTEP_ACTIVITY + " was deleted.";
-            activitydetails = "Question step was deleted. (Study ID = " + customStudyId + ")";
+            eventEnum = STUDY_QUESTION_STEP_DELETED;
+
           } else if (questionnairesStepsBo
               .getStepType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.FORM_STEP)) {
-            activity = FdahpStudyDesignerConstants.FORMSTEP_ACTIVITY + " was deleted.";
-            activitydetails = "Form step was deleted .(Study ID = " + customStudyId + ")";
+            eventEnum = STUDY_FORM_STEP_DELETED;
           }
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
@@ -1222,13 +1226,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       query.executeUpdate();
 
       // Reset destination steps in Questionnaire Ends
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - deleteQuestionnaireStep");
+
+      auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -1252,11 +1251,16 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       Transaction transaction) {
     String message = FdahpStudyDesignerConstants.FAILURE;
     logger.info("StudyQuestionnaireDAOImpl - deleteQuestionnaireStep(session,transction) - starts");
-    String activitydetails = "";
-    String activity = "";
     String searchQuery = null;
     QuestionnairesStepsBo questionnairesStepsBo = null;
+    Map<String, String> values = new HashMap<>();
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(sessionObject.getSessionId());
+      auditRequest.setStudyId(customStudyId);
+      auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
+      values.put(QUESTION_ID, questionnaireId.toString());
+      values.put(STEP_ID, stepId.toString());
       searchQuery =
           "From QuestionnairesStepsBo QSBO where QSBO.instructionFormId="
               + stepId
@@ -1284,30 +1288,13 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String deleteQuery = "delete InstructionsBo IBO where IBO.id=" + stepId;
           query = session.createQuery(deleteQuery);
           query.executeUpdate();
-          activity = FdahpStudyDesignerConstants.INSTRUCTION_ACTIVITY + " was deleted.";
-          ;
-          activitydetails = "Instruction Step was deleted.(Study ID =" + customStudyId + ")";
-          auditLogDAO.saveToAuditLog(
-              session,
-              transaction,
-              sessionObject,
-              activity,
-              activitydetails,
-              "StudyQuestionnaireDAOImpl - deleteQuestionnaireStep");
+          auditLogEventHelper.logEvent(STUDY_INSTRUCTION_STEP_DELETED, auditRequest, values);
 
         } else if (stepType.equalsIgnoreCase(FdahpStudyDesignerConstants.QUESTION_STEP)) {
           String deleteQuery = "delete QuestionsBo QBO where QBO.id=" + stepId;
           query = session.createQuery(deleteQuery);
           query.executeUpdate();
-          activity = FdahpStudyDesignerConstants.QUESTIONSTEP_ACTIVITY + " was deleted.";
-          activitydetails = "Question Step was deleted.(Study ID =" + customStudyId + ")";
-          auditLogDAO.saveToAuditLog(
-              session,
-              transaction,
-              sessionObject,
-              activity,
-              activitydetails,
-              "StudyQuestionnaireDAOImpl - deleteQuestionnaireStep");
+          auditLogEventHelper.logEvent(STUDY_QUESTION_STEP_DELETED, auditRequest, values);
 
           String deleteResponse =
               "delete QuestionReponseTypeBo QRBO where QRBO.questionsResponseTypeId=" + stepId;
@@ -1350,15 +1337,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           String formDelete = "delete FormBo FBO where FBO.formId=" + stepId;
           query = session.createQuery(formDelete);
           query.executeUpdate();
-          activity = FdahpStudyDesignerConstants.FORMSTEP_ACTIVITY + " was deleted.";
-          activitydetails = "Form Step was deleted.(Study ID =" + customStudyId + ")";
-          auditLogDAO.saveToAuditLog(
-              session,
-              transaction,
-              sessionObject,
-              activity,
-              activitydetails,
-              "StudyQuestionnaireDAOImpl - deleteQuestionnaireStep");
+          auditLogEventHelper.logEvent(STUDY_FORM_STEP_DELETED, auditRequest, values);
         }
         session.delete(questionnairesStepsBo);
         message = FdahpStudyDesignerConstants.SUCCESS;
@@ -1428,6 +1407,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         message =
             deleteQuestuionnaireInfo(studyId, questionnaireId, customStudyId, session, transaction);
       }
+      // STUDY_QUESTIONNAIRE_DELETED
       activity = FdahpStudyDesignerConstants.QUESTIONNAIRE_ACTIVITY + " was deleted.";
       activitydetails =
           FdahpStudyDesignerConstants.QUESTIONNAIRE_ACTIVITY
