@@ -16,7 +16,7 @@ INSERT INTO `auth_info` (`id`, `app_info_id`, `created_time`, `device_token`, `d
 
 INSERT INTO `user_app_details` (`id`, `app_info_id`, `created_time`, `user_details_id`) VALUES (20, 1, '2020-03-21 08:49:38', 44);
 
-INSERT INTO `ur_admin_user` (`id`, `created_time`, `email`, `first_name`, `last_name`, `super_admin`) VALUES ('1', '2020-08-05 18:51:37', 'mock@gmail.com', 'test', 'user', '1');
+INSERT INTO `ur_admin_user` (`id`, `created_time`, `email`, `first_name`, `last_name`, `super_admin`) VALUES ('1', '2020-08-05 18:51:37', 'mock@gmail.com', 'test', 'user', '1'), ('2', '2020-08-05 18:51:37', 'abc@gmail.com', 'test', 'user', '1'), ('3', '2020-08-06 18:51:37', 'xyz@gmail.com', 'test1', 'user1', '0');
 
 INSERT INTO `app_permissions` (`id`, `created_time`, `created_by`, `edit`, `app_info_id`, `ur_admin_user_id`) VALUES ('1', '2020-08-05 18:42:42', '0','1', '1', '1');
 
