@@ -21,8 +21,11 @@ public class DeactivateAccountScheduledTask {
 
   // 30min fixed delay and 10s initial delay
   @Scheduled(fixedDelay = FIXED_DELAY_MILLI_SEC, initialDelay = INITIAL_DELAY_MILLI_SEC)
-  public void deactivateAccount() {
-    logger.info("begin deactivateAccount()");
+  public void processDeleteAccountRequests() {
+    logger.entry("begin processDeleteAccountRequests()");
+
     userManagementProfService.processDeleteAccountRequests();
+
+    logger.exit("processDeleteAccountRequests() completed");
   }
 }

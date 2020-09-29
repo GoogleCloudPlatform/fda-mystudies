@@ -254,8 +254,6 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Root<UserAppDetailsEntity> userAppDetailsRoot = null;
     CriteriaDelete<AuthInfoEntity> criteriaAuthInfoDelete = null;
     Root<AuthInfoEntity> authInfoRoot = null;
-    CriteriaUpdate<UserDetailsEntity> criteriaUserDetailsUpdate = null;
-    Root<UserDetailsEntity> userDetailsRootUpdate = null;
 
     CriteriaUpdate<ParticipantStudyEntity> criteriaParticipantStudiesUpdate = null;
     Root<ParticipantStudyEntity> participantStudiesRoot = null;
@@ -263,15 +261,11 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Predicate[] studyInfoIdPredicates = new Predicate[1];
     Expression<String> studyIdExpression = null;
     Predicate[] predicatesAuthInfo = new Predicate[1];
-    Predicate[] predicatesUserDetails = new Predicate[1];
     Predicate[] predicatesUserAppDetails = new Predicate[1];
     CriteriaQuery<StudyEntity> studyInfoQuery = null;
     Root<StudyEntity> rootStudy = null;
     List<StudyEntity> studyInfoBoList = null;
-    List<String> studyInfoIdList = null;
     UserDetailsEntity userDetails = null;
-    int isUpdated = 0;
-    boolean returnVal = false;
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
     if (deleteData != null && !deleteData.isEmpty()) {
@@ -281,8 +275,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       studyInfoIdPredicates[0] = studyIdExpression.in(deleteData);
       studyInfoQuery.select(rootStudy).where(studyInfoIdPredicates);
       studyInfoBoList = session.createQuery(studyInfoQuery).getResultList();
-      studyInfoIdList =
-          studyInfoBoList.stream().map(StudyEntity::getId).collect(Collectors.toList());
+      studyInfoBoList.stream().map(StudyEntity::getId).collect(Collectors.toList());
       criteriaParticipantStudiesUpdate =
           criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
@@ -295,7 +288,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       studyIdPredicates.add(studyIdExpression.in(studyInfoBoList));
       criteriaParticipantStudiesUpdate.where(
           studyIdPredicates.toArray(new Predicate[studyIdPredicates.size()]));
-      isUpdated = session.createQuery(criteriaParticipantStudiesUpdate).executeUpdate();
+      session.createQuery(criteriaParticipantStudiesUpdate).executeUpdate();
     }
 
     criteriaAuthInfoDelete = criteriaBuilder.createCriteriaDelete(AuthInfoEntity.class);
@@ -339,9 +332,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
 
   @Override
   public void deactivateUserAccount(String userId) {
-
     Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
-    // TODO before status was 3 now set to 0
     UserDetailsEntity userDetailsEntity = optUserDetails.get();
     userDetailsEntity.setStatus(UserStatus.DEACTIVATED.getValue());
     userDetailsEntity.setUserId(null);

@@ -151,8 +151,6 @@ public class UserManagementUtil {
   }
 
   public void deleteUserInfoInAuthServer(String userId) {
-    logger.info("(Util)....UserManagementUtil.deleteUserInfoInAuthServer()......STARTED");
-
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", "Bearer " + oauthService.getAccessToken());

@@ -23,7 +23,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
-import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
@@ -227,15 +226,14 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
   @Override
   public void processDeleteAccountRequests() {
-
-    // Step1: findUsers With Status DEACTIVATE_REQUEST_RECIEVED
+    // findUsers With Status DEACTIVATE_REQUEST_RECIEVED
     List<UserDetailsEntity> listOfUserDetails =
         (List<UserDetailsEntity>)
             CollectionUtils.emptyIfNull(
                 userDetailsRepository.findByStatus(
                     UserStatus.DEACTIVATE_REQUEST_RECIEVED.getValue()));
 
-    // Step 2: call deactivateUserAccount() for each userID's
+    // call deactivateUserAccount() for each userID's
     listOfUserDetails.forEach(
         userDetails -> userProfileManagementDao.deactivateUserAccount(userDetails.getUserId()));
   }
@@ -247,9 +245,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     String userDetailsId = String.valueOf(0);
-    boolean returnVal = false;
     WithdrawFromStudyBean studyBean = null;
-    WithdrawFromStudyRespFromServer resp = null;
     String participantId = "";
     String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     List<String> deleteData = new ArrayList<String>();
@@ -320,7 +316,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
 
       userManagementUtil.deleteUserInfoInAuthServer(userId);
-      // Step 3:call deactivateUserAccount()
+
+      // change the status from DEACTIVATE_REQUEST_RECIEVED to DEACTIVATED
       userProfileManagementDao.deactivateUserAccount(userId);
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
 
