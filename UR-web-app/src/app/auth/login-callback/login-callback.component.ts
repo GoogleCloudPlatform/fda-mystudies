@@ -30,11 +30,17 @@ export class LoginCallbackComponent implements OnInit {
           this.authService
             .getToken(params.code, params.userId)
             .pipe(
-              switchMap(() => {
+              switchMap((authServerResponse) => {
                 sessionStorage.setItem('code', params.code);
                 sessionStorage.setItem('authUserId', params.userId);
-                sessionStorage.setItem('accessToken', params.access_token);
-                sessionStorage.setItem('refreshToken', params.refresh_token);
+                sessionStorage.setItem(
+                  'accessToken',
+                  authServerResponse.access_token,
+                );
+                sessionStorage.setItem(
+                  'refreshToken',
+                  authServerResponse.refresh_token,
+                );
                 return this.accountService.fetchUserProfile();
               }),
             )
