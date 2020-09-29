@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
@@ -17,10 +18,12 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -45,6 +48,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Autowired private SessionFactory sessionFactory;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Autowired UserDetailsRepository userDetailsRepository;
 
   @Autowired CommonDao commonDao;
 
@@ -341,5 +346,16 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       appPropertiesDetails = appPropetiesDetailList.get(0);
     }
     return appPropertiesDetails;
+  }
+
+  @Override
+  public void deactivateUserAccount(String userId) {
+
+    Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
+    // TODO before status was 3 now set to 0
+    UserDetailsEntity userDetailsEntity = optUserDetails.get();
+    userDetailsEntity.setStatus(UserStatus.DEACTIVATED.getValue());
+    userDetailsEntity.setUserId(null);
+    userDetailsRepository.saveAndFlush(userDetailsEntity);
   }
 }
