@@ -45,6 +45,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "auth-server-ws",
 #     "user-registration-server-ws",
 #     "response-server-ws",
+#     "participant-manager-module",
 #   ])
 #
 #   provider = google-beta
@@ -208,6 +209,11 @@ resource "google_service_account" "study_metadata_gke_sa" {
 
 resource "google_service_account" "user_registration_gke_sa" {
   account_id = "user-registration-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "participant_manager_gke_sa" {
+  account_id = "participant-manager-gke-sa"
   project    = module.project.project_id
 }
 
