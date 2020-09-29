@@ -184,21 +184,18 @@ public class UserServiceImpl implements UserService {
       ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
-    UserEntity userEntity = null;
-    Optional<UserEntity> entity =
+
+    Optional<UserEntity> optUserEntity =
         repository.findByAppIdAndEmail(
             resetPasswordRequest.getAppId(), resetPasswordRequest.getEmail());
-    Optional<UserEntity> optionalEntity = repository.findByUserId(resetPasswordRequest.getUserId());
-    if (optionalEntity.isPresent()) {
-      userEntity = optionalEntity.get();
-    }
 
-    if (!entity.isPresent()) {
+    if (!optUserEntity.isPresent()) {
       auditHelper.logEvent(PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME, auditRequest);
       logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
+    UserEntity userEntity = optUserEntity.get();
     if (userEntity.getStatus() == UserAccountStatus.PENDING_CONFIRMATION.getStatus()) {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_NOT_VERIFIED);
     }
@@ -207,15 +204,17 @@ public class UserServiceImpl implements UserService {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
     }
 
+    Integer accountStatusBeforePasswordReset = userEntity.getStatus();
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
       ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
       setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
+      userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
       userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
-      if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
         auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
       } else {
         auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
@@ -226,7 +225,7 @@ public class UserServiceImpl implements UserService {
     }
 
     auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
-    if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+    if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
       auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
     } else {
       auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
@@ -583,5 +582,10 @@ public class UserServiceImpl implements UserService {
     repository.delete(optUserEntity.get());
 
     logger.exit("user account deleted");
+  }
+
+  @Override
+  public Optional<UserEntity> findByUserId(String userId) {
+    return repository.findByUserId(userId);
   }
 }

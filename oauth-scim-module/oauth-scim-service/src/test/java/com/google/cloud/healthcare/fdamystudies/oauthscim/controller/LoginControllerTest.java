@@ -36,7 +36,6 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -197,40 +196,6 @@ public class LoginControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldRedirectToCallbackUrl() throws Exception {
-    MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-    queryParams.add("code", AUTH_CODE_VALUE);
-
-    HttpHeaders headers = getCommonHeaders();
-
-    Cookie mobilePlatformCookie =
-        new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
-    Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
-    Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
-
-    String callbackUrl = redirectConfig.getCallbackUrl(MobilePlatform.UNKNOWN.getValue());
-    String expectedRedirectUrl =
-        String.format(
-            "%s?code=%s&userId=%s&accountStatus=0", callbackUrl, AUTH_CODE_VALUE, USER_ID_VALUE);
-
-    mockMvc
-        .perform(
-            get(ApiEndpoint.LOGIN_PAGE.getPath())
-                .contextPath(getContextPath())
-                .headers(headers)
-                .queryParams(queryParams)
-                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
-        .andDo(print())
-        .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl(expectedRedirectUrl))
-        .andReturn();
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(SIGNIN_SUCCEEDED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, SIGNIN_SUCCEEDED);
-  }
-
-  @Test
   public void shouldAutoLoginPageFailedInvalidRegId() throws Exception {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add(LOGIN_CHALLENGE, LOGIN_CHALLENGE_VALUE_FOR_ANDROID);
@@ -379,6 +344,11 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
 
+    String forgotPasswordRedirectUrl =
+        redirectConfig.getForgotPasswordUrl(MobilePlatform.UNKNOWN.getValue());
+    String termsRedirectUrl = redirectConfig.getTermsUrl(MobilePlatform.UNKNOWN.getValue());
+    String aboutRedirectUrl = redirectConfig.getAboutUrl(MobilePlatform.UNKNOWN.getValue());
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
@@ -387,6 +357,9 @@ public class LoginControllerTest extends BaseMockIT {
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
         .andDo(print())
         .andExpect(view().name(LOGIN_VIEW_NAME))
+        .andExpect(content().string(containsString(forgotPasswordRedirectUrl)))
+        .andExpect(content().string(containsString(termsRedirectUrl)))
+        .andExpect(content().string(containsString(aboutRedirectUrl)))
         .andExpect(content().string(containsString(INVALID_LOGIN_CREDENTIALS.getDescription())));
   }
 
