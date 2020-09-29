@@ -1,0 +1,13 @@
+{
+	"request": {
+		"method": "PUT",
+		"url": "/oauth-scim-service/users/TuKUeFdyWz4E2A1-LqQcoYKBpMsfLnl-KjiuRFuxWcM3sQg"
+	},
+	"response": {
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json;charset=UTF-8"
+		},
+		"bodyFileName": "oauth-scim-service/auth-server-deactivate-account-response.json"
+	}
+}
