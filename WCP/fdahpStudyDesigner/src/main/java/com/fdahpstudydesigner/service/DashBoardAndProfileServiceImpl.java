@@ -23,7 +23,6 @@
 
 package com.fdahpstudydesigner.service;
 
-
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
 
