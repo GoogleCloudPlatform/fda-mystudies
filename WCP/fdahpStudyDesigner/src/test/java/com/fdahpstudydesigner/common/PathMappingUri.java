@@ -31,6 +31,11 @@ public enum PathMappingUri {
 
   VIEW_USER_DETAILS("/adminDashboard/viewUserDetails.do"),
 
+  DELETE_QUESTION_FORM_INFO("/adminStudies/deleteFormQuestion.do"),
+
+  SAVE_OR_UPDATE_QUETIONNAIR_SCHEDULE("/adminStudies/saveorUpdateQuestionnaireSchedule.do"),
+
+  DELETE_QUESTIONNAIRES("/adminStudies/deleteQuestionnaire.do"),
   CONSENT_MARKED_AS_COMPLETE("/adminStudies/consentMarkAsCompleted.do"),
 
   NOTIFICATION_MARK_AS_COMPLETED("/adminStudies/notificationMarkAsCompleted.do"),
