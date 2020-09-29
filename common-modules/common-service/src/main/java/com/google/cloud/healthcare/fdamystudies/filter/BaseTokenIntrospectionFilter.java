@@ -8,12 +8,16 @@
 
 package com.google.cloud.healthcare.fdamystudies.filter;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.common.AuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.service.OAuthService;
 import java.io.IOException;
 import java.util.Map;
@@ -45,6 +49,8 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
   public static final String ACTIVE = "active";
 
   @Autowired private OAuthService oauthService;
+
+  @Autowired private AuditEventHelper auditEventHelper;
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -89,6 +95,9 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
   private void validateOAuthToken(
       ServletRequest request, ServletResponse response, FilterChain chain, String auth)
       throws IOException, ServletException {
+    HttpServletRequest req = (HttpServletRequest) request;
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+
     String token = StringUtils.replace(auth, "Bearer", "").trim();
     ObjectNode params = getObjectNode();
     params.put(TOKEN, token);
@@ -98,6 +107,7 @@ public abstract class BaseTokenIntrospectionFilter implements Filter {
         chain.doFilter(request, response);
       } else {
         logger.exit("token is invalid, return 401 Unauthorized response");
+        auditEventHelper.logEvent(ACCESS_TOKEN_INVALID_OR_EXPIRED, auditRequest);
         setUnauthorizedResponse(response);
       }
     } else {

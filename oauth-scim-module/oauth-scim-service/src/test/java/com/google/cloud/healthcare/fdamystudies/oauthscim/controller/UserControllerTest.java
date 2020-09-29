@@ -56,6 +56,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
@@ -137,6 +138,8 @@ public class UserControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(INVALID_TOKEN)));
+
+    verifyAuditEventCall(CommonAuditEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED);
   }
 
   @Test
@@ -541,7 +544,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -572,7 +574,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
 
     mockMvc
         .perform(
@@ -601,7 +602,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
     userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -662,7 +662,6 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId(APP_ID_VALUE);
-    userRequest.setUserId(userEntity.getUserId());
     userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     userRepository.saveAndFlush(userEntity);
 
@@ -699,7 +698,7 @@ public class UserControllerTest extends BaseMockIT {
     ResetPasswordRequest userRequest = new ResetPasswordRequest();
     userRequest.setEmail(EMAIL_VALUE);
     userRequest.setAppId("Invalid");
-    userRequest.setUserId(userEntity.getUserId());
+
     mockMvc
         .perform(
             post(ApiEndpoint.RESET_PASSWORD.getPath())

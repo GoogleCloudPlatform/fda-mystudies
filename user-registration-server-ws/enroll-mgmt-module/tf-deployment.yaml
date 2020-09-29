@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-registration-server-ws
+  name: participant-datastore-enroll
   labels:
-    app: user-registration-server-ws
+    app: participant-datastore-enroll
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user-registration-server
+      app: participant-datastore-enroll
   template:
     metadata:
       labels:
-        app: user-registration-server
+        app: participant-datastore-enroll
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: user-registration-ws
-          image: gcr.io/fda-mystudies-dev-apps/user-registration-server-ws:latest
+        - name: participant-datastore-enroll
+          image: gcr.io/fda-mystudies-dev-apps/participant-datastore-enroll:latest
           env:
             - name: DB_USER
               valueFrom:
@@ -81,7 +81,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /myStudiesUserMgmtWS/healthCheck
+              path: /myStudiesEnrollmentMgmt/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
