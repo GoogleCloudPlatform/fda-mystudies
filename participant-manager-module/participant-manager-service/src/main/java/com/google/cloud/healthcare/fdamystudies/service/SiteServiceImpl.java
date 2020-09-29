@@ -295,14 +295,7 @@ public class SiteServiceImpl implements SiteService {
             site.getStudy().getId(), participant.getEmail());
 
     if (registry.isPresent()) {
-      ParticipantRegistrySiteEntity participantRegistrySite = registry.get();
-      Optional<ParticipantStudyEntity> participantStudy =
-          participantStudyRepository.findByParticipantRegistrySiteId(
-              participantRegistrySite.getId());
-
-      if (participantStudy.isPresent()) {
-        return ErrorCode.EMAIL_EXISTS;
-      }
+      return ErrorCode.EMAIL_EXISTS;
     }
     return null;
   }
@@ -621,7 +614,6 @@ public class SiteServiceImpl implements SiteService {
               .stream()
               .map(ParticipantStudyEntity::getId)
               .collect(Collectors.toList());
-
 
       List<StudyConsentEntity> studyConsents = null;
       if (page != null && limit != null) {
