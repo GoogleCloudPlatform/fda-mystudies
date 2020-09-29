@@ -16,6 +16,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
@@ -144,6 +145,10 @@ public class BaseMockIT {
 
   protected void clearAuditRequests() {
     auditRequests.clear();
+  }
+
+  public static String asJsonString(Object obj) throws JsonProcessingException {
+    return new ObjectMapper().writeValueAsString(obj);
   }
 
   protected SessionObject getSessionObject() {
