@@ -246,7 +246,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public boolean deActivateAcct(String userId, List<String> deleteData, String userDetailsId) {
+  public void deActivateAcct(String userId, List<String> deleteData, String userDetailsId) {
     logger.info("UserProfileManagementDaoImpl deActivateAcct() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
 
@@ -271,7 +271,6 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     List<String> studyInfoIdList = null;
     UserDetailsEntity userDetails = null;
     int isUpdated = 0;
-    int count = 0;
     boolean returnVal = false;
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
@@ -288,7 +287,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
           criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
       criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
-      criteriaParticipantStudiesUpdate.set("participantId", "NULL");
+      criteriaParticipantStudiesUpdate.set("participantId", null);
       userDetails = session.get(UserDetailsEntity.class, userDetailsId);
       studyIdPredicates.add(
           criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
@@ -312,17 +311,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     criteriaUserAppDetailsDelete.where(predicatesUserAppDetails);
     session.createQuery(criteriaUserAppDetailsDelete).executeUpdate();
 
-    criteriaUserDetailsUpdate = criteriaBuilder.createCriteriaUpdate(UserDetailsEntity.class);
-    userDetailsRootUpdate = criteriaUserDetailsUpdate.from(UserDetailsEntity.class);
-    criteriaUserDetailsUpdate.set("status", 3);
-    predicatesUserDetails[0] = criteriaBuilder.equal(userDetailsRootUpdate.get("userId"), userId);
-    criteriaUserDetailsUpdate.where(predicatesUserDetails);
-    count = session.createQuery(criteriaUserDetailsUpdate).executeUpdate();
-    if (count > 0) {
-      returnVal = true;
-    }
     logger.info("UserProfileManagementDaoImpl deActivateAcct() - Ends ");
-    return returnVal;
   }
 
   @Override

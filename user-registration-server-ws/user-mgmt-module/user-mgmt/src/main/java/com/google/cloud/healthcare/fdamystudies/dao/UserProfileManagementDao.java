@@ -36,7 +36,7 @@ public interface UserProfileManagementDao {
 
   public UserDetailsEntity getParticipantDetails(String id);
 
-  public boolean deActivateAcct(String userId, List<String> deleteData, String userDetailsId);
+  public void deActivateAcct(String userId, List<String> deleteData, String userDetailsId);
 
   public void deactivateUserAccount(String userId);
 }

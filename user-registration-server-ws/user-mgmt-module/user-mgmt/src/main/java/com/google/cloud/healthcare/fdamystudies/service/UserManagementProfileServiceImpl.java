@@ -24,13 +24,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
-import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
@@ -237,9 +238,6 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     // Step 2: call deactivateUserAccount() for each userID's
     listOfUserDetails.forEach(
         userDetails -> userProfileManagementDao.deactivateUserAccount(userDetails.getUserId()));
-    /* for (UserDetailsBO userDetails : listOfUserDetails) {
-      userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
-    }*/
   }
 
   @Override
@@ -256,17 +254,15 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     List<String> deleteData = new ArrayList<String>();
 
-    // Step 1: change status to deactivate request recieved in userreg service and return userentity
-
     Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
 
-    if (optUserDetails.isPresent()) {
-      UserDetailsEntity userDetailsEntity = optUserDetails.get();
-      userDetailsEntity.setStatus(UserStatus.DEACTIVATE_REQUEST_RECIEVED.getValue());
-      userDetailsRepository.saveAndFlush(userDetailsEntity);
-    } else {
-      // TODO (M)
+    if (!optUserDetails.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
+
+    UserDetailsEntity userDetailsEntity = optUserDetails.get();
+    userDetailsEntity.setStatus(UserStatus.DEACTIVATE_REQUEST_RECIEVED.getValue());
+    userDetailsRepository.saveAndFlush(userDetailsEntity);
 
     userDetailsId = commonDao.getUserInfoDetails(userId);
 
@@ -320,22 +316,18 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     }
     if (retVal != null
         && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-      returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
+
+      userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
 
       userManagementUtil.deleteUserInfoInAuthServer(userId);
       // Step 3:call deactivateUserAccount()
       userProfileManagementDao.deactivateUserAccount(userId);
+      message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
 
-      if (returnVal) {
-        message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-      } else {
-        message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-      }
+      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATED, auditRequest);
+    } else {
+      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATION_FAILED, auditRequest);
     }
-
-    AuditLogEvent auditEvent =
-        returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
-    userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
 
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");
     return message;
