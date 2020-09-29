@@ -15,7 +15,7 @@ public enum UserStatus {
   DEACTIVATED(0, "Deactivated"),
   ACTIVE(1, "Active"),
   INVITED(2, "Invited"),
-  DEACTIVATE_REQUEST_RECIEVED(3, "Deactivate request recieved");
+  DEACTIVATE_PENDING(3, "Deactivate request pending");
 
   private Integer value;
 

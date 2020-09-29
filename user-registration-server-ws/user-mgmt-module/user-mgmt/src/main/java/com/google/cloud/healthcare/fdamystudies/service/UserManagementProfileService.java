@@ -39,5 +39,5 @@ public interface UserManagementProfileService {
   public EmailResponse resendConfirmationthroughEmail(
       String applicationId, String securityToken, String emailId);
 
-  public void processDeleteAccountRequests();
+  public void processDeactivatePendingRequests();
 }

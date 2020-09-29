@@ -48,12 +48,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 public class UserManagementProfileServiceImpl implements UserManagementProfileService {
@@ -225,17 +225,25 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
-  public void processDeleteAccountRequests() {
-    // findUsers With Status DEACTIVATE_REQUEST_RECIEVED
+  public void processDeactivatePendingRequests() {
+    // findUsers With Status DEACTIVATE_PENDING
     List<UserDetailsEntity> listOfUserDetails =
         (List<UserDetailsEntity>)
             CollectionUtils.emptyIfNull(
-                userDetailsRepository.findByStatus(
-                    UserStatus.DEACTIVATE_REQUEST_RECIEVED.getValue()));
+                userDetailsRepository.findByStatus(UserStatus.DEACTIVATE_PENDING.getValue()));
 
     // call deactivateUserAccount() for each userID's
     listOfUserDetails.forEach(
-        userDetails -> userProfileManagementDao.deactivateUserAccount(userDetails.getUserId()));
+        userDetails -> {
+          try {
+            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId());
+            userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
+          } catch (ErrorCodeException e) {
+            if (e.getErrorCode() == ErrorCode.USER_NOT_FOUND) {
+              userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
+            }
+          }
+        });
   }
 
   @Override
@@ -255,10 +263,6 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     if (!optUserDetails.isPresent()) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
-
-    UserDetailsEntity userDetailsEntity = optUserDetails.get();
-    userDetailsEntity.setStatus(UserStatus.DEACTIVATE_REQUEST_RECIEVED.getValue());
-    userDetailsRepository.saveAndFlush(userDetailsEntity);
 
     userDetailsId = commonDao.getUserInfoDetails(userId);
 
@@ -315,9 +319,13 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
 
       userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
 
+      UserDetailsEntity userDetailsEntity = optUserDetails.get();
+      userDetailsEntity.setStatus(UserStatus.DEACTIVATE_PENDING.getValue());
+      userDetailsRepository.saveAndFlush(userDetailsEntity);
+
       userManagementUtil.deleteUserInfoInAuthServer(userId);
 
-      // change the status from DEACTIVATE_REQUEST_RECIEVED to DEACTIVATED
+      // change the status from DEACTIVATE_PENDING to DEACTIVATED
       userProfileManagementDao.deactivateUserAccount(userId);
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
 
