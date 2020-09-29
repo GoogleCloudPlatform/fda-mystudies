@@ -95,7 +95,11 @@ export class SetUpAccountComponent
           this.toastr.success(getMessage(successResponse.code));
           sessionStorage.setItem('tempRegId', successResponse.tempRegId);
           sessionStorage.setItem('userId', successResponse.userId);
-          this.authService.beginLoginConsentFlow();
+          this.authService.initSessionStorage();
+          setTimeout(() => {
+            this.authService.beginLoginConsentFlow();
+          }, 1000);
+          // this.authService.beginLoginConsentFlow();
         }),
     );
   }
