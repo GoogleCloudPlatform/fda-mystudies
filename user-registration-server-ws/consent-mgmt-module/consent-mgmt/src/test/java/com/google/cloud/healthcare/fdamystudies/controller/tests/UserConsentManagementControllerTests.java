@@ -139,20 +139,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     clearAuditRequests();
     auditEventMap.clear();
 
-    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
-    String fileName =
-        underDirectory
-            + "/"
-            + Constants.VALID_USER_ID
-            + "_"
-            + consentStatus.getStudyId()
-            + "_"
-            + consentStatus.getConsent().getVersion()
-            + "_"
-            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-            + ".pdf";
+    String filepath = getConsentDocumentFilepath(consentStatus);
 
-    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), filepath);
     Blob mockedBlob = mock(Blob.class);
 
     String content = "sample consent document content";
@@ -186,6 +175,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     verifyAuditEventCall(auditEventMap, READ_OPERATION_SUCCEEDED_FOR_SIGNED_CONSENT_DOCUMENT);
     verifyTokenIntrospectRequest(2);
+  }
+
+  private String getConsentDocumentFilepath(ConsentStatusBean consentStatus) {
+    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
+    String filepath =
+        underDirectory
+            + "/"
+            + consentStatus.getConsent().getVersion()
+            + "_"
+            + new SimpleDateFormat("MMddyyyy").format(new Date())
+            + ".pdf";
+    return filepath;
   }
 
   @Test
@@ -240,20 +241,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     clearAuditRequests();
     auditEventMap.clear();
 
-    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
-    String fileName =
-        underDirectory
-            + "/"
-            + Constants.VALID_USER_ID
-            + "_"
-            + consentStatus.getStudyId()
-            + "_"
-            + consentStatus.getConsent().getVersion()
-            + "_"
-            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-            + ".pdf";
+    String filepath = getConsentDocumentFilepath(consentStatus);
 
-    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), filepath);
     Blob mockedBlob = mock(Blob.class);
 
     String content = "sample consent document content";
@@ -340,20 +330,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     clearAuditRequests();
     auditEventMap.clear();
 
-    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
-    String fileName =
-        underDirectory
-            + "/"
-            + Constants.VALID_USER_ID
-            + "_"
-            + consentStatus.getStudyId()
-            + "_"
-            + consentStatus.getConsent().getVersion()
-            + "_"
-            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-            + ".pdf";
+    String filepath = getConsentDocumentFilepath(consentStatus);
 
-    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), filepath);
     Blob mockedBlob = mock(Blob.class);
 
     String content = "sample consent document content";

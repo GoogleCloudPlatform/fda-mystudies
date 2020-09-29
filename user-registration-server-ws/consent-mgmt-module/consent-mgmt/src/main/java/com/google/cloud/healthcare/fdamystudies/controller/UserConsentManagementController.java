@@ -154,13 +154,9 @@ public class UserConsentManagementController {
               if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                 String underDirectory = userId + "/" + consentStatusBean.getStudyId();
                 String fileName =
-                    userId
+                    consentStatusBean.getConsent().getVersion()
                         + "_"
-                        + consentStatusBean.getStudyId()
-                        + "_"
-                        + consentStatusBean.getConsent().getVersion()
-                        + "_"
-                        + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
+                        + new SimpleDateFormat("MMddyyyy").format(new Date())
                         + ".pdf";
 
                 saveDocumentToCloudStorage(
@@ -187,13 +183,9 @@ public class UserConsentManagementController {
               if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                 String underDirectory = userId + "/" + consentStatusBean.getStudyId();
                 String fileName =
-                    userId
+                    consentStatusBean.getConsent().getVersion()
                         + "_"
-                        + consentStatusBean.getStudyId()
-                        + "_"
-                        + consentStatusBean.getConsent().getVersion()
-                        + "_"
-                        + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
+                        + new SimpleDateFormat("MMddyyyy").format(new Date())
                         + ".pdf";
 
                 saveDocumentToCloudStorage(
