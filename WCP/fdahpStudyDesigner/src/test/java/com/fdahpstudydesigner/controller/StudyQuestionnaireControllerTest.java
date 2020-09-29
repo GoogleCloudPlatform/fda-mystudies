@@ -9,7 +9,7 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_ACTIVE_TASK_CREATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_QUESTIONNAIRE_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_IN_FORM_DELETED;
@@ -77,7 +77,7 @@ public class StudyQuestionnaireControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewStudyQuestionnaires.do"));
 
-    verifyAuditEventCall(STUDY_NEW_ACTIVE_TASK_CREATED);
+    verifyAuditEventCall(STUDY_NEW_QUESTIONNAIRE_CREATED);
   }
 
   @Test

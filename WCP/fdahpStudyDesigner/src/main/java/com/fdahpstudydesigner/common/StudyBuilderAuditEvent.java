@@ -107,12 +107,12 @@ public enum StudyBuilderAuditEvent {
       "Question step in form deleted (activity ID - ${questionnaire_id}, form ID - ${form_id}, step ID - ${step_id}).",
       "STUDY_QUESTION_STEP_IN_FORM_DELETED"),
 
-  STUDY_NEW_ACTIVE_TASK_CREATED(
+  STUDY_NEW_QUESTIONNAIRE_CREATED(
       STUDY_BUILDER,
       STUDY_DATASTORE,
       null,
-      "New Active task created (activity ID - ${activetask_id}).",
-      "STUDY_NEW_ACTIVE_TASK_CREATED"),
+      "New questionnaire created (activity ID - ${questionnaire_id}).",
+      "STUDY_NEW_QUESTIONNAIRE_CREATED"),
 
   STUDY_FORM_STEP_DELETED(
       STUDY_BUILDER,

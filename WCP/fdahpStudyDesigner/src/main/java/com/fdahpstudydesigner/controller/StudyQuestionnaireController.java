@@ -9,7 +9,7 @@
 package com.fdahpstudydesigner.controller;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_ACTIVE_TASK_CREATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_QUESTIONNAIRE_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRE_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_IN_FORM_DELETED;
@@ -2122,8 +2122,8 @@ public class StudyQuestionnaireController {
                       sessionStudyCount + FdahpStudyDesignerConstants.SUC_MSG,
                       "Questionnaire Updated successfully.");
             } else {
-              values.put("activetask_id", addQuestionnaireBo.getId().toString());
-              eventEnum = STUDY_NEW_ACTIVE_TASK_CREATED;
+              values.put("questionnaire_id", addQuestionnaireBo.getId().toString());
+              eventEnum = STUDY_NEW_QUESTIONNAIRE_CREATED;
               auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
               request
                   .getSession()
