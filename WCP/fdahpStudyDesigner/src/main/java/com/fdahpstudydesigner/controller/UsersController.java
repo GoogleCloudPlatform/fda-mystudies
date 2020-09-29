@@ -79,7 +79,7 @@ public class UsersController {
 
   @Autowired private UsersService usersService;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvEntHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @RequestMapping("/adminUsersEdit/activateOrDeactivateUser.do")
   public void activateOrDeactivateUser(
@@ -299,9 +299,9 @@ public class UsersController {
           AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
           request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
           if (addFlag) {
-            auditLogEvEntHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
+            auditLogEventHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
           } else {
-            auditLogEvEntHelper.logEvent(USER_ACCOUNT_UPDATED_FAILED, auditRequest);
+            auditLogEventHelper.logEvent(USER_ACCOUNT_UPDATED_FAILED, auditRequest);
           }
         }
         mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -342,15 +342,15 @@ public class UsersController {
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             Map<String, String> values = new HashMap<>();
             values.put(StudyBuilderConstants.EDITED_USER_ID, changePassworduserId);
-            auditLogEvEntHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_USER, auditRequest, values);
+            auditLogEventHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_USER, auditRequest, values);
 
             String sent =
                 loginService.sendPasswordResetLinkToMail(
                     request, emailId, "", "enforcePasswordChange");
             if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
-              auditLogEvEntHelper.logEvent(PASSWORD_ENFORCEMENT_EMAIL_SENT, auditRequest, values);
+              auditLogEventHelper.logEvent(PASSWORD_ENFORCEMENT_EMAIL_SENT, auditRequest, values);
             } else {
-              auditLogEvEntHelper.logEvent(
+              auditLogEventHelper.logEvent(
                   PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED, auditRequest, values);
             }
           }
@@ -358,7 +358,7 @@ public class UsersController {
           msg = usersService.enforcePasswordChange(null, "");
           if (StringUtils.isNotEmpty(msg)
               && msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
-            auditLogEvEntHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS, auditRequest);
+            auditLogEventHelper.logEvent(PASSWORD_CHANGE_ENFORCED_FOR_ALL_USERS, auditRequest);
             emails = usersService.getActiveUserEmailIds();
             if ((emails != null) && !emails.isEmpty()) {
               boolean allSent = false;
@@ -371,10 +371,10 @@ public class UsersController {
                 }
               }
               if (allSent) {
-                auditLogEvEntHelper.logEvent(
+                auditLogEventHelper.logEvent(
                     PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_SENT, auditRequest);
               } else {
-                auditLogEvEntHelper.logEvent(
+                auditLogEventHelper.logEvent(
                     PASSWORD_CHANGE_ENFORCEMENT_FOR_ALL_USERS_EMAIL_FAILED, auditRequest);
               }
             }
@@ -474,10 +474,10 @@ public class UsersController {
                     propMap.get("resent.link.success.message"));
             Map<String, String> values = new HashMap<>();
             values.put(StudyBuilderConstants.USER_ID, String.valueOf(userId));
-            auditLogEvEntHelper.logEvent(NEW_USER_INVITATION_RESENT, auditRequest, values);
+            auditLogEventHelper.logEvent(NEW_USER_INVITATION_RESENT, auditRequest, values);
           } else {
             request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
-            auditLogEvEntHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
+            auditLogEventHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
           }
         }
         mav = new ModelAndView("redirect:/adminUsersView/getUserList.do");
@@ -526,10 +526,10 @@ public class UsersController {
               auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
               auditRequest.setCorrelationId(sesObj.getSessionId());
               if (sesObj.getUserId().equals(userBO.getUserId())) {
-                auditLogEvEntHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
+                auditLogEventHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
               } else {
                 values.put("viewed_user_id", userId);
-                auditLogEvEntHelper.logEvent(USER_RECORD_VIEWED, auditRequest, values);
+                auditLogEventHelper.logEvent(USER_RECORD_VIEWED, auditRequest, values);
               }
             }
           }
