@@ -73,6 +73,8 @@ public class StudyControllerTest extends BaseMockIT {
 
   private static final String USER_ID_VALUE = "4878641";
 
+  private static final int STUDY_ID_INT_VALUE = 678574;
+
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
     HttpHeaders headers = getCommonHeaders();
@@ -473,7 +475,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
 
     StudyBo studyBo = new StudyBo();
-    studyBo.setId(678574);
+    studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setStudySequenceBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -504,7 +506,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     ConsentInfoBo ConsentInfoBo = new ConsentInfoBo();
-    ConsentInfoBo.setStudyId(678574);
+    ConsentInfoBo.setStudyId(STUDY_ID_INT_VALUE);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_CONSENT_INFO.getPath())
@@ -522,7 +524,7 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldCompleteSyudySettings() throws Exception {
+  public void shouldCompleteStudySettings() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
     SessionObject session = new SessionObject();
@@ -535,7 +537,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
 
     StudyBo studyBo = new StudyBo();
-    studyBo.setId(678574);
+    studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setStudySequenceBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -590,7 +592,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     StudyBo studyBo = new StudyBo();
-    studyBo.setId(678574);
+    studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
     studyBo.setStudySequenceBo(null);
 
@@ -621,7 +623,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     StudyBo studyBo = new StudyBo();
-    studyBo.setId(678574);
+    studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
     studyBo.setStudySequenceBo(null);
 
@@ -656,7 +658,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     StudyBo studyBo = new StudyBo();
-    studyBo.setId(678574);
+    studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
     studyBo.setStudySequenceBo(null);
 
@@ -786,7 +788,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     EligibilityBo eligibilityBo = new EligibilityBo();
-    eligibilityBo.setStudyId(678574);
+    eligibilityBo.setStudyId(STUDY_ID_INT_VALUE);
     eligibilityBo.setActionType("save");
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -819,7 +821,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     EligibilityBo eligibilityBo = new EligibilityBo();
-    eligibilityBo.setStudyId(678574);
+    eligibilityBo.setStudyId(STUDY_ID_INT_VALUE);
     eligibilityBo.setActionType("complete");
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -850,7 +852,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(678574);
+    consentBo.setStudyId(STUDY_ID_INT_VALUE);
     consentBo.setType("save");
 
     mockMvc
@@ -877,7 +879,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(678574);
+    consentBo.setStudyId(STUDY_ID_INT_VALUE);
     consentBo.setType("complete");
     consentBo.setConsentDocContent("doc");
 
@@ -905,7 +907,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
     ConsentBo consentBo = new ConsentBo();
-    consentBo.setStudyId(678574);
+    consentBo.setStudyId(STUDY_ID_INT_VALUE);
     consentBo.setComprehensionTest("save");
     consentBo.setConsentDocContent("doc");
 
