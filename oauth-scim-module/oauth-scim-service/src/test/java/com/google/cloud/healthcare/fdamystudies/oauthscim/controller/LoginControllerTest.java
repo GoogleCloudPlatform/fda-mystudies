@@ -27,6 +27,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
@@ -62,6 +63,7 @@ import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
 import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
@@ -129,9 +131,13 @@ public class LoginControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     String forgotPasswordRedirectUrl =
-        redirectConfig.getForgotPasswordUrl(MobilePlatform.UNKNOWN.getValue());
-    String termsRedirectUrl = redirectConfig.getTermsUrl(MobilePlatform.UNKNOWN.getValue());
-    String aboutRedirectUrl = redirectConfig.getAboutUrl(MobilePlatform.UNKNOWN.getValue());
+        redirectConfig.getForgotPasswordUrl(
+            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    String termsRedirectUrl =
+        redirectConfig.getTermsUrl(
+            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    String aboutRedirectUrl =
+        redirectConfig.getAboutUrl(PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -158,9 +164,12 @@ public class LoginControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
 
     String forgotPasswordRedirectUrl =
-        redirectConfig.getForgotPasswordUrl(MobilePlatform.ANDROID.getValue());
+        redirectConfig.getForgotPasswordUrl(
+            MobilePlatform.ANDROID.getValue(), PlatformComponent.MOBILE_APPS.getValue());
     String signupRedirectUrl = redirectConfig.getSignupUrl(MobilePlatform.ANDROID.getValue());
-    String termsRedirectUrl = redirectConfig.getTermsUrl(MobilePlatform.ANDROID.getValue());
+    String termsRedirectUrl =
+        redirectConfig.getTermsUrl(
+            MobilePlatform.ANDROID.getValue(), PlatformComponent.MOBILE_APPS.getValue());
     String privacyPolicyRedirectUrl =
         redirectConfig.getPrivacyPolicyUrl(MobilePlatform.ANDROID.getValue());
     mockMvc
@@ -206,6 +215,8 @@ public class LoginControllerTest extends BaseMockIT {
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie userIdCookie = new Cookie(USER_ID_COOKIE, USER_ID_VALUE);
     Cookie accountStatusCookie = new Cookie(ACCOUNT_STATUS_COOKIE, "0");
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -213,7 +224,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .headers(headers)
                 .queryParams(queryParams)
-                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie))
+                .cookie(mobilePlatformCookie, userIdCookie, accountStatusCookie, sourceCookie))
         .andDo(print())
         .andExpect(status().is2xxSuccessful())
         .andReturn();
@@ -273,6 +284,8 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie tempRegId = new Cookie(TEMP_REG_ID_COOKIE, TEMP_REG_ID_VALUE);
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     MvcResult result =
         mockMvc
@@ -280,7 +293,8 @@ public class LoginControllerTest extends BaseMockIT {
                 post(ApiEndpoint.LOGIN_PAGE.getPath())
                     .contextPath(getContextPath())
                     .params(queryParams)
-                    .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId))
+                    .cookie(
+                        appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId, sourceCookie))
             .andDo(print())
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()))
@@ -311,13 +325,15 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
     Cookie tempRegId = new Cookie(TEMP_REG_ID_COOKIE, TEMP_REG_ID_VALUE);
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(queryParams)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId, sourceCookie))
         .andDo(print())
         .andExpect(status().is2xxSuccessful())
         .andExpect(view().name(LOGIN_VIEW_NAME));
@@ -343,18 +359,24 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     String forgotPasswordRedirectUrl =
-        redirectConfig.getForgotPasswordUrl(MobilePlatform.UNKNOWN.getValue());
-    String termsRedirectUrl = redirectConfig.getTermsUrl(MobilePlatform.UNKNOWN.getValue());
-    String aboutRedirectUrl = redirectConfig.getAboutUrl(MobilePlatform.UNKNOWN.getValue());
+        redirectConfig.getForgotPasswordUrl(
+            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    String termsRedirectUrl =
+        redirectConfig.getTermsUrl(
+            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
+    String aboutRedirectUrl =
+        redirectConfig.getAboutUrl(PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(view().name(LOGIN_VIEW_NAME))
         .andExpect(content().string(containsString(forgotPasswordRedirectUrl)))
@@ -375,7 +397,8 @@ public class LoginControllerTest extends BaseMockIT {
 
     // Step-2 call API with login credentials
     String activationUrl =
-        redirectConfig.getAccountActivationUrl(MobilePlatform.UNKNOWN.getValue());
+        redirectConfig.getAccountActivationUrl(
+            MobilePlatform.UNKNOWN.getValue(), PlatformComponent.PARTICIPANT_MANAGER.getValue());
     String expectedViedName =
         String.format("redirect:%s?email=%s", activationUrl, userEntity.getEmail());
 
@@ -385,13 +408,16 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
                 .headers(headers)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(view().name(expectedViedName));
@@ -416,13 +442,16 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
                 .headers(headers)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection());
 
@@ -447,13 +476,16 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
                 .headers(headers)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl(ApiEndpoint.CONSENT_PAGE.getUrl()));
@@ -474,12 +506,15 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
                 .params(requestParams)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(content().string(containsString(INVALID_LOGIN_CREDENTIALS.getDescription())));
   }
@@ -499,6 +534,8 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     HttpHeaders headers = getCommonHeaders();
     headers.add("userId", userEntity.getUserId());
@@ -514,7 +551,7 @@ public class LoginControllerTest extends BaseMockIT {
                   .contextPath(getContextPath())
                   .params(requestParams)
                   .headers(headers)
-                  .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                  .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
           .andDo(print())
           .andExpect(content().string(containsString(expectedErrorCode.getDescription())));
 
@@ -571,6 +608,8 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     HttpHeaders headers = getCommonHeaders();
     headers.add("userId", userEntity.getUserId());
@@ -581,7 +620,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .params(requestParams)
                 .headers(headers)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(content().string(containsString(INVALID_LOGIN_CREDENTIALS.getDescription())));
 
@@ -613,6 +652,8 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     HttpHeaders headers = getCommonHeaders();
     headers.add("userId", userEntity.getUserId());
@@ -623,7 +664,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .params(requestParams)
                 .headers(headers)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(content().string(containsString(PASSWORD_EXPIRED.getDescription())));
 
@@ -654,6 +695,8 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     HttpHeaders headers = getCommonHeaders();
     headers.add("userId", userEntity.getUserId());
@@ -664,7 +707,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .params(requestParams)
                 .headers(headers)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(content().string(containsString(TEMP_PASSWORD_EXPIRED.getDescription())));
 
@@ -684,6 +727,8 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie loginChallenge = new Cookie(LOGIN_CHALLENGE_COOKIE, LOGIN_CHALLENGE_VALUE);
     Cookie mobilePlatformCookie =
         new Cookie(MOBILE_PLATFORM_COOKIE, MobilePlatform.UNKNOWN.getValue());
+    Cookie sourceCookie =
+        new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     HttpHeaders headers = getCommonHeaders();
 
@@ -693,7 +738,7 @@ public class LoginControllerTest extends BaseMockIT {
                 .contextPath(getContextPath())
                 .params(requestParams)
                 .headers(headers)
-                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie))
+                .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
         .andExpect(content().string(containsString(USER_NOT_FOUND.getDescription())));
 
@@ -731,9 +776,9 @@ public class LoginControllerTest extends BaseMockIT {
     headers.set("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
     headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
     headers.add("appVersion", "1.0");
-    headers.add("appId", "SCIM AUTH SERVER");
+    headers.add("appId", PlatformComponent.PARTICIPANT_MANAGER.getValue());
     headers.add("studyId", "MyStudies");
-    headers.add("source", "SCIM AUTH SERVER");
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
     headers.add("correlationId", IdGenerator.id());
     return headers;
   }
