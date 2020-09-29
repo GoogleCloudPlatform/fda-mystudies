@@ -6,7 +6,10 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHAN
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCED_FOR_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_ENFORCEMENT_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_RE_ACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_DEACTIVATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,6 +42,40 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(view().name("addOrEditUserPage"));
 
     verifyAuditEventCall(ACCOUNT_DETAILS_VIEWED);
+  }
+
+  @Test
+  public void shouldActivateUser() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.ACTIVATE_OR_DEACTIVATE_USER.getPath())
+                .param("userId", "2")
+                .param("userStatus", "0")
+                .headers(headers)
+                .sessionAttrs(getSession()))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyAuditEventCall(USER_ACCOUNT_RE_ACTIVATED);
+  }
+
+  @Test
+  public void shouldDeactivateUser() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.ACTIVATE_OR_DEACTIVATE_USER.getPath())
+                .param("userId", "2")
+                .param("userStatus", "1")
+                .headers(headers)
+                .sessionAttrs(getSession()))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyAuditEventCall(USER_RECORD_DEACTIVATED);
   }
 
   @Test
@@ -150,6 +187,7 @@ public class UsersControllerTest extends BaseMockIT {
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminUsersView/getUserList.do"));
 
+    verifyAuditEventCall(USER_RECORD_UPDATED);
     // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
     // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
     verifyAuditEventCall(USER_ACCOUNT_UPDATED_FAILED);

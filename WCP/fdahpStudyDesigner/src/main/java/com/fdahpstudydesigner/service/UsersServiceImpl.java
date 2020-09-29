@@ -24,9 +24,13 @@
 package com.fdahpstudydesigner.service;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_CREATION_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_INVITATION_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_RE_ACTIVATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.EDITED_USER_ID;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -81,10 +85,18 @@ public class UsersServiceImpl implements UsersService {
     String status = "";
 
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(userSession.getSessionId());
+      auditRequest.setUserId(String.valueOf(userId));
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
       superAdminEmailList = usersDAO.getSuperAdminList();
       userBo = usersDAO.getUserDetails(userId);
       if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
+        StudyBuilderAuditEvent auditLogEvent =
+            userStatus == 1 ? USER_RECORD_DEACTIVATED : USER_ACCOUNT_RE_ACTIVATED;
+        Map<String, String> values = new HashMap<>();
+        values.put(EDITED_USER_ID, String.valueOf(userSession.getUserId()));
+        auditLogHelper.logEvent(auditLogEvent, auditRequest, values);
         keyValueForSubject = new HashMap<String, String>();
         if ((superAdminEmailList != null) && !superAdminEmailList.isEmpty()) {
           if (userStatus == 1) {
@@ -209,73 +221,79 @@ public class UsersServiceImpl implements UsersService {
       }
       msg =
           usersDAO.addOrUpdateUserDetails(userBO2, permissions, selectedStudies, permissionValues);
-      if (addFlag) {
-        values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
-        values.put(StudyBuilderConstants.ACCESS_LEVEL, userBO.getAccessLevel());
-        msg = loginService.sendPasswordResetLinkToMail(request, userBO2.getUserEmail(), "", "USER");
-        auditLogEvents.add(NEW_USER_CREATED);
-        if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
-          auditLogEvents.add(NEW_USER_INVITATION_EMAIL_SENT);
-        } else {
-          auditLogEvents.add(NEW_USER_INVITATION_EMAIL_FAILED);
-        }
-      }
-      if (!addFlag) {
-        values.put(StudyBuilderConstants.EDITED_USER_ID, String.valueOf(userSession.getUserId()));
-        values.put(StudyBuilderConstants.ACCESS_LEVEL, userSession.getAccessLevel());
-        auditLogEvents.add(USER_RECORD_UPDATED);
-
-        if (emailIdChange) {
-          msg =
-              loginService.sendPasswordResetLinkToMail(
-                  request, userBO2.getUserEmail(), userBO3.getUserEmail(), "USER_EMAIL_UPDATE");
-        } else {
-          msg =
-              loginService.sendPasswordResetLinkToMail(
-                  request, userBO2.getUserEmail(), "", "USER_UPDATE");
-        }
-      }
-      auditLogHelper.logEvent(auditLogEvents, auditRequest, values);
-      superAdminEmailList = usersDAO.getSuperAdminList();
-      if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)
-          && (superAdminEmailList != null)
-          && !superAdminEmailList.isEmpty()) {
-        keyValueForSubject = new HashMap<String, String>();
-        if (superAdminEmailList.size() == 1) {
-          for (String email : superAdminEmailList) {
-            adminFullNameIfSizeOne = usersDAO.getSuperAdminNameByEmailId(email);
-            keyValueForSubject.put("$admin", adminFullNameIfSizeOne.getFirstName());
-          }
-        } else {
-          keyValueForSubject.put("$admin", "Admin");
-        }
-        keyValueForSubject.put("$userEmail", userBO.getUserEmail());
-        keyValueForSubject.put(
-            "$sessionAdminFullName", userSession.getFirstName() + " " + userSession.getLastName());
+      if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         if (addFlag) {
-          dynamicContent =
-              FdahpStudyDesignerUtil.genarateEmailContent(
-                  "mailForAdminUserCreateContent", keyValueForSubject);
-          EmailNotification.sendEmailNotification(
-              "mailForAdminUserCreateSubject", dynamicContent, null, superAdminEmailList, null);
-        } else {
-          String status = "";
-          if (FdahpStudyDesignerUtil.isEmpty(userBO2.getUserPassword())) {
-            status = "Pending Activation";
+          values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
+          values.put(StudyBuilderConstants.ACCESS_LEVEL, userBO.getAccessLevel());
+          msg =
+              loginService.sendPasswordResetLinkToMail(request, userBO2.getUserEmail(), "", "USER");
+          auditLogEvents.add(NEW_USER_CREATED);
+          if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
+            auditLogEvents.add(NEW_USER_INVITATION_EMAIL_SENT);
           } else {
-            if (userBO2.isEnabled()) {
-              status = "Active";
-            } else {
-              status = "Deactivated";
-            }
+            auditLogEvents.add(NEW_USER_INVITATION_EMAIL_FAILED);
           }
-          keyValueForSubject.put("$userStatus", status);
-          dynamicContent =
-              FdahpStudyDesignerUtil.genarateEmailContent(
-                  "mailForAdminUserUpdateContent", keyValueForSubject);
-          EmailNotification.sendEmailNotification(
-              "mailForAdminUserUpdateSubject", dynamicContent, null, superAdminEmailList, null);
         }
+        if (!addFlag) {
+          values.put(StudyBuilderConstants.EDITED_USER_ID, String.valueOf(userSession.getUserId()));
+          values.put(StudyBuilderConstants.EDITED_USER_ACCESS_LEVEL, userSession.getAccessLevel());
+          auditLogEvents.add(USER_RECORD_UPDATED);
+
+          if (emailIdChange) {
+            msg =
+                loginService.sendPasswordResetLinkToMail(
+                    request, userBO2.getUserEmail(), userBO3.getUserEmail(), "USER_EMAIL_UPDATE");
+          } else {
+            msg =
+                loginService.sendPasswordResetLinkToMail(
+                    request, userBO2.getUserEmail(), "", "USER_UPDATE");
+          }
+        }
+        auditLogHelper.logEvent(auditLogEvents, auditRequest, values);
+        superAdminEmailList = usersDAO.getSuperAdminList();
+        if (msg.equals(FdahpStudyDesignerConstants.SUCCESS)
+            && (superAdminEmailList != null)
+            && !superAdminEmailList.isEmpty()) {
+          keyValueForSubject = new HashMap<String, String>();
+          if (superAdminEmailList.size() == 1) {
+            for (String email : superAdminEmailList) {
+              adminFullNameIfSizeOne = usersDAO.getSuperAdminNameByEmailId(email);
+              keyValueForSubject.put("$admin", adminFullNameIfSizeOne.getFirstName());
+            }
+          } else {
+            keyValueForSubject.put("$admin", "Admin");
+          }
+          keyValueForSubject.put("$userEmail", userBO.getUserEmail());
+          keyValueForSubject.put(
+              "$sessionAdminFullName",
+              userSession.getFirstName() + " " + userSession.getLastName());
+          if (addFlag) {
+            dynamicContent =
+                FdahpStudyDesignerUtil.genarateEmailContent(
+                    "mailForAdminUserCreateContent", keyValueForSubject);
+            EmailNotification.sendEmailNotification(
+                "mailForAdminUserCreateSubject", dynamicContent, null, superAdminEmailList, null);
+          } else {
+            String status = "";
+            if (FdahpStudyDesignerUtil.isEmpty(userBO2.getUserPassword())) {
+              status = "Pending Activation";
+            } else {
+              if (userBO2.isEnabled()) {
+                status = "Active";
+              } else {
+                status = "Deactivated";
+              }
+            }
+            keyValueForSubject.put("$userStatus", status);
+            dynamicContent =
+                FdahpStudyDesignerUtil.genarateEmailContent(
+                    "mailForAdminUserUpdateContent", keyValueForSubject);
+            EmailNotification.sendEmailNotification(
+                "mailForAdminUserUpdateSubject", dynamicContent, null, superAdminEmailList, null);
+          }
+        }
+      } else {
+        auditLogHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
       }
     } catch (Exception e) {
       logger.error("UsersServiceImpl - addOrUpdateUserDetails() - ERROR", e);

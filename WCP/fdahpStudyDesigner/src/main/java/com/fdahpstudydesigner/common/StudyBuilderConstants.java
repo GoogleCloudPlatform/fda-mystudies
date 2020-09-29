@@ -14,6 +14,7 @@ public final class StudyBuilderConstants {
 
   public static final String USER_ID = "new_user_id";
   public static final String ACCESS_LEVEL = "new_user_access_level";
+  public static final String EDITED_USER_ACCESS_LEVEL = "edited_user_access_level";
   public static final String EDITED_USER_ID = "edited_user_id";
   public static final String NOTIFICATION_ID = "notification_id";
   public static final String OLD_NOTIFICATION_ID = "old_notification_id";

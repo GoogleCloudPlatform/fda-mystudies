@@ -204,6 +204,7 @@ public class LoginController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     if ((error != null)
         && (("timeOut").equalsIgnoreCase(error) || ("multiUser").equalsIgnoreCase(error))) {
+      // TODO(Aswini):Session Expiry AUDIT Event
       request.getSession().setAttribute("errMsg", propMap.get("user.session.timeout"));
     } else if (error != null) {
       request
@@ -333,10 +334,11 @@ public class LoginController {
       @RequestParam(value = "msg", required = false) String msg,
       @RequestParam(value = "sucMsg", required = false) String sucMsg) {
     logger.info("LoginController - sessionOut() - Starts");
-    SessionObject sesObj =
+    SessionObject sesObj = null;
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    sesObj =
         (SessionObject)
             request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setCorrelationId(sesObj.getSessionId());
     auditRequest.setUserId(sesObj.getEmail());
     try {
@@ -344,12 +346,18 @@ public class LoginController {
       if (auth != null) {
         loginService.logUserLogOut(sesObj);
         new SecurityContextLogoutHandler().logout(request, response, auth);
+        auditRequest.setSource(USER_SIGNOUT_SUCCEEDED.getSource().getValue());
+        auditRequest.setDestination(USER_SIGNOUT_SUCCEEDED.getDestination().getValue());
         auditLogEventHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
       }
       request.getSession(true).setAttribute("errMsg", msg);
       request.getSession(true).setAttribute("sucMsg", sucMsg);
     } catch (Exception e) {
       logger.error("LoginController - sessionOut() - ERROR ", e);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
+      auditRequest.setUserId(sesObj.getEmail());
+      auditRequest.setSource(USER_SIGNOUT_FAILED.getSource().getValue());
+      auditRequest.setDestination(USER_SIGNOUT_FAILED.getDestination().getValue());
       auditLogEventHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
     }
     logger.info("LoginController - sessionOut() - Ends");

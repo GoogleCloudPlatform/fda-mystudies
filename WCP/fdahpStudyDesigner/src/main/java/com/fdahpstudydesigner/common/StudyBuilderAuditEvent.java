@@ -259,7 +259,21 @@ public enum StudyBuilderAuditEvent {
   STUDY_RESUMED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_RESUMED"),
 
   STUDY_SETTINGS_SAVED_OR_UPDATED(
-      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_SETTINGS_SAVED_OR_UPDATED");
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_SETTINGS_SAVED_OR_UPDATED"),
+
+  USER_ACCOUNT_RE_ACTIVATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "User account activated (user ID - ${edited_user_id}).",
+      "USER_ACCOUNT_RE_ACTIVATED"),
+
+  USER_RECORD_DEACTIVATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "User account deactivated (user ID - ${edited_user_id}).",
+      "USER_RECORD_DEACTIVATED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;
