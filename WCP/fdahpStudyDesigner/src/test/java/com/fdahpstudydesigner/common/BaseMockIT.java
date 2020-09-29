@@ -88,6 +88,8 @@ public class BaseMockIT {
 
   protected final String SESSION_USER_EMAIL = "mystudies_mockit@grr.la";
 
+  protected MockMvc mockMvc;
+
   protected final String STUDY_SESSION_COUNT_PARAM = "_S";
 
   protected final String STUDY_SESSION_COUNT_VALUE = "0";
@@ -97,8 +99,6 @@ public class BaseMockIT {
 
   protected final String CUSTOM_STUDY_ID_ATTR_NAME =
       STUDY_SESSION_COUNT_VALUE + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID;
-
-  protected MockMvc mockMvc;
 
   @Value("${applicationVersion}")
   protected String applicationVersion;
