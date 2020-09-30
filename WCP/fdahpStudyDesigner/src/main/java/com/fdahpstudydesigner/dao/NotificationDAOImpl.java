@@ -31,7 +31,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFIC
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NEW_NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.NOTIFICATION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.OLD_NOTIFICATION_ID;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
 import com.fdahpstudydesigner.bo.NotificationBO;
