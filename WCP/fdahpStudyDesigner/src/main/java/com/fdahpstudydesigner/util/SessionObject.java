@@ -54,6 +54,7 @@ public class SessionObject implements Serializable {
   private String userType = "";
   private String role = "";
   private String sessionId;
+  private String accessLevel = "";
 
   public Integer getAdminstratorId() {
     return adminstratorId;
@@ -237,5 +238,13 @@ public class SessionObject implements Serializable {
 
   public void setSessionId(String sessionId) {
     this.sessionId = sessionId;
+  }
+
+  public String getAccessLevel() {
+    return accessLevel;
+  }
+
+  public void setAccessLevel(String accessLevel) {
+    this.accessLevel = accessLevel;
   }
 }
