@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
@@ -38,7 +37,7 @@ public class DashBoardAndProfileControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     mockMvc
         .perform(
-            post(PathMappingUri.CHANGE_PASSWORD.getPath())
+            post(PathMappingUri.ADMIN_DASHBOARD_CHANGE_PASSWORD.getPath())
                 .headers(headers)
                 .param("newPassword", "BostonTechnology@123")
                 .param("oldPassword", "Mock-it-Password")
@@ -54,7 +53,7 @@ public class DashBoardAndProfileControllerTest extends BaseMockIT {
     HttpHeaders headers = getCommonHeaders();
     mockMvc
         .perform(
-            post(PathMappingUri.CHANGE_PASSWORD.getPath())
+            post(PathMappingUri.ADMIN_DASHBOARD_CHANGE_PASSWORD.getPath())
                 .headers(headers)
                 .param("newPassword", "Mock-password-user")
                 .param("oldPassword", "Invalid_For_User")
@@ -102,7 +101,7 @@ public class DashBoardAndProfileControllerTest extends BaseMockIT {
 
     mockMvc
         .perform(
-            get(PathMappingUri.VIEW_USER_DETAILS.getPath())
+            get(PathMappingUri.ADMIN_DASHBOARD_VIEW_USER_DETAILS.getPath())
                 .headers(headers)
                 .sessionAttrs(getSessionObjectForDashboard()))
         .andDo(print())
