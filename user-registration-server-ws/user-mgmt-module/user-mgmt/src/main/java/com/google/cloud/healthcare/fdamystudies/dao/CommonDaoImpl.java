@@ -9,7 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
@@ -127,25 +129,20 @@ public class CommonDaoImpl implements CommonDao {
     AppEntity appDetails = null;
 
     AppOrgInfoBean appOrgInfoBean = new AppOrgInfoBean();
-    String appInfoId = String.valueOf(0);
-    String orgInfoId = String.valueOf(0);
 
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
 
-    if (!StringUtils.isEmpty(appId)) {
-      appDetailsBoCriteria = criteriaBuilder.createQuery(AppEntity.class);
-      appDetailsBoRoot = appDetailsBoCriteria.from(AppEntity.class);
-      appDetailsPredicates[0] = criteriaBuilder.equal(appDetailsBoRoot.get("appId"), appId);
-      appDetailsBoCriteria.select(appDetailsBoRoot).where(appDetailsPredicates);
-      appDetailsList = session.createQuery(appDetailsBoCriteria).getResultList();
-      if (!appDetailsList.isEmpty()) {
-        appDetails = appDetailsList.get(0);
-        appInfoId = appDetails.getAppId();
-      }
+    appDetailsBoCriteria = criteriaBuilder.createQuery(AppEntity.class);
+    appDetailsBoRoot = appDetailsBoCriteria.from(AppEntity.class);
+    appDetailsPredicates[0] = criteriaBuilder.equal(appDetailsBoRoot.get("appId"), appId);
+    appDetailsBoCriteria.select(appDetailsBoRoot).where(appDetailsPredicates);
+    appDetailsList = session.createQuery(appDetailsBoCriteria).getResultList();
+    if (appDetailsList.isEmpty()) {
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
     }
-
-    appOrgInfoBean.setAppInfoId(appInfoId);
+    appDetails = appDetailsList.get(0);
+    appOrgInfoBean.setAppInfoId(appDetails.getAppId());
 
     logger.info("CommonDaoImpl getUserAppDetailsByAllApi() - Ends ");
     return appOrgInfoBean;
