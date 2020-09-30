@@ -44,7 +44,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.ConsentBo;
 import com.fdahpstudydesigner.bo.ConsentInfoBo;
