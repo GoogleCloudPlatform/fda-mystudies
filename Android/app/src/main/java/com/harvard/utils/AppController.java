@@ -181,6 +181,19 @@ public class AppController {
     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
   }
 
+  public static boolean checkafter(Date starttime) {
+    return starttime.after(new Date());
+  }
+
+  public static boolean isWithinRange(Date starttime, Date endtime) {
+    if (endtime == null) {
+      return (new Date().after(starttime) || new Date().equals(starttime));
+    } else {
+      return (new Date().after(starttime) || new Date().equals(starttime))
+          && new Date().before(endtime);
+    }
+  }
+
   public static final int getColor(Context context, int id) {
     final int version = Build.VERSION.SDK_INT;
     if (version >= 23) {
@@ -246,7 +259,6 @@ public class AppController {
   public static SimpleDateFormat getDateFormatForApi() {
     return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
   }
-
 
   public static SimpleDateFormat getDateFormatUtcNoZone() {
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
