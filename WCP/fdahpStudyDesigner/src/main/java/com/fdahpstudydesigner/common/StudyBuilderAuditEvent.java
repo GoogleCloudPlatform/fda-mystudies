@@ -8,6 +8,8 @@
 
 package com.fdahpstudydesigner.common;
 
+import static com.fdahpstudydesigner.common.PlatformComponent.PARTICIPANT_DATASTORE;
+import static com.fdahpstudydesigner.common.PlatformComponent.RESPONSE_DATASTORE;
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_BUILDER;
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_DATASTORE;
 
@@ -257,7 +259,58 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       null,
-      "STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED");
+      "STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED"),
+
+  STUDY_COMPREHENSION_TEST_SECTION_MARKED_COMPLETE(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      null,
+      "STUDY_COMPREHENSION_TEST_SECTION_MARKED_COMPLETE"),
+
+  STUDY_LIST_VIEWED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_LIST_VIEWED"),
+
+  STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New consent document published for existing study. New consent document version:'${consent_document_version}'",
+      "STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED"),
+
+  STUDY_CONSENT_CONTENT_NEW_VERSION_PUBLISHED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New consent content version published with study. New consent content version: '${consent_version}'",
+      "STUDY_CONSENT_CONTENT_NEW_VERSION_PUBLISHED"),
+
+  STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE(
+      STUDY_DATASTORE,
+      PARTICIPANT_DATASTORE,
+      null,
+      "App/study metadata sent.",
+      "STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE"),
+
+  STUDY_METADATA_SENT_TO_RESPONSE_DATASTORE(
+      STUDY_DATASTORE,
+      RESPONSE_DATASTORE,
+      null,
+      "Study metadata sent.",
+      "STUDY_METADATA_SENT_TO_RESPONSE_DATASTORE"),
+
+  STUDY_METADATA_SEND_OPERATION_FAILED(
+      STUDY_DATASTORE,
+      PARTICIPANT_DATASTORE,
+      null,
+      "Failed to send app/study metadata.",
+      "STUDY_METADATA_SEND_OPERATION_FAILED"),
+
+  STUDY_METADATA_SEND_FAILED(
+      STUDY_DATASTORE,
+      RESPONSE_DATASTORE,
+      null,
+      "Failed to send study metadata.",
+      "STUDY_METADATA_SEND_FAILED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

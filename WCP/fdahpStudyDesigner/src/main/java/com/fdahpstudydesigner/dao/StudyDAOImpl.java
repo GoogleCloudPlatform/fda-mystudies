@@ -24,7 +24,10 @@ package com.fdahpstudydesigner.dao;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COMPREHENSION_TEST_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_CONTENT_NEW_VERSION_PUBLISHED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LAUNCHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PAUSED;
@@ -3670,6 +3673,8 @@ public class StudyDAOImpl implements StudyDAO {
             query.setMaxResults(1);
             studyVersionBo = (StudyVersionBo) query.uniqueResult();
             if (studyVersionBo != null) {
+              auditLogEventHelper.logEvent(
+                  STUDY_COMPREHENSION_TEST_SECTION_MARKED_COMPLETE, auditRequest);
               activity = "Study comprehension test marked as completed.";
               activitydetails =
                   "Comprehension Test section successfully checked for minimum content completeness and marked 'Completed'.  (Study ID = "
@@ -4392,9 +4397,11 @@ public class StudyDAOImpl implements StudyDAO {
             study.setEnrollmentdateAsAnchordate(studyBo.isEnrollmentdateAsAnchordate());
             // Phase2a code end
             session.saveOrUpdate(study);
+
             values.put("enrollment_setting", String.valueOf(study.getEnrollingParticipants()));
             values.put("rejoin_setting", String.valueOf(study.getAllowRejoin()));
             values.put("dataretention_setting", String.valueOf(study.getRetainParticipant()));
+
             // setting true to setting admins
             // setting and admins section of Study completed or not
             // updated in study sequence table(to keep track of each
@@ -5612,6 +5619,9 @@ public class StudyDAOImpl implements StudyDAO {
               newConsentBo.setLive(1);
               newConsentBo.setCustomStudyId(studyBo.getCustomStudyId());
               session.save(newConsentBo);
+              values.put("consent_document_version", String.valueOf(newConsentBo.getVersion()));
+              auditLogEventHelper.logEvent(
+                  STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED, auditRequest, values);
             }
             query =
                 session
@@ -5627,6 +5637,9 @@ public class StudyDAOImpl implements StudyDAO {
                 newConsentInfoBo.setCustomStudyId(studyBo.getCustomStudyId());
                 newConsentInfoBo.setLive(1);
                 session.save(newConsentInfoBo);
+                values.put("consent_version", String.valueOf(newConsentInfoBo.getVersion()));
+                auditLogEventHelper.logEvent(
+                    STUDY_CONSENT_CONTENT_NEW_VERSION_PUBLISHED, auditRequest, values);
               }
             }
           }
