@@ -26,29 +26,36 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.PRIVACY_POLICY_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_TO;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SIGNUP_LINK;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SKIP;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SOURCE_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_REG_ID_COOKIE;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TERMS_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID_COOKIE;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.AuthenticationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.beans.LoginRequest;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.common.CookieHelper;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.RedirectConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.OAuthService;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +71,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -72,12 +78,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.WebUtils;
 
 @Controller
 public class LoginController {
 
-  private static final String MOBILE_DEVICE = "mobileDevice";
+  private static final String MOBILE_APP = "mobileApp";
 
   private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
 
@@ -89,39 +94,22 @@ public class LoginController {
 
   @Autowired private CookieHelper cookieHelper;
 
-  @Autowired private AppPropertyConfig appConfig;
+  @Autowired private AuthScimAuditHelper auditHelper;
 
-  /**
-   * @param loginChallenge is optional. ORY Hydra sends this field as query param when login/consent
-   *     flow is initiated.
-   * @param code ORY Hydra redirects to this path again when the login/consent flow is completed.
-   *     ORY Hydra sends authorization 'code' and no login challenge in query params.
-   * @param request
-   * @param response
-   * @param model
-   * @return
-   */
   @GetMapping(value = "/login")
   public String login(
-      @RequestParam(name = LOGIN_CHALLENGE, required = false) String loginChallenge,
-      @RequestParam(required = false) String code,
-      @CookieValue(name = ACCOUNT_STATUS_COOKIE, required = false) String accountStatus,
+      @RequestParam(name = LOGIN_CHALLENGE) String loginChallenge,
       HttpServletRequest request,
       HttpServletResponse response,
-      Model model) {
+      Model model)
+      throws UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
-
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     model.addAttribute("loginRequest", new LoginRequest());
-
-    // login/consent flow completed
-    if (StringUtils.isNotBlank(code)) {
-      logger.exit(
-          "login/consent flow completed, redirect to callbackUrl with auth code and userId");
-      return redirectToCallbackUrl(request, code, accountStatus, response);
-    }
 
     // login/consent flow initiated
     if (StringUtils.isEmpty(loginChallenge)) {
+      auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
       return ERROR_VIEW_NAME;
     }
 
@@ -131,13 +119,10 @@ public class LoginController {
     ResponseEntity<JsonNode> loginResponse = oauthService.requestLogin(paramMap);
     if (loginResponse.getStatusCode().is2xxSuccessful()) {
       JsonNode responseBody = loginResponse.getBody();
-      if (skipLogin(responseBody)) {
-        logger.exit("skip login, return to callback URL");
-        return redirectToCallbackUrl(request, code, accountStatus, response);
-      }
       return redirectToLoginOrAutoLoginPage(response, responseBody, model, loginChallenge);
     }
 
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
     return ERROR_VIEW_NAME;
   }
 
@@ -151,25 +136,29 @@ public class LoginController {
    * @param model
    * @return
    * @throws JsonProcessingException
+   * @throws UnsupportedEncodingException
    */
   @PostMapping(value = "/login")
   public String authenticate(
       @Valid @ModelAttribute("loginRequest") LoginRequest loginRequest,
       BindingResult bindingResult,
       Model model,
-      @CookieValue(name = TEMP_REG_ID_COOKIE, required = false) String tempRegId,
-      @CookieValue(name = APP_ID_COOKIE) String appId,
-      @CookieValue(name = LOGIN_CHALLENGE_COOKIE) String loginChallenge,
-      @CookieValue(name = MOBILE_PLATFORM_COOKIE) String mobilePlatform,
       HttpServletRequest request,
       HttpServletResponse response)
-      throws JsonProcessingException {
+      throws JsonProcessingException, UnsupportedEncodingException {
     logger.entry(String.format("%s request", request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
+    String tempRegId = cookieHelper.getCookieValue(request, TEMP_REG_ID_COOKIE);
+    String appId = cookieHelper.getCookieValue(request, APP_ID_COOKIE);
+    String loginChallenge = cookieHelper.getCookieValue(request, LOGIN_CHALLENGE_COOKIE);
+    String mobilePlatform = cookieHelper.getCookieValue(request, MOBILE_PLATFORM_COOKIE);
+    String source = cookieHelper.getCookieValue(request, SOURCE_COOKIE);
+
+    addAttributesToModel(model, mobilePlatform, source);
 
     if (StringUtils.isNotEmpty(tempRegId)) {
-      return redirectToLoginOrConsentPage(tempRegId, loginChallenge, request, response);
+      return redirectToLoginOrConsentPage(tempRegId, loginChallenge, response);
     }
 
     // validate login credentials
@@ -190,11 +179,11 @@ public class LoginController {
     user.setPassword(loginRequest.getPassword());
     user.setAppId(appId);
 
-    AuthenticationResponse authenticationResponse = userService.authenticate(user);
+    AuthenticationResponse authenticationResponse = userService.authenticate(user, auditRequest);
 
     if (UserAccountStatus.PENDING_CONFIRMATION.getStatus()
         == authenticationResponse.getAccountStatus()) {
-      String redirectUrl = redirectConfig.getAccountActivationUrl(mobilePlatform);
+      String redirectUrl = redirectConfig.getAccountActivationUrl(mobilePlatform, source);
       String url = String.format("%s?email=%s", redirectUrl, loginRequest.getEmail());
       return redirect(response, url);
     }
@@ -209,15 +198,12 @@ public class LoginController {
     } else {
       return LOGIN_VIEW_NAME;
     }
-    return redirectToConsentPage(
-        loginChallenge, authenticationResponse.getUserId(), request, response);
+    return redirectToConsentPage(loginChallenge, authenticationResponse.getUserId(), response);
   }
 
   private String redirectToLoginOrConsentPage(
-      String tempRegId,
-      String loginChallenge,
-      HttpServletRequest request,
-      HttpServletResponse response) {
+      String tempRegId, String loginChallenge, HttpServletResponse response)
+      throws UnsupportedEncodingException {
     Optional<UserEntity> optUser = userService.findUserByTempRegId(tempRegId);
     if (!optUser.isPresent()) {
       logger.exit("tempRegId is invalid, return to login page");
@@ -229,19 +215,12 @@ public class LoginController {
       cookieHelper.addCookie(response, USER_ID_COOKIE, user.getUserId());
       cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
       userService.resetTempRegId(user.getUserId());
-      return redirectToConsentPage(loginChallenge, user.getUserId(), request, response);
+      return redirectToConsentPage(loginChallenge, user.getUserId(), response);
     }
   }
 
-  private boolean skipLogin(JsonNode responseBody) {
-    return responseBody.has(SKIP) && responseBody.get(SKIP).booleanValue();
-  }
-
   private String redirectToConsentPage(
-      String loginChallenge,
-      String userId,
-      HttpServletRequest request,
-      HttpServletResponse response) {
+      String loginChallenge, String userId, HttpServletResponse response) {
     ResponseEntity<JsonNode> result = oauthService.loginAccept(userId, loginChallenge);
     if (result.getStatusCode().is2xxSuccessful()) {
       String redirectUrl = JsonUtils.getTextValue(result.getBody(), REDIRECT_TO);
@@ -251,9 +230,10 @@ public class LoginController {
   }
 
   private String redirectToLoginOrAutoLoginPage(
-      HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge) {
+      HttpServletResponse response, JsonNode responseBody, Model model, String loginChallenge)
+      throws UnsupportedEncodingException {
 
-    String requestUrl = responseBody.get("request_url").textValue();
+    String requestUrl = URLDecoder.decode(responseBody.get("request_url").textValue(), "UTF-8");
     MultiValueMap<String, String> qsParams =
         UriComponentsBuilder.fromUriString(requestUrl).build().getQueryParams();
 
@@ -264,16 +244,13 @@ public class LoginController {
         APP_ID_COOKIE,
         CORRELATION_ID_COOKIE,
         CLIENT_APP_VERSION_COOKIE,
-        MOBILE_PLATFORM_COOKIE);
+        MOBILE_PLATFORM_COOKIE,
+        SOURCE_COOKIE);
 
     String mobilePlatform = qsParams.getFirst(MOBILE_PLATFORM);
+    String source = qsParams.getFirst(SOURCE);
     model.addAttribute(LOGIN_CHALLENGE, loginChallenge);
-    model.addAttribute(FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform));
-    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
-    model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform));
-    model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
-    model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
-    model.addAttribute(MOBILE_DEVICE, MobilePlatform.isMobileDevice(mobilePlatform));
+    addAttributesToModel(model, mobilePlatform, source);
 
     // tempRegId for auto login after signup
     String tempRegId = qsParams.getFirst(TEMP_REG_ID);
@@ -287,25 +264,21 @@ public class LoginController {
         cookieHelper.addCookie(response, ACCOUNT_STATUS_COOKIE, String.valueOf(user.getStatus()));
         return AUTO_LOGIN_VIEW_NAME;
       }
-
       logger.exit("tempRegId is invalid, return to login page");
       return LOGIN_VIEW_NAME;
     }
     return LOGIN_VIEW_NAME;
   }
 
-  private String redirectToCallbackUrl(
-      HttpServletRequest request, String code, String accountStatus, HttpServletResponse response) {
-    String userId = WebUtils.getCookie(request, USER_ID_COOKIE).getValue();
-    String mobilePlatform = WebUtils.getCookie(request, MOBILE_PLATFORM_COOKIE).getValue();
-    String callbackUrl = redirectConfig.getCallbackUrl(mobilePlatform);
-
-    String redirectUrl =
-        String.format(
-            "%s?code=%s&userId=%s&accountStatus=%s", callbackUrl, code, userId, accountStatus);
-
-    logger.exit(String.format("redirect to %s from /login", callbackUrl));
-    return redirect(response, redirectUrl);
+  private void addAttributesToModel(Model model, String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    model.addAttribute(
+        FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform, source));
+    model.addAttribute(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
+    model.addAttribute(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source));
+    model.addAttribute(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+    model.addAttribute(ABOUT_LINK, redirectConfig.getAboutUrl(source));
+    model.addAttribute(MOBILE_APP, platformComponent.equals(PlatformComponent.MOBILE_APPS));
   }
 
   private String redirect(HttpServletResponse response, String redirectUrl) {
@@ -319,17 +292,39 @@ public class LoginController {
     logger.error(String.format("Request %s failed with an exception", req.getRequestURL()), ex);
     ModelAndView modelView = new ModelAndView();
     modelView.setViewName(ERROR_VIEW_NAME);
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return modelView;
   }
 
   @ExceptionHandler(ErrorCodeException.class)
-  public ModelAndView handleErrorCodeException(HttpServletRequest req, ErrorCodeException ex) {
+  public ModelAndView handleErrorCodeException(HttpServletRequest req, ErrorCodeException ex)
+      throws UnsupportedEncodingException {
     logger.error(
         String.format("Request %s failed with an ErrorCodeException", req.getRequestURL()), ex);
+    String mobilePlatform = cookieHelper.getCookieValue(req, MOBILE_PLATFORM_COOKIE);
+    mobilePlatform = StringUtils.defaultIfEmpty(mobilePlatform, MobilePlatform.UNKNOWN.getValue());
+    String source = cookieHelper.getCookieValue(req, SOURCE_COOKIE);
+
     ModelAndView modelView = new ModelAndView();
+    modelView.setViewName(LOGIN_VIEW_NAME);
     modelView.addObject("loginRequest", new LoginRequest());
     modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
-    modelView.setViewName(LOGIN_VIEW_NAME);
+    modelView.addObject(
+        FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform, source));
+    modelView.addObject(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
+    modelView.addObject(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source));
+    modelView.addObject(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+    modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
+
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    modelView.addObject(MOBILE_APP, platformComponent.equals(PlatformComponent.MOBILE_APPS));
+
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
     return modelView;
   }
 }

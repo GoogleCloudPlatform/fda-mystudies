@@ -29,6 +29,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ComponentScan(basePackages = "com.google.cloud.healthcare.fdamystudies")
 public class CommonModuleConfiguration implements WebMvcConfigurer {
 
+  @Autowired private RestResponseErrorHandler restResponseErrorHandler;
+
   @Value("${cors.allowed.origins:}")
   private String corsAllowedOrigins;
 
@@ -44,10 +46,9 @@ public class CommonModuleConfiguration implements WebMvcConfigurer {
   public RestTemplate restTemplate() {
     RestTemplate restTemplate = new RestTemplate();
 
-    restTemplate.setErrorHandler(new RestResponseErrorHandler());
     addInterceptors(restTemplate);
 
-    restTemplate.setErrorHandler(new RestResponseErrorHandler());
+    restTemplate.setErrorHandler(restResponseErrorHandler);
     return restTemplate;
   }
 

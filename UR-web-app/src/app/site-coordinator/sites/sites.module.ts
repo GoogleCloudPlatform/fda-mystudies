@@ -13,8 +13,8 @@ import {ImportEmailListComponent} from './import-email-list/import-email-list.co
     SiteListComponent,
     AddSiteComponent,
     SiteDetailsComponent,
-    AddEmailComponent,
     ImportEmailListComponent,
+    AddEmailComponent,
   ],
   imports: [CommonModule, SitesRoutingModule, FormsModule, NgxDataTableModule],
 })

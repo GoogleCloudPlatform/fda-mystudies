@@ -31,8 +31,6 @@ export class LoginCallbackComponent implements OnInit {
             .getToken(params.code, params.userId)
             .pipe(
               switchMap((authServerResponse) => {
-                console.log(params);
-                console.log(authServerResponse);
                 sessionStorage.setItem('code', params.code);
                 sessionStorage.setItem('authUserId', params.userId);
                 sessionStorage.setItem(

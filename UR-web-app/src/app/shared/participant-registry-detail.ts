@@ -24,9 +24,14 @@ export interface ParticipantRegistryDetail {
   status?: string;
 }
 export interface CountByStatus {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   A?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   D?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   E?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   I?: number;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   N?: number;
 }

@@ -9,7 +9,6 @@ import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus} from '../shared/enums';
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const expectedSitesList = {
   studies: [
     {
@@ -60,7 +59,6 @@ export const expectedSitesList = {
   code: 'MSG-0018',
 } as StudyResponse;
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 export const expectedStudyList = {
   studies: [
     {
@@ -167,11 +165,13 @@ export const expectedStudiesDetails = {
       },
     ],
     countByStatus: {
+      /* eslint-disable @typescript-eslint/naming-convention */
       A: 34,
       D: 0,
       E: 1,
       I: 12,
       N: 21,
+      /* eslint-disable @typescript-eslint/naming-convention */
     },
   },
 
@@ -191,6 +191,7 @@ export const expectedTargetEnrollment: UpdateTargetEnrollmentRequest = {
 };
 export const expectedSiteResponse = {
   message: 'New site added successfully',
+  code: 'MSG_001',
 } as ApiResponse;
 
 export const expectedNewSite = {

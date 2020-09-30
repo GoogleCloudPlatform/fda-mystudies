@@ -61,7 +61,6 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     } else {
       const headers = req.headers
-        .set('Content-Type', 'application/json')
         .set('userId', sessionStorage.getItem('userId') || '')
         .set(
           'Authorization',

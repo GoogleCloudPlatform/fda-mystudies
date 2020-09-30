@@ -734,15 +734,22 @@ public class ManageUserServiceImpl implements ManageUserService {
     }
 
     List<User> users = new ArrayList<>();
-    Page<UserRegAdminEntity> adminList =
-        userAdminRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
+    List<UserRegAdminEntity> adminList = null;
+    if (page != null && limit != null) {
+      Page<UserRegAdminEntity> adminPage =
+          userAdminRepository.findAll(PageRequest.of(page, limit, Sort.by("created").descending()));
+      adminList = (List<UserRegAdminEntity>) CollectionUtils.emptyIfNull(adminPage.getContent());
+    } else {
+      adminList = userAdminRepository.findAll();
+    }
+
     adminList
         .stream()
         .map(admin -> users.add(UserMapper.prepareUserInfo(admin)))
         .collect(Collectors.toList());
 
     participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
-    logger.exit(String.format("total users=%d", adminList.getSize()));
+    logger.exit(String.format("total users=%d", adminList.size()));
     return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, userAdminRepository.count());
   }
 }

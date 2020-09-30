@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Profile, UpdateProfile, ChangePassword} from './profile.model';
+import {ChangePassword, Profile, UpdateProfile} from './profile.model';
 import {EntityService} from '../../../service/entity.service';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';

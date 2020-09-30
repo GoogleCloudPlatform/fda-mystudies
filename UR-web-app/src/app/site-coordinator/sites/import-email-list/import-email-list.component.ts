@@ -11,43 +11,49 @@ import {ToastrService} from 'ngx-toastr';
   styleUrls: ['./import-email-list.component.scss'],
 })
 export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
-  @Output() cancelled = new EventEmitter();
-  @Output() successSubmit = new EventEmitter();
+  @Output() cancel = new EventEmitter();
+  @Output() import = new EventEmitter();
   @Input() siteId = '';
   fileName = '';
-  file = new File([''], '', {});
+  file?: File;
   constructor(
     private readonly siteDetailsService: SiteDetailsService,
     private readonly toastr: ToastrService,
   ) {
     super();
   }
-  onFileChange(event: Event): void {
+  fileChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    const fileHolded: File = (target.files as FileList)[0];
-    this.file = fileHolded;
+    const selectedFile: File = (target.files as FileList)[0];
+    this.file = selectedFile;
     this.fileName = this.file.name;
   }
-  onCancel(): void {
-    this.cancelled.emit();
+
+  cancelled(): void {
+    this.cancel.emit();
   }
 
   importParticipants(): void {
-    if (this.file.name) {
+    if (this.file?.name) {
       const formData = new FormData();
       formData.append('file', this.file, this.file.name);
       this.siteDetailsService
         .importParticipants(this.siteId, formData)
-        .subscribe((successResponse: ApiResponse) => {
-          if (getMessage(successResponse.code)) {
-            this.toastr.success(getMessage(successResponse.code));
-          } else {
-            this.toastr.success(successResponse.message);
-            this.successSubmit.emit();
-          }
-        });
+        .subscribe(
+          (successResponse: ApiResponse) => {
+            if (getMessage(successResponse.code)) {
+              this.toastr.success(getMessage(successResponse.code));
+            } else {
+              this.toastr.success(successResponse.message);
+              this.import.emit();
+            }
+          },
+          (error) => {
+            this.toastr.error(error);
+          },
+        );
     } else {
-      this.toastr.error('Please select file to be upload');
+      this.toastr.error('Please select a file to upload.');
     }
   }
 }

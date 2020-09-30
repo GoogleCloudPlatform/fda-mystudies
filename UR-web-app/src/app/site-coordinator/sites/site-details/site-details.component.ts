@@ -12,6 +12,8 @@ import {ApiResponse} from 'src/app/entity/api.response.model';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {OnboardingStatus} from 'src/app/shared/enums';
+import {SearchService} from 'src/app/shared/search.service';
+const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
   templateUrl: './site-details.component.html',
@@ -20,6 +22,18 @@ import {OnboardingStatus} from 'src/app/shared/enums';
 export class SiteDetailsComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
+  query$ = new BehaviorSubject('');
+  siteParticipants$: Observable<SiteParticipants> = of();
+  siteDetailsBackup = {} as SiteParticipants;
+  siteId = '';
+
+  sendResend = '';
+  enableDisable = '';
+  toggleDisplay = false;
+  userIds: string[] = [];
+  onBoardingStatus = OnboardingStatus;
+  activeTab = OnboardingStatus.All;
+
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -27,64 +41,58 @@ export class SiteDetailsComponent
     private readonly toastr: ToastrService,
     private readonly modalService: BsModalService,
     public modalRef: BsModalRef,
+    private readonly sharedService: SearchService,
   ) {
     super();
   }
-  query$ = new BehaviorSubject('');
-  siteParticipants$: Observable<SiteParticipants> = of();
-  siteId = '';
-  sendResend = '';
-  enableDisable = '';
-  activeTab = 'all';
-  toggLeDisplay = false;
-  arrayOfuserId: string[] = [];
-  onBoardingStatus = OnboardingStatus;
-  openModal(templateref: TemplateRef<unknown>): void {
-    this.modalRef = this.modalService.show(templateref);
+  openModal(templateRef: TemplateRef<unknown>): void {
+    this.modalRef = this.modalService.show(templateRef);
   }
   ngOnInit(): void {
+    this.sharedService.updateSearchPlaceHolder('Search Participant Email');
     this.subs.add(
       this.route.params.subscribe((params) => {
         if (params.siteId) {
           this.siteId = params.siteId as string;
         }
-        this.fetchSiteParticipant('all');
+        this.fetchSiteParticipant(OnboardingStatus.All);
       }),
     );
   }
   toggleParticipant(): void {
-    if (this.toggLeDisplay) {
-      this.toggLeDisplay = false;
-    } else this.toggLeDisplay = true;
+    this.toggleDisplay = !this.toggleDisplay;
   }
-  fetchSiteParticipant(fetcingOption: string): void {
+  fetchSiteParticipant(fetchingOption: OnboardingStatus): void {
     this.siteParticipants$ = combineLatest(
-      this.particpantDetailService.get(this.siteId, fetcingOption),
+      this.particpantDetailService.get(this.siteId, fetchingOption),
       this.query$,
     ).pipe(
       map(([siteDetails, query]) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        siteDetails.participantRegistryDetail.registryParticipants = siteDetails.participantRegistryDetail.registryParticipants.filter(
+        this.siteDetailsBackup = JSON.parse(
+          JSON.stringify(siteDetails),
+        ) as SiteParticipants;
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email.toLowerCase().includes(query.toLowerCase()),
         );
-        return siteDetails;
+        return this.siteDetailsBackup;
       }),
     );
   }
   search(query: string): void {
-    this.query$.next(query.trim());
+    this.query$.next(query.trim().toLowerCase());
   }
-  changeTab(tab: string): void {
-    this.sendResend = tab === 'new' ? 'Send Invitation' : 'Resend Invitation';
+  changeTab(tab: OnboardingStatus): void {
+    this.sendResend =
+      tab === OnboardingStatus.New ? 'Send Invitation' : 'Resend Invitation';
     this.enableDisable =
-      tab === 'new' || tab === 'inivited'
+      tab === OnboardingStatus.New || tab === OnboardingStatus.Invited
         ? 'Disable Invitation'
         : 'Enable Invitation';
     this.activeTab = tab;
-    this.toggLeDisplay = false;
-    this.arrayOfuserId.splice(0, this.arrayOfuserId.length);
-    this.fetchSiteParticipant(this.activeTab);
+    this.toggleDisplay = false;
+    this.userIds = [];
+    this.fetchSiteParticipant(tab);
   }
   redirectParticipant(userId: string): void {
     void this.router.navigate(['/user/participantDetail', userId]);
@@ -92,13 +100,10 @@ export class SiteDetailsComponent
   rowCheckBoxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
-      this.arrayOfuserId.push(checkbox.id);
+      this.userIds.push(checkbox.id);
     } else {
-      this.arrayOfuserId = this.arrayOfuserId.filter(
-        (item) => item !== checkbox.id,
-      );
+      this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
-    console.log(this.arrayOfuserId);
   }
   decommissionSite(): void {
     this.subs.add(
@@ -115,12 +120,12 @@ export class SiteDetailsComponent
     );
   }
   sendInvitation(): void {
-    if (this.arrayOfuserId.length > 0) {
-      if (this.arrayOfuserId.length > 11) {
+    if (this.userIds.length > 0) {
+      if (this.userIds.length > MAXIMUM_USER_COUNT) {
         this.toastr.error('Please select less than 10 participants');
       } else {
         const sendInvitations = {
-          ids: this.arrayOfuserId,
+          ids: this.userIds,
         };
         this.subs.add(
           this.particpantDetailService
@@ -130,28 +135,25 @@ export class SiteDetailsComponent
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab('invited');
+                this.changeTab(OnboardingStatus.Invited);
               }
             }),
         );
       }
     } else {
-      this.toastr.error(
-        'Please select atleast one participant for sending invitation',
-      );
+      this.toastr.error('Please select at least one participant');
     }
   }
+
   toggleInvitation(): void {
-    if (this.arrayOfuserId.length > 0) {
-      if (this.arrayOfuserId.length > 11) {
+    if (this.userIds.length > 0) {
+      if (this.userIds.length > MAXIMUM_USER_COUNT) {
         this.toastr.error('Please select less than 10 participants');
       } else {
         const statusUpdate =
-          this.activeTab === 'Enable' || this.activeTab === 'Invited'
-            ? 'N'
-            : 'D';
+          this.activeTab === OnboardingStatus.Disabled ? 'N' : 'D';
         const invitationUpdate = {
-          ids: this.arrayOfuserId,
+          ids: this.userIds,
           status: statusUpdate,
         };
         this.subs.add(
@@ -162,25 +164,27 @@ export class SiteDetailsComponent
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(status === 'enable' ? 'new' : 'disabled');
+                this.changeTab(
+                  this.activeTab === OnboardingStatus.Disabled
+                    ? OnboardingStatus.Disabled
+                    : OnboardingStatus.New,
+                );
               }
             }),
         );
       }
     } else {
-      this.toastr.error(
-        status === '0'
-          ? 'Please select atleast one participant to disable'
-          : 'Please select atleast one participant for to enable',
-      );
+      this.toastr.error('Please select at least one participant');
     }
   }
+
   onSucceedAddEmail(): void {
     this.modalRef.hide();
-    this.fetchSiteParticipant(this.activeTab);
+    this.fetchSiteParticipant(OnboardingStatus.New);
   }
-  onSucceedFileImport(): void {
-    this.changeTab('new');
+
+  onFileImportSuccess(): void {
+    this.fetchSiteParticipant(OnboardingStatus.New);
     this.modalRef.hide();
   }
 }

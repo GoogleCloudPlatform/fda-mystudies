@@ -79,6 +79,10 @@ export class AuthService {
     return sessionStorage.getItem('userId') || '';
   }
 
+  getUserId(): string {
+    return sessionStorage.getItem('userId') || '';
+  }
+
   getToken(code: string, userId: string): Observable<AccessToken> {
     const options = {
       headers: new HttpHeaders({

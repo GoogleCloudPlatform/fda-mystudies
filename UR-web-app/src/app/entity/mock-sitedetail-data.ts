@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import {EnrollmentStatus} from '../shared/enums';
 import {
   StatusUpdate,
@@ -52,12 +51,15 @@ export const expectedSiteParticipantDetails = {
         consentHistory: [],
       },
     ],
+
     countByStatus: {
+      /* eslint-disable @typescript-eslint/naming-convention */
       A: 1,
       D: 0,
       E: 1,
       I: 12,
       N: 21,
+      /* eslint-disable @typescript-eslint/naming-convention */
     },
   },
   status: 200,
@@ -89,7 +91,8 @@ export const expectedSendInviteResponse = {
 
 export const expectedAddParticipantResponse = {
   message: 'Email added successfully',
-};
+} as ApiResponse;
+
 export const expectedImportedEmailListResponse = {
   message: 'Email imported successfully',
 } as ApiResponse;

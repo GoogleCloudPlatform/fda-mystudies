@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
     value = "commonservice.auditlogevent.enabled",
     havingValue = "true",
     matchIfMissing = true)
-public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEventService {
+public class AuditEventServiceImpl implements AuditEventService {
 
   private XLogger logger = XLoggerFactory.getXLogger(AuditEventServiceImpl.class.getName());
 

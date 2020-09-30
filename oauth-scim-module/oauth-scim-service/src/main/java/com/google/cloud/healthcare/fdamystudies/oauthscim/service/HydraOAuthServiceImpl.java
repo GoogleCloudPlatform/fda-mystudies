@@ -24,7 +24,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.service.BaseServiceImpl;
 import java.util.Collections;
 import javax.annotation.PostConstruct;
@@ -82,17 +84,21 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
 
   @Autowired private UserService userService;
 
+  @Autowired private AuthScimAuditHelper auditHelper;
+
   @PostConstruct
   public void init() {
     encodedAuthorization = getEncodedAuthorization(clientId, clientSecret);
   }
 
-  public ResponseEntity<?> getToken(MultiValueMap<String, String> paramMap, HttpHeaders headers)
+  public ResponseEntity<?> getToken(
+      MultiValueMap<String, String> paramMap,
+      HttpHeaders headers,
+      AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry(String.format("getToken() for grant_type=%s", paramMap.getFirst(GRANT_TYPE)));
 
     headers.add(CONTENT_TYPE, APPLICATION_X_WWW_FORM_URLENCODED_CHARSET_UTF_8);
-
     String grantType = paramMap.getFirst(GRANT_TYPE);
     if (REFRESH_TOKEN.equals(grantType) || AUTHORIZATION_CODE.equals(grantType)) {
       headers.set(AUTHORIZATION, encodedAuthorization);
@@ -106,7 +112,8 @@ class HydraOAuthServiceImpl extends BaseServiceImpl implements OAuthService {
         && response.getBody().hasNonNull(REFRESH_TOKEN)) {
       String refreshToken = getTextValue(response.getBody(), REFRESH_TOKEN);
       UserResponse userResponse =
-          userService.revokeAndReplaceRefreshToken(paramMap.getFirst(USER_ID), refreshToken);
+          userService.revokeAndReplaceRefreshToken(
+              paramMap.getFirst(USER_ID), refreshToken, auditRequest);
       if (!HttpStatus.valueOf(userResponse.getHttpStatusCode()).is2xxSuccessful()) {
         return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
       }

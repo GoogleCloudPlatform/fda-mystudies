@@ -9,6 +9,8 @@ import {of} from 'rxjs';
 import * as expectedResult from 'src/app/entity/mock-profile-data';
 import {Profile, UpdateProfile} from './profile.model';
 import {AuthService} from '../../../service/auth.service';
+import {HttpClient} from '@angular/common/http';
+import {ApiResponse} from 'src/app/entity/api.response.model';
 describe('AccountService', () => {
   let accountService: AccountService;
   let httpServiceSpyObj: jasmine.SpyObj<HttpClient>;

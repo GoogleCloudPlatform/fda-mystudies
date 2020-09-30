@@ -31,7 +31,12 @@ public interface SiteService {
   public SiteResponse addSite(SiteRequest siteRequest);
 
   public ParticipantRegistryResponse getParticipants(
-      String userId, String siteId, String onboardingStatus, AuditLogEventRequest auditRequest);
+      String userId,
+      String siteId,
+      String onboardingStatus,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit);
 
   public ParticipantResponse addNewParticipant(
       ParticipantDetailRequest participant, String userId, AuditLogEventRequest auditRequest);
@@ -40,7 +45,7 @@ public interface SiteService {
       String userId, String siteId, AuditLogEventRequest auditRequest);
 
   public ParticipantDetailResponse getParticipantDetails(
-      String participantRegistrySiteId, String userId, int page, int limit);
+      String participantRegistrySiteId, String userId, Integer page, Integer limit);
 
   public InviteParticipantResponse inviteParticipants(
       InviteParticipantRequest inviteparticipantBean, AuditLogEventRequest auditRequest);
