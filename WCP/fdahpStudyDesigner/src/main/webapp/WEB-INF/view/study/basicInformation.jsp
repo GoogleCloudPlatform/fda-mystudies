@@ -527,7 +527,7 @@
                                   return false;
                                 } else {
                                   $(
-                                      '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                      '.studyTypeClass,.studyIdCls,.appIdCls')
                                       .prop(
                                           'disabled',
                                           false);
@@ -546,7 +546,7 @@
                                               return false;
                                             } else {
                                               $(
-                                                  '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                                  '.studyTypeClass,.studyIdCls,.appIdCls')
                                                   .prop(
                                                       'disabled',
                                                       false);
@@ -596,7 +596,7 @@
                                                                     return false;
                                                                   } else {
                                                                     $(
-                                                                        '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                                                        '.studyTypeClass,.studyIdCls,.appIdCls')
                                                                         .prop(
                                                                             'disabled',
                                                                             false);
@@ -640,7 +640,7 @@
                                   return false;
                                 } else {
                                   $(
-                                      '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                      '.studyTypeClass,.studyIdCls,.appIdCls')
                                       .prop(
                                           'disabled',
                                           false);
@@ -660,7 +660,7 @@
                                             return false;
                                           } else {
                                             $(
-                                                '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                                '.studyTypeClass,.studyIdCls,.appIdCls')
                                                 .prop(
                                                     'disabled',
                                                     false);
@@ -749,7 +749,7 @@
                                           valid) {
                                         if (valid) {
                                           $(
-                                              '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                              '.studyTypeClass,.studyIdCls,.appIdCls')
                                               .prop(
                                                   'disabled',
                                                   false);
@@ -766,7 +766,7 @@
                                               .submit();
                                         } else {
                                           $(
-                                              '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                              '.studyTypeClass,.studyIdCls,.appIdCls')
                                               .prop(
                                                   'disabled',
                                                   false);
@@ -785,7 +785,7 @@
                                       });
                                 } else {
                                   $(
-                                      '.studyTypeClass,.studyIdCls,.appIdCls,.orgIdCls')
+                                      '.studyTypeClass,.studyIdCls,.appIdCls')
                                       .prop(
                                           'disabled',
                                           false);
