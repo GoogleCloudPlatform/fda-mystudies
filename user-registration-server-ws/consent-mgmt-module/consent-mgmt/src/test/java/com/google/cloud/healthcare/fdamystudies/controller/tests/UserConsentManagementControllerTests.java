@@ -118,9 +118,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
-    String consentDocumentFileName =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
@@ -143,7 +140,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
-
+    String consentDocumentFileName =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
     BlobId validBlobId = BlobId.of(appConfig.getBucketName(), consentDocumentFileName);
     Blob mockedBlob = mock(Blob.class);
 
@@ -215,9 +213,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
-    String consentDocumentFileName =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
@@ -237,6 +232,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
+
+    String consentDocumentFileName =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
 
     BlobId validBlobId = BlobId.of(appConfig.getBucketName(), consentDocumentFileName);
     Blob mockedBlob = mock(Blob.class);
@@ -308,9 +306,6 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
-    String consentDocumentFileName =
-        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
@@ -330,6 +325,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
+
+    String consentDocumentFileName =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
 
     BlobId validBlobId = BlobId.of(appConfig.getBucketName(), consentDocumentFileName);
     Blob mockedBlob = mock(Blob.class);
