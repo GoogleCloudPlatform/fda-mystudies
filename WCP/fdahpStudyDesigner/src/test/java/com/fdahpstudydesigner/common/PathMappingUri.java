@@ -13,6 +13,22 @@ public enum PathMappingUri {
 
   SESSION_OUT("/sessionOut.do"),
 
+  CHANGE_PASSWORD("/changePassword.do"),
+
+  FORGOT_PASSWORD("/forgotPassword.do"),
+
+  SECURITY_TOKEN_VALIDATION("/createPassword.do"),
+
+  ADD_PASSWORD("/addPassword.do"),
+
+  ADD_OR_UPDATE_USER_DETAILS("/adminUsersEdit/addOrUpdateUserDetails.do"),
+
+  ENFORCE_PASSWORD_CHANGE("/adminUsersEdit/enforcePasswordChange.do"),
+
+  RESEND_ACTIVATE_DETAILS_LINK("/adminUsersEdit/resendActivateDetailsLink.do"),
+
+  VIEW_USER_DETAILS("/adminUsersView/viewUserDetails.do"),
+
   ACTIVE_TASK_MARK_AS_COMPLETED("/adminStudies/activeTAskMarkAsCompleted.do"),
 
   SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT("/adminStudies/saveOrUpdateActiveTaskContent.do"),
@@ -25,12 +41,17 @@ public enum PathMappingUri {
 
   SAVE_OR_UPDATE_STUDY_NOTIFICATION("/adminStudies/saveOrUpdateStudyNotification.do"),
 
-  CHANGE_PASSWORD("/adminDashboard/changePassword.do"),
+  ADMIN_DASHBOARD_CHANGE_PASSWORD("/adminDashboard/changePassword.do"),
 
   UPDATE_PROFILE_DETAILS("/adminDashboard/updateUserDetails.do"),
 
-  VIEW_USER_DETAILS("/adminDashboard/viewUserDetails.do"),
+  ADMIN_DASHBOARD_VIEW_USER_DETAILS("/adminDashboard/viewUserDetails.do"),
 
+  DELETE_QUESTION_FORM_INFO("/adminStudies/deleteFormQuestion.do"),
+
+  SAVE_OR_UPDATE_QUETIONNAIR_SCHEDULE("/adminStudies/saveorUpdateQuestionnaireSchedule.do"),
+
+  DELETE_QUESTIONNAIRES("/adminStudies/deleteQuestionnaire.do"),
   CONSENT_MARKED_AS_COMPLETE("/adminStudies/consentMarkAsCompleted.do"),
 
   NOTIFICATION_MARK_AS_COMPLETED("/adminStudies/notificationMarkAsCompleted.do"),
@@ -43,7 +64,17 @@ public enum PathMappingUri {
 
   UPDATE_STUDY_ACTION("/adminStudies/updateStudyAction"),
 
-  SAVE_OR_UPDATE_SETTINGS_AND_ADMINS("/adminStudies/saveOrUpdateSettingAndAdmins.do");
+  SAVE_OR_UPDATE_SETTINGS_AND_ADMINS("/adminStudies/saveOrUpdateSettingAndAdmins.do"),
+
+  SAVE_OR_UPDATE_CONSENT_INFO("/adminStudies/saveOrUpdateConsentInfo.do"),
+
+  SAVE_OR_UPDATE_BASIC_INFO("/adminStudies/saveOrUpdateBasicInfo.do"),
+
+  SAVE_OR_UPDATE_RESOURCE("/adminStudies/saveOrUpdateResource.do"),
+
+  SAVE_OR_UPDATE_STUDY_ELIGIBILITY("/adminStudies/saveOrUpdateStudyEligibilty.do"),
+
+  SAVE_CONSENT_REVIEW_AND_ECONSENT_INFO("/adminStudies/saveConsentReviewAndEConsentInfo.do");
 
   private final String path;
 

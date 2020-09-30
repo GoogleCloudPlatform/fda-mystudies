@@ -67,7 +67,7 @@
             <div class="col-md-5 pr-none text-right">
               <a class="blue__link forgot__pwd desktop"
                 th:href="${forgot_password_link}">Forgot password?</a> <span
-                class="mobile" th:if="${mobileDevice}">New user?
+                class="mobile" th:if="${mobileApp}">New user?
                 <a th:href="${signup_link}" class="sign__up">Sign up</a>
               </span>
             </div>
@@ -85,11 +85,11 @@
     <div>&copy; 2019 FDA MyStudies. All rights reserved.</div>
     <div>
       <ul>
-        <li th:if="${!mobileDevice}"><a th:href="${about_link}">About</a></li>
-        <li th:if="${!mobileDevice}"><a th:href="${terms_link}">Terms
+        <li th:if="${!mobileApp}"><a th:href="${about_link}">About</a></li>
+        <li th:if="${!mobileApp}"><a th:href="${terms_link}">Terms
             of Service</a></li>
-        <li th:if="${mobileDevice}"><a th:href="${terms_link}">Terms</a></li>
-        <li th:if="${mobileDevice}"><a
+        <li th:if="${mobileApp}"><a th:href="${terms_link}">Terms</a></li>
+        <li th:if="${mobileApp}"><a
           th:href="${privacy_policy_link}">Privacy Policy</a></li>
       </ul>
     </div>
