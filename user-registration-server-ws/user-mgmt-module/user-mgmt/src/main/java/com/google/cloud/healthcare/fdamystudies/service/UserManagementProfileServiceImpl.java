@@ -242,6 +242,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
             if (e.getErrorCode() == ErrorCode.USER_NOT_FOUND) {
               userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
             }
+          } catch (Exception e) {
+            logger.error("processDeactivatePendingRequests() failed with an exception", e);
           }
         });
   }
@@ -317,7 +319,7 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
     if (retVal != null
         && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
 
-      userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
+      userProfileManagementDao.deactivateAcct(userId, deleteData, userDetailsId);
 
       UserDetailsEntity userDetailsEntity = optUserDetails.get();
       userDetailsEntity.setStatus(UserStatus.DEACTIVATE_PENDING.getValue());

@@ -246,7 +246,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public void deActivateAcct(String userId, List<String> deleteData, String userDetailsId) {
+  public void deactivateAcct(String userId, List<String> deleteData, String userDetailsId) {
     logger.info("UserProfileManagementDaoImpl deActivateAcct() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
 
