@@ -196,9 +196,6 @@ public class StudyBo implements Serializable {
   @Column(name = "app_id")
   private String appId;
 
-  @Column(name = "org_id")
-  private String orgId = "OrgName";
-
   public String getAllowRejoin() {
     return allowRejoin;
   }
@@ -573,13 +570,5 @@ public class StudyBo implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
-  }
-
-  public String getOrgId() {
-    return orgId;
-  }
-
-  public void setOrgId(String orgId) {
-    this.orgId = orgId;
   }
 }
