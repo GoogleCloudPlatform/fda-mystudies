@@ -192,7 +192,72 @@ public enum StudyBuilderAuditEvent {
   STUDY_RESUMED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_RESUMED"),
 
   STUDY_SETTINGS_SAVED_OR_UPDATED(
-      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_SETTINGS_SAVED_OR_UPDATED");
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_SETTINGS_SAVED_OR_UPDATED"),
+
+  STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED"),
+
+  STUDY_SETTINGS_MARKED_COMPLETE(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Settings section marked complete with enrollment setting '${enrollment_setting}', re-join setting '${rejoin_setting}' and data-retention setting '${dataretention_setting}'. ",
+      "STUDY_SETTINGS_MARKED_COMPLETE"),
+
+  STUDY_DEACTIVATED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_DEACTIVATED"),
+
+  STUDY_SAVED_IN_DRAFT_STATE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_SAVED_IN_DRAFT_STATE"),
+
+  STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE"),
+
+  STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED"),
+
+  STUDY_NEW_RESOURCE_CREATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "New Resource created (resource ID - ${resource_id}).",
+      "STUDY_NEW_RESOURCE_CREATED"),
+
+  STUDY_RESOURCE_SAVED_OR_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Resource saved/updated (resource ID - ${resource_id}).",
+      "STUDY_RESOURCE_SAVED_OR_UPDATED"),
+
+  STUDY_RESOURCE_MARKED_COMPLETED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Resource marked done/complete (resource ID - ${resource_id}).",
+      "STUDY_RESOURCE_MARKED_COMPLETED"),
+
+  STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED"),
+
+  STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE"),
+
+  STUDY_REVIEW_AND_E_CONSENT_SAVED_OR_UPDATED(
+      STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_REVIEW_AND_E_CONSENT_SAVED_OR_UPDATED"),
+
+  STUDY_REVIEW_AND_E_CONSENT_MARKED_COMPLETE(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Review and E-consent section marked complete (data-sharing consent setting: '${datasharing_consent_setting}', consent document version: '${consent_document_version}')",
+      "STUDY_REVIEW_AND_E_CONSENT_MARKED_COMPLETE"),
+
+  STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      null,
+      "STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;
