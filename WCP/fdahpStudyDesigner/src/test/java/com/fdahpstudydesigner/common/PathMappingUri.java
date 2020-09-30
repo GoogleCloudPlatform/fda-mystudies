@@ -64,7 +64,17 @@ public enum PathMappingUri {
 
   UPDATE_STUDY_ACTION("/adminStudies/updateStudyAction"),
 
-  SAVE_OR_UPDATE_SETTINGS_AND_ADMINS("/adminStudies/saveOrUpdateSettingAndAdmins.do");
+  SAVE_OR_UPDATE_SETTINGS_AND_ADMINS("/adminStudies/saveOrUpdateSettingAndAdmins.do"),
+
+  SAVE_OR_UPDATE_CONSENT_INFO("/adminStudies/saveOrUpdateConsentInfo.do"),
+
+  SAVE_OR_UPDATE_BASIC_INFO("/adminStudies/saveOrUpdateBasicInfo.do"),
+
+  SAVE_OR_UPDATE_RESOURCE("/adminStudies/saveOrUpdateResource.do"),
+
+  SAVE_OR_UPDATE_STUDY_ELIGIBILITY("/adminStudies/saveOrUpdateStudyEligibilty.do"),
+
+  SAVE_CONSENT_REVIEW_AND_ECONSENT_INFO("/adminStudies/saveConsentReviewAndEConsentInfo.do");
 
   private final String path;
 

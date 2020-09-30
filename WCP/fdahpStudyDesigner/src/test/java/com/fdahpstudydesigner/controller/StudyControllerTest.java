@@ -11,17 +11,31 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.LAST_PUBLISHED_VERSION_OF_STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_STUDY_CREATION_INITIATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACCESSED_IN_EDIT_MODE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_DEACTIVATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LAUNCHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_NOTIFICATION_CREATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_RESOURCE_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PAUSED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PUBLISHED_AS_UPCOMING_STUDY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIONNAIRES_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESOURCE_MARKED_COMPLETED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESOURCE_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESOURCE_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESUMED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_AND_E_CONSENT_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_AND_E_CONSENT_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SAVED_IN_DRAFT_STATE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
@@ -31,7 +45,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import com.fdahpstudydesigner.bean.StudySessionBean;
+import com.fdahpstudydesigner.bo.ConsentBo;
+import com.fdahpstudydesigner.bo.ConsentInfoBo;
+import com.fdahpstudydesigner.bo.EligibilityBo;
 import com.fdahpstudydesigner.bo.NotificationBO;
+import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
@@ -53,6 +71,8 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String CUSTOM_STUDY_ID_VALUE = "678590";
 
   private static final String USER_ID_VALUE = "4878641";
+
+  private static final int STUDY_ID_INT_VALUE = 678574;
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
@@ -325,12 +345,12 @@ public class StudyControllerTest extends BaseMockIT {
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678595");
 
     mockMvc
         .perform(
             post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
-                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
+                .param(FdahpStudyDesignerConstants.STUDY_ID, "678579")
                 .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "lunchId")
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
@@ -400,12 +420,12 @@ public class StudyControllerTest extends BaseMockIT {
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678594");
 
     mockMvc
         .perform(
             post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
-                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
+                .param(FdahpStudyDesignerConstants.STUDY_ID, "678578")
                 .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "pauseId")
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
@@ -425,12 +445,12 @@ public class StudyControllerTest extends BaseMockIT {
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678593");
 
     mockMvc
         .perform(
             post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
-                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
+                .param(FdahpStudyDesignerConstants.STUDY_ID, "678577")
                 .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "resumeId")
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
@@ -454,7 +474,7 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
 
     StudyBo studyBo = new StudyBo();
-    studyBo.setId(678574);
+    studyBo.setId(STUDY_ID_INT_VALUE);
     studyBo.setStudySequenceBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -468,5 +488,436 @@ public class StudyControllerTest extends BaseMockIT {
     mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
 
     verifyAuditEventCall(STUDY_SETTINGS_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldSaveOrUpdateStudyConsentSection() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ConsentInfoBo ConsentInfoBo = new ConsentInfoBo();
+    ConsentInfoBo.setStudyId(STUDY_ID_INT_VALUE);
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_CONSENT_INFO.getPath())
+            .headers(headers)
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, ConsentInfoBo);
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:/adminStudies/consentListPage.do"));
+
+    verifyAuditEventCall(STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldCompleteStudySettings() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(STUDY_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+
+    StudyBo studyBo = new StudyBo();
+    studyBo.setId(STUDY_ID_INT_VALUE);
+    studyBo.setStudySequenceBo(null);
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_SETTINGS_AND_ADMINS.getPath())
+            .param("userIds", STUDY_ID_VALUE)
+            .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "completed")
+            .headers(headers)
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, studyBo);
+    mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
+
+    verifyAuditEventCall(STUDY_SETTINGS_MARKED_COMPLETE);
+  }
+
+  @Test
+  public void shouldDeactivateStudy() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678592");
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
+                .param(FdahpStudyDesignerConstants.STUDY_ID, "678576")
+                .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "deactivateId")
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyAuditEventCall(STUDY_DEACTIVATED);
+  }
+
+  @Test
+  public void shouldSaveStudyInDraftState() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    StudyBo studyBo = new StudyBo();
+    studyBo.setId(STUDY_ID_INT_VALUE);
+    studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
+    studyBo.setStudySequenceBo(null);
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_BASIC_INFO.getPath())
+            .headers(headers)
+            .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "save")
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, studyBo);
+
+    mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
+
+    verifyAuditEventCall(STUDY_SAVED_IN_DRAFT_STATE);
+  }
+
+  @Test
+  public void shouldMarkStudySectionAsComplete() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    StudyBo studyBo = new StudyBo();
+    studyBo.setId(STUDY_ID_INT_VALUE);
+    studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
+    studyBo.setStudySequenceBo(null);
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_BASIC_INFO.getPath())
+            .headers(headers)
+            .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "completed")
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, studyBo);
+
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:viewSettingAndAdmins.do"));
+
+    verifyAuditEventCall(STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE);
+  }
+
+  @Test
+  public void shouldSaveOrUpdateStudySection() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    StudyBo studyBo = new StudyBo();
+    studyBo.setId(STUDY_ID_INT_VALUE);
+    studyBo.setCustomStudyId(CUSTOM_STUDY_ID_VALUE);
+    studyBo.setStudySequenceBo(null);
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_BASIC_INFO.getPath())
+            .headers(headers)
+            .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "save")
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, studyBo);
+
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:viewBasicInfo.do"));
+
+    verifyAuditEventCall(STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldCreateNewStudyResource() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ResourceBO ResourceBO = new ResourceBO();
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_RESOURCE.getPath())
+            .headers(headers)
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, ResourceBO);
+
+    mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
+
+    verifyAuditEventCall(STUDY_NEW_RESOURCE_CREATED);
+  }
+
+  @Test
+  public void shouldSaveOrUpdateStudyResource() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ResourceBO ResourceBO = new ResourceBO();
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_RESOURCE.getPath())
+            .headers(headers)
+            .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "save")
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, ResourceBO);
+
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:addOrEditResource.do"));
+
+    verifyAuditEventCall(STUDY_RESOURCE_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldMarkStudyResourceAsComplete() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ResourceBO ResourceBO = new ResourceBO();
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_RESOURCE.getPath())
+            .headers(headers)
+            .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "completed")
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, ResourceBO);
+
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:getResourceList.do"));
+
+    verifyAuditEventCall(STUDY_RESOURCE_MARKED_COMPLETED);
+  }
+
+  @Test
+  public void shouldSaveOrUpdateStudyEligibilitySection() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    EligibilityBo eligibilityBo = new EligibilityBo();
+    eligibilityBo.setStudyId(STUDY_ID_INT_VALUE);
+    eligibilityBo.setActionType("save");
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_STUDY_ELIGIBILITY.getPath())
+            .headers(headers)
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, eligibilityBo);
+
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:viewStudyEligibilty.do"));
+    verifyAuditEventCall(STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldMarkStudyEligibilitySectionAsComplete() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    EligibilityBo eligibilityBo = new EligibilityBo();
+    eligibilityBo.setStudyId(STUDY_ID_INT_VALUE);
+    eligibilityBo.setActionType("complete");
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_STUDY_ELIGIBILITY.getPath())
+            .headers(headers)
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, eligibilityBo);
+
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:consentListPage.do"));
+    verifyAuditEventCall(STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE);
+  }
+
+  @Test
+  public void shouldReviewStudyAndSaveEConsent() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ConsentBo consentBo = new ConsentBo();
+    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setType("save");
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.SAVE_CONSENT_REVIEW_AND_ECONSENT_INFO.getPath())
+                .param("consentInfo", asJsonString(consentBo))
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+    verifyAuditEventCall(STUDY_REVIEW_AND_E_CONSENT_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldMarkCompleteStudyReviewAndEConsent() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ConsentBo consentBo = new ConsentBo();
+    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setType("complete");
+    consentBo.setConsentDocContent("doc");
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.SAVE_CONSENT_REVIEW_AND_ECONSENT_INFO.getPath())
+                .param("consentInfo", asJsonString(consentBo))
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+    verifyAuditEventCall(STUDY_REVIEW_AND_E_CONSENT_MARKED_COMPLETE);
+  }
+
+  @Test
+  public void shouldConsentReviewAndEConsentInfo() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ConsentBo consentBo = new ConsentBo();
+    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setComprehensionTest("save");
+    consentBo.setConsentDocContent("doc");
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.SAVE_CONSENT_REVIEW_AND_ECONSENT_INFO.getPath())
+                .param("consentInfo", asJsonString(consentBo))
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+    verifyAuditEventCall(STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED);
   }
 }
