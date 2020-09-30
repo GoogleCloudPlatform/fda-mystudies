@@ -22,9 +22,9 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.config.HibernateTestConfig;
 import com.fdahpstudydesigner.config.WebAppTestConfig;
-import com.fdahpstudydesigner.controller.StudyController;
 import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,10 +44,8 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,8 +91,6 @@ public class BaseMockIT {
 
   @Mock @Autowired protected RestTemplate restTemplate;
 
-  @InjectMocks @Spy StudyController studyController;
-
   protected ObjectMapper mapper = new ObjectMapper();
 
   protected MockRestServiceServer mockServer;
@@ -124,6 +120,10 @@ public class BaseMockIT {
   public void setUp() {
 
     logger.debug(String.format("BEGIN TEST: %s", testName.getMethodName()));
+
+    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
+    map.put("WCPClientId", "a7ff979d-8b11-46d7-9003-3954c42041eg");
+    map.put("WCPSecretKey", "joef42g64ogfIFOCWHFeb4efca157245259ed65thla9a");
 
     mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
     initSecurityContext();

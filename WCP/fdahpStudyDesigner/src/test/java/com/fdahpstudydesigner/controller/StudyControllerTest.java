@@ -74,15 +74,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.web.client.support.RestGatewaySupport;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StudyControllerTest extends BaseMockIT {
+
+  @InjectMocks @Spy StudyController studyController;
 
   private static final String STUDY_ID_VALUE = "678574";
 
@@ -91,6 +97,10 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String USER_ID_VALUE = "4878641";
 
   private static final int STUDY_ID_INT_VALUE = 678574;
+
+  private static final String STUDIES_META_DATA_URI = "/studies/studymetadata";
+
+  private static final String STUDY_META_DATA_URI = "/studymetadata";
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
@@ -1060,7 +1070,7 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
-        .expect(requestTo("http://localhost:8090/myStudiesUserMgmtWS/studies/studymetadata"))
+        .expect(requestTo(STUDIES_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.OK)
@@ -1068,7 +1078,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .body(mapper.writeValueAsString(studyDetailsBean)));
 
     mockServer
-        .expect(requestTo("http://localhost:8091/mystudies-response-server/studymetadata"))
+        .expect(requestTo(STUDY_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.OK)
@@ -1111,7 +1121,7 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
-        .expect(requestTo("http://localhost:8090/myStudiesUserMgmtWS/studies/studymetadata"))
+        .expect(requestTo(STUDIES_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.FOUND)
@@ -1119,7 +1129,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .body(mapper.writeValueAsString(studyDetailsBean)));
 
     mockServer
-        .expect(requestTo("http://localhost:8091/mystudies-response-server/studymetadata"))
+        .expect(requestTo(STUDY_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
             withStatus(HttpStatus.FOUND)
