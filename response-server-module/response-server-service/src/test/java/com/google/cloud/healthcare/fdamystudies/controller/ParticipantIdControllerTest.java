@@ -25,8 +25,8 @@ import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBe
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.List;
 import java.util.Map;

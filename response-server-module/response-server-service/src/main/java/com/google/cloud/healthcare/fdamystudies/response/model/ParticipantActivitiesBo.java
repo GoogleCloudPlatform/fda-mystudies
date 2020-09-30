@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.model;
+package com.google.cloud.healthcare.fdamystudies.response.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

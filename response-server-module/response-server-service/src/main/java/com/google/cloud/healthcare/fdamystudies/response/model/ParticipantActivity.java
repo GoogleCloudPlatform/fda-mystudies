@@ -5,7 +5,7 @@
  * license that can be found in the LICENSE file or at
  * https://opensource.org/licenses/MIT.
  */
-package com.google.cloud.healthcare.fdamystudies.model;
+package com.google.cloud.healthcare.fdamystudies.response.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
