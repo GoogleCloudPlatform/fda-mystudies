@@ -1,4 +1,8 @@
-INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `role_id`, `created_by`, `modified_by`, `status`, `accountNonExpired`, `accountNonLocked`, `credentialsNonExpired`, `force_logout`) VALUES ('1', 'abc', 'xyx', 'ttt@gmail.com', '$2a$10$uSKnFqkar9ugqrdD1KElcOcPGEtdpuNMvwlHfRGwX4jovq.sH0e/q', '1', '1', '1', '1', '1', '1', '1', 'N');		
+INSERT INTO `user_permissions` (`permission_id`, `permissions`) VALUES (8, 'ROLE_CREATE_MANAGE_STUDIES'), (6, 'ROLE_MANAGE_APP_WIDE_NOTIFICATION_EDIT'), (4, 'ROLE_MANAGE_APP_WIDE_NOTIFICATION_VIEW'), (2, 'ROLE_MANAGE_STUDIES'), (5, 'ROLE_MANAGE_USERS_EDIT'), (7, 'ROLE_MANAGE_USERS_VIEW'), (1, 'ROLE_SUPERADMIN');
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `role_id`, `created_by`, `modified_by`, `status`, `accountNonExpired`, `accountNonLocked`, `credentialsNonExpired`, `force_logout`, `security_token`, `access_code`) VALUES ('1', 'abc', 'xyx', 'ttt@gmail.com', '$2a$10$uSKnFqkar9ugqrdD1KElcOcPGEtdpuNMvwlHfRGwX4jovq.sH0e/q', '1', '1', '1', '1', '1', '1', '1', 'N', NULL, NULL), ('2', 'firstname2', 'laststname2', 'super@gmail.com', NULL, '8', '1', '1', '1', '1', '1', '1', 'N', 'N8K7zYrc0F', 'ja67Ll'), ('3', 'firstname3', 'laststname3', 'super3@gmail.com', '$2a$10$uSKnFqkar9ugqrdD1KElcOcPGEtdpuNMvwlHfRGwX4jovq.sH0e/q', '8', '1', '1', '1', '1', '1', '1', 'N', 'jkh7zYrc0F', 'ja72Ll');
+
+INSERT INTO `user_permission_mapping` (`user_id`, `permission_id`) VALUES (2, 8);
 
 INSERT INTO questionnaires_steps (step_id, questionnaires_id, instruction_form_id, step_short_title, step_type, sequence_no, destination_step, repeatable, skiappable, active, status) VALUES (1, 11675, 85231, '1time', 'Question', 1, 60873, 'No', 'Yes', 1, 1), (2, 1, 1, '1time', 'Question', 1, 60873, 'No', 'Yes', 1, 1);
 
