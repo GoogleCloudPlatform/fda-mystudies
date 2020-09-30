@@ -22,10 +22,17 @@
 
 package com.fdahpstudydesigner.dao;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LAUNCHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PAUSED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_PUBLISHED_AS_UPCOMING_STUDY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_RESUMED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_AND_E_CONSENT_MARKED_COMPLETE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_AND_E_CONSENT_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
 
@@ -3548,7 +3555,7 @@ public class StudyDAOImpl implements StudyDAO {
     String activitydetails = "";
     String activity = "";
     StudyVersionBo studyVersionBo = null;
-    StudyBuilderAuditEvent eventEnum = null;
+    Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
@@ -3620,6 +3627,7 @@ public class StudyDAOImpl implements StudyDAO {
       if ((customStudyId != null) && !customStudyId.isEmpty()) {
         if (consentBo.getType() != null) {
           if (consentBo.getType().equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
+            auditLogEventHelper.logEvent(STUDY_REVIEW_AND_E_CONSENT_SAVED_OR_UPDATED, auditRequest);
             activity = "Study consentReview saved.";
             activitydetails =
                 "Content saved for Consent Review Section. (Study ID = " + customStudyId + ")";
@@ -3631,6 +3639,11 @@ public class StudyDAOImpl implements StudyDAO {
             query.setMaxResults(1);
             studyVersionBo = (StudyVersionBo) query.uniqueResult();
             if (studyVersionBo != null) {
+              values.put("datasharing_consent_setting", consentBo.getConsentDocContent());
+              values.put(
+                  "consent_document_version", String.valueOf(studyVersionBo.getConsentVersion()));
+              auditLogEventHelper.logEvent(
+                  STUDY_REVIEW_AND_E_CONSENT_MARKED_COMPLETE, auditRequest, values);
               activity = "Study consentReview marked as completed.";
               activitydetails =
                   "Consent Review section successfully checked for minimum content completeness and marked 'Completed'.  (Study ID = "
@@ -3644,6 +3657,8 @@ public class StudyDAOImpl implements StudyDAO {
           if (consentBo
               .getComprehensionTest()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
+            auditLogEventHelper.logEvent(
+                STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED, auditRequest);
             activity = "Study comprehension test saved.";
             activitydetails =
                 "Content saved for Comprehension test Section. (Study ID = " + customStudyId + ")";
@@ -3664,7 +3679,6 @@ public class StudyDAOImpl implements StudyDAO {
           }
         }
       }
-      auditLogEventHelper.logEvent(eventEnum, auditRequest);
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -4202,8 +4216,10 @@ public class StudyDAOImpl implements StudyDAO {
                 .getButtonText()
                 .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
           studySequenceBo.setBasicInfo(true);
+          auditLogEvent = STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
         } else if (StringUtils.isNotEmpty(studyBo.getButtonText())
             && studyBo.getButtonText().equalsIgnoreCase(FdahpStudyDesignerConstants.SAVE_BUTTON)) {
+          auditLogEvent = STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
           studySequenceBo.setBasicInfo(false);
         }
         session.update(studySequenceBo);
@@ -4344,6 +4360,7 @@ public class StudyDAOImpl implements StudyDAO {
     List<Integer> deletingUserIdsWithoutLoginUser = new ArrayList<Integer>();
     boolean ownUserForceLogout = false;
     StudyBuilderAuditEvent eventEnum = null;
+    Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
@@ -4375,7 +4392,9 @@ public class StudyDAOImpl implements StudyDAO {
             study.setEnrollmentdateAsAnchordate(studyBo.isEnrollmentdateAsAnchordate());
             // Phase2a code end
             session.saveOrUpdate(study);
-
+            values.put("enrollment_setting", String.valueOf(study.getEnrollingParticipants()));
+            values.put("rejoin_setting", String.valueOf(study.getAllowRejoin()));
+            values.put("dataretention_setting", String.valueOf(study.getRetainParticipant()));
             // setting true to setting admins
             // setting and admins section of Study completed or not
             // updated in study sequence table(to keep track of each
@@ -4600,6 +4619,7 @@ public class StudyDAOImpl implements StudyDAO {
           if (studyBo
               .getButtonText()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
+            auditLogEventHelper.logEvent(STUDY_SETTINGS_MARKED_COMPLETE, auditRequest, values);
             activity = "Study settings marked as Completed.";
             activitydetails =
                 "Section validated for minimum completion required and marked as Completed. (Study ID = "
@@ -4686,7 +4706,8 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @SuppressWarnings("unchecked")
-  public String studyDraftCreation(StudyBo studyBo, Session session) {
+  public String studyDraftCreation(
+      StudyBo studyBo, Session session, AuditLogEventRequest auditRequest) {
     logger.info("StudyDAOImpl - studyDraftCreation() - Starts");
     List<StudyPageBo> studyPageBo = null;
     List<StudyPermissionBO> studyPermissionList = null;
@@ -5580,6 +5601,8 @@ public class StudyDAOImpl implements StudyDAO {
                         FdahpStudyDesignerConstants.CUSTOM_STUDY_ID, studyBo.getCustomStudyId());
             query.executeUpdate();
 
+            Map<String, String> values = new HashMap<>();
+
             // If Consent updated flag -1 then update
             if (consentBo != null) {
               ConsentBo newConsentBo = SerializationUtils.clone(consentBo);
@@ -5831,7 +5854,7 @@ public class StudyDAOImpl implements StudyDAO {
             }
             message = FdahpStudyDesignerConstants.SUCCESS;
             // StudyDraft version creation
-            message = studyDraftCreation(studyBo, session);
+            message = studyDraftCreation(studyBo, session, auditRequest);
             if (message.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
               if (buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_LUNCH)) {
                 // notification text --
@@ -5982,6 +6005,7 @@ public class StudyDAOImpl implements StudyDAO {
                   FdahpStudyDesignerConstants.ACTION_DEACTIVATE)) {
                 // notification text --
                 liveStudy.setStatus(FdahpStudyDesignerConstants.STUDY_DEACTIVATED);
+                auditLogEvent = STUDY_DEACTIVATED;
                 notificationBO = new NotificationBO();
                 notificationBO.setStudyId(liveStudy.getId());
                 notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
