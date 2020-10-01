@@ -498,9 +498,9 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "participant-datastore/enroll-mgmt-module",
 #     "participant-datastore/user-mgmt-module",
 #     "response-server-ws",
-#     "participant-manager-module",
+#     "participant-manager-datastore",
 #     "hydra",
-#     "UR-web-app",
+#     "participant-manager",
 #   ])
 #
 #   provider = google-beta
@@ -631,7 +631,7 @@ template "project_data" {
     # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "my_studies_db_default_password" {
+data "google_secret_manager_secret_version" "mystudies_db_default_password" {
   provider = google-beta
   secret  = "auto-mystudies-sql-default-user-password"
   project = "{{$prefix}}-{{$env}}-secrets"
@@ -645,7 +645,7 @@ EOF
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.my_studies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
@@ -691,12 +691,12 @@ EOF
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
           # iam_members = [{
           #   role   = "roles/storage.objectViewer"
-          #   member = "serviceAccount:$${module.my_studies.instance_service_account_email_address}"
+          #   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
           # }]
         },
       ]
       bigquery_datasets = [{
-        dataset_id = "{{$prefix}}_{{$env}}_my_studies_firestore_data"
+        dataset_id = "{{$prefix}}_{{$env}}_mystudies_firestore_data"
       }]
     }
   }
