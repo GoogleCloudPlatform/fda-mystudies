@@ -1131,10 +1131,21 @@ public class StudyActivity extends AppCompatActivity
       searchBtn.setVisibility(View.GONE);
       infoIcon.setVisibility(View.VISIBLE);
       closeDrawer();
-      getSupportFragmentManager()
-          .beginTransaction()
-          .replace(R.id.frameLayoutContainer, new SignInFragment(), "fragment")
-          .commit();
+      SharedPreferenceHelper.writePreference(
+          StudyActivity.this, getString(R.string.loginflow), "SideMenu");
+      SharedPreferenceHelper.writePreference(
+          StudyActivity.this, getString(R.string.logintype), "signIn");
+      CustomTabsIntent customTabsIntent =
+          new CustomTabsIntent.Builder()
+              .setToolbarColor(getResources().getColor(R.color.colorAccent))
+              .setShowTitle(true)
+              .setCloseButtonIcon(
+                  BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+              .setStartAnimations(StudyActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+              .setExitAnimations(StudyActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
+              .build();
+      customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+      startActivity(customTabsIntent.intent);
     }
 
     @Override
