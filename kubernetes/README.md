@@ -21,7 +21,7 @@ All files below are relative to the root of the repo.
   * kubeapply.sh
     * A helper script that applies all resources to the cluster. Not
             required, the manual steps will be described below.
-* auth-server-ws/
+* oauth-scim-module/
   * tf-deployment.yaml
     * A Kubernetes Deployment, deploying the app along with its secrets.
     * This is forked from deployment.yaml with modifications for the Terraform
@@ -135,7 +135,7 @@ organization and deployment.
 In each tf-deployment.yaml file listed below (paths are relative to the
 root of the repo):
 
-1. auth-server-ws/tf-deployment.yaml
+1. oauth-scim-module/tf-deployment.yaml
 1. response-server-module/tf-deployment.yaml
 1. WCP/tf-deployment.yaml
 1. WCP-WS/tf-deployment.yaml
@@ -229,7 +229,7 @@ $ kubectl apply \
   -f ./user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml \
   -f ./user-registration-server-ws/user-mgmt-module/tf-deployment.yaml \
   -f ./WCP/tf-deployment.yaml \
-  -f ./auth-server-ws/tf-deployment.yaml \
+  -f ./oauth-scim-module/tf-deployment.yaml \
   -f ./participant-manager-module/tf-deployment.yaml
 ```
 
@@ -243,7 +243,7 @@ $ kubectl apply \
   -f ./user-registration-server-ws/enroll-mgmt-module/tf-service.yaml \
   -f ./user-registration-server-ws/user-mgmt-module/tf-service.yaml \
   -f ./WCP/tf-service.yaml \
-  -f ./auth-server-ws/tf-service.yaml \
+  -f ./oauth-scim-module/tf-service.yaml \
   -f ./participant-manager-module/tf-service.yaml
 ```
 
