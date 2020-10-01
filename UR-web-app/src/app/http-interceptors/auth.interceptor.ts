@@ -60,15 +60,14 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     } else {
-      const headers = req.headers
-        .set('Content-Type', 'application/json')
+      let headers = req.headers
         .set('userId', sessionStorage.getItem('userId') || '')
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
-      if (!req.headers.has('Content-Type')) {
-        req.headers.set('Content-Type', 'application/json');
+      if (!req.headers.has('content-type')) {
+        headers = headers.append('content-type', 'application/json');
       }
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
@@ -87,7 +86,6 @@ export class AuthInterceptor implements HttpInterceptor {
             this.toasterService.error(err.error.message);
           } else {
             const customError = err.error as ApiResponse;
-            console.log(customError.error_code);
             if (getMessage(customError.error_code)) {
               this.toasterService.error(getMessage(customError.error_code));
             } else {
