@@ -87,7 +87,7 @@ export class AuthService {
       .set('userId', userId)
       .set('code_verifier', sessionStorage.getItem('pkceVerifier') || '');
     return this.http.post<AccessToken>(
-      `${environment.authServerUrl}/hydra/oauth2/token`,
+      `${environment.authServerUrl}/oauth2/token`,
       params.toString(),
       options,
     );
