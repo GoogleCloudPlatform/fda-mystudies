@@ -22,7 +22,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USE
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -207,7 +206,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest(1);
 
     UserDetailsEntity daoResp = service.loadUserDetailsByUserId(Constants.USER_ID);
-    assertNull(daoResp);
+    assertNotNull(daoResp);
 
     verify(1, deleteRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.USER_ID)));
     verify(

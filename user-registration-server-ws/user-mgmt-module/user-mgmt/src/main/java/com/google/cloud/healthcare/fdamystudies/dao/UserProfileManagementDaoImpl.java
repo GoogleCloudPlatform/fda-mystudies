@@ -338,7 +338,9 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     UserDetailsEntity userDetailsEntity = optUserDetails.get();
     String alteredEmail =
         userDetailsEntity.getEmail() + "_DEACTIVATED_" + Instant.now().toEpochMilli();
-    alteredEmail = alteredEmail.substring(0, CommonConstants.EMAIL_LENGTH);
+    if (alteredEmail.length() > CommonConstants.EMAIL_LENGTH) {
+      alteredEmail = alteredEmail.substring(0, CommonConstants.EMAIL_LENGTH);
+    }
     userDetailsEntity.setStatus(UserStatus.DEACTIVATED.getValue());
     userDetailsEntity.setEmail(alteredEmail);
     userDetailsRepository.saveAndFlush(userDetailsEntity);
