@@ -485,11 +485,8 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "user-registration-server-ws/enroll-mgmt-module",
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
-<<<<<<< HEAD
 #     "participant-manager-module",
-=======
 #     "hydra",
->>>>>>> 6f1a1e51c (Update terraform files)
 #   ])
 #
 #   provider = google-beta
