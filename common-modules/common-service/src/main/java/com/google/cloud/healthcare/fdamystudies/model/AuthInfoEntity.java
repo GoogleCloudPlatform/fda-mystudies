@@ -17,7 +17,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,12 +31,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Setter
 @Getter
 @Entity
-@Table(
-    name = "auth_info",
-    indexes = {
-      @Index(name = "auth_info_device_token_idx", columnList = "device_token"),
-      @Index(name = "auth_info_device_type_idx", columnList = "device_type")
-    })
+@Table(name = "auth_info")
 public class AuthInfoEntity implements Serializable {
 
   private static final long serialVersionUID = 4985607753888575491L;
