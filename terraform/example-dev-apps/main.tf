@@ -196,6 +196,11 @@ resource "google_service_account" "auth_server_gke_sa" {
   project    = module.project.project_id
 }
 
+resource "google_service_account" "hydra_gke_sa" {
+  account_id = "hydra-gke-sa"
+  project    = module.project.project_id
+}
+
 resource "google_service_account" "response_server_gke_sa" {
   account_id = "response-server-gke-sa"
   project    = module.project.project_id

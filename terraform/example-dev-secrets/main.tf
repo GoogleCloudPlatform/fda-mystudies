@@ -38,6 +38,7 @@ resource "random_string" "strings" {
     "participant_enroll_datastore_db_user",
     "participant_user_datastore_db_user",
     "participant_manager_db_user",
+    "hydra_db_user",
   ])
   length  = 16
   special = true
@@ -62,6 +63,13 @@ resource "random_password" "passwords" {
   ])
   length  = 16
   special = true
+}
+
+resource "random_secret" "strings" {
+  for_each = toset([
+    "hydra_secrets_key",
+  ])
+  length = 32
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.

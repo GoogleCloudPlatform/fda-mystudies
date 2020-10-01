@@ -285,6 +285,7 @@ resource "random_string" "strings" {
     "participant_enroll_datastore_db_user",
     "participant_user_datastore_db_user",
     "participant_manager_db_user",
+    "hydra_db_user",
   ])
   length  = 16
   special = true
@@ -309,6 +310,13 @@ resource "random_password" "passwords" {
   ])
   length  = 16
   special = true
+}
+
+resource "random_secret" "strings" {
+  for_each = toset([
+    "hydra_secrets_key",
+  ])
+  length  = 32
 }
 EOF
     }
@@ -441,6 +449,7 @@ template "project_apps" {
       # Terraform-generated service account for use by the GKE apps.
       service_accounts = [
         { account_id = "auth-server-gke-sa" },
+        { account_id = "hydra-gke-sa" },
         { account_id = "response-server-gke-sa" },
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
