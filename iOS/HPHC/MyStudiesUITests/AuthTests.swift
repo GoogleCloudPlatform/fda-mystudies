@@ -6,25 +6,18 @@
 
 import XCTest
 
-class MyStudiesUITests: XCTestCase {
+class MyStudiesUITests: UITestBase {
 
+  override func setUp() {
+    super.setUp()
+  }
   override func setUpWithError() throws {
     // In UI tests it is usually best to stop immediately when a failure occurs.
     continueAfterFailure = false
   }
 
-  func testLaunchPerformance() throws {
-    if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-      // This measures how long it takes to launch your application.
-      measure(metrics: [XCTOSSignpostMetric.applicationLaunch]) {
-        XCUIApplication().launch()
-      }
-    }
-  }
-
   func testRegistrationFlow() {
 
-    let app = XCUIApplication()
     app.launch()
 
     app.buttons["New User?"].tap()
@@ -49,6 +42,26 @@ class MyStudiesUITests: XCTestCase {
     app.toolbars["Toolbar"].buttons["Done"].tap()
     app.buttons["Submit"].tap()
 
+    let verificationStep = app.staticTexts["Verification Step"]
+    wait(forElement: verificationStep, timeout: 3)
+    XCTAssertTrue(verificationStep.exists)
+
+    let verificationField = app.textFields.firstMatch
+    verificationField.tap()
+    verificationField.typeText("gysas#4x")
+
+    app.toolbars["Toolbar"].buttons["Done"].tap()
+    app.buttons["Continue"].tap()
   }
 
+}
+
+extension XCTestCase {
+    func wait(forElement element: XCUIElement, timeout: TimeInterval) {
+        let predicate = NSPredicate(format: "exists == 1")
+        // This will make the test runner continously evalulate the
+        // predicate, and wait until it matches.
+        expectation(for: predicate, evaluatedWith: element)
+        waitForExpectations(timeout: timeout)
+    }
 }
