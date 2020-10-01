@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-server-ws
+  name: auth-server
   labels:
-    app: auth-server-ws
+    app: auth-server
 spec:
   replicas: 3
   selector:
@@ -17,8 +17,8 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: auth-server-ws
-          image: gcr.io/fda-mystudies-dev-apps/auth-server-ws:latest
+        - name: auth-server
+          image: gcr.io/fda-mystudies-dev-apps/auth-server:latest
           env:
             - name: DB_USER
               valueFrom:
@@ -57,7 +57,7 @@ spec:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /AuthServer/healthCheck
+              path: /oauth-scim-module/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
