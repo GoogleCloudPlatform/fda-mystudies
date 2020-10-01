@@ -29,17 +29,6 @@ export SECRETS_SYSTEM=${SECRETS_SYSTEM}
 # mysql://user:pw@tcp(host:port)/database?someSetting=value&foo=bar
 export DSN=mysql://${DB_USER}:${DB_PASS}@tcp(localhost:3306)/${DB_NAME}?sql_notes=false
 
-# CORS for public
-export SERVE_PUBLIC_CORS_ENABLED="true"
-export SERVE_PUBLIC_CORS_ALLOWED_ORIGINS="*"
-# TODO: review whether the next values are needed.
-#export SERVE_PUBLIC_CORS_ALLOWED_METHODS="POST,GET,PUT,DELETE"
-#export SERVE_ADMIN_CORS_ALLOWED_HEADERS="Accept, Content-Type"
-#export SERVE_ADMIN_CORS_EXPOSED_HEADERS="Accept, Content-Type"
-#export SERVE_PUBLIC_CORS_ALLOWED_HEADERS="Accept, Content-Type"
-#export SERVE_PUBLIC_CORS_EXPOSED_HEADERS="Accept, Content-Type"
-#export SERVE_ADMIN_CORS_ALLOWED_METHODS="POST,GET,PUT,DELETE"
-
 # issuer URL
 export URLS_SELF_ISSUER="${BASE_URL}/hydra"
 # Login and consent app
