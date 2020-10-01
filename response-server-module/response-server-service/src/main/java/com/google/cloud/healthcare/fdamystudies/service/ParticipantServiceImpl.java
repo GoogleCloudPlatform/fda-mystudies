@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantDao;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
