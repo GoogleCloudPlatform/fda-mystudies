@@ -12,8 +12,12 @@ import XCTest
 class LoginTest: XCTestCase {
 
   func testGrantCode() {
-    guard let url = try? AuthRouter.codeGrant(params: [:], headers: [:]).asURLRequest().url
-    else { return XCTFail() }
+    guard let url = try? AuthRouter.codeGrant(params: [:], headers: [:]).asURLRequest().url,
+      let urlStr = url?.absoluteString
+    else {
+      XCTFail()
+      return
+    }
 
     let responseDict: JSONDictionary = [
       User.JSONKey.accessToken: "accesstoken-12345",
@@ -22,13 +26,14 @@ class LoginTest: XCTestCase {
     ]
 
     // Mock the response.
-    stub(http(.post, uri: url?.absoluteString ?? ""), json(responseDict))
-    let expection = XCTestExpectation(description: "Api call")
+    stub(http(.post, uri: urlStr), json(responseDict))
 
-    let code = "grant_code" // Code from the callback URL.
+    let expection = XCTestExpectation(description: "Code Grant Api Call")
+
+    let code = "grant_code"  // Code from the callback URL.
     HydraAPI.grant(user: User.currentUser, with: code) { (status, _) in
       if status {
-         expection.fulfill()
+        expection.fulfill()
       } else {
         XCTFail()
       }
