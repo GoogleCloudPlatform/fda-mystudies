@@ -97,9 +97,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         userDetailsRepository.findByEmailAndAppId(user.getEmailId(), appOrgInfoBean.getAppInfoId());
 
     // Return USER_ALREADY_EXISTS error code if user account already exists for the given email
-    UserDetailsEntity existingUserDetails = new UserDetailsEntity();
     if (optUserDetails.isPresent()) {
-      existingUserDetails = optUserDetails.get();
+      UserDetailsEntity existingUserDetails = optUserDetails.get();
       if (generateVerificationCode(existingUserDetails)) {
         generateAndSaveVerificationCode(existingUserDetails);
       }
