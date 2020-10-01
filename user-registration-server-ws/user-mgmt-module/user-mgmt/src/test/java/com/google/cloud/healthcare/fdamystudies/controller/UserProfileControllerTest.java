@@ -218,6 +218,7 @@ public class UserProfileControllerTest extends BaseMockIT {
     UserDetailsEntity daoResp = service.loadUserDetailsByUserId(Constants.USER_ID);
     assertNotNull(daoResp);
     assertTrue(daoResp.getEmail().length() == CommonConstants.EMAIL_LENGTH);
+    assertTrue(daoResp.getEmail().contains("_DEACTIVATED_"));
 
     verify(1, deleteRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.USER_ID)));
     verify(
