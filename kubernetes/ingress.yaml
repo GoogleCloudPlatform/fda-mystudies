@@ -41,7 +41,7 @@ spec:
             backend:
               serviceName: study-designer-np
               servicePort: 50000
-          - path: /participant-manager-service/#/*
+          - path: /#/*
             backend:
               serviceName: participant-manager-app-np
               servicePort: 50000

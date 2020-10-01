@@ -20,8 +20,4 @@ spec:
       - name: participant-manager-app
         image: gcr.io/fda-mystudies-dev-apps/participant-manager-app:latest
         ports:
-        - containerPort: 8080
-        readinessProbe:
-          httpGet:
-            path: /index.html
-            port: 8080
+        - containerPort: 80
