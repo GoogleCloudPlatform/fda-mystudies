@@ -267,6 +267,7 @@ resource "random_string" "strings" {
     "study_metadata_db_user",
     "user_registration_db_user",
     "participant_manager_db_user",
+    "hydra_db_user",
   ])
   length  = 16
   special = true
@@ -285,6 +286,7 @@ resource "random_password" "passwords" {
     "study_metadata_db_password",
     "user_registration_db_password",
     "participant_manager_db_user",
+    "hydra_db_password",
   ])
   length  = 16
   special = true
