@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,9 +47,7 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
 import com.jayway.jsonpath.JsonPath;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
-import java.util.Date;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
@@ -106,15 +105,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
     TestUtils.addContentTypeAcceptHeaders(headers);
-    mockMvc
-        .perform(
-            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
-                .content(requestJson)
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                    .content(requestJson)
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)))
+            .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
+            .andReturn();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -138,21 +140,9 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     // Reset Audit Event calls
     clearAuditRequests();
     auditEventMap.clear();
-
-    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
-    String fileName =
-        underDirectory
-            + "/"
-            + Constants.VALID_USER_ID
-            + "_"
-            + consentStatus.getStudyId()
-            + "_"
-            + consentStatus.getConsent().getVersion()
-            + "_"
-            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-            + ".pdf";
-
-    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    String consentDocumentFileName =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), consentDocumentFileName);
     Blob mockedBlob = mock(Blob.class);
 
     String content = "sample consent document content";
@@ -166,7 +156,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         String.format(
             "/myStudiesConsentMgmtWS/consentDocument?studyId=%s&consentVersion=%s",
             Constants.STUDYOF_HEALTH, Constants.VERSION_1_0);
-    MvcResult result =
+    result =
         mockMvc
             .perform(get(path).headers(headers).contextPath(getContextPath()))
             .andDo(print())
@@ -210,15 +200,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     TestUtils.addContentTypeAcceptHeaders(headers);
     headers.add("Authorization", VALID_BEARER_TOKEN);
-    mockMvc
-        .perform(
-            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
-                .content(requestJson)
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                    .content(requestJson)
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)))
+            .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
+            .andReturn();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -240,20 +233,10 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     clearAuditRequests();
     auditEventMap.clear();
 
-    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
-    String fileName =
-        underDirectory
-            + "/"
-            + Constants.VALID_USER_ID
-            + "_"
-            + consentStatus.getStudyId()
-            + "_"
-            + consentStatus.getConsent().getVersion()
-            + "_"
-            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-            + ".pdf";
+    String consentDocumentFileName =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
 
-    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), consentDocumentFileName);
     Blob mockedBlob = mock(Blob.class);
 
     String content = "sample consent document content";
@@ -266,7 +249,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
         String.format(
             "/myStudiesConsentMgmtWS/consentDocument?studyId=%s&consentVersion=%s",
             Constants.STUDYOF_HEALTH, Constants.VERSION_1_0);
-    MvcResult result =
+    result =
         mockMvc
             .perform(get(path).headers(headers).contextPath(getContextPath()))
             .andDo(print())
@@ -310,15 +293,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     TestUtils.addContentTypeAcceptHeaders(headers);
     headers.add("Authorization", VALID_BEARER_TOKEN);
-    mockMvc
-        .perform(
-            post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
-                .content(requestJson)
-                .headers(headers)
-                .contextPath(getContextPath()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)));
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.UPDATE_ELIGIBILITY_CONSENT.getPath())
+                    .content(requestJson)
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)))
+            .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
+            .andReturn();
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -340,20 +326,10 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     clearAuditRequests();
     auditEventMap.clear();
 
-    String underDirectory = Constants.VALID_USER_ID + "/" + consentStatus.getStudyId();
-    String fileName =
-        underDirectory
-            + "/"
-            + Constants.VALID_USER_ID
-            + "_"
-            + consentStatus.getStudyId()
-            + "_"
-            + consentStatus.getConsent().getVersion()
-            + "_"
-            + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-            + ".pdf";
+    String consentDocumentFileName =
+        JsonPath.read(result.getResponse().getContentAsString(), "$.consentDocumentFileName");
 
-    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), fileName);
+    BlobId validBlobId = BlobId.of(appConfig.getBucketName(), consentDocumentFileName);
     Blob mockedBlob = mock(Blob.class);
 
     String content = "sample consent document content";
@@ -363,7 +339,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
     when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
 
     // Invoke http api endpoint to get consent and verify pdf content
-    MvcResult result =
+    result =
         mockMvc
             .perform(
                 get(ApiEndpoint.CONSENT_DOCUMENT.getPath())
