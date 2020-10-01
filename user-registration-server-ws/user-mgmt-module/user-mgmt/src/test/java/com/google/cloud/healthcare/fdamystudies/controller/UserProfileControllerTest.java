@@ -8,8 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
@@ -24,7 +24,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WIT
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,6 +42,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -57,7 +57,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -186,7 +188,15 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void deactivateAccountSuccess() throws Exception {
+    String veryLongEmail = RandomStringUtils.randomAlphabetic(300) + "@grr.la";
+    Optional<UserDetailsEntity> optUserDetails =
+        userDetailsRepository.findByUserId(Constants.USER_ID);
+    UserDetailsEntity userDetails = optUserDetails.get();
+    userDetails.setEmail(veryLongEmail);
+    userDetailsRepository.saveAndFlush(userDetails);
+
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
+    headers.set(Constants.USER_ID_HEADER, Constants.USER_ID);
 
     StudyReqBean studyReqBean = new StudyReqBean(Constants.STUDY_ID, Constants.TRUE);
     List<StudyReqBean> list = new ArrayList<StudyReqBean>();
@@ -205,20 +215,22 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest(1);
 
-    UserDetailsEntity daoResp = service.loadUserDetailsByUserId(Constants.VALID_USER_ID);
-    assertEquals(3, daoResp.getStatus());
+    UserDetailsEntity daoResp = service.loadUserDetailsByUserId(Constants.USER_ID);
+    assertNotNull(daoResp);
+    assertTrue(daoResp.getEmail().length() == CommonConstants.EMAIL_LENGTH);
+    assertTrue(daoResp.getEmail().contains("_DEACTIVATED_"));
 
-    verify(1, putRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.VALID_USER_ID)));
+    verify(1, deleteRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.USER_ID)));
     verify(
         1,
         postRequestedFor(
             urlEqualTo(
-                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=1&deleteResponses=true")));
+                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setUserId(Constants.USER_ID);
     auditRequest.setStudyId(Constants.STUDY_ID);
-    auditRequest.setParticipantId("1");
+    auditRequest.setParticipantId("4");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(USER_ACCOUNT_DEACTIVATED.getEventCode(), auditRequest);
