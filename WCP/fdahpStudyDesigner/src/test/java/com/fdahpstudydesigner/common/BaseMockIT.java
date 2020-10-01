@@ -14,6 +14,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +24,6 @@ import com.fdahpstudydesigner.config.HibernateTestConfig;
 import com.fdahpstudydesigner.config.WebAppTestConfig;
 import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,10 +119,6 @@ public class BaseMockIT {
   public void setUp() {
 
     logger.debug(String.format("BEGIN TEST: %s", testName.getMethodName()));
-
-    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
-    map.put("WCPClientId", "a7ff979d-8b11-46d7-9003-3954c42041eg");
-    map.put("WCPSecretKey", "joef42g64ogfIFOCWHFeb4efca157245259ed65thla9a");
 
     mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
     initSecurityContext();

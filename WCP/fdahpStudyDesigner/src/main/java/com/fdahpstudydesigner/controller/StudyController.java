@@ -5206,8 +5206,10 @@ public class StudyController {
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientId", map.get("WCPClientId"));
-      headers.set("secretKey", FdahpStudyDesignerUtil.getHashedValue(map.get("WCPSecretKey")));
+      headers.set("clientId", map.get("security.oauth2.client.client-id"));
+      headers.set(
+          "secretKey",
+          FdahpStudyDesignerUtil.getHashedValue(map.get("security.oauth2.client.client-secret")));
 
       userRegistrationServerUrl = map.get("userRegistrationServerUrl");
 
@@ -5253,8 +5255,10 @@ public class StudyController {
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientId", map.get("WCPClientId"));
-      headers.set("secretKey", FdahpStudyDesignerUtil.getHashedValue(map.get("WCPSecretKey")));
+      headers.set("clientId", map.get("security.oauth2.client.client-id"));
+      headers.set(
+          "secretKey",
+          FdahpStudyDesignerUtil.getHashedValue(map.get("security.oauth2.client.client-secret")));
 
       responseServerUrl = map.get("responseServerUrl");
 
