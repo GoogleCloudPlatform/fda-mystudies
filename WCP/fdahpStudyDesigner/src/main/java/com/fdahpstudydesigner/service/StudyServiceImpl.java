@@ -1494,7 +1494,6 @@ public class StudyServiceImpl implements StudyService {
         studyDetails.setAppId(studyBo.getAppId());
         studyDetails.setAppName("App Name_" + studyBo.getAppId());
         studyDetails.setAppDescription("App Desc_" + studyBo.getAppId());
-        studyDetails.setOrgId(studyBo.getOrgId());
       }
     } catch (Exception e) {
       logger.error("StudyServiceImpl - getStudyByLatestVersion - Error", e);
