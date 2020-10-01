@@ -74,8 +74,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -88,8 +86,6 @@ import org.springframework.web.client.support.RestGatewaySupport;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StudyControllerTest extends BaseMockIT {
 
-  @InjectMocks @Spy StudyController studyController;
-
   private static final String STUDY_ID_VALUE = "678574";
 
   private static final String CUSTOM_STUDY_ID_VALUE = "678590";
@@ -101,6 +97,8 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String STUDIES_META_DATA_URI = "/studies/studymetadata";
 
   private static final String STUDY_META_DATA_URI = "/studymetadata";
+
+  private static final String TEST_STUDY_ID_STRING = "678680";
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
@@ -1039,7 +1037,7 @@ public class StudyControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
-                .param(FdahpStudyDesignerConstants.STUDY_ID, "678680")
+                .param(FdahpStudyDesignerConstants.STUDY_ID, TEST_STUDY_ID_STRING)
                 .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "updatesId")
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
@@ -1088,7 +1086,7 @@ public class StudyControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
-                .param(FdahpStudyDesignerConstants.STUDY_ID, "678680")
+                .param(FdahpStudyDesignerConstants.STUDY_ID, TEST_STUDY_ID_STRING)
                 .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "deactivateId")
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
