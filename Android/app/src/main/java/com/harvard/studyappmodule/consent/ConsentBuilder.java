@@ -221,11 +221,11 @@ public class ConsentBuilder {
               "Share my data with "
                   + consent.getSharing().getShortDesc()
                   + " and qualified researchers worldwide",
-              "True",
+              "Provided",
               "yes");
       choices[1] =
           new Choice(
-              "Only share my data with " + consent.getSharing().getLongDesc(), "False", "no");
+              "Only share my data with " + consent.getSharing().getLongDesc(), "Not Provided", "no");
 
       AnswerFormat choiceAnswerFormat =
           new ChoiceAnswerFormat(AnswerFormat.ChoiceAnswerStyle.SingleChoice, choices);

@@ -608,8 +608,6 @@ public class SurveyCompleteActivity extends AppCompatActivity
     JSONObject activityStatus = new JSONObject();
     JSONObject activityRun = new JSONObject();
     try {
-      activityStatus.put(
-          "studyId", getIntent().getStringExtra(CustomSurveyViewTaskActivity.STUDYID));
       activityStatus.put("activityState", SurveyActivitiesFragment.COMPLETED);
       activityStatus.put("activityId", activityId[1]);
       activityStatus.put(

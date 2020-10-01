@@ -145,7 +145,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private EligibilityConsent eligibilityConsent;
   private StudyList studyList;
   private String pdfPath;
-  String sharingConsent = "n/a";
+  String sharingConsent = "Not Applicable";
 
   public static Intent newIntent(
       Context context,

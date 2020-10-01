@@ -2784,7 +2784,6 @@ public class SurveyActivitiesFragment extends Fragment
     JSONObject activityStatus = new JSONObject();
     JSONObject activityRun = new JSONObject();
     try {
-      activityStatus.put("studyId", studyId);
       activityStatus.put("activityState", IN_PROGRESS);
       activityStatus.put("activityId", activityId);
       activityStatus.put("activityRunId", "" + activityRunId);
