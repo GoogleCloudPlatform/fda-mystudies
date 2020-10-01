@@ -99,7 +99,6 @@ export class SetUpAccountComponent
           setTimeout(() => {
             this.authService.beginLoginConsentFlow();
           }, 1000);
-          // this.authService.beginLoginConsentFlow();
         }),
     );
   }
