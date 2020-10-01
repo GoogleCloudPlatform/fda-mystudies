@@ -40,7 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     }
     if (req.url.includes(`${environment.authServerUrl}`)) {
-      const headers = req.headers
+      let headers = req.headers
         .set('Accept', 'application/json')
         .set('correlationId', sessionStorage.getItem('correlationId') || '')
         .set('appId', this.authService.appId)
@@ -49,8 +49,11 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
-      if (!req.headers.has('Content-Type')) {
-        headers.set('Content-Type', 'application/x-www-form-urlencoded');
+      if (!req.headers.has('content-type')) {
+        headers = headers.append(
+          'Content-Type',
+          'application/x-www-form-urlencoded',
+        );
       }
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
@@ -60,14 +63,14 @@ export class AuthInterceptor implements HttpInterceptor {
         }),
       );
     } else {
-      const headers = req.headers
+      let headers = req.headers
         .set('userId', sessionStorage.getItem('userId') || '')
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
-      if (!req.headers.has('Content-Type')) {
-        req.headers.set('Content-Type', 'application/json');
+      if (!req.headers.has('content-type')) {
+        headers = headers.append('content-type', 'application/json');
       }
       const authReq = req.clone({headers});
       return next.handle(authReq).pipe(
