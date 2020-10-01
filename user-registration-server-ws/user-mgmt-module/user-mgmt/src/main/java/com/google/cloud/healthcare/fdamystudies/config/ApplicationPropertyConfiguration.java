@@ -87,4 +87,7 @@ public class ApplicationPropertyConfiguration {
 
   @Value("${mail.from-email}")
   private String fromEmail;
+
+  @Value("${auth.server.deleteStatusUrl}")
+  private String authServerDeleteStatusUrl;
 }
