@@ -25,6 +25,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -241,6 +242,11 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
           } catch (ErrorCodeException e) {
             if (e.getErrorCode() == ErrorCode.USER_NOT_FOUND) {
               userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
+            } else {
+              logger.warn(
+                  String.format(
+                      "Delete user from %s failed with ErrorCode=%s",
+                      PlatformComponent.SCIM_AUTH_SERVER.getValue(), e.getErrorCode()));
             }
           } catch (Exception e) {
             logger.error("processDeactivatePendingRequests() failed with an exception", e);

@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -21,6 +22,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -334,8 +336,11 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   public void deactivateUserAccount(String userId) {
     Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
     UserDetailsEntity userDetailsEntity = optUserDetails.get();
+    String alteredEmail =
+        userDetailsEntity.getEmail() + "_DEACTIVATED_" + Instant.now().toEpochMilli();
+    alteredEmail = alteredEmail.substring(0, CommonConstants.EMAIL_LENGTH);
     userDetailsEntity.setStatus(UserStatus.DEACTIVATED.getValue());
-    userDetailsEntity.setUserId(null);
+    userDetailsEntity.setEmail(alteredEmail);
     userDetailsRepository.saveAndFlush(userDetailsEntity);
   }
 }
