@@ -19,6 +19,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ConsentStatusBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ConsentStudyResponseBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.bean.StudyInfoBean;
+import com.google.cloud.healthcare.fdamystudies.bean.UpdateEligibilityConsentBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ConsentAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
@@ -99,6 +100,7 @@ public class UserConsentManagementController {
     StudyInfoBean studyInfoBean = null;
     String userDetailId = String.valueOf(0);
 
+    String consentdocumentFilepath = null;
     if ((consentStatusBean != null)
         && (consentStatusBean.getConsent() != null)
         && ((consentStatusBean.getConsent().getVersion() != null)
@@ -153,18 +155,18 @@ public class UserConsentManagementController {
               }
               if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                 String underDirectory = userId + "/" + consentStatusBean.getStudyId();
-                String fileName =
-                    userId
-                        + "_"
-                        + consentStatusBean.getStudyId()
-                        + "_"
-                        + consentStatusBean.getConsent().getVersion()
+                String consentDocumentFileName =
+                    consentStatusBean.getConsent().getVersion()
                         + "_"
                         + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
                         + ".pdf";
-
                 saveDocumentToCloudStorage(
-                    auditRequest, underDirectory, fileName, consentStatusBean, studyConsent);
+                    auditRequest,
+                    underDirectory,
+                    consentDocumentFileName,
+                    consentStatusBean,
+                    studyConsent);
+                consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
               }
               if (optUser.isPresent()) {
                 studyConsent.setUserDetails(optUser.get());
@@ -186,18 +188,18 @@ public class UserConsentManagementController {
               studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
               if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
                 String underDirectory = userId + "/" + consentStatusBean.getStudyId();
-                String fileName =
-                    userId
-                        + "_"
-                        + consentStatusBean.getStudyId()
-                        + "_"
-                        + consentStatusBean.getConsent().getVersion()
+                String consentDocumentFileName =
+                    consentStatusBean.getConsent().getVersion()
                         + "_"
                         + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
                         + ".pdf";
-
                 saveDocumentToCloudStorage(
-                    auditRequest, underDirectory, fileName, consentStatusBean, studyConsent);
+                    auditRequest,
+                    underDirectory,
+                    consentDocumentFileName,
+                    consentStatusBean,
+                    studyConsent);
+                consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
               }
             }
             String addOrUpdateConsentMessage =
@@ -253,8 +255,11 @@ public class UserConsentManagementController {
           response);
       return null;
     }
+    UpdateEligibilityConsentBean updateEligibilityConsentBean =
+        new UpdateEligibilityConsentBean(
+            errorBean.getCode(), errorBean.getMessage(), consentdocumentFilepath);
     logger.info("UserConsentManagementController updateEligibilityConsentStatus() - ends ");
-    return new ResponseEntity<>(errorBean, HttpStatus.OK);
+    return new ResponseEntity<>(updateEligibilityConsentBean, HttpStatus.OK);
   }
 
   private void saveDocumentToCloudStorage(

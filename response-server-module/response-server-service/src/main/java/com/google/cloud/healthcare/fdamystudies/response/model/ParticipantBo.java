@@ -6,7 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.model;
+package com.google.cloud.healthcare.fdamystudies.response.model;
 
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.io.Serializable;
@@ -16,10 +16,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "participant_info")
+@Table(
+    name = "participant_info",
+    indexes = {
+      @Index(
+          name = "participant_info_token_identifier_participant_identifier_idx",
+          columnList = "token_identifier,participant_identifier")
+    })
 public class ParticipantBo implements Serializable {
 
   private static final long serialVersionUID = -8669517487080184697L;
