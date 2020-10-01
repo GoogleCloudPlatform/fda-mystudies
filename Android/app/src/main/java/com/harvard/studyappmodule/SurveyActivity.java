@@ -320,21 +320,11 @@ public class SurveyActivity extends AppCompatActivity
             closeDrawer();
             if (previousValue != R.id.mSignInProfileLayout) {
               previousValue = R.id.mSignInProfileLayout;
-              if (AppController.getHelperSharedPreference()
-                  .readPreference(SurveyActivity.this, getString(R.string.userid), "")
-                  .equalsIgnoreCase("")) {
-                getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frameLayoutContainer, new SignInFragment(), "fragment")
-                    .commit();
-                menutitle.setText(R.string.sign_in);
-              } else {
-                getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.frameLayoutContainer, new ProfileFragment(), "fragment")
-                    .commit();
-                menutitle.setText(R.string.profile);
-              }
+              getSupportFragmentManager()
+                  .beginTransaction()
+                  .replace(R.id.frameLayoutContainer, new ProfileFragment(), "fragment")
+                  .commit();
+              menutitle.setText(R.string.profile);
             }
           }
         });

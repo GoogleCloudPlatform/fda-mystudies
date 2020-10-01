@@ -148,12 +148,6 @@
             android:theme="@style/passcodeTheme"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".usermodule.SignInActivity"
-            android:configChanges="screenLayout|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppThemeNoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustNothing" />
-        <activity
             android:name=".usermodule.ForgotPasswordActivity"
             android:configChanges="screenLayout|orientation"
             android:screenOrientation="portrait"
