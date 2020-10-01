@@ -42,6 +42,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.SettingsRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
@@ -56,7 +57,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -185,6 +188,13 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void deactivateAccountSuccess() throws Exception {
+    String veryLongEmail = RandomStringUtils.randomAlphabetic(300) + "@grr.la";
+    Optional<UserDetailsEntity> optUserDetails =
+        userDetailsRepository.findByUserId(Constants.USER_ID);
+    UserDetailsEntity userDetails = optUserDetails.get();
+    userDetails.setEmail(veryLongEmail);
+    userDetailsRepository.saveAndFlush(userDetails);
+
     HttpHeaders headers = TestUtils.getCommonHeaders(Constants.USER_ID_HEADER);
     headers.set(Constants.USER_ID_HEADER, Constants.USER_ID);
 
@@ -207,6 +217,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     UserDetailsEntity daoResp = service.loadUserDetailsByUserId(Constants.USER_ID);
     assertNotNull(daoResp);
+    assertTrue(daoResp.getEmail().length() == CommonConstants.EMAIL_LENGTH);
 
     verify(1, deleteRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.USER_ID)));
     verify(
