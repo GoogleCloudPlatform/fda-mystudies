@@ -126,16 +126,16 @@ do
 done
 
 # Deployment Phase 2 - Uncomment after Phase 1 is deployed
-cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
-cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
-cp -r ${SRC_PROJ_BASE}-resp-firebase/iam ${DST_PROJ_BASE}-resp-firebase/
+#cp -r ${SRC_PROJ_BASE}-networks/networks ${DST_PROJ_BASE}-networks/
+#cp -r ${SRC_PROJ_BASE}-resp-firebase/firebase ${DST_PROJ_BASE}-resp-firebase/
+#cp -r ${SRC_PROJ_BASE}-resp-firebase/iam ${DST_PROJ_BASE}-resp-firebase/
 
 # Deployment Phase 3 - Uncomment after Phase 1, 2 are deployed
-cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
+#cp -r ${SRC_PROJ_BASE}-apps/apps ${DST_PROJ_BASE}-apps/
 
 # Deployment Phase 4 - Uncomment after Phase 1, 2, 3 are deployed
-cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
-cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
+#cp -r ${SRC_PROJ_BASE}-data/data ${DST_PROJ_BASE}-data/
+#cp -r ${SRC_PROJ_BASE}-data/iam ${DST_PROJ_BASE}-data/
 
 cd ${OUTPUT_TF_BASE}
 

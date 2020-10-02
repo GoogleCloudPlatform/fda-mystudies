@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name = "mystudies-demo-audit"
-// org_id          = "18510592047"
-folder_id       = "folders/440087619763"
+name            = "mystudies-demo-audit"
+org_id          = "18510592047"
 billing_account = "01B494-31B256-17B2A6"
 apis = [
   "bigquery.googleapis.com",

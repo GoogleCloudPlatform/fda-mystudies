@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name = "mystudies-demo-data"
-// org_id          = "18510592047"
-folder_id       = "folders/582188324485"
+name            = "mystudies-demo-data"
+org_id          = "18510592047"
 billing_account = "01B494-31B256-17B2A6"
 apis = [
   "compute.googleapis.com",

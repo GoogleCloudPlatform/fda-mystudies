@@ -13,4 +13,4 @@
 # limitations under the License.
 
 display_name = "mystudies-demo"
-parent       = "folders/440087619763"
+parent       = "organizations/18510592047"

@@ -17,8 +17,7 @@ variable "name" {
 }
 
 variable "org_id" {
-  type    = string
-  default = ""
+  type = string
 }
 
 variable "folder_id" {

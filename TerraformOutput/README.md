@@ -194,7 +194,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment [Deployment Phase 2](./rename.sh#L101-L102)
+1. Uncomment [Deployment Phase 2](./rename.sh#L101-L103)
 
 1. Comment out [Firestore location and Index](./org/folder.mystudies-demo/project.mystudies-demo-resp-firebase/firebase/main.tf#L27-L61).
 
@@ -225,7 +225,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment [Deployment Phase 3](./rename.sh#L105) and run [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 3](./rename.sh#L106) and run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
@@ -244,7 +244,7 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Go to the original directory.
 
-1. Uncomment [Deployment Phase 4](./rename.sh#L108-L109) and run [rename.sh](./rename.sh).
+1. Uncomment [Deployment Phase 4](./rename.sh#L109-L110) and run [rename.sh](./rename.sh).
 
 1. Go to the target diretory.
 
@@ -275,3 +275,23 @@ To see what resources each deployment provisions, check out the comments in each
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.
+
+### Phase 5: Mobile app setups
+
+1. Build and destribute iOS and Android apps following their individual instructions.
+
+1. Once you have setup push notification for the apps, copy the values to their corresponding secrets:
+```
+# bundleID used for the Android App.
+android-bundle-id
+# found under settings > cloud messaging in the android app defined in your firebase project.
+android-server-key
+# bundleID used to build and distribute the iOS App.
+ios-bundle-id
+# certificate and password generated for APNs.
+ios-certificate
+ios-certificate-password
+```
+
+1. Run [copy_push_notification_info_to_sql.sh](./copy_push_notification_info_to_sql.sh)
+    script to copy push notification info from secrets into CloudSQL.
