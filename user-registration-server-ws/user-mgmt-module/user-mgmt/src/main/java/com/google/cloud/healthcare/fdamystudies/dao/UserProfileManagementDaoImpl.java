@@ -9,6 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
@@ -17,10 +19,13 @@ import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
@@ -45,6 +50,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   @Autowired private SessionFactory sessionFactory;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
+
+  @Autowired UserDetailsRepository userDetailsRepository;
 
   @Autowired CommonDao commonDao;
 
@@ -241,7 +248,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
   }
 
   @Override
-  public boolean deActivateAcct(String userId, List<String> deleteData, String userDetailsId) {
+  public void deactivateAcct(String userId, List<String> deleteData, String userDetailsId) {
     logger.info("UserProfileManagementDaoImpl deActivateAcct() - Starts ");
     CriteriaBuilder criteriaBuilder = null;
 
@@ -249,8 +256,6 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Root<UserAppDetailsEntity> userAppDetailsRoot = null;
     CriteriaDelete<AuthInfoEntity> criteriaAuthInfoDelete = null;
     Root<AuthInfoEntity> authInfoRoot = null;
-    CriteriaUpdate<UserDetailsEntity> criteriaUserDetailsUpdate = null;
-    Root<UserDetailsEntity> userDetailsRootUpdate = null;
 
     CriteriaUpdate<ParticipantStudyEntity> criteriaParticipantStudiesUpdate = null;
     Root<ParticipantStudyEntity> participantStudiesRoot = null;
@@ -258,16 +263,11 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     Predicate[] studyInfoIdPredicates = new Predicate[1];
     Expression<String> studyIdExpression = null;
     Predicate[] predicatesAuthInfo = new Predicate[1];
-    Predicate[] predicatesUserDetails = new Predicate[1];
     Predicate[] predicatesUserAppDetails = new Predicate[1];
     CriteriaQuery<StudyEntity> studyInfoQuery = null;
     Root<StudyEntity> rootStudy = null;
     List<StudyEntity> studyInfoBoList = null;
-    List<String> studyInfoIdList = null;
     UserDetailsEntity userDetails = null;
-    int isUpdated = 0;
-    int count = 0;
-    boolean returnVal = false;
     Session session = this.sessionFactory.getCurrentSession();
     criteriaBuilder = session.getCriteriaBuilder();
     if (deleteData != null && !deleteData.isEmpty()) {
@@ -277,13 +277,12 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       studyInfoIdPredicates[0] = studyIdExpression.in(deleteData);
       studyInfoQuery.select(rootStudy).where(studyInfoIdPredicates);
       studyInfoBoList = session.createQuery(studyInfoQuery).getResultList();
-      studyInfoIdList =
-          studyInfoBoList.stream().map(StudyEntity::getId).collect(Collectors.toList());
+      studyInfoBoList.stream().map(StudyEntity::getId).collect(Collectors.toList());
       criteriaParticipantStudiesUpdate =
           criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
       criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
-      criteriaParticipantStudiesUpdate.set("participantId", "NULL");
+      criteriaParticipantStudiesUpdate.set("participantId", null);
       userDetails = session.get(UserDetailsEntity.class, userDetailsId);
       studyIdPredicates.add(
           criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
@@ -291,7 +290,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       studyIdPredicates.add(studyIdExpression.in(studyInfoBoList));
       criteriaParticipantStudiesUpdate.where(
           studyIdPredicates.toArray(new Predicate[studyIdPredicates.size()]));
-      isUpdated = session.createQuery(criteriaParticipantStudiesUpdate).executeUpdate();
+      session.createQuery(criteriaParticipantStudiesUpdate).executeUpdate();
     }
 
     criteriaAuthInfoDelete = criteriaBuilder.createCriteriaDelete(AuthInfoEntity.class);
@@ -307,17 +306,7 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
     criteriaUserAppDetailsDelete.where(predicatesUserAppDetails);
     session.createQuery(criteriaUserAppDetailsDelete).executeUpdate();
 
-    criteriaUserDetailsUpdate = criteriaBuilder.createCriteriaUpdate(UserDetailsEntity.class);
-    userDetailsRootUpdate = criteriaUserDetailsUpdate.from(UserDetailsEntity.class);
-    criteriaUserDetailsUpdate.set("status", 3);
-    predicatesUserDetails[0] = criteriaBuilder.equal(userDetailsRootUpdate.get("userId"), userId);
-    criteriaUserDetailsUpdate.where(predicatesUserDetails);
-    count = session.createQuery(criteriaUserDetailsUpdate).executeUpdate();
-    if (count > 0) {
-      returnVal = true;
-    }
     logger.info("UserProfileManagementDaoImpl deActivateAcct() - Ends ");
-    return returnVal;
   }
 
   @Override
@@ -341,5 +330,19 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       appPropertiesDetails = appPropetiesDetailList.get(0);
     }
     return appPropertiesDetails;
+  }
+
+  @Override
+  public void deactivateUserAccount(String userId) {
+    Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
+    UserDetailsEntity userDetailsEntity = optUserDetails.get();
+    String alteredEmail =
+        userDetailsEntity.getEmail() + "_DEACTIVATED_" + Instant.now().toEpochMilli();
+    if (alteredEmail.length() > CommonConstants.EMAIL_LENGTH) {
+      alteredEmail = alteredEmail.substring(0, CommonConstants.EMAIL_LENGTH);
+    }
+    userDetailsEntity.setStatus(UserStatus.DEACTIVATED.getValue());
+    userDetailsEntity.setEmail(alteredEmail);
+    userDetailsRepository.saveAndFlush(userDetailsEntity);
   }
 }

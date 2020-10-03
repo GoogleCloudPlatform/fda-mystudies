@@ -14,7 +14,9 @@ import lombok.Getter;
 public enum UserStatus {
   DEACTIVATED(0, "Deactivated"),
   ACTIVE(1, "Active"),
-  INVITED(2, "Invited");
+  INVITED(2, "Invited"),
+  DEACTIVATE_PENDING(3, "Deactivate request pending"),
+  PENDING_EMAIL_CONFIRMATION(4, "Pending email confirmation");
 
   private Integer value;
 

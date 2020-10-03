@@ -20,9 +20,9 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -97,17 +97,14 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         userDetailsRepository.findByEmailAndAppId(user.getEmailId(), appOrgInfoBean.getAppInfoId());
 
     // Return USER_ALREADY_EXISTS error code if user account already exists for the given email
-    UserDetailsEntity existingUserDetails = new UserDetailsEntity();
     if (optUserDetails.isPresent()) {
-      existingUserDetails = optUserDetails.get();
-      if (StringUtils.isNotEmpty(existingUserDetails.getUserId())) {
-        if (generateVerificationCode(existingUserDetails)) {
-          generateAndSaveVerificationCode(existingUserDetails);
-        }
-        userMgmntAuditHelper.logEvent(
-            UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME, auditRequest);
-        throw new ErrorCodeException(USER_ALREADY_EXISTS);
+      UserDetailsEntity existingUserDetails = optUserDetails.get();
+      if (generateVerificationCode(existingUserDetails)) {
+        generateAndSaveVerificationCode(existingUserDetails);
       }
+      userMgmntAuditHelper.logEvent(
+          UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME, auditRequest);
+      throw new ErrorCodeException(USER_ALREADY_EXISTS);
     }
 
     // save user details
@@ -147,7 +144,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   }
 
   private boolean generateVerificationCode(UserDetailsEntity userDetails) {
-    return UserAccountStatus.PENDING_CONFIRMATION.getStatus() == userDetails.getStatus()
+    return UserStatus.PENDING_EMAIL_CONFIRMATION.getValue() == userDetails.getStatus()
         && (StringUtils.isEmpty(userDetails.getEmailCode())
             || Timestamp.from(Instant.now()).after(userDetails.getCodeExpireDate()));
   }
@@ -165,7 +162,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
   private UserDetailsEntity fromUserRegistrationForm(UserRegistrationForm user) {
     UserDetailsEntity userDetails = new UserDetailsEntity();
-    userDetails.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userDetails.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
     userDetails.setVerificationDate(new Timestamp(System.currentTimeMillis()));
     userDetails.setUserId(user.getUserId());
     userDetails.setEmail(user.getEmailId());
@@ -184,7 +181,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     userRequest.setEmail(user.getEmailId());
     userRequest.setPassword(user.getPassword());
     userRequest.setAppId(user.getAppId());
-    userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
+    userRequest.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
 
     HttpEntity<UserRequest> requestEntity = new HttpEntity<>(userRequest, headers);
 
