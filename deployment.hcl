@@ -173,7 +173,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-hydra-secrets-system"
-          secret_data = "$${random_secret.strings[\"hydra_secrets_key\"].result}"
+          secret_data = "$${random_secret.secrets[\"hydra_secrets_key\"].result}"
         },
         {
           secret_id   = "auto-mystudies-ma-client-id"
@@ -292,7 +292,7 @@ resource "random_password" "passwords" {
   special = true
 }
 
-resource "random_secret" "strings" {
+resource "random_secret" "secrets" {
   for_each = toset([
     "hydra_secrets_key",
   ])
