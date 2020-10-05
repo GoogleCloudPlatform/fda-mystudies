@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: participant-enroll-datastore
+  labels:
+    app: participant-enroll-datastore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: participant-enroll-datastore
+  template:
+    metadata:
+      labels:
+        app: participant-enroll-datastore
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: participant-enroll-datastore
+          image: gcr.io/fda-mystudies-dev-apps/participant-enroll-datastore:latest
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: participant-enroll-datastore-db-credentials
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: participant-enroll-datastore-db-credentials
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: participant-enroll-datastore-db-credentials
+                  key: dbname
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: participant-enroll-datastore-secrets
+                  key: CLIENT_ID
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: participant-enroll-datastore-secrets
+                  key: SECRET_KEY
+            - name: HYDRA_ADMIN_URL
+                value: "hydra:4445"
+            - name: RESPONSE_SERVER_URL
+              value: "response-server-np:50000"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /participant-enroll-datastore/healthCheck
+              port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-credential_file=/secrets/gcloud_key/key.json"]
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: participant-enroll-datastore-gcloud-key

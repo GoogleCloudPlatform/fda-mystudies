@@ -45,11 +45,11 @@ module "project" {
   ]
 }
 
-module "example_dev_mystudies_firestore_data" {
+module "example_dev_my_studies_firestore_data" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id = "example_dev_mystudies_firestore_data"
+  dataset_id = "example_dev_my_studies_firestore_data"
   project_id = module.project.project_id
   location   = "us-east1"
 }

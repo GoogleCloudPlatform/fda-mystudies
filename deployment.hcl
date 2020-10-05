@@ -132,7 +132,7 @@ template "project_secrets" {
         {
           secret_id = "manual-mystudies-email-password"
         },
-        # AppId for the mobile app. This needs to be in the app_info table in user registration database.
+        # AppId for the mobile app. This needs to be in the app_info table in participant database.
         {
           secret_id = "manual-mobile-app-appid"
         },
@@ -236,12 +236,28 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"study_metadata_db_user\"].result}"
         },
         {
-          secret_id   = "auto-user-registration-db-password"
-          secret_data = "$${random_password.passwords[\"user_registration_db_password\"].result}"
+          secret_id   = "auto-participant-consent-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_consent_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-user-registration-db-user"
-          secret_data = "$${random_string.strings[\"user_registration_db_user\"].result}"
+          secret_id   = "auto-participant-consent-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_consent_datastore_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_enroll_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_enroll_datastore_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-user-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_user_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-user-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_user_datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-participant-manager-db-password"
@@ -265,7 +281,9 @@ resource "random_string" "strings" {
     "response_server_db_user",
     "study_designer_db_user",
     "study_metadata_db_user",
-    "user_registration_db_user",
+    "participant_consent_datastore_db_user",
+    "participant_enroll_datastore_db_user",
+    "participant_user_datastore_db_user",
     "participant_manager_db_user",
     "hydra_db_user",
   ])
@@ -284,7 +302,9 @@ resource "random_password" "passwords" {
     "response_server_db_password",
     "study_designer_db_password",
     "study_metadata_db_password",
-    "user_registration_db_password",
+    "participant_consent_datastore_db_password",
+    "participant_enroll_datastore_db_password",
+    "participant_user_datastore_db_password",
     "participant_manager_db_password",
     "hydra_db_password",
   ])
@@ -486,9 +506,9 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "user-registration-server-ws/enroll-mgmt-module",
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
-#     "participant-manager-datastore",
+#     "participant-manager-module",
 #     "hydra",
-#     "participant-manager",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta
@@ -619,7 +639,7 @@ template "project_data" {
     # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "mystudies_db_default_password" {
+data "google_secret_manager_secret_version" "my_studies_db_default_password" {
   provider = google-beta
   secret  = "auto-mystudies-sql-default-user-password"
   project = "{{$prefix}}-{{$env}}-secrets"
@@ -633,7 +653,7 @@ EOF
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.my_studies_db_default_password.secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
@@ -677,12 +697,12 @@ EOF
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
           # iam_members = [{
           #   role   = "roles/storage.objectViewer"
-          #   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          #   member = "serviceAccount:$${module.my_studies.instance_service_account_email_address}"
           # }]
         },
       ]
       bigquery_datasets = [{
-        dataset_id = "{{$prefix}}_{{$env}}_mystudies_firestore_data"
+        dataset_id = "{{$prefix}}_{{$env}}_my_studies_firestore_data"
       }]
     }
   }
