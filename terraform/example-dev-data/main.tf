@@ -71,6 +71,7 @@ module "project_iam_members" {
     "roles/cloudsql.client" = [
       "serviceAccount:bastion@example-dev-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:hydra-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-metadata-gke-sa@example-dev-apps.iam.gserviceaccount.com",
