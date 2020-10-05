@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: participant-manager-app
+  labels:
+    app: participant-manager-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: participant-manager-app
+  template:
+    metadata:
+      labels:
+        app: participant-manager-app
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: participant-manager-app
+        image: gcr.io/fda-mystudies-dev-apps/participant-manager-app:latest
+        ports:
+        - containerPort: 80
