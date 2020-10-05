@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
+import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
@@ -89,6 +90,7 @@ public class UsersControllerTest extends BaseMockIT {
     session.setLastName("lastname");
     session.setAccessLevel("2");
     session.setUserId(1);
+    session.setAccessLevel(UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -218,13 +220,6 @@ public class UsersControllerTest extends BaseMockIT {
     verifyAuditEventCall(NEW_USER_CREATION_FAILED);
   }
 
-  protected SessionObject getSessionObject() {
-    SessionObject session = new SessionObject();
-    session.setSessionId(UUID.randomUUID().toString());
-    session.setEmail(SESSION_USER_EMAIL);
-    return session;
-  }
-
   private HashMap<String, Object> getSession() {
     SessionObject session = new SessionObject();
     session.setSessionId(UUID.randomUUID().toString());
@@ -233,6 +228,7 @@ public class UsersControllerTest extends BaseMockIT {
     session.setLastName("lastname");
     session.setAccessLevel("2");
     session.setUserId(2);
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);

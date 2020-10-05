@@ -14,7 +14,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -165,6 +164,7 @@ public class BaseMockIT {
     session.setSessionId(UUID.randomUUID().toString());
     session.setEmail(SESSION_USER_EMAIL);
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
     return session;
   }
 
@@ -256,6 +256,7 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getAppVersion());
       assertNotNull(auditRequest.getMobilePlatform());
+      assertNotNull(auditRequest.getUserAccessLevel());
     }
   }
 

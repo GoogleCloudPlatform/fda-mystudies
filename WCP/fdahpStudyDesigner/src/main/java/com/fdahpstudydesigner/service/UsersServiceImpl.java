@@ -85,6 +85,7 @@ public class UsersServiceImpl implements UsersService {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(userSession.getSessionId());
       auditRequest.setUserId(String.valueOf(userId));
+      auditRequest.setUserAccessLevel(userSession.getAccessLevel());
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
       superAdminEmailList = usersDAO.getSuperAdminList();
       userBo = usersDAO.getUserDetails(userId);
@@ -127,7 +128,11 @@ public class UsersServiceImpl implements UsersService {
         if ((userBo != null) && Integer.valueOf(userStatus).equals(0)) {
           if (!userBo.isCredentialsNonExpired()) {
             loginService.sendPasswordResetLinkToMail(
-                request, userBo.getUserEmail(), "", "ReactivateMailAfterEnforcePassChange");
+                request,
+                userBo.getUserEmail(),
+                "",
+                "ReactivateMailAfterEnforcePassChange",
+                auditRequest);
           } else {
             customerCareMail = propMap.get("email.address.customer.service");
             keyValueForSubject.put("$userFirstName", userBo.getFirstName());
@@ -159,7 +164,8 @@ public class UsersServiceImpl implements UsersService {
       List<Integer> permissionList,
       String selectedStudies,
       String permissionValues,
-      SessionObject userSession) {
+      SessionObject userSession,
+      AuditLogEventRequest auditRequest) {
     logger.info("UsersServiceImpl - addOrUpdateUserDetails() - Starts");
     UserBO userBO2 = null;
     String msg = FdahpStudyDesignerConstants.FAILURE;
@@ -175,9 +181,10 @@ public class UsersServiceImpl implements UsersService {
     UserBO adminFullNameIfSizeOne = null;
     UserBO userBO3 = null;
     try {
-      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      /*AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(userSession.getSessionId());
       auditRequest.setUserId(String.valueOf(userSession.getUserId()));
+      auditRequest.setUserAccessLevel(userSession.getAccessLevel());*/
       if (null == userBO.getUserId()) {
         addFlag = true;
         userBO2 = new UserBO();
@@ -223,7 +230,8 @@ public class UsersServiceImpl implements UsersService {
           values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
           values.put(StudyBuilderConstants.ACCESS_LEVEL, userBO.getAccessLevel());
           msg =
-              loginService.sendPasswordResetLinkToMail(request, userBO2.getUserEmail(), "", "USER");
+              loginService.sendPasswordResetLinkToMail(
+                  request, userBO2.getUserEmail(), "", "USER", auditRequest);
           auditLogEvents.add(NEW_USER_CREATED);
           if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
             auditLogEvents.add(NEW_USER_INVITATION_EMAIL_SENT);
@@ -239,11 +247,15 @@ public class UsersServiceImpl implements UsersService {
           if (emailIdChange) {
             msg =
                 loginService.sendPasswordResetLinkToMail(
-                    request, userBO2.getUserEmail(), userBO3.getUserEmail(), "USER_EMAIL_UPDATE");
+                    request,
+                    userBO2.getUserEmail(),
+                    userBO3.getUserEmail(),
+                    "USER_EMAIL_UPDATE",
+                    auditRequest);
           } else {
             msg =
                 loginService.sendPasswordResetLinkToMail(
-                    request, userBO2.getUserEmail(), "", "USER_UPDATE");
+                    request, userBO2.getUserEmail(), "", "USER_UPDATE", auditRequest);
           }
         }
         auditLogHelper.logEvent(auditLogEvents, auditRequest, values);

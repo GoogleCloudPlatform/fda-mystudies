@@ -26,7 +26,6 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE;
-
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
@@ -94,6 +93,7 @@ public class StudyActiveTasksController {
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
+      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
@@ -503,6 +503,7 @@ public class StudyActiveTasksController {
                 .getSession()
                 .setAttribute(sessionStudyCount + "activeTaskInfoId", activeTaskInfoId.toString());
             values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
+            auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);

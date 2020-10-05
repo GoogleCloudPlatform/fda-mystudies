@@ -55,7 +55,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -66,6 +65,7 @@ import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
+import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
@@ -181,6 +181,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -207,6 +208,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -233,6 +235,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -258,6 +261,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -290,6 +294,7 @@ public class StudyControllerTest extends BaseMockIT {
     SessionObject session = getSessionObject();
     session.setStudySessionBeans(studySessionBeans);
     session.setUserId(0);
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -313,6 +318,24 @@ public class StudyControllerTest extends BaseMockIT {
   public void checkLastPublishedVersionOfStudiedViewed() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
+    List<StudySessionBean> studySessionBeans = new ArrayList<>();
+    StudySessionBean studySession = new StudySessionBean();
+    studySession.setIsLive("true");
+    studySession.setPermission("View");
+    studySession.setSessionStudyCount(10);
+    studySession.setStudyId("10");
+    studySessionBeans.add(studySession);
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setStudySessionBeans(studySessionBeans);
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
     mockMvc
         .perform(
             post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
@@ -320,7 +343,8 @@ public class StudyControllerTest extends BaseMockIT {
                 .param(FdahpStudyDesignerConstants.PERMISSION, "View")
                 .param(FdahpStudyDesignerConstants.IS_LIVE, "isLive")
                 .headers(headers)
-                .sessionAttrs(getSessionAttributes()))
+                .sessionAttrs(sessionAttributes))
+        //        .sessionAttrs(getSessionAttributes()))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewBasicInfo.do"));
@@ -332,12 +356,29 @@ public class StudyControllerTest extends BaseMockIT {
   public void checkStudyViewed() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
+    List<StudySessionBean> studySessionBeans = new ArrayList<>();
+    StudySessionBean studySession = new StudySessionBean();
+    studySession.setIsLive("true");
+    studySession.setPermission("View");
+    studySession.setSessionStudyCount(10);
+    studySessionBeans.add(studySession);
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setStudySessionBeans(studySessionBeans);
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
     mockMvc
         .perform(
             post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
                 .param(FdahpStudyDesignerConstants.PERMISSION, "View")
                 .headers(headers)
-                .sessionAttrs(getSessionAttributes()))
+                .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewBasicInfo.do"));
@@ -349,11 +390,28 @@ public class StudyControllerTest extends BaseMockIT {
   public void checkStudyAccessedInEditMode() throws Exception {
     HttpHeaders headers = getCommonHeaders();
 
+    List<StudySessionBean> studySessionBeans = new ArrayList<>();
+    StudySessionBean studySession = new StudySessionBean();
+    studySession.setIsLive("true");
+    studySession.setPermission("Edit");
+    studySession.setSessionStudyCount(10);
+    studySessionBeans.add(studySession);
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setStudySessionBeans(studySessionBeans);
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+
     mockMvc
         .perform(
             post(PathMappingUri.VIEW_STUDY_DETAILS.getPath())
                 .headers(headers)
-                .sessionAttrs(getSessionAttributes()))
+                .sessionAttrs(sessionAttributes))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewBasicInfo.do"));
@@ -368,6 +426,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -393,6 +452,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -418,6 +478,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt("4878642"));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -443,6 +504,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -468,6 +530,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -494,6 +557,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(STUDY_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -524,6 +588,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -556,6 +621,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(STUDY_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -585,6 +651,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -610,6 +677,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -641,6 +709,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -676,6 +745,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -712,6 +782,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -740,6 +811,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -773,6 +845,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -806,6 +879,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -839,6 +913,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -871,6 +946,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -898,6 +974,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -926,6 +1003,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -954,6 +1032,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -982,6 +1061,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -1005,6 +1085,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt("4878642"));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -1029,6 +1110,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt("4878642"));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -1055,6 +1137,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -1106,6 +1189,7 @@ public class StudyControllerTest extends BaseMockIT {
     session.setUserId(Integer.parseInt(USER_ID_VALUE));
     session.setStudySession(new ArrayList<>(Arrays.asList(0)));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);

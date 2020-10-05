@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
+import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
@@ -220,6 +221,7 @@ public class LoginControllerTest extends BaseMockIT {
     session.setFirstName("firstname");
     session.setLastName("lastname");
     session.setUserId(3);
+    session.setAccessLevel(UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);

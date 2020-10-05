@@ -24,7 +24,6 @@
 package com.fdahpstudydesigner.dao;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACTIVE_TASK_DELETED;
-
 import com.fdahpstudydesigner.bean.ActiveStatisticsBean;
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
@@ -94,6 +93,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setStudyId(customStudyId);
+      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       session = hibernateTemplate.getSessionFactory().openSession();
       if (activeTaskBo != null) {
         Integer studyId = activeTaskBo.getStudyId();

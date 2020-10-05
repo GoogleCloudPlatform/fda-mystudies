@@ -108,6 +108,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       UUID uuid = UUID.randomUUID(); // Generates random UUID.
       auditRequest.setCorrelationId(uuid.toString().toUpperCase());
       auditRequest.setUserId(String.valueOf(userBO2.getUserId()));
+      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
         if (StringUtils.isBlank(userBO.getUserPassword())) {
@@ -228,6 +229,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(userId));
+      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       if ((newPassword != null)
           && (newPassword.contains(sesObj.getFirstName())
               || newPassword.contains(sesObj.getLastName()))) {
@@ -407,7 +409,11 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   public String sendPasswordResetLinkToMail(
-      HttpServletRequest request, String email, String oldEmail, String type) {
+      HttpServletRequest request,
+      String email,
+      String oldEmail,
+      String type,
+      AuditLogEventRequest auditRequest) {
     logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Starts");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String passwordResetToken = null;
@@ -428,20 +434,12 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     final Integer USER_LOCK_DURATION =
         Integer.valueOf(propMap.get("user.lock.duration.in.minutes"));
     final String lockMsg = propMap.get("user.lock.msg");
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
       passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
       accessCode = RandomStringUtils.randomAlphanumeric(6);
       if (!StringUtils.isEmpty(passwordResetToken)) {
         userdetails = loginDAO.getValidUserByEmail(email);
         if ("".equals(type) && userdetails != null && userdetails.isEnabled()) {
-          SessionObject sesObj =
-              (SessionObject) request.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-          // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
-          // services
-          UUID uuid = UUID.randomUUID(); // Generates random UUID.
-          auditRequest.setCorrelationId(
-              sesObj == null ? uuid.toString().toUpperCase() : sesObj.getSessionId());
           auditRequest.setUserId(String.valueOf(userdetails.getUserId()));
           auditLogEventHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
         }

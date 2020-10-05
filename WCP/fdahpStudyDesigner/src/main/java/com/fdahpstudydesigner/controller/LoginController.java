@@ -237,11 +237,22 @@ public class LoginController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      UUID uuid = UUID.randomUUID(); // Generates random UUID.
+      if (sesObj != null) {
+        auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
+        auditRequest.setCorrelationId(sesObj.getSessionId());
+      } else {
+        auditRequest.setCorrelationId(uuid.toString().toUpperCase());
+      }
+
       String email =
           ((null != request.getParameter("email")) && !"".equals(request.getParameter("email")))
               ? request.getParameter("email")
               : "";
-      message = loginService.sendPasswordResetLinkToMail(request, email, "", "");
+      message = loginService.sendPasswordResetLinkToMail(request, email, "", "", auditRequest);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
         auditRequest.setUserId(request.getParameter("email"));
         request.getSession().setAttribute("sucMsg", propMap.get("user.forgot.success.msg"));
@@ -341,6 +352,7 @@ public class LoginController {
             request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
     auditRequest.setCorrelationId(sesObj.getSessionId());
     auditRequest.setUserId(sesObj.getEmail());
+    auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
     try {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       if (auth != null) {
@@ -419,6 +431,9 @@ public class LoginController {
     ModelAndView mv = new ModelAndView("redirect:login.do");
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       ModelMap map = new ModelMap();
       if (null != request.getSession(false).getAttribute("sucMsg")) {
         map.addAttribute("sucMsg", request.getSession(false).getAttribute("sucMsg"));
@@ -451,6 +466,7 @@ public class LoginController {
         // services
         UUID uuid = UUID.randomUUID(); // Generates random UUID.
         auditRequest.setCorrelationId(uuid.toString().toUpperCase());
+        auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
         auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
         mv = new ModelAndView("userPasswordReset", map);
       }

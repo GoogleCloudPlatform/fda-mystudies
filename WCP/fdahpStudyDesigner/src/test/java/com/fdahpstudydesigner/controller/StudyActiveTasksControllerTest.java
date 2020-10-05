@@ -16,10 +16,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.bo.ActiveTaskBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
+import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
@@ -46,6 +46,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -76,6 +77,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -109,6 +111,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
@@ -142,6 +145,7 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
     session.setStudySession(
         new ArrayList<>(Arrays.asList(Integer.parseInt(STUDY_SESSION_COUNT_VALUE))));
     session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
 
     HashMap<String, Object> sessionAttributes = getSessionAttributes();
     sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);

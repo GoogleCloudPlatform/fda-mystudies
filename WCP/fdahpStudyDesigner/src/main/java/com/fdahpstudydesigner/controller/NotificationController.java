@@ -378,6 +378,7 @@ public class NotificationController {
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
+      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       auditLogEventHelper.logEvent(APP_LEVEL_NOTIFICATION_LIST_VIEWED, auditRequest);
       mav = new ModelAndView("notificationListPage", map);
     } catch (Exception e) {

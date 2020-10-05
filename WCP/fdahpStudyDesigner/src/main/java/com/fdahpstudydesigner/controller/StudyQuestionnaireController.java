@@ -16,7 +16,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTIO
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.FORM_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.QUESTION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.STEP_ID;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
@@ -199,6 +198,7 @@ public class StudyQuestionnaireController {
         auditRequest.setCorrelationId(sesObj.getSessionId());
         auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         auditRequest.setStudyId(customStudyId);
+        auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
         if (!formId.isEmpty() && !questionId.isEmpty()) {
           message =
               studyQuestionnaireService.deleteFromStepQuestion(
@@ -280,6 +280,7 @@ public class StudyQuestionnaireController {
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
+      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
@@ -2090,6 +2091,7 @@ public class StudyQuestionnaireController {
           && sesObj.getStudySession().contains(sessionStudyCount)) {
         auditRequest.setCorrelationId(sesObj.getSessionId());
         auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
+        auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
         customStudyId =
             (String)
                 request

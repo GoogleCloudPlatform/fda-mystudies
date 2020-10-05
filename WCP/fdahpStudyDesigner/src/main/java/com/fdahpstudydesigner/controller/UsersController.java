@@ -272,6 +272,10 @@ public class UsersController {
           selectedStudies = "";
           permissionValues = "";
         }
+        AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+        auditRequest.setCorrelationId(userSession.getSessionId());
+        auditRequest.setUserId(String.valueOf(userSession.getUserId()));
+        auditRequest.setUserAccessLevel(userSession.getAccessLevel());
         msg =
             usersService.addOrUpdateUserDetails(
                 request,
@@ -280,7 +284,8 @@ public class UsersController {
                 permissionList,
                 selectedStudies,
                 permissionValues,
-                userSession);
+                userSession,
+                auditRequest);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
           if (addFlag) {
             request
@@ -296,7 +301,6 @@ public class UsersController {
                     propMap.get("update.user.success.message"));
           }
         } else {
-          AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
           request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
           if (addFlag) {
             auditLogEventHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
@@ -327,6 +331,7 @@ public class UsersController {
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(userSession.getSessionId().toUpperCase());
       auditRequest.setUserId(String.valueOf(userSession.getUserId()));
+      auditRequest.setUserAccessLevel(userSession.getAccessLevel());
       String changePassworduserId =
           FdahpStudyDesignerUtil.isEmpty(request.getParameter("changePassworduserId"))
               ? ""
@@ -346,7 +351,7 @@ public class UsersController {
 
             String sent =
                 loginService.sendPasswordResetLinkToMail(
-                    request, emailId, "", "enforcePasswordChange");
+                    request, emailId, "", "enforcePasswordChange", auditRequest);
             if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
               auditLogEventHelper.logEvent(PASSWORD_ENFORCEMENT_EMAIL_SENT, auditRequest, values);
             } else {
@@ -365,7 +370,7 @@ public class UsersController {
               for (String email : emails) {
                 String sent =
                     loginService.sendPasswordResetLinkToMail(
-                        request, email, "", "enforcePasswordChange");
+                        request, email, "", "enforcePasswordChange", auditRequest);
                 if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
                   allSent = true;
                 }
@@ -460,11 +465,12 @@ public class UsersController {
         if (StringUtils.isNotEmpty(userId)) {
           auditRequest.setCorrelationId(userSession.getSessionId().toUpperCase());
           auditRequest.setUserId(String.valueOf(userSession.getUserId()));
+          auditRequest.setUserAccessLevel(userSession.getAccessLevel());
           userBo = usersService.getUserDetails(Integer.parseInt(userId));
           if (userBo != null) {
             msg =
                 loginService.sendPasswordResetLinkToMail(
-                    request, userBo.getUserEmail(), "", "USER");
+                    request, userBo.getUserEmail(), "", "USER", auditRequest);
           }
           if (msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             request
@@ -525,6 +531,7 @@ public class UsersController {
                   (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
               auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
               auditRequest.setCorrelationId(sesObj.getSessionId());
+              auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
               if (sesObj.getUserId().equals(userBO.getUserId())) {
                 auditLogEventHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
               } else {

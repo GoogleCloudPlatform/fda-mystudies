@@ -13,7 +13,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_INSTRUC
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_QUESTION_STEP_DELETED;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.QUESTION_ID;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.STEP_ID;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.QuestionnaireStepBean;
 import com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo;
@@ -943,6 +942,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
+      auditRequest.setUserAccessLevel(sessionObject.getAccessLevel());
 
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -1078,6 +1078,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
+      auditRequest.setUserAccessLevel(sessionObject.getAccessLevel());
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
@@ -1259,6 +1260,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
+      auditRequest.setUserAccessLevel(sessionObject.getAccessLevel());
       values.put(QUESTION_ID, questionnaireId.toString());
       values.put(STEP_ID, stepId.toString());
       searchQuery =
