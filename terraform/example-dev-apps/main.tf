@@ -42,10 +42,14 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   for_each = toset([
 #     "WCP",
 #     "WCP-WS",
-#     "auth-server-ws",
-#     "user-registration-server-ws",
+#     "oauth-scim-module",
+#     "user-registration-server-ws/consent-mgmt-module",
+#     "user-registration-server-ws/enroll-mgmt-module",
+#     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
 #     "participant-manager-module",
+#     "hydra",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta
@@ -189,6 +193,11 @@ module "example_dev_gke_cluster" {
 
 resource "google_service_account" "auth_server_gke_sa" {
   account_id = "auth-server-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "hydra_gke_sa" {
+  account_id = "hydra-gke-sa"
   project    = module.project.project_id
 }
 
