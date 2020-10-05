@@ -28,6 +28,7 @@ import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -172,6 +173,7 @@ public class UsersDAOImpl implements UsersDAO {
                         "FROM UserPermissions UPBO WHERE UPBO.permissions IN (" + permissions + ")")
                     .list());
         userBO2.setPermissionList(permissionSet);
+        userBO2.setAccessLevel(FdahpStudyDesignerUtil.calculateAccessLevel(permissionSet));
         session.update(userBO2);
       } else {
         userBO2.setPermissionList(null);

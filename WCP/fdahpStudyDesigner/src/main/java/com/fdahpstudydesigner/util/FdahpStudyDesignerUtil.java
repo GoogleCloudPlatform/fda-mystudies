@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -52,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import net.objecthunter.exp4j.ExpressionBuilder;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -1049,5 +1051,25 @@ public class FdahpStudyDesignerUtil {
     }
     logger.info("FdahpStudyDesignerUtil - getHashedValue() - ends");
     return generatedHash;
+  }
+
+  public static String calculateAccessLevel(Set<UserPermissions> userPermission) {
+    String accessLevel = null;
+    if (CollectionUtils.isNotEmpty(userPermission)) {
+      List<String> permissions = new LinkedList<>();
+      for (UserPermissions up : userPermission) {
+        permissions.add(up.getPermissions());
+      }
+
+      if (permissions.contains(FdahpStudyDesignerConstants.ROLE_SUPERADMIN_NAME)) {
+        accessLevel = "Superadmin";
+      } else if (permissions.contains(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW_NAME)
+          || permissions.contains(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT_NAME)) {
+        accessLevel = "SB Admin";
+      } else {
+        accessLevel = "App/Study Admin";
+      }
+    }
+    return accessLevel;
   }
 }
