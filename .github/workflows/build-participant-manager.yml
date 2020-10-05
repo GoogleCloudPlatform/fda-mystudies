@@ -1,4 +1,4 @@
-name: Build-user-registration-webapp
+name: Build-participant-manager
 on:
   pull_request:
     paths:

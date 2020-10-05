@@ -1,10 +1,10 @@
+name: Build-participant-manager-datastore
 on:
   pull_request:
     paths:
     - 'common-modules/**'
     - 'participant-manager-datastore/**'
     - '.github/workflows/build-participant-manager-datastore.yml'
-name: Build-participant-manager-datastore
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,4 +17,4 @@ jobs:
     - name: Build with Maven
       run: |
           cd participant-manager-datastore
-          mvn -B package --file pom.xml        
+          mvn -B package --file pom.xml

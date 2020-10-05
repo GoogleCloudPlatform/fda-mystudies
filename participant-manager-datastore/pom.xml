@@ -15,7 +15,7 @@
   </properties>
 
   <modules>
-    <module>participant-manager-datastore</module>
+    <module>participant-manager-service</module>
     <module>../common-modules</module>
   </modules>
 </project>
