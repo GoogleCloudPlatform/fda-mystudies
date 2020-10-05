@@ -487,6 +487,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "response-server-ws",
 #     "participant-manager-module",
 #     "hydra",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta

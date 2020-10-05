@@ -43,6 +43,8 @@ All files below are relative to the root of the repo.
   * same as auth-server-ws
 * user-registration-server-ws/user-mgmt-module
   * same as auth-server-ws
+* UR-web-app/
+  * same as auth-server-ws
 
 ## Setup
 
@@ -144,6 +146,7 @@ root of the repo):
 1. user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml
 1. user-registration-server-ws/user-mgmt-module/tf-deployment.yaml
 1. participant-manager-module/tf-deployment.yaml
+1. UR-web-app/tf-deployment.yaml
 
 Do the following:
 
@@ -162,6 +165,10 @@ In the ./kubernetes/ingress.yaml file:
     name in ./kubernetes/cert.yaml.
 * Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
+    
+In ./UR-web-app/src/environments/environment.prod.ts
+
+* Change the domain name to match your organization.
 
 ### GKE Cluster - Terraform
 
@@ -232,7 +239,8 @@ $ kubectl apply \
   -f ./WCP/tf-deployment.yaml \
   -f ./oauth-scim-module/tf-deployment.yaml \
   -f ./participant-manager-module/tf-deployment.yaml \
-  -f ./hydra/tf-deployment.yaml
+  -f ./hydra/tf-deployment.yaml \
+  -f ./UR-web-app/tf-deployment.yaml
 ```
 
 Apply all services:
@@ -247,7 +255,8 @@ $ kubectl apply \
   -f ./WCP/tf-service.yaml \
   -f ./oauth-scim-module/tf-service.yaml \
   -f ./participant-manager-module/tf-service.yaml \
-  -f ./hydra/tf-service.yaml
+  -f ./hydra/tf-service.yaml \
+  -f ./UR-web-app/tf-service.yaml
 ```
 
 Apply the certificate and the ingress:
