@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {switchMap} from 'rxjs/operators';
+import {AccessToken} from 'src/app/entity/access-token';
 import {AuthService} from 'src/app/service/auth.service';
 import {StateService} from 'src/app/service/state.service';
-import {Tokens} from 'src/app/shared/auth-server-response';
 import {AccountService} from 'src/app/site-coordinator/account/shared/account.service';
 import {Profile} from 'src/app/site-coordinator/account/shared/profile.model';
 
@@ -31,7 +31,7 @@ export class LoginCallbackComponent implements OnInit {
           this.authService
             .getToken(params.code, params.userId)
             .pipe(
-              switchMap((authServerResponse: Tokens) => {
+              switchMap((authServerResponse: AccessToken) => {
                 sessionStorage.setItem('code', params.code);
                 sessionStorage.setItem('authUserId', params.userId);
                 sessionStorage.setItem(

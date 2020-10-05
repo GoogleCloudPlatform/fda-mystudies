@@ -16,7 +16,8 @@ import {AuthService} from '../service/auth.service';
 import {ApiResponse} from '../entity/api.response.model';
 import {environment} from 'src/environments/environment';
 import {CookieService} from 'ngx-cookie-service';
-import {Tokens} from '../shared/auth-server-response';
+import {AccessToken} from '../entity/access-token';
+import {Router} from '@angular/router';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
@@ -28,6 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
     private readonly toasterService: ToastrService,
     private readonly authService: AuthService,
     public cookieService: CookieService,
+    private readonly router: Router,
   ) {}
 
   intercept(
@@ -53,14 +55,15 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
   private handle401Error(request: HttpRequest<unknown>, next: HttpHandler) {
-    console.log('I am here');
-    if (!this.isRefreshing) {
-      this.isRefreshing = true;
-      this.refreshTokenSubject.next(null);
-      return this.authService.refreshToken().pipe(
-        switchMap((authServerResponse: Tokens) => {
+    this.isRefreshing = true;
+    this.refreshTokenSubject.next(null);
+    return this.authService
+      .refreshToken()
+      .pipe(
+        switchMap((authServerResponse: AccessToken) => {
+          console.log(authServerResponse);
           this.isRefreshing = false;
-          this.refreshTokenSubject.next(authServerResponse.access_token);
+          this.refreshTokenSubject.next(authServerResponse);
           sessionStorage.setItem(
             'accessToken',
             authServerResponse.access_token,
@@ -75,16 +78,30 @@ export class AuthInterceptor implements HttpInterceptor {
             }),
           );
         }),
+      )
+      .subscribe(
+        (success) => {
+          console.log('success');
+          console.log(success);
+        },
+        (error) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          if (error.status === 401) {
+            sessionStorage.clear();
+            void this.router.navigate(['/']);
+          }
+        },
       );
-    } else {
-      return this.refreshTokenSubject.pipe(
-        filter((token) => token !== null),
-        take(1),
-        // switchMap((jwt) => {
-        //   return next.handle(this.setHeaders(request));
-        // }),
-      );
-    }
+    // }
+    //  else {
+    //   return this.refreshTokenSubject.pipe(
+    //     filter((token) => token !== null),
+    //     take(1),
+    //     // switchMap((jwt) => {
+    //     //   return next.handle(this.setHeaders(request));
+    //     // }),
+    //   );
+    // }
   }
   private setHeaders(req: HttpRequest<unknown>) {
     if (req.url.includes(`${environment.authServerUrl}`)) {
@@ -123,7 +140,7 @@ export class AuthInterceptor implements HttpInterceptor {
       (err: unknown): Observable<T> => {
         if (err instanceof HttpErrorResponse) {
           console.log(err.status);
-          if (err.status === 401) {
+          if (err.status === 0) {
             this.handle401Error(request, next);
           }
           if (err.error instanceof ErrorEvent) {
