@@ -61,7 +61,7 @@ resource "random_password" "passwords" {
   special = true
 }
 
-resource "random_secret" "strings" {
+resource "random_secret" "secrets" {
   for_each = toset([
     "hydra_secrets_key",
   ])
@@ -352,7 +352,7 @@ resource "google_secret_manager_secret_version" "auto_hydra_secrets_system_data"
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_hydra_secrets_system.id
-  secret_data = random_secret.strings["hydra_secrets_key"].result
+  secret_data = random_secret.secrets["hydra_secrets_key"].result
 }
 
 resource "google_secret_manager_secret" "auto_mystudies_ma_client_id" {

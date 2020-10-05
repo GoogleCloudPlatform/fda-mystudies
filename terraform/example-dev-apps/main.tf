@@ -42,13 +42,14 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   for_each = toset([
 #     "WCP",
 #     "WCP-WS",
-#     "auth-server-ws",
+#     "oauth-scim-module",
 #     "user-registration-server-ws/consent-mgmt-module",
 #     "user-registration-server-ws/enroll-mgmt-module",
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
 #     "participant-manager-module",
 #     "hydra",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta
