@@ -158,7 +158,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         1,
         getRequestedFor(
             urlEqualTo(
-                "/myStudiesEnrollmentMgmt/participantInfo?studyId=ASignature01&participantId="
+                "/participant-enroll-datastore/participantInfo?studyId=ASignature01&participantId="
                     + participantBo.getParticipantIdentifier())));
 
     verify(

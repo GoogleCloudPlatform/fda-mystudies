@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: participant-consent-datastore
+  labels:
+    app: participant-consent-datastore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: participant-consent-datastore
+  template:
+    metadata:
+      labels:
+        app: participant-consent-datastore
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: participant-consent-datastore
+          image: gcr.io/fda-mystudies-dev-apps/participant-consent-datastore:latest
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: participant-consent-datastore-db-credentials
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: participant-consent-datastore-db-credentials
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: participant-consent-datastore-db-credentials
+                  key: dbname
+            - name: CONSENT_MGMT_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: participant-consent-datastore-secrets
+                  key: CLIENT_ID
+            - name: CONSENT_MGMT_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: participant-consent-datastore-secrets
+                  key: SECRET_KEY
+            - name: GCP_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: participant-consent-datastore-secrets
+                  key: GCP_BUCKET_NAME
+            - name: HYDRA_ADMIN_URL
+              value: "hydra:4445"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /participant-consent-datastore/healthCheck
+              port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-credential_file=/secrets/gcloud_key/key.json"]
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: participant-consent-datastore-gcloud-key
