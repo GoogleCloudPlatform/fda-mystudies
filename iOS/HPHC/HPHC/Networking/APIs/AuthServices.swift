@@ -83,14 +83,13 @@ class AuthServices: NSObject {
     user.userId = response[kUserId] as? String ?? ""
     user.verified = response[kUserVerified] as? Bool ?? false
     user.authToken = response[kUserAuthToken] as? String ?? ""
-    user.clientToken = response["clientToken"] as? String ?? ""
     user.refreshToken = response[kRefreshToken] as? String ?? ""
 
     if let isTempPassword = response[kUserIsTempPassword] as? Bool {
-      user.isLoginWithTempPassword = isTempPassword
+      user.isLoggedInWithTempPassword = isTempPassword
     }
 
-    if user.verified! && !user.isLoginWithTempPassword {
+    if user.verified && !user.isLoggedInWithTempPassword {
 
       // Set user type & save current user to DB
       user.userType = UserType.loggedInUser
@@ -116,7 +115,7 @@ class AuthServices: NSObject {
   func handleChangePasswordResponse(response: [String: Any]) {
 
     let user = User.currentUser
-    if user.verified! {
+    if user.verified {
       user.userType = UserType.loggedInUser
       DBHandler().saveCurrentUser(user: user)
       let ud = UserDefaults.standard
@@ -182,7 +181,6 @@ class AuthServices: NSObject {
     let user = User.currentUser
     user.refreshToken = response["refreshToken"] as? String ?? ""
     user.authToken = response[kUserAuthToken] as? String ?? ""
-    user.clientToken = response["clientToken"] as? String ?? ""
     FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
     FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
     DBHandler().saveCurrentUser(user: user)

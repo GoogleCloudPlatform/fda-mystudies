@@ -263,7 +263,7 @@ public class TestDataHelper {
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
-    participantStudyEntity.setSharing(DataSharingStatus.PERMITTED.value());
+    participantStudyEntity.setSharing(DataSharingStatus.PROVIDED.value());
     return participantStudyRepository.saveAndFlush(participantStudyEntity);
   }
 

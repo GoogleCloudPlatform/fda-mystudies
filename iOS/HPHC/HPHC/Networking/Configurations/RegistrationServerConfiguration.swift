@@ -104,22 +104,13 @@ class RegistrationServerConfiguration: NetworkConfiguration {
 
   override func getDefaultHeaders() -> [String: String] {
 
-    let clientId = RegistrationServerAPIKey.apiKey
-    let seceretKey = RegistrationServerSecretKey.secretKey
-
     var header = [
       "appId": AppConfiguration.appID,
       "orgId": AppConfiguration.orgID,
     ]
 
     if User.currentUser.authToken != nil {
-      header[kUserAuthToken] = User.currentUser.authToken
-      header["clientToken"] = User.currentUser.clientToken
-      header["clientId"] = clientId
-      header["secretKey"] = seceretKey
-    } else {
-      header["clientId"] = clientId
-      header["secretKey"] = seceretKey
+      header[kAuthorization] = User.currentUser.authToken
     }
     return header
   }
