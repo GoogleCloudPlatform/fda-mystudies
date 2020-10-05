@@ -22,8 +22,6 @@
  */
 package com.hphc.mystudies.util;
 
-import java.io.InputStream;
-import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -44,7 +42,8 @@ public class HibernateUtil {
       if (sessionFactory == null) {
         sessionFactory =
             new AnnotationConfiguration()
-                .addProperties(PropertiesUtil.makePropertiesWithEnvironmentVariables("application.properties"))
+                .addProperties(
+                    PropertiesUtil.makePropertiesWithEnvironmentVariables("application.properties"))
                 .configure("hibernate.cfg.xml")
                 .buildSessionFactory();
       }

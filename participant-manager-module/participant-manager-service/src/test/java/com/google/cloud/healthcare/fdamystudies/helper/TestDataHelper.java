@@ -105,7 +105,7 @@ public class TestDataHelper {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add("appId", "GCPMS001");
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "PARTICIPANT MANAGER");
     return headers;
   }
 
@@ -263,7 +263,7 @@ public class TestDataHelper {
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
-    participantStudyEntity.setSharing(DataSharingStatus.PERMITTED.value());
+    participantStudyEntity.setSharing(DataSharingStatus.PROVIDED.value());
     return participantStudyRepository.saveAndFlush(participantStudyEntity);
   }
 

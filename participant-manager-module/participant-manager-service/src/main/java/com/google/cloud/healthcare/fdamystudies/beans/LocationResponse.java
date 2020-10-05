@@ -20,6 +20,8 @@ public class LocationResponse extends BaseResponse {
 
   private List<LocationDetails> locations = new ArrayList<>();
 
+  private Long totalLocationsCount;
+
   public LocationResponse(MessageCode messageCode, List<LocationDetails> locations) {
     super(messageCode);
     this.locations.addAll(locations);

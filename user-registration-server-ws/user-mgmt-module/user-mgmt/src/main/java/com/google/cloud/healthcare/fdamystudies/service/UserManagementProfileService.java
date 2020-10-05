@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
@@ -35,6 +36,8 @@ public interface UserManagementProfileService {
   public String deactivateAccount(
       String userId, DeactivateAcctBean deactivateBean, AuditLogEventRequest auditRequest);
 
-  public int resendConfirmationthroughEmail(
-      String applicationId, String securityToken, String emailId) throws Exception;
+  public EmailResponse resendConfirmationthroughEmail(
+      String applicationId, String securityToken, String emailId);
+
+  public void processDeactivatePendingRequests();
 }

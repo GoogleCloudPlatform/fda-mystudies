@@ -9,7 +9,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /AuthServer/*
+          - path: /oauth-scim-module/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
@@ -19,15 +19,15 @@ spec:
               servicePort: 50000
           - path: /myStudiesUserMgmtWS/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-datastore-user-np
               servicePort: 50000
           - path: /myStudiesConsentMgmtWS/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-datastore-consent-np
               servicePort: 50000
           - path: /myStudiesEnrollmentMgmt/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-datastore-enroll-np
               servicePort: 50000
           - path: /StudyMetaData/*
             backend:

@@ -23,6 +23,11 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.fdahpstudydesigner.bo.MasterDataBO;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.dao.AuditLogDAO;
+import com.fdahpstudydesigner.dao.LoginDAOImpl;
+import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -33,11 +38,6 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import com.fdahpstudydesigner.bo.MasterDataBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
-import com.fdahpstudydesigner.dao.LoginDAOImpl;
-import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 

@@ -32,8 +32,12 @@ ENROLLMENT_URL = xxxxxx
 // e.g. mystudiesdeployment.com/myStudiesConsentMgmtWS/
 CONSENTMGMT_URL = xxxxxx
 
-// Hydra URL for auth services
-// e.g. mystudiesdeployment.com
+// URL of oauth scim services.
+// e.g. mystudiesdeployment.com/oauth-scim-service
+AUTH_URL = xxxxxx
+
+// URL of Hydra server.
+// e.g. mystudiesdeployment.com/oauth2
 HYDRA_BASE_URL = xxxxx
 
 // HYDRA_CLIENT_ID is a client ID for OAuth.
