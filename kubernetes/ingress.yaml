@@ -17,17 +17,17 @@ spec:
             backend:
               serviceName: response-server-np
               servicePort: 50000
-          - path: /myStudiesUserMgmtWS/*
+          - path: /participant-user-datastore/*
             backend:
-              serviceName: participant-datastore-user-np
+              serviceName: participant-user-datastore-np
               servicePort: 50000
-          - path: /myStudiesConsentMgmtWS/*
+          - path: /participant-consent-datastore/*
             backend:
-              serviceName: participant-datastore-consent-np
+              serviceName: participant-consent-datastore-np
               servicePort: 50000
-          - path: /myStudiesEnrollmentMgmt/*
+          - path: /participant-enroll-datastore/*
             backend:
-              serviceName: participant-datastore-enroll-np
+              serviceName: participant-enroll-datastore-np
               servicePort: 50000
           - path: /StudyMetaData/*
             backend:
