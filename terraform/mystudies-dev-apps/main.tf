@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
-    prefix = "example-dev-apps"
+    bucket = "mystudies-dev-terraform-state"
+    prefix = "mystudies-dev-apps"
   }
 }
 
@@ -48,8 +48,8 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "participant-datastore/user-mgmt-module",
 #     "response-server-ws",
 #     "participant-manager-datastore",
-#     "participant-manager",
 #     "hydra",
+#     "participant-manager",
 #   ])
 #
 #   provider = google-beta
@@ -72,16 +72,16 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 8.1.0"
 
-  name                    = "example-dev-apps"
+  name                    = "mystudies-dev-apps"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "440087619763"
+  billing_account         = "01B494-31B256-17B2A6"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
-  shared_vpc              = "example-dev-networks"
+  shared_vpc              = "mystudies-dev-networks"
   shared_vpc_subnets = [
-    "projects/example-dev-networks/regions/us-central1/subnetworks/example-dev-gke-subnet",
+    "projects/mystudies-dev-networks/regions/us-east1/subnetworks/mystudies-dev-gke-subnet",
   ]
   activate_apis = [
     "binaryauthorization.googleapis.com",
@@ -144,18 +144,18 @@ resource "google_binary_authorization_policy" "policy" {
   }
 }
 
-module "example_dev" {
+module "mystudies_dev" {
   source  = "terraform-google-modules/cloud-dns/google"
   version = "~> 3.0.0"
 
-  name       = "example-dev"
+  name       = "mystudies-dev"
   project_id = module.project.project_id
-  domain     = "example-dev.example.com."
+  domain     = "mystudies.hcls.joonix.net."
   type       = "public"
 
   recordsets = [
     {
-      name    = "example-dev"
+      name    = "mystudies-dev"
       records = ["${google_compute_global_address.ingress_static_ip.address}"]
       ttl     = 30
       type    = "A"
@@ -163,21 +163,21 @@ module "example_dev" {
   ]
 }
 
-module "example_dev_gke_cluster" {
+module "mystudies_dev_gke_cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
   version = "~> 10.0.0"
 
   # Required.
-  name               = "example-dev-gke-cluster"
+  name               = "mystudies-dev-gke-cluster"
   project_id         = module.project.project_id
-  region             = "us-central1"
+  region             = "us-east1"
   regional           = true
-  network_project_id = "example-dev-networks"
+  network_project_id = "mystudies-dev-networks"
 
-  network                = "example-dev-network"
-  subnetwork             = "example-dev-gke-subnet"
-  ip_range_pods          = "example-dev-pods-range"
-  ip_range_services      = "example-dev-services-range"
+  network                = "mystudies-dev-network"
+  subnetwork             = "mystudies-dev-gke-subnet"
+  ip_range_pods          = "mystudies-dev-pods-range"
+  ip_range_services      = "mystudies-dev-services-range"
   master_ipv4_cidr_block = "192.168.0.0/28"
   master_authorized_networks = [
     {
@@ -216,18 +216,18 @@ resource "google_service_account" "study_metadata_gke_sa" {
   project    = module.project.project_id
 }
 
-resource "google_service_account" "participant_consent_datastore_gke_sa" {
-  account_id = "participant-consent-datastore-gke-sa"
+resource "google_service_account" "consent_datastore_gke_sa" {
+  account_id = "consent-datastore-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "participant_enroll_datastore_gke_sa" {
-  account_id = "participant-enroll-datastore-gke-sa"
+resource "google_service_account" "enroll_datastore_gke_sa" {
+  account_id = "enroll-datastore-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "participant_user_datastore_gke_sa" {
-  account_id = "participant-user-datastore-gke-sa"
+resource "google_service_account" "user_datastore_gke_sa" {
+  account_id = "user-datastore-gke-sa"
   project    = module.project.project_id
 }
 

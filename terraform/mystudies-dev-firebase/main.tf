@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
-    prefix = "example-dev-firebase"
+    bucket = "mystudies-dev-terraform-state"
+    prefix = "mystudies-dev-firebase"
   }
 }
 
@@ -52,10 +52,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 8.1.0"
 
-  name                    = "example-dev-firebase"
+  name                    = "mystudies-dev-firebase"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "440087619763"
+  billing_account         = "01B494-31B256-17B2A6"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
@@ -76,11 +76,11 @@ module "project_iam_members" {
       "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
     ],
     "roles/datastore.user" = [
-      "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-server-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [
-      "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
     ],
   }
 }
@@ -115,13 +115,13 @@ resource "google_service_account" "real_time_triggers" {
   project    = module.project.project_id
 }
 
-module "example_dev_mystudies_firestore_raw_data" {
+module "mystudies_dev_mystudies_firestore_raw_data" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-mystudies-firestore-raw-data"
+  name       = "mystudies-dev-mystudies-firestore-raw-data"
   project_id = module.project.project_id
-  location   = "us-central1"
+  location   = "us-east1"
 
   lifecycle_rules = [
     {

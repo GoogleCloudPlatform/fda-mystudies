@@ -1,20 +1,20 @@
 # {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
 # {{$ref := "ref=templates-v0.2.0"}}
 
-# {{$prefix := "example"}}
+# {{$prefix := "mystudies"}}
 # {{$env := "dev"}}
-# {{$domain := "example.com"}}
-# {{$default_location := "us-central1"}}
-# {{$default_zone := "a"}}
+# {{$domain := "hcls.joonix.net"}}
+# {{$default_location := "us-east1"}}
+# {{$default_zone := "b"}}
 
 data = {
   parent_type     = "folder"
-  parent_id       = "0000000000"
-  billing_account = "XXXXXX-XXXXXX-XXXXXX"
+  parent_id       = "440087619763"
+  billing_account = "01B494-31B256-17B2A6"
   state_bucket    = "{{$prefix}}-{{$env}}-terraform-state"
 
   # Default locations for resources. Can be overridden in individual templates.
-  bigquery_location   = "us-east1" # BigQuery is not available in "us-central1"
+  bigquery_location   = "{{$default_location}}" # BigQuery is not available in "us-central1"
   cloud_sql_region    = "{{$default_location}}"
   cloud_sql_zone      = "{{$default_zone}}"
   compute_region      = "{{$default_location}}"
@@ -32,14 +32,14 @@ template "devops" {
   data = {
     # During Step 1, set to `true` and re-run the engine after generated devops module has been deployed.
     # Run `terraform init` in the devops module to backup its state to GCS.
-    enable_gcs_backend = false
+    enable_gcs_backend = true
 
-    admins_group = "{{$prefix}}-{{$env}}-folder-admins@{{$domain}}"
+    admins_group = "dpt-dev@{{$domain}}"
 
     project = {
       project_id = "{{$prefix}}-{{$env}}-devops"
       owners = [
-        "group:{{$prefix}}-{{$env}}-devops-owners@{{$domain}}",
+        "group:dpt-dev@{{$domain}}",
       ]
       apis = [
         "container.googleapis.com",
@@ -57,10 +57,10 @@ template "cicd" {
   data = {
     project_id = "{{$prefix}}-{{$env}}-devops"
     github = {
-      owner = "GoogleCloudPlatform"
-      name  = "example"
+      owner = "zohrehj"
+      name  = "fda-mystudies"
     }
-    branch_regex   = "^master$"
+    branch_regex   = "^develop$"
     terraform_root = "terraform"
 
     # Prepare and enable default triggers.
@@ -72,7 +72,7 @@ template "cicd" {
 
     # IAM members to give the roles/cloudbuild.builds.viewer permission so they can see build results.
     build_viewers = [
-      "group:{{$prefix}}-{{$env}}-cicd-viewers@{{$domain}}",
+      "group:dpt-dev@{{$domain}}",
     ]
 
     managed_dirs = [
@@ -91,7 +91,7 @@ template "audit" {
   recipe_path = "{{$recipes}}/audit.hcl?{{$ref}}"
   output_path = "./audit"
   data = {
-    auditors_group = "{{$prefix}}-{{$env}}-auditors@{{$domain}}"
+    auditors_group = "dpt-dev@{{$domain}}"
     project = {
       project_id = "{{$prefix}}-{{$env}}-audit"
     }
@@ -173,7 +173,7 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-hydra-secrets-system"
-          secret_data = "$${random_secret.secrets[\"hydra_secrets_key\"].result}"
+          secret_data = "$${random_password.secrets[\"hydra_secrets_key\"].result}"
         },
         {
           secret_id   = "auto-mystudies-ma-client-id"
@@ -256,8 +256,8 @@ template "project_secrets" {
           secret_data = "$${random_password.passwords[\"participant_user_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-participant-enroll-datastore-db-user"
-          secret_data = "$${random_string.strings[\"participant_enroll_datastore_db_user\"].result}"
+          secret_id   = "auto-participant-user-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_user_datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-participant-manager-db-password"
@@ -305,18 +305,19 @@ resource "random_password" "passwords" {
     "participant_consent_datastore_db_password",
     "participant_enroll_datastore_db_password",
     "participant_user_datastore_db_password",
-    "participant_manager_db_user",
+    "participant_manager_db_password",
     "hydra_db_password",
   ])
   length  = 16
   special = true
 }
 
-resource "random_secret" "secrets" {
+resource "random_password" "secrets" {
   for_each = toset([
     "hydra_secrets_key",
   ])
   length  = 32
+  special= false
 }
 EOF
     }
@@ -377,7 +378,7 @@ template "project_networks" {
         image_family  = "ubuntu-2004-lts"
         image_project = "ubuntu-os-cloud"
         members = [
-          "group:{{$prefix}}-{{$env}}-bastion-accessors@{{$domain}}",
+          "group:dpt-dev@{{$domain}}",
         ]
         startup_script = <<EOF
 sudo apt-get -y update
@@ -453,9 +454,9 @@ template "project_apps" {
         { account_id = "response-server-gke-sa" },
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
-        { account_id = "participant-consent-datastore-gke-sa" },
-        { account_id = "participant-enroll-datastore-gke-sa" },
-        { account_id = "participant-user-datastore-gke-sa" },
+        { account_id = "consent-datastore-gke-sa" },
+        { account_id = "enroll-datastore-gke-sa" },
+        { account_id = "user-datastore-gke-sa" },
         { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
@@ -470,7 +471,7 @@ template "project_apps" {
       # DNS sets up nameservers to connect to the GKE clusters.
       dns_zones = [{
         name   = "{{$prefix}}-{{$env}}"
-        domain = "{{$prefix}}-{{$env}}.{{$domain}}."
+        domain = "{{$prefix}}.{{$domain}}."
         type   = "public"
         record_sets = [{
           name = "{{$prefix}}-{{$env}}"
@@ -640,7 +641,7 @@ template "project_data" {
     # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "my_studies_db_default_password" {
+data "google_secret_manager_secret_version" "mystudies_db_default_password" {
   provider = google-beta
   secret  = "auto-mystudies-sql-default-user-password"
   project = "{{$prefix}}-{{$env}}-secrets"
@@ -654,7 +655,7 @@ EOF
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.my_studies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
@@ -664,9 +665,9 @@ EOF
           "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:participant-consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:participant-enroll-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:participant-user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:enroll-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
@@ -700,12 +701,12 @@ EOF
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
           # iam_members = [{
           #   role   = "roles/storage.objectViewer"
-          #   member = "serviceAccount:$${module.my_studies.instance_service_account_email_address}"
+          #   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
           # }]
         },
       ]
       bigquery_datasets = [{
-        dataset_id = "{{$prefix}}_{{$env}}_my_studies_firestore_data"
+        dataset_id = "{{$prefix}}_{{$env}}_mystudies_firestore_data"
       }]
     }
   }

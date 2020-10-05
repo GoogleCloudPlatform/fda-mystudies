@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
-    prefix = "example-dev-networks"
+    bucket = "mystudies-dev-terraform-state"
+    prefix = "mystudies-dev-networks"
   }
 }
 
@@ -29,10 +29,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 8.1.0"
 
-  name                    = "example-dev-networks"
+  name                    = "mystudies-dev-networks"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "440087619763"
+  billing_account         = "01B494-31B256-17B2A6"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
@@ -55,11 +55,11 @@ module "bastion_vm" {
 
   name         = "bastion-vm"
   project      = module.project.project_id
-  zone         = "us-central1-a"
+  zone         = "us-east1-b"
   host_project = module.project.project_id
-  network      = module.example_dev_network.network.network.self_link
-  subnet       = module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link
-  members      = ["group:example-dev-bastion-accessors@example.com"]
+  network      = module.mystudies_dev_network.network.network.self_link
+  subnet       = module.mystudies_dev_network.subnets["us-east1/mystudies-dev-bastion-subnet"].self_link
+  members      = ["group:dpt-dev@hcls.joonix.net"]
 
   image_family = "ubuntu-2004-lts"
 
@@ -75,76 +75,76 @@ sudo chmod +x /usr/local/bin/cloud_sql_proxy
 EOF
 }
 
-module "example_dev_network" {
+module "mystudies_dev_network" {
   source  = "terraform-google-modules/network/google"
   version = "~> 2.4.0"
 
-  network_name = "example-dev-network"
+  network_name = "mystudies-dev-network"
   project_id   = module.project.project_id
 
   subnets = [
     {
-      subnet_name           = "example-dev-bastion-subnet"
+      subnet_name           = "mystudies-dev-bastion-subnet"
       subnet_ip             = "10.0.128.0/24"
-      subnet_region         = "us-central1"
+      subnet_region         = "us-east1"
       subnet_flow_logs      = true
       subnet_private_access = true
     },
 
     {
-      subnet_name           = "example-dev-gke-subnet"
+      subnet_name           = "mystudies-dev-gke-subnet"
       subnet_ip             = "10.0.0.0/17"
-      subnet_region         = "us-central1"
+      subnet_region         = "us-east1"
       subnet_flow_logs      = true
       subnet_private_access = true
     },
 
   ]
   secondary_ranges = {
-    "example-dev-gke-subnet" = [
+    "mystudies-dev-gke-subnet" = [
       {
-        range_name    = "example-dev-pods-range"
+        range_name    = "mystudies-dev-pods-range"
         ip_cidr_range = "172.16.0.0/14"
       },
       {
-        range_name    = "example-dev-services-range"
+        range_name    = "mystudies-dev-services-range"
         ip_cidr_range = "172.20.0.0/14"
       },
     ],
   }
 }
 
-module "cloud_sql_private_service_access_example_dev_network" {
+module "cloud_sql_private_service_access_mystudies_dev_network" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
   version = "~> 3.2.0"
 
   project_id  = module.project.project_id
-  vpc_network = module.example_dev_network.network_name
+  vpc_network = module.mystudies_dev_network.network_name
 }
 
-module "example_dev_router" {
+module "mystudies_dev_router" {
   source  = "terraform-google-modules/cloud-router/google"
   version = "~> 0.2.0"
 
-  name    = "example-dev-router"
+  name    = "mystudies-dev-router"
   project = module.project.project_id
-  region  = "us-central1"
-  network = module.example_dev_network.network.network.self_link
+  region  = "us-east1"
+  network = module.mystudies_dev_network.network.network.self_link
 
   nats = [
     {
-      name                               = "example-dev-nat"
+      name                               = "mystudies-dev-nat"
       source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
 
       subnetworks = [
         {
-          name                    = "${module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link}"
+          name                    = "${module.mystudies_dev_network.subnets["us-east1/mystudies-dev-bastion-subnet"].self_link}"
           source_ip_ranges_to_nat = ["PRIMARY_IP_RANGE"]
 
           secondary_ip_range_names = []
         },
         {
-          name                    = "${module.example_dev_network.subnets["us-central1/example-dev-gke-subnet"].self_link}"
+          name                    = "${module.mystudies_dev_network.subnets["us-east1/mystudies-dev-gke-subnet"].self_link}"
           source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
 
           secondary_ip_range_names = []

@@ -19,7 +19,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
+    bucket = "mystudies-dev-terraform-state"
     prefix = "kubernetes"
   }
 }
@@ -27,9 +27,9 @@ terraform {
 data "google_client_config" "default" {}
 
 data "google_container_cluster" "gke_cluster" {
-  name     = "example-dev-gke-cluster"
-  location = "us-central1"
-  project  = "example-dev-apps"
+  name     = "mystudies-dev-gke-cluster"
+  location = "us-east1"
+  project  = "mystudies-dev-apps"
 }
 
 provider "kubernetes" {

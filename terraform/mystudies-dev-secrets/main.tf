@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
-    prefix = "example-dev-secrets"
+    bucket = "mystudies-dev-terraform-state"
+    prefix = "mystudies-dev-secrets"
   }
 }
 
@@ -58,18 +58,19 @@ resource "random_password" "passwords" {
     "participant_consent_datastore_db_password",
     "participant_enroll_datastore_db_password",
     "participant_user_datastore_db_password",
-    "participant_manager_db_user",
+    "participant_manager_db_password",
     "hydra_db_password",
   ])
   length  = 16
   special = true
 }
 
-resource "random_secret" "secrets" {
+resource "random_password" "secrets" {
   for_each = toset([
     "hydra_secrets_key",
   ])
-  length = 32
+  length  = 32
+  special = false
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
@@ -77,10 +78,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 8.1.0"
 
-  name                    = "example-dev-secrets"
+  name                    = "mystudies-dev-secrets"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "440087619763"
+  billing_account         = "01B494-31B256-17B2A6"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
@@ -98,7 +99,7 @@ resource "google_secret_manager_secret" "manual_mystudies_wcp_user" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -114,7 +115,7 @@ resource "google_secret_manager_secret" "manual_mystudies_wcp_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -130,7 +131,7 @@ resource "google_secret_manager_secret" "manual_mystudies_email_address" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -146,7 +147,7 @@ resource "google_secret_manager_secret" "manual_mystudies_email_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -162,7 +163,7 @@ resource "google_secret_manager_secret" "manual_mobile_app_appid" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -178,7 +179,7 @@ resource "google_secret_manager_secret" "manual_android_bundle_id" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -194,7 +195,7 @@ resource "google_secret_manager_secret" "manual_android_server_key" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -210,7 +211,7 @@ resource "google_secret_manager_secret" "manual_ios_bundle_id" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -226,7 +227,7 @@ resource "google_secret_manager_secret" "manual_ios_certificate" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -242,7 +243,7 @@ resource "google_secret_manager_secret" "manual_ios_certificate_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -258,7 +259,7 @@ resource "google_secret_manager_secret" "auto_auth_server_db_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -280,7 +281,7 @@ resource "google_secret_manager_secret" "auto_auth_server_db_user" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -302,7 +303,7 @@ resource "google_secret_manager_secret" "auto_hydra_db_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -324,7 +325,7 @@ resource "google_secret_manager_secret" "auto_hydra_db_user" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -346,7 +347,7 @@ resource "google_secret_manager_secret" "auto_hydra_secrets_system" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -356,7 +357,7 @@ resource "google_secret_manager_secret_version" "auto_hydra_secrets_system_data"
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_hydra_secrets_system.id
-  secret_data = random_secret.secrets["hydra_secrets_key"].result
+  secret_data = random_password.secrets["hydra_secrets_key"].result
 }
 
 resource "google_secret_manager_secret" "auto_mystudies_ma_client_id" {
@@ -368,7 +369,7 @@ resource "google_secret_manager_secret" "auto_mystudies_ma_client_id" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -390,7 +391,7 @@ resource "google_secret_manager_secret" "auto_mystudies_ma_secret_key" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -412,7 +413,7 @@ resource "google_secret_manager_secret" "auto_mystudies_rs_client_id" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -434,7 +435,7 @@ resource "google_secret_manager_secret" "auto_mystudies_rs_secret_key" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -456,7 +457,7 @@ resource "google_secret_manager_secret" "auto_mystudies_sql_default_user_passwor
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -478,7 +479,7 @@ resource "google_secret_manager_secret" "auto_mystudies_urs_client_id" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -500,7 +501,7 @@ resource "google_secret_manager_secret" "auto_mystudies_urs_secret_key" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -522,7 +523,7 @@ resource "google_secret_manager_secret" "auto_mystudies_wcp_client_id" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -544,7 +545,7 @@ resource "google_secret_manager_secret" "auto_mystudies_wcp_secret_key" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -566,7 +567,7 @@ resource "google_secret_manager_secret" "auto_response_server_db_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -588,7 +589,7 @@ resource "google_secret_manager_secret" "auto_response_server_db_user" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -610,7 +611,7 @@ resource "google_secret_manager_secret" "auto_study_designer_db_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -632,7 +633,7 @@ resource "google_secret_manager_secret" "auto_study_designer_db_user" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -654,7 +655,7 @@ resource "google_secret_manager_secret" "auto_study_metadata_db_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -676,7 +677,7 @@ resource "google_secret_manager_secret" "auto_study_metadata_db_user" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -698,7 +699,7 @@ resource "google_secret_manager_secret" "auto_participant_consent_datastore_db_p
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -720,7 +721,7 @@ resource "google_secret_manager_secret" "auto_participant_consent_datastore_db_u
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -742,7 +743,7 @@ resource "google_secret_manager_secret" "auto_participant_enroll_datastore_db_pa
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -764,7 +765,7 @@ resource "google_secret_manager_secret" "auto_participant_enroll_datastore_db_us
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -786,7 +787,7 @@ resource "google_secret_manager_secret" "auto_participant_user_datastore_db_pass
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -799,26 +800,26 @@ resource "google_secret_manager_secret_version" "auto_participant_user_datastore
   secret_data = random_password.passwords["participant_user_datastore_db_password"].result
 }
 
-resource "google_secret_manager_secret" "auto_participant_enroll_datastore_db_user" {
+resource "google_secret_manager_secret" "auto_participant_user_datastore_db_user" {
   provider = google-beta
 
-  secret_id = "auto-participant-enroll-datastore-db-user"
+  secret_id = "auto-participant-user-datastore-db-user"
   project   = module.project.project_id
 
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_participant_enroll_datastore_db_user_data" {
+resource "google_secret_manager_secret_version" "auto_participant_user_datastore_db_user_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_participant_enroll_datastore_db_user.id
-  secret_data = random_string.strings["participant_enroll_datastore_db_user"].result
+  secret      = google_secret_manager_secret.auto_participant_user_datastore_db_user.id
+  secret_data = random_string.strings["participant_user_datastore_db_user"].result
 }
 
 resource "google_secret_manager_secret" "auto_participant_manager_db_password" {
@@ -830,7 +831,7 @@ resource "google_secret_manager_secret" "auto_participant_manager_db_password" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
@@ -852,7 +853,7 @@ resource "google_secret_manager_secret" "auto_participant_manager_db_user" {
   replication {
     user_managed {
       replicas {
-        location = "us-central1"
+        location = "us-east1"
       }
     }
   }
