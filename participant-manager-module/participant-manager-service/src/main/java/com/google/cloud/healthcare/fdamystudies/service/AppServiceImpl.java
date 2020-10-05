@@ -86,6 +86,11 @@ public class AppServiceImpl implements AppService {
   public AppResponse getApps(String userId) {
     logger.entry("getApps(userId)");
 
+    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
+    if (CollectionUtils.isEmpty(appPermissions)) {
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+    }
+
     List<SitePermissionEntity> sitePermissions =
         sitePermissionRepository.findSitePermissionByUserId(userId);
     if (CollectionUtils.isEmpty(sitePermissions)) {

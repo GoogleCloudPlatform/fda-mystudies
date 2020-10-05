@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.criteria.CriteriaBuilder;
