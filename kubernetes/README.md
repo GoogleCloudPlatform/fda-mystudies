@@ -138,6 +138,7 @@ In each tf-deployment.yaml file listed below (paths are relative to the
 root of the repo):
 
 1. oauth-scim-module/tf-deployment.yaml
+1. hydra/tf-deployment.yaml
 1. response-server-module/tf-deployment.yaml
 1. WCP/tf-deployment.yaml
 1. WCP-WS/tf-deployment.yaml
@@ -236,9 +237,10 @@ $ kubectl apply \
   -f ./user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml \
   -f ./user-registration-server-ws/user-mgmt-module/tf-deployment.yaml \
   -f ./WCP/tf-deployment.yaml \
+  -f ./oauth-scim-module/tf-deployment.yaml \
   -f ./participant-manager-module/tf-deployment.yaml \
-  -f ./UR-web-app/tf-deployment.yaml \
-  -f ./oauth-scim-module/tf-deployment.yaml
+  -f ./hydra/tf-deployment.yaml \
+  -f ./UR-web-app/tf-deployment.yaml
 ```
 
 Apply all services:
@@ -253,6 +255,7 @@ $ kubectl apply \
   -f ./WCP/tf-service.yaml \
   -f ./oauth-scim-module/tf-service.yaml \
   -f ./participant-manager-module/tf-service.yaml \
+  -f ./hydra/tf-service.yaml \
   -f ./UR-web-app/tf-service.yaml
 ```
 

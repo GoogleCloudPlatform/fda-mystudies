@@ -1,0 +1,19 @@
+# LoadBalancer service for Response server.
+# See https://cloud.google.com/kubernetes-engine/docs/how-to/exposing-apps#creating_a_service_of_type_loadbalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: hydra-np
+  # Add Container Native Load Balancing.
+  # See https://cloud.google.com/kubernetes-engine/docs/how-to/container-native-load-balancing#create_service
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}' # Creates a NEG after an Ingress is created
+spec:
+  type: NodePort
+  selector:
+    app: hydra-ic
+    tier: web
+  ports:
+  - protocol: TCP
+    port: 4444
+    targetPort: 8080

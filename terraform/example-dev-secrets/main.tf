@@ -36,6 +36,7 @@ resource "random_string" "strings" {
     "study_metadata_db_user",
     "user_registration_db_user",
     "participant_manager_db_user",
+    "hydra_db_user",
   ])
   length  = 16
   special = true
@@ -54,9 +55,17 @@ resource "random_password" "passwords" {
     "study_metadata_db_password",
     "user_registration_db_password",
     "participant_manager_db_user",
+    "hydra_db_password",
   ])
   length  = 16
   special = true
+}
+
+resource "random_secret" "secrets" {
+  for_each = toset([
+    "hydra_secrets_key",
+  ])
+  length = 32
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
@@ -278,6 +287,72 @@ resource "google_secret_manager_secret_version" "auto_auth_server_db_user_data" 
 
   secret      = google_secret_manager_secret.auto_auth_server_db_user.id
   secret_data = random_string.strings["auth_server_db_user"].result
+}
+
+resource "google_secret_manager_secret" "auto_hydra_db_password" {
+  provider = google-beta
+
+  secret_id = "auto-hydra-db-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_hydra_db_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_hydra_db_password.id
+  secret_data = random_password.passwords["hydra_db_password"].result
+}
+
+resource "google_secret_manager_secret" "auto_hydra_db_user" {
+  provider = google-beta
+
+  secret_id = "auto-hydra-db-user"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_hydra_db_user_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_hydra_db_user.id
+  secret_data = random_string.strings["hydra_db_user"].result
+}
+
+resource "google_secret_manager_secret" "auto_hydra_secrets_system" {
+  provider = google-beta
+
+  secret_id = "auto-hydra-secrets-system"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_hydra_secrets_system_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_hydra_secrets_system.id
+  secret_data = random_secret.secrets["hydra_secrets_key"].result
 }
 
 resource "google_secret_manager_secret" "auto_mystudies_ma_client_id" {

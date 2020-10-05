@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hydra-ic
+  labels:
+    app: hydra-ic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hydra-ic
+  template:
+    metadata:
+      labels:
+        app: hydra-ic
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+      - name: hydra-ic
+        image: gcr.io/fda-mystudies-dev-apps/hydra:latest
+        env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: hydra-db-credentials
+              key: username
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: hydra-db-credentials
+              key: password
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: hydra-db-credentials
+              key: dbname
+        - name: SECRETS_SYSTEM
+          valueFrom:
+            secretKeyRef:
+              name: hydra-secrets
+              key: SECRETS_KEY
+        - name: BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: hydra-secrets
+              key: BASE_URL
+        ports:
+        - containerPort: 4444
+        - containerPort: 4445
+        readinessProbe:
+          httpGet:
+            port: 4444
+            path: /hydra/health/ready
+        volumeMounts:
+        - name: gcloud-key-volume
+          mountPath: /secrets/gcloud_key
+          readOnly: true
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:latest
+        command: ["/cloud_sql_proxy",
+                  "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+                  "-credential_file=/secrets/gcloud_key/key.json"]
+        volumeMounts:
+        - name: gcloud-key-volume
+          mountPath: /secrets/gcloud_key
+          readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: hydra-gcloud-key
