@@ -43,6 +43,7 @@ let kStudyId = "studyId"
 let kDeleteData = "deleteData"
 let kUserVerified = "verified"
 let kUserAuthToken = "accessToken"
+let kAuthorization = "Authorization"
 let kStudies = "studies"
 let kActivites = "activities"
 let kActivityKey = "activity"
@@ -331,8 +332,6 @@ class UserServices: NSObject {
     user.userId = (response[kUserId] as? String)!
     user.verified = (response[kUserVerified] as? Bool)!
     user.authToken = (response[kUserAuthToken] as? String)!
-    user.clientToken = (response["clientToken"] as? String)!
-
     user.refreshToken = (response[kRefreshToken] as? String)!
     StudyFilterHandler.instance.previousAppliedFilters = []
 
@@ -346,7 +345,7 @@ class UserServices: NSObject {
     if let varified = response[kUserVerified] as? Bool {
 
       user.verified = varified
-      if user.verified! {
+      if user.verified {
 
         user.userType = UserType.loggedInUser
 
@@ -367,7 +366,7 @@ class UserServices: NSObject {
     let user = User.currentUser
     user.verified = true
 
-    if user.verified! {
+    if user.verified {
 
       if user.authToken != nil {
 

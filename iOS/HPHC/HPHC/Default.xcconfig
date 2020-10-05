@@ -32,9 +32,16 @@ ENROLLMENT_URL = xxxxxx
 // e.g. mystudiesdeployment.com/myStudiesConsentMgmtWS/
 CONSENTMGMT_URL = xxxxxx
 
-// URL of AuthServer.
-// e.g. mystudiesdeployment.com/AuthServer/
+// URL of oauth scim services.
+// e.g. mystudiesdeployment.com/oauth-scim-service
 AUTH_URL = xxxxxx
+
+// URL of Hydra server.
+// e.g. mystudiesdeployment.com/oauth2
+HYDRA_BASE_URL = xxxxx
+
+// HYDRA_CLIENT_ID is a client ID for OAuth.
+HYDRA_CLIENT_ID = xxxx
 
 // This is used to generate base64 basic Authorization token for WCP WS validation.
 AUTH_USERNAME = xxxxx
