@@ -22,12 +22,6 @@
 
 package com.fdahpstudydesigner.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
@@ -35,6 +29,12 @@ import com.fdahpstudydesigner.dao.StudyDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {

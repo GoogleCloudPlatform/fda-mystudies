@@ -386,7 +386,7 @@
               <tr>
                 <span
                   class="sort__by__text mobile__view mr-sm"
-                  style="background: transparent;"
+                  style="background: transparent"
                 >
                   Sort By:
                 </span>
@@ -554,7 +554,18 @@
     </div>
 
     <ng-template #addParticipants>
-      <div class="modal-body modal__body"></div>
+      <div class="modal-body modal__body">
+        <app-add-email
+          [siteId]="siteId"
+          (addEmail)="onSucceedAddEmail()"
+          (cancel)="modalRef.hide()"
+        ></app-add-email>
+        <app-import-email-list
+          [siteId]="siteId"
+          (import)="onFileImportSuccess()"
+          (cancel)="modalRef.hide()"
+        ></app-import-email-list>
+      </div>
     </ng-template>
   </div>
 </ng-container>

@@ -22,6 +22,8 @@
  */
 package com.hphc.mystudies.web.servlet;
 
+import com.hphc.mystudies.exception.ErrorCodes;
+import com.hphc.mystudies.util.StudyMetaDataConstants;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -33,8 +35,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import com.hphc.mystudies.exception.ErrorCodes;
-import com.hphc.mystudies.util.StudyMetaDataConstants;
 
 public class RestAuthenticationFilter implements Filter {
 

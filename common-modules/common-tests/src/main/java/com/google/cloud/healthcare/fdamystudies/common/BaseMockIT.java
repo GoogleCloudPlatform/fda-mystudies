@@ -228,13 +228,17 @@ public class BaseMockIT {
       AuditLogEventRequest auditRequest = auditRequestByEventCode.get(auditEvent.getEventCode());
 
       assertEquals(auditEvent.getEventCode(), auditRequest.getEventCode());
-      assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
+
+      if (auditEvent.getDestination() != null) {
+        assertEquals(auditEvent.getDestination().getValue(), auditRequest.getDestination());
+      }
 
       // Use enum value where specified, otherwise, use 'source' header value.
       if (auditEvent.getSource().isPresent()) {
         assertEquals(auditEvent.getSource().get().getValue(), auditRequest.getSource());
-      } else {
-        assertEquals("IntegrationTests", auditRequest.getSource());
+      } else if (StringUtils.isNotEmpty(auditRequest.getSource())) {
+        PlatformComponent platformComponent = PlatformComponent.fromValue(auditRequest.getSource());
+        assertNotNull(platformComponent);
       }
 
       if (auditEvent.getResourceServer().isPresent()) {
@@ -261,27 +265,6 @@ public class BaseMockIT {
 
   protected void clearAuditRequests() {
     auditRequests.clear();
-  }
-
-  protected MimeMessage verifyMimeMessage(
-      String toEmail, String fromEmail, String subject, String body)
-      throws MessagingException, IOException {
-    ArgumentCaptor<MimeMessage> mailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
-    verify(emailSender, atLeastOnce()).send(mailCaptor.capture());
-
-    MimeMessage mail = mailCaptor.getValue();
-
-    assertThat(mail.getFrom()).containsExactly(new InternetAddress(fromEmail));
-    assertThat(mail.getRecipients(Message.RecipientType.TO))
-        .containsExactly(new InternetAddress(toEmail));
-    assertThat(mail.getRecipients(Message.RecipientType.CC)).isNull();
-
-    assertThat(mail.getSubject()).isEqualTo(subject);
-    assertThat(mail.getContent().toString()).contains(body);
-
-    assertThat(mail.getDataHandler().getContentType()).isEqualTo("text/html; charset=utf-8");
-
-    return mail;
   }
 
   protected void verifyDoesNotContain(String text, String... searchValues) {
@@ -325,5 +308,26 @@ public class BaseMockIT {
         times,
         postRequestedFor(urlEqualTo("/oauth-scim-service/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
+  }
+
+  protected MimeMessage verifyMimeMessage(
+      String toEmail, String fromEmail, String subject, String body)
+      throws MessagingException, IOException {
+    ArgumentCaptor<MimeMessage> mailCaptor = ArgumentCaptor.forClass(MimeMessage.class);
+    verify(emailSender, atLeastOnce()).send(mailCaptor.capture());
+
+    MimeMessage mail = mailCaptor.getValue();
+
+    assertThat(mail.getFrom()).containsExactly(new InternetAddress(fromEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.TO))
+        .containsExactly(new InternetAddress(toEmail));
+    assertThat(mail.getRecipients(Message.RecipientType.CC)).isNull();
+
+    assertThat(mail.getSubject()).isEqualToIgnoringCase(subject);
+    assertThat(mail.getContent().toString()).contains(body);
+
+    assertThat(mail.getDataHandler().getContentType())
+        .isEqualToIgnoringCase("text/html; charset=utf-8");
+    return mail;
   }
 }

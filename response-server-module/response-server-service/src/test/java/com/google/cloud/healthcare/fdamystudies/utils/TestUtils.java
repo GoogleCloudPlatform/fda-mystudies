@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.utils;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.USER_ID_HEADER;
 import static com.google.cloud.healthcare.fdamystudies.utils.Constants.VALID_USER_ID;
 
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import javax.ws.rs.core.MediaType;
 import org.springframework.http.HttpHeaders;
 
@@ -23,6 +24,10 @@ public class TestUtils {
     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "GCPMS001");
+    headers.add("source", "RESPONSE DATASTORE");
     return headers;
   }
 
@@ -32,6 +37,10 @@ public class TestUtils {
     headers.add(USER_ID_HEADER, VALID_USER_ID);
     headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
     headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+    headers.add("correlationId", IdGenerator.id());
+    headers.add("appVersion", "1.0");
+    headers.add("appId", "GCPMS001");
+    headers.add("source", "RESPONSE DATASTORE");
     return headers;
   }
 }

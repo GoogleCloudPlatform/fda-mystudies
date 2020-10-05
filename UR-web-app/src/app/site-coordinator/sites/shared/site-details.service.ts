@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core';
 import {SiteParticipants} from './site-detail.model';
 import {EntityService} from '../../../service/entity.service';
 import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from '@environment';
+import {AddEmail} from './add-email';
 import {
   InviteSend,
   StatusUpdate,
@@ -72,6 +73,15 @@ export class SiteDetailsService {
       invitationToSend,
     );
   }
+  addParticipants(
+    siteId: string,
+    modelEmail: AddEmail,
+  ): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/participants`,
+      modelEmail,
+    );
+  }
 
   private getInvitationType(fetchingOption: OnboardingStatus): string {
     switch (fetchingOption) {
@@ -84,5 +94,21 @@ export class SiteDetailsService {
       default:
         return '';
     }
+  }
+
+  importParticipants(
+    siteId: string,
+    formData: FormData,
+  ): Observable<ApiResponse> {
+    const httpOptionsForUpload = {
+      headers: new HttpHeaders({}),
+    };
+    return this.http.post<ApiResponse>(
+      `${environment.baseUrl}/sites/${encodeURIComponent(
+        siteId,
+      )}/participants/import`,
+      formData,
+      httpOptionsForUpload,
+    );
   }
 }

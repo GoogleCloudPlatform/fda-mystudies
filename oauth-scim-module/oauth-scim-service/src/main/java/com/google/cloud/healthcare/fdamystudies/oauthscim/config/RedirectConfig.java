@@ -10,8 +10,11 @@ package com.google.cloud.healthcare.fdamystudies.oauthscim.config;
 
 import static com.google.cloud.healthcare.fdamystudies.common.MobilePlatform.ANDROID;
 import static com.google.cloud.healthcare.fdamystudies.common.MobilePlatform.IOS;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.MOBILE_APPS;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_MANAGER;
 
 import com.google.cloud.healthcare.fdamystudies.common.MobilePlatform;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import java.io.Serializable;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,22 +35,32 @@ public class RedirectConfig implements Serializable {
   @Value("${android.deeplink.url}")
   private String androidDeeplinkUrl;
 
-  public String getCallbackUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+  public String getCallbackUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/callback";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return androidDeeplinkUrl + "/callback";
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return iosDeeplinkUrl + "/callback";
     }
-    return participantManagerUrl + "/#/callback";
+    return null;
   }
 
-  public String getForgotPasswordUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+  public String getForgotPasswordUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/forgotPassword";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return androidDeeplinkUrl + "/forgotPassword";
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return iosDeeplinkUrl + "/forgotPassword";
     }
-    return participantManagerUrl + "/#/forgotPassword";
+    return null;
   }
 
   public String getSignupUrl(String mobilePlatform) {
@@ -59,22 +72,32 @@ public class RedirectConfig implements Serializable {
     return null;
   }
 
-  public String getAccountActivationUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+  public String getAccountActivationUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/activation";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return androidDeeplinkUrl + "/activation";
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return iosDeeplinkUrl + "/activation";
     }
-    return participantManagerUrl + "/#/activation";
+    return null;
   }
 
-  public String getTermsUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
+  public String getTermsUrl(String mobilePlatform, String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/terms";
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == ANDROID) {
       return androidDeeplinkUrl + "/terms";
-    } else if (MobilePlatform.fromValue(mobilePlatform) == IOS) {
+    } else if (MOBILE_APPS == platformComponent
+        && MobilePlatform.fromValue(mobilePlatform) == IOS) {
       return iosDeeplinkUrl + "/terms";
     }
-    return participantManagerUrl + "/#/terms";
+    return null;
   }
 
   public String getPrivacyPolicyUrl(String mobilePlatform) {
@@ -86,11 +109,11 @@ public class RedirectConfig implements Serializable {
     return null;
   }
 
-  public String getAboutUrl(String mobilePlatform) {
-    if (MobilePlatform.fromValue(mobilePlatform) == ANDROID
-        || MobilePlatform.fromValue(mobilePlatform) == IOS) {
-      return null;
+  public String getAboutUrl(String source) {
+    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+    if (PARTICIPANT_MANAGER == platformComponent) {
+      return participantManagerUrl + "/#/about";
     }
-    return participantManagerUrl + "/#/about";
+    return null;
   }
 }

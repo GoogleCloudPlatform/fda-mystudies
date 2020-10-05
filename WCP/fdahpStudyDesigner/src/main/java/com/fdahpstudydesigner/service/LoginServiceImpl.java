@@ -22,12 +22,38 @@
 
 package com.fdahpstudydesigner.service;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_SENT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_REQUESTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
+import com.fdahpstudydesigner.bo.UserAttemptsBo;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.bo.UserPasswordHistory;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
+import com.fdahpstudydesigner.common.StudyBuilderConstants;
+import com.fdahpstudydesigner.common.UserAccessLevel;
+import com.fdahpstudydesigner.dao.AuditLogDAO;
+import com.fdahpstudydesigner.dao.LoginDAOImpl;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
+import com.fdahpstudydesigner.util.EmailNotification;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -38,15 +64,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import com.fdahpstudydesigner.bo.UserAttemptsBo;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.bo.UserPasswordHistory;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
-import com.fdahpstudydesigner.dao.LoginDAOImpl;
-import com.fdahpstudydesigner.util.EmailNotification;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
-import com.fdahpstudydesigner.util.SessionObject;
 
 @Service
 public class LoginServiceImpl implements LoginService, UserDetailsService {
@@ -54,6 +71,10 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   private static Logger logger = Logger.getLogger(LoginServiceImpl.class.getName());
 
   @Autowired private AuditLogDAO auditLogDAO;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
+
+  @Autowired private HttpServletRequest request;
 
   private LoginDAOImpl loginDAO;
 
@@ -79,7 +100,14 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     Boolean isValidPassword = true;
     String activity = "";
     String activityDetail = "";
+    Map<String, String> values = new HashMap<>();
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
+      // services
+      UUID uuid = UUID.randomUUID(); // Generates random UUID.
+      auditRequest.setCorrelationId(uuid.toString().toUpperCase());
+      auditRequest.setUserId(String.valueOf(userBO2.getUserId()));
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
         if (StringUtils.isBlank(userBO.getUserPassword())) {
@@ -109,24 +137,11 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               }
             }
             if (isValidPassword) {
-              if ((userBO2 != null) && StringUtils.isNotEmpty(userBO2.getFirstName())) {
-                userBO.setFirstName(
-                    null != userBO2.getFirstName() ? userBO2.getFirstName().trim() : "");
-                userBO.setLastName(
-                    null != userBO2.getLastName() ? userBO2.getLastName().trim() : "");
-                userBO.setPhoneNumber(
-                    null != userBO2.getPhoneNumber() ? userBO2.getPhoneNumber().trim() : "");
-                activity = "User registration.";
-                activityDetail =
-                    "User named "
-                        + userBO2.getFirstName()
-                        + " "
-                        + userBO2.getLastName()
-                        + " is successfully registered";
-              } else {
-                activity = "Forgot password";
-                activityDetail = "User successfully created the new password.";
-              }
+              userBO.setFirstName(
+                  null != userBO2.getFirstName() ? userBO2.getFirstName().trim() : "");
+              userBO.setLastName(null != userBO2.getLastName() ? userBO2.getLastName().trim() : "");
+              userBO.setPhoneNumber(
+                  null != userBO2.getPhoneNumber() ? userBO2.getPhoneNumber().trim() : "");
               userBO.setUserPassword(FdahpStudyDesignerUtil.getEncryptedPassword(password));
               userBO.setTokenUsed(true);
               userBO.setEnabled(true);
@@ -142,13 +157,21 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 isValid = true;
                 SessionObject sessionObject = new SessionObject();
                 sessionObject.setUserId(userBO.getUserId());
-                auditLogDAO.saveToAuditLog(
-                    null,
-                    null,
-                    sessionObject,
-                    activity,
-                    activityDetail,
-                    "LoginDAOImpl - updateUser()");
+
+                auditLogEventHelper.logEvent(NEW_USER_ACCOUNT_ACTIVATED, auditRequest);
+                auditLogEventHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
+              } else {
+                if (userBO2 != null) {
+                  values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
+                  values.put(
+                      StudyBuilderConstants.ACCESS_LEVEL,
+                      UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
+                  auditLogEventHelper.logEvent(
+                      NEW_USER_ACCOUNT_ACTIVATION_FAILED, auditRequest, values);
+                  auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
+                } else {
+                  auditLogEventHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest, values);
+                }
               }
             } else {
               result = oldPasswordError.replace("$countPass", passwordCount);
@@ -158,6 +181,9 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
           }
         } else {
           result = invalidAccessCodeError;
+          values.put(StudyBuilderConstants.USER_ID, String.valueOf(userBO.getUserId()));
+          auditLogEventHelper.logEvent(
+              NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE, auditRequest, values);
         }
         if (isIntialPasswordSetUp && isValid) {
           List<String> cc = new ArrayList<>();
@@ -197,7 +223,11 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     String activity = "";
     String activityDetail = "";
     int countPassChar = 0;
+    StudyBuilderAuditEvent eventEnum = null;
     try {
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      auditRequest.setCorrelationId(sesObj.getSessionId());
+      auditRequest.setUserId(String.valueOf(userId));
       if ((newPassword != null)
           && (newPassword.contains(sesObj.getFirstName())
               || newPassword.contains(sesObj.getLastName()))) {
@@ -237,11 +267,13 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
             if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
               loginDAO.updatePasswordHistory(
                   userId, FdahpStudyDesignerUtil.getEncryptedPassword(newPassword));
-              activity = "Change password.";
-              activityDetail = "User successfully changed his/her password.";
+              eventEnum = PASSWORD_CHANGE_SUCCEEDED;
               auditLogDAO.saveToAuditLog(
                   null, null, sesObj, activity, activityDetail, "LoginDAOImpl - changePassword");
+            } else {
+              eventEnum = PASSWORD_CHANGE_FAILED;
             }
+            auditLogEventHelper.logEvent(eventEnum, auditRequest);
           } else {
             message = oldPasswordError.replace("$countPass", passwordCount);
           }
@@ -396,11 +428,23 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     final Integer USER_LOCK_DURATION =
         Integer.valueOf(propMap.get("user.lock.duration.in.minutes"));
     final String lockMsg = propMap.get("user.lock.msg");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
       passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
       accessCode = RandomStringUtils.randomAlphanumeric(6);
       if (!StringUtils.isEmpty(passwordResetToken)) {
         userdetails = loginDAO.getValidUserByEmail(email);
+        if ("".equals(type) && userdetails != null && userdetails.isEnabled()) {
+          SessionObject sesObj =
+              (SessionObject) request.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+          // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
+          // services
+          UUID uuid = UUID.randomUUID(); // Generates random UUID.
+          auditRequest.setCorrelationId(
+              sesObj == null ? uuid.toString().toUpperCase() : sesObj.getSessionId());
+          auditRequest.setUserId(String.valueOf(userdetails.getUserId()));
+          auditLogEventHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
+        }
         if ("".equals(type) && userdetails.getEmailChanged()) {
           userdetails = null;
         }
@@ -523,6 +567,9 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 flag =
                     EmailNotification.sendEmailNotification(
                         "passwordResetLinkSubject", dynamicContent, email, null, null);
+                StudyBuilderAuditEvent auditLogEvent =
+                    flag ? PASSWORD_HELP_EMAIL_SENT : PASSWORD_HELP_EMAIL_FAILED;
+                auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
               }
               if (flag) {
                 message = FdahpStudyDesignerConstants.SUCCESS;
@@ -536,6 +583,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - sendPasswordResetLinkToMail - ERROR ", e);
+      auditLogEventHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
     }
     logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Ends");
     return message;

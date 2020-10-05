@@ -2,7 +2,7 @@
   <div (keydown)="onKeyDown($event)" id="desktop-menu">
     <div class="bs-example bs__example">
       <nav class="navbar navbar-expand-md p-none">
-        <a routerLink="/user/dashboard" class="navbar-brand">
+        <a routerLink="/coordinator/studies" class="navbar-brand">
           <img class="mr-sm" src="assets/images/landing-logo.gif" />
           <span class="header__logo__text">FDA MyStudies</span>
         </a>
@@ -30,6 +30,7 @@
                 Dashboard
               </a>
               <a
+                *ngIf="user?.manageLocations !== null || user?.superAdmin"
                 routerLink="/coordinator/locations"
                 routerLinkActive="active"
                 class="nav-item nav-link"
@@ -37,6 +38,7 @@
                 Locations
               </a>
               <a
+                *ngIf="user?.superAdmin"
                 routerLink="/coordinator/users"
                 routerLinkActive="active"
                 class="nav-item nav-link"
@@ -69,9 +71,7 @@
 <router-outlet (activate)="onActivate($event)"></router-outlet>
 
 <footer>
-  <div>
-    &copy; 2019 FDA MyStudies. All rights reserved.
-  </div>
+  <div>&copy; 2019 FDA MyStudies. All rights reserved.</div>
   <div>
     <ul>
       <li><a href="#">About</a></li>

@@ -23,9 +23,9 @@
 
 package com.fdahpstudydesigner.util;
 
+import com.fdahpstudydesigner.bean.StudySessionBean;
 import java.io.Serializable;
 import java.util.List;
-import com.fdahpstudydesigner.bean.StudySessionBean;
 
 public class SessionObject implements Serializable {
 
@@ -53,6 +53,8 @@ public class SessionObject implements Serializable {
   private String userPermissions = "";
   private String userType = "";
   private String role = "";
+  private String sessionId;
+  private String accessLevel = "";
 
   public Integer getAdminstratorId() {
     return adminstratorId;
@@ -228,5 +230,21 @@ public class SessionObject implements Serializable {
 
   public void setRole(String role) {
     this.role = role;
+  }
+
+  public String getSessionId() {
+    return sessionId;
+  }
+
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
+  }
+
+  public String getAccessLevel() {
+    return accessLevel;
+  }
+
+  public void setAccessLevel(String accessLevel) {
+    this.accessLevel = accessLevel;
   }
 }

@@ -23,10 +23,10 @@
 
 package com.fdahpstudydesigner.service;
 
-import java.util.List;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.util.List;
 
 public interface NotificationService {
 
