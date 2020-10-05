@@ -103,7 +103,7 @@ enum AuthRouter: URLRequestConvertible {
 
     case .changePassword(let parameters, let userID):
       return Request(
-        method: .post,
+        method: .put,
         path: "/users/\(userID)/change_password",
         encoding: JSONEncoding.default,
         parameters: parameters

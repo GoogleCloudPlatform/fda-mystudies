@@ -496,22 +496,25 @@ class User {
     refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
 
     if self.verified && !self.isLoggedInWithTempPassword {
-
-      // Set user type & save current user to DB
-      userType = UserType.loggedInUser
-      DBHandler().saveCurrentUser(user: self)
-
-      // Updating Key & Vector
-      let appDelegate = UIApplication.shared.delegate as? AppDelegate
-      appDelegate?.updateKeyAndInitializationVector()
-
-      FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
-      FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
-
-      UserDefaults.standard.set(true, forKey: kPasscodeIsPending)  // For passcode setup
-
-      StudyFilterHandler.instance.previousAppliedFilters = []
+      saveAuthenticatedUserToDB()
     }
+  }
+
+  func saveAuthenticatedUserToDB() {
+    // Set user type & save current user to DB
+    userType = UserType.loggedInUser
+    DBHandler().saveCurrentUser(user: self)
+
+    // Updating Key & Vector
+    let appDelegate = UIApplication.shared.delegate as? AppDelegate
+    appDelegate?.updateKeyAndInitializationVector()
+
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
+
+    UserDefaults.standard.set(true, forKey: kPasscodeIsPending)  // For passcode setup
+
+    StudyFilterHandler.instance.previousAppliedFilters = []
   }
 }
 
