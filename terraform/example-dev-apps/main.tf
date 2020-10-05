@@ -48,8 +48,8 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
 #     "participant-manager-datastore",
-#     "participant-manager",
 #     "hydra",
+#     "participant-manager",
 #   ])
 #
 #   provider = google-beta

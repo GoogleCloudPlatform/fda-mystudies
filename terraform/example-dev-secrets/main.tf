@@ -54,7 +54,7 @@ resource "random_password" "passwords" {
     "study_designer_db_password",
     "study_metadata_db_password",
     "user_registration_db_password",
-    "participant_manager_db_user",
+    "participant_manager_db_password",
     "hydra_db_password",
   ])
   length  = 16
