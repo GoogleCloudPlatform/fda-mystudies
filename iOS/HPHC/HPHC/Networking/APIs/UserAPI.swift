@@ -61,6 +61,10 @@ struct UserAPI {
 
     APIService.instance
       .requestForData(with: AuthRouter.changePassword(params: params, userID: userID)) { (_, status, error) in
+        if status {
+          let user = User.currentUser
+          UserDefaults.standard.set(user.userId, forKey: kUserId)
+        }
         completion(status, error)
       }
   }
