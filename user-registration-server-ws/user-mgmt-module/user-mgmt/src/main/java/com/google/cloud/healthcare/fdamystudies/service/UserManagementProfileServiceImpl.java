@@ -20,24 +20,24 @@ import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
-import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
-import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyRespFromServer;
-import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
-import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
+import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
+import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserProfileManagementDao;
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
 import java.sql.Timestamp;
@@ -48,13 +48,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 public class UserManagementProfileServiceImpl implements UserManagementProfileService {
@@ -72,6 +72,8 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   @Autowired private EmailService emailService;
 
   @Autowired private AppRepository appRepository;
+
+  @Autowired UserDetailsRepository userDetailsRepository;
 
   private static final Logger logger =
       LoggerFactory.getLogger(UserManagementProfileServiceImpl.class);
@@ -224,88 +226,120 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
   }
 
   @Override
+  public void processDeactivatePendingRequests() {
+    // findUsers With Status DEACTIVATE_PENDING
+    List<UserDetailsEntity> listOfUserDetails =
+        (List<UserDetailsEntity>)
+            CollectionUtils.emptyIfNull(
+                userDetailsRepository.findByStatus(UserStatus.DEACTIVATE_PENDING.getValue()));
+
+    // call deactivateUserAccount() for each userID's
+    listOfUserDetails.forEach(
+        userDetails -> {
+          try {
+            userManagementUtil.deleteUserInfoInAuthServer(userDetails.getUserId());
+            userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
+          } catch (ErrorCodeException e) {
+            if (e.getErrorCode() == ErrorCode.USER_NOT_FOUND) {
+              userProfileManagementDao.deactivateUserAccount(userDetails.getUserId());
+            } else {
+              logger.warn(
+                  String.format(
+                      "Delete user from %s failed with ErrorCode=%s",
+                      PlatformComponent.SCIM_AUTH_SERVER.getValue(), e.getErrorCode()));
+            }
+          } catch (Exception e) {
+            logger.error("processDeactivatePendingRequests() failed with an exception", e);
+          }
+        });
+  }
+
+  @Override
   @Transactional()
   public String deactivateAccount(
       String userId, DeactivateAcctBean deactivateAcctBean, AuditLogEventRequest auditRequest) {
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Starts");
     String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     String userDetailsId = String.valueOf(0);
-    boolean returnVal = false;
     WithdrawFromStudyBean studyBean = null;
-    WithdrawFromStudyRespFromServer resp = null;
     String participantId = "";
     String retVal = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     List<String> deleteData = new ArrayList<String>();
 
+    Optional<UserDetailsEntity> optUserDetails = userDetailsRepository.findByUserId(userId);
+
+    if (!optUserDetails.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
     userDetailsId = commonDao.getUserInfoDetails(userId);
-    UpdateEmailStatusRequest updateEmailStatusRequest = new UpdateEmailStatusRequest();
-    updateEmailStatusRequest.setStatus(UserAccountStatus.DEACTIVATED.getStatus());
-    UpdateEmailStatusResponse updateStatusResponse =
-        userManagementUtil.updateUserInfoInAuthServer(updateEmailStatusRequest, userId);
 
-    if (HttpStatus.OK.value() == updateStatusResponse.getHttpStatusCode()) {
-      if (deactivateAcctBean != null
-          && deactivateAcctBean.getDeleteData() != null
-          && !deactivateAcctBean.getDeleteData().isEmpty()) {
-        for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
-          studyBean = new WithdrawFromStudyBean();
-          participantId = commonDao.getParticipantId(userDetailsId, studyReqBean.getStudyId());
-          studyReqBean.setStudyId(studyReqBean.getStudyId());
-          if (participantId != null && !participantId.isEmpty())
-            studyBean.setParticipantId(participantId);
-          studyBean.setDelete(studyReqBean.getDelete());
-          studyBean.setStudyId(studyReqBean.getStudyId());
-          deleteData.add(studyReqBean.getStudyId());
+    if (deactivateAcctBean != null
+        && deactivateAcctBean.getDeleteData() != null
+        && !deactivateAcctBean.getDeleteData().isEmpty()) {
+      for (StudyReqBean studyReqBean : deactivateAcctBean.getDeleteData()) {
+        studyBean = new WithdrawFromStudyBean();
+        participantId = commonDao.getParticipantId(userDetailsId, studyReqBean.getStudyId());
+        studyReqBean.setStudyId(studyReqBean.getStudyId());
+        if (participantId != null && !participantId.isEmpty())
+          studyBean.setParticipantId(participantId);
+        studyBean.setDelete(studyReqBean.getDelete());
+        studyBean.setStudyId(studyReqBean.getStudyId());
+        deleteData.add(studyReqBean.getStudyId());
 
-          auditRequest.setStudyId(studyBean.getStudyId());
-          auditRequest.setParticipantId(studyBean.getParticipantId());
-          auditRequest.setUserId(userId);
+        auditRequest.setStudyId(studyBean.getStudyId());
+        auditRequest.setParticipantId(studyBean.getParticipantId());
+        auditRequest.setUserId(userId);
 
-          retVal =
-              userManagementUtil.withdrawParticipantFromStudy(
-                  studyBean.getParticipantId(),
-                  studyBean.getStudyId(),
-                  studyBean.getDelete(),
-                  auditRequest);
+        retVal =
+            userManagementUtil.withdrawParticipantFromStudy(
+                studyBean.getParticipantId(),
+                studyBean.getStudyId(),
+                studyBean.getDelete(),
+                auditRequest);
 
-          if (Boolean.valueOf(studyReqBean.getDelete())) {
+        if (Boolean.valueOf(studyReqBean.getDelete())) {
 
-            Map<String, String> map =
-                Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
+          Map<String, String> map =
+              Collections.singletonMap("delete_or_retain", CommonConstants.DELETE);
 
-            userMgmntAuditHelper.logEvent(
-                DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
+          userMgmntAuditHelper.logEvent(
+              DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
 
-            if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-              userMgmntAuditHelper.logEvent(PARTICIPANT_DATA_DELETED, auditRequest);
-            }
-
-          } else {
-
-            Map<String, String> map =
-                Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
-
-            userMgmntAuditHelper.logEvent(
-                DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
+          if (retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+            userMgmntAuditHelper.logEvent(PARTICIPANT_DATA_DELETED, auditRequest);
           }
-        }
-      } else {
-        retVal = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
-      }
-      if (retVal != null
-          && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
-        returnVal = userProfileManagementDao.deActivateAcct(userId, deleteData, userDetailsId);
 
-        if (returnVal) {
-          message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
         } else {
-          message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
+
+          Map<String, String> map =
+              Collections.singletonMap("delete_or_retain", CommonConstants.RETAIN);
+
+          userMgmntAuditHelper.logEvent(
+              DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL, auditRequest, map);
         }
       }
+    } else {
+      retVal = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+    }
+    if (retVal != null
+        && retVal.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
 
-      AuditLogEvent auditEvent =
-          returnVal ? USER_ACCOUNT_DEACTIVATED : USER_ACCOUNT_DEACTIVATION_FAILED;
-      userMgmntAuditHelper.logEvent(auditEvent, auditRequest);
+      userProfileManagementDao.deactivateAcct(userId, deleteData, userDetailsId);
+
+      UserDetailsEntity userDetailsEntity = optUserDetails.get();
+      userDetailsEntity.setStatus(UserStatus.DEACTIVATE_PENDING.getValue());
+      userDetailsRepository.saveAndFlush(userDetailsEntity);
+
+      userManagementUtil.deleteUserInfoInAuthServer(userId);
+
+      // change the status from DEACTIVATE_PENDING to DEACTIVATED
+      userProfileManagementDao.deactivateUserAccount(userId);
+      message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+
+      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATED, auditRequest);
+    } else {
+      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATION_FAILED, auditRequest);
     }
 
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");

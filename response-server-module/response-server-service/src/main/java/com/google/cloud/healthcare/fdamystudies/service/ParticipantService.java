@@ -8,7 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
 
 public interface ParticipantService {

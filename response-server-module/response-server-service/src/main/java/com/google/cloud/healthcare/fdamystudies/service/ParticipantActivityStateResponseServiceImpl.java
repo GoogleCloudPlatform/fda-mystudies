@@ -14,7 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityBean;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantActivitiesDao;
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesBo;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
