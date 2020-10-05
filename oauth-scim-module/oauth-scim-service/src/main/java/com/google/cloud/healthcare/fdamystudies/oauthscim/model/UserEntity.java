@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.model;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.ID_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,7 +42,7 @@ public class UserEntity {
   private String id;
 
   @ToString.Exclude
-  @Column(name = "user_id", updatable = false, length = 64, unique = true)
+  @Column(name = "user_id", updatable = false, length = ID_LENGTH, unique = true)
   private String userId;
 
   @Column(
@@ -52,14 +53,14 @@ public class UserEntity {
   private Timestamp created;
 
   @ToString.Exclude
-  @Column(name = "temp_reg_id", nullable = true, length = 64, unique = true)
+  @Column(name = "temp_reg_id", nullable = true, length = ID_LENGTH, unique = true)
   private String tempRegId;
 
   @ToString.Exclude
   @Column(name = "email", nullable = false, length = EMAIL_LENGTH)
   private String email;
 
-  @Column(name = "app_id", nullable = false, length = 100)
+  @Column(name = "app_id", nullable = false, length = ID_LENGTH)
   private String appId;
 
   @ToString.Exclude
