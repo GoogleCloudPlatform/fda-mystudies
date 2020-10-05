@@ -7,8 +7,8 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import {finalize} from 'rxjs/operators';
-import {Observable, OperatorFunction, throwError} from 'rxjs';
+import {filter, finalize, switchMap, take} from 'rxjs/operators';
+import {BehaviorSubject, Observable, OperatorFunction, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
 import {getMessage} from '../shared/error.codes.enum';
@@ -16,8 +16,13 @@ import {AuthService} from '../service/auth.service';
 import {ApiResponse} from '../entity/api.response.model';
 import {environment} from 'src/environments/environment';
 import {CookieService} from 'ngx-cookie-service';
+import {Tokens} from '../shared/auth-server-response';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  private isRefreshing = false;
+  private readonly refreshTokenSubject: BehaviorSubject<
+    unknown
+  > = new BehaviorSubject<unknown>(null);
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
@@ -33,12 +38,55 @@ export class AuthInterceptor implements HttpInterceptor {
 
     if (!this.authService.hasCredentials()) {
       return next.handle(req).pipe(
-        this.handleError(),
+        this.handleError(req, next),
         finalize(() => {
           void this.spinner.hide();
         }),
       );
     }
+
+    return next.handle(this.setHeaders(req)).pipe(
+      this.handleError(req, next),
+      finalize(() => {
+        void this.spinner.hide();
+      }),
+    );
+  }
+  private handle401Error(request: HttpRequest<unknown>, next: HttpHandler) {
+    console.log('I am here');
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null);
+      return this.authService.refreshToken().pipe(
+        switchMap((authServerResponse: Tokens) => {
+          this.isRefreshing = false;
+          this.refreshTokenSubject.next(authServerResponse.access_token);
+          sessionStorage.setItem(
+            'accessToken',
+            authServerResponse.access_token,
+          );
+          sessionStorage.setItem(
+            'refreshToken',
+            authServerResponse.refresh_token,
+          );
+          return next.handle(this.setHeaders(request)).pipe(
+            catchError((error) => {
+              return throwError(error);
+            }),
+          );
+        }),
+      );
+    } else {
+      return this.refreshTokenSubject.pipe(
+        filter((token) => token !== null),
+        take(1),
+        // switchMap((jwt) => {
+        //   return next.handle(this.setHeaders(request));
+        // }),
+      );
+    }
+  }
+  private setHeaders(req: HttpRequest<unknown>) {
     if (req.url.includes(`${environment.authServerUrl}`)) {
       const headers = req.headers
         .set('Accept', 'application/json')
@@ -52,13 +100,7 @@ export class AuthInterceptor implements HttpInterceptor {
       if (!req.headers.has('Content-Type')) {
         headers.set('Content-Type', 'application/x-www-form-urlencoded');
       }
-      const authReq = req.clone({headers});
-      return next.handle(authReq).pipe(
-        this.handleError(),
-        finalize(() => {
-          void this.spinner.hide();
-        }),
-      );
+      return req.clone({headers});
     } else {
       const headers = req.headers
         .set('userId', sessionStorage.getItem('userId') || '')
@@ -69,19 +111,21 @@ export class AuthInterceptor implements HttpInterceptor {
       if (!req.headers.has('Content-Type')) {
         req.headers.set('Content-Type', 'application/json');
       }
-      const authReq = req.clone({headers});
-      return next.handle(authReq).pipe(
-        this.handleError(),
-        finalize(() => {
-          void this.spinner.hide();
-        }),
-      );
+      return req.clone({headers});
     }
   }
-  handleError<T>(): OperatorFunction<T, T> {
+
+  handleError<T>(
+    request: HttpRequest<unknown>,
+    next: HttpHandler,
+  ): OperatorFunction<T, T> {
     return catchError(
       (err: unknown): Observable<T> => {
         if (err instanceof HttpErrorResponse) {
+          console.log(err.status);
+          if (err.status === 401) {
+            this.handle401Error(request, next);
+          }
           if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
           } else {

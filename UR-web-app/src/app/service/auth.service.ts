@@ -10,6 +10,7 @@ import {UserService} from './user.service';
 import {v4 as uuidv4} from 'uuid';
 import getPkce from 'oauth-pkce';
 import {Observable} from 'rxjs';
+import {Tokens} from '../shared/auth-server-response';
 @Injectable({providedIn: 'root'})
 export class AuthService {
   pkceLength = 43;
@@ -49,6 +50,7 @@ export class AuthService {
       .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.redirectUrl)
       .set('state', uuidv4())
+      .set('env', 'localhost')
       .toString();
     window.location.href = `${environment.loginUrl}?${params}`;
   }
@@ -91,6 +93,39 @@ export class AuthService {
       params.toString(),
       options,
     );
+  }
+
+  refreshToken(): Observable<unknown> {
+    const options = {
+      headers: new HttpHeaders({
+        /* eslint-disable @typescript-eslint/naming-convention */
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+        'correlationId': sessionStorage.getItem('correlationId') || '',
+        'appId': this.appId,
+        'mobilePlatform': this.mobilePlatform,
+      }),
+    };
+    const params = new HttpParams()
+      .set(`grant_type`, 'refresh_token')
+      .set(`refresh_token`, this.getRefreshToken())
+      .set('redirect_uri', environment.redirectUrl)
+      .set('userId', this.getAuthUserId())
+      .set('code_verifier', sessionStorage.getItem('pkceVerifier') || '');
+    return this.http.post<unknown>(
+      `${environment.authServerUrl}/oauth2/token`,
+      params.toString(),
+      options,
+    );
+  }
+
+  private getRefreshToken() {
+    return sessionStorage.getItem('refreshToken') || '';
+  }
+
+  addTokens(authServerResponse: Tokens): void {
+    sessionStorage.setItem('accessToken', authServerResponse.access_token);
+    sessionStorage.setItem('refreshToken', authServerResponse.refresh_token);
   }
 
   getUserDetails(): void {
