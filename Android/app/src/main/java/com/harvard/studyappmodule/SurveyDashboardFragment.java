@@ -28,7 +28,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -473,10 +472,8 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 calendarEnd.add(Calendar.DATE, -1);
                 fromDayVal = simpleDateFormat.format(calendarStart.getTime());
                 toDayVal = simpleDateFormat.format(calendarEnd.getTime());
-                SimpleDateFormat dateFormatForDashboardCurrentDayOut =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                changeDateLabel.setText(
-                    dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
+                SimpleDateFormat dateFormatForDashboardCurrentDayOut = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                changeDateLabel.setText(dateFormatForDashboardCurrentDayOut.format(calendarStart.getTime()));
 
               } catch (ParseException e) {
                 Logger.log(e);
@@ -494,8 +491,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 calendarEnd.add(Calendar.DATE, -7);
                 fromDayVal = dateFormatForApi.format(calendarStart.getTime());
                 toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 changeDateLabel.setText(
                     simpleDateFormat.format(calendarStart.getTime())
                         + " - "
@@ -516,8 +512,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                 calendarEnd.add(Calendar.MONTH, -1);
                 fromDayVal = dateFormatForApi.format(calendarStart.getTime());
                 toDayVal = dateFormatForApi.format(calendarEnd.getTime());
-                SimpleDateFormat dateFormatForChartAndStat =
-                    AppController.getDateFormatForChartAndStat();
+                SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
                 changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
 
               } catch (ParseException e) {
@@ -534,8 +529,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
 
             if (dateType.equalsIgnoreCase(DAY)) {
               try {
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
                 Date selectedEndDate = dateFormatForApi.parse(toDayVal);
@@ -557,8 +551,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
               }
             } else if (dateType.equalsIgnoreCase(WEEK)) {
               try {
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte = dateFormatForApi.parse(fromDayVal);
                 Date selectedEndDate = dateFormatForApi.parse(toDayVal);
@@ -591,8 +584,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             } else if (dateType.equalsIgnoreCase(MONTH)) {
               try {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
-                SimpleDateFormat dateFormatForChartAndStat =
-                    AppController.getDateFormatForChartAndStat();
+                SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
                 Date selectedStartDAte = simpleDateFormat.parse(fromDayVal);
                 Date selectedEndDate = simpleDateFormat.parse(toDayVal);
                 Calendar calendarStart = Calendar.getInstance();
@@ -605,8 +597,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
                   fromDayVal = simpleDateFormat.format(calendarStart.getTime());
                   toDayVal = simpleDateFormat.format(calendarEnd.getTime());
 
-                  changeDateLabel.setText(
-                      dateFormatForChartAndStat.format(calendarStart.getTime()));
+                  changeDateLabel.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
                   addViewStatisticsValuesRefresh();
                 }
               } catch (ParseException e) {
@@ -693,12 +684,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   }
 
   private void saveBitmap(Bitmap bitmap) {
-    String root;
-    if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
-      root = Environment.getExternalStorageDirectory().getAbsolutePath();
-    } else {
-      root = context.getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
-    }
+    String root = Environment.getExternalStorageDirectory().toString();
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
     String fname = ((SurveyActivity) context).getTitle1() + "_Dashboard.png";
@@ -733,8 +719,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     try {
       int month = currentMonth + 1;
       String originDate = currentDay + " " + month + " " + currentYear;
-      SimpleDateFormat dateFormatForDashboardCurrentDay =
-          AppController.getDateFormatForDashboardCurrentDay();
+      SimpleDateFormat dateFormatForDashboardCurrentDay = AppController.getDateFormatForDashboardCurrentDay();
       SimpleDateFormat formatOut = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
       SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
       Calendar calendar = Calendar.getInstance();
@@ -1185,8 +1170,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar1.set(Calendar.SECOND, 59);
     calendar1.set(Calendar.MILLISECOND, 999);
     toDayVal = dateFormatForApi.format(calendar1.getTime());
-    SimpleDateFormat simpleDateFormat =
-        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     changeDateLabel.setText(simpleDateFormat.format(calendar.getTime()));
     setColorForSelectedDayMonthYear(dayLayout);
     dateType = DAY;
@@ -1209,8 +1193,7 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
     calendar.set(Calendar.MILLISECOND, 999);
     toDayVal = dateFormatForApi.format(calendar.getTime());
 
-    SimpleDateFormat simpleDateFormat =
-        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     String text =
         simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date());
     changeDateLabel.setText(text);

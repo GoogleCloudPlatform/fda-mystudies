@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -255,14 +254,8 @@ public class ConsentCompletedActivity extends AppCompatActivity {
   }
 
   public File copy(File src) throws IOException {
-    String root;
-    if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
-      root = Environment.getExternalStorageDirectory().getAbsolutePath();
-    } else {
-      root = getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
-    }
     String primaryStoragePath =
-        root
+        Environment.getExternalStorageDirectory().getAbsolutePath()
             + "/"
             + AppController.getHelperSharedPreference()
                 .readPreference(ConsentCompletedActivity.this, getString(R.string.title), "")

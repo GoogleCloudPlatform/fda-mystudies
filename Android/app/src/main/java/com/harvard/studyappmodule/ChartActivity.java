@@ -24,7 +24,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -561,12 +560,7 @@ public class ChartActivity extends AppCompatActivity {
   }
 
   private void saveBitmap(Bitmap bitmap) {
-    String root;
-    if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
-      root = Environment.getExternalStorageDirectory().getAbsolutePath();
-    } else {
-      root = getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
-    }
+    String root = Environment.getExternalStorageDirectory().toString();
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
     String fname = getIntent().getStringExtra("studyName") + "_Chart.png";
@@ -659,8 +653,7 @@ public class ChartActivity extends AppCompatActivity {
 
       final ArrayList<String> runtxt = new ArrayList<>();
 
-      SimpleDateFormat runchartdate =
-          AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+      SimpleDateFormat runchartdate = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
       for (int i = 0; i < lists.size(); i++) {
         runtxt.add(
             runchartdate.format(lists.get(i).get(0).getStartDate())
@@ -838,10 +831,8 @@ public class ChartActivity extends AppCompatActivity {
                     (int) leftArrow.getTag(), simpleDateFormat.format(calendarStart.getTime()));
                 toDayVals.set(
                     (int) leftArrow.getTag(), simpleDateFormat.format(calendarEnd.getTime()));
-                SimpleDateFormat dateFormatForDashboardAndChartCurrentDayOut =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
-                textView1.setText(
-                    dateFormatForDashboardAndChartCurrentDayOut.format(calendarStart.getTime()));
+                SimpleDateFormat dateFormatForDashboardAndChartCurrentDayOut = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                textView1.setText(dateFormatForDashboardAndChartCurrentDayOut.format(calendarStart.getTime()));
                 refreshchartdata(
                     "" + textView1.getTag(),
                     calendarStart.getTime(),
@@ -860,9 +851,9 @@ public class ChartActivity extends AppCompatActivity {
               try {
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte =
-                    dateFormatForApi.parse(fromDayVals.get((int) leftArrow.getTag()));
+                        dateFormatForApi.parse(fromDayVals.get((int) leftArrow.getTag()));
                 Date selectedEndDate =
-                    dateFormatForApi.parse(toDayVals.get((int) leftArrow.getTag()));
+                        dateFormatForApi.parse(toDayVals.get((int) leftArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.DATE, -7);
@@ -873,8 +864,7 @@ public class ChartActivity extends AppCompatActivity {
                     (int) leftArrow.getTag(), dateFormatForApi.format(calendarStart.getTime()));
                 toDayVals.set(
                     (int) leftArrow.getTag(), dateFormatForApi.format(calendarEnd.getTime()));
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 textView1.setText(
                     simpleDateFormat.format(calendarStart.getTime())
                         + " - "
@@ -897,9 +887,9 @@ public class ChartActivity extends AppCompatActivity {
               try {
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte =
-                    dateFormatForApi.parse(fromDayVals.get((int) leftArrow.getTag()));
+                        dateFormatForApi.parse(fromDayVals.get((int) leftArrow.getTag()));
                 Date selectedEndDate =
-                    dateFormatForApi.parse(toDayVals.get((int) leftArrow.getTag()));
+                        dateFormatForApi.parse(toDayVals.get((int) leftArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.MONTH, -1);
@@ -910,8 +900,7 @@ public class ChartActivity extends AppCompatActivity {
                     (int) leftArrow.getTag(), dateFormatForApi.format(calendarStart.getTime()));
                 toDayVals.set(
                     (int) leftArrow.getTag(), dateFormatForApi.format(calendarEnd.getTime()));
-                SimpleDateFormat dateFormatForChartAndStat =
-                    AppController.getDateFormatForChartAndStat();
+                SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
                 textView1.setText(dateFormatForChartAndStat.format(calendarStart.getTime()));
                 refreshchartdata(
                     "" + textView1.getTag(),
@@ -931,9 +920,9 @@ public class ChartActivity extends AppCompatActivity {
               try {
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte =
-                    dateFormatForApi.parse(fromDayVals.get((int) leftArrow.getTag()));
+                        dateFormatForApi.parse(fromDayVals.get((int) leftArrow.getTag()));
                 Date selectedEndDate =
-                    dateFormatForApi.parse(toDayVals.get((int) leftArrow.getTag()));
+                        dateFormatForApi.parse(toDayVals.get((int) leftArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.YEAR, -1);
@@ -971,13 +960,12 @@ public class ChartActivity extends AppCompatActivity {
 
             if (dateTypeArray.get((int) rightArrow.getTag()).equalsIgnoreCase(DAY)) {
               try {
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte =
-                    dateFormatForApi.parse(fromDayVals.get((int) rightArrow.getTag()));
+                        dateFormatForApi.parse(fromDayVals.get((int) rightArrow.getTag()));
                 Date selectedEndDate =
-                    dateFormatForApi.parse(toDayVals.get((int) rightArrow.getTag()));
+                        dateFormatForApi.parse(toDayVals.get((int) rightArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.DATE, 1);
@@ -1008,13 +996,12 @@ public class ChartActivity extends AppCompatActivity {
               }
             } else if (dateTypeArray.get((int) rightArrow.getTag()).equalsIgnoreCase(WEEK)) {
               try {
-                SimpleDateFormat simpleDateFormat =
-                    AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+                SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
                 SimpleDateFormat dateFormatForApi = AppController.getDateFormatForApi();
                 Date selectedStartDAte =
-                    dateFormatForApi.parse(fromDayVals.get((int) rightArrow.getTag()));
+                        dateFormatForApi.parse(fromDayVals.get((int) rightArrow.getTag()));
                 Date selectedEndDate =
-                    dateFormatForApi.parse(toDayVals.get((int) rightArrow.getTag()));
+                        dateFormatForApi.parse(toDayVals.get((int) rightArrow.getTag()));
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(selectedStartDAte);
                 calendarStart.add(Calendar.DATE, 7);
@@ -1067,8 +1054,7 @@ public class ChartActivity extends AppCompatActivity {
             } else if (dateTypeArray.get((int) rightArrow.getTag()).equalsIgnoreCase(MONTH)) {
               try {
                 SimpleDateFormat simpleDateFormat = AppController.getDateFormatForApi();
-                SimpleDateFormat dateFormatForChartAndStat =
-                    AppController.getDateFormatForChartAndStat();
+                SimpleDateFormat dateFormatForChartAndStat = AppController.getDateFormatForChartAndStat();
                 Date selectedStartDAte =
                     simpleDateFormat.parse(fromDayVals.get((int) rightArrow.getTag()));
                 Date selectedEndDate =
@@ -1418,8 +1404,7 @@ public class ChartActivity extends AppCompatActivity {
     String toDayVal = dateFormatForApi.format(calendar1.getTime());
     toDayVals.add(toDayVal);
     endtime = calendar1.getTime();
-    SimpleDateFormat simpleDateFormat =
-        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     textView1.setText(simpleDateFormat.format(calendar.getTime()));
     dateType = DAY;
     dateTypeArray.add(DAY);
@@ -1436,8 +1421,7 @@ public class ChartActivity extends AppCompatActivity {
     String fromDayVal = dateFormatForApi.format(calendar.getTime());
     starttime = calendar.getTime();
     fromDayVals.add(fromDayVal);
-    SimpleDateFormat simpleDateFormat =
-        AppController.getDateFormatForDashboardAndChartCurrentDayOut();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatForDashboardAndChartCurrentDayOut();
     textView1.setText(
         simpleDateFormat.format(calendar.getTime()) + " - " + simpleDateFormat.format(new Date()));
     calendar.add(Calendar.DATE, 6);
