@@ -25,7 +25,7 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityInfoData;
-import com.harvard.usermodule.webservicemodel.RefreshToken;
+import com.harvard.usermodule.webservicemodel.TokenData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
@@ -462,16 +462,17 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
       response = "success";
 
       if (forRefreshToken) {
-        obj = parseJson(responseModel, RefreshToken.class);
-        RefreshToken refreshToken = (RefreshToken) obj;
+        obj = parseJson(responseModel, TokenData.class);
+        TokenData refreshToken = (TokenData) obj;
         if (refreshToken != null) {
           AppController.getHelperSharedPreference()
-              .writePreference(context, context.getString(R.string.auth), refreshToken.getAuth());
+              .writePreference(
+                  context, context.getString(R.string.auth), refreshToken.getAccess_token());
           AppController.getHelperSharedPreference()
               .writePreference(
                   context,
                   context.getString(R.string.refreshToken),
-                  refreshToken.getRefreshToken());
+                  refreshToken.getRefresh_token());
         } else {
           response = "error";
         }
