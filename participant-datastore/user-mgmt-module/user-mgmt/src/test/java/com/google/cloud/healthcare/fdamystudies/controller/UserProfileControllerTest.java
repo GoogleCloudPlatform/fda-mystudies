@@ -72,11 +72,13 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   private static final String USER_PROFILE_PATH = "/participant-user-datastore/userProfile";
 
-  private static final String UPDATE_USER_PROFILE_PATH = "/participant-user-datastore/updateUserProfile";
+  private static final String UPDATE_USER_PROFILE_PATH =
+      "/participant-user-datastore/updateUserProfile";
 
   private static final String DEACTIVATE_PATH = "/participant-user-datastore/deactivate";
 
-  private static final String RESEND_CONFIRMATION_PATH = "/participant-user-datastore/resendConfirmation";
+  private static final String RESEND_CONFIRMATION_PATH =
+      "/participant-user-datastore/resendConfirmation";
 
   @Autowired private UserProfileController profileController;
 
@@ -225,7 +227,8 @@ public class UserProfileControllerTest extends BaseMockIT {
         1,
         postRequestedFor(
             urlEqualTo(
-                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true")));
+                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true"
+            )));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);
