@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -258,13 +259,13 @@ public class PdfDisplayActivity extends AppCompatActivity
 
   public void sharePdfCreation() {
     try {
-      String temPdfPath =
-          Environment.getExternalStorageDirectory().getAbsolutePath()
-              + "/"
-              + title
-              + "_"
-              + getString(R.string.signed_consent)
-              + ".pdf";
+      String root;
+      if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
+        root = Environment.getExternalStorageDirectory().getAbsolutePath();
+      } else {
+        root = getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
+      }
+      String temPdfPath = root + "/" + title + "_" + getString(R.string.signed_consent) + ".pdf";
       File file = new File(temPdfPath);
       if (!file.exists()) {
         file.createNewFile();

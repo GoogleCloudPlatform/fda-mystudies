@@ -16,6 +16,7 @@
 package com.harvard.studyappmodule.custom.question;
 
 import android.media.MediaRecorder;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -49,11 +50,18 @@ public class AudioQuestionbody implements StepBody {
     LinearLayout linearLayout = new LinearLayout(inflater.getContext());
     linearLayout.setOrientation(LinearLayout.VERTICAL);
     Toast.makeText(inflater.getContext(), R.string.recording, Toast.LENGTH_SHORT).show();
-    audioSavePathInDevice =
-        Environment.getExternalStorageDirectory().getAbsolutePath()
-            + "/FDA/"
-            + createRandomAudioFileName()
-            + ".3gp";
+
+    String root;
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+      root = Environment.getExternalStorageDirectory().getAbsolutePath();
+    } else {
+      root =
+          inflater
+              .getContext()
+              .getExternalFilesDir(inflater.getContext().getString(R.string.app_name))
+              .getAbsolutePath();
+    }
+    audioSavePathInDevice = root + "/FDA/" + createRandomAudioFileName() + ".3gp";
     mediaRecorderReady();
 
     try {
@@ -113,7 +121,7 @@ public class AudioQuestionbody implements StepBody {
     int i = 0;
     while (i < 5) {
       stringBuilder.append(
-              randomAudioFileName.charAt(random.nextInt(randomAudioFileName.length())));
+          randomAudioFileName.charAt(random.nextInt(randomAudioFileName.length())));
 
       i++;
     }

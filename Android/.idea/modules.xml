@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android.iml" filepath="$PROJECT_DIR$/.idea/modules/Android.iml" group="Android" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android-app.iml" group="Android/app" />
       <module fileurl="file://$PROJECT_DIR$/FDA.iml" filepath="$PROJECT_DIR$/FDA.iml" />
       <module fileurl="file://E:/Project/Gitlab/FDA/FDA Sprint1.iml" filepath="E:/Project/Gitlab/FDA/FDA Sprint1.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
