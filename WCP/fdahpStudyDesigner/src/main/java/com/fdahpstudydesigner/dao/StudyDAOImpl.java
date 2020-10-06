@@ -3562,7 +3562,6 @@ public class StudyDAOImpl implements StudyDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       // check whether the consentinfo is saved for this study or not, if
@@ -4237,7 +4236,6 @@ public class StudyDAOImpl implements StudyDAO {
               studyBo.getId());
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
-      auditRequest.setUserAccessLevel(sessionObject.getAccessLevel());
       auditLogEventHelper.logEvent(auditLogEvent, auditRequest);
 
       transaction.commit();
@@ -4369,7 +4367,6 @@ public class StudyDAOImpl implements StudyDAO {
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       if (null != studyBo) {
@@ -5760,7 +5757,6 @@ public class StudyDAOImpl implements StudyDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       if (StringUtils.isNotEmpty(studyId) && StringUtils.isNotEmpty(buttonText)) {

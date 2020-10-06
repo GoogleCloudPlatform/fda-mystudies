@@ -85,7 +85,6 @@ public class UsersServiceImpl implements UsersService {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(userSession.getSessionId());
       auditRequest.setUserId(String.valueOf(userId));
-      auditRequest.setUserAccessLevel(userSession.getAccessLevel());
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
       superAdminEmailList = usersDAO.getSuperAdminList();
       userBo = usersDAO.getUserDetails(userId);
@@ -181,10 +180,6 @@ public class UsersServiceImpl implements UsersService {
     UserBO adminFullNameIfSizeOne = null;
     UserBO userBO3 = null;
     try {
-      /*AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(userSession.getSessionId());
-      auditRequest.setUserId(String.valueOf(userSession.getUserId()));
-      auditRequest.setUserAccessLevel(userSession.getAccessLevel());*/
       if (null == userBO.getUserId()) {
         addFlag = true;
         userBO2 = new UserBO();

@@ -108,7 +108,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       UUID uuid = UUID.randomUUID(); // Generates random UUID.
       auditRequest.setCorrelationId(uuid.toString().toUpperCase());
       auditRequest.setUserId(String.valueOf(userBO2.getUserId()));
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
         if (StringUtils.isBlank(userBO.getUserPassword())) {
@@ -229,7 +228,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(userId));
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       if ((newPassword != null)
           && (newPassword.contains(sesObj.getFirstName())
               || newPassword.contains(sesObj.getLastName()))) {

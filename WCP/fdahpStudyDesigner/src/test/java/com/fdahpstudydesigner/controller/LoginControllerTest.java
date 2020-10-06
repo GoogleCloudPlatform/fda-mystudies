@@ -26,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
-import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
@@ -214,18 +213,16 @@ public class LoginControllerTest extends BaseMockIT {
     verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE);
   }
 
-  private HashMap<String, Object> getSession() {
-    SessionObject session = new SessionObject();
+  public HashMap<String, Object> getSession() {
+    HashMap<String, Object> sessionAttributesMap = getSessionAttributes();
+    SessionObject session =
+        (SessionObject) sessionAttributesMap.get(FdahpStudyDesignerConstants.SESSION_OBJECT);
     session.setSessionId(UUID.randomUUID().toString());
     session.setEmail("super@gmail.com");
     session.setFirstName("firstname");
     session.setLastName("lastname");
     session.setUserId(3);
-    session.setAccessLevel(UserAccessLevel.STUDY_BUILDER_ADMIN.getValue());
-
-    HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
-    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-
-    return sessionAttributes;
+    sessionAttributesMap.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    return sessionAttributesMap;
   }
 }

@@ -93,7 +93,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setStudyId(customStudyId);
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       session = hibernateTemplate.getSessionFactory().openSession();
       if (activeTaskBo != null) {
         Integer studyId = activeTaskBo.getStudyId();

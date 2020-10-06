@@ -228,7 +228,6 @@ public class DashBoardAndProfileController {
             }
             auditRequest.setUserId(String.valueOf(userSession.getUserId()));
             auditRequest.setCorrelationId(userSession.getSessionId());
-            auditRequest.setUserAccessLevel(userSession.getAccessLevel());
             auditLogHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
           }
         }

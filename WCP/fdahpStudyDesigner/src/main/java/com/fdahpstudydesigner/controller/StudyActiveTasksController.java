@@ -93,7 +93,6 @@ public class StudyActiveTasksController {
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
@@ -503,7 +502,6 @@ public class StudyActiveTasksController {
                 .getSession()
                 .setAttribute(sessionStudyCount + "activeTaskInfoId", activeTaskInfoId.toString());
             values.put("activetask_id", activeTaskBo.getTaskTypeId().toString());
-            auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
             if (StringUtils.isNotEmpty(buttonText)
                 && buttonText.equalsIgnoreCase(FdahpStudyDesignerConstants.COMPLETED_BUTTON)) {
               auditLogEventHelper.logEvent(STUDY_ACTIVE_TASK_MARKED_COMPLETE, auditRequest, values);

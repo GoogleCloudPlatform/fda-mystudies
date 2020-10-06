@@ -275,7 +275,6 @@ public class UsersController {
         AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
         auditRequest.setCorrelationId(userSession.getSessionId());
         auditRequest.setUserId(String.valueOf(userSession.getUserId()));
-        auditRequest.setUserAccessLevel(userSession.getAccessLevel());
         msg =
             usersService.addOrUpdateUserDetails(
                 request,
@@ -331,7 +330,6 @@ public class UsersController {
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(userSession.getSessionId().toUpperCase());
       auditRequest.setUserId(String.valueOf(userSession.getUserId()));
-      auditRequest.setUserAccessLevel(userSession.getAccessLevel());
       String changePassworduserId =
           FdahpStudyDesignerUtil.isEmpty(request.getParameter("changePassworduserId"))
               ? ""
@@ -465,7 +463,6 @@ public class UsersController {
         if (StringUtils.isNotEmpty(userId)) {
           auditRequest.setCorrelationId(userSession.getSessionId().toUpperCase());
           auditRequest.setUserId(String.valueOf(userSession.getUserId()));
-          auditRequest.setUserAccessLevel(userSession.getAccessLevel());
           userBo = usersService.getUserDetails(Integer.parseInt(userId));
           if (userBo != null) {
             msg =
@@ -531,7 +528,6 @@ public class UsersController {
                   (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
               auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
               auditRequest.setCorrelationId(sesObj.getSessionId());
-              auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
               if (sesObj.getUserId().equals(userBO.getUserId())) {
                 auditLogEventHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
               } else {

@@ -25,6 +25,7 @@ package com.fdahpstudydesigner.util;
 import com.fdahpstudydesigner.bean.FormulaInfoBean;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
+import com.fdahpstudydesigner.common.UserAccessLevel;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,7 +43,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -1053,23 +1053,19 @@ public class FdahpStudyDesignerUtil {
     return generatedHash;
   }
 
-  public static String calculateAccessLevel(Set<UserPermissions> userPermission) {
-    String accessLevel = null;
+  public static String getUserAccessLevel(Set<UserPermissions> userPermission) {
     if (CollectionUtils.isNotEmpty(userPermission)) {
-      List<String> permissions = new LinkedList<>();
       for (UserPermissions up : userPermission) {
-        permissions.add(up.getPermissions());
-      }
-
-      if (permissions.contains(FdahpStudyDesignerConstants.ROLE_SUPERADMIN_NAME)) {
-        accessLevel = "Superadmin";
-      } else if (permissions.contains(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW_NAME)
-          || permissions.contains(FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT_NAME)) {
-        accessLevel = "SB Admin";
-      } else {
-        accessLevel = "App/Study Admin";
+        if (FdahpStudyDesignerConstants.ROLE_SUPERADMIN_NAME.equals(up.getPermissions())) {
+          return UserAccessLevel.SUPER_ADMIN.getValue();
+        } else if (FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_VIEW_NAME.equals(
+                up.getPermissions())
+            || FdahpStudyDesignerConstants.ROLE_MANAGE_USERS_EDIT_NAME.equals(
+                up.getPermissions())) {
+          return UserAccessLevel.STUDY_BUILDER_ADMIN.getValue();
+        }
       }
     }
-    return accessLevel;
+    return UserAccessLevel.APP_STUDY_ADMIN.getValue();
   }
 }

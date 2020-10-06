@@ -942,7 +942,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
-      auditRequest.setUserAccessLevel(sessionObject.getAccessLevel());
 
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -1078,7 +1077,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
-      auditRequest.setUserAccessLevel(sessionObject.getAccessLevel());
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
@@ -1260,7 +1258,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
       auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
-      auditRequest.setUserAccessLevel(sessionObject.getAccessLevel());
       values.put(QUESTION_ID, questionnaireId.toString());
       values.put(STEP_ID, stepId.toString());
       searchQuery =

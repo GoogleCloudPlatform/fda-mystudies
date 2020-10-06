@@ -173,7 +173,7 @@ public class UsersDAOImpl implements UsersDAO {
                         "FROM UserPermissions UPBO WHERE UPBO.permissions IN (" + permissions + ")")
                     .list());
         userBO2.setPermissionList(permissionSet);
-        userBO2.setAccessLevel(FdahpStudyDesignerUtil.calculateAccessLevel(permissionSet));
+        userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
         session.update(userBO2);
       } else {
         userBO2.setPermissionList(null);

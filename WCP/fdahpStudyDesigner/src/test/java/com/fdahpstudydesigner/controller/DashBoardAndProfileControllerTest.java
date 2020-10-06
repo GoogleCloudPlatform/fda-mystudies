@@ -19,7 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
-import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.HashMap;
@@ -120,7 +119,6 @@ public class DashBoardAndProfileControllerTest extends BaseMockIT {
     session.setFirstName(FIRST_NAME);
     session.setLastName(LAST_NAME);
     session.setUserId(USER_ID);
-    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
     sessionAttributesMap.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
     return sessionAttributesMap;
   }

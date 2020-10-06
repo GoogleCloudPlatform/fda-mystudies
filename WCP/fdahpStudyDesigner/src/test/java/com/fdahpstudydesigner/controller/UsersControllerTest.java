@@ -220,19 +220,17 @@ public class UsersControllerTest extends BaseMockIT {
     verifyAuditEventCall(NEW_USER_CREATION_FAILED);
   }
 
-  private HashMap<String, Object> getSession() {
-    SessionObject session = new SessionObject();
+  public HashMap<String, Object> getSession() {
+    HashMap<String, Object> sessionAttributesMap = getSessionAttributes();
+    SessionObject session =
+        (SessionObject) sessionAttributesMap.get(FdahpStudyDesignerConstants.SESSION_OBJECT);
     session.setSessionId(UUID.randomUUID().toString());
     session.setEmail("super@gmail.com");
     session.setFirstName("firstname");
     session.setLastName("lastname");
-    session.setAccessLevel("2");
-    session.setUserId(2);
     session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
-
-    HashMap<String, Object> sessionAttributes = new HashMap<String, Object>();
-    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
-
-    return sessionAttributes;
+    session.setUserId(2);
+    sessionAttributesMap.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    return sessionAttributesMap;
   }
 }
