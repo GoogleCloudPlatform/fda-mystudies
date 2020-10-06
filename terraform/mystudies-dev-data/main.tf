@@ -94,7 +94,7 @@ module "mystudies_dev_mystudies_consent_documents" {
 
   iam_members = [
     {
-      member = "serviceAccount:participant-consent-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:consent-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
     {

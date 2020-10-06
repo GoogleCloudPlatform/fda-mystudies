@@ -683,7 +683,7 @@ EOF
           name = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:participant-consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+            member = "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           },{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
