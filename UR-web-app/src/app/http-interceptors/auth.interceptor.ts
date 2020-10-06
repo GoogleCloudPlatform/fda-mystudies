@@ -7,7 +7,7 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import {filter, finalize, switchMap, take} from 'rxjs/operators';
+import {finalize} from 'rxjs/operators';
 import {BehaviorSubject, Observable, OperatorFunction, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ToastrService} from 'ngx-toastr';
@@ -57,51 +57,33 @@ export class AuthInterceptor implements HttpInterceptor {
   private handle401Error(request: HttpRequest<unknown>, next: HttpHandler) {
     this.isRefreshing = true;
     this.refreshTokenSubject.next(null);
-    return this.authService
-      .refreshToken()
-      .pipe(
-        switchMap((authServerResponse: AccessToken) => {
-          console.log(authServerResponse);
-          this.isRefreshing = false;
-          this.refreshTokenSubject.next(authServerResponse);
-          sessionStorage.setItem(
-            'accessToken',
-            authServerResponse.access_token,
-          );
-          sessionStorage.setItem(
-            'refreshToken',
-            authServerResponse.refresh_token,
-          );
-          return next.handle(this.setHeaders(request)).pipe(
-            catchError((error) => {
-              return throwError(error);
-            }),
-          );
-        }),
-      )
-      .subscribe(
-        (success) => {
-          console.log('success');
-          console.log(success);
-        },
-        (error) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          if (error.status === 401) {
-            sessionStorage.clear();
-            void this.router.navigate(['/']);
-          }
-        },
-      );
-    // }
-    //  else {
-    //   return this.refreshTokenSubject.pipe(
-    //     filter((token) => token !== null),
-    //     take(1),
-    //     // switchMap((jwt) => {
-    //     //   return next.handle(this.setHeaders(request));
-    //     // }),
-    //   );
-    // }
+    return this.authService.refreshToken().subscribe(
+      (authServerResponse: AccessToken) => {
+        this.refreshTokenSubject.next(authServerResponse);
+        sessionStorage.setItem('accessToken', authServerResponse.access_token);
+        sessionStorage.setItem(
+          'refreshToken',
+          authServerResponse.refresh_token,
+        );
+        return next.handle(this.setHeaders(request)).pipe(
+          catchError((error) => {
+            return throwError(error);
+          }),
+        );
+      },
+      (error) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const customError = error.error as ApiResponse;
+        if (getMessage(customError.error_code)) {
+          this.toasterService.error(getMessage(customError.error_code));
+        }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (error.status === 401) {
+          sessionStorage.clear();
+          void this.router.navigate(['/']);
+        }
+      },
+    );
   }
   private setHeaders(req: HttpRequest<unknown>) {
     if (req.url.includes(`${environment.authServerUrl}`)) {
@@ -110,6 +92,11 @@ export class AuthInterceptor implements HttpInterceptor {
         .set('correlationId', sessionStorage.getItem('correlationId') || '')
         .set('appId', this.authService.appId)
         .set('mobilePlatform', this.authService.mobilePlatform)
+        .set('Access-Control-Allow-Origin', '*')
+        .set(
+          'Access-Control-Allow-Headers',
+          'Origin, X-Requested-With, Content-Type, Accept',
+        )
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
@@ -121,6 +108,11 @@ export class AuthInterceptor implements HttpInterceptor {
     } else {
       const headers = req.headers
         .set('userId', sessionStorage.getItem('userId') || '')
+        .set('Access-Control-Allow-Origin', '*')
+        .set(
+          'Access-Control-Allow-Headers',
+          'Origin, X-Requested-With, Content-Type, Accept',
+        )
         .set(
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
@@ -139,11 +131,9 @@ export class AuthInterceptor implements HttpInterceptor {
     return catchError(
       (err: unknown): Observable<T> => {
         if (err instanceof HttpErrorResponse) {
-          console.log(err.status);
-          if (err.status === 0) {
+          if (err.status === 401) {
             this.handle401Error(request, next);
-          }
-          if (err.error instanceof ErrorEvent) {
+          } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
           } else {
             const customError = err.error as ApiResponse;
