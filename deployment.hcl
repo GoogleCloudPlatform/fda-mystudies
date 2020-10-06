@@ -600,22 +600,22 @@ resource "google_firebase_project" "firebase" {
 }
 
 # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
-# resource "google_firestore_index" "activities_index" {
-#   project    = module.project.project_id
-#   collection = "Activities"
-#   fields {
-#     field_path = "participantId"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "createdTimestamp"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "__name__"
-#     order      = "ASCENDING"
-#   }
-# }
+resource "google_firestore_index" "activities_index" {
+  project    = module.project.project_id
+  collection = "Activities"
+  fields {
+    field_path = "participantId"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "createdTimestamp"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "__name__"
+    order      = "ASCENDING"
+  }
+}
 EOF
     }
   }
@@ -639,7 +639,7 @@ template "project_data" {
       }
     }
     # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
-    /* terraform_addons = {
+    terraform_addons = {
       raw_config = <<EOF
 data "google_secret_manager_secret_version" "mystudies_db_default_password" {
   provider = google-beta
@@ -647,16 +647,16 @@ data "google_secret_manager_secret_version" "mystudies_db_default_password" {
   project = "{{$prefix}}-{{$env}}-secrets"
 }
 EOF
-    } */
+    }
     resources = {
       # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
-      # cloud_sql_instances = [{
-      #   name               = "mystudies"
-      #   type               = "mysql"
-      #   network_project_id = "{{$prefix}}-{{$env}}-networks"
-      #   network            = "{{$prefix}}-{{$env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
-      # }]
+      cloud_sql_instances = [{
+        name               = "mystudies"
+        type               = "mysql"
+        network_project_id = "{{$prefix}}-{{$env}}-networks"
+        network            = "{{$prefix}}-{{$env}}-network"
+        user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
+      }]
       iam_members = {
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",

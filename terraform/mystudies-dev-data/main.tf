@@ -24,6 +24,12 @@ terraform {
   }
 }
 
+data "google_secret_manager_secret_version" "mystudies_db_default_password" {
+  provider = google-beta
+  secret   = "auto-mystudies-sql-default-user-password"
+  project  = "mystudies-dev-secrets"
+}
+
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
@@ -52,6 +58,20 @@ module "mystudies_dev_mystudies_firestore_data" {
   dataset_id = "mystudies_dev_mystudies_firestore_data"
   project_id = module.project.project_id
   location   = "us-east1"
+}
+
+module "mystudies" {
+  source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
+  version = "~> 3.2.0"
+
+  name              = "mystudies"
+  project_id        = module.project.project_id
+  region            = "us-east1"
+  zone              = "b"
+  availability_type = "REGIONAL"
+  database_version  = "MYSQL_5_7"
+  vpc_network       = "projects/mystudies-dev-networks/global/networks/mystudies-dev-network"
+  user_password     = data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data
 }
 
 module "project_iam_members" {

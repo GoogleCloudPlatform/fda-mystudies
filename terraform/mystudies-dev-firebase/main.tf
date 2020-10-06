@@ -30,22 +30,22 @@ resource "google_firebase_project" "firebase" {
 }
 
 # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
-# resource "google_firestore_index" "activities_index" {
-#   project    = module.project.project_id
-#   collection = "Activities"
-#   fields {
-#     field_path = "participantId"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "createdTimestamp"
-#     order      = "ASCENDING"
-#   }
-#   fields {
-#     field_path = "__name__"
-#     order      = "ASCENDING"
-#   }
-# }
+resource "google_firestore_index" "activities_index" {
+  project    = module.project.project_id
+  collection = "Activities"
+  fields {
+    field_path = "participantId"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "createdTimestamp"
+    order      = "ASCENDING"
+  }
+  fields {
+    field_path = "__name__"
+    order      = "ASCENDING"
+  }
+}
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 module "project" {
