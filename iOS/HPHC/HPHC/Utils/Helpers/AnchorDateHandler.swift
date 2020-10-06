@@ -207,7 +207,6 @@ class AnchorDateHandler {
 
     let headers: [String: String] = [
       "accessToken": User.currentUser.authToken ?? "",
-      "clientToken": User.currentUser.clientToken ?? "",
       "userId": User.currentUser.userId ?? "",
     ]
 

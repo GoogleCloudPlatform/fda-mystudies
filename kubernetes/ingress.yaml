@@ -9,7 +9,7 @@ spec:
   rules:
     - http:
         paths:
-          - path: /AuthServer/*
+          - path: /oauth-scim-module/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
@@ -40,4 +40,16 @@ spec:
           - path: /fdaResources/*
             backend:
               serviceName: study-designer-np
+              servicePort: 50000
+          - path: /hydra/*
+              backend:
+                serviceName: hydra-np
+                servicePort: 4444
+          - path: /#/*
+            backend:
+              serviceName: participant-manager-app-np
+              servicePort: 50000
+          - path: /participant-manager-service/*
+            backend:
+              serviceName: participant-manager-np
               servicePort: 50000

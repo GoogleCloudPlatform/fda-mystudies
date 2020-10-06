@@ -7,9 +7,9 @@ export interface ManageLocations {
 export interface Location extends ApiResponse {
   locationId: string;
 
-  name: string;
+  name?: string;
 
-  customId: string;
+  customId?: string;
 
   description: string;
 
@@ -25,7 +25,7 @@ export interface StatusUpdateRequest {
 }
 
 export interface FieldUpdateRequest {
-  name: string;
+  name?: string;
   description: string;
 }
 

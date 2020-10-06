@@ -33,6 +33,11 @@ struct ApiError: ErrorPresentable {
       code: nil
     )
   }
+
+  /// Data parsing issue.
+  static var unwrapError: ApiError {
+    return ApiError(title: "Something bad happened", message: "please try again later.", code: nil)
+  }
 }
 
 enum HTTPError: Int {

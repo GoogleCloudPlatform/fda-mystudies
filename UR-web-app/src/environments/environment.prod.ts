@@ -1,3 +1,4 @@
+// Replace the example domain name with your deployed address.
 export const environment = {
   production: true,
   baseUrl: 'http://35.193.185.224:8093/participant-manager-service',

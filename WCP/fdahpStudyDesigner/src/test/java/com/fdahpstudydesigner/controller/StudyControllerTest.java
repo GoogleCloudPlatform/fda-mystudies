@@ -13,13 +13,21 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_STUDY_CRE
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ACCESSED_IN_EDIT_MODE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_BASIC_INFO_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COMPREHENSION_TEST_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_CONTENT_NEW_VERSION_PUBLISHED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_CONSENT_SECTIONS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_ELIGIBILITY_SECTION_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LAUNCHED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_LIST_VIEWED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SEND_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SEND_OPERATION_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_METADATA_SENT_TO_RESPONSE_DATASTORE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_NOTIFICATION_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NEW_RESOURCE_CREATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_NOTIFICATIONS_SECTION_MARKED_COMPLETE;
@@ -39,12 +47,16 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTING
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.ConsentBo;
 import com.fdahpstudydesigner.bo.ConsentInfoBo;
@@ -63,8 +75,15 @@ import java.util.List;
 import java.util.UUID;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.web.client.support.RestGatewaySupport;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class StudyControllerTest extends BaseMockIT {
 
   private static final String STUDY_ID_VALUE = "678574";
@@ -74,6 +93,12 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String USER_ID_VALUE = "4878641";
 
   private static final int STUDY_ID_INT_VALUE = 678574;
+
+  private static final String STUDIES_META_DATA_URI = "/studies/studymetadata";
+
+  private static final String STUDY_META_DATA_URI = "/studymetadata";
+
+  private static final String TEST_STUDY_ID_STRING = "678680";
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
@@ -920,5 +945,208 @@ public class StudyControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isOk());
     verifyAuditEventCall(STUDY_COMPREHENSION_TEST_SECTION_SAVED_OR_UPDATED);
+  }
+
+  @Test
+  public void shouldMarkStudyComprehensionTestSectionAsComplete() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ConsentBo consentBo = new ConsentBo();
+    consentBo.setStudyId(STUDY_ID_INT_VALUE);
+    consentBo.setComprehensionTest("complete");
+    consentBo.setConsentDocContent("doc");
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.SAVE_CONSENT_REVIEW_AND_ECONSENT_INFO.getPath())
+                .param("consentInfo", asJsonString(consentBo))
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+    verifyAuditEventCall(STUDY_COMPREHENSION_TEST_SECTION_MARKED_COMPLETE);
+  }
+
+  @Test
+  public void shouldViewStudyList() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.STUDY_LIST.getPath())
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyAuditEventCall(STUDY_LIST_VIEWED);
+  }
+
+  @Test
+  public void shouldPublishStudyConsentContent() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt("4878642"));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678599");
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
+                .param(FdahpStudyDesignerConstants.STUDY_ID, "678580")
+                .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "updatesId")
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+    verifyAuditEventCall(STUDY_CONSENT_DOCUMENT_NEW_VERSION_PUBLISHED);
+  }
+
+  @Test
+  public void shouldPublishStudyConsentDoc() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt("4878642"));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678999");
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
+                .param(FdahpStudyDesignerConstants.STUDY_ID, TEST_STUDY_ID_STRING)
+                .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "updatesId")
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    verifyAuditEventCall(STUDY_CONSENT_CONTENT_NEW_VERSION_PUBLISHED);
+  }
+
+  @Test
+  public void shouldSendStudyMetadataToParticipantAndResponseDatastore() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, "678999");
+
+    RestGatewaySupport gateway = new RestGatewaySupport();
+    gateway.setRestTemplate(restTemplate);
+    mockServer = MockRestServiceServer.createServer(gateway);
+
+    StudyDetailsBean studyDetailsBean = new StudyDetailsBean();
+    studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
+
+    mockServer
+        .expect(requestTo(STUDIES_META_DATA_URI))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(studyDetailsBean)));
+
+    mockServer
+        .expect(requestTo(STUDY_META_DATA_URI))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(studyDetailsBean)));
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
+                .param(FdahpStudyDesignerConstants.STUDY_ID, TEST_STUDY_ID_STRING)
+                .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "deactivateId")
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    mockServer.verify();
+
+    verifyAuditEventCall(STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
+    verifyAuditEventCall(STUDY_METADATA_SENT_TO_RESPONSE_DATASTORE);
+  }
+
+  @Test
+  public void shouldFailSendingStudyMetadata() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    RestGatewaySupport gateway = new RestGatewaySupport();
+    gateway.setRestTemplate(restTemplate);
+    mockServer = MockRestServiceServer.createServer(gateway);
+
+    StudyDetailsBean studyDetailsBean = new StudyDetailsBean();
+    studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
+
+    mockServer
+        .expect(requestTo(STUDIES_META_DATA_URI))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(studyDetailsBean)));
+
+    mockServer
+        .expect(requestTo(STUDY_META_DATA_URI))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(studyDetailsBean)));
+
+    mockMvc
+        .perform(
+            post(PathMappingUri.UPDATE_STUDY_ACTION.getPath())
+                .param(FdahpStudyDesignerConstants.STUDY_ID, STUDY_ID_VALUE)
+                .param(FdahpStudyDesignerConstants.BUTTON_TEXT, "deactivateId")
+                .headers(headers)
+                .sessionAttrs(sessionAttributes))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    mockServer.verify();
+
+    verifyAuditEventCall(STUDY_METADATA_SEND_OPERATION_FAILED);
+    verifyAuditEventCall(STUDY_METADATA_SEND_FAILED);
   }
 }

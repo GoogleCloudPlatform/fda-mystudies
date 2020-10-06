@@ -164,6 +164,18 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"auth_server_db_user\"].result}"
         },
         {
+          secret_id   = "auto-hydra-db-password"
+          secret_data = "$${random_password.passwords[\"hydra_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-hydra-db-user"
+          secret_data = "$${random_string.strings[\"hydra_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-hydra-secrets-system"
+          secret_data = "$${random_secret.secrets[\"hydra_secrets_key\"].result}"
+        },
+        {
           secret_id   = "auto-mystudies-ma-client-id"
           secret_data = "$${random_string.strings[\"mystudies_ma_client_id\"].result}"
         },
@@ -255,6 +267,7 @@ resource "random_string" "strings" {
     "study_metadata_db_user",
     "user_registration_db_user",
     "participant_manager_db_user",
+    "hydra_db_user",
   ])
   length  = 16
   special = true
@@ -273,9 +286,17 @@ resource "random_password" "passwords" {
     "study_metadata_db_password",
     "user_registration_db_password",
     "participant_manager_db_user",
+    "hydra_db_password",
   ])
   length  = 16
   special = true
+}
+
+resource "random_secret" "secrets" {
+  for_each = toset([
+    "hydra_secrets_key",
+  ])
+  length  = 32
 }
 EOF
     }
@@ -408,6 +429,7 @@ template "project_apps" {
       # Terraform-generated service account for use by the GKE apps.
       service_accounts = [
         { account_id = "auth-server-gke-sa" },
+        { account_id = "hydra-gke-sa" },
         { account_id = "response-server-gke-sa" },
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
@@ -458,12 +480,14 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   for_each = toset([
 #     "WCP",
 #     "WCP-WS",
-#     "auth-server-ws",
+#     "oauth-scim-module",
 #     "user-registration-server-ws/consent-mgmt-module",
 #     "user-registration-server-ws/enroll-mgmt-module",
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
 #     "participant-manager-module",
+#     "hydra",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta
@@ -614,6 +638,7 @@ EOF
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",
           "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",

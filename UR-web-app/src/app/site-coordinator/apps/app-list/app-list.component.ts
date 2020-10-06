@@ -44,8 +44,8 @@ export class AppListComponent implements OnInit {
         this.manageAppsBackup = {...manageApps};
         this.manageAppsBackup.apps = this.manageAppsBackup.apps.filter(
           (app: App) =>
-            app.name.toLowerCase().includes(query.toLowerCase()) ||
-            app.customId.toLowerCase().includes(query.toLowerCase()),
+            app.name?.toLowerCase().includes(query.toLowerCase()) ||
+            app.customId?.toLowerCase().includes(query.toLowerCase()),
         );
         return this.manageAppsBackup;
       }),
