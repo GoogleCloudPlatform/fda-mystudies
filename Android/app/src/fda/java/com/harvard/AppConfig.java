@@ -31,14 +31,4 @@ public class AppConfig {
   // OrgId
   public static String ORG_ID_KEY = "orgId";
   public static String ORG_ID_VALUE = BuildConfig.ORG_ID;
-
-  // ClientId
-  public static String CLIENT_ID_KEY = "clientId";
-  public static String CLIENT_ID_VALUE = BuildConfig.CLIENT_ID_VALUE;
-  //Secret Key
-  public static String SECRET_KEY = "secretKey";
-  public static String SECRET_KEY_VALUE = BuildConfig.SECRET_KEY_VALUE;
-  //Client Token
-  public static String CLIENT_TOKEN = "clientToken";
-
 }

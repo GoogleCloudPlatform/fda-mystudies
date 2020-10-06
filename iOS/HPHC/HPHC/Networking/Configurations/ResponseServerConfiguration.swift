@@ -92,7 +92,6 @@ class ResponseServerConfiguration: NetworkConfiguration {
       "appId": AppConfiguration.appID,
       "orgId": AppConfiguration.orgID,
       kUserAuthToken: User.currentUser.authToken ?? "",
-      "clientToken": User.currentUser.clientToken ?? "",
     ]
     return header
   }

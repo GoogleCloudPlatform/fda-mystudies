@@ -80,10 +80,6 @@ class ConsentSharePdfStepViewController: ORKStepViewController {
     super.init(coder: aDecoder)
   }
 
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
-
   // MARK: - Overriden Methods
   override func hasNextStep() -> Bool {
     super.hasNextStep()
