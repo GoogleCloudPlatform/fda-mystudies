@@ -95,7 +95,7 @@ export class AccountProfileComponent
           this.toastr.error(getMessage(successResponse.code));
         }
         sessionStorage.clear();
-        void this.router.navigate(['/']);
+        void this.router.navigate(['/login']);
       },
       (errorResponse: ApiResponse) => {
         console.log(errorResponse);
