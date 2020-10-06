@@ -2,7 +2,6 @@ package com.harvard.webservicemodule.apihelper;
 
 public class Responsemodel {
   private String responseCode;
-  private String response;
   private String servermsg;
   private String responseData;
 
@@ -30,11 +29,4 @@ public class Responsemodel {
     this.responseCode = responseCode;
   }
 
-  public String getResponse() {
-    return response;
-  }
-
-  void setResponse(String response) {
-    this.response = response;
-  }
 }
