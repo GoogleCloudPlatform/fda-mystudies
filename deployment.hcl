@@ -132,7 +132,7 @@ template "project_secrets" {
         {
           secret_id = "manual-mystudies-email-password"
         },
-        # AppId for the mobile app. This needs to be in the app_info table in user registration database.
+        # AppId for the mobile app. This needs to be in the app_info table in participant database.
         {
           secret_id = "manual-mobile-app-appid"
         },
@@ -236,12 +236,28 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"study_metadata_db_user\"].result}"
         },
         {
-          secret_id   = "auto-user-registration-db-password"
-          secret_data = "$${random_password.passwords[\"user_registration_db_password\"].result}"
+          secret_id   = "auto-participant-consent-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_consent_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-user-registration-db-user"
-          secret_data = "$${random_string.strings[\"user_registration_db_user\"].result}"
+          secret_id   = "auto-participant-consent-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_consent_datastore_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_enroll_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_enroll_datastore_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-user-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_user_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-user-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_user_datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-participant-manager-db-password"
@@ -265,7 +281,9 @@ resource "random_string" "strings" {
     "response_server_db_user",
     "study_designer_db_user",
     "study_metadata_db_user",
-    "user_registration_db_user",
+    "participant_consent_datastore_db_user",
+    "participant_enroll_datastore_db_user",
+    "participant_user_datastore_db_user",
     "participant_manager_db_user",
     "hydra_db_user",
   ])
@@ -284,7 +302,9 @@ resource "random_password" "passwords" {
     "response_server_db_password",
     "study_designer_db_password",
     "study_metadata_db_password",
-    "user_registration_db_password",
+    "participant_consent_datastore_db_password",
+    "participant_enroll_datastore_db_password",
+    "participant_user_datastore_db_password",
     "participant_manager_db_password",
     "hydra_db_password",
   ])
@@ -434,7 +454,9 @@ template "project_apps" {
         { account_id = "response-server-gke-sa" },
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
-        { account_id = "user-registration-gke-sa" },
+        { account_id = "consent-datastore-gke-sa" },
+        { account_id = "enroll-datastore-gke-sa" },
+        { account_id = "user-datastore-gke-sa" },
         { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
@@ -482,13 +504,13 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "WCP",
 #     "WCP-WS",
 #     "oauth-scim-module",
-#     "user-registration-server-ws/consent-mgmt-module",
-#     "user-registration-server-ws/enroll-mgmt-module",
-#     "user-registration-server-ws/user-mgmt-module",
+#     "participant-datastore/consent-mgmt-module",
+#     "participant-datastore/enroll-mgmt-module",
+#     "participant-datastore/user-mgmt-module",
 #     "response-server-ws",
-#     "participant-manager-datastore",
+#     "participant-manager-module",
 #     "hydra",
-#     "participant-manager",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta
@@ -619,7 +641,7 @@ template "project_data" {
     # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "mystudies_db_default_password" {
+data "google_secret_manager_secret_version" "my_studies_db_default_password" {
   provider = google-beta
   secret  = "auto-mystudies-sql-default-user-password"
   project = "{{$prefix}}-{{$env}}-secrets"
@@ -633,7 +655,7 @@ EOF
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.my_studies_db_default_password.secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
@@ -643,7 +665,9 @@ EOF
           "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:enroll-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
@@ -659,7 +683,7 @@ EOF
           name = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+            member = "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           },{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
@@ -677,12 +701,12 @@ EOF
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
           # iam_members = [{
           #   role   = "roles/storage.objectViewer"
-          #   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          #   member = "serviceAccount:$${module.my_studies.instance_service_account_email_address}"
           # }]
         },
       ]
       bigquery_datasets = [{
-        dataset_id = "{{$prefix}}_{{$env}}_mystudies_firestore_data"
+        dataset_id = "{{$prefix}}_{{$env}}_my_studies_firestore_data"
       }]
     }
   }
