@@ -26,7 +26,7 @@ terraform {
 
 # Reserve a static external IP for the Ingress.
 resource "google_compute_global_address" "ingress_static_ip" {
-  name         = "my-studies-ingress-ip"
+  name         = "mystudies-ingress-ip"
   description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = module.project.project_id
@@ -42,9 +42,14 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   for_each = toset([
 #     "WCP",
 #     "WCP-WS",
-#     "auth-server-ws",
-#     "user-registration-server-ws",
+#     "oauth-scim-module",
+#     "user-registration-server-ws/consent-mgmt-module",
+#     "user-registration-server-ws/enroll-mgmt-module",
+#     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
+#     "participant-manager-module",
+#     "hydra",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta
@@ -191,6 +196,11 @@ resource "google_service_account" "auth_server_gke_sa" {
   project    = module.project.project_id
 }
 
+resource "google_service_account" "hydra_gke_sa" {
+  account_id = "hydra-gke-sa"
+  project    = module.project.project_id
+}
+
 resource "google_service_account" "response_server_gke_sa" {
   account_id = "response-server-gke-sa"
   project    = module.project.project_id
@@ -208,6 +218,11 @@ resource "google_service_account" "study_metadata_gke_sa" {
 
 resource "google_service_account" "user_registration_gke_sa" {
   account_id = "user-registration-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "participant_manager_gke_sa" {
+  account_id = "participant-manager-gke-sa"
   project    = module.project.project_id
 }
 

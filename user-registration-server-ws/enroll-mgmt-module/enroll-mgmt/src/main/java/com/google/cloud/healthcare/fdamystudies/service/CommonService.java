@@ -8,9 +8,9 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 
 public interface CommonService {
 
-  public UserDetailsBO getUserInfoDetails(String userId);
+  public UserDetailsEntity getUserInfoDetails(String userId);
 }

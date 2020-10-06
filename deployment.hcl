@@ -164,6 +164,18 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"auth_server_db_user\"].result}"
         },
         {
+          secret_id   = "auto-hydra-db-password"
+          secret_data = "$${random_password.passwords[\"hydra_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-hydra-db-user"
+          secret_data = "$${random_string.strings[\"hydra_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-hydra-secrets-system"
+          secret_data = "$${random_secret.secrets[\"hydra_secrets_key\"].result}"
+        },
+        {
           secret_id   = "auto-mystudies-ma-client-id"
           secret_data = "$${random_string.strings[\"mystudies_ma_client_id\"].result}"
         },
@@ -231,6 +243,14 @@ template "project_secrets" {
           secret_id   = "auto-user-registration-db-user"
           secret_data = "$${random_string.strings[\"user_registration_db_user\"].result}"
         },
+        {
+          secret_id   = "auto-participant-manager-db-password"
+          secret_data = "$${random_password.passwords[\"participant_manager_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-manager-db-user"
+          secret_data = "$${random_string.strings[\"participant_manager_db_user\"].result}"
+        },
       ]
     }
     terraform_addons = {
@@ -246,6 +266,8 @@ resource "random_string" "strings" {
     "study_designer_db_user",
     "study_metadata_db_user",
     "user_registration_db_user",
+    "participant_manager_db_user",
+    "hydra_db_user",
   ])
   length  = 16
   special = true
@@ -263,9 +285,18 @@ resource "random_password" "passwords" {
     "study_designer_db_password",
     "study_metadata_db_password",
     "user_registration_db_password",
+    "participant_manager_db_user",
+    "hydra_db_password",
   ])
   length  = 16
   special = true
+}
+
+resource "random_secret" "secrets" {
+  for_each = toset([
+    "hydra_secrets_key",
+  ])
+  length  = 32
 }
 EOF
     }
@@ -317,7 +348,7 @@ template "project_networks" {
       }]
       # To connect to the CloudSQL instance via the bastion VM:
       # $ gcloud compute ssh bastion-vm --zone={{$default_location}}-{{$default_zone}} --project={{$prefix}}-{{$env}}-networks
-      # $ cloud_sql_proxy -instances={{$prefix}}-{{$env}}-data:{{$default_location}}:my-studies=tcp:3306
+      # $ cloud_sql_proxy -instances={{$prefix}}-{{$env}}-data:{{$default_location}}:mystudies=tcp:3306
       # $ mysql -u default -p --host 127.0.0.1
       bastion_hosts = [{
         name          = "bastion-vm"
@@ -398,10 +429,12 @@ template "project_apps" {
       # Terraform-generated service account for use by the GKE apps.
       service_accounts = [
         { account_id = "auth-server-gke-sa" },
+        { account_id = "hydra-gke-sa" },
         { account_id = "response-server-gke-sa" },
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
         { account_id = "user-registration-gke-sa" },
+        { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
       # Binary Authorization resources.
@@ -431,7 +464,7 @@ template "project_apps" {
       raw_config = <<EOF
 # Reserve a static external IP for the Ingress.
 resource "google_compute_global_address" "ingress_static_ip" {
-  name         = "my-studies-ingress-ip"
+  name         = "mystudies-ingress-ip"
   description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = module.project.project_id
@@ -447,9 +480,14 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   for_each = toset([
 #     "WCP",
 #     "WCP-WS",
-#     "auth-server-ws",
-#     "user-registration-server-ws",
+#     "oauth-scim-module",
+#     "user-registration-server-ws/consent-mgmt-module",
+#     "user-registration-server-ws/enroll-mgmt-module",
+#     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
+#     "participant-manager-module",
+#     "hydra",
+#     "UR-web-app",
 #   ])
 #
 #   provider = google-beta
@@ -498,7 +536,7 @@ template "project_firebase" {
       storage_buckets = [
         {
           # Firestore data export
-          name = "{{$prefix}}-{{$env}}-my-studies-firestore-raw-data"
+          name = "{{$prefix}}-{{$env}}-mystudies-firestore-raw-data"
           iam_members = [{
             role   = "roles/storage.admin"
             member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
@@ -538,7 +576,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
 # resource "google_firestore_index" "activities_index" {
 #   project    = module.project.project_id
 #   collection = "Activities"
@@ -577,7 +615,7 @@ template "project_data" {
         host_project_id = "{{$prefix}}-{{$env}}-networks"
       }
     }
-    # Step 5: uncomment and re-run the engine once all previous steps have been completed.
+    # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
 data "google_secret_manager_secret_version" "my_studies_db_default_password" {
@@ -588,9 +626,9 @@ data "google_secret_manager_secret_version" "my_studies_db_default_password" {
 EOF
     } */
     resources = {
-      # Step 5: uncomment and re-run the engine once all previous steps have been completed.
+      # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
       # cloud_sql_instances = [{
-      #   name               = "my-studies"
+      #   name               = "mystudies"
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
@@ -600,10 +638,12 @@ EOF
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",
           "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/bigquery.jobUser" = [
@@ -615,21 +655,24 @@ EOF
       }
       storage_buckets = [
         {
-          name = "{{$prefix}}-{{$env}}-my-studies-consent-documents"
+          name = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+          },{
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
-          name = "{{$prefix}}-{{$env}}-my-studies-fda-resources"
+          name = "{{$prefix}}-{{$env}}-mystudies-fda-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
-          name = "{{$prefix}}-{{$env}}-my-studies-sql-import"
+          name = "{{$prefix}}-{{$env}}-mystudies-sql-import"
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
           # iam_members = [{
           #   role   = "roles/storage.objectViewer"

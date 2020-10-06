@@ -47,7 +47,6 @@ class DBHandler: NSObject {
       dbUser?.emailId = user.emailId!
       dbUser?.userId = user.userId
       dbUser?.verified = user.verified
-      dbUser?.clientToken = user.clientToken
 
       try? realm.write {
         realm.add(dbUser!, update: .all)
@@ -59,7 +58,6 @@ class DBHandler: NSObject {
           dbUser?.userType = (user.userType?.rawValue)!
           dbUser?.emailId = user.emailId!
           dbUser?.authToken = user.authToken
-          dbUser?.clientToken = user.clientToken
           dbUser?.verified = user.verified
           dbUser?.refreshToken = user.refreshToken
         }
@@ -80,10 +78,9 @@ class DBHandler: NSObject {
       let currentUser = User.currentUser
       currentUser.firstName = dbUser?.firstName
       currentUser.lastName = dbUser?.lastName
-      currentUser.verified = dbUser?.verified
+      currentUser.verified = dbUser?.verified ?? false
       currentUser.userId = dbUser?.userId
       currentUser.emailId = dbUser?.emailId
-      currentUser.clientToken = dbUser?.clientToken
       currentUser.userType = (dbUser?.userType).map { UserType(rawValue: $0) }!
 
       let settings = Settings()

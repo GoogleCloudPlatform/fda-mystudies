@@ -9,32 +9,34 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.usermgmt.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import java.util.List;
 
 public interface UserProfileManagementDao {
 
-  public UserDetailsBO getParticipantInfoDetails(String userId);
+  public UserDetailsEntity getParticipantInfoDetails(String userId);
 
-  public ErrorBean updateUserProfile(String userId, UserDetailsBO userDetail, AuthInfoBO authInfo);
+  public ErrorBean updateUserProfile(
+      String userId, UserDetailsEntity userDetail, AuthInfoEntity authInfo);
 
-  public AuthInfoBO getAuthInfo(Integer userDetailsId);
+  public AuthInfoEntity getAuthInfo(UserDetailsEntity userDetailsEntity);
 
-  public UserDetailsBO getParticipantDetailsByEmail(
-      String email, Integer appInfoId, Integer orgInfoId);
+  public UserDetailsEntity getParticipantDetailsByEmail(String email, AppEntity app);
 
-  public LoginAttemptsBO getLoginAttempts(String email);
+  public LoginAttemptsEntity getLoginAttempts(String email);
 
-  public UserDetailsBO saveParticipant(UserDetailsBO participant);
+  public UserDetailsEntity saveParticipant(UserDetailsEntity participant);
 
-  public AppInfoDetailsBO getAppPropertiesDetailsByAppId(Integer appId);
+  public AppEntity getAppPropertiesDetailsByAppId(String appId);
 
   public void resetLoginAttempts(String email);
 
-  public UserDetailsBO getParticipantDetails(String id);
+  public UserDetailsEntity getParticipantDetails(String id);
 
-  public boolean deActivateAcct(String userId, List<String> deleteData, Integer userDetailsId);
+  public void deactivateAcct(String userId, List<String> deleteData, String userDetailsId);
+
+  public void deactivateUserAccount(String userId);
 }

@@ -8,10 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
-import com.google.cloud.healthcare.fdamystudies.enroll.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.exception.SystemException;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
+import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -25,27 +26,30 @@ public class ParticipantStudiesInfoDaoImpl implements ParticipantStudiesInfoDao 
 
   private static final Logger logger = LoggerFactory.getLogger(ParticipantStudiesInfoDaoImpl.class);
 
-  @Autowired private EntityManagerFactory entityManagerFactory;
+  @Autowired private SessionFactory sessionFactory;
+
+  @Autowired private UserDetailsRepository userDetailsRepository;
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<ParticipantStudiesBO> getParticipantStudiesInfo(Integer userDetailsId)
-      throws SystemException {
+  public List<ParticipantStudyEntity> getParticipantStudiesInfo(String userDetailsId) {
 
-    List<ParticipantStudiesBO> participantStudiesList = null;
+    List<ParticipantStudyEntity> participantStudiesList = null;
     logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Started");
     if (userDetailsId != null) {
-      try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
-        Query<ParticipantStudiesBO> query =
-            session.createQuery(
-                "from ParticipantStudiesBO where userDetails.userDetailsId = :userDetailsId");
-        query.setParameter("userDetailsId", userDetailsId);
-        participantStudiesList = query.getResultList();
-        return participantStudiesList;
-      } catch (Exception e) {
-        logger.error("(DAO)...UserDetailsDaoImpl.getParticipantStudiesInfo(): (ERROR) ", e);
-        throw new SystemException();
-      }
+      Session session = this.sessionFactory.getCurrentSession();
+
+      Optional<UserDetailsEntity> optUserDetails =
+          userDetailsRepository.findByUserId(userDetailsId);
+      UserDetailsEntity userDetails = optUserDetails.get();
+
+      Query<ParticipantStudyEntity> query =
+          session.createQuery("from ParticipantStudyEntity where userDetails = :userDetails");
+
+      query.setParameter("userDetails", userDetails);
+      participantStudiesList = query.getResultList();
+      return participantStudiesList;
+
     } else {
       logger.info("(DAO)...ParticipantStudiesInfoDaoImpl.getParticipantStudiesInfo()...Ended");
       return null;

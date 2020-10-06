@@ -22,6 +22,7 @@
 
 package com.fdahpstudydesigner.bo;
 
+import com.fdahpstudydesigner.bean.StudyListBean;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
 import org.springframework.web.multipart.MultipartFile;
-import com.fdahpstudydesigner.bean.StudyListBean;
 
 @Entity
 @Table(name = "studies")
@@ -195,9 +195,6 @@ public class StudyBo implements Serializable {
 
   @Column(name = "app_id")
   private String appId;
-
-  @Column(name = "org_id")
-  private String orgId = "OrgName";
 
   public String getAllowRejoin() {
     return allowRejoin;
@@ -573,13 +570,5 @@ public class StudyBo implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
-  }
-
-  public String getOrgId() {
-    return orgId;
-  }
-
-  public void setOrgId(String orgId) {
-    this.orgId = orgId;
   }
 }

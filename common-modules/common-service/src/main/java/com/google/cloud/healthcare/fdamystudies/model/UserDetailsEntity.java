@@ -8,10 +8,10 @@
 
 package com.google.cloud.healthcare.fdamystudies.model;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.LARGE_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -23,6 +23,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -30,28 +31,30 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 @Setter
 @Getter
 @ToString
+@Builder
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(
     name = "user_details",
     uniqueConstraints = {
       @UniqueConstraint(
           columnNames = {"user_id", "app_info_id"},
           name = "user_details_user_id_app_info_id_uidx")
-    })
+    },
+    indexes = {@Index(name = "user_details_email_idx", columnList = "email")})
 public class UserDetailsEntity implements Serializable {
 
   private static final long serialVersionUID = -6971868842609206885L;
@@ -72,7 +75,7 @@ public class UserDetailsEntity implements Serializable {
   private String lastName;
 
   @ToString.Exclude
-  @Column(name = "email", length = LARGE_LENGTH)
+  @Column(name = "email", length = EMAIL_LENGTH)
   private String email;
 
   @ToString.Exclude

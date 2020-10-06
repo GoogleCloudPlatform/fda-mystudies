@@ -86,6 +86,11 @@ public class AppServiceImpl implements AppService {
   public AppResponse getApps(String userId) {
     logger.entry("getApps(userId)");
 
+    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
+    if (CollectionUtils.isEmpty(appPermissions)) {
+      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+    }
+
     List<SitePermissionEntity> sitePermissions =
         sitePermissionRepository.findSitePermissionByUserId(userId);
     if (CollectionUtils.isEmpty(sitePermissions)) {
@@ -273,7 +278,7 @@ public class AppServiceImpl implements AppService {
     Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
 
     if (!(optUserRegAdminEntity.isPresent() && optUserRegAdminEntity.get().isSuperAdmin())) {
-      throw new ErrorCodeException(ErrorCode.USER_ADMIN_ACCESS_DENIED);
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
 
     List<AppEntity> apps = appRepository.findAll();

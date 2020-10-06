@@ -17,5 +17,9 @@ public interface StudyService {
   public StudyResponse getStudies(String userId);
 
   public ParticipantRegistryResponse getStudyParticipants(
-      String userId, String studyId, AuditLogEventRequest auditRequest);
+      String userId,
+      String studyId,
+      AuditLogEventRequest auditRequest,
+      Integer page,
+      Integer limit);
 }

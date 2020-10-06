@@ -1,15 +1,15 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: heroes-hat-dev
+  name: fda-mystudies-dev
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: my-studies-ingress-ip
-    networking.gke.io/managed-certificates: heroes-hat-cert
+    kubernetes.io/ingress.global-static-ip-name: mystudies-ingress-ip
+    networking.gke.io/managed-certificates: fda-mystudies-cert
 spec:
   rules:
     - http:
         paths:
-          - path: /AuthServer/*
+          - path: /oauth-scim-module/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
@@ -19,15 +19,15 @@ spec:
               servicePort: 50000
           - path: /myStudiesUserMgmtWS/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-datastore-user-np
               servicePort: 50000
           - path: /myStudiesConsentMgmtWS/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-datastore-consent-np
               servicePort: 50000
           - path: /myStudiesEnrollmentMgmt/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-datastore-enroll-np
               servicePort: 50000
           - path: /StudyMetaData/*
             backend:
@@ -40,4 +40,16 @@ spec:
           - path: /fdaResources/*
             backend:
               serviceName: study-designer-np
+              servicePort: 50000
+          - path: /hydra/*
+              backend:
+                serviceName: hydra-np
+                servicePort: 4444
+          - path: /#/*
+            backend:
+              serviceName: participant-manager-app-np
+              servicePort: 50000
+          - path: /participant-manager-service/*
+            backend:
+              serviceName: participant-manager-np
               servicePort: 50000

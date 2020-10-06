@@ -22,6 +22,17 @@
 
 package com.fdahpstudydesigner.scheduler;
 
+import com.fdahpstudydesigner.bean.PushNotificationBean;
+import com.fdahpstudydesigner.bo.AuditLogBO;
+import com.fdahpstudydesigner.bo.UserBO;
+import com.fdahpstudydesigner.dao.AuditLogDAO;
+import com.fdahpstudydesigner.dao.LoginDAO;
+import com.fdahpstudydesigner.dao.NotificationDAO;
+import com.fdahpstudydesigner.dao.UsersDAO;
+import com.fdahpstudydesigner.service.NotificationService;
+import com.fdahpstudydesigner.util.EmailNotification;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,17 +60,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import com.fdahpstudydesigner.bean.PushNotificationBean;
-import com.fdahpstudydesigner.bo.AuditLogBO;
-import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
-import com.fdahpstudydesigner.dao.LoginDAO;
-import com.fdahpstudydesigner.dao.NotificationDAO;
-import com.fdahpstudydesigner.dao.UsersDAO;
-import com.fdahpstudydesigner.service.NotificationService;
-import com.fdahpstudydesigner.util.EmailNotification;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
-import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 
 @EnableScheduling
 public class FDASchedulerService {
@@ -218,10 +218,11 @@ public class FDASchedulerService {
 
         post.setHeader("Content-type", "application/json");
 
-        post.setHeader("clientId", configMap.get("WCPClientId").toString());
+        post.setHeader("clientId", configMap.get("security.oauth2.client.client-id").toString());
         post.setHeader(
             "secretKey",
-            FdahpStudyDesignerUtil.getHashedValue(configMap.get("WCPSecretKey").toString()));
+            FdahpStudyDesignerUtil.getHashedValue(
+                configMap.get("security.oauth2.client.client-secret").toString()));
 
         StringEntity requestEntity =
             new StringEntity(json.toString(), ContentType.APPLICATION_JSON);

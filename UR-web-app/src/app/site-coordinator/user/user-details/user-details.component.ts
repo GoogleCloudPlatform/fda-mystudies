@@ -10,7 +10,8 @@ import {Permission} from 'src/app/shared/permission-enums';
   selector: 'user-details',
   templateUrl: './user-details.component.html',
 })
-export class UserDetailsComponent extends UnsubscribeOnDestroyAdapter
+export class UserDetailsComponent
+  extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   adminId = '';
   user = {} as User;
@@ -31,7 +32,7 @@ export class UserDetailsComponent extends UnsubscribeOnDestroyAdapter
   ngOnInit(): void {
     this.subs.add(
       this.route.params.subscribe((params) => {
-        if (params['userId']) {
+        if (params.userId) {
           this.adminId = params.userId as string;
         }
         this.getUserDetails();

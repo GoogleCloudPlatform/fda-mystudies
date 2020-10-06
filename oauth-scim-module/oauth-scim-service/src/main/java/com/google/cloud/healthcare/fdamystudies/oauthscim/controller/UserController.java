@@ -8,6 +8,11 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ChangePasswordRequest;
@@ -18,9 +23,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UpdateEmailStatusResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
+import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -49,6 +56,8 @@ public class UserController {
 
   @Autowired private UserService userService;
 
+  @Autowired private AuthScimAuditHelper auditHelper;
+
   @PostMapping(
       value = "/users",
       produces = MediaType.APPLICATION_JSON_VALUE,
@@ -71,8 +80,13 @@ public class UserController {
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
     ResetPasswordResponse resetPasswordResponse =
         userService.resetPassword(resetPasswordRequest, auditRequest);
+
+    if (resetPasswordResponse.getHttpStatusCode() == HttpStatus.OK.value()) {
+      auditHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
+    }
 
     logger.exit(String.format(STATUS_LOG, resetPasswordResponse.getHttpStatusCode()));
     return ResponseEntity.status(resetPasswordResponse.getHttpStatusCode())
@@ -89,9 +103,11 @@ public class UserController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format("begin %s request", request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+
     userRequest.setUserId(userId);
 
-    ChangePasswordResponse userResponse = userService.changePassword(userRequest);
+    ChangePasswordResponse userResponse = userService.changePassword(userRequest, auditRequest);
 
     logger.exit(String.format("status=%d", userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
@@ -126,8 +142,15 @@ public class UserController {
       HttpServletRequest request)
       throws JsonProcessingException {
     logger.entry(String.format(BEGIN_S_REQUEST_LOG, request.getRequestURI()));
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
 
-    UserResponse userResponse = userService.logout(userId);
+    UserResponse userResponse = userService.logout(userId, auditRequest);
+
+    AuditLogEvent auditEvent =
+        userResponse.getHttpStatusCode() == HttpStatus.OK.value()
+            ? USER_SIGNOUT_SUCCEEDED
+            : USER_SIGNOUT_FAILED;
+    auditHelper.logEvent(auditEvent, auditRequest);
 
     logger.exit(String.format(STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);

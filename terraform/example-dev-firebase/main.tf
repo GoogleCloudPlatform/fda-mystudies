@@ -29,7 +29,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
 # resource "google_firestore_index" "activities_index" {
 #   project    = module.project.project_id
 #   collection = "Activities"
@@ -115,11 +115,11 @@ resource "google_service_account" "real_time_triggers" {
   project    = module.project.project_id
 }
 
-module "example_dev_my_studies_firestore_raw_data" {
+module "example_dev_mystudies_firestore_raw_data" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-firestore-raw-data"
+  name       = "example-dev-mystudies-firestore-raw-data"
   project_id = module.project.project_id
   location   = "us-central1"
 

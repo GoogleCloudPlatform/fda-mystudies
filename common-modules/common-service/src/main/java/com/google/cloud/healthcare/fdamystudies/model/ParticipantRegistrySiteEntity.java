@@ -12,6 +12,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.MEDIUM_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.TINY_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_LENGTH;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -23,6 +24,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -34,21 +36,21 @@ import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
-@ConditionalOnProperty(
-    value = "participant.manager.entities.enabled",
-    havingValue = "true",
-    matchIfMissing = false)
 @Setter
 @Getter
 @Entity
 @Table(
     name = "participant_registry_site",
+    indexes = {
+      @Index(
+          name = "participant_registry_site_site_id_onboarding_status_idx",
+          columnList = "site_id,onboarding_status"),
+    },
     uniqueConstraints = {
       @UniqueConstraint(
           columnNames = {"email", "study_info_id"},
-          name = "participant_registry_site_email_study_info_id_uidx")
+          name = "participant_registry_site_email_study_info_id_uidx"),
     })
 public class ParticipantRegistrySiteEntity implements Serializable {
   private static final long serialVersionUID = 1L;
@@ -69,7 +71,7 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   private StudyEntity study;
 
   @ToString.Exclude
-  @Column(length = LARGE_LENGTH)
+  @Column(length = EMAIL_LENGTH)
   private String email;
 
   @ToString.Exclude

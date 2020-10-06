@@ -23,11 +23,11 @@
 
 package com.fdahpstudydesigner.dao;
 
-import java.util.List;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
 import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.NotificationHistoryBO;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.util.List;
 
 public interface NotificationDAO {
 

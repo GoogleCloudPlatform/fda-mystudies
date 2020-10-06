@@ -25,14 +25,10 @@ public class TestUtils {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add(Constants.APP_ID_HEADER, Constants.APP_ID_VALUE);
-    headers.add("source", "IntegrationTests");
+    headers.add("source", "MOBILE APPS");
 
     if (ArrayUtils.contains(addOptionalHeaderNames, Constants.USER_ID_HEADER)) {
       headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
-    }
-
-    if (ArrayUtils.contains(addOptionalHeaderNames, Constants.ORG_ID_HEADER)) {
-      headers.add(Constants.ORG_ID_HEADER, Constants.ORG_ID_VALUE);
     }
 
     return headers;

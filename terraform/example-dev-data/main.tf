@@ -71,20 +71,22 @@ module "project_iam_members" {
     "roles/cloudsql.client" = [
       "serviceAccount:bastion@example-dev-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:hydra-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-metadata-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:user-registration-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:participant-manager-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
     ],
   }
 }
 
-module "example_dev_my_studies_consent_documents" {
+module "example_dev_mystudies_consent_documents" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-consent-documents"
+  name       = "example-dev-mystudies-consent-documents"
   project_id = module.project.project_id
   location   = "us-central1"
 
@@ -93,14 +95,18 @@ module "example_dev_my_studies_consent_documents" {
       member = "serviceAccount:user-registration-gke-sa@example-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
+    {
+      member = "serviceAccount:participant-manager-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
+    },
   ]
 }
 
-module "example_dev_my_studies_fda_resources" {
+module "example_dev_mystudies_fda_resources" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-fda-resources"
+  name       = "example-dev-mystudies-fda-resources"
   project_id = module.project.project_id
   location   = "us-central1"
 
@@ -112,11 +118,11 @@ module "example_dev_my_studies_fda_resources" {
   ]
 }
 
-module "example_dev_my_studies_sql_import" {
+module "example_dev_mystudies_sql_import" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "example-dev-my-studies-sql-import"
+  name       = "example-dev-mystudies-sql-import"
   project_id = module.project.project_id
   location   = "us-central1"
 

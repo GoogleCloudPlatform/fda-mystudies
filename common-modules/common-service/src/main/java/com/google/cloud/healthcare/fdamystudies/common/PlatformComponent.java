@@ -35,9 +35,9 @@ public enum PlatformComponent {
       "SCIM AUTH SERVER",
       "This component implements login/consent flow and integrates with ORY Hydra for access and refresh tokens"),
 
-  AUTH_SERVER(
-      "Auth Server",
-      "This is back-end component that manages user accounts and issues access and refresh tokens"),
+  PARTICIPANT_MANAGER_DATASTORE(
+      "PARTICIPANT MANAGER DATASTORE",
+      "This is the back-end component that manages the study builder data and holds the study configurations"),
 
   PARTICIPANT_MANAGER(
       "PARTICIPANT MANAGER",
@@ -49,4 +49,13 @@ public enum PlatformComponent {
   private String value;
 
   private String description;
+
+  public static PlatformComponent fromValue(String value) {
+    for (PlatformComponent type : PlatformComponent.values()) {
+      if (type.getValue().equals(value)) {
+        return type;
+      }
+    }
+    return null;
+  }
 }
