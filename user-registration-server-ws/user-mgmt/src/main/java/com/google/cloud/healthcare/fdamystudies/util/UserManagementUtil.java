@@ -337,7 +337,7 @@ public class UserManagementUtil {
       requestBody = new HttpEntity<>(null, headers);
       responseEntity =
           restTemplate.exchange(
-              appConfig.getAuthServerUrl() + "/deactivate",
+              appConfig.getAuthServerDeactivateUrl(),
               HttpMethod.POST,
               requestBody,
               Integer.class);
