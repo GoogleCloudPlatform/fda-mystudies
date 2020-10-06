@@ -6,6 +6,9 @@
 # {{$domain := "example.com"}}
 # {{$default_location := "us-central1"}}
 # {{$default_zone := "a"}}
+# {{$github_owner := "GoogleCloudPlatform"}}
+# {{$github_repo := "example"}}
+# {{$github_branch := "^master" }}
 
 data = {
   parent_type     = "folder"
@@ -57,10 +60,10 @@ template "cicd" {
   data = {
     project_id = "{{$prefix}}-{{$env}}-devops"
     github = {
-      owner = "GoogleCloudPlatform"
-      name  = "example"
+      owner = "{{$github_owner}}"
+      name  = "{{$github_repo}}"
     }
-    branch_regex   = "^master$"
+    branch_regex   = "{{$github_branch}}"
     terraform_root = "terraform"
 
     # Prepare and enable default triggers.
@@ -520,9 +523,9 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   included_files = ["$${each.key}/**"]
 #
 #   github {
-#     owner = "GoogleCloudPlatform"
-#     name  = "example"
-#     push { branch = "^master$" }
+#     owner = "{{$github_owner}}"
+#     name  = "{{$github_repo}}"
+#     push { branch = "{{$github_branch}}" }
 #   }
 #
 #   filename = "$${each.key}/cloudbuild.yaml"
