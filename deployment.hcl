@@ -699,10 +699,10 @@ EOF
         {
           name = "{{$prefix}}-{{$env}}-mystudies-sql-import"
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
-          # iam_members = [{
-          #   role   = "roles/storage.objectViewer"
-          #   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
-          # }]
+          iam_members = [{
+            role   = "roles/storage.objectViewer"
+            member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
+          }]
         },
       ]
       bigquery_datasets = [{
