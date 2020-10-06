@@ -59,17 +59,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           wcpConfigEvent.getV(),
           wcpConfigEvent.isShowAlert(),
           "WCP");
-    } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("delete")) {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
-      apiCall.apiCallDeleteHashmap(
-          url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParams(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
     } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
@@ -107,8 +96,7 @@ public class WebserviceSubscriber extends BaseSubscriber {
               + registrationServerConfigEvent.getUrl();
     } else {
       url =
-          registrationServerConfigEvent.getProductionUrl()
-              + registrationServerConfigEvent.getUrl();
+          registrationServerConfigEvent.getProductionUrl() + registrationServerConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
     if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
@@ -132,17 +120,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.isShowAlert(),
           "RegistrationServer");
-    } else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("delete")) {
-      ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
-      apiCall.apiCallDeleteHashmap(
-          url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParams(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
     } else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
@@ -150,17 +127,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConfigEvent.getHeaders(),
           registrationServerConfigEvent.getClassT(),
           registrationServerConfigEvent.getRequestParamsJson(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
-    } else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("delete_array")) {
-      ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
-      apiCall.apiCallDeleteJsonArray(
-          url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParamsJsonArray(),
           registrationServerConfigEvent.getResponseCode(),
           registrationServerConfigEvent.getV(),
           registrationServerConfigEvent.isShowAlert(),
@@ -218,17 +184,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.isShowAlert(),
           "RegistrationServerConsent");
-    } else if (registrationServerConsentConfigEvent.getRequestType().equalsIgnoreCase("delete")) {
-      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
-      apiCall.apiCallDeleteHashmap(
-          url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParams(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
     } else if (registrationServerConsentConfigEvent
         .getRequestType()
         .equalsIgnoreCase("delete_object")) {
@@ -238,19 +193,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerConsentConfigEvent.getHeaders(),
           registrationServerConsentConfigEvent.getClassT(),
           registrationServerConsentConfigEvent.getRequestParamsJson(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
-    } else if (registrationServerConsentConfigEvent
-        .getRequestType()
-        .equalsIgnoreCase("delete_array")) {
-      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
-      apiCall.apiCallDeleteJsonArray(
-          url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParamsJsonArray(),
           registrationServerConsentConfigEvent.getResponseCode(),
           registrationServerConsentConfigEvent.getV(),
           registrationServerConsentConfigEvent.isShowAlert(),
@@ -302,17 +244,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getV(),
           authServerConfigEvent.isShowAlert(),
           "AuthServer");
-    } else if (authServerConfigEvent.getRequestType().equalsIgnoreCase("delete")) {
-      ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
-      apiCall.apiCallDeleteHashmap(
-          url,
-          authServerConfigEvent.getHeaders(),
-          authServerConfigEvent.getClassT(),
-          authServerConfigEvent.getRequestParams(),
-          authServerConfigEvent.getResponseCode(),
-          authServerConfigEvent.getV(),
-          authServerConfigEvent.isShowAlert(),
-          "AuthServer");
     } else if (authServerConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
@@ -320,17 +251,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           authServerConfigEvent.getHeaders(),
           authServerConfigEvent.getClassT(),
           authServerConfigEvent.getRequestParamsJson(),
-          authServerConfigEvent.getResponseCode(),
-          authServerConfigEvent.getV(),
-          authServerConfigEvent.isShowAlert(),
-          "AuthServer");
-    } else if (authServerConfigEvent.getRequestType().equalsIgnoreCase("delete_array")) {
-      ApiCall apiCall = new ApiCall(authServerConfigEvent.getContext());
-      apiCall.apiCallDeleteJsonArray(
-          url,
-          authServerConfigEvent.getHeaders(),
-          authServerConfigEvent.getClassT(),
-          authServerConfigEvent.getRequestParamsJsonArray(),
           authServerConfigEvent.getResponseCode(),
           authServerConfigEvent.getV(),
           authServerConfigEvent.isShowAlert(),
@@ -378,17 +298,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           responseServerConfigEvent.getHeaders(),
           responseServerConfigEvent.getClassT(),
           responseServerConfigEvent.getRequestParamsJson(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
-    } else if (responseServerConfigEvent.getRequestType().equalsIgnoreCase("delete")) {
-      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
-      apiCall.apiCallDeleteHashmap(
-          url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getRequestParams(),
           responseServerConfigEvent.getResponseCode(),
           responseServerConfigEvent.getV(),
           responseServerConfigEvent.isShowAlert(),
@@ -449,19 +358,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           "RegistrationServerEnrollment");
     } else if (registrationServerEnrollmentConfigEvent
         .getRequestType()
-        .equalsIgnoreCase("delete")) {
-      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
-      apiCall.apiCallDeleteHashmap(
-          url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParams(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
-    } else if (registrationServerEnrollmentConfigEvent
-        .getRequestType()
         .equalsIgnoreCase("delete_object")) {
       ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
@@ -469,19 +365,6 @@ public class WebserviceSubscriber extends BaseSubscriber {
           registrationServerEnrollmentConfigEvent.getHeaders(),
           registrationServerEnrollmentConfigEvent.getClassT(),
           registrationServerEnrollmentConfigEvent.getRequestParamsJson(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
-    } else if (registrationServerEnrollmentConfigEvent
-        .getRequestType()
-        .equalsIgnoreCase("delete_array")) {
-      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
-      apiCall.apiCallDeleteJsonArray(
-          url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParamsJsonArray(),
           registrationServerEnrollmentConfigEvent.getResponseCode(),
           registrationServerEnrollmentConfigEvent.getV(),
           registrationServerEnrollmentConfigEvent.isShowAlert(),

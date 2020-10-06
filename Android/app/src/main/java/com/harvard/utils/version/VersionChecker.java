@@ -63,7 +63,7 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   private VersionModel parseJson(Responsemodel responseModel, Class genericClass) {
     Gson gson = new Gson();
     try {
-      JsonReader reader = new JsonReader(new StringReader(responseModel.getResponse()));
+      JsonReader reader = new JsonReader(new StringReader(responseModel.getResponseData()));
       reader.setLenient(true);
       return gson.fromJson(reader, genericClass);
     } catch (Exception e) {
