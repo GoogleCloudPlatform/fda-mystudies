@@ -38,34 +38,34 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #
 # The following content should be initially commented out if the above manual step is not completed.
 
-# resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = toset([
-#     "WCP",
-#     "WCP-WS",
-#     "oauth-scim-module",
-#     "participant-datastore/consent-mgmt-module",
-#     "participant-datastore/enroll-mgmt-module",
-#     "participant-datastore/user-mgmt-module",
-#     "response-server-ws",
-#     "participant-manager-datastore",
-#     "hydra",
-#     "participant-manager",
-#   ])
-#
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = each.key
-#
-#   included_files = ["${each.key}/**"]
-#
-#   github {
-#     owner = "GoogleCloudPlatform"
-#     name  = "example"
-#     push { branch = "^master$" }
-#   }
-#
-#   filename = "${each.key}/cloudbuild.yaml"
-# }
+resource "google_cloudbuild_trigger" "server_build_triggers" {
+  for_each = toset([
+    "WCP",
+    "WCP-WS",
+    "oauth-scim-module",
+    "participant-datastore/consent-mgmt-module",
+    "participant-datastore/enroll-mgmt-module",
+    "participant-datastore/user-mgmt-module",
+    "response-server-ws",
+    "participant-manager-datastore",
+    "hydra",
+    "participant-manager",
+  ])
+
+  provider = google-beta
+  project  = module.project.project_id
+  name     = each.key
+
+  included_files = ["${each.key}/**"]
+
+  github {
+    owner = "GoogleCloudPlatform"
+    name  = "example"
+    push { branch = "^master$" }
+  }
+
+  filename = "${each.key}/cloudbuild.yaml"
+}
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 module "project" {
