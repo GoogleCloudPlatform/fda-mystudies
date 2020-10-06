@@ -104,6 +104,36 @@ export class AuthService {
     );
   }
 
+  refreshToken(): Observable<AccessToken> {
+    const options = {
+      headers: new HttpHeaders({
+        /* eslint-disable @typescript-eslint/naming-convention */
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+        'correlationId': sessionStorage.getItem('correlationId') || '',
+        'appId': this.appId,
+        'mobilePlatform': this.mobilePlatform,
+      }),
+    };
+
+    const params = new HttpParams()
+      .set(`grant_type`, 'refresh_token')
+      .set('redirect_uri', environment.redirectUrl)
+      .set('client_id', environment.clientId)
+      .set(`refresh_token`, this.getRefreshToken())
+      .set('userId', this.getAuthUserId());
+
+    return this.http.post<AccessToken>(
+      `${environment.authServerUrl}/oauth2/token`,
+      params.toString(),
+      options,
+    );
+  }
+
+  private getRefreshToken() {
+    return sessionStorage.getItem('refreshToken') || '';
+  }
+
   getUserDetails(): void {
     this.userService.getUserDetails().subscribe((user: User) => {
       this.cookieService.set('user', JSON.stringify(user));
