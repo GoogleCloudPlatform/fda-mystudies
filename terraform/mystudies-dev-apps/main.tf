@@ -54,7 +54,7 @@ resource "google_cloudbuild_trigger" "server_build_triggers" {
 
   provider = google-beta
   project  = module.project.project_id
-  name     = each.key
+  name     = replace(each.key, "/", "-")
 
   included_files = ["${each.key}/**"]
 
