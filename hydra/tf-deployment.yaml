@@ -46,8 +46,8 @@ spec:
               name: hydra-secrets
               key: BASE_URL
         ports:
-        - containerPort: 4444
-        - containerPort: 4445
+        - containerPort: 4444 # public
+        - containerPort: 4445 # admin
         readinessProbe:
           httpGet:
             port: 4444
