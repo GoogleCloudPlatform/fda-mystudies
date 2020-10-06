@@ -172,7 +172,7 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"hydra_db_user\"].result}"
         },
         {
-          secret_id   = "auto-hydra-secrets-system"
+          secret_id   = "auto-hydra-system-secret"
           secret_data = "$${random_password.system_secrets[\"hydra_system_secret\"].result}"
         },
         {

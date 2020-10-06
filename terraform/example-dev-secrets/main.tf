@@ -334,10 +334,10 @@ resource "google_secret_manager_secret_version" "auto_hydra_db_user_data" {
   secret_data = random_string.strings["hydra_db_user"].result
 }
 
-resource "google_secret_manager_secret" "auto_hydra_secrets_system" {
+resource "google_secret_manager_secret" "auto_hydra_system_secret" {
   provider = google-beta
 
-  secret_id = "auto-hydra-secrets-system"
+  secret_id = "auto-hydra-system-secret"
   project   = module.project.project_id
 
   replication {
@@ -349,10 +349,10 @@ resource "google_secret_manager_secret" "auto_hydra_secrets_system" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_hydra_secrets_system_data" {
+resource "google_secret_manager_secret_version" "auto_hydra_system_secret_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_hydra_secrets_system.id
+  secret      = google_secret_manager_secret.auto_hydra_system_secret.id
   secret_data = random_password.system_secrets["hydra_system_secret"].result
 }
 
