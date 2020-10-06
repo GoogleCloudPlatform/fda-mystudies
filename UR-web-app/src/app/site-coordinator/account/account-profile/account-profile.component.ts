@@ -5,7 +5,7 @@ import {ToastrService} from 'ngx-toastr';
 import {AccountService} from '../shared/account.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {UpdateProfile} from '../shared/profile.model';
+import {Profile, UpdateProfile} from '../shared/profile.model';
 import {Validators} from '@angular/forms';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {StateService} from 'src/app/service/state.service';
@@ -69,8 +69,15 @@ export class AccountProfileComponent
       firstName: String(this.profileForm.controls['firstName'].value),
       lastName: String(this.profileForm.controls['lastName'].value),
     };
+
     this.accountService.updateUserProfile(profileToBeUpdated).subscribe(
       (successResponse: ApiResponse) => {
+        const userObject = sessionStorage.getItem('user');
+        let user = {} as Profile;
+        if (userObject) user = JSON.parse(userObject) as Profile;
+        user.firstName = String(this.profileForm.controls['firstName'].value);
+        user.lastName = String(this.profileForm.controls['lastName'].value);
+        sessionStorage.setItem('user', JSON.stringify(user));
         this.userState.setCurrentUserName(
           this.profileForm.controls['firstName'].value,
         );
@@ -95,10 +102,9 @@ export class AccountProfileComponent
           this.toastr.error(getMessage(successResponse.code));
         }
         sessionStorage.clear();
-        void this.router.navigate(['/login']);
+        void this.router.navigate(['/']);
       },
       (errorResponse: ApiResponse) => {
-        console.log(errorResponse);
         if (getMessage(errorResponse.code)) {
           this.toastr.error(getMessage(errorResponse.code));
         }

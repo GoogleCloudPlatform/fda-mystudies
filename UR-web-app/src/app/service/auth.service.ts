@@ -15,7 +15,7 @@ export class AuthService {
   pkceLength = 43;
   appId = 'PARTICIPANT MANAGER';
   mobilePlatform = 'DESKTOP';
-  source = 'PARTICIPANTMANAGER';
+  source = 'PARTICIPANT MANAGER';
 
   constructor(
     private readonly http: HttpClient,
