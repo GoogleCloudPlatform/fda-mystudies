@@ -285,7 +285,7 @@ resource "random_password" "passwords" {
     "study_designer_db_password",
     "study_metadata_db_password",
     "user_registration_db_password",
-    "participant_manager_db_user",
+    "participant_manager_db_password",
     "hydra_db_password",
   ])
   length  = 16
@@ -486,9 +486,9 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "user-registration-server-ws/enroll-mgmt-module",
 #     "user-registration-server-ws/user-mgmt-module",
 #     "response-server-ws",
-#     "participant-manager-module",
+#     "participant-manager-datastore",
 #     "hydra",
-#     "UR-web-app",
+#     "participant-manager",
 #   ])
 #
 #   provider = google-beta
