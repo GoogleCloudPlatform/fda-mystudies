@@ -65,9 +65,9 @@ resource "random_password" "passwords" {
   special = true
 }
 
-resource "random_secret" "strings" {
+resource "random_password" "system_secrets" {
   for_each = toset([
-    "hydra_secrets_key",
+    "hydra_system_secret",
   ])
   length = 32
 }
