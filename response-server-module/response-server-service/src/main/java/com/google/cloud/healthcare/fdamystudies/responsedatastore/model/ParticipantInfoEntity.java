@@ -18,6 +18,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,16 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @Getter
 @Entity
-@Table(name = "participant_info")
+@Table(
+    name = "participant_info",
+    indexes = {
+      @Index(
+          name = "participant_info_token_id_participant_id_idx",
+          columnList = "token_id,participant_id"),
+      @Index(
+          name = "participant_info_study_id_participant_id_idx",
+          columnList = "study_id,participant_id")
+    })
 public class ParticipantInfoEntity implements Serializable {
 
   private static final long serialVersionUID = -8669517487080184697L;
