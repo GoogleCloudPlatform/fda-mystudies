@@ -317,6 +317,7 @@ resource "random_password" "system_secrets" {
     "hydra_system_secret",
   ])
   length  = 32
+  special = false
 }
 EOF
     }

@@ -69,7 +69,8 @@ resource "random_password" "system_secrets" {
   for_each = toset([
     "hydra_system_secret",
   ])
-  length = 32
+  length  = 32
+  special = false
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
