@@ -6,6 +6,9 @@
 # {{$domain := "hcls.joonix.net"}}
 # {{$default_location := "us-east1"}}
 # {{$default_zone := "b"}}
+# {{$github_owner := "zohrehj"}}
+# {{$github_repo := "fda-mystudies"}}
+# {{$github_branch := "^develop$" }}
 
 data = {
   parent_type     = "folder"
@@ -57,10 +60,10 @@ template "cicd" {
   data = {
     project_id = "{{$prefix}}-{{$env}}-devops"
     github = {
-      owner = "zohrehj"
-      name  = "fda-mystudies"
+      owner = "{{$github_owner}}"
+      name  = "{{$github_repo}}"
     }
-    branch_regex   = "^develop$"
+    branch_regex   = "{{$github_branch}}"
     terraform_root = "terraform"
 
     # Prepare and enable default triggers.
@@ -520,9 +523,9 @@ resource "google_cloudbuild_trigger" "server_build_triggers" {
   included_files = ["$${each.key}/**"]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
-    push { branch = "^master$" }
+    owner = "{{$github_owner}}"
+    name  = "{{$github_repo}}"
+    push { branch = "{{$github_branch}}" }
   }
 
   filename = "$${each.key}/cloudbuild.yaml"

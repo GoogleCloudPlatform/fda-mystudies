@@ -59,9 +59,9 @@ resource "google_cloudbuild_trigger" "server_build_triggers" {
   included_files = ["${each.key}/**"]
 
   github {
-    owner = "GoogleCloudPlatform"
-    name  = "example"
-    push { branch = "^master$" }
+    owner = "zohrehj"
+    name  = "fda-mystudies"
+    push { branch = "^develop$" }
   }
 
   filename = "${each.key}/cloudbuild.yaml"
