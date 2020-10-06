@@ -53,9 +53,9 @@ export class SiteListComponent implements OnInit {
         this.manageStudiesBackup = {...manageStudies};
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
-            study.name.toLowerCase().includes(query) ||
-            study.customId.toLowerCase().includes(query) ||
-            study.sites.some((site) => site.name.includes(query)),
+            study.name?.toLowerCase().includes(query) ||
+            study.customId?.toLowerCase().includes(query) ||
+            study.sites.some((site) => site.name?.includes(query)),
         );
         return this.manageStudiesBackup;
       }),
