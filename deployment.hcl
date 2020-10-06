@@ -518,7 +518,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #
 #   provider = google-beta
 #   project  = module.project.project_id
-#   name     = each.key
+#   name     = replace(each.key, "/", "-")
 #
 #   included_files = ["$${each.key}/**"]
 #
