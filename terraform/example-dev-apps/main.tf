@@ -61,7 +61,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   github {
 #     owner = "GoogleCloudPlatform"
 #     name  = "example"
-#     push { branch = "^master" }
+#     push { branch = "^master$" }
 #   }
 #
 #   filename = "${each.key}/cloudbuild.yaml"

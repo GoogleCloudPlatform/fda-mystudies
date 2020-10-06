@@ -8,7 +8,7 @@
 # {{$default_zone := "a"}}
 # {{$github_owner := "GoogleCloudPlatform"}}
 # {{$github_repo := "example"}}
-# {{$github_branch := "^master" }}
+# {{$github_branch := "^master$" }}
 
 data = {
   parent_type     = "folder"
