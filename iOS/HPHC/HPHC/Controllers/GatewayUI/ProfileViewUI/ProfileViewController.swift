@@ -117,7 +117,8 @@ class ProfileViewController: UIViewController, SlideMenuControllerDelegate {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
 
-    if isProfileEdited {
+    if isProfileEdited,
+      User.currentUser.userType == UserType.loggedInUser {
       isProfileEdited = false
       UserServices().updateUserProfile(self)
     }
