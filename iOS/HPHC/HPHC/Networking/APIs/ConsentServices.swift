@@ -48,10 +48,11 @@ class ConsentServices: NSObject {
 
     var userDataSharing: String
     if let isShareData = consentResult?.isShareDataWithPublic {
-      userDataSharing = "\(isShareData)"
+      userDataSharing = isShareData ? "Provided" : "Not Provided"
     } else {
-      userDataSharing = "n/a"
+      userDataSharing = "Not Applicable"
     }
+
     let base64data =
       consentResult?.consentPdfData?
       .base64EncodedString() ?? ""
