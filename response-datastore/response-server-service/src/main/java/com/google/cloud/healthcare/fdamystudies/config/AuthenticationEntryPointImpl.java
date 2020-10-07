@@ -32,7 +32,7 @@ public class AuthenticationEntryPointImpl extends BasicAuthenticationEntryPoint 
   @Override
   public void afterPropertiesSet() {
     // RealmName appears in the login window (Firefox).
-    setRealmName("fda-mystudies-response-server");
+    setRealmName("response-datastore");
     super.afterPropertiesSet();
   }
 }

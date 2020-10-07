@@ -33,13 +33,13 @@
 	</Appenders>
 	<Loggers>
 
-		<Logger name="com.fda-mystudies-response-server"
+		<Logger name="com.response-datastore"
 			additivity="false">
 			<AppenderRef ref="appLog" />
 			<AppenderRef ref="Console" />
 		</Logger>
 
-		<Logger name="com.fda-mystudies-response-server"
+		<Logger name="com.response-datastore"
 			additivity="false" level="debug">
 			<AppenderRef ref="debugLog" />
 		</Logger>
