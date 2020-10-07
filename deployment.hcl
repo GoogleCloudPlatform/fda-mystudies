@@ -215,12 +215,12 @@ template "project_secrets" {
           secret_data = "$${random_password.passwords[\"mystudies_wcp_secret_key\"].result}"
         },
         {
-          secret_id   = "auto-response-server-db-password"
-          secret_data = "$${random_password.passwords[\"response_server_db_password\"].result}"
+          secret_id   = "auto-response-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"response-datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-response-server-db-user"
-          secret_data = "$${random_string.strings[\"response_server_db_user\"].result}"
+          secret_id   = "auto-response-datastore-db-user"
+          secret_data = "$${random_string.strings[\"response-datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-study-designer-db-password"
@@ -281,7 +281,7 @@ resource "random_string" "strings" {
     "mystudies_rs_client_id",
     "mystudies_urs_client_id",
     "mystudies_wcp_client_id",
-    "response_server_db_user",
+    "response_datastore_db_user",
     "study_designer_db_user",
     "study_metadata_db_user",
     "participant_consent_datastore_db_user",
@@ -302,7 +302,7 @@ resource "random_password" "passwords" {
     "mystudies_sql_default_user_password",
     "mystudies_urs_secret_key",
     "mystudies_wcp_secret_key",
-    "response_server_db_password",
+    "response_datastore_db_password",
     "study_designer_db_password",
     "study_metadata_db_password",
     "participant_consent_datastore_db_password",
@@ -454,7 +454,7 @@ template "project_apps" {
       service_accounts = [
         { account_id = "auth-server-gke-sa" },
         { account_id = "hydra-gke-sa" },
-        { account_id = "response-server-gke-sa" },
+        { account_id = "response-datastore-gke-sa" },
         { account_id = "study-designer-gke-sa" },
         { account_id = "study-metadata-gke-sa" },
         { account_id = "consent-datastore-gke-sa" },
@@ -510,7 +510,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "participant-datastore/consent-mgmt-module",
 #     "participant-datastore/enroll-mgmt-module",
 #     "participant-datastore/user-mgmt-module",
-#     "response-server-ws",
+#     "response-datastore",
 #     "participant-manager-datastore",
 #     "hydra",
 #     "participant-manager",
@@ -552,7 +552,7 @@ template "project_firebase" {
           "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
         ]
         "roles/datastore.user" = [
-          "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/pubsub.subscriber" = [
@@ -665,7 +665,7 @@ EOF
           "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",
           "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",

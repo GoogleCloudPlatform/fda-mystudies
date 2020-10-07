@@ -72,7 +72,7 @@ module "project_iam_members" {
       "serviceAccount:bastion@example-dev-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:hydra-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-metadata-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:consent-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",

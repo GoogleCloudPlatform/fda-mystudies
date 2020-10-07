@@ -62,8 +62,8 @@ spec:
                   key: BASE_URL
             - name: REGISTRATION_SERVER_URL
               value: "user-registration-server-np:50000"
-            - name: RESPONSE_SERVER_URL
-              value: "response-server-np:50000"
+            - name: RESPONSE_DATASTORE_URL
+              value: "response-datastore-np:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
             - name: SMTP_HOSTNAME
