@@ -175,7 +175,6 @@ class AnchorDateHandler {
     let method = ResponseMethods.getParticipantResponse.method
 
     let sourceActivityID = emptyAnchorDateDetail.sourceActivityId ?? ""
-    let orgID = AppConfiguration.orgID
     let appID = AppConfiguration.appID
     let studyID = self.study.studyId ?? ""
     let tokenIdentifier = study.userParticipateState.tokenIdentifier ?? ""
@@ -185,7 +184,6 @@ class AnchorDateHandler {
     let participantId = study.userParticipateState.participantId ?? ""
 
     var urlString = ResponseServerURLConstants.DevelopmentURL + method.methodName + "?"
-    urlString += "&orgId" + "=" + orgID
     urlString += "&appId" + "=" + appID
     urlString += "&studyId" + "=" + studyID
     urlString += "&siteId" + "=" + siteID

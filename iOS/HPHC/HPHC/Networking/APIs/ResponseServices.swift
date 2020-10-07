@@ -77,7 +77,6 @@ class ResponseServices: NSObject {
         JSONKey.tokenIdentifier: studyStatus.tokenIdentifier ?? "",
         JSONKey.siteID: studyStatus.siteID ?? "",
         JSONKey.applicationId: AppConfiguration.appID,
-        JSONKey.orgID: AppConfiguration.orgID,
         kActivityResponseData: responseData,
       ] as [String: Any]
 
@@ -130,8 +129,7 @@ class ResponseServices: NSObject {
           JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
           JSONKey.siteID: userStudyStatus.siteID ?? "",
           kActivityResponseData: responseData,
-          JSONKey.applicationId: AppConfiguration.appID,
-          JSONKey.orgID: AppConfiguration.orgID,
+          JSONKey.applicationId: AppConfiguration.appID
         ] as [String: Any]
 
       let headers: [String: String] = [
@@ -163,7 +161,6 @@ class ResponseServices: NSObject {
     let params =
       [
         JSONKey.appID: AppConfiguration.appID,
-        JSONKey.orgID: AppConfiguration.orgID,
         JSONKey.siteID: userStudyStatus?.siteID ?? "",
         JSONKey.studyID: study.studyId ?? "",
         JSONKey.activityID: self.activityId!,
