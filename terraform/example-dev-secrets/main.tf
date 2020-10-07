@@ -31,7 +31,7 @@ resource "random_string" "strings" {
     "mystudies_rs_client_id",
     "mystudies_urs_client_id",
     "mystudies_wcp_client_id",
-    "response_server_db_user",
+    "response_datastore_db_user",
     "study_builder_db_user",
     "study_metadata_db_user",
     "participant_consent_datastore_db_user",
@@ -52,7 +52,7 @@ resource "random_password" "passwords" {
     "mystudies_sql_default_user_password",
     "mystudies_urs_secret_key",
     "mystudies_wcp_secret_key",
-    "response_server_db_password",
+    "response_datastore_db_password",
     "study_builder_db_password",
     "study_metadata_db_password",
     "participant_consent_datastore_db_password",
@@ -558,10 +558,10 @@ resource "google_secret_manager_secret_version" "auto_mystudies_wcp_secret_key_d
   secret_data = random_password.passwords["mystudies_wcp_secret_key"].result
 }
 
-resource "google_secret_manager_secret" "auto_response_server_db_password" {
+resource "google_secret_manager_secret" "auto_response_datastore_db_password" {
   provider = google-beta
 
-  secret_id = "auto-response-server-db-password"
+  secret_id = "auto-response-datastore-db-password"
   project   = module.project.project_id
 
   replication {
@@ -573,17 +573,17 @@ resource "google_secret_manager_secret" "auto_response_server_db_password" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_response_server_db_password_data" {
+resource "google_secret_manager_secret_version" "auto_response_datastore_db_password_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_response_server_db_password.id
-  secret_data = random_password.passwords["response_server_db_password"].result
+  secret      = google_secret_manager_secret.auto_response_datastore_db_password.id
+  secret_data = random_password.passwords["response-datastore_db_password"].result
 }
 
-resource "google_secret_manager_secret" "auto_response_server_db_user" {
+resource "google_secret_manager_secret" "auto_response_datastore_db_user" {
   provider = google-beta
 
-  secret_id = "auto-response-server-db-user"
+  secret_id = "auto-response-datastore-db-user"
   project   = module.project.project_id
 
   replication {
@@ -595,11 +595,11 @@ resource "google_secret_manager_secret" "auto_response_server_db_user" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_response_server_db_user_data" {
+resource "google_secret_manager_secret_version" "auto_response_datastore_db_user_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_response_server_db_user.id
-  secret_data = random_string.strings["response_server_db_user"].result
+  secret      = google_secret_manager_secret.auto_response_datastore_db_user.id
+  secret_data = random_string.strings["response-datastore_db_user"].result
 }
 
 resource "google_secret_manager_secret" "auto_study_builder_db_password" {

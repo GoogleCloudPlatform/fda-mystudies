@@ -1,65 +1,75 @@
-# TODO: Rename this from study-meta-data to study-server.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: study-meta-data
+  name: response-datastore
   labels:
-    app: study-meta-data
+    app: response-datastore
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: study-meta-data
+      app: response-datastore
   template:
     metadata:
       labels:
-        app: study-meta-data
+        app: response-datastore
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: study-meta-data
-          image: gcr.io/fda-mystudies-dev-apps/study-meta-data:latest
+        - name: response-datastore
+          image: gcr.io/fda-mystudies-dev-apps/response-datastore:latest
           env:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-meta-data-db-credentials
+                  name: response-datastore-db-credentials
                   key: username
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-meta-data-db-credentials
+                  name: response-datastore-db-credentials
                   key: password
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: study-meta-data-db-credentials
+                  name: response-datastore-db-credentials
                   key: dbname
-            - name: CLIENT_ID
+            - name: FIRESTORE_PROJECT_ID
+              value: "fda-mystudies-dev-firebase"
+            - name: AUTH_SERVER_URL
+              value: "auth-server-np:50000"
+            - name: REGISTRATION_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: study-meta-data-secrets
-                  key: CLIENT_ID
-            - name: SECRET_KEY
+                  key: REGISTRATION_CLIENT_ID
+                  name: response-datastore-secrets
+            - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: study-meta-data-secrets
-                  key: SECRET_KEY
-            - name: BASE_URL
+                  key: CLIENT_SECRET
+                  name: response-datastore-secrets
+            - name: WCP_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-meta-data-secrets
-                  key: BASE_URL
-            - name: USER_REGISTRATION_SERVER
-              value: "user-registration-server-np:50000"
+                  key: WCP_USER
+                  name: response-datastore-secrets
+            - name: WCP_PASS
+              valueFrom:
+                secretKeyRef:
+                  key: WCP_PASS
+                  name: response-datastore-secrets
+            - name: STUDY_DATASTORE_URL
+              value: "study-meta-data-np:50000"
+            - name: PARTICIPANT_ENROLL_DATASTORE_URL
+              value: "participant-enroll-datastore:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /StudyMetaData/healthCheck
+              path: /response-datastore/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
@@ -77,4 +87,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-meta-data-gcloud-key
+          secretName: response-datastore-gcloud-key

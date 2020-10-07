@@ -76,7 +76,7 @@ module "project_iam_members" {
       "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
     ],
     "roles/datastore.user" = [
-      "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [
