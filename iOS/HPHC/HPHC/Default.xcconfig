@@ -25,11 +25,11 @@ WCP_URL = xxxxxx
 RESPONSE_URL = xxxxxxxxx
 
 // URL of different service bundles within participant datastore.
-// e.g. mystudiesdeployment.com/myStudiesUserMgmtWS/
+// e.g. mystudiesdeployment.com/participant-user-datastore/
 REGISTRATION_URL = xxxxxxx
-// e.g. mystudiesdeployment.com/myStudiesEnrollmentMgmt/
+// e.g. mystudiesdeployment.com/participant-enroll-datastore/
 ENROLLMENT_URL = xxxxxx
-// e.g. mystudiesdeployment.com/myStudiesConsentMgmtWS/
+// e.g. mystudiesdeployment.com/participant-consent-datastore/
 CONSENTMGMT_URL = xxxxxx
 
 // URL of oauth scim services.

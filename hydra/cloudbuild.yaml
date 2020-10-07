@@ -18,5 +18,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [ 'build', '-f', "hydra/Dockerfile", '-t', 'gcr.io/$PROJECT_ID/hydra', '.' ]
+
 images:
 - 'gcr.io/$PROJECT_ID/hydra'
