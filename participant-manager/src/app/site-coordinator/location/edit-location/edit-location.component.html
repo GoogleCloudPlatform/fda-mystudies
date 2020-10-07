@@ -106,7 +106,9 @@
           type="submit"
           name="update"
           class="btn bt__add mr-sm"
-          [disabled]="!updateLocationForm.form.valid"
+          [disabled]="
+            !updateLocationForm.form.valid || statusUpdate.status !== 1
+          "
           (click)="update()"
         >
           Save
