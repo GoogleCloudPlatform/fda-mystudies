@@ -218,10 +218,11 @@ public class FDASchedulerService {
 
         post.setHeader("Content-type", "application/json");
 
-        post.setHeader("clientId", configMap.get("WCPClientId").toString());
+        post.setHeader("clientId", configMap.get("security.oauth2.client.client-id").toString());
         post.setHeader(
             "secretKey",
-            FdahpStudyDesignerUtil.getHashedValue(configMap.get("WCPSecretKey").toString()));
+            FdahpStudyDesignerUtil.getHashedValue(
+                configMap.get("security.oauth2.client.client-secret").toString()));
 
         StringEntity requestEntity =
             new StringEntity(json.toString(), ContentType.APPLICATION_JSON);

@@ -58,6 +58,18 @@ enum DayValue: String {
   }
 }
 
+enum AccountStatus: Int {
+
+  /// User account verified  
+  case verified = 0
+
+  /// User account not verified
+  case pending
+
+  /// Logged In with temporary password
+  case tempPassword
+}
+
 let kUserValueForOS = "ios"
 
 let kCFBundleShortVersionString = "CFBundleShortVersionString"
@@ -76,13 +88,12 @@ class User {
   var password: String? = ""
   var refreshToken: String! = ""
 
-  var verified: Bool!
+  var verified: Bool = false
   var authToken: String!
-  var clientToken: String!
   var participatedStudies: [UserStudyStatus]! = []
   var participatedActivites: [UserActivityStatus]! = []
   var logoutReason: LogoutReason = .userAction
-  var isLoginWithTempPassword: Bool = false
+  var isLoggedInWithTempPassword: Bool = false
 
   /// sharedInstance
   private static var _currentUser: User?
@@ -94,6 +105,12 @@ class User {
 
   static func resetCurrentUser() {
     _currentUser = nil
+  }
+
+  struct JSONKey {
+    static let accessToken = "access_token"
+    static let tokenType = "token_type"
+    static let refreshToken = "refresh_token"
   }
 
   /// Default Initializer which initialize all properties
@@ -469,6 +486,31 @@ class User {
     return .yetToJoin
   }
 
+  func authenticate(with dict: JSONDictionary) {
+
+    let tokenType = dict[JSONKey.tokenType] as? String ?? ""
+    let accessToken = dict[JSONKey.accessToken] as? String ?? ""
+    authToken = tokenType.capitalized + " " + accessToken
+    refreshToken = dict[JSONKey.refreshToken] as? String ?? ""
+
+    if self.verified && !self.isLoggedInWithTempPassword {
+
+      // Set user type & save current user to DB
+      userType = UserType.loggedInUser
+      DBHandler().saveCurrentUser(user: self)
+
+      // Updating Key & Vector
+      let appDelegate = UIApplication.shared.delegate as? AppDelegate
+      appDelegate?.updateKeyAndInitializationVector()
+
+      FDAKeychain.shared[kUserAuthTokenKeychainKey] = authToken
+      FDAKeychain.shared[kUserRefreshTokenKeychainKey] = refreshToken
+
+      UserDefaults.standard.set(true, forKey: kPasscodeIsPending)  // For passcode setup
+
+      StudyFilterHandler.instance.previousAppliedFilters = []
+    }
+  }
 }
 
 // MARK: User Settings

@@ -34,8 +34,7 @@ public class StudyDetailsBean {
       studyEnrolling = "",
       appId = "",
       appName = "",
-      appDescription = "",
-      orgId = "";
+      appDescription = "";
 
   public String getStudyId() {
     return studyId;
@@ -75,10 +74,6 @@ public class StudyDetailsBean {
 
   public String getAppId() {
     return appId;
-  }
-
-  public String getOrgId() {
-    return orgId;
   }
 
   public void setStudyId(String studyId) {
@@ -135,9 +130,5 @@ public class StudyDetailsBean {
 
   public void setAppDescription(String appDescription) {
     this.appDescription = appDescription;
-  }
-
-  public void setOrgId(String orgId) {
-    this.orgId = orgId;
   }
 }

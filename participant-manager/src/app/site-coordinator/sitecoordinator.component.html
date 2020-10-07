@@ -1,0 +1,81 @@
+<header>
+  <div (keydown)="onKeyDown($event)" id="desktop-menu">
+    <div class="bs-example bs__example">
+      <nav class="navbar navbar-expand-md p-none">
+        <a routerLink="/coordinator/studies" class="navbar-brand">
+          <img class="mr-sm" src="assets/images/landing-logo.gif" />
+          <span class="header__logo__text">FDA MyStudies</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <div class="navbar-nav ml-auto">
+            <div class="navbar-nav display-flex-center">
+              <div
+                *ngIf="showSearchBar"
+                class="navbar-nav inner-addon right-addon search-icon"
+              >
+                <input
+                  type="text"
+                  [attr.placeholder]="searchPlaceholder"
+                  autocomplete="off"
+                  [(ngModel)]="filterQuery"
+                  class="form-control search-box search__"
+                />
+              </div>
+
+              <a
+                routerLink="/coordinator/studies"
+                routerLinkActive="active"
+                class="nav-item nav-link"
+              >
+                Dashboard
+              </a>
+              <a
+                *ngIf="user?.manageLocations !== null || user?.superAdmin"
+                routerLink="/coordinator/locations"
+                routerLinkActive="active"
+                class="nav-item nav-link"
+              >
+                Locations
+              </a>
+              <a
+                *ngIf="user?.superAdmin"
+                routerLink="/coordinator/users"
+                routerLinkActive="active"
+                class="nav-item nav-link"
+              >
+                Users
+              </a>
+              <a
+                routerLink="/coordinator/accounts"
+                routerLinkActive="active"
+                class="nav-item nav-link"
+              >
+                My Account
+                <span class="navbar__name">J</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <mobile-menu
+    [searchPlaceholder]="searchPlaceholder"
+    [showSearchBar]="showSearchBar"
+    [filterQuery]="filterQuery"
+    (keyDown)="onKeyDown($event)"
+  ></mobile-menu>
+</header>
+
+<router-outlet (activate)="onActivate($event)"></router-outlet>
+
+<footer>
+  <div>&copy; 2019 FDA MyStudies. All rights reserved.</div>
+  <div>
+    <ul>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Terms of Service</a></li>
+    </ul>
+  </div>
+</footer>

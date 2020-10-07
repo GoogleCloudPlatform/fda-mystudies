@@ -62,10 +62,10 @@ import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.dao.CloudFirestoreResponsesDaoImpl;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantActivitiesBo;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.utils.Constants;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
@@ -158,7 +158,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         1,
         getRequestedFor(
             urlEqualTo(
-                "/myStudiesEnrollmentMgmt/participantInfo?studyId=ASignature01&participantId="
+                "/participant-enroll-datastore/participantInfo?studyId=ASignature01&participantId="
                     + participantBo.getParticipantIdentifier())));
 
     verify(
@@ -168,8 +168,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 "/StudyMetaData/activity?studyId=ASignature01"
                     + "&activityId=Activity&activityVersion=1.0")));
 
-    // Step-4: assert argument capture
 
+    // Step-4: assert argument capture
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(ACTIVITY_COLLECTION_NAME_VALUE, activityCollectionNameCaptor.getValue());

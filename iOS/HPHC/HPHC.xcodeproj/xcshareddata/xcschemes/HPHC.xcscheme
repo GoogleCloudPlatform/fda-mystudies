@@ -49,22 +49,13 @@
       </CodeCoverageTargets>
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7878B3192216C6E10052FC23"
                BuildableName = "HPHCTests.xctest"
                BlueprintName = "HPHCTests"
-               ReferencedContainer = "container:HPHC.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "89055917230149AD005FB284"
-               BuildableName = "HPHCUITests.xctest"
-               BlueprintName = "HPHCUITests"
                ReferencedContainer = "container:HPHC.xcodeproj">
             </BuildableReference>
          </TestableReference>

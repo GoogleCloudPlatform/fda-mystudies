@@ -1,4 +1,0 @@
-steps:
-- name: 'maven'
-  args: ['mvn', '-B', 'package', 'com.google.cloud.tools:jib-maven-plugin:2.5.2:build', '-Dimage=gcr.io/$PROJECT_ID/participant-datastore-consent']
-  dir: "user-registration-server-ws/consent-mgmt-module"

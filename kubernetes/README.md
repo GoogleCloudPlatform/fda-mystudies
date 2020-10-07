@@ -21,7 +21,7 @@ All files below are relative to the root of the repo.
   * kubeapply.sh
     * A helper script that applies all resources to the cluster. Not
             required, the manual steps will be described below.
-* auth-server-ws/
+* oauth-scim-module/
   * tf-deployment.yaml
     * A Kubernetes Deployment, deploying the app along with its secrets.
     * This is forked from deployment.yaml with modifications for the Terraform
@@ -37,11 +37,13 @@ All files below are relative to the root of the repo.
   * same as auth-server-ws
 * WCP-WS/
   * same as auth-server-ws
-* user-registration-server-ws/consent-mgmt-module
+* participant-datastore/consent-mgmt-module
   * same as auth-server-ws
-* user-registration-server-ws/enroll-mgmt-module
+* participant-datastore/enroll-mgmt-module
   * same as auth-server-ws
-* user-registration-server-ws/user-mgmt-module
+* participant-datastore/user-mgmt-module
+  * same as auth-server-ws
+* participant-manager/
   * same as auth-server-ws
 
 ## Setup
@@ -135,14 +137,16 @@ organization and deployment.
 In each tf-deployment.yaml file listed below (paths are relative to the
 root of the repo):
 
-1. auth-server-ws/tf-deployment.yaml
+1. oauth-scim-module/tf-deployment.yaml
+1. hydra/tf-deployment.yaml
 1. response-server-module/tf-deployment.yaml
 1. WCP/tf-deployment.yaml
 1. WCP-WS/tf-deployment.yaml
-1. user-registration-server-ws/consent-mgmt-module/tf-deployment.yaml
-1. user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml
-1. user-registration-server-ws/user-mgmt-module/tf-deployment.yaml
-1. participant-manager-module/tf-deployment.yaml
+1. participant-datastore/consent-mgmt-module/tf-deployment.yaml
+1. participant-datastore/enroll-mgmt-module/tf-deployment.yaml
+1. participant-datastore/user-mgmt-module/tf-deployment.yaml
+1. participant-manager-datastore/tf-deployment.yaml
+1. participant-manager/tf-deployment.yaml
 
 Do the following:
 
@@ -161,6 +165,10 @@ In the ./kubernetes/ingress.yaml file:
     name in ./kubernetes/cert.yaml.
 * Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
+    
+In ./participant-manager/src/environments/environment.prod.ts
+
+* Change the domain name to match your organization.
 
 ### GKE Cluster - Terraform
 
@@ -225,12 +233,14 @@ Apply all deployments:
 $ kubectl apply \
   -f ./WCP-WS/tf-deployment.yaml \
   -f ./response-server-ws/tf-deployment.yaml \
-  -f ./user-registration-server-ws/consent-mgmt-module/tf-deployment.yaml \
-  -f ./user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml \
-  -f ./user-registration-server-ws/user-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/consent-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/user-mgmt-module/tf-deployment.yaml \
   -f ./WCP/tf-deployment.yaml \
-  -f ./auth-server-ws/tf-deployment.yaml \
-  -f ./participant-manager-module/tf-deployment.yaml
+  -f ./oauth-scim-module/tf-deployment.yaml \
+  -f ./participant-manager-datastore/tf-deployment.yaml \
+  -f ./hydra/tf-deployment.yaml \
+  -f ./participant-manager/tf-deployment.yaml
 ```
 
 Apply all services:
@@ -239,12 +249,14 @@ Apply all services:
 $ kubectl apply \
   -f ./WCP-WS/tf-service.yaml \
   -f ./response-server-ws/tf-service.yaml \
-  -f ./user-registration-server-ws/consent-mgmt-module/tf-service.yaml \
-  -f ./user-registration-server-ws/enroll-mgmt-module/tf-service.yaml \
-  -f ./user-registration-server-ws/user-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/consent-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/enroll-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/user-mgmt-module/tf-service.yaml \
   -f ./WCP/tf-service.yaml \
-  -f ./auth-server-ws/tf-service.yaml \
-  -f ./participant-manager-module/tf-service.yaml
+  -f ./oauth-scim-module/tf-service.yaml \
+  -f ./participant-manager-datastore/tf-service.yaml \
+  -f ./hydra/tf-service.yaml \
+  -f ./participant-manager/tf-service.yaml
 ```
 
 Apply the certificate and the ingress:

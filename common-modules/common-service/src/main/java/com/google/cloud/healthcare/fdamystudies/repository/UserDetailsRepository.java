@@ -43,4 +43,6 @@ public interface UserDetailsRepository extends JpaRepository<UserDetailsEntity, 
 
   @Query("SELECT ud FROM UserDetailsEntity ud WHERE ud.userId = :userId")
   public Optional<UserDetailsEntity> findByUserId(String userId);
+
+  List<UserDetailsEntity> findByStatus(Integer status);
 }
