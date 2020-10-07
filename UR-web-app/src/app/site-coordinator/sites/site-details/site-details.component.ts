@@ -26,7 +26,8 @@ export class SiteDetailsComponent
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
-
+  siteIdAddEmail = '';
+  siteIdImportEmail = '';
   sendResend = '';
   enableDisable = '';
   toggleDisplay = false;
@@ -45,9 +46,18 @@ export class SiteDetailsComponent
   ) {
     super();
   }
-  openModal(templateRef: TemplateRef<unknown>): void {
+  openModal(templateRef: TemplateRef<unknown>, importType: string): void {
+    console.log(importType);
+    if (importType === 'addEmail') {
+      this.siteIdAddEmail = this.siteId;
+      console.log(this.siteIdAddEmail);
+    } else {
+      this.siteIdImportEmail = this.siteId;
+    }
+
     this.modalRef = this.modalService.show(templateRef);
   }
+
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder('Search Participant Email');
     this.subs.add(
@@ -179,12 +189,17 @@ export class SiteDetailsComponent
   }
 
   onSucceedAddEmail(): void {
-    this.modalRef.hide();
+    this.cancel();
     this.fetchSiteParticipant(OnboardingStatus.New);
   }
 
   onFileImportSuccess(): void {
+    this.cancel();
     this.fetchSiteParticipant(OnboardingStatus.New);
+  }
+  cancel(): void {
+    this.siteIdAddEmail = '';
+    this.siteIdImportEmail = '';
     this.modalRef.hide();
   }
 }

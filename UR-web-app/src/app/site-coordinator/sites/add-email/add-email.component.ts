@@ -13,7 +13,7 @@ import {ToastrService} from 'ngx-toastr';
 export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
   @Output() addEmail = new EventEmitter();
-  @Input() siteId = '';
+  @Input() siteIdAddEmail = '';
   model: AddEmail;
   constructor(
     private readonly siteDetailedService: SiteDetailsService,
@@ -26,15 +26,15 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
   addParticipant(): void {
     this.subs.add(
       this.siteDetailedService
-        .addParticipants(this.siteId, this.model)
+        .addParticipants(this.siteIdAddEmail, this.model)
         .subscribe(
           (successResponse: ApiResponse) => {
             if (getMessage(successResponse.code)) {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
-              this.addEmail.emit();
             }
+            this.addEmail.emit();
           },
           (error) => {
             this.toastr.error(error);

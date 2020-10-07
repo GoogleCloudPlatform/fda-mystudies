@@ -1,39 +1,41 @@
-<form (ngSubmit)="addParticipant()" #addParticipantForm="ngForm">
-  <div class="row border__bottom__c4d1e6">
-    <div class="col-xs-12 col-md-12 p-none">
-      <div class="form-group border-radius__77">
-        <label for="email">Email</label>
-        <input
-          type="text"
-          class="form-control"
-          id="email"
-          placeholder="Enter Email"
-          pattern='(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)'
-          required
-          [(ngModel)]="model.email"
-          name="email"
-        />
+<div *ngIf="siteIdAddEmail !== ''">
+  <form (ngSubmit)="addParticipant()" #addParticipantForm="ngForm">
+    <div class="row border__bottom__c4d1e6">
+      <div class="col-xs-12 col-md-12 p-none">
+        <div class="form-group border-radius__77">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            class="form-control"
+            id="email"
+            placeholder="Enter Email"
+            pattern='(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)'
+            required
+            [(ngModel)]="model.email"
+            name="email"
+          />
+        </div>
       </div>
     </div>
-  </div>
-  <div class="p-xlg flex__justify__space-between">
-    <div>
-      <button
-        name="addEmail"
-        type="submit"
-        [disabled]="!addParticipantForm.form.valid"
-        class="btn bt__add mr-sm"
-      >
-        Add
-      </button>
-      <button
-        name="cancel"
-        type="button"
-        class="btn bt__cancel"
-        (click)="onCancel()"
-      >
-        Cancel
-      </button>
+    <div class="p-xlg flex__justify__space-between">
+      <div>
+        <button
+          name="addEmail"
+          type="submit"
+          [disabled]="!addParticipantForm.form.valid"
+          class="btn bt__add mr-sm"
+        >
+          Add
+        </button>
+        <button
+          name="cancel"
+          type="button"
+          class="btn bt__cancel"
+          (click)="onCancel()"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
-  </div>
-</form>
+  </form>
+</div>
