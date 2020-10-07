@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: study-designer
+  name: study-builder
   labels:
-    app: study-designer
+    app: study-builder
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: study-designer
+      app: study-builder
   template:
     metadata:
       labels:
-        app: study-designer
+        app: study-builder
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: study-designer
-          image: gcr.io/fda-mystudies-dev-apps/study-designer:latest
+        - name: study-builder
+          image: gcr.io/fda-mystudies-dev-apps/study-builder:latest
           env:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-db-credentials
+                  name: study-builder-db-credentials
                   key: username
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-db-credentials
+                  name: study-builder-db-credentials
                   key: password
             - name: DB_NAME
               valueFrom:
@@ -48,22 +48,19 @@ spec:
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-secrets
+                  name: study-builder-secrets
                   key: CLIENT_ID
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-secrets
+                  name: study-builder-secrets
                   key: SECRET_KEY
-            - name: BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: study-designer-secrets
-                  key: BASE_URL
-            - name: REGISTRATION_SERVER_URL
-              value: "user-registration-server-np:50000"
+            - name: STUDY_BUILDER_URL
+              value: "https://fda-mystudies.domain.com/studybuilder/"
+            - name: PARTICIPANT_USER_DATASTORE_URL
+              value: "http://participant-user-datastore-np:50000/participant-user-datastore"
             - name: RESPONSE_DATASTORE_URL
-              value: "response-datastore-np:50000"
+              value: "http://response-datastore-np:50000/response-datastore"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
             - name: SMTP_HOSTNAME
@@ -94,4 +91,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-designer-gcloud-key
+          secretName: study-builder-gcloud-key
