@@ -1,11 +1,10 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Copyright 2020 Google LLC Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"), to deal in the
+ * Software without restriction, including without limitation the rights to use, copy, modify,
+ * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+ * to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
@@ -46,7 +45,8 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
   private static Logger logger = Logger.getLogger(LimitLoginAuthenticationProvider.class.getName());
 
-  @Autowired private AuditLogDAO auditLogDAO;
+  @Autowired
+  private AuditLogDAO auditLogDAO;
 
   private LoginDAOImpl loginDAO;
 
@@ -68,10 +68,7 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       if (StringUtils.isNotEmpty(username)) {
         userBO = loginDAO.getValidUserByEmail(username.toLowerCase());
         if (userBO == null) {
-          auditLogDAO.saveToAuditLog(
-              null,
-              null,
-              null,
+          auditLogDAO.saveToAuditLog(null, null, null,
               FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_MESSAGE,
               FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_DEATILS_MESSAGE,
               "LimitLoginAuthenticationProvider - authenticate()");
@@ -83,15 +80,12 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       // Restricting the user to login for specified minutes if the user
       // has max fails attempts
       try {
-        if ((userAttempts != null)
-            && (userAttempts.getAttempts() >= MAX_ATTEMPTS)
+        if ((userAttempts != null) && (userAttempts.getAttempts() >= MAX_ATTEMPTS)
             && new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
-                .parse(
-                    FdahpStudyDesignerUtil.addMinutes(
-                        userAttempts.getLastModified(), USER_LOCK_DURATION))
-                .after(
-                    new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
-                        .parse(FdahpStudyDesignerUtil.getCurrentDateTime()))) {
+                .parse(FdahpStudyDesignerUtil.addMinutes(userAttempts.getLastModified(),
+                    USER_LOCK_DURATION))
+                .after(new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
+                    .parse(FdahpStudyDesignerUtil.getCurrentDateTime()))) {
           throw new LockedException(lockMsg);
         }
       } catch (ParseException e) {
@@ -99,10 +93,8 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       }
 
       UsernamePasswordAuthenticationToken token =
-          new UsernamePasswordAuthenticationToken(
-              authentication.getPrincipal(),
-              authentication.getCredentials(),
-              new ArrayList<GrantedAuthority>());
+          new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
+              authentication.getCredentials(), new ArrayList<GrantedAuthority>());
 
       // if reach here, means login success, else an exception will be
       // thrown
@@ -132,6 +124,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
       }
 
       throw new LockedException(error);
+    } catch (Exception e) {
+      logger.error("LimitLoginAuthenticationProvider - authenticate - ERROR - signin failed! ", e);
+      return null;
     }
   }
 
