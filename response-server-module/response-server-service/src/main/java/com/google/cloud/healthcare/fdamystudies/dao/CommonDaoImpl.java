@@ -40,7 +40,7 @@ public class CommonDaoImpl implements CommonDao {
     Root<ParticipantInfoEntity> participantBoRoot =
         participantBoCriteriaQuery.from(ParticipantInfoEntity.class);
     participantBoPredicates[0] =
-        criteriaBuilder.equal(participantBoRoot.get("participantIdentifier"), participantId);
+        criteriaBuilder.equal(participantBoRoot.get("participantId"), participantId);
     participantBoCriteriaQuery.select(participantBoRoot).where(participantBoPredicates);
     List<ParticipantInfoEntity> participantBoList =
         session.createQuery(participantBoCriteriaQuery).getResultList();

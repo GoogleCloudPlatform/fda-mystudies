@@ -34,9 +34,7 @@ import org.hibernate.annotations.GenericGenerator;
       @Index(
           name = "participant_info_token_id_participant_id_idx",
           columnList = "token_id,participant_id"),
-      @Index(
-          name = "participant_info_study_id_participant_id_idx",
-          columnList = "study_id,participant_id")
+      @Index(name = "participant_info_token_id_idx", columnList = "token_id")
     })
 public class ParticipantInfoEntity implements Serializable {
 
