@@ -231,12 +231,12 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"study_builder_db_user\"].result}"
         },
         {
-          secret_id   = "auto-study-metadata-db-password"
-          secret_data = "$${random_password.passwords[\"study_metadata_db_password\"].result}"
+          secret_id   = "auto-study-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"study_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-study-metadata-db-user"
-          secret_data = "$${random_string.strings[\"study_metadata_db_user\"].result}"
+          secret_id   = "auto-study-datastore-db-user"
+          secret_data = "$${random_string.strings[\"study_datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-participant-consent-datastore-db-password"
@@ -283,7 +283,7 @@ resource "random_string" "strings" {
     "mystudies_wcp_client_id",
     "response_datastore_db_user",
     "study_builder_db_user",
-    "study_metadata_db_user",
+    "study_datastore_db_user",
     "participant_consent_datastore_db_user",
     "participant_enroll_datastore_db_user",
     "participant_user_datastore_db_user",
@@ -304,7 +304,7 @@ resource "random_password" "passwords" {
     "mystudies_wcp_secret_key",
     "response_datastore_db_password",
     "study_builder_db_password",
-    "study_metadata_db_password",
+    "study_datastore_db_password",
     "participant_consent_datastore_db_password",
     "participant_enroll_datastore_db_password",
     "participant_user_datastore_db_password",
@@ -456,7 +456,7 @@ template "project_apps" {
         { account_id = "hydra-gke-sa" },
         { account_id = "response-datastore-gke-sa" },
         { account_id = "study-builder-gke-sa" },
-        { account_id = "study-metadata-gke-sa" },
+        { account_id = "study-datastore-gke-sa" },
         { account_id = "consent-datastore-gke-sa" },
         { account_id = "enroll-datastore-gke-sa" },
         { account_id = "user-datastore-gke-sa" },
@@ -669,7 +669,7 @@ EOF
           "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:response-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-builder-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:enroll-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
