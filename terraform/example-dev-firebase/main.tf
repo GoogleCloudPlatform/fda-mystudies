@@ -73,7 +73,7 @@ module "project_iam_members" {
 
   bindings = {
     "roles/datastore.user" = [
-      "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [

@@ -51,8 +51,6 @@ spec:
                 secretKeyRef:
                   name: study-meta-data-secrets
                   key: BASE_URL
-            - name: RESPONSE_SERVER
-              value: "response-server-np:50000"
             - name: USER_REGISTRATION_SERVER
               value: "user-registration-server-np:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
