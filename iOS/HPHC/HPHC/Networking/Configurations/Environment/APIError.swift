@@ -17,7 +17,7 @@ struct ApiError: ErrorPresentable {
   // MARK: - Properties
   var title: String?
   var message: String?
-  var code: Int!
+  var code: Int?
 
   // MARK: - Initializers
   init(title: String? = nil, message: String? = nil, code: HTTPError? = nil) {
@@ -48,7 +48,7 @@ struct ApiError: ErrorPresentable {
 
   func toNSError() -> NSError {
     let errorInfo = ["NSLocalizedDescription": message ?? ""]
-    return NSError(domain: title ?? "", code: code, userInfo: errorInfo)
+    return NSError(domain: title ?? "", code: code ?? 0, userInfo: errorInfo)
   }
 
   // MARK: - Utils

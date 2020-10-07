@@ -467,7 +467,6 @@ extension SignInViewController: WKNavigationDelegate {
     didFailProvisionalNavigation navigation: WKNavigation!,
     withError error: Error
   ) {
-    self.view.makeToast(error.localizedDescription)
     UIView.animate(
       withDuration: 0.33,
       animations: {
