@@ -1,82 +1,75 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: study-designer
+  name: response-datastore
   labels:
-    app: study-designer
+    app: response-datastore
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: study-designer
+      app: response-datastore
   template:
     metadata:
       labels:
-        app: study-designer
+        app: response-datastore
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: study-designer
-          image: gcr.io/fda-mystudies-dev-apps/study-designer:latest
+        - name: response-datastore
+          image: gcr.io/fda-mystudies-dev-apps/response-datastore:latest
           env:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-db-credentials
+                  name: response-datastore-db-credentials
                   key: username
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-db-credentials
+                  name: response-datastore-db-credentials
                   key: password
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-db-credentials
+                  name: response-datastore-db-credentials
                   key: dbname
-            - name: FROM_EMAIL_ADDRESS
+            - name: FIRESTORE_PROJECT_ID
+              value: "fda-mystudies-dev-firebase"
+            - name: AUTH_SERVER_URL
+              value: "auth-server-np:50000"
+            - name: REGISTRATION_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: email-credentials
-                  key: email_address
-            - name: FROM_EMAIL_PASSWORD
+                  key: REGISTRATION_CLIENT_ID
+                  name: response-datastore-secrets
+            - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: email-credentials
-                  key: email_password
-            - name: CLIENT_ID
+                  key: CLIENT_SECRET
+                  name: response-datastore-secrets
+            - name: WCP_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-secrets
-                  key: CLIENT_ID
-            - name: SECRET_KEY
+                  key: WCP_USER
+                  name: response-datastore-secrets
+            - name: WCP_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-secrets
-                  key: SECRET_KEY
-            - name: BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: study-designer-secrets
-                  key: BASE_URL
-            - name: REGISTRATION_SERVER_URL
-              value: "user-registration-server-np:50000"
-            - name: RESPONSE_DATASTORE_URL
-              value: "response-datastore-np:50000"
+                  key: WCP_PASS
+                  name: response-datastore-secrets
+            - name: STUDY_DATASTORE_URL
+              value: "study-meta-data-np:50000"
+            - name: PARTICIPANT_ENROLL_DATASTORE_URL
+              value: "participant-enroll-datastore:50000"
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
-            - name: SMTP_HOSTNAME
-              value: "smtp.gmail.com"
-            - name: SMTP_USE_IP_WHITELIST
-              value: "false"
-            - name: FROM_EMAIL_DOMAIN
-              value: ""
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /studybuilder/healthCheck.do
+              path: /response-datastore/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
@@ -94,4 +87,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-designer-gcloud-key
+          secretName: response-datastore-gcloud-key

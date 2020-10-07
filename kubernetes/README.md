@@ -31,7 +31,7 @@ All files below are relative to the root of the repo.
         and the Ingress.
     * This is forked from service.yaml with modifications for the Terraform
         setup.
-* response-server-module/
+* response-datastore/
   * same as auth-server-ws
 * WCP/
   * same as auth-server-ws
@@ -89,7 +89,7 @@ Upload the SQL files to the bucket:
 $ gsutil cp \
   ./auth-server-ws/auth_server_db_script.sql \
   ./WCP/sqlscript/* \
-  ./response-server-ws/mystudies_response_server_db_script.sql \
+  ./response-datastore/mystudies_response_server_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_app_info_update_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_user_registration_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
