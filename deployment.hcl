@@ -548,9 +548,10 @@ template "project_firebase" {
     }
     resources = {
       iam_members = {
-        "roles/datastore.importExportAdmin" = [
-          "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-        ]
+        # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
+        # "roles/datastore.importExportAdmin" = [
+        #   "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+        # ]
         "roles/datastore.user" = [
           "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
@@ -563,10 +564,11 @@ template "project_firebase" {
         {
           # Firestore data export
           name = "{{$prefix}}-{{$env}}-mystudies-firestore-raw-data"
-          iam_members = [{
-            role   = "roles/storage.admin"
-            member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-          }]
+          # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
+          # iam_members = [{
+          #   role   = "roles/storage.admin"
+          #   member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
+          # }]
           # TTL 7 days.
           lifecycle_rules = [{
             action = {
@@ -602,7 +604,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
 # resource "google_firestore_index" "activities_index" {
 #   project    = module.project.project_id
 #   collection = "Activities"
@@ -641,7 +643,7 @@ template "project_data" {
         host_project_id = "{{$prefix}}-{{$env}}-networks"
       }
     }
-    # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
+    # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
 data "google_secret_manager_secret_version" "mystudies_db_default_password" {
@@ -652,7 +654,7 @@ data "google_secret_manager_secret_version" "mystudies_db_default_password" {
 EOF
     } */
     resources = {
-      # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
+      # Step 5.5: uncomment and re-run the engine once all previous steps have been completed.
       # cloud_sql_instances = [{
       #   name               = "mystudies"
       #   type               = "mysql"
@@ -674,12 +676,13 @@ EOF
           "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
-        "roles/bigquery.jobUser" = [
-          "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
-        ]
-        "roles/bigquery.dataEditor" = [
-          "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
-        ]
+        # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
+        # "roles/bigquery.jobUser" = [
+        #   "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
+        # ]
+        # "roles/bigquery.dataEditor" = [
+        #   "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
+        # ]
       }
       storage_buckets = [
         {
