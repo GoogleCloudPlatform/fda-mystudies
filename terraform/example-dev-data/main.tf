@@ -74,7 +74,7 @@ module "project_iam_members" {
       "serviceAccount:hydra-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-metadata-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:consent-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:enroll-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:user-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",

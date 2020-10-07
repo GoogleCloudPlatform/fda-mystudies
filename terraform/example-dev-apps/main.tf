@@ -211,8 +211,8 @@ resource "google_service_account" "study_designer_gke_sa" {
   project    = module.project.project_id
 }
 
-resource "google_service_account" "study_metadata_gke_sa" {
-  account_id = "study-metadata-gke-sa"
+resource "google_service_account" "study_datastore_gke_sa" {
+  account_id = "study-datastore-gke-sa"
   project    = module.project.project_id
 }
 

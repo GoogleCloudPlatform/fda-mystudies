@@ -1,9 +1,9 @@
+name: Build study datastore
 on:
   pull_request:
     paths:
     - 'WCP-WS/**'
-    - '.github/workflows/build-studymetadata.yml'
-name: Build studymetadata
+    - '.github/workflows/build-study-datastore.yml'
 jobs:
   build:
     runs-on: ubuntu-latest

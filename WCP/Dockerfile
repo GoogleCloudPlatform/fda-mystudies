@@ -9,9 +9,9 @@ RUN ls /app/target
 FROM tomcat:9.0.33-jdk11-openjdk
 
 # Creates mounted path for gcsfuse
-RUN mkdir /usr/local/tomcat/webapps/fdaResources
-RUN chmod a+w /usr/local/tomcat/webapps/fdaResources
-RUN mkdir /usr/local/tomcat/webapps/fdaResources/studyResources
+RUN mkdir /usr/local/tomcat/webapps/study-resources
+RUN chmod a+w /usr/local/tomcat/webapps/study-resources
+RUN mkdir /usr/local/tomcat/webapps/study-resources/resources
 
 # Installs gcsfuse
 ENV GCSFUSE_REPO gcsfuse-stretch
