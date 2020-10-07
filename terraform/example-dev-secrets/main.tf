@@ -34,7 +34,9 @@ resource "random_string" "strings" {
     "response_server_db_user",
     "study_designer_db_user",
     "study_metadata_db_user",
-    "user_registration_db_user",
+    "participant_consent_datastore_db_user",
+    "participant_enroll_datastore_db_user",
+    "participant_user_datastore_db_user",
     "participant_manager_db_user",
     "hydra_db_user",
   ])
@@ -53,19 +55,22 @@ resource "random_password" "passwords" {
     "response_server_db_password",
     "study_designer_db_password",
     "study_metadata_db_password",
-    "user_registration_db_password",
-    "participant_manager_db_user",
+    "participant_consent_datastore_db_password",
+    "participant_enroll_datastore_db_password",
+    "participant_user_datastore_db_password",
+    "participant_manager_db_password",
     "hydra_db_password",
   ])
   length  = 16
   special = true
 }
 
-resource "random_secret" "secrets" {
+resource "random_password" "system_secrets" {
   for_each = toset([
-    "hydra_secrets_key",
+    "hydra_system_secret",
   ])
-  length = 32
+  length  = 32
+  special = false
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
@@ -352,7 +357,7 @@ resource "google_secret_manager_secret_version" "auto_hydra_secrets_system_data"
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_hydra_secrets_system.id
-  secret_data = random_secret.secrets["hydra_secrets_key"].result
+  secret_data = random_password.system_secrets["hydra_system_secret"].result
 }
 
 resource "google_secret_manager_secret" "auto_mystudies_ma_client_id" {
@@ -685,10 +690,10 @@ resource "google_secret_manager_secret_version" "auto_study_metadata_db_user_dat
   secret_data = random_string.strings["study_metadata_db_user"].result
 }
 
-resource "google_secret_manager_secret" "auto_user_registration_db_password" {
+resource "google_secret_manager_secret" "auto_participant_consent_datastore_db_password" {
   provider = google-beta
 
-  secret_id = "auto-user-registration-db-password"
+  secret_id = "auto-participant-consent-datastore-db-password"
   project   = module.project.project_id
 
   replication {
@@ -700,17 +705,17 @@ resource "google_secret_manager_secret" "auto_user_registration_db_password" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_user_registration_db_password_data" {
+resource "google_secret_manager_secret_version" "auto_participant_consent_datastore_db_password_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_user_registration_db_password.id
-  secret_data = random_password.passwords["user_registration_db_password"].result
+  secret      = google_secret_manager_secret.auto_participant_consent_datastore_db_password.id
+  secret_data = random_password.passwords["participant_consent_datastore_db_password"].result
 }
 
-resource "google_secret_manager_secret" "auto_user_registration_db_user" {
+resource "google_secret_manager_secret" "auto_participant_consent_datastore_db_user" {
   provider = google-beta
 
-  secret_id = "auto-user-registration-db-user"
+  secret_id = "auto-participant-consent-datastore-db-user"
   project   = module.project.project_id
 
   replication {
@@ -722,11 +727,99 @@ resource "google_secret_manager_secret" "auto_user_registration_db_user" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_user_registration_db_user_data" {
+resource "google_secret_manager_secret_version" "auto_participant_consent_datastore_db_user_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_user_registration_db_user.id
-  secret_data = random_string.strings["user_registration_db_user"].result
+  secret      = google_secret_manager_secret.auto_participant_consent_datastore_db_user.id
+  secret_data = random_string.strings["participant_consent_datastore_db_user"].result
+}
+
+resource "google_secret_manager_secret" "auto_participant_enroll_datastore_db_password" {
+  provider = google-beta
+
+  secret_id = "auto-participant-enroll-datastore-db-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_participant_enroll_datastore_db_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_participant_enroll_datastore_db_password.id
+  secret_data = random_password.passwords["participant_enroll_datastore_db_password"].result
+}
+
+resource "google_secret_manager_secret" "auto_participant_enroll_datastore_db_user" {
+  provider = google-beta
+
+  secret_id = "auto-participant-enroll-datastore-db-user"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_participant_enroll_datastore_db_user_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_participant_enroll_datastore_db_user.id
+  secret_data = random_string.strings["participant_enroll_datastore_db_user"].result
+}
+
+resource "google_secret_manager_secret" "auto_participant_user_datastore_db_password" {
+  provider = google-beta
+
+  secret_id = "auto-participant-user-datastore-db-password"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_participant_user_datastore_db_password_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_participant_user_datastore_db_password.id
+  secret_data = random_password.passwords["participant_user_datastore_db_password"].result
+}
+
+resource "google_secret_manager_secret" "auto_participant_user_datastore_db_user" {
+  provider = google-beta
+
+  secret_id = "auto-participant-user-datastore-db-user"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+resource "google_secret_manager_secret_version" "auto_participant_user_datastore_db_user_data" {
+  provider = google-beta
+
+  secret      = google_secret_manager_secret.auto_participant_user_datastore_db_user.id
+  secret_data = random_string.strings["participant_user_datastore_db_user"].result
 }
 
 resource "google_secret_manager_secret" "auto_participant_manager_db_password" {

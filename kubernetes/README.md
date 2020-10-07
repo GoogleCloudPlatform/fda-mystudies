@@ -37,13 +37,13 @@ All files below are relative to the root of the repo.
   * same as auth-server-ws
 * WCP-WS/
   * same as auth-server-ws
-* user-registration-server-ws/consent-mgmt-module
+* participant-datastore/consent-mgmt-module
   * same as auth-server-ws
-* user-registration-server-ws/enroll-mgmt-module
+* participant-datastore/enroll-mgmt-module
   * same as auth-server-ws
-* user-registration-server-ws/user-mgmt-module
+* participant-datastore/user-mgmt-module
   * same as auth-server-ws
-* UR-web-app/
+* participant-manager/
   * same as auth-server-ws
 
 ## Setup
@@ -142,11 +142,11 @@ root of the repo):
 1. response-server-module/tf-deployment.yaml
 1. WCP/tf-deployment.yaml
 1. WCP-WS/tf-deployment.yaml
-1. user-registration-server-ws/consent-mgmt-module/tf-deployment.yaml
-1. user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml
-1. user-registration-server-ws/user-mgmt-module/tf-deployment.yaml
-1. participant-manager-module/tf-deployment.yaml
-1. UR-web-app/tf-deployment.yaml
+1. participant-datastore/consent-mgmt-module/tf-deployment.yaml
+1. participant-datastore/enroll-mgmt-module/tf-deployment.yaml
+1. participant-datastore/user-mgmt-module/tf-deployment.yaml
+1. participant-manager-datastore/tf-deployment.yaml
+1. participant-manager/tf-deployment.yaml
 
 Do the following:
 
@@ -166,7 +166,7 @@ In the ./kubernetes/ingress.yaml file:
 * Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
     
-In ./UR-web-app/src/environments/environment.prod.ts
+In ./participant-manager/src/environments/environment.prod.ts
 
 * Change the domain name to match your organization.
 
@@ -233,14 +233,14 @@ Apply all deployments:
 $ kubectl apply \
   -f ./WCP-WS/tf-deployment.yaml \
   -f ./response-server-ws/tf-deployment.yaml \
-  -f ./user-registration-server-ws/consent-mgmt-module/tf-deployment.yaml \
-  -f ./user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml \
-  -f ./user-registration-server-ws/user-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/consent-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/user-mgmt-module/tf-deployment.yaml \
   -f ./WCP/tf-deployment.yaml \
   -f ./oauth-scim-module/tf-deployment.yaml \
-  -f ./participant-manager-module/tf-deployment.yaml \
+  -f ./participant-manager-datastore/tf-deployment.yaml \
   -f ./hydra/tf-deployment.yaml \
-  -f ./UR-web-app/tf-deployment.yaml
+  -f ./participant-manager/tf-deployment.yaml
 ```
 
 Apply all services:
@@ -249,14 +249,14 @@ Apply all services:
 $ kubectl apply \
   -f ./WCP-WS/tf-service.yaml \
   -f ./response-server-ws/tf-service.yaml \
-  -f ./user-registration-server-ws/consent-mgmt-module/tf-service.yaml \
-  -f ./user-registration-server-ws/enroll-mgmt-module/tf-service.yaml \
-  -f ./user-registration-server-ws/user-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/consent-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/enroll-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/user-mgmt-module/tf-service.yaml \
   -f ./WCP/tf-service.yaml \
   -f ./oauth-scim-module/tf-service.yaml \
-  -f ./participant-manager-module/tf-service.yaml \
+  -f ./participant-manager-datastore/tf-service.yaml \
   -f ./hydra/tf-service.yaml \
-  -f ./UR-web-app/tf-service.yaml
+  -f ./participant-manager/tf-service.yaml
 ```
 
 Apply the certificate and the ingress:

@@ -380,7 +380,7 @@ public class OAuthControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth2/introspect"))
+        postRequestedFor(urlEqualTo("/hydra/oauth2/introspect"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
@@ -432,7 +432,7 @@ public class OAuthControllerTest extends BaseMockIT {
 
     verify(
         1,
-        postRequestedFor(urlEqualTo("/oauth2/revoke"))
+        postRequestedFor(urlEqualTo("/hydra/oauth2/revoke"))
             .withRequestBody(new ContainsPattern(VALID_TOKEN)));
   }
 
