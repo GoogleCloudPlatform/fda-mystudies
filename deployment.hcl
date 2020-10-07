@@ -223,12 +223,12 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"response-datastore_db_user\"].result}"
         },
         {
-          secret_id   = "auto-study-designer-db-password"
-          secret_data = "$${random_password.passwords[\"study_designer_db_password\"].result}"
+          secret_id   = "auto-study-builder-db-password"
+          secret_data = "$${random_password.passwords[\"study_builder_db_password\"].result}"
         },
         {
-          secret_id   = "auto-study-designer-db-user"
-          secret_data = "$${random_string.strings[\"study_designer_db_user\"].result}"
+          secret_id   = "auto-study-builder-db-user"
+          secret_data = "$${random_string.strings[\"study_builder_db_user\"].result}"
         },
         {
           secret_id   = "auto-study-datastore-db-password"
@@ -282,7 +282,7 @@ resource "random_string" "strings" {
     "mystudies_urs_client_id",
     "mystudies_wcp_client_id",
     "response_datastore_db_user",
-    "study_designer_db_user",
+    "study_builder_db_user",
     "study_datastore_db_user",
     "participant_consent_datastore_db_user",
     "participant_enroll_datastore_db_user",
@@ -303,7 +303,7 @@ resource "random_password" "passwords" {
     "mystudies_urs_secret_key",
     "mystudies_wcp_secret_key",
     "response_datastore_db_password",
-    "study_designer_db_password",
+    "study_builder_db_password",
     "study_datastore_db_password",
     "participant_consent_datastore_db_password",
     "participant_enroll_datastore_db_password",
@@ -455,7 +455,7 @@ template "project_apps" {
         { account_id = "auth-server-gke-sa" },
         { account_id = "hydra-gke-sa" },
         { account_id = "response-datastore-gke-sa" },
-        { account_id = "study-designer-gke-sa" },
+        { account_id = "study-builder-gke-sa" },
         { account_id = "study-datastore-gke-sa" },
         { account_id = "consent-datastore-gke-sa" },
         { account_id = "enroll-datastore-gke-sa" },
@@ -668,7 +668,7 @@ EOF
           "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:response-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-builder-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:study-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:enroll-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
@@ -699,7 +699,7 @@ EOF
           name = "{{$prefix}}-{{$env}}-mystudies-fda-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+            member = "serviceAccount:study-builder-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {

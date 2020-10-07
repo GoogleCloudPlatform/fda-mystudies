@@ -67,7 +67,7 @@ module "project_iam_members" {
       "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:hydra-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-builder-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:study-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:consent-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:enroll-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
@@ -108,7 +108,7 @@ module "example_dev_mystudies_fda_resources" {
 
   iam_members = [
     {
-      member = "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:study-builder-gke-sa@example-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
   ]
