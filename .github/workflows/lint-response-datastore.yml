@@ -1,16 +1,16 @@
-name: response-server-checkstyle
+name: lint-response-datastore
 
 on:
   pull_request:
     paths:
-    - 'response-server-module/response-server-service/**'
-    - '.github/workflows/lint-response-server.yml'
+    - 'response-datastore/response-server-service/**'
+    - '.github/workflows/lint-response-datastore.yml'
 jobs:
   checkstyle_job:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: /response-server-module/response-server-service
+        working-directory: /response-datastore/response-server-service
     name: Checkstyle job
     steps:
     - name: Checkout
@@ -21,5 +21,5 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         reporter: 'github-pr-review'
         level: error
-        workdir: ./response-server-module/response-server-service
+        workdir: ./response-datastore/response-server-service
         tool_name: response-server Checks
