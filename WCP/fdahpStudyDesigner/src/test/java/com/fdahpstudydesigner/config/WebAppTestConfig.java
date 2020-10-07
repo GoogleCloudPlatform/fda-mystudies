@@ -9,6 +9,7 @@
 package com.fdahpstudydesigner.config;
 
 import static org.mockito.Mockito.mock;
+
 import com.fdahpstudydesigner.service.AuditEventService;
 import com.fdahpstudydesigner.service.AuditEventServiceImpl;
 import org.springframework.context.annotation.Bean;

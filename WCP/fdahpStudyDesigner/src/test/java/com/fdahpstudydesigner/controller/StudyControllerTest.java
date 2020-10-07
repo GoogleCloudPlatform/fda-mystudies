@@ -55,6 +55,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -344,7 +345,6 @@ public class StudyControllerTest extends BaseMockIT {
                 .param(FdahpStudyDesignerConstants.IS_LIVE, "isLive")
                 .headers(headers)
                 .sessionAttrs(sessionAttributes))
-        //        .sessionAttrs(getSessionAttributes()))
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewBasicInfo.do"));

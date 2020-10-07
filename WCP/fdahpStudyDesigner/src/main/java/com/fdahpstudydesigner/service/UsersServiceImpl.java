@@ -31,6 +31,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_DEACTIVATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderConstants.EDITED_USER_ID;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
