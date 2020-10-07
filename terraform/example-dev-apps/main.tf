@@ -206,8 +206,8 @@ resource "google_service_account" "response_server_gke_sa" {
   project    = module.project.project_id
 }
 
-resource "google_service_account" "study_designer_gke_sa" {
-  account_id = "study-designer-gke-sa"
+resource "google_service_account" "study_builder_gke_sa" {
+  account_id = "study-builder-gke-sa"
   project    = module.project.project_id
 }
 

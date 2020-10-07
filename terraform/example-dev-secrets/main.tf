@@ -32,7 +32,7 @@ resource "random_string" "strings" {
     "mystudies_urs_client_id",
     "mystudies_wcp_client_id",
     "response_server_db_user",
-    "study_designer_db_user",
+    "study_builder_db_user",
     "study_metadata_db_user",
     "participant_consent_datastore_db_user",
     "participant_enroll_datastore_db_user",
@@ -53,7 +53,7 @@ resource "random_password" "passwords" {
     "mystudies_urs_secret_key",
     "mystudies_wcp_secret_key",
     "response_server_db_password",
-    "study_designer_db_password",
+    "study_builder_db_password",
     "study_metadata_db_password",
     "participant_consent_datastore_db_password",
     "participant_enroll_datastore_db_password",
@@ -602,10 +602,10 @@ resource "google_secret_manager_secret_version" "auto_response_server_db_user_da
   secret_data = random_string.strings["response_server_db_user"].result
 }
 
-resource "google_secret_manager_secret" "auto_study_designer_db_password" {
+resource "google_secret_manager_secret" "auto_study_builder_db_password" {
   provider = google-beta
 
-  secret_id = "auto-study-designer-db-password"
+  secret_id = "auto-study-builder-db-password"
   project   = module.project.project_id
 
   replication {
@@ -617,17 +617,17 @@ resource "google_secret_manager_secret" "auto_study_designer_db_password" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_study_designer_db_password_data" {
+resource "google_secret_manager_secret_version" "auto_study_builder_db_password_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_study_designer_db_password.id
-  secret_data = random_password.passwords["study_designer_db_password"].result
+  secret      = google_secret_manager_secret.auto_study_builder_db_password.id
+  secret_data = random_password.passwords["study_builder_db_password"].result
 }
 
-resource "google_secret_manager_secret" "auto_study_designer_db_user" {
+resource "google_secret_manager_secret" "auto_study_builder_db_user" {
   provider = google-beta
 
-  secret_id = "auto-study-designer-db-user"
+  secret_id = "auto-study-builder-db-user"
   project   = module.project.project_id
 
   replication {
@@ -639,11 +639,11 @@ resource "google_secret_manager_secret" "auto_study_designer_db_user" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_study_designer_db_user_data" {
+resource "google_secret_manager_secret_version" "auto_study_builder_db_user_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_study_designer_db_user.id
-  secret_data = random_string.strings["study_designer_db_user"].result
+  secret      = google_secret_manager_secret.auto_study_builder_db_user.id
+  secret_data = random_string.strings["study_builder_db_user"].result
 }
 
 resource "google_secret_manager_secret" "auto_study_metadata_db_password" {
