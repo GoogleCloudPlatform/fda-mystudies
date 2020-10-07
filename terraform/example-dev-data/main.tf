@@ -62,12 +62,6 @@ module "project_iam_members" {
   mode     = "additive"
 
   bindings = {
-    "roles/bigquery.dataEditor" = [
-      "serviceAccount:example-dev-firebase@appspot.gserviceaccount.com",
-    ],
-    "roles/bigquery.jobUser" = [
-      "serviceAccount:example-dev-firebase@appspot.gserviceaccount.com",
-    ],
     "roles/cloudsql.client" = [
       "serviceAccount:bastion@example-dev-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
