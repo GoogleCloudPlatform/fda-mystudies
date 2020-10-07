@@ -80,10 +80,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
-  @GetMapping(
-      value = {"/users/admin/{adminId}"},
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = {"/users/admin/{adminId}"})
   public ResponseEntity<GetAdminDetailsResponse> getAdminDetailsAndApps(
       @RequestHeader("userId") String userId,
       @PathVariable(value = "adminId", required = false) String adminId,
@@ -94,10 +91,7 @@ public class UserController {
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
 
-  @GetMapping(
-      value = {"/users"},
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = {"/users"})
   public ResponseEntity<GetUsersResponse> getUsers(
       @RequestHeader("userId") String superAdminUserId,
       @RequestParam(required = false) Integer page,
