@@ -635,7 +635,7 @@ extension LeftMenuViewController: NMWebServiceDelegate {
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
     UIApplication.shared.keyWindow?.addProgressIndicatorOnWindowFromTop()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  // unauthorized
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,

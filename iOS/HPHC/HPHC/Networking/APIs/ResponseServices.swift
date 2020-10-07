@@ -33,6 +33,7 @@ class ResponseServices: NSObject {
   var keys: String!
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
+  var method: Method!
 
   private(set) var isOfflineSyncRequest = false
 
@@ -265,6 +266,22 @@ class ResponseServices: NSObject {
     self.sendRequestWith(method: method, params: params, headers: headerParams)
   }
 
+  func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
+    HydraAPI.refreshToken { (status, error) in
+      if status {
+        self.handleUpdateTokenResponse()
+      } else if let error = error {
+        self.delegate?.failedRequest(
+          manager,
+          requestName:
+            requestName,
+          error:
+            error.toNSError()
+        )
+      }
+    }
+  }
+
   // MARK: Parsers
 
   /// Handles Participant Response
@@ -397,15 +414,24 @@ class ResponseServices: NSObject {
     }
   }
 
+  func handleUpdateTokenResponse() {
+    self.sendRequestWith(
+      method: self.method,
+      params: self.requestParams,
+      headers: self.headerParams
+    )
+  }
+
   /// Sends request
   /// - Parameters:
   ///   - method: instance of `Method`
   ///   - params: request params
   ///   - headers: request headers
-  private func sendRequestWith(method: Method, params: [String: Any], headers: [String: String]?) {
+  private func sendRequestWith(method: Method, params: [String: Any]?, headers: [String: String]?) {
 
     self.requestParams = params
     self.headerParams = headers
+    self.method = method
 
     networkManager.composeRequest(
       ResponseServerConfiguration.configuration,
@@ -426,7 +452,9 @@ extension ResponseServices: NMWebServiceDelegate {
     switch requestName {
     case ResponseMethods.getParticipantResponse.description as String:
       self.handleGetParticipantResponse(response: response as! [String: Any])
-
+    case AuthServerMethods.getRefreshedToken.description as String:
+      self.handleUpdateTokenResponse()
+      return
     case ResponseMethods.processResponse.description as String: break
     case ResponseMethods.updateActivityState.description as String: break
     case ResponseMethods.activityState.description as String:
@@ -441,22 +469,34 @@ extension ResponseServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    delegate?.failedRequest(manager, requestName: requestName, error: error)
-
-    // handle failed request due to network connectivity
-    if requestName as String == ResponseMethods.processResponse.description
-      || requestName as String == ResponseMethods.updateActivityState.description
-    {
-      // Save in database if fails due to network
-      // Ignore save for Sync request as the object already avaiable in the DB.
-      if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
-        DBHandler.saveRequestInformation(
-          params: self.requestParams,
-          headers: self.headerParams,
-          method: requestName as String,
-          server: SyncUpdate.ServerType.response.rawValue
-        )
+    if error.code == 401 {
+      // Update Refresh Token
+      updateToken(manager: manager, requestName: requestName, error: error)
+    } else {
+      var errorInfo = error.userInfo
+      var localError = error
+      if error.code == 403 {
+        errorInfo = ["NSLocalizedDescription": LocalizableString.sessionExpired.localizedString]
+        localError = NSError(domain: error.domain, code: 403, userInfo: errorInfo)
       }
+
+      // handle failed request due to network connectivity
+      if requestName as String == ResponseMethods.processResponse.description
+        || requestName as String == ResponseMethods.updateActivityState.description
+      {
+
+        if error.code == kNoNetworkErrorCode, !isOfflineSyncRequest {
+          // Save in database if fails due to network
+          // Ignore save for Sync request as the object already avaiable in the DB.
+          DBHandler.saveRequestInformation(
+            params: self.requestParams,
+            headers: self.headerParams,
+            method: requestName as String,
+            server: SyncUpdate.ServerType.response.rawValue
+          )
+        }
+      }
+      delegate?.failedRequest(manager, requestName: requestName, error: localError)
     }
   }
 }

@@ -114,8 +114,7 @@ class RegistrationServerConfiguration: NetworkConfiguration {
   override func getDefaultHeaders() -> [String: String] {
 
     var header = [
-      "appId": AppConfiguration.appID,
-      "orgId": AppConfiguration.orgID,
+      "appId": AppConfiguration.appID
     ]
 
     if User.currentUser.authToken != nil {

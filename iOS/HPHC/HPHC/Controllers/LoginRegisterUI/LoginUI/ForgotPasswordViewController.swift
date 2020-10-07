@@ -144,7 +144,7 @@ class ForgotPasswordViewController: UIViewController {
           _ = self.navigationController?.popViewController(animated: true)
         }
       } else if let error = error {
-        if error.code == .forbidden {
+        if error.code == HTTPError.forbidden.rawValue {
           // User not verified
           self.navigateToVerifyViewController()
         } else {
