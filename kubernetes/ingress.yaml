@@ -29,17 +29,17 @@ spec:
             backend:
               serviceName: participant-enroll-datastore-np
               servicePort: 50000
-          - path: /StudyMetaData/*
+          - path: /study-datastore/*
             backend:
-              serviceName: study-meta-data-np
+              serviceName: study-datastore-np
               servicePort: 50000
           - path: /studybuilder/*
             backend:
-              serviceName: study-designer-np
+              serviceName: study-builder-np
               servicePort: 50000
           - path: /study-resources/*
             backend:
-              serviceName: study-designer-np
+              serviceName: study-builder-np
               servicePort: 50000
           - path: /hydra/*
               backend:
