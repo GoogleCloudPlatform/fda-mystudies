@@ -249,7 +249,7 @@
           if (e.which == 13) {
             if (isFromValid($("#loginForm"))) {
               e.target.blur();
-              $(".askSignInCls").removeClass('hide');
+              $('#loginBtnId').click();
             }
           }
         });
