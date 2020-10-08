@@ -34,7 +34,7 @@ public class AppInfoDetailsBO implements Serializable {
   @Column(name = "app_info_id")
   private int appInfoId;
 
-  @Column(name = "custom_app_id")
+  @Column(name = "custom_app_id", unique = true)
   private String appId;
 
   @Column(name = "app_name", columnDefinition = "VARCHAR(255)")
