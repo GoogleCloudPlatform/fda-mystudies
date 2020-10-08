@@ -26,14 +26,15 @@ TIMESTAMP=`date -d "$DATE" +'%s.%3N'`
 
 TMPFILE=$(mktemp)
 
-echo "UPDATE users SET
-  app_id=\"PARTICIPANT MANAGER\",
-  email=\"${EMAIL}\",
-  status=0,
-  temp_reg_id=\"bd676334dd745c6afaa6547f9736a4c4df411a3ca2c4f514070daae31008cd9d\",
-  user_id=\"96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508\",
-  user_info=\"{\"password\": {\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":${TIMESTAMP}}, \"password_history\": [{\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":${TIMESTAMP}}]}\"
-WHERE id=\"8ad16a8c74f823a10174f82c9a300001\";
+echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_info)
+  values(
+  \"8ad16a8c74f823a10174f82c9a300001\",
+  \"PARTICIPANT MANAGER\",
+  \"${EMAIL}\",
+  0,
+  \"bd676334dd745c6afaa6547f9736a4c4df411a3ca2c4f514070daae31008cd9d\",
+  \"96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508\",
+  \"{\"password\": {\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":${TIMESTAMP}}, \"password_history\": [{\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":${TIMESTAMP}}]}\");
 " >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
