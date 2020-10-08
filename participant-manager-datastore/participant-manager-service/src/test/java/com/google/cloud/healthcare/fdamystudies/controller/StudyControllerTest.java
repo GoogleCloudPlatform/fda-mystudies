@@ -16,6 +16,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.US
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ENROLLMENT_TARGET_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.STUDY_PARTICIPANT_REGISTRY_VIEWED;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.NO_OF_RECORDS;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.PAGE_NO;
@@ -279,7 +280,8 @@ public class StudyControllerTest extends BaseMockIT {
     // Step 1: 1 Participants for study already added in @BeforeEach, add 20 new Participants for
     // study
     for (int i = 1; i <= 20; i++) {
-      locationEntity = testDataHelper.createLocation();
+      locationEntity = testDataHelper.newLocationEntity();
+      locationEntity.setCustomId(CUSTOM_ID_VALUE + String.valueOf(i));
       locationEntity.setName(LOCATION_NAME_VALUE + String.valueOf(i));
       testDataHelper.getLocationRepository().saveAndFlush(locationEntity);
       siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
