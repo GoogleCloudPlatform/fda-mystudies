@@ -26,6 +26,7 @@ package com.fdahpstudydesigner.controller;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -237,11 +238,17 @@ public class LoginController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      UUID uuid = UUID.randomUUID(); // Generates random UUID.
+      auditRequest.setCorrelationId(
+          sesObj == null ? uuid.toString().toUpperCase() : sesObj.getSessionId());
       String email =
           ((null != request.getParameter("email")) && !"".equals(request.getParameter("email")))
               ? request.getParameter("email")
               : "";
-      message = loginService.sendPasswordResetLinkToMail(request, email, "", "");
+      message = loginService.sendPasswordResetLinkToMail(request, email, "", "", auditRequest);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
         auditRequest.setUserId(request.getParameter("email"));
         request.getSession().setAttribute("sucMsg", propMap.get("user.forgot.success.msg"));
@@ -419,6 +426,9 @@ public class LoginController {
     ModelAndView mv = new ModelAndView("redirect:login.do");
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       ModelMap map = new ModelMap();
       if (null != request.getSession(false).getAttribute("sucMsg")) {
         map.addAttribute("sucMsg", request.getSession(false).getAttribute("sucMsg"));

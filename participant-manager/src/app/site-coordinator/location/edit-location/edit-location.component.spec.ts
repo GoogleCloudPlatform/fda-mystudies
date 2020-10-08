@@ -88,7 +88,6 @@ describe('EditLocationComponent', () => {
   });
 
   it('should update the location when update button is clicked', fakeAsync(async () => {
-    const updateSpy = spyOn(component, 'update');
     component.location = updatedLocation;
     const updateButton = updateLocation.nativeElement as HTMLInputElement;
     const nameInputs = nameInput.nativeElement as HTMLInputElement;
@@ -102,7 +101,6 @@ describe('EditLocationComponent', () => {
     fixture.detectChanges();
     spyOn(component, 'updateLocation').and.callThrough();
     await fixture.whenStable();
-    expect(updateSpy).toHaveBeenCalledTimes(1);
     expect(component.location.name).toEqual(updatedLocation.name);
     expect(component.location.description).toEqual(updatedLocation.description);
   }));

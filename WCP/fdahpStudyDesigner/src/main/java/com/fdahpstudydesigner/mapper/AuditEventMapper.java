@@ -13,7 +13,9 @@ import com.fdahpstudydesigner.common.BadRequestException;
 import com.fdahpstudydesigner.common.MobilePlatform;
 import com.fdahpstudydesigner.common.PlatformComponent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
+import com.fdahpstudydesigner.util.SessionObject;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Map;
@@ -43,6 +45,12 @@ public final class AuditEventMapper {
     auditRequest.setAppVersion(getValue(request, APP_VERSION));
     auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
     auditRequest.setUserId(getValue(request, USER_ID));
+    SessionObject sesObj =
+        (SessionObject)
+            request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+    if (sesObj != null) {
+      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
+    }
 
     String source = getValue(request, SOURCE);
     if (StringUtils.isNotEmpty(source)) {
