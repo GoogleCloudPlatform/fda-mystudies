@@ -19,7 +19,7 @@ export interface Study {
 
 export interface StudyResponse {
   studies: Study[];
-  sitePermissionCount?: number;
+  sitePermissionCount: number;
   status: number;
   message: string;
   code: string;
