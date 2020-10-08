@@ -32,19 +32,19 @@ All files below are relative to the root of the repo.
     * This is forked from service.yaml with modifications for the Terraform
         setup.
 * response-datastore/
-  * same as auth-server-ws
-* WCP/
-  * same as auth-server-ws
+  * same as oauth-scim-module
+* study-builder/
+  * same as oauth-scim-module
 * WCP-WS/
-  * same as auth-server-ws
+  * same as oauth-scim-module
 * participant-datastore/consent-mgmt-module
-  * same as auth-server-ws
+  * same as oauth-scim-module
 * participant-datastore/enroll-mgmt-module
-  * same as auth-server-ws
+  * same as oauth-scim-module
 * participant-datastore/user-mgmt-module
-  * same as auth-server-ws
+  * same as oauth-scim-module
 * participant-manager/
-  * same as auth-server-ws
+  * same as oauth-scim-module
 
 ## Setup
 
