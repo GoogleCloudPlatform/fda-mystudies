@@ -48,6 +48,7 @@ export class SiteDetailsComponent
   openModal(templateRef: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(templateRef);
   }
+
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder('Search Participant Email');
     this.subs.add(
@@ -73,7 +74,7 @@ export class SiteDetailsComponent
         ) as SiteParticipants;
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
-            participant.email.toLowerCase().includes(query.toLowerCase()),
+            participant.email?.toLowerCase().includes(query.toLowerCase()),
         );
         return this.siteDetailsBackup;
       }),
@@ -95,7 +96,7 @@ export class SiteDetailsComponent
     this.fetchSiteParticipant(tab);
   }
   redirectParticipant(userId: string): void {
-    void this.router.navigate(['/user/participantDetail', userId]);
+    void this.router.navigate(['/user/participant', userId]);
   }
   rowCheckBoxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
@@ -184,7 +185,7 @@ export class SiteDetailsComponent
   }
 
   onFileImportSuccess(): void {
-    this.fetchSiteParticipant(OnboardingStatus.New);
     this.modalRef.hide();
+    this.fetchSiteParticipant(OnboardingStatus.New);
   }
 }

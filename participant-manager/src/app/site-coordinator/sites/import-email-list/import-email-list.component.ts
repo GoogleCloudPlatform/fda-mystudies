@@ -45,8 +45,8 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
-              this.import.emit();
             }
+            this.import.emit();
           },
           (error) => {
             this.toastr.error(error);

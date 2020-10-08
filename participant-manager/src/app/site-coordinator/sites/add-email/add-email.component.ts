@@ -33,8 +33,8 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
-              this.addEmail.emit();
             }
+            this.addEmail.emit();
           },
           (error) => {
             this.toastr.error(error);
