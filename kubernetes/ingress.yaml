@@ -13,21 +13,21 @@ spec:
             backend:
               serviceName: auth-server-np
               servicePort: 50000
-          - path: /mystudies-response-server/*
+          - path: /response-datastore/*
             backend:
-              serviceName: response-server-np
+              serviceName: response-datastore-np
               servicePort: 50000
-          - path: /myStudiesUserMgmtWS/*
+          - path: /participant-user-datastore/*
             backend:
-              serviceName: participant-datastore-user-np
+              serviceName: participant-user-datastore-np
               servicePort: 50000
-          - path: /myStudiesConsentMgmtWS/*
+          - path: /participant-consent-datastore/*
             backend:
-              serviceName: participant-datastore-consent-np
+              serviceName: participant-consent-datastore-np
               servicePort: 50000
-          - path: /myStudiesEnrollmentMgmt/*
+          - path: /participant-enroll-datastore/*
             backend:
-              serviceName: participant-datastore-enroll-np
+              serviceName: participant-enroll-datastore-np
               servicePort: 50000
           - path: /StudyMetaData/*
             backend:
@@ -37,7 +37,7 @@ spec:
             backend:
               serviceName: study-designer-np
               servicePort: 50000
-          - path: /fdaResources/*
+          - path: /study-resources/*
             backend:
               serviceName: study-designer-np
               servicePort: 50000
@@ -47,9 +47,9 @@ spec:
                 servicePort: 4444
           - path: /#/*
             backend:
-              serviceName: participant-manager-app-np
-              servicePort: 50000
-          - path: /participant-manager-service/*
-            backend:
               serviceName: participant-manager-np
+              servicePort: 50000
+          - path: /participant-manager-datastore/*
+            backend:
+              serviceName: participant-manager-datastore-np
               servicePort: 50000
