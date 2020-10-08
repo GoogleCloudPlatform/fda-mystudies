@@ -23,6 +23,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.RoleBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
@@ -45,7 +46,8 @@ public interface UsersService {
       List<Integer> permissionList,
       String selectedStudies,
       String permissionValues,
-      SessionObject userSession);
+      SessionObject userSession,
+      AuditLogEventRequest auditRequest);
 
   public String enforcePasswordChange(Integer userId, String email);
 

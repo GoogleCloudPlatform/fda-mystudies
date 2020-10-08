@@ -5251,7 +5251,6 @@ public class StudyController {
       SessionObject userSession =
           (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       auditRequest.setCorrelationId(userSession.getSessionId());
-
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);

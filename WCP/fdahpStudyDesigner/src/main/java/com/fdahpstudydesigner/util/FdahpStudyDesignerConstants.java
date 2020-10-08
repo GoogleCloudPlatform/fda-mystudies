@@ -435,6 +435,10 @@ public class FdahpStudyDesignerConstants {
   public static final String ANCHOR_ERROR_MSG =
       "One or more activity or resources has a period of visibility that uses anchor date. However, there is no anchor date set for the study yet. Please visit the Questionnaires section, select a question for the anchor date and then try again.";
 
+  public static final String ROLE_SUPERADMIN_NAME = "ROLE_SUPERADMIN";
+  public static final String ROLE_MANAGE_USERS_EDIT_NAME = "ROLE_MANAGE_USERS_EDIT";
+  public static final String ROLE_MANAGE_USERS_VIEW_NAME = "ROLE_MANAGE_USERS_VIEW";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }
