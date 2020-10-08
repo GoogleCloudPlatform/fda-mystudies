@@ -13,7 +13,7 @@ import {ToastrService} from 'ngx-toastr';
 export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
   @Output() import = new EventEmitter();
-  @Input() siteId = '';
+  @Input() siteIdImportEmail = '';
   fileName = '';
   file?: File;
   constructor(
@@ -38,15 +38,15 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
       const formData = new FormData();
       formData.append('file', this.file, this.file.name);
       this.siteDetailsService
-        .importParticipants(this.siteId, formData)
+        .importParticipants(this.siteIdImportEmail, formData)
         .subscribe(
           (successResponse: ApiResponse) => {
             if (getMessage(successResponse.code)) {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
-              this.import.emit();
             }
+            this.import.emit();
           },
           (error) => {
             this.toastr.error(error);

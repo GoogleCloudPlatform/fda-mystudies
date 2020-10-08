@@ -80,7 +80,7 @@
                       <div class="mr-sm">
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(addParticipants)"
+                          (click)="openModal(addParticipants, 'addEmail')"
                         >
                           Add Email
                         </button>
@@ -88,7 +88,7 @@
                       <div>
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(addParticipants)"
+                          (click)="openModal(addParticipants, 'importEmail')"
                         >
                           Import Email List
                         </button>
@@ -148,7 +148,7 @@
                   <div class="mr-sm">
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(addParticipants)"
+                      (click)="openModal(addParticipants, 'addEmail')"
                     >
                       Add Email
                     </button>
@@ -156,7 +156,7 @@
                   <div>
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(addParticipants)"
+                      (click)="openModal(addParticipants, 'importEmail')"
                     >
                       Import Email List
                     </button>
@@ -556,14 +556,14 @@
     <ng-template #addParticipants>
       <div class="modal-body modal__body">
         <app-add-email
-          [siteId]="siteId"
+          [siteIdAddEmail]="siteIdAddEmail"
           (addEmail)="onSucceedAddEmail()"
-          (cancel)="modalRef.hide()"
+          (cancel)="cancel()"
         ></app-add-email>
         <app-import-email-list
-          [siteId]="siteId"
+          [siteIdImportEmail]="siteIdImportEmail"
           (import)="onFileImportSuccess()"
-          (cancel)="modalRef.hide()"
+          (cancel)="cancel()"
         ></app-import-email-list>
       </div>
     </ng-template>
