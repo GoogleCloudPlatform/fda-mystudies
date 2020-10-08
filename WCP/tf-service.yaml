@@ -1,9 +1,9 @@
-# LoadBalancer service for Response server.
+# LoadBalancer service for Study Builder.
 # See https://cloud.google.com/kubernetes-engine/docs/how-to/exposing-apps#creating_a_service_of_type_loadbalancer
 apiVersion: v1
 kind: Service
 metadata:
-  name: study-designer-np
+  name: study-builder-np
   # Add Container Native Load Balancing.
   # See https://cloud.google.com/kubernetes-engine/docs/how-to/container-native-load-balancing#create_service
   annotations:
@@ -11,7 +11,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: study-designer
+    app: study-builder
   ports:
   - protocol: TCP
     port: 50000
