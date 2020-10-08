@@ -90,9 +90,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     sesObj.setPasswordExpairdedDateTime(userdetails.getPasswordExpairdedDateTime());
     sesObj.setCreatedDate(userdetails.getCreatedOn());
     sesObj.setRole(userdetails.getRoleName());
+    sesObj.setAccessLevel(userdetails.getAccessLevel());
 
     if (response.isCommitted()) {
-      System.out.println("Can't redirect");
+      logger.info("Can't redirect");
       return;
     }
 

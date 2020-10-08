@@ -32,6 +32,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_REQUESTED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
 import com.fdahpstudydesigner.bo.UserBO;
@@ -407,7 +408,11 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   public String sendPasswordResetLinkToMail(
-      HttpServletRequest request, String email, String oldEmail, String type) {
+      HttpServletRequest request,
+      String email,
+      String oldEmail,
+      String type,
+      AuditLogEventRequest auditRequest) {
     logger.info("LoginServiceImpl - sendPasswordResetLinkToMail - Starts");
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String passwordResetToken = null;
@@ -428,20 +433,12 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     final Integer USER_LOCK_DURATION =
         Integer.valueOf(propMap.get("user.lock.duration.in.minutes"));
     final String lockMsg = propMap.get("user.lock.msg");
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
       passwordResetToken = RandomStringUtils.randomAlphanumeric(10);
       accessCode = RandomStringUtils.randomAlphanumeric(6);
       if (!StringUtils.isEmpty(passwordResetToken)) {
         userdetails = loginDAO.getValidUserByEmail(email);
         if ("".equals(type) && userdetails != null && userdetails.isEnabled()) {
-          SessionObject sesObj =
-              (SessionObject) request.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-          // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
-          // services
-          UUID uuid = UUID.randomUUID(); // Generates random UUID.
-          auditRequest.setCorrelationId(
-              sesObj == null ? uuid.toString().toUpperCase() : sesObj.getSessionId());
           auditRequest.setUserId(String.valueOf(userdetails.getUserId()));
           auditLogEventHelper.logEvent(PASSWORD_HELP_REQUESTED, auditRequest);
         }
