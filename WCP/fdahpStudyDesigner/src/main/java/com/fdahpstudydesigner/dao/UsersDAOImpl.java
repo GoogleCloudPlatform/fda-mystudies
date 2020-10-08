@@ -28,6 +28,7 @@ import com.fdahpstudydesigner.bo.StudyPermissionBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPermissions;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
+import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -172,6 +173,7 @@ public class UsersDAOImpl implements UsersDAO {
                         "FROM UserPermissions UPBO WHERE UPBO.permissions IN (" + permissions + ")")
                     .list());
         userBO2.setPermissionList(permissionSet);
+        userBO2.setAccessLevel(FdahpStudyDesignerUtil.getUserAccessLevel(permissionSet));
         session.update(userBO2);
       } else {
         userBO2.setPermissionList(null);
@@ -456,6 +458,7 @@ public class UsersDAOImpl implements UsersDAO {
           userBO.setEnabled(null != obj[5] ? (Boolean) obj[5] : false);
           userBO.setUserPassword(null != obj[6] ? String.valueOf(obj[6]) : "");
           userBO.setEmailChanged(null != obj[7] ? (Boolean) obj[7] : false);
+          userBO.setAccessLevel(null != obj[8] ? String.valueOf(obj[8]) : "");
           userBO.setUserFullName(userBO.getFirstName() + " " + userBO.getLastName());
           userList.add(userBO);
         }

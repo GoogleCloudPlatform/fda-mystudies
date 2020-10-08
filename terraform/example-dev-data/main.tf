@@ -45,11 +45,11 @@ module "project" {
   ]
 }
 
-module "example_dev_my_studies_firestore_data" {
+module "example_dev_mystudies_firestore_data" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id = "example_dev_my_studies_firestore_data"
+  dataset_id = "example_dev_mystudies_firestore_data"
   project_id = module.project.project_id
   location   = "us-east1"
 }
@@ -62,20 +62,16 @@ module "project_iam_members" {
   mode     = "additive"
 
   bindings = {
-    "roles/bigquery.dataEditor" = [
-      "serviceAccount:example-dev-firebase@appspot.gserviceaccount.com",
-    ],
-    "roles/bigquery.jobUser" = [
-      "serviceAccount:example-dev-firebase@appspot.gserviceaccount.com",
-    ],
     "roles/cloudsql.client" = [
       "serviceAccount:bastion@example-dev-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:hydra-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-metadata-gke-sa@example-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:user-registration-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-builder-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:consent-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:enroll-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:user-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:participant-manager-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
     ],
@@ -92,7 +88,7 @@ module "example_dev_mystudies_consent_documents" {
 
   iam_members = [
     {
-      member = "serviceAccount:user-registration-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:consent-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
     {
@@ -112,7 +108,7 @@ module "example_dev_mystudies_fda_resources" {
 
   iam_members = [
     {
-      member = "serviceAccount:study-designer-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:study-builder-gke-sa@example-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
   ]

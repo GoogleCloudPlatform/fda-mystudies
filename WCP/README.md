@@ -62,7 +62,7 @@ smtp.portvalue=25
 smtp.hostname=xxx.xxx.xxx.xx    
 #Should be changed to actual SMTP IP
 
-fda.imgUploadPath=<Tomcat installed path>/webapps/fdaResources/     
+fda.imgUploadPath=<Tomcat installed path>/webapps/study-resources/     
 #<Tomcat installed path> will be changed to actual path
 
 acceptLinkMail =http://localhost:8080/fdahpStudyDesigner/createPassword.do?securityToken=
@@ -85,10 +85,10 @@ hibernate.connection.password=****
 #“hibernate.connection.username” value will be changed to actual username of database.
 #“hibernate.connection.password” value will be changed to actual password of database.
 
-fda.smd.study.thumbnailPath = http://localhost:8080/fdaResources/studylogo/
-fda.smd.study.pagePath = http://localhost:8080/fdaResources/studypages/
-fda.smd.resource.pdfPath = http://localhost:8080/fdaResources/studyResources/
-fda.smd.questionnaire.image=http://localhost/fdaResources/questionnaire/
+fda.smd.study.thumbnailPath = http://localhost:8080/study-resources/logos/
+fda.smd.study.pagePath = http://localhost:8080/study-resources/pages/
+fda.smd.resource.pdfPath = http://localhost:8080/study-resources/resources/
+fda.smd.questionnaire.image=http://localhost/study-resources/questionnaires/
 #For all the properties “localhost” will be changed to actual IP address or domain name.
 
 

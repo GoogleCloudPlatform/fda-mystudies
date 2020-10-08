@@ -35,19 +35,19 @@ spec:
             secretKeyRef:
               name: hydra-db-credentials
               key: dbname
-        - name: SECRETS_SYSTEM
+        - name: SYSTEM_SECRET
           valueFrom:
             secretKeyRef:
               name: hydra-secrets
-              key: SECRETS_KEY
+              key: system_secret
         - name: BASE_URL
           valueFrom:
             secretKeyRef:
               name: hydra-secrets
               key: BASE_URL
         ports:
-        - containerPort: 4444
-        - containerPort: 4445
+        - containerPort: 4444 # public
+        - containerPort: 4445 # admin
         readinessProbe:
           httpGet:
             port: 4444

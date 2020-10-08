@@ -123,14 +123,14 @@ regenerating the Terraform configs several times.
     `GIT_ROOT`.
 
     ```bash
-    export GIT_ROOT=/path/to/your/local/git/root
+    export GIT_ROOT=/path/to/your/local/repo/fda-mystudies
     ```
 
 1. Save the path to your copy of the template to an environment variable
     `ENGINE_CONFIG`.
 
     ```bash
-    export ENGINE_CONFIG=cloud/healthcare/compliance/deploy/templates/fda_mystudies/my_config.hcl
+    export ENGINE_CONFIG=/path/to/your/local/deployment.hcl
     ```
 
 ### Step 1: Deploy Devops project and CICD manually
@@ -144,7 +144,7 @@ regenerating the Terraform configs several times.
     $ENGINE_CONFIG is set to `false` or commented out.
 
     ```bash
-    ./tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
     ```
 
 #### Devops Project
@@ -164,7 +164,7 @@ regenerating the Terraform configs several times.
     Teraform configs.
 
     ```bash
-    ./tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
     ```
 
 1. Backup the state of the `devops` project to the newly created state bucket
@@ -254,10 +254,11 @@ regenerating the Terraform configs several times.
 ### Step 5: Deploy additional Firebase resources and Data resources through CICD
 
 1. In $ENGINE_CONFIG, uncomment the blocks that are marked as *Step 5.1*, *Step
-    5.2* and *Step 5.3*. Then regenerate the Terraform configs:
+    5.2*, *Step 5.3*, *Step 5.4*, *Step 5.5* and *Step 5.6*. Then regenerate the
+    Terraform configs:
 
     ```bash
-    ./tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
     ```
 
 1. Commit your current local git working dir and send a Pull Request to merge
@@ -270,7 +271,7 @@ regenerating the Terraform configs several times.
     regenerate the Terraform configs:
 
     ```bash
-    ./tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
+    tfengine --config_path=$ENGINE_CONFIG --output_path=$GIT_ROOT/terraform
     ```
 
 1. Commit your current local git working dir and send a Pull Request to merge
