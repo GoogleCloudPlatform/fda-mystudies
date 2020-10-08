@@ -34,7 +34,7 @@ class StudyTest: XCTestCase {
           "tagline": "Understanding factors that influence women's fitness",
           "status": "Closed",
           "logo":
-            "http://172.246.126.44:8080/fdaResources/studylogo/STUDY_AP_09142018053627.jpeg?v=1550642300197",
+            "http://172.246.126.44:8080/study-resources/logos/STUDY_AP_09142018053627.jpeg?v=1550642300197",
           "settings": [
             "enrolling": true,
             "platform": "ios",
@@ -50,7 +50,7 @@ class StudyTest: XCTestCase {
           "tagline": "Gathering insights on eye-friendly lifestyles",
           "status": "Active",
           "logo":
-            "http://172.246.126.44:8080/fdaResources/studylogo/STUDY_SS_05212018053722.jpg?v=1550642300203",
+            "http://172.246.126.44:8080/study-resources/logos/STUDY_SS_05212018053722.jpg?v=1550642300203",
           "settings": [
             "enrolling": true,
             "platform": "ios",

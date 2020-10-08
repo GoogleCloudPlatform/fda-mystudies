@@ -8,6 +8,6 @@
 **/.classpath
 **/.factorypath
 **/*.log
-user-registration-server-ws/consent-mgmt/ConsentMgmtServicesWs.iml
-UR-web-app/coverage/
-UR-web-app/node_modules/
+participant-datastore/consent-mgmt/ConsentMgmtServicesWs.iml
+participant-manager/coverage/
+participant-manager/node_modules/

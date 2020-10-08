@@ -3563,7 +3563,6 @@ public class StudyDAOImpl implements StudyDAO {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
       auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
-
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       // check whether the consentinfo is saved for this study or not, if

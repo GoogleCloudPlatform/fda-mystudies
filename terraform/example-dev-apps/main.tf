@@ -43,18 +43,18 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "WCP",
 #     "WCP-WS",
 #     "oauth-scim-module",
-#     "user-registration-server-ws/consent-mgmt-module",
-#     "user-registration-server-ws/enroll-mgmt-module",
-#     "user-registration-server-ws/user-mgmt-module",
-#     "response-server-ws",
-#     "participant-manager-module",
+#     "participant-datastore/consent-mgmt-module",
+#     "participant-datastore/enroll-mgmt-module",
+#     "participant-datastore/user-mgmt-module",
+#     "response-datastore",
+#     "participant-manager-datastore",
 #     "hydra",
-#     "UR-web-app",
+#     "participant-manager",
 #   ])
 #
 #   provider = google-beta
 #   project  = module.project.project_id
-#   name     = each.key
+#   name     = replace(each.key, "/", "-")
 #
 #   included_files = ["${each.key}/**"]
 #
@@ -201,23 +201,33 @@ resource "google_service_account" "hydra_gke_sa" {
   project    = module.project.project_id
 }
 
-resource "google_service_account" "response_server_gke_sa" {
-  account_id = "response-server-gke-sa"
+resource "google_service_account" "response_datastore_gke_sa" {
+  account_id = "response-datastore-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "study_designer_gke_sa" {
-  account_id = "study-designer-gke-sa"
+resource "google_service_account" "study_builder_gke_sa" {
+  account_id = "study-builder-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "study_metadata_gke_sa" {
-  account_id = "study-metadata-gke-sa"
+resource "google_service_account" "study_datastore_gke_sa" {
+  account_id = "study-datastore-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "user_registration_gke_sa" {
-  account_id = "user-registration-gke-sa"
+resource "google_service_account" "consent_datastore_gke_sa" {
+  account_id = "consent-datastore-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "enroll_datastore_gke_sa" {
+  account_id = "enroll-datastore-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "user_datastore_gke_sa" {
+  account_id = "user-datastore-gke-sa"
   project    = module.project.project_id
 }
 
