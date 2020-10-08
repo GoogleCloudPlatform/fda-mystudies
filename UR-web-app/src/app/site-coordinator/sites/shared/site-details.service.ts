@@ -99,7 +99,7 @@ export class SiteDetailsService {
     formData: FormData,
   ): Observable<ApiResponse> {
     const httpOptionsForUpload = {
-      headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
+      headers: new HttpHeaders(),
     };
     return this.http.post<ApiResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(
