@@ -128,7 +128,7 @@ class ResourceAnchorTest: XCTestCase {
   }
 
   let studyResponse = Data(
-    "{\n    \"message\": \"SUCCESS\",\n    \"studies\": [\n        {\n            \"studyId\": \"Study02\",\n            \"studyVersion\": \"1.3\",\n            \"title\": \"Food Nutrition\",\n            \"category\": \"Food Safety\",\n            \"sponsorName\": \" FDA\",\n            \"tagline\": \"Path to improved health\",\n            \"status\": \"Closed\",\n            \"logo\": \"https:\\hpwcp-stage.lkcompliant.net/fdaResources/studylogo/STUDY_FS_05282018040302.jpeg?v=1564127523483\",\n            \"settings\": {\n                \"enrolling\": true,\n                \"platform\": \"all\",\n                \"rejoin\": true\n            }\n        }\n   ]\n}"
+    "{\n    \"message\": \"SUCCESS\",\n    \"studies\": [\n        {\n            \"studyId\": \"Study02\",\n            \"studyVersion\": \"1.3\",\n            \"title\": \"Food Nutrition\",\n            \"category\": \"Food Safety\",\n            \"sponsorName\": \" FDA\",\n            \"tagline\": \"Path to improved health\",\n            \"status\": \"Closed\",\n            \"logo\": \"https:\\hpwcp-stage.lkcompliant.net/study-resources/logos/STUDY_FS_05282018040302.jpeg?v=1564127523483\",\n            \"settings\": {\n                \"enrolling\": true,\n                \"platform\": \"all\",\n                \"rejoin\": true\n            }\n        }\n   ]\n}"
       .utf8)
 
 }

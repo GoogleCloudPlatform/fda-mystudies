@@ -13,9 +13,9 @@ spec:
             backend:
               serviceName: auth-server-np
               servicePort: 50000
-          - path: /mystudies-response-server/*
+          - path: /response-datastore/*
             backend:
-              serviceName: response-server-np
+              serviceName: response-datastore-np
               servicePort: 50000
           - path: /participant-user-datastore/*
             backend:
@@ -37,7 +37,7 @@ spec:
             backend:
               serviceName: study-designer-np
               servicePort: 50000
-          - path: /fdaResources/*
+          - path: /study-resources/*
             backend:
               serviceName: study-designer-np
               servicePort: 50000
