@@ -22,6 +22,7 @@
 
 package com.fdahpstudydesigner.service;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.util.SessionObject;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +48,11 @@ public interface LoginService {
   public Boolean logUserLogOut(SessionObject sessionObject);
 
   public String sendPasswordResetLinkToMail(
-      HttpServletRequest request, String email, String oldEmail, String type);
+      HttpServletRequest request,
+      String email,
+      String oldEmail,
+      String type,
+      AuditLogEventRequest auditRequest);
 
   public void sendLockedAccountPasswordResetLinkToMail(String email);
 

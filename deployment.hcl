@@ -6,6 +6,9 @@
 # {{$domain := "example.com"}}
 # {{$default_location := "us-central1"}}
 # {{$default_zone := "a"}}
+# {{$github_owner := "GoogleCloudPlatform"}}
+# {{$github_repo := "example"}}
+# {{$github_branch := "^master$" }}
 
 data = {
   parent_type     = "folder"
@@ -57,10 +60,10 @@ template "cicd" {
   data = {
     project_id = "{{$prefix}}-{{$env}}-devops"
     github = {
-      owner = "GoogleCloudPlatform"
-      name  = "example"
+      owner = "{{$github_owner}}"
+      name  = "{{$github_repo}}"
     }
-    branch_regex   = "^master$"
+    branch_regex   = "{{$github_branch}}"
     terraform_root = "terraform"
 
     # Prepare and enable default triggers.
@@ -132,7 +135,7 @@ template "project_secrets" {
         {
           secret_id = "manual-mystudies-email-password"
         },
-        # AppId for the mobile app. This needs to be in the app_info table in user registration database.
+        # AppId for the mobile app. This needs to be in the app_info table in participant database.
         {
           secret_id = "manual-mobile-app-appid"
         },
@@ -172,8 +175,8 @@ template "project_secrets" {
           secret_data = "$${random_string.strings[\"hydra_db_user\"].result}"
         },
         {
-          secret_id   = "auto-hydra-secrets-system"
-          secret_data = "$${random_secret.secrets[\"hydra_secrets_key\"].result}"
+          secret_id   = "auto-hydra-system-secret"
+          secret_data = "$${random_password.system_secrets[\"hydra_system_secret\"].result}"
         },
         {
           secret_id   = "auto-mystudies-ma-client-id"
@@ -212,36 +215,52 @@ template "project_secrets" {
           secret_data = "$${random_password.passwords[\"mystudies_wcp_secret_key\"].result}"
         },
         {
-          secret_id   = "auto-response-server-db-password"
-          secret_data = "$${random_password.passwords[\"response_server_db_password\"].result}"
+          secret_id   = "auto-response-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"response-datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-response-server-db-user"
-          secret_data = "$${random_string.strings[\"response_server_db_user\"].result}"
+          secret_id   = "auto-response-datastore-db-user"
+          secret_data = "$${random_string.strings[\"response-datastore_db_user\"].result}"
         },
         {
-          secret_id   = "auto-study-designer-db-password"
-          secret_data = "$${random_password.passwords[\"study_designer_db_password\"].result}"
+          secret_id   = "auto-study-builder-db-password"
+          secret_data = "$${random_password.passwords[\"study_builder_db_password\"].result}"
         },
         {
-          secret_id   = "auto-study-designer-db-user"
-          secret_data = "$${random_string.strings[\"study_designer_db_user\"].result}"
+          secret_id   = "auto-study-builder-db-user"
+          secret_data = "$${random_string.strings[\"study_builder_db_user\"].result}"
         },
         {
-          secret_id   = "auto-study-metadata-db-password"
-          secret_data = "$${random_password.passwords[\"study_metadata_db_password\"].result}"
+          secret_id   = "auto-study-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"study_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-study-metadata-db-user"
-          secret_data = "$${random_string.strings[\"study_metadata_db_user\"].result}"
+          secret_id   = "auto-study-datastore-db-user"
+          secret_data = "$${random_string.strings[\"study_datastore_db_user\"].result}"
         },
         {
-          secret_id   = "auto-user-registration-db-password"
-          secret_data = "$${random_password.passwords[\"user_registration_db_password\"].result}"
+          secret_id   = "auto-participant-consent-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_consent_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-user-registration-db-user"
-          secret_data = "$${random_string.strings[\"user_registration_db_user\"].result}"
+          secret_id   = "auto-participant-consent-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_consent_datastore_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_enroll_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_enroll_datastore_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-user-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_user_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-user-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_user_datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-participant-manager-db-password"
@@ -262,10 +281,12 @@ resource "random_string" "strings" {
     "mystudies_rs_client_id",
     "mystudies_urs_client_id",
     "mystudies_wcp_client_id",
-    "response_server_db_user",
-    "study_designer_db_user",
-    "study_metadata_db_user",
-    "user_registration_db_user",
+    "response_datastore_db_user",
+    "study_builder_db_user",
+    "study_datastore_db_user",
+    "participant_consent_datastore_db_user",
+    "participant_enroll_datastore_db_user",
+    "participant_user_datastore_db_user",
     "participant_manager_db_user",
     "hydra_db_user",
   ])
@@ -281,22 +302,25 @@ resource "random_password" "passwords" {
     "mystudies_sql_default_user_password",
     "mystudies_urs_secret_key",
     "mystudies_wcp_secret_key",
-    "response_server_db_password",
-    "study_designer_db_password",
-    "study_metadata_db_password",
-    "user_registration_db_password",
-    "participant_manager_db_user",
+    "response_datastore_db_password",
+    "study_builder_db_password",
+    "study_datastore_db_password",
+    "participant_consent_datastore_db_password",
+    "participant_enroll_datastore_db_password",
+    "participant_user_datastore_db_password",
+    "participant_manager_db_password",
     "hydra_db_password",
   ])
   length  = 16
   special = true
 }
 
-resource "random_secret" "secrets" {
+resource "random_password" "system_secrets" {
   for_each = toset([
-    "hydra_secrets_key",
+    "hydra_system_secret",
   ])
   length  = 32
+  special = false
 }
 EOF
     }
@@ -430,10 +454,12 @@ template "project_apps" {
       service_accounts = [
         { account_id = "auth-server-gke-sa" },
         { account_id = "hydra-gke-sa" },
-        { account_id = "response-server-gke-sa" },
-        { account_id = "study-designer-gke-sa" },
-        { account_id = "study-metadata-gke-sa" },
-        { account_id = "user-registration-gke-sa" },
+        { account_id = "response-datastore-gke-sa" },
+        { account_id = "study-builder-gke-sa" },
+        { account_id = "study-datastore-gke-sa" },
+        { account_id = "consent-datastore-gke-sa" },
+        { account_id = "enroll-datastore-gke-sa" },
+        { account_id = "user-datastore-gke-sa" },
         { account_id = "participant-manager-gke-sa" },
         { account_id = "triggers-pubsub-handler-gke-sa" },
       ]
@@ -481,25 +507,25 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #     "WCP",
 #     "WCP-WS",
 #     "oauth-scim-module",
-#     "user-registration-server-ws/consent-mgmt-module",
-#     "user-registration-server-ws/enroll-mgmt-module",
-#     "user-registration-server-ws/user-mgmt-module",
-#     "response-server-ws",
-#     "participant-manager-module",
+#     "participant-datastore/consent-mgmt-module",
+#     "participant-datastore/enroll-mgmt-module",
+#     "participant-datastore/user-mgmt-module",
+#     "response-datastore",
+#     "participant-manager-datastore",
 #     "hydra",
-#     "UR-web-app",
+#     "participant-manager",
 #   ])
 #
 #   provider = google-beta
 #   project  = module.project.project_id
-#   name     = each.key
+#   name     = replace(each.key, "/", "-")
 #
 #   included_files = ["$${each.key}/**"]
 #
 #   github {
-#     owner = "GoogleCloudPlatform"
-#     name  = "example"
-#     push { branch = "^master$" }
+#     owner = "{{$github_owner}}"
+#     name  = "{{$github_repo}}"
+#     push { branch = "{{$github_branch}}" }
 #   }
 #
 #   filename = "$${each.key}/cloudbuild.yaml"
@@ -522,11 +548,12 @@ template "project_firebase" {
     }
     resources = {
       iam_members = {
-        "roles/datastore.importExportAdmin" = [
-          "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-        ]
+        # Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
+        # "roles/datastore.importExportAdmin" = [
+        #   "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+        # ]
         "roles/datastore.user" = [
-          "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
         "roles/pubsub.subscriber" = [
@@ -537,10 +564,11 @@ template "project_firebase" {
         {
           # Firestore data export
           name = "{{$prefix}}-{{$env}}-mystudies-firestore-raw-data"
-          iam_members = [{
-            role   = "roles/storage.admin"
-            member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-          }]
+          # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
+          # iam_members = [{
+          #   role   = "roles/storage.admin"
+          #   member = "serviceAccount:$${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
+          # }]
           # TTL 7 days.
           lifecycle_rules = [{
             action = {
@@ -576,7 +604,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
 # resource "google_firestore_index" "activities_index" {
 #   project    = module.project.project_id
 #   collection = "Activities"
@@ -615,10 +643,10 @@ template "project_data" {
         host_project_id = "{{$prefix}}-{{$env}}-networks"
       }
     }
-    # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
+    # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "my_studies_db_default_password" {
+data "google_secret_manager_secret_version" "mystudies_db_default_password" {
   provider = google-beta
   secret  = "auto-mystudies-sql-default-user-password"
   project = "{{$prefix}}-{{$env}}-secrets"
@@ -626,39 +654,42 @@ data "google_secret_manager_secret_version" "my_studies_db_default_password" {
 EOF
     } */
     resources = {
-      # Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
+      # Step 5.5: uncomment and re-run the engine once all previous steps have been completed.
       # cloud_sql_instances = [{
       #   name               = "mystudies"
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.my_studies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
           "serviceAccount:bastion@{{$prefix}}-{{$env}}-networks.iam.gserviceaccount.com",
           "serviceAccount:auth-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:hydra-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:response-server-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:study-metadata-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
-          "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:response-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-builder-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:study-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:enroll-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
+          "serviceAccount:user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com",
         ]
-        "roles/bigquery.jobUser" = [
-          "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
-        ]
-        "roles/bigquery.dataEditor" = [
-          "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
-        ]
+        # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
+        # "roles/bigquery.jobUser" = [
+        #   "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
+        # ]
+        # "roles/bigquery.dataEditor" = [
+        #   "serviceAccount:{{$prefix}}-{{$env}}-firebase@appspot.gserviceaccount.com",
+        # ]
       }
       storage_buckets = [
         {
           name = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:user-registration-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+            member = "serviceAccount:consent-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           },{
             role   = "roles/storage.objectAdmin"
             member = "serviceAccount:participant-manager-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
@@ -668,7 +699,7 @@ EOF
           name = "{{$prefix}}-{{$env}}-mystudies-fda-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
-            member = "serviceAccount:study-designer-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+            member = "serviceAccount:study-builder-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
           }]
         },
         {
@@ -676,12 +707,12 @@ EOF
           # Step 6: uncomment and re-run the engine once all previous steps have been completed.
           # iam_members = [{
           #   role   = "roles/storage.objectViewer"
-          #   member = "serviceAccount:$${module.my_studies.instance_service_account_email_address}"
+          #   member = "serviceAccount:$${module.mystudies.instance_service_account_email_address}"
           # }]
         },
       ]
       bigquery_datasets = [{
-        dataset_id = "{{$prefix}}_{{$env}}_my_studies_firestore_data"
+        dataset_id = "{{$prefix}}_{{$env}}_mystudies_firestore_data"
       }]
     }
   }

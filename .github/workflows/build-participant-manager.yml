@@ -1,0 +1,32 @@
+name: Build-participant-manager
+on:
+  pull_request:
+    paths:
+      - "participant-manager/**"
+      - ".github/workflows/build-participant-manager.yml"
+
+jobs:
+  build:
+    defaults:
+      run:
+        working-directory: ./participant-manager
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: npm install and npm run build
+        run: |
+          npm ci
+          npm run build:ci
+
+      - name: npm run test
+        run: |
+          npm run test:ci

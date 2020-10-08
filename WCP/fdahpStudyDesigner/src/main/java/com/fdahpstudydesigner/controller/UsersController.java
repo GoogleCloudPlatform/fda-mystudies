@@ -35,6 +35,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_ENFO
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_ACCOUNT_UPDATED_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_RECORD_VIEWED;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.StudyListBean;
 import com.fdahpstudydesigner.bo.RoleBO;
@@ -272,6 +273,9 @@ public class UsersController {
           selectedStudies = "";
           permissionValues = "";
         }
+        AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+        auditRequest.setCorrelationId(userSession.getSessionId());
+        auditRequest.setUserId(String.valueOf(userSession.getUserId()));
         msg =
             usersService.addOrUpdateUserDetails(
                 request,
@@ -280,7 +284,8 @@ public class UsersController {
                 permissionList,
                 selectedStudies,
                 permissionValues,
-                userSession);
+                userSession,
+                auditRequest);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(msg)) {
           if (addFlag) {
             request
@@ -296,7 +301,6 @@ public class UsersController {
                     propMap.get("update.user.success.message"));
           }
         } else {
-          AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
           request.getSession().setAttribute(FdahpStudyDesignerConstants.ERR_MSG, msg);
           if (addFlag) {
             auditLogEventHelper.logEvent(NEW_USER_CREATION_FAILED, auditRequest);
@@ -346,7 +350,7 @@ public class UsersController {
 
             String sent =
                 loginService.sendPasswordResetLinkToMail(
-                    request, emailId, "", "enforcePasswordChange");
+                    request, emailId, "", "enforcePasswordChange", auditRequest);
             if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
               auditLogEventHelper.logEvent(PASSWORD_ENFORCEMENT_EMAIL_SENT, auditRequest, values);
             } else {
@@ -365,7 +369,7 @@ public class UsersController {
               for (String email : emails) {
                 String sent =
                     loginService.sendPasswordResetLinkToMail(
-                        request, email, "", "enforcePasswordChange");
+                        request, email, "", "enforcePasswordChange", auditRequest);
                 if (FdahpStudyDesignerConstants.SUCCESS.equals(sent)) {
                   allSent = true;
                 }
@@ -464,7 +468,7 @@ public class UsersController {
           if (userBo != null) {
             msg =
                 loginService.sendPasswordResetLinkToMail(
-                    request, userBo.getUserEmail(), "", "USER");
+                    request, userBo.getUserEmail(), "", "USER", auditRequest);
           }
           if (msg.equalsIgnoreCase(FdahpStudyDesignerConstants.SUCCESS)) {
             request
