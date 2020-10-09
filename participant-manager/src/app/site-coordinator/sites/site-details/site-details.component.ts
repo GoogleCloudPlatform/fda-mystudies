@@ -189,13 +189,15 @@ export class SiteDetailsComponent
   }
 
   onSucceedAddEmail(): void {
-    this.cancel();
-    this.fetchSiteParticipant(OnboardingStatus.New);
+    this.siteIdAddEmail = '';
+    this.modalRef.hide();
+    this.changeTab(OnboardingStatus.New);
   }
 
   onFileImportSuccess(): void {
-    this.cancel();
-    this.fetchSiteParticipant(OnboardingStatus.New);
+    this.siteIdImportEmail = '';
+    this.modalRef.hide();
+    this.changeTab(OnboardingStatus.New);
   }
   cancel(): void {
     this.siteIdAddEmail = '';
