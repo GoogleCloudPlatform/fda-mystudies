@@ -21,7 +21,7 @@ export class SetUpAccountService {
 
   setUpAccount(userUpdate: SetUpUser): Observable<SetUpResponse> {
     return this.http.post<SetUpResponse>(
-      `${environment.baseUrl}/users/setUpAccount`,
+      `${environment.baseUrl}/users//setUpAccount/`,
       userUpdate,
     );
   }
