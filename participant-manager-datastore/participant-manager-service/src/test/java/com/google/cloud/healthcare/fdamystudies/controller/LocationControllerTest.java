@@ -65,6 +65,7 @@ import com.jayway.jsonpath.JsonPath;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.commons.collections4.map.HashedMap;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -167,12 +168,14 @@ public class LocationControllerTest extends BaseMockIT {
   public void shouldCreateANewLocation() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
+    LocationRequest locationRequest = getLocationRequest();
+    locationRequest.setCustomId(CUSTOM_ID_VALUE + RandomStringUtils.randomAlphabetic(2));
     // Step 1: Call API to create new location
     result =
         mockMvc
             .perform(
                 post(ApiEndpoint.ADD_NEW_LOCATION.getPath())
-                    .content(asJsonString(getLocationRequest()))
+                    .content(asJsonString(locationRequest))
                     .headers(headers)
                     .contextPath(getContextPath()))
             .andDo(print())
@@ -187,7 +190,7 @@ public class LocationControllerTest extends BaseMockIT {
     Optional<LocationEntity> optLocationEntity = locationRepository.findById(locationId);
     LocationEntity locationEntity = optLocationEntity.get();
     assertNotNull(locationEntity);
-    assertEquals(CUSTOM_ID_VALUE, locationEntity.getCustomId());
+    assertEquals(locationRequest.getCustomId(), locationEntity.getCustomId());
     assertEquals(LOCATION_NAME_VALUE, locationEntity.getName());
     assertEquals(LOCATION_DESCRIPTION_VALUE, locationEntity.getDescription());
 
@@ -366,6 +369,7 @@ public class LocationControllerTest extends BaseMockIT {
   public void shouldUpdateToInactiveLocation() throws Exception {
     // Step 1: change the status to active
     LocationEntity entityToInactiveLocation = testDataHelper.newLocationEntity();
+    entityToInactiveLocation.setCustomId(CUSTOM_ID_VALUE + RandomStringUtils.randomAlphabetic(2));
     locationRepository.saveAndFlush(entityToInactiveLocation);
     entityToInactiveLocation.setStatus(ACTIVE_STATUS);
     locationRepository.saveAndFlush(entityToInactiveLocation);
@@ -458,9 +462,12 @@ public class LocationControllerTest extends BaseMockIT {
   public void shouldReturnLocationsForPagination() throws Exception {
     // Step 1: 1 location already added in @BeforeEach, add 20 new locations
     for (int i = 1; i <= 20; i++) {
-      locationEntity = testDataHelper.createLocation();
-      locationEntity.setCustomId(String.valueOf(i) + CUSTOM_ID_VALUE);
+      LocationEntity locationEntity = testDataHelper.newLocationEntity();
+      locationEntity.setCustomId(CUSTOM_ID_VALUE + String.valueOf(i));
       locationRepository.saveAndFlush(locationEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(500);
     }
 
     // Step 2: Call API and expect GET_LOCATION_SUCCESS message and fetch only 5 data out of 21
@@ -481,7 +488,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.totalLocationsCount", is(21)))
         .andExpect(
-            jsonPath("$.locations[0].customId", is(String.valueOf(20) + CUSTOM_LOCATION_ID)));
+            jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID + String.valueOf(20))));
 
     verifyTokenIntrospectRequest(1);
 
@@ -501,7 +508,7 @@ public class LocationControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.locations", hasSize(3)))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_LOCATION_SUCCESS.getMessage())))
         .andExpect(jsonPath("$.totalLocationsCount", is(21)))
-        .andExpect(jsonPath("$.locations[0].customId", is(String.valueOf(2) + CUSTOM_LOCATION_ID)));
+        .andExpect(jsonPath("$.locations[0].customId", is(CUSTOM_LOCATION_ID + String.valueOf(2))));
 
     verifyTokenIntrospectRequest(2);
 
