@@ -2,6 +2,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {UserService} from 'src/app/service/user.service';
 import {MobileMenuComponent} from './mobile-menu.component';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('MobileMenuComponent', () => {
   let component: MobileMenuComponent;
@@ -9,7 +10,7 @@ describe('MobileMenuComponent', () => {
 
   beforeEach(async(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [RouterTestingModule, HttpClientTestingModule],
       declarations: [MobileMenuComponent],
       providers: [UserService],
     }).compileComponents();

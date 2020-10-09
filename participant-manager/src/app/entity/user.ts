@@ -6,11 +6,11 @@ import {ApiResponse} from './api.response.model';
 export interface User extends ApiResponse {
   id: string;
 
-  email: string;
+  email?: string;
 
-  firstName: string;
+  firstName?: string;
 
-  lastName: string;
+  lastName?: string;
 
   phoneNumber: string;
 
