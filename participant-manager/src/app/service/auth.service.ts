@@ -61,7 +61,7 @@ export class AuthService {
       .set('redirect_uri', environment.redirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)
-      .set('env', 'localhost')
+      // .set('env', 'localhost')
       .toString();
     window.location.href = `${environment.loginUrl}?${params}`;
   }
