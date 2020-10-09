@@ -22,7 +22,9 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sharedService.updateSearchPlaceHolder('Search User by Name or Email');
+    this.sharedService.updateSearchPlaceHolder(
+      'Search User by Name or Email ID',
+    );
     this.getUsers();
   }
 
