@@ -2,7 +2,7 @@ import {EnrollmentStatus, OnboardingStatus} from './enums';
 
 export interface RegistryParticipant {
   id: string;
-  email: string;
+  email?: string;
   enrollmentStatus: EnrollmentStatus;
   enrollmentDate: string;
   invitedDate: string;
