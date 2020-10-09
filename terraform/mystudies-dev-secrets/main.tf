@@ -577,7 +577,7 @@ resource "google_secret_manager_secret_version" "auto_response_datastore_db_pass
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_response_datastore_db_password.id
-  secret_data = random_password.passwords["response-datastore_db_password"].result
+  secret_data = random_password.passwords["response_datastore_db_password"].result
 }
 
 resource "google_secret_manager_secret" "auto_response_datastore_db_user" {
@@ -599,7 +599,7 @@ resource "google_secret_manager_secret_version" "auto_response_datastore_db_user
   provider = google-beta
 
   secret      = google_secret_manager_secret.auto_response_datastore_db_user.id
-  secret_data = random_string.strings["response-datastore_db_user"].result
+  secret_data = random_string.strings["response_datastore_db_user"].result
 }
 
 resource "google_secret_manager_secret" "auto_study_builder_db_password" {

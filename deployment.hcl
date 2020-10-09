@@ -216,11 +216,11 @@ template "project_secrets" {
         },
         {
           secret_id   = "auto-response-datastore-db-password"
-          secret_data = "$${random_password.passwords[\"response-datastore_db_password\"].result}"
+          secret_data = "$${random_password.passwords[\"response_datastore_db_password\"].result}"
         },
         {
           secret_id   = "auto-response-datastore-db-user"
-          secret_data = "$${random_string.strings[\"response-datastore_db_user\"].result}"
+          secret_data = "$${random_string.strings[\"response_datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-study-builder-db-password"
