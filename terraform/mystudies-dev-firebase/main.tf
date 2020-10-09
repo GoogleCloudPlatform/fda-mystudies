@@ -29,7 +29,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
 resource "google_firestore_index" "activities_index" {
   project    = module.project.project_id
   collection = "Activities"
@@ -76,7 +76,7 @@ module "project_iam_members" {
       "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
     ],
     "roles/datastore.user" = [
-      "serviceAccount:response-server-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [

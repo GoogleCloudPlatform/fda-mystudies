@@ -96,7 +96,7 @@ export class AuthService {
   getUserDetails(): void {
     this.userService.getUserDetails().subscribe((user: User) => {
       this.cookieService.set('user', JSON.stringify(user));
-      void this.router.navigate(['/coordinator/']);
+      void this.router.navigate(['/coordinator/studies/sites']);
     });
   }
 

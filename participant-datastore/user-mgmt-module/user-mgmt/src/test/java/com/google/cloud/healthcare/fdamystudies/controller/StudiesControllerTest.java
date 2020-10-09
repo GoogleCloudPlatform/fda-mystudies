@@ -53,7 +53,8 @@ import org.springframework.http.HttpStatus;
 
 public class StudiesControllerTest extends BaseMockIT {
 
-  private static final String STUDY_METADATA_PATH = "/participant-user-datastore/studies/studymetadata";
+  private static final String STUDY_METADATA_PATH =
+      "/participant-user-datastore/studies/studymetadata";
 
   private static final String SEND_NOTIFICATION_PATH =
       "/participant-user-datastore/studies/sendNotification";

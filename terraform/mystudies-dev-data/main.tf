@@ -92,9 +92,9 @@ module "project_iam_members" {
       "serviceAccount:bastion@mystudies-dev-networks.iam.gserviceaccount.com",
       "serviceAccount:auth-server-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:hydra-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:response-server-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-designer-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-metadata-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-builder-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:consent-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:enroll-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:user-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
@@ -134,7 +134,7 @@ module "mystudies_dev_mystudies_fda_resources" {
 
   iam_members = [
     {
-      member = "serviceAccount:study-designer-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:study-builder-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
   ]

@@ -23,7 +23,7 @@
 # secret is used to encrypt the database and needs to be set to the same value every time the process (re-)starts.
 # You can use /dev/urandom to generate a secret. But make sure that the secret must be the same anytime you define it.
 # You could, for example, store the value somewhere.
-export SECRETS_SYSTEM=${SECRETS_SYSTEM}
+export SECRETS_SYSTEM=${SYSTEM_SECRET}
 
 # Points to database location
 # mysql://user:pw@tcp(host:port)/database?someSetting=value&foo=bar

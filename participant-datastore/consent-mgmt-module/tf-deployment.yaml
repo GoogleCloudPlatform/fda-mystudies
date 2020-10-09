@@ -35,12 +35,12 @@ spec:
                 secretKeyRef:
                   name: participant-consent-datastore-db-credentials
                   key: dbname
-            - name: CONSENT_MGMT_CLIENT_ID
+            - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: participant-consent-datastore-secrets
                   key: CLIENT_ID
-            - name: CONSENT_MGMT_CLIENT_SECRET
+            - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: participant-consent-datastore-secrets
