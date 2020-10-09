@@ -145,8 +145,8 @@ export class SiteDetailsComponent
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(OnboardingStatus.Invited);
               }
+              this.changeTab(OnboardingStatus.Invited);
             }),
         );
       }
@@ -174,12 +174,12 @@ export class SiteDetailsComponent
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(
-                  this.activeTab === OnboardingStatus.Disabled
-                    ? OnboardingStatus.Disabled
-                    : OnboardingStatus.New,
-                );
               }
+              this.changeTab(
+                this.activeTab === OnboardingStatus.Disabled
+                  ? OnboardingStatus.Disabled
+                  : OnboardingStatus.New,
+              );
             }),
         );
       }

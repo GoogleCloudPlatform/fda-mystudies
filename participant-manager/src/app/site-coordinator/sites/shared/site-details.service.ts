@@ -12,6 +12,7 @@ import {
 } from '../../participant-details/participant-details';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {OnboardingStatus} from 'src/app/shared/enums';
+import {skip} from 'rxjs/operators';
 @Injectable({
   providedIn: 'root',
 })
@@ -98,15 +99,15 @@ export class SiteDetailsService {
     siteId: string,
     formData: FormData,
   ): Observable<ApiResponse> {
-    const httpOptionsForUpload = {
-      headers: new HttpHeaders(),
-    };
+    // const httpOptionsForUpload = {
+    //   headers: new HttpHeaders().set(skip, true),
+    // };
     return this.http.post<ApiResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/import`,
       formData,
-      httpOptionsForUpload,
+      {headers: {skip: 'true'}},
     );
   }
 }

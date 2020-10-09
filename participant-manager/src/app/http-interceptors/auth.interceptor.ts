@@ -120,7 +120,7 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
-      if (!req.headers.has('content-type')) {
+      if (!req.headers.get('skip')) {
         headers = headers.append('content-type', 'application/json');
       }
       return req.clone({headers});
