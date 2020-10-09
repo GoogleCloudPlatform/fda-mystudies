@@ -9,7 +9,7 @@ export interface AppDetails {
 }
 
 export interface Participant {
-  email: string;
+  email?: string;
   userDetailsId: string;
   registrationStatus: string;
   registrationDate: string;
