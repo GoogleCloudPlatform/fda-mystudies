@@ -8,7 +8,7 @@ export interface RegistryParticipant {
   invitedDate: string;
   siteId: string;
   customLocationId: string;
-  locationName: string;
+  locationName?: string;
   participantRegistrySiteid?: string;
   customStudyId?: string;
   studyName?: string;

@@ -1,6 +1,6 @@
 <ng-container *ngIf="participant$ | async as participant">
   <section
-    *ngIf="participant.participantDetail"
+    *ngIf="participant.participantDetails"
     class="subheader p-none pl-none"
   >
     <div class="max__w__1280 m-none">
@@ -17,26 +17,26 @@
             <div class="display-inline-flex overflow__auto">
               <div class="pr-xlg">
                 <div class="banner__label">
-                  {{ participant.participantDetail.customLocationId }}
+                  {{ participant.participantDetails.customLocationId }}
                 </div>
                 <div class="banner__text">
-                  {{ participant.participantDetail.locationName }}
+                  {{ participant.participantDetails.locationName }}
                 </div>
               </div>
               <div class="pr-xlg">
                 <div class="banner__label">
-                  {{ participant.participantDetail.customStudyId }}
+                  {{ participant.participantDetails.customStudyId }}
                 </div>
                 <div class="banner__text">
-                  {{ participant.participantDetail.studyName }}
+                  {{ participant.participantDetails.studyName }}
                 </div>
               </div>
               <div>
                 <div class="banner__label">
-                  {{ participant.participantDetail.customAppId }}
+                  {{ participant.participantDetails.customAppId }}
                 </div>
                 <div class="banner__text">
-                  {{ participant.participantDetail.appName }}
+                  {{ participant.participantDetails.appName }}
                 </div>
               </div>
             </div>
@@ -47,14 +47,14 @@
             <div
               class="mr-sm"
               *ngIf="
-                participant.participantDetail.onboardingStatus !==
+                participant.participantDetails.onboardingStatus !==
                 onBoardingStatus.Disabled
               "
             >
               <button
                 name="sendInvite"
                 class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
-                (click)="sendInvitation(participant.participantDetail.siteId)"
+                (click)="sendInvitation(participant.participantDetails.siteId)"
               >
                 {{ sendResend }}
               </button>
@@ -65,8 +65,8 @@
                 class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
                 (click)="
                   toggleInvitation(
-                    participant.participantDetail.siteId,
-                    participant.participantDetail.onboardingStatus
+                    participant.participantDetails.siteId,
+                    participant.participantDetails.onboardingStatus
                   )
                 "
               >
@@ -84,7 +84,7 @@
       <button
         name="sendInvite"
         class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
-        (click)="sendInvitation(participant.participantDetail.siteId)"
+        (click)="sendInvitation(participant.participantDetails.siteId)"
       >
         {{ sendResend }}
       </button>
@@ -93,8 +93,8 @@
         class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
         (click)="
           toggleInvitation(
-            participant.participantDetail.siteId,
-            participant.participantDetail.onboardingStatus
+            participant.participantDetails.siteId,
+            participant.participantDetails.onboardingStatus
           )
         "
       >
@@ -110,25 +110,25 @@
       <div>
         <div class="mb__mb-sm">
           <div class="blue__text__md">Participant Email</div>
-          <div class="font24">{{ participant.participantDetail.email }}</div>
+          <div class="font24">{{ participant.participantDetails.email }}</div>
         </div>
         <div>
           <div class="flex__justify__space-between flex__wrap">
             <div>
               <div class="blue__text__md">Onboarding Status</div>
               <div class="participant__label">
-                {{ participant.participantDetail.onboardingStatus }}
+                {{ participant.participantDetails.onboardingStatus }}
               </div>
             </div>
             <div>
               <div class="blue__text__md">Last Invitation Sent</div>
               <div class="inactive__text">
-                {{ participant.participantDetail.invitationDate }}
+                {{ participant.participantDetails.invitationDate }}
               </div>
             </div>
             <div
               *ngFor="
-                let enrollmentDetails of participant.participantDetail
+                let enrollmentDetails of participant.participantDetails
                   .enrollments
               "
             >
@@ -161,7 +161,7 @@
     <section class="cards1 m-none">
       <table
         class="table table-striped"
-        [mfData]="participant.participantDetail.consentHistory"
+        [mfData]="participant.participantDetails.consentHistory"
         #mf="mfDataTable"
         [mfRowsOnPage]="10"
       >

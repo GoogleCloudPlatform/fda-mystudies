@@ -44,13 +44,13 @@ export class ParticipantDetailsComponent
     this.participant$ = this.participantDetailsService.get(this.participantId);
     this.participant$.subscribe((participant) => {
       this.sendResend =
-        participant.participantDetail.onboardingStatus ===
+        participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.New
           ? 'Send Invitation'
           : 'Resend Invitation';
 
       this.enableDisable =
-        participant.participantDetail.onboardingStatus ===
+        participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.Disabled
           ? 'Enable Invitation'
           : 'Disable Invitation';
