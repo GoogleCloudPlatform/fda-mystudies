@@ -989,7 +989,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
-            "ResponseServer",
+            "RegistrationServerEnrollment",
             "",
             "",
             "");
