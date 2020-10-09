@@ -36,7 +36,7 @@ export class SiteListComponent implements OnInit {
 
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder(
-      'Search By Site or Study ID or Name',
+      'Search by Site or Study ID or Name',
     );
     this.getStudies();
   }
