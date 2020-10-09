@@ -28,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
@@ -692,7 +693,12 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
   }
 
   private void saveBitmap(Bitmap bitmap) {
-    String root = Environment.getExternalStorageDirectory().toString();
+    String root;
+    if (Build.VERSION.SDK_INT < VERSION_CODES.Q) {
+      root = Environment.getExternalStorageDirectory().getAbsolutePath();
+    } else {
+      root = getActivity().getExternalFilesDir(getString(R.string.app_name)).getAbsolutePath();
+    }
     File dir = new File(root + "/Android/FDA/Screenshot");
     dir.mkdirs();
     String fname = ((SurveyActivity) context).getTitle1() + "_Dashboard.png";

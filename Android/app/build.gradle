@@ -19,12 +19,12 @@ def apikeyPropertiesFile = rootProject.file("api.properties");
 def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "28.0.3"
     defaultConfig {
 
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
