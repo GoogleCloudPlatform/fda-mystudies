@@ -139,9 +139,9 @@ describe('UpdateUserComponent', () => {
       const superAdminInputs = superAdminInput.nativeElement as HTMLInputElement;
       await fixture.whenStable();
 
-      firstNameInputs.value = addUserRequest.firstName;
-      lastNameInputs.value = addUserRequest.lastName;
-      emailInputs.value = addUserRequest.email;
+      firstNameInputs.value = addUserRequest.firstName as string;
+      lastNameInputs.value = addUserRequest.lastName as string;
+      emailInputs.value = addUserRequest.email as string;
       superAdminInputs.checked;
       dispatchEvent(new Event('input'));
       submitButton.click();
