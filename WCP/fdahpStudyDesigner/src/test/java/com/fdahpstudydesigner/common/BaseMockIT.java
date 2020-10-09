@@ -261,10 +261,12 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getCorrelationId());
       assertNotNull(auditRequest.getOccured());
       assertNotNull(auditRequest.getPlatformVersion());
-      assertNotNull(auditRequest.getAppId());
-      assertNotNull(auditRequest.getAppVersion());
-      assertNotNull(auditRequest.getMobilePlatform());
-      assertNotNull(auditRequest.getUserAccessLevel());
+      if (!auditEvent.getEventCode().equals("SIGNIN_FAILED_UNREGISTERED_USER")) {
+        assertNotNull(auditRequest.getAppId());
+        assertNotNull(auditRequest.getAppVersion());
+        assertNotNull(auditRequest.getMobilePlatform());
+        assertNotNull(auditRequest.getUserAccessLevel());
+      }
     }
   }
 

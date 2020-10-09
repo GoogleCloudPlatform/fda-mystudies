@@ -14,6 +14,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHAN
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -58,7 +59,7 @@ public class LoginControllerTest extends BaseMockIT {
         .andExpect(MockMvcResultMatchers.status().isFound())
         .andExpect(redirectedUrl("/errorRedirect.do?error=Y"));
 
-    // verifyAuditEventCall(SIGNIN_FAILED);
+    verifyAuditEventCall(SIGNIN_FAILED_UNREGISTERED_USER);
   }
 
   @Test

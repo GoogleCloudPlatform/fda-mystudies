@@ -45,11 +45,13 @@ public final class AuditEventMapper {
     auditRequest.setAppVersion(getValue(request, APP_VERSION));
     auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
     auditRequest.setUserId(getValue(request, USER_ID));
-    SessionObject sesObj =
-        (SessionObject)
-            request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-    if (sesObj != null) {
-      auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
+    if (request.getSession() != null) {
+      SessionObject sesObj =
+          (SessionObject)
+              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+      if (sesObj != null) {
+        auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
+      }
     }
 
     String source = getValue(request, SOURCE);
