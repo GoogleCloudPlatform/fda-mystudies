@@ -94,9 +94,7 @@ export class SiteDetailsComponent
     this.userIds = [];
     this.fetchSiteParticipant(tab);
   }
-  redirectParticipant(userId: string): void {
-    void this.router.navigate(['/user/participantDetail', userId]);
-  }
+
   rowCheckBoxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -135,8 +133,8 @@ export class SiteDetailsComponent
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(OnboardingStatus.Invited);
               }
+              this.changeTab(OnboardingStatus.Invited);
             }),
         );
       }
@@ -164,12 +162,12 @@ export class SiteDetailsComponent
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(
-                  this.activeTab === OnboardingStatus.Disabled
-                    ? OnboardingStatus.Disabled
-                    : OnboardingStatus.New,
-                );
               }
+              this.changeTab(
+                this.activeTab === OnboardingStatus.Disabled
+                  ? OnboardingStatus.Disabled
+                  : OnboardingStatus.New,
+              );
             }),
         );
       }
@@ -180,11 +178,11 @@ export class SiteDetailsComponent
 
   onSucceedAddEmail(): void {
     this.modalRef.hide();
-    this.fetchSiteParticipant(OnboardingStatus.New);
+    this.changeTab(OnboardingStatus.New);
   }
 
   onFileImportSuccess(): void {
-    this.fetchSiteParticipant(OnboardingStatus.New);
+    this.changeTab(OnboardingStatus.New);
     this.modalRef.hide();
   }
 }
