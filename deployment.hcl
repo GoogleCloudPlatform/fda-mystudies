@@ -505,7 +505,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # resource "google_cloudbuild_trigger" "server_build_triggers" {
 #   for_each = toset([
 #     "study-builder",
-#     "WCP-WS",
+#     "study-datastore",
 #     "oauth-scim-module",
 #     "participant-datastore/consent-mgmt-module",
 #     "participant-datastore/enroll-mgmt-module",
