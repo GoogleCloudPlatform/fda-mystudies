@@ -53,7 +53,7 @@ export class LoginCallbackComponent implements OnInit {
                 if (params.accountStatus === 3) {
                   void this.router.navigate(['/change-password']);
                 } else {
-                  void this.router.navigate(['/coordinator']);
+                  void this.router.navigate(['/coordinator/studies/sites']);
                 }
               },
               (error) => {

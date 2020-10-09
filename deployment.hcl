@@ -124,10 +124,10 @@ template "project_secrets" {
     resources = {
       secrets = [
         {
-          secret_id = "manual-mystudies-wcp-user"
+          secret_id = "manual-study-builder-user"
         },
         {
-          secret_id = "manual-mystudies-wcp-password"
+          secret_id = "manual-study-builder-password"
         },
         {
           secret_id = "manual-mystudies-email-address"
@@ -207,12 +207,12 @@ template "project_secrets" {
           secret_data = "$${random_password.passwords[\"mystudies_urs_secret_key\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-wcp-client-id"
-          secret_data = "$${random_string.strings[\"mystudies_wcp_client_id\"].result}"
+          secret_id   = "auto-study-builder-client-id"
+          secret_data = "$${random_string.strings[\"study_builder_client_id\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-wcp-secret-key"
-          secret_data = "$${random_password.passwords[\"mystudies_wcp_secret_key\"].result}"
+          secret_id   = "auto-study-builder-secret-key"
+          secret_data = "$${random_password.passwords[\"study_builder_secret_key\"].result}"
         },
         {
           secret_id   = "auto-response-datastore-db-password"
@@ -280,7 +280,7 @@ resource "random_string" "strings" {
     "mystudies_ma_client_id",
     "mystudies_rs_client_id",
     "mystudies_urs_client_id",
-    "mystudies_wcp_client_id",
+    "study_builder_client_id",
     "response_datastore_db_user",
     "study_builder_db_user",
     "study_datastore_db_user",
@@ -301,7 +301,7 @@ resource "random_password" "passwords" {
     "mystudies_rs_secret_key",
     "mystudies_sql_default_user_password",
     "mystudies_urs_secret_key",
-    "mystudies_wcp_secret_key",
+    "study_builder_secret_key",
     "response_datastore_db_password",
     "study_builder_db_password",
     "study_datastore_db_password",
@@ -504,7 +504,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 
 # resource "google_cloudbuild_trigger" "server_build_triggers" {
 #   for_each = toset([
-#     "WCP",
+#     "study-builder",
 #     "WCP-WS",
 #     "oauth-scim-module",
 #     "participant-datastore/consent-mgmt-module",

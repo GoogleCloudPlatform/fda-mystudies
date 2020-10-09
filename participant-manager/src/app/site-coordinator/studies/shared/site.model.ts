@@ -4,7 +4,7 @@ export interface Site {
   enrollmentPercentage: number;
   status?: string;
   id: string;
-  name: string;
+  name?: string;
   invited?: number;
 }
 export interface UpdateTargetEnrollmentRequest {
