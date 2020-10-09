@@ -567,6 +567,15 @@
     <string name="server_connect_error">Couldn\'t connect to server. Please try again later.</string>
     <string name="loginflow">loginflow</string>
     <string name="logintype">logintype</string>
+    <string name="login_studyinfo_studyId">login_studyinfo_studyId</string>
+    <string name="login_studyinfo_title">login_studyinfo_title</string>
+    <string name="login_studyinfo_bookmark">login_studyinfo_bookmark</string>
+    <string name="login_studyinfo_status">login_studyinfo_status</string>
+    <string name="login_studyinfo_studyStatus">login_studyinfo_studyStatus</string>
+    <string name="login_studyinfo_position">login_studyinfo_position</string>
+    <string name="login_studyinfo_enroll">login_studyinfo_enroll</string>
+    <string name="login_studyinfo_rejoin">login_studyinfo_rejoin</string>
+    <string name="login_studyinfo_about_this_study">login_studyinfo_about_this_study</string>
 
 
     <!--must change strings-->
