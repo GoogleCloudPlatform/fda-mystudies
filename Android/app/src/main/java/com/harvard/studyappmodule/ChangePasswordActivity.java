@@ -235,7 +235,7 @@ public class ChangePasswordActivity extends AppCompatActivity
     AuthServerConfigEvent authServerConfigEvent =
         new AuthServerConfigEvent(
             "put",
-            Urls.AUTH_SERVICE + userId + Urls.CHANGE_PASSWORD,
+            Urls.AUTH_SERVICE + "/" + userId + Urls.CHANGE_PASSWORD,
             CHANGE_PASSWORD_REQUEST,
             ChangePasswordActivity.this,
             ChangePasswordData.class,

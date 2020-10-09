@@ -411,6 +411,7 @@ public class SurveyActivity extends AppCompatActivity
                     new AuthServerConfigEvent(
                         "post",
                         Urls.AUTH_SERVICE
+                            + "/"
                             + SharedPreferenceHelper.readPreference(
                                 SurveyActivity.this, getString(R.string.userid), "")
                             + Urls.LOGOUT,

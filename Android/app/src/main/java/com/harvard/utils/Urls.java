@@ -33,7 +33,7 @@ public class Urls {
 
   // New Auth Server
   public static String TOKENS = "/oauth2/token";
-  public static String AUTH_SERVICE = "/users/";
+  public static String AUTH_SERVICE = "/users";
   public static String CHANGE_PASSWORD = "/change_password";
   public static String FORGOT_PASSWORD = "/user/reset_password";
   public static String LOGOUT = "/logout";

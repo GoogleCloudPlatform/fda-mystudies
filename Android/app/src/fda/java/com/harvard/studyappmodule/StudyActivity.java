@@ -944,6 +944,7 @@ public class StudyActivity extends AppCompatActivity
                     new AuthServerConfigEvent(
                         "post",
                         Urls.AUTH_SERVICE
+                            + "/"
                             + SharedPreferenceHelper.readPreference(
                                 StudyActivity.this, getString(R.string.userid), "")
                             + Urls.LOGOUT,

@@ -340,6 +340,7 @@ public class ProfileFragment extends Fragment
         new AuthServerConfigEvent(
             "post",
             Urls.AUTH_SERVICE
+                + "/"
                 + SharedPreferenceHelper.readPreference(context, getString(R.string.userid), "")
                 + Urls.LOGOUT,
             LOGOUT_REPSONSECODE,
