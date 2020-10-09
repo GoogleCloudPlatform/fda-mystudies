@@ -104,9 +104,7 @@ export class SiteDetailsComponent
     this.userIds = [];
     this.fetchSiteParticipant(tab);
   }
-  redirectParticipant(userId: string): void {
-    void this.router.navigate(['/user/participantDetail', userId]);
-  }
+
   rowCheckBoxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -115,6 +113,7 @@ export class SiteDetailsComponent
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
+
   decommissionSite(): void {
     this.subs.add(
       this.particpantDetailService
@@ -129,6 +128,7 @@ export class SiteDetailsComponent
         }),
     );
   }
+
   sendInvitation(): void {
     if (this.userIds.length > 0) {
       if (this.userIds.length > MAXIMUM_USER_COUNT) {

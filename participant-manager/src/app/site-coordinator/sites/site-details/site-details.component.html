@@ -425,7 +425,7 @@
                 <!-- for all Selected -->
                 <td
                   *ngIf="activeTab == onBoardingStatus.All"
-                  (click)="redirectParticipant(participant.id)"
+                  [routerLink]="['/coordinator/participant', participant.id]"
                 >
                   <span class="no_st_en">{{ participant.email }}</span>
                 </td>
@@ -442,7 +442,10 @@
                       <label for="{{ participant.id }}">
                         <span
                           class="no_st_en"
-                          (click)="redirectParticipant(participant.id)"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
                         >
                           {{ participant.email }}
                         </span>
@@ -480,7 +483,10 @@
                         <label for="{{ participant.id }}">
                           <span
                             class="no_st_en"
-                            (click)="redirectParticipant(participant.id)"
+                            [routerLink]="[
+                              '/coordinator/participant',
+                              participant.id
+                            ]"
                           >
                             {{ participant.email }}
                           </span>
@@ -489,7 +495,12 @@
                       <div
                         *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
                       >
-                        <span (click)="redirectParticipant(participant.id)">
+                        <span
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
+                        >
                           {{ participant.email }}
                         </span>
                       </div>
@@ -511,7 +522,10 @@
                       <label for="{{ participant.id }}">
                         <span
                           class="no_st_en"
-                          (click)="redirectParticipant(participant.id)"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
                         >
                           {{ participant.email }}
                         </span>
