@@ -12,7 +12,24 @@
               </a>
             </div>
             <div>
-              <div class="mb-xs">Study Participant Registry</div>
+              <div class="mb-xs">
+                <span
+                  *ngIf="
+                    studyDetails.participantRegistryDetail.studyType !==
+                    studyTypes.Open
+                  "
+                >
+                  Study Participant Registry
+                </span>
+                <span
+                  *ngIf="
+                    studyDetails.participantRegistryDetail.studyType ===
+                    studyTypes.Open
+                  "
+                >
+                  Enrollment Registry
+                </span>
+              </div>
               <div class="flex__justify__space-between">
                 <div
                   *ngIf="

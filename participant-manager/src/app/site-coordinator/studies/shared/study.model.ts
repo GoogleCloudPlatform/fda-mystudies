@@ -3,11 +3,11 @@ import {Site} from './site.model';
 export interface Study {
   appId?: string;
   appInfoId?: string;
-  customId: string;
+  customId?: string;
   enrollmentPercentage?: number;
   id: string;
   sitesCount: number;
-  name: string;
+  name?: string;
   sites: Site[];
   studyPermission: number;
   totalSitesCount: number;
@@ -19,7 +19,7 @@ export interface Study {
 
 export interface StudyResponse {
   studies: Study[];
-  sitePermissionCount?: number;
+  sitePermissionCount: number;
   status: number;
   message: string;
   code: string;

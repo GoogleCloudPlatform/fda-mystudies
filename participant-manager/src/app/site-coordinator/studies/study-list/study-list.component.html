@@ -1,7 +1,7 @@
 <div class="max__w__1280">
   <div class="tab-content">
     <ng-container *ngIf="studyList$ | async as studyList">
-      <div>
+      <div *ngIf="studyList.sitePermissionCount >= 2">
         <div
           *ngFor="let study of studyList.studies"
           class="bg__white cards cards__var box__shadow-cmn ml-none mr-none studies_row"
@@ -29,7 +29,7 @@
                   >
                     <div class="col-xs-6 col-md-12 p-none">
                       <span *ngIf="study.type !== studyTypes.Open">
-                        {{ study.totalSitesCount }}
+                        {{ study.sitesCount }}
                         sites
                       </span>
                       <span *ngIf="study.type === studyTypes.Open">

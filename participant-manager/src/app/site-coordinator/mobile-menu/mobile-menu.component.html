@@ -66,11 +66,43 @@
       <ul class="user__profile__ul">
         <li>
           <a
-            routerLink="/coordinator/studies"
-            routerLinkActive="active"
             class="nav-item nav-link"
+            routerLink="/coordinator/studies/sites"
+            [ngClass]="{
+              active: apps.isActive || sites.isActive || studies.isActive
+            }"
           >
             Dashboard
+          </a>
+          <a
+            class="nav-item nav-link"
+            routerLink="/coordinator/studies"
+            routerLinkActive
+            #studies="routerLinkActive"
+            style="display: none"
+            [routerLinkActiveOptions]="{exact: true}"
+          >
+            sites
+          </a>
+          <a
+            class="nav-item nav-link"
+            routerLink="/coordinator/apps"
+            routerLinkActive
+            #apps="routerLinkActive"
+            style="display: none"
+            [routerLinkActiveOptions]="{exact: true}"
+          >
+            apps
+          </a>
+          <a
+            class="nav-item nav-link"
+            routerLink="/coordinator/studies/sites"
+            routerLinkActive
+            #sites="routerLinkActive"
+            style="display: none"
+            [routerLinkActiveOptions]="{exact: true}"
+          >
+            studies
           </a>
         </li>
         <li>

@@ -73,7 +73,7 @@ export class SiteDetailsComponent
         ) as SiteParticipants;
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
-            participant.email.toLowerCase().includes(query.toLowerCase()),
+            participant.email?.toLowerCase().includes(query.toLowerCase()),
         );
         return this.siteDetailsBackup;
       }),
