@@ -25,7 +25,7 @@ export interface StatusUpdateRequest {
 }
 
 export interface FieldUpdateRequest {
-  name: string;
+  name?: string;
   description: string;
 }
 

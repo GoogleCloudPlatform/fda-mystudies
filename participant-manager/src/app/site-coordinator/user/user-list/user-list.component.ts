@@ -22,7 +22,9 @@ export class UserListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sharedService.updateSearchPlaceHolder('Search User by Name or Email');
+    this.sharedService.updateSearchPlaceHolder(
+      'Search User by Name or Email ID',
+    );
     this.getUsers();
   }
 
@@ -35,9 +37,9 @@ export class UserListComponent implements OnInit {
         this.manageUsersBackup = {...manageUser};
         this.manageUsersBackup.users = this.manageUsersBackup.users.filter(
           (user: User) =>
-            user.firstName.toLowerCase().includes(query) ||
-            user.lastName.toLowerCase().includes(query) ||
-            user.email.toLowerCase().includes(query),
+            user.firstName?.toLowerCase().includes(query) ||
+            user.lastName?.toLowerCase().includes(query) ||
+            user.email?.toLowerCase().includes(query),
         );
         return this.manageUsersBackup;
       }),
