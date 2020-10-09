@@ -35,7 +35,7 @@ All files below are relative to the root of the repo.
   * same as oauth-scim-module
 * study-builder/
   * same as oauth-scim-module
-* WCP-WS/
+* study-datastore/
   * same as oauth-scim-module
 * participant-datastore/consent-mgmt-module
   * same as oauth-scim-module
@@ -141,7 +141,7 @@ root of the repo):
 1. hydra/tf-deployment.yaml
 1. response-server-module/tf-deployment.yaml
 1. study-builder/tf-deployment.yaml
-1. WCP-WS/tf-deployment.yaml
+1. study-datastore/tf-deployment.yaml
 1. participant-datastore/consent-mgmt-module/tf-deployment.yaml
 1. participant-datastore/enroll-mgmt-module/tf-deployment.yaml
 1. participant-datastore/user-mgmt-module/tf-deployment.yaml
@@ -231,7 +231,7 @@ Apply all deployments:
 
 ```bash
 $ kubectl apply \
-  -f ./WCP-WS/tf-deployment.yaml \
+  -f ./study-datastore/tf-deployment.yaml \
   -f ./response-server-ws/tf-deployment.yaml \
   -f ./participant-datastore/consent-mgmt-module/tf-deployment.yaml \
   -f ./participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
@@ -247,7 +247,7 @@ Apply all services:
 
 ```bash
 $ kubectl apply \
-  -f ./WCP-WS/tf-service.yaml \
+  -f ./study-datastore/tf-service.yaml \
   -f ./response-server-ws/tf-service.yaml \
   -f ./participant-datastore/consent-mgmt-module/tf-service.yaml \
   -f ./participant-datastore/enroll-mgmt-module/tf-service.yaml \
