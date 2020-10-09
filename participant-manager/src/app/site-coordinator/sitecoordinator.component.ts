@@ -17,7 +17,6 @@ export class SiteCoordinatorComponent implements OnInit {
   searchBar: SearchBar | undefined;
   user = {} as Profile;
   userName = '';
-  serverEnvironment = '';
   constructor(
     private readonly searchService: SearchService,
     private readonly userState: StateService,
@@ -26,6 +25,12 @@ export class SiteCoordinatorComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
+    this.userState.currentUserName$.subscribe((upadtedUsername) => {
+      this.userName = upadtedUsername;
+    });
+    if (this.userName === '') {
+      this.userName = this.user.firstName;
+    }
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
         this.showSearchBar = true;
