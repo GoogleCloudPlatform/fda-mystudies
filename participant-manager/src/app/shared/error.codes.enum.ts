@@ -80,7 +80,6 @@ const errorMessages = {
   EC_0064: 'email_id already exist',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
-
 export type ErrorCode = keyof typeof errorMessages;
 
 export function getMessage(key: ErrorCode): string {
