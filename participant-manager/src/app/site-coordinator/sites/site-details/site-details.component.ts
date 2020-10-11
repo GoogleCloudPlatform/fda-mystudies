@@ -123,7 +123,7 @@ export class SiteDetailsComponent
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success(successResponse.message);
-            void this.router.navigate(['/sites']);
+            void this.router.navigate(['/coordinator/studies/sites']);
           }
         }),
     );
