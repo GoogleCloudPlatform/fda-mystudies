@@ -691,7 +691,7 @@ public class LoginControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldRespondPasswordExpiredFOrLockedAcc() throws Exception {
+  public void shouldRespondPasswordExpiredForLockedAccount() throws Exception {
     // Step-1 create a user account with ACCOUNT_LOCKED status
     UserResponse userResponse = userService.createUser(newUserRequest());
     UserEntity userEntity = userRepository.findByUserId(userResponse.getUserId()).get();
