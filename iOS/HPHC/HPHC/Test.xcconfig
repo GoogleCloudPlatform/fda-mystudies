@@ -7,6 +7,7 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 //
+
 // Server configuration
 // By default App will connect to network over HTTPS
 // Update the value to http to connect over HTTP
@@ -15,7 +16,7 @@
 // Update the App Transport Security Settings in info.plist
 // Set `Allow Arbitrary Loads` to YES and `Allow Arbitrary Loads in Web Content` to YES to connect over HTTP
 // Set `Allow Arbitrary Loads` to NO and `Allow Arbitrary Loads in Web Content` to NO to connect over HTTPS
-PROTOCOL = https
+PROTOCOL = http
 
 // URL of study metadata server.
 // e.g. mystudiesdeployment.com/StudyMetaData/
@@ -27,11 +28,11 @@ RESPONSE_URL = xxxxxxxxx
 
 // URL of different service bundles within participant datastore.
 // e.g. mystudiesdeployment.com/myStudiesUserMgmtWS/
-REGISTRATION_URL = xxxxxxx
+REGISTRATION_URL = localhost:8080/myStudiesUserMgmtWS/
 // e.g. mystudiesdeployment.com/myStudiesEnrollmentMgmt/
-ENROLLMENT_URL = xxxxxx
+ENROLLMENT_URL = localhost:8080/myStudiesEnrollmentMgmt/
 // e.g. mystudiesdeployment.com/myStudiesConsentMgmtWS/
-CONSENTMGMT_URL = xxxxxx
+CONSENTMGMT_URL = localhost:8080/myStudiesConsentMgmtWS/
 
 // Hydra URL for auth services
 // e.g. mystudiesdeployment.com

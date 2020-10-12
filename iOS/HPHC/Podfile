@@ -29,3 +29,9 @@ target 'HPHCTests' do
   inherit! :search_paths
   pod 'Mockingjay', '3.0.0-alpha.1'
 end
+
+target 'MyStudiesUITests' do
+  use_frameworks!
+  pod 'Embassy'
+  pod 'EnvoyAmbassador'
+end

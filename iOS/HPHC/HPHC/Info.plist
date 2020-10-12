@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>PROTOCOL</key>
+	<string>$(PROTOCOL)</string>
 	<key>HYDRA_CLIENT_ID</key>
 	<string>$(HYDRA_CLIENT_ID)</string>
 	<key>AUTH_PASSWORD</key>
@@ -44,6 +46,8 @@
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
 		<false/>
 	</dict>
