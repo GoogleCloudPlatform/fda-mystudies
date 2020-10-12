@@ -43,6 +43,7 @@ public final class AuditEventMapper {
       throw new ErrorCodeException(ErrorCode.INVALID_SOURCE_NAME);
     }
     auditRequest.setSource(source);
+
     auditRequest.setUserIp(getUserIP(request));
 
     MobilePlatform mobilePlatform = MobilePlatform.fromValue(getValue(request, MOBILE_PLATFORM));
