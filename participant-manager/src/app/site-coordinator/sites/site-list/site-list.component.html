@@ -38,48 +38,49 @@
                   </div>
                 </div>
                 <div
-                  class="col-xs-12 col-md-12 p-none border__bottom__red progress__bar"
+                  class="col-xs-12 col-md-12 p-none border__bottom__red progress__bar border-top__c4d1e6"
                 >
                   <div
                     *ngFor="let site of study.sites"
-                    class="row display-flex-center progress__bar__row"
                     [routerLink]="
                       study.type === studyTypes.Open
                         ? ['/coordinator/studies', study.id]
                         : ['/coordinator/studies/sites/', site.id]
                     "
                   >
-                    <div class="col-xs-12 col-md-8 p-none cursor__pointer">
-                      <span
-                        *ngIf="study.type !== studyTypes.Open"
-                        class="sites_row"
-                      >
-                        {{ site.name }}
-                      </span>
-                      <span *ngIf="study.type === studyTypes.Open">
-                        Enrollment Registry
-                      </span>
-                    </div>
-                    <div class="col-xs-12 col-md-4 p-none lh__6">
-                      <div class="prog">
-                        <div class="pro__base">
-                          <div *ngIf="site.invited">
-                            <div
-                              class="pro__top"
-                              [style.width.%]="site.enrollmentPercentage"
-                            ></div>
+                    <div class="row display-flex-center progress__bar__row">
+                      <div class="col-xs-12 col-md-8 p-none cursor__pointer">
+                        <span
+                          *ngIf="study.type !== studyTypes.Open"
+                          class="sites_row"
+                        >
+                          {{ site.name }}
+                        </span>
+                        <span *ngIf="study.type === studyTypes.Open">
+                          Enrollment Registry
+                        </span>
+                      </div>
+                      <div class="col-xs-12 col-md-4 p-none lh__6">
+                        <div class="prog">
+                          <div class="pro__base">
+                            <div *ngIf="site.invited">
+                              <div
+                                class="pro__top"
+                                [style.width.%]="site.enrollmentPercentage"
+                              ></div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div
-                        class="progress-label font__bold"
-                        [ngClass]="progressBarColor(site)"
-                      >
-                        <div>
-                          <span *ngIf="site.invited" class="enrolled">
-                            {{ site.enrolled }} / {{ site.invited }}
-                          </span>
-                          <span *ngIf="site.invited === 0">N/A</span>
+                        <div
+                          class="progress-label font__bold"
+                          [ngClass]="progressBarColor(site)"
+                        >
+                          <div>
+                            <span *ngIf="site.invited" class="enrolled">
+                              {{ site.enrolled }} / {{ site.invited }}
+                            </span>
+                            <span *ngIf="site.invited === 0">N/A</span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -94,7 +95,7 @@
               >
                 <button
                   name="add"
-                  class="primary__btn add__site"
+                  class="primary__btn add__site btn__container"
                   (click)="openAddSiteModal(template, study)"
                 >
                   + Add Site

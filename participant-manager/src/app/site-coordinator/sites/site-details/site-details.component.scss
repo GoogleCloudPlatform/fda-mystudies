@@ -91,3 +91,8 @@ input[type="checkbox"]:checked + label::before {
 .subheader {
   padding: 13px 0px !important;
 }
+
+.site-details > .subheader {
+  min-height: 67px !important;
+  line-height: 100% !important;
+}

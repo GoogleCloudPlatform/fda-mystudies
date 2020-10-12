@@ -15,7 +15,7 @@ export class AuthService {
   pkceLength = 43;
   appId = 'PARTICIPANT MANAGER';
   mobilePlatform = 'DESKTOP';
-  source = 'PARTICIPANTMANAGER';
+  source = 'PARTICIPANT MANAGER';
 
   constructor(
     private readonly http: HttpClient,
@@ -48,6 +48,8 @@ export class AuthService {
       .set('correlationId', sessionStorage.getItem('correlationId') || '')
       .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.redirectUrl)
+      .set('source', this.source)
+      .set('env', 'localhost')
       .set('state', uuidv4())
       .toString();
     window.location.href = `${environment.loginUrl}?${params}`;
