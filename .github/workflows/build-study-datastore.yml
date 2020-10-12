@@ -2,7 +2,7 @@ name: Build study datastore
 on:
   pull_request:
     paths:
-    - 'WCP-WS/**'
+    - 'study-datastore/**'
     - '.github/workflows/build-study-datastore.yml'
 jobs:
   build:
@@ -15,5 +15,5 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-          cd WCP-WS
+          cd study-datastore
           mvn -B package --file pom.xml

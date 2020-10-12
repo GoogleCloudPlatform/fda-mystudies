@@ -41,8 +41,8 @@ export class StudyListComponent implements OnInit {
         this.manageStudiesBackup = {...manageStudies};
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
-            study.name.toLowerCase().includes(query.toLowerCase()) ||
-            study.customId.toLowerCase().includes(query.toLowerCase()),
+            study.name?.toLowerCase().includes(query.toLowerCase()) ||
+            study.customId?.toLowerCase().includes(query.toLowerCase()),
         );
         return this.manageStudiesBackup;
       }),
