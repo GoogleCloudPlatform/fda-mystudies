@@ -248,7 +248,7 @@ public class StudyStateServiceImpl implements StudyStateService {
   }
 
   @Override
-  @Transactional(readOnly = true)
+  @Transactional
   public WithDrawFromStudyRespBean withdrawFromStudy(
       String participantId, String studyId, boolean delete) {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
