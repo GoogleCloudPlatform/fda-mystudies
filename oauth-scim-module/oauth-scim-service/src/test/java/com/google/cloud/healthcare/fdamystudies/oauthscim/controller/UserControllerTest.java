@@ -12,8 +12,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
@@ -448,7 +447,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertEquals(expectedPasswordHash, actualPasswordHash);
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
@@ -632,7 +631,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
 
