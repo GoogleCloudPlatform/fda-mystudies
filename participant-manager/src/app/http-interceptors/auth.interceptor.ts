@@ -106,7 +106,7 @@ export class AuthInterceptor implements HttpInterceptor {
       }
       return req.clone({headers});
     } else {
-      const headers = req.headers
+      let headers = req.headers
         .set('userId', sessionStorage.getItem('userId') || '')
         .set('Access-Control-Allow-Origin', '*')
         .set(
@@ -117,8 +117,9 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
-      if (!req.headers.has('Content-Type')) {
-        req.headers.set('Content-Type', 'application/json');
+
+      if (!req.headers.get('skip')) {
+        headers = headers.append('Content-Type', 'application/json');
       }
       return req.clone({headers});
     }
