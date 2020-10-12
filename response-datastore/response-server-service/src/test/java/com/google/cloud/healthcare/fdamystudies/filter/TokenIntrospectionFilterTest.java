@@ -52,8 +52,6 @@ public class TokenIntrospectionFilterTest extends BaseMockIT {
     mockMvc
         .perform(get(apiEnum.getPath()).contextPath(getContextPath()).headers(getCommonHeaders()))
         .andDo(print());
-
-    verifyTokenIntrospectRequest(1);
   }
 
   private HttpHeaders getCommonHeaders() {
