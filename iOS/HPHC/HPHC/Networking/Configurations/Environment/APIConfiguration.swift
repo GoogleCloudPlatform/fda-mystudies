@@ -30,15 +30,9 @@ enum Configuration {
 
 enum API {
 
-  private enum AppProtocol {
-    private static let http = "http://"
-    private static let https = "https://"
+  private struct AppProtocol {
     static var value: String {
-      #if DEBUG
-        return https
-      #else
-        return https
-      #endif
+      return ((try? Configuration.value(for: "PROTOCOL")) ?? "") + "://"
     }
   }
 

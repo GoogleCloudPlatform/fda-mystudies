@@ -37,13 +37,17 @@ class MyStudiesUITests: UITestBase {
     confirmPasswordField.tap()
     confirmPasswordField.typeText("Test@124")
 
+    let doneButton = app.toolbars["Toolbar"].buttons["Done"]
+    if doneButton.exists {
+      doneButton.swipeUp()
+    }
+
     app.tables.buttons["notChecked"].tap()
 
-    app.toolbars["Toolbar"].buttons["Done"].tap()
     app.buttons["Submit"].tap()
 
     let verificationStep = app.staticTexts["Verification Step"]
-    wait(forElement: verificationStep, timeout: 3)
+    wait(forElement: verificationStep, timeout: 5)
     XCTAssertTrue(verificationStep.exists)
 
     let verificationField = app.textFields.firstMatch
