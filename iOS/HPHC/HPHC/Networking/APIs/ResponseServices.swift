@@ -466,13 +466,13 @@ extension ResponseServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if error.code == 401 {
+    if error.code == HTTPError.tokenExpired.rawValue {
       // Update Refresh Token
       updateToken(manager: manager, requestName: requestName, error: error)
     } else {
       var errorInfo = error.userInfo
       var localError = error
-      if error.code == 403 {
+      if error.code == HTTPError.forbidden.rawValue {
         errorInfo = ["NSLocalizedDescription": LocalizableString.sessionExpired.localizedString]
         localError = NSError(domain: error.domain, code: 403, userInfo: errorInfo)
       }
