@@ -240,7 +240,10 @@ public enum ErrorCode {
 
   INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status."),
 
-  INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value");
+  INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value"),
+
+  CANNOT_ADD_SITE_FOR_DECOMMISSIONED_lOCATION(
+      400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site for decommissioned location.");
 
   private final int status;
   private final String code;

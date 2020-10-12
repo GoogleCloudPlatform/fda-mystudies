@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CL
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEFAULT_PERCENTAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
@@ -173,6 +174,13 @@ public class SiteServiceImpl implements SiteService {
     if (CollectionUtils.isNotEmpty(sitesList)) {
       sitesList.get(0);
       throw new ErrorCodeException(ErrorCode.SITE_EXISTS);
+    }
+
+    Optional<LocationEntity> optLocation = locationRepository.findById(siteRequest.getLocationId());
+    if (!optLocation.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.LOCATION_NOT_FOUND);
+    } else if (optLocation.get().getStatus().equals(INACTIVE_STATUS)) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_DECOMMISSIONED_lOCATION);
     }
 
     Optional<StudyEntity> optStudyEntity = studyRepository.findById(siteRequest.getStudyId());
