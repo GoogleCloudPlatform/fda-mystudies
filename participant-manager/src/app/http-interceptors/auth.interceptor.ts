@@ -87,7 +87,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
   private setHeaders(req: HttpRequest<unknown>) {
     if (req.url.includes(`${environment.authServerUrl}`)) {
-      const headers = req.headers
+      let headers = req.headers
         .set('Accept', 'application/json')
         .set('correlationId', sessionStorage.getItem('correlationId') || '')
         .set('appId', this.authService.appId)
@@ -102,7 +102,10 @@ export class AuthInterceptor implements HttpInterceptor {
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
       if (!req.headers.has('Content-Type')) {
-        headers.set('Content-Type', 'application/x-www-form-urlencoded');
+        headers = headers.append(
+          'Content-Type',
+          'application/x-www-form-urlencoded',
+        );
       }
       return req.clone({headers});
     } else {
