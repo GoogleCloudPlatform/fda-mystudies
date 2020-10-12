@@ -50,7 +50,7 @@ public class LocationEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "custom_id", nullable = false, length = SMALL_LENGTH)
+  @Column(name = "custom_id", nullable = false, unique = true, length = SMALL_LENGTH)
   private String customId;
 
   @Column(name = "status")
