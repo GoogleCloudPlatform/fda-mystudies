@@ -9,7 +9,6 @@
 package com.google.cloud.healthcare.fdamystudies.model;
 
 import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.SMALL_LENGTH;
-import static com.google.cloud.healthcare.fdamystudies.common.ColumnConstraints.XS_LENGTH;
 
 import java.beans.Transient;
 import java.io.Serializable;
@@ -55,7 +54,7 @@ public class ParticipantStudyEntity implements Serializable {
   @Column(name = "id", updatable = false, nullable = false)
   private String id;
 
-  @Column(name = "participant_id", unique = true, length = XS_LENGTH)
+  @Column(name = "participant_id", unique = true, length = SMALL_LENGTH)
   private String participantId;
 
   @ManyToOne(cascade = CascadeType.MERGE)
