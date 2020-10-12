@@ -26,3 +26,8 @@ var isUITesting: Bool {
 var isTestingLoginLogoutFlow: Bool {
   return ProcessInfo.processInfo.arguments.contains("LOGIN_LOGOUT_FLOW")
 }
+
+/// To test the UI for logged In User cases
+var isTestingLoggedUser: Bool {
+    return ProcessInfo.processInfo.arguments.contains("LOGGED_USER")
+}

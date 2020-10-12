@@ -170,6 +170,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   // MARK: - App Delegates methods
 
+  func application(_ application: UIApplication,
+                   willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    mockTestUser()
+    return true
+  }
+
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -1817,5 +1823,15 @@ extension UIWindow {
 extension UIApplication {
   func topMostViewController() -> UIViewController? {
     return self.keyWindow?.rootViewController?.topMostViewController()
+  }
+}
+
+extension AppDelegate {
+  fileprivate func mockTestUser() {
+    guard isTestingLoggedUser else { return }
+    User.currentUser.authToken = "Bearer accesstoken-12345"
+    User.currentUser.refreshToken = "FXm_WOcEddMDzumj"
+    User.currentUser.emailId = "test@xyz.la"
+    User.currentUser.userType = .loggedInUser
   }
 }

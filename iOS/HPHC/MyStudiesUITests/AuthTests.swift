@@ -58,6 +58,25 @@ class MyStudiesUITests: UITestBase {
     app.buttons["Continue"].tap()
   }
 
+  func testChangePasswordForLoggedUser() {
+    app.launchArguments += ["LOGGED_USER"]
+    app.launch()
+
+    app.navigationBars.firstMatch.buttons["menu icn"].tap()
+    app.staticTexts["My Account"].tap()
+
+    // Error alert
+    app.alerts.buttons["OK"].tap()
+    app.staticTexts["Change Password"].tap()
+
+    XCTAssertTrue(app.secureTextFields["enter current password"].exists,
+                  "Current password field not found")
+    XCTAssertTrue(app.secureTextFields["enter new password"].exists,
+                  "New password field not found")
+    XCTAssertTrue(app.secureTextFields["confirm password"].exists,
+                  "Confirm password field not found")
+  }
+
 }
 
 extension XCTestCase {
