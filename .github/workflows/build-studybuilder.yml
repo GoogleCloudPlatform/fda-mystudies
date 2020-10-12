@@ -1,7 +1,7 @@
 on:
   pull_request:
     paths:
-    - 'WCP/fdahpStudyDesigner/**'
+    - 'study-builder/fdahpStudyDesigner/**'
     - '.github/workflows/build-studybuilder.yml'
 name: Build studybuilder
 jobs:
@@ -15,5 +15,5 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: |
-          cd WCP/fdahpStudyDesigner
+          cd study-builder/fdahpStudyDesigner
           mvn -B package --file pom.xml

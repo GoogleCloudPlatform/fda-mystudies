@@ -31,20 +31,20 @@ All files below are relative to the root of the repo.
         and the Ingress.
     * This is forked from service.yaml with modifications for the Terraform
         setup.
-* response-server-module/
-  * same as auth-server-ws
-* WCP/
-  * same as auth-server-ws
-* WCP-WS/
-  * same as auth-server-ws
+* response-datastore/
+  * same as oauth-scim-module
+* study-builder/
+  * same as oauth-scim-module
+* study-datastore/
+  * same as oauth-scim-module
 * participant-datastore/consent-mgmt-module
-  * same as auth-server-ws
+  * same as oauth-scim-module
 * participant-datastore/enroll-mgmt-module
-  * same as auth-server-ws
+  * same as oauth-scim-module
 * participant-datastore/user-mgmt-module
-  * same as auth-server-ws
+  * same as oauth-scim-module
 * participant-manager/
-  * same as auth-server-ws
+  * same as oauth-scim-module
 
 ## Setup
 
@@ -88,8 +88,8 @@ Upload the SQL files to the bucket:
 ```bash
 $ gsutil cp \
   ./auth-server-ws/auth_server_db_script.sql \
-  ./WCP/sqlscript/* \
-  ./response-server-ws/mystudies_response_server_db_script.sql \
+  ./study-builder/sqlscript/* \
+  ./response-datastore/mystudies_response_server_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_app_info_update_db_script.sql \
   ./user-registration-server-ws/sqlscript/mystudies_user_registration_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
@@ -140,8 +140,8 @@ root of the repo):
 1. oauth-scim-module/tf-deployment.yaml
 1. hydra/tf-deployment.yaml
 1. response-server-module/tf-deployment.yaml
-1. WCP/tf-deployment.yaml
-1. WCP-WS/tf-deployment.yaml
+1. study-builder/tf-deployment.yaml
+1. study-datastore/tf-deployment.yaml
 1. participant-datastore/consent-mgmt-module/tf-deployment.yaml
 1. participant-datastore/enroll-mgmt-module/tf-deployment.yaml
 1. participant-datastore/user-mgmt-module/tf-deployment.yaml
@@ -231,12 +231,12 @@ Apply all deployments:
 
 ```bash
 $ kubectl apply \
-  -f ./WCP-WS/tf-deployment.yaml \
+  -f ./study-datastore/tf-deployment.yaml \
   -f ./response-server-ws/tf-deployment.yaml \
   -f ./participant-datastore/consent-mgmt-module/tf-deployment.yaml \
   -f ./participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
   -f ./participant-datastore/user-mgmt-module/tf-deployment.yaml \
-  -f ./WCP/tf-deployment.yaml \
+  -f ./study-builder/tf-deployment.yaml \
   -f ./oauth-scim-module/tf-deployment.yaml \
   -f ./participant-manager-datastore/tf-deployment.yaml \
   -f ./hydra/tf-deployment.yaml \
@@ -247,12 +247,12 @@ Apply all services:
 
 ```bash
 $ kubectl apply \
-  -f ./WCP-WS/tf-service.yaml \
+  -f ./study-datastore/tf-service.yaml \
   -f ./response-server-ws/tf-service.yaml \
   -f ./participant-datastore/consent-mgmt-module/tf-service.yaml \
   -f ./participant-datastore/enroll-mgmt-module/tf-service.yaml \
   -f ./participant-datastore/user-mgmt-module/tf-service.yaml \
-  -f ./WCP/tf-service.yaml \
+  -f ./study-builder/tf-service.yaml \
   -f ./oauth-scim-module/tf-service.yaml \
   -f ./participant-manager-datastore/tf-service.yaml \
   -f ./hydra/tf-service.yaml \

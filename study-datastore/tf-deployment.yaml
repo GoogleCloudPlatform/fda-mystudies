@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: study-datastore
+  labels:
+    app: study-datastore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: study-datastore
+  template:
+    metadata:
+      labels:
+        app: study-datastore
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: study-datastore
+          image: gcr.io/fda-mystudies-dev-apps/study-datastore:latest
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-db-credentials
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-db-credentials
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: study-datastore-db-credentials
+                  key: dbname
+            - name: PARTICIPANT_USER_DATASTORE_URL
+              value: "http://participant-user-datastore-np:50000/participant-user-datastore"
+            - name: STUDY_BUILDER_RESOURCE_URL
+              value: "https://fda-mystudies.domain.com/study-resources"
+            - name: TERMS_AND_CONDITION_URL
+              value: ""
+            - name: PRIVACY_POLICY_URL
+              name: ""
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /study-datastore/healthCheck
+              port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-credential_file=/secrets/gcloud_key/key.json"]
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: study-datastore-gcloud-key

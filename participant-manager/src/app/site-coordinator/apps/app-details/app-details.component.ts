@@ -65,7 +65,7 @@ export class AppDetailsComponent
         this.appDetailsBackup = appDetails;
         this.appDetailsBackup.participants = this.appDetailsBackup.participants.filter(
           (participant: Participant) =>
-            participant.email.toLowerCase().includes(query.toLowerCase()),
+            participant.email?.toLowerCase().includes(query.toLowerCase()),
         );
         return this.appDetailsBackup;
       }),

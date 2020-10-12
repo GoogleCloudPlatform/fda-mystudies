@@ -1,12 +1,12 @@
 export interface App {
   permission: number;
   appUsersCount: number;
-  customId: string;
+  customId?: string;
   enrolledCount: number;
   enrollmentPercentage: number;
   id: string;
   invitedCount: number;
-  name: string;
+  name?: string;
   studiesCount: number;
 }
 export interface ManageApps {
