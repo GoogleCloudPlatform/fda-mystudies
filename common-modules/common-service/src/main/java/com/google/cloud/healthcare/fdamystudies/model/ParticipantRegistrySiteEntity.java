@@ -82,8 +82,8 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   @CreationTimestamp
   private Timestamp invitationDate;
 
-  @Column(name = "invitation_count", columnDefinition = "BIGINT DEFAULT 0")
-  private Long invitationCount;
+  @Column(name = "invitation_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+  private Long invitationCount = 0L;
 
   @Column(name = "disabled_time")
   private Timestamp disabledDate;
