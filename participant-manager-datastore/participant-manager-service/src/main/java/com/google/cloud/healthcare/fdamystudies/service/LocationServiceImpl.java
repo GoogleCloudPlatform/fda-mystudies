@@ -87,6 +87,14 @@ public class LocationServiceImpl implements LocationService {
 
       throw new ErrorCodeException(ErrorCode.LOCATION_ACCESS_DENIED);
     }
+
+    Optional<LocationEntity> optLocation =
+        locationRepository.findByCustomId(location.getCustomId());
+
+    if (optLocation.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.CUSTOM_ID_EXISTS);
+    }
+
     location.setCreatedBy(adminUser.getId());
     LocationEntity created = locationRepository.saveAndFlush(location);
 

@@ -65,7 +65,7 @@ export class StudyDetailsComponent
         this.studyDetailsBackup = {...studyDetails};
         this.studyDetailsBackup.participantRegistryDetail.registryParticipants = this.studyDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
-            participant.email.toLowerCase().includes(query.toLowerCase()) ||
+            participant.email?.toLowerCase().includes(query.toLowerCase()) ||
             participant.locationName
               .toLowerCase()
               .includes(query.toLowerCase()),
