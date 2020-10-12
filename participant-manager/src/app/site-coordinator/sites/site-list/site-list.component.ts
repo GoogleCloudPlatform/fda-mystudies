@@ -36,7 +36,7 @@ export class SiteListComponent implements OnInit {
 
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder(
-      'Search By Site or Study ID or Name',
+      'Search by Site or Study ID or Name',
     );
     this.getStudies();
   }
@@ -53,9 +53,9 @@ export class SiteListComponent implements OnInit {
         this.manageStudiesBackup = {...manageStudies};
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
-            study.name.toLowerCase().includes(query) ||
-            study.customId.toLowerCase().includes(query) ||
-            study.sites.some((site) => site.name.includes(query)),
+            study.name?.toLowerCase().includes(query) ||
+            study.customId?.toLowerCase().includes(query) ||
+            study.sites.some((site) => site.name?.includes(query)),
         );
         return this.manageStudiesBackup;
       }),
