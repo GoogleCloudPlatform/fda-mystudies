@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
@@ -181,7 +182,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     userRequest.setEmail(user.getEmailId());
     userRequest.setPassword(user.getPassword());
     userRequest.setAppId(user.getAppId());
-    userRequest.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
+    userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
 
     HttpEntity<UserRequest> requestEntity = new HttpEntity<>(userRequest, headers);
 
