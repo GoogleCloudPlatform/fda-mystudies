@@ -196,9 +196,9 @@ public class BaseMockIT {
     headers.add("correlationId", UUID.randomUUID().toString());
 
     headers.add("appVersion", applicationVersion);
-    headers.add("appId", "STUDY BUILDER");
-    headers.add("source", "STUDY BUILDER");
-    headers.add("mobilePlatform", "UNKNOWN");
+    headers.add("appId", PlatformComponent.STUDY_BUILDER.getValue());
+    headers.add("source", PlatformComponent.STUDY_BUILDER.getValue());
+    headers.add("mobilePlatform", MobilePlatform.UNKNOWN.getValue());
     return headers;
   }
 
@@ -261,13 +261,21 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getCorrelationId());
       assertNotNull(auditRequest.getOccured());
       assertNotNull(auditRequest.getPlatformVersion());
-      if (!auditEvent.getEventCode().equals("SIGNIN_FAILED_UNREGISTERED_USER")) {
-        assertNotNull(auditRequest.getAppId());
-        assertNotNull(auditRequest.getAppVersion());
+      assertNotNull(auditRequest.getAppId());
+      assertNotNull(auditRequest.getAppVersion());
+
+      if (!isPreLoginAuditEvent(auditRequest)) {
         assertNotNull(auditRequest.getMobilePlatform());
         assertNotNull(auditRequest.getUserAccessLevel());
       }
     }
+  }
+
+  private boolean isPreLoginAuditEvent(AuditLogEventRequest auditRequest) {
+    return StudyBuilderAuditEvent.SIGNIN_FAILED.getEventCode().equals(auditRequest.getEventCode())
+        || StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER
+            .getEventCode()
+            .equals(auditRequest.getEventCode());
   }
 
   protected void addParams(MockHttpServletRequestBuilder requestBuilder, Object formModel)

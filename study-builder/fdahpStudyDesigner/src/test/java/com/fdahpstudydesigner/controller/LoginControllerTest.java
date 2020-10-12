@@ -54,6 +54,7 @@ public class LoginControllerTest extends BaseMockIT {
     final ResultActions resultActions =
         mockMvc.perform(
             formLogin("/j_spring_security_check").user(SESSION_USER_EMAIL).password("secret"));
+
     resultActions
         .andDo(print())
         .andExpect(MockMvcResultMatchers.status().isFound())

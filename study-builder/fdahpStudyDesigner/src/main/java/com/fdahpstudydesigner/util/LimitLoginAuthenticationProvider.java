@@ -72,8 +72,6 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
         (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
     AuditLogEventRequest auditRequest =
         AuditEventMapper.fromHttpServletRequest(attributes.getRequest());
-    String sessionId = attributes.getSessionId();
-    auditRequest.setCorrelationId(sessionId);
     String username = (String) authentication.getPrincipal();
 
     try {

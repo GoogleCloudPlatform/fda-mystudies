@@ -19,6 +19,7 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Map;
+import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
@@ -27,32 +28,29 @@ public final class AuditEventMapper {
 
   private AuditEventMapper() {}
 
-  private static final String APP_ID = "appId";
-
   private static final String MOBILE_PLATFORM = "mobilePlatform";
-
-  private static final String CORRELATION_ID = "correlationId";
-
-  private static final String USER_ID = "userId";
-
-  private static final String APP_VERSION = "appVersion";
 
   private static final String SOURCE = "source";
 
   public static AuditLogEventRequest fromHttpServletRequest(HttpServletRequest request) {
+    Map<String, String> map = FdahpStudyDesignerUtil.getAppProperties();
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setAppId(getValue(request, APP_ID));
-    auditRequest.setAppVersion(getValue(request, APP_VERSION));
-    auditRequest.setCorrelationId(getValue(request, CORRELATION_ID));
-    auditRequest.setUserId(getValue(request, USER_ID));
+
+    auditRequest.setAppId(PlatformComponent.STUDY_BUILDER.getValue());
+    auditRequest.setAppVersion(map.get("applicationVersion"));
     if (request.getSession() != null) {
       SessionObject sesObj =
           (SessionObject)
-              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
+              request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       if (sesObj != null) {
         auditRequest.setUserAccessLevel(sesObj.getAccessLevel());
+        auditRequest.setCorrelationId(sesObj.getCorrelationId());
+        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
       }
     }
+
+    auditRequest.setCorrelationId(
+        StringUtils.defaultIfEmpty(auditRequest.getCorrelationId(), UUID.randomUUID().toString()));
 
     String source = getValue(request, SOURCE);
     if (StringUtils.isNotEmpty(source)) {
