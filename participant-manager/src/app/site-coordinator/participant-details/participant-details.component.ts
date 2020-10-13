@@ -8,7 +8,7 @@ import {ToastrService} from 'ngx-toastr';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {OnboardingStatus} from 'src/app/shared/enums';
 import {ApiResponse} from 'src/app/entity/api.response.model';
-
+import {Location} from '@angular/common';
 @Component({
   selector: 'app-participant-details',
   templateUrl: './participant-details.component.html',
@@ -24,6 +24,7 @@ export class ParticipantDetailsComponent
   onBoardingStatus = OnboardingStatus;
 
   constructor(
+    private readonly locationLibrary: Location,
     private readonly participantDetailsService: ParticipantDetailsService,
     private readonly route: ActivatedRoute,
     private readonly toastr: ToastrService,
@@ -107,5 +108,8 @@ export class ParticipantDetailsComponent
           }
         }),
     );
+  }
+  backClicked(): void {
+    this.locationLibrary.back();
   }
 }
