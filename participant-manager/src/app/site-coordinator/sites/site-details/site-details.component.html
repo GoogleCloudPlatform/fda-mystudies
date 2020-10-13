@@ -15,13 +15,16 @@
               <div class="mb-xs">
                 Site Participant Registry
                 <span
-                  *ngIf="siteParticipants.participantRegistryDetail.siteStatus"
-                  class="active__"
+                  [ngClass]="
+                    siteParticipants.participantRegistryDetail.siteStatus === 1
+                      ? 'active__'
+                      : 'inActive__'
+                  "
                 >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
                       ? "Active"
-                      : "Inactive"
+                      : "Decommissioned"
                   }}
                 </span>
               </div>
