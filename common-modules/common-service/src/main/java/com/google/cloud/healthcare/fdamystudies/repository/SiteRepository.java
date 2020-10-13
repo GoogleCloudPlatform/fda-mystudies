@@ -8,11 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -40,4 +42,35 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
 
   @Query("SELECT site from SiteEntity site where site.study.id= :studyId and site.study.type=:type")
   public Optional<SiteEntity> findByStudyIdAndType(String studyId, String type);
+
+  @Modifying
+  @Query(
+      value =
+          "SELECT invites.site_id as siteId, invites.invitedCount, IFNULL(enrolled.enrolledCount, 0) AS enrolledCount FROM (SELECT prs.site_id, SUM(prs.invitation_count) AS invitedCount "
+              + "FROM participant_registry_site prs, sites_permissions sp WHERE prs.site_id=sp.site_id AND sp.ur_admin_user_id =:userId "
+              + "GROUP BY prs.site_id ) AS invites LEFT JOIN ( SELECT ps.site_id, COUNT(ps.site_id) AS enrolledCount "
+              + "FROM participant_study_info ps, sites_permissions sp WHERE ps.site_id=sp.site_id AND sp.ur_admin_user_id =:userId GROUP BY ps.site_id) "
+              + "AS enrolled ON invites.site_id=enrolled.site_id ",
+      nativeQuery = true)
+  public List<EnrolledInvitedCount> getEnrolledInvitedCountByUserId(@Param("userId") String userId);
+
+  @Query(
+      value =
+          "SELECT invites.site_id as siteId, invites.invitedCount, IFNULL(enrolled.enrolledCount, 0) AS enrolledCount "
+              + "FROM "
+              + " ( "
+              + "SELECT prs.site_id, SUM(prs.invitation_count) AS invitedCount "
+              + "FROM participant_registry_site prs, sites si, study_info st "
+              + "WHERE prs.site_id=si.id AND si.study_id=st.id AND st.type='CLOSE' "
+              + "GROUP BY prs.site_id "
+              + ") AS invites "
+              + "LEFT JOIN "
+              + "( "
+              + "SELECT ps.site_id, COUNT(ps.site_id) AS enrolledCount "
+              + "FROM participant_study_info ps, sites si "
+              + "WHERE ps.site_id=si.id "
+              + "GROUP BY ps.site_id "
+              + ") AS enrolled ON invites.site_id=enrolled.site_id",
+      nativeQuery = true)
+  public List<EnrolledInvitedCount> getEnrolledInvitedCount();
 }
