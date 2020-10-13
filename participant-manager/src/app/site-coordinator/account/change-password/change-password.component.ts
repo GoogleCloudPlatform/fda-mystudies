@@ -40,7 +40,7 @@ export class ChangePasswordComponent
     );
   }
   passCriteria = '';
-  get resetPassword() {
+  get ressetPassword() {
     return this.resetPasswordForm.controls;
   }
   ngOnInit(): void {
