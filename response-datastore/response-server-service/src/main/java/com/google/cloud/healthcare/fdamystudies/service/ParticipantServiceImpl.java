@@ -19,13 +19,15 @@ public class ParticipantServiceImpl implements ParticipantService {
   @Autowired private ParticipantDao participantDao;
 
   @Override
-  public String saveParticipant(ParticipantInfoEntity participantBo) throws ProcessResponseException {
+  public String saveParticipant(ParticipantInfoEntity participantBo)
+      throws ProcessResponseException {
     System.out.println("ParticipantServiceImpl saveParticipant starts");
     return participantDao.saveParticipant(participantBo);
   }
 
   @Override
-  public boolean isValidParticipant(ParticipantInfoEntity participantBo) throws ProcessResponseException {
+  public boolean isValidParticipant(ParticipantInfoEntity participantBo)
+      throws ProcessResponseException {
     return participantDao.isValidParticipant(participantBo);
   }
 }

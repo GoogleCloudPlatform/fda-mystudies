@@ -17,5 +17,6 @@ import org.springframework.stereotype.Repository;
 public interface ParticipantActivitiesRepository
     extends JpaRepository<ParticipantActivitiesEntity, Integer> {
 
-  List<ParticipantActivitiesEntity> findByStudyIdAndParticipantId(String studyId, String participantId);
+  List<ParticipantActivitiesEntity> findByStudyIdAndParticipantId(
+      String studyId, String participantId);
 }
