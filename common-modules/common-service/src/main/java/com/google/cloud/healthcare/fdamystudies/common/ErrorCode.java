@@ -246,7 +246,9 @@ public enum ErrorCode {
       403,
       "EC_0123",
       HttpStatus.FORBIDDEN.toString(),
-      "You do not have permission to access this app");
+      "You do not have permission to access this app"),
+  
+  TEMP_PASSWORD_INVALID(400, "EC_0122", Constants.BAD_REQUEST, "Temporary password is invalid");
 
   private final int status;
   private final String code;
