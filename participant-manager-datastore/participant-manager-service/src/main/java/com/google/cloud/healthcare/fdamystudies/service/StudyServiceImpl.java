@@ -28,10 +28,13 @@ import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.StudyCount;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
@@ -40,6 +43,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionReposit
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,12 +84,27 @@ public class StudyServiceImpl implements StudyService {
 
   @Autowired private AppPermissionRepository appPermissionRepository;
 
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
+
   @Override
   @Transactional(readOnly = true)
   public StudyResponse getStudies(String userId) {
     logger.entry("getStudies(String userId)");
 
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!(optUserRegAdminEntity.isPresent())) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      StudyResponse studyResponse = getStudiesForSuperAdmin(optUserRegAdminEntity.get());
+      logger.exit(
+          String.format("total studies for superadmin=%d", studyResponse.getStudies().size()));
+      return studyResponse;
+    }
+
     List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
+
     List<StudyPermissionEntity> studyPermissions =
         studyPermissionRepository.findByAdminUserId(userId);
 
@@ -133,7 +152,62 @@ public class StudyServiceImpl implements StudyService {
         studyPermissionsByStudyInfoId,
         studyPermissionMap,
         siteWithInvitedParticipantCountMap,
-        siteWithEnrolledParticipantCountMap);
+        siteWithEnrolledParticipantCountMap,
+        optUserRegAdminEntity.get());
+  }
+
+  private StudyResponse getStudiesForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
+
+    List<StudyCount> studyInvitedCountList = studyRepository.findInvitedCountByStudyId();
+    Map<String, StudyCount> studyInvitedCountMap =
+        studyInvitedCountList
+            .stream()
+            .collect(Collectors.toMap(StudyCount::getStudyId, Function.identity()));
+
+    List<StudyCount> studyEnrolledCountList = studyRepository.findEnrolledCountByStudyId();
+    Map<String, StudyCount> studyEnrolledCountMap =
+        studyEnrolledCountList
+            .stream()
+            .collect(Collectors.toMap(StudyCount::getStudyId, Function.identity()));
+
+    List<SiteCount> sitesList = siteRepository.findStudySitesCount();
+    Map<String, SiteCount> sitesPerStudyMap =
+        sitesList.stream().collect(Collectors.toMap(SiteCount::getStudyId, Function.identity()));
+
+    List<StudyEntity> studies = studyRepository.findAll();
+    List<StudyDetails> studyDetailsList = new ArrayList<>();
+    for (StudyEntity study : studies) {
+      StudyDetails studyDetail = new StudyDetails();
+      studyDetail.setId(study.getId());
+      studyDetail.setCustomId(study.getCustomId());
+      studyDetail.setName(study.getName());
+      studyDetail.setType(study.getType());
+      SiteCount siteCount = sitesPerStudyMap.get(study.getId());
+      if (siteCount != null && siteCount.getCount() != null) {
+        studyDetail.setSitesCount(siteCount.getCount());
+      }
+      studyDetail.setStudyPermission(Permission.EDIT.value());
+      Long enrolledCount = getCount(studyEnrolledCountMap, study.getId());
+      Long invitedCount = getCount(studyInvitedCountMap, study.getId());
+      studyDetail.setEnrolled(enrolledCount);
+      studyDetail.setInvited(invitedCount);
+      if (studyDetail.getInvited() != 0 && studyDetail.getInvited() >= studyDetail.getEnrolled()) {
+        Double percentage =
+            (Double.valueOf(studyDetail.getEnrolled()) * 100)
+                / Double.valueOf(studyDetail.getInvited());
+        studyDetail.setEnrollmentPercentage(percentage);
+      }
+      studyDetailsList.add(studyDetail);
+    }
+    return new StudyResponse(
+        MessageCode.GET_STUDIES_SUCCESS, studyDetailsList, userRegAdminEntity.isSuperAdmin());
+  }
+
+  private Long getCount(Map<String, StudyCount> map, String studyId) {
+    if (map.containsKey(studyId)) {
+      return map.get(studyId).getCount();
+    }
+    return 0L;
   }
 
   private Map<String, StudyPermissionEntity> getStudyPermissionsByStudyInfoId(
@@ -156,7 +230,8 @@ public class StudyServiceImpl implements StudyService {
       Map<String, StudyPermissionEntity> studyPermissionsByStudyInfoId,
       Map<StudyEntity, List<SitePermissionEntity>> studyPermissionMap,
       Map<String, Long> siteWithInvitedParticipantCountMap,
-      Map<String, Long> siteWithEnrolledParticipantCountMap) {
+      Map<String, Long> siteWithEnrolledParticipantCountMap,
+      UserRegAdminEntity userRegAdminEntity) {
     List<StudyDetails> studies = new ArrayList<>();
     for (Map.Entry<StudyEntity, List<SitePermissionEntity>> entry : studyPermissionMap.entrySet()) {
       StudyDetails studyDetail = new StudyDetails();
@@ -192,7 +267,11 @@ public class StudyServiceImpl implements StudyService {
     }
 
     StudyResponse studyResponse =
-        new StudyResponse(MessageCode.GET_STUDIES_SUCCESS, studies, sitePermissions.size());
+        new StudyResponse(
+            MessageCode.GET_STUDIES_SUCCESS,
+            studies,
+            sitePermissions.size(),
+            userRegAdminEntity.isSuperAdmin());
     logger.exit(String.format("total studies=%d", studyResponse.getStudies().size()));
     return studyResponse;
   }

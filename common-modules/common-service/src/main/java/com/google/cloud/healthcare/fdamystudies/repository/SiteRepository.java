@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import java.util.List;
 import java.util.Optional;
@@ -40,4 +41,12 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
 
   @Query("SELECT site from SiteEntity site where site.study.id= :studyId and site.study.type=:type")
   public Optional<SiteEntity> findByStudyIdAndType(String studyId, String type);
+
+  @Query(
+      value =
+          "SELECT study.id AS studyId, IFNULL(COUNT(st.id),0) AS count "
+              + "FROM sites st, study_info study "
+              + "WHERE study.id = st.study_id GROUP BY study.id ",
+      nativeQuery = true)
+  public List<SiteCount> findStudySitesCount();
 }
