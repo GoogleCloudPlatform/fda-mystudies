@@ -247,11 +247,14 @@ public class LoginControllerTest extends BaseMockIT {
     MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
     queryParams.add(LOGIN_CHALLENGE, AUTO_LOGIN_LOGIN_CHALLENGE_VALUE);
 
+    HttpHeaders headers = getCommonHeaders();
+
     MvcResult result =
         mockMvc
             .perform(
                 get(ApiEndpoint.LOGIN_PAGE.getPath())
                     .contextPath(getContextPath())
+                    .headers(headers)
                     .queryParams(queryParams))
             .andDo(print())
             .andExpect(status().isOk())
@@ -287,11 +290,14 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
+    HttpHeaders headers = getCommonHeaders();
+
     MvcResult result =
         mockMvc
             .perform(
                 post(ApiEndpoint.LOGIN_PAGE.getPath())
                     .contextPath(getContextPath())
+                    .headers(headers)
                     .params(queryParams)
                     .cookie(
                         appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId, sourceCookie))
@@ -328,10 +334,13 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
+    HttpHeaders headers = getCommonHeaders();
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
+                .headers(headers)
                 .params(queryParams)
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, tempRegId, sourceCookie))
         .andDo(print())
@@ -371,10 +380,13 @@ public class LoginControllerTest extends BaseMockIT {
     String aboutRedirectUrl =
         redirectConfig.getAboutUrl(PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
+    HttpHeaders headers = getCommonHeaders();
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
+                .headers(headers)
                 .params(requestParams)
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
@@ -509,10 +521,13 @@ public class LoginControllerTest extends BaseMockIT {
     Cookie sourceCookie =
         new Cookie(SOURCE_COOKIE, PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
+    HttpHeaders headers = getCommonHeaders();
+
     mockMvc
         .perform(
             post(ApiEndpoint.LOGIN_PAGE.getPath())
                 .contextPath(getContextPath())
+                .headers(headers)
                 .params(requestParams)
                 .cookie(appIdCookie, loginChallenge, mobilePlatformCookie, sourceCookie))
         .andDo(print())
