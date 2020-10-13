@@ -433,6 +433,8 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSitePermissionAccessDeniedError() throws Exception {
     // Site 1: set manage site permission to no permission
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
     sitePermissionEntity.setCanEdit(Permission.NO_PERMISSION);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
@@ -981,9 +983,13 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAccessDeniedForGetParticipantDetails() throws Exception {
-    // Step 1: Set userId to invalid
+    // Step 1: Set super admin to false
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, IdGenerator.id());
+    testDataHelper.getSitePermissionRepository().deleteAll();
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     // Step 2: Call API to return MANAGE_SITE_PERMISSION_ACCESS_DENIED error
     mockMvc

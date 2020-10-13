@@ -78,6 +78,7 @@ import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
@@ -87,6 +88,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -156,6 +158,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private EmailService emailService;
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Override
   @Transactional
@@ -315,17 +319,27 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.SITE_NOT_FOUND);
     }
 
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
-
-    if (!optSitePermission.isPresent()
-        || Permission.NO_PERMISSION
-            == Permission.fromValue(optSitePermission.get().getCanEdit().value())) {
-      throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    ParticipantRegistryDetail participantRegistryDetail = null;
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    ParticipantRegistryDetail participantRegistryDetail =
-        ParticipantMapper.fromSite(optSite.get(), optSitePermission.get(), siteId);
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      participantRegistryDetail =
+          ParticipantMapper.fromSite(optSite.get(), Permission.EDIT, siteId);
+    } else {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
+
+      if (!optSitePermission.isPresent()
+          || Permission.NO_PERMISSION
+              == Permission.fromValue(optSitePermission.get().getCanEdit().value())) {
+        throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      }
+      participantRegistryDetail =
+          ParticipantMapper.fromSite(optSite.get(), optSitePermission.get().getCanEdit(), siteId);
+    }
     Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
     participantRegistryDetail.setCountByStatus(statusWithCountMap);
 
@@ -653,12 +667,18 @@ public class SiteServiceImpl implements SiteService {
       return ErrorCode.PARTICIPANT_REGISTRY_SITE_NOT_FOUND;
     }
 
-    Optional<SitePermissionEntity> sitePermission =
-        sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
-            userId, optParticipantRegistry.get().getSite().getId());
-    if (!sitePermission.isPresent()) {
-      logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
-      return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+    if (!optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<SitePermissionEntity> sitePermission =
+          sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
+              userId, optParticipantRegistry.get().getSite().getId());
+      if (!sitePermission.isPresent()) {
+        logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+        return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+      }
     }
     return null;
   }
