@@ -12,63 +12,51 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 
 @Setter
 @Getter
 @Configuration
-@PropertySources({
-  @PropertySource("classpath:application-appConfig-${spring.profiles.active}.properties"),
-  @PropertySource("classpath:application-${spring.profiles.active}.properties")
-})
 public class ApplicationConfiguration {
 
-  @Value("${firestoreProjectId}")
+  @Value("${firestore.project.id}")
   private String firestoreProjectId;
 
-  @Value("${interceptor}")
-  private String interceptorUrls;
-
-  @Value("${serverApiUrls}")
-  private String serverApiUrls;
-
-  @Value("${wcpStudyActivityMetadataUrl}")
+  @Value("${wcp.study.activity.metadata.url}")
   private String wcpStudyActivityMetadataUrl;
 
-  @Value("${responseDataFilePath}")
+  @Value("${response.data.file.path}")
   private String responseDataFilePath;
 
-  @Value("${lastResponseOnly}")
+  @Value("${last.response.only}")
   private String lastResponseOnly;
 
-  @Value("${supportStringResponse}")
+  @Value("${support.string.response}")
   private String supportStringResponse;
 
-  @Value("${responseSupportedQTypeDouble}")
+  @Value("${response.supported.QType.double}")
   private String responseSupportedQTypeDouble;
 
-  @Value("${responseSupportedQTypeDate}")
+  @Value("${response.supported.QType.date}")
   private String responseSupportedQTypeDate;
 
-  @Value("${responseSupportedQTypeString}")
+  @Value("${response.supported.QType.string}")
   private String responseSupportedQTypeString;
 
-  @Value("${saveRawResponseData}")
+  @Value("${save.raw.response.data}")
   private String saveRawResponseData;
 
-  @Value("${wcpBundleId}")
+  @Value("${wcp.bundle.id}")
   private String wcpBundleId;
 
-  @Value("${wcpAppToken}")
+  @Value("${wcp.app.token}")
   private String wcpAppToken;
 
-  @Value("${regServerClientId}")
+  @Value("${security.oauth2.client.client-id}")
   private String regServerClientId;
 
-  @Value("${regServerClientSecret}")
+  @Value("${security.oauth2.client.client-secret}")
   private String regServerClientSecret;
 
-  @Value("${regServerPartStudyInfoUrl}")
+  @Value("${enroll.mgmt.service.url}")
   private String regServerPartStudyInfoUrl;
 }
