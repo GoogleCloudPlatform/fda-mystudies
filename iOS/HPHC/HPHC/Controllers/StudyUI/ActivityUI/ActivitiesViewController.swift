@@ -171,7 +171,7 @@ class ActivitiesViewController: UIViewController {
       /// Update status to false so notification can be registered again.
       Study.currentStudy?.activitiesLocalNotificationUpdated = false
       DBHandler.updateLocalNotificationScheduleStatus(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: Study.currentStudy?.studyId ?? "",
         status: false
       )
 
@@ -229,8 +229,8 @@ class ActivitiesViewController: UIViewController {
   }
 
   func checkForDashBoardInfo() {
-
-    DBHandler.loadStatisticsForStudy(studyId: (Study.currentStudy?.studyId)!) {
+    guard let studyID = Study.currentStudy?.studyId else { return }
+    DBHandler.loadStatisticsForStudy(studyId: studyID) {
       (statiticsList) in
 
       if statiticsList.count != 0 {
@@ -548,10 +548,10 @@ class ActivitiesViewController: UIViewController {
       )
     )
 
-    let studyid = (Study.currentStudy?.studyId)!
+    guard let currentStudy = Study.currentStudy else { return }
 
     let status = User.currentUser.udpateCompletionAndAdherence(
-      studyId: studyid,
+      studyId: currentStudy.studyId,
       completion: Int(completion),
       adherence: Int(adherence)
     )
@@ -559,12 +559,12 @@ class ActivitiesViewController: UIViewController {
     /// Update to server
     EnrollServices().updateCompletionAdherence(studyStatus: status, delegate: self)
     /// Update Local DB
-    DBHandler.updateStudyParticipationStatus(study: Study.currentStudy!)
+    DBHandler.updateStudyParticipationStatus(study: currentStudy)
 
     /// Compose Alert based on Completion
-    let halfCompletionKey = "50pcShown" + (Study.currentStudy?.studyId)!
-    let fullCompletionKey = "100pcShown" + (Study.currentStudy?.studyId)!
-    let missedKey = "totalMissed" + (Study.currentStudy?.studyId)!
+    let halfCompletionKey = "50pcShown" + currentStudy.studyId
+    let fullCompletionKey = "100pcShown" + currentStudy.studyId
+    let missedKey = "totalMissed" + currentStudy.studyId
 
     let ud = UserDefaults.standard
     if completion > 50 && completion < 100 {
@@ -579,7 +579,7 @@ class ActivitiesViewController: UIViewController {
 
       if !(ud.bool(forKey: fullCompletionKey)) {
         let message =
-          "The study " + (Study.currentStudy?.name!)!
+          "The study " + (currentStudy.name ?? "")
           + " is 100 percent complete. Thank you for your participation."
         UIUtilities.showAlertWithMessage(alertMessage: message)
         ud.set(true, forKey: fullCompletionKey)
@@ -591,8 +591,7 @@ class ActivitiesViewController: UIViewController {
     if ud.object(forKey: missedKey) == nil {
       ud.set(totalIncompletedRuns, forKey: missedKey)
 
-    } else {
-      let previousMissed = (ud.object(forKey: missedKey) as? Int)!
+    } else if let previousMissed = ud.object(forKey: missedKey) as? Int {
       ud.set(totalIncompletedRuns, forKey: missedKey)
       if previousMissed < totalIncompletedRuns {
         // show alert
@@ -731,9 +730,9 @@ class ActivitiesViewController: UIViewController {
 
   /// Handler for studyUpdateResponse.
   func handleStudyUpdatesResponse() {
-
+    guard let currentStudy = Study.currentStudy else { return }
     Study.currentStudy?.newVersion = StudyUpdates.studyVersion
-    DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
+    DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
 
     //Consent Updated
     if StudyUpdates.studyConsentUpdated {
@@ -741,7 +740,7 @@ class ActivitiesViewController: UIViewController {
 
     } else if StudyUpdates.studyInfoUpdated {
       WCPServices().getStudyInformation(
-        studyId: (Study.currentStudy?.studyId)!,
+        studyId: currentStudy.studyId,
         delegate: self
       )
 
