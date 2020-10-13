@@ -1751,19 +1751,31 @@ public class SurveyActivitiesFragment extends Fragment
                   || !activitiesArrayList.get(i).getEndTime().equalsIgnoreCase("")) {
                 try {
                   starttime =
-                      simpleDateFormat.parse(
-                          activitiesArrayList.get(i).getStartTime().split("\\.")[0]);
+                          simpleDateFormat.parse(
+                                  activitiesArrayList.get(i).getStartTime().split("\\.")[0]);
                 } catch (ParseException e) {
                   Logger.log(e);
                 }
                 try {
                   endtime =
-                      simpleDateFormat.parse(
-                          activitiesArrayList.get(i).getEndTime().split("\\.")[0]);
+                          simpleDateFormat.parse(
+                                  activitiesArrayList.get(i).getEndTime().split("\\.")[0]);
                 } catch (ParseException e) {
                   Logger.log(e);
                 } catch (Exception e1) {
                   Logger.log(e1);
+                }
+              } else {
+                if (activitiesArrayList.get(i).getFrequency().getType().equalsIgnoreCase("One Time")
+                    && activitiesArrayList.get(i).getAnchorDate() != null
+                    && activitiesArrayList.get(i).getAnchorDate().getEnd() == null) {
+                  try {
+                    starttime =
+                        simpleDateFormat.parse(
+                            activitiesArrayList.get(i).getStartTime().split("\\.")[0]);
+                  } catch (ParseException e) {
+                    Logger.log(e);
+                  }
                 }
               }
             }

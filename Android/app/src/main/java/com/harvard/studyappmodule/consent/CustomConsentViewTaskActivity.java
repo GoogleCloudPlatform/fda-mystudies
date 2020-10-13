@@ -680,7 +680,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       try {
         StepResult result = taskResult.getStepResult("sharing");
         if (result != null) {
-          JSONObject resultObj = new JSONObject(result.getResults().toString());
+          JSONObject resultObj = new JSONObject(result.getResults());
           sharingConsent = resultObj.get("answer").toString();
         }
       } catch (Exception e) {

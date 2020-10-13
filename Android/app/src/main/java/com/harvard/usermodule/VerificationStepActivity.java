@@ -278,7 +278,7 @@ public class VerificationStepActivity extends AppCompatActivity
   @Override
   public void asyncResponseFailure(int responseCode, String errormsg, String statusCode) {
     AppController.getHelperProgressDialog().dismissDialog();
-    if (responseCode == CONFIRM_REGISTER_USER_RESPONSE) {
+    if (responseCode == CONFIRM_REGISTER_USER_RESPONSE || responseCode == RESEND_CONFIRMATION) {
       if (statusCode.equalsIgnoreCase("401")) {
         Toast.makeText(this, errormsg, Toast.LENGTH_SHORT).show();
         if (from != null && from.equalsIgnoreCase("Activity")) {
