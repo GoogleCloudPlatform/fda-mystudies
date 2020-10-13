@@ -129,7 +129,7 @@ class ResponseServices: NSObject {
           JSONKey.tokenIdentifier: userStudyStatus.tokenIdentifier ?? "",
           JSONKey.siteID: userStudyStatus.siteID ?? "",
           kActivityResponseData: responseData,
-          JSONKey.applicationId: AppConfiguration.appID
+          JSONKey.applicationId: AppConfiguration.appID,
         ] as [String: Any]
 
       let headers: [String: String] = [
