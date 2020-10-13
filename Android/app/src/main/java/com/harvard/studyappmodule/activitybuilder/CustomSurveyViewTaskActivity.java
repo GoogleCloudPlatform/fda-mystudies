@@ -343,8 +343,8 @@ public class CustomSurveyViewTaskActivity<T> extends AppCompatActivity implement
               dbServiceSubscriber.getSurveyResponseFromDB(
                   getIntent().getStringExtra(STUDYID)
                       + "_STUDYID_"
-                      + resourceArrayList.get(i).getAvailability().getSourceActivityId(),
-                  resourceArrayList.get(i).getAvailability().getSourceKey(),
+                      + AppController.getSourceActivityId(resourceArrayList.get(i)),
+                  AppController.getSourceKey(resourceArrayList.get(i)),
                   realm);
           if (stepRecordCustom != null) {
             Calendar startCalender = Calendar.getInstance();

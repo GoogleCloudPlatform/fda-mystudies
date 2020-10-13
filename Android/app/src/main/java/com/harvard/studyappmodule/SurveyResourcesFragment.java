@@ -419,8 +419,8 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     dbServiceSubscriber.getSurveyResponseFromDB(
                         ((SurveyActivity) context).getStudyId()
                             + "_STUDYID_"
-                            + resourceArrayList.get(i).getAvailability().getSourceActivityId(),
-                        resourceArrayList.get(i).getAvailability().getSourceKey(),
+                                + AppController.getSourceActivityId(resourceArrayList.get(i)),
+                            AppController.getSourceKey(resourceArrayList.get(i)),
                         realm);
                 if (stepRecordCustom != null) {
                   Calendar startCalender = Calendar.getInstance();
@@ -453,7 +453,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     NotificationDbResources notificationsDb = null;
                     RealmResults<NotificationDbResources> notificationsDbs =
                         dbServiceSubscriber.getNotificationDbResources(
-                            resourceArrayList.get(i).getAvailability().getSourceActivityId(),
+                            AppController.getSourceActivityId(resourceArrayList.get(i)),
                             ((SurveyActivity) context).getStudyId(),
                             RESOURCES,
                             realm);
@@ -471,7 +471,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                     if (notificationsDb == null) {
                       setRemainder(
                           startCalender,
-                          resourceArrayList.get(i).getAvailability().getSourceActivityId(),
+                          AppController.getSourceActivityId(resourceArrayList.get(i)),
                           ((SurveyActivity) context).getStudyId(),
                           resourceArrayList.get(i).getNotificationText(),
                           resourceArrayList.get(i).getResourcesId());
@@ -556,7 +556,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                 NotificationDbResources notificationsDb = null;
                 RealmResults<NotificationDbResources> notificationsDbs =
                     dbServiceSubscriber.getNotificationDbResources(
-                        resourceArrayList.get(i).getAvailability().getSourceActivityId(),
+                        AppController.getSourceActivityId(resourceArrayList.get(i)),
                         ((SurveyActivity) context).getStudyId(),
                         RESOURCES,
                         realm);
@@ -574,7 +574,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
                 if (notificationsDb == null) {
                   setRemainder(
                       startCalender,
-                      resourceArrayList.get(i).getAvailability().getSourceActivityId(),
+                      AppController.getSourceActivityId(resourceArrayList.get(i)),
                       ((SurveyActivity) context).getStudyId(),
                       resourceArrayList.get(i).getNotificationText(),
                       resourceArrayList.get(i).getResourcesId());
