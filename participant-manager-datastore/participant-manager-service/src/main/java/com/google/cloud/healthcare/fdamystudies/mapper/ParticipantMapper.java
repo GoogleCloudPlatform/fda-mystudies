@@ -8,14 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
-
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -31,6 +30,8 @@ import java.util.Map;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+
 public final class ParticipantMapper {
 
   private ParticipantMapper() {}
@@ -38,7 +39,12 @@ public final class ParticipantMapper {
   public static ParticipantDetail fromParticipantStudy(ParticipantStudyEntity participantStudy) {
     ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setId(participantStudy.getId());
-    participantDetail.setEnrollmentStatus(participantStudy.getStatus());
+    if (participantStudy.getStatus().equalsIgnoreCase(EnrollmentStatus.IN_PROGRESS.getStatus())) {
+      participantDetail.setEnrollmentStatus(EnrollmentStatus.ENROLLED.getStatus());
+    } else {
+      participantDetail.setEnrollmentStatus(participantStudy.getStatus());
+    }
+
     participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());
     participantDetail.setSiteId(participantStudy.getSite().getId());
     participantDetail.setCustomLocationId(participantStudy.getSite().getLocation().getCustomId());
