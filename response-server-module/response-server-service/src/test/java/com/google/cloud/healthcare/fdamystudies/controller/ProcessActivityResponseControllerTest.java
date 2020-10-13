@@ -158,14 +158,14 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         1,
         getRequestedFor(
             urlEqualTo(
-                "/myStudiesEnrollmentMgmt/participantInfo?studyId=ASignature01&participantId="
+                "/participant-enroll-datastore/participantInfo?studyId=ASignature01&participantId="
                     + participantBo.getParticipantIdentifier())));
 
     verify(
         1,
         getRequestedFor(
             urlEqualTo(
-                "/StudyMetaData/activity?studyId=ASignature01"
+                "/study-datastore/activity?studyId=ASignature01"
                     + "&activityId=Activity&activityVersion=1.0")));
 
     // Step-4: assert argument capture
