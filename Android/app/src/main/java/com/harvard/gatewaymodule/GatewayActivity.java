@@ -31,7 +31,6 @@ import com.harvard.R;
 import com.harvard.gatewaymodule.events.GetStartedEvent;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
-import com.harvard.usermodule.SignInActivity;
 import com.harvard.usermodule.SignupActivity;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
@@ -58,11 +57,6 @@ public class GatewayActivity extends AppCompatActivity {
     setFont();
     bindEvents();
     setViewPagerView();
-    if (getIntent().getStringExtra("from") != null
-        && getIntent().getStringExtra("from").equalsIgnoreCase("forgot")) {
-      Intent intent = new Intent(GatewayActivity.this, SignInActivity.class);
-      startActivity(intent);
-    }
   }
 
   @Override

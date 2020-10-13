@@ -2926,10 +2926,6 @@ public class SurveyActivitiesFragment extends Fragment
         responseModel =
             HttpRequest.getRequest(
                 Urls.PROCESSRESPONSEDATA
-                    + AppConfig.ORG_ID_KEY
-                    + "="
-                    + AppConfig.ORG_ID_VALUE
-                    + "&"
                     + AppConfig.APP_ID_KEY
                     + "="
                     + AppConfig.APP_ID_VALUE

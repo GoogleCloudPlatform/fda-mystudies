@@ -281,7 +281,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
               SharedPreferenceHelper.readPreference(
                   context, context.getString(R.string.userid), ""));
           refreshTokenJsonData.put("redirect_uri", Urls.AUTH_SERVER_REDIRECT_URL);
-          refreshTokenJsonData.put("client_id", Urls.AUTH_CLIENT_ID);
+          refreshTokenJsonData.put("client_id", BuildConfig.HYDRA_CLIENT_ID);
           refreshTokenJsonData.put("grant_type", "refresh_token");
 
           HashMap<String, String> refreshTokenHeader = new HashMap<>();
@@ -344,7 +344,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         response = "success";
 
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "/activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponseData());
@@ -478,7 +478,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         }
       } else {
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_WCP_SERVER + "/activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponseData());

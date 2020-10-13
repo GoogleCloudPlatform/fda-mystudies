@@ -1293,10 +1293,6 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
         responseModel =
             HttpRequest.getRequest(
                 Urls.PROCESSRESPONSEDATA
-                    + AppConfig.ORG_ID_KEY
-                    + "="
-                    + AppConfig.ORG_ID_VALUE
-                    + "&"
                     + AppConfig.APP_ID_KEY
                     + "="
                     + AppConfig.APP_ID_VALUE

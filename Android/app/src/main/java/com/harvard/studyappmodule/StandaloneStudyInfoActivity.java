@@ -54,7 +54,6 @@ import com.harvard.studyappmodule.studymodel.ConsentDocumentData;
 import com.harvard.studyappmodule.studymodel.Study;
 import com.harvard.studyappmodule.studymodel.StudyHome;
 import com.harvard.studyappmodule.studymodel.StudyList;
-import com.harvard.usermodule.SignInActivity;
 import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.GetPreferenceEvent;
 import com.harvard.usermodule.webservicemodel.Studies;

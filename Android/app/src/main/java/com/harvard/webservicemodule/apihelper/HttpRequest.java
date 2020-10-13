@@ -181,7 +181,6 @@ public class HttpRequest {
         }
         httppost.addHeader(CONTENT_TYPE_KEY, APPLICATION_JSON);
         httppost.addHeader(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-        httppost.addHeader(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
         StringEntity params1 = new StringEntity(jsonObject.toString());
         httppost.setEntity(params1);
@@ -282,7 +281,6 @@ public class HttpRequest {
       conn.setConnectTimeout(TimeoutInterval);
       conn.setRequestProperty(CONTENT_TYPE_KEY, APPLICATION_JSON);
       conn.setRequestProperty(AppConfig.APP_ID_KEY, AppConfig.APP_ID_VALUE);
-      conn.setRequestProperty(AppConfig.ORG_ID_KEY, AppConfig.ORG_ID_VALUE);
 
       if (serverType.equalsIgnoreCase(SERVER_TYPE_WCP)) {
         String encoding = Base64.encodeToString(basicAuth.getBytes(), Base64.DEFAULT);

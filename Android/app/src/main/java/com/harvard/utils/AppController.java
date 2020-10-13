@@ -42,7 +42,6 @@ import com.harvard.offlinemodule.model.OfflineData;
 import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.StandaloneActivity;
 import com.harvard.studyappmodule.StudyActivity;
-import com.harvard.usermodule.SignInActivity;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
