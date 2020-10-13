@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
+import com.google.cloud.healthcare.fdamystudies.model.AppCount;
 import com.google.cloud.healthcare.fdamystudies.model.LocationIdStudyNamesPair;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
@@ -46,4 +47,12 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query("SELECT study FROM StudyEntity study where study.app.id = :appInfoId")
   public List<StudyEntity> findByAppId(String appInfoId);
+
+  @Query(
+      value =
+          "SELECT app.id AS appId, COUNT(study.id) AS count "
+              + "FROM study_info study, app_info app "
+              + "WHERE app.id = study.app_info_id GROUP BY app.id ",
+      nativeQuery = true)
+  public List<AppCount> findAppStudiesCount();
 }
