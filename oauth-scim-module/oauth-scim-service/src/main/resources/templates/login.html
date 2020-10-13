@@ -24,7 +24,7 @@
 </head>
 <body class="bg__aqua-gray">
   <form th:action="@{/login}" method="POST" id="loginForm" novalidate
-    onsubmit="return validateform()" th:object="${loginRequest}">
+    onsubmit="return validateform();" th:object="${loginRequest}">
     <div class="centered__div box__shadow-cmn">
       <div class="signin__container">
         <div>
@@ -34,10 +34,9 @@
             </div>
           </div>
           <div class="input__field">
-            <div class="err__msg" id="email_error" style="display: none">Please
-              enter valid email address</div>
+            <div class="err__msg" id="email_error" style="display: none">Enter an email</div>
             <label>Email</label> <input type="email" name="email"
-              th:field="*{email}" id="email" placeholder="Enter Email"
+              th:field="*{email}" id="email" placeholder="Enter your email"
               value="" required="required"
               onblur="validateField('email');" />
           </div>
@@ -47,7 +46,7 @@
             <label>Password</label> <input type="password"
               th:field="*{password}" name="password" id="password"
               placeholder="Enter your password" required="required"
-              minlength="8" maxlength="64" value=""
+              minlength="8" maxlength="64" value="" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?=\S+$).{8,64}$"
               onblur="validateField('password');" />
           </div>
 

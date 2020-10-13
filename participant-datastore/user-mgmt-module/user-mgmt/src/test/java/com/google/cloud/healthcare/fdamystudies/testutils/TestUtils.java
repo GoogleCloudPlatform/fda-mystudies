@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.testutils;
 
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import javax.ws.rs.core.MediaType;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +26,7 @@ public class TestUtils {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add(Constants.APP_ID_HEADER, Constants.APP_ID_VALUE);
-    headers.add("source", "MOBILE APPS");
+    headers.add("source", PlatformComponent.MOBILE_APPS.getValue());
 
     if (ArrayUtils.contains(addOptionalHeaderNames, Constants.USER_ID_HEADER)) {
       headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
