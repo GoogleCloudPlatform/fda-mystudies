@@ -895,11 +895,11 @@ public class AppController {
     return generatedHash;
   }
 
-  public static String getSourceActivityId(Resource resource){
+  public static String getSourceActivityId(Resource resource) {
     return resource.getAvailability().getSourceActivityId();
   }
 
-  public static String getSourceKey(Resource resource){
+  public static String getSourceKey(Resource resource) {
     return resource.getAvailability().getSourceKey();
   }
 }
