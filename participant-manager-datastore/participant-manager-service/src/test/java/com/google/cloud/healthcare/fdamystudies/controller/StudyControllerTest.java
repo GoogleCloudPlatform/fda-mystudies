@@ -179,6 +179,9 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAppNotFoundForStudyParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -199,6 +202,9 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAccessDeniedForStudyParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -354,6 +360,24 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnUserNotFoundForStudyParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnUserNotFound() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
 
@@ -444,6 +468,8 @@ public class StudyControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnStudyPermissionAccessDeniedForUpdateTargetEnrollment() throws Exception {
     // Step 1:Set permission to READ_VIEW
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
     studyPermissionEntity.setEdit(Permission.VIEW);

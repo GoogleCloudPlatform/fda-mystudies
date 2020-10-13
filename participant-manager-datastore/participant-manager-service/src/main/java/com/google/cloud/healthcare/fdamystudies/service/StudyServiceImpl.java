@@ -32,6 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
@@ -40,6 +41,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionReposit
 import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +81,8 @@ public class StudyServiceImpl implements StudyService {
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
   @Autowired private AppPermissionRepository appPermissionRepository;
+
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -279,23 +283,31 @@ public class StudyServiceImpl implements StudyService {
       throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
     }
 
-    Optional<StudyPermissionEntity> optStudyPermission =
-        studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
-
-    if (!optStudyPermission.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    StudyPermissionEntity studyPermission = optStudyPermission.get();
+    AppEntity app = null;
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      StudyEntity study = optStudy.get();
+      Optional<AppEntity> optApp = appRepository.findById(study.getApp().getId());
+      app = optApp.orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_NOT_FOUND));
+    } else {
+      Optional<StudyPermissionEntity> optStudyPermission =
+          studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
+      app =
+          optStudyPermission
+              .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
+              .getApp();
 
-    if (studyPermission.getApp() == null) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+      if (app == null) {
+        throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+      }
     }
-
-    Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
     return prepareRegistryParticipantResponse(
-        optStudy.get(), optApp.get(), userId, auditRequest, page, limit);
+        optStudy.get(), app, userId, auditRequest, page, limit);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(

@@ -78,6 +78,7 @@ import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.LocationRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
@@ -87,6 +88,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -156,6 +158,8 @@ public class SiteServiceImpl implements SiteService {
   @Autowired private EmailService emailService;
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
+
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Override
   @Transactional
@@ -1095,16 +1099,32 @@ public class SiteServiceImpl implements SiteService {
       UpdateTargetEnrollmentRequest enrollmentRequest, AuditLogEventRequest auditRequest) {
     logger.entry("updateTargetEnrollment()");
 
-    Optional<StudyPermissionEntity> optStudyPermission =
-        studyPermissionRepository.findByStudyIdAndUserId(
-            enrollmentRequest.getStudyId(), enrollmentRequest.getUserId());
-
-    StudyPermissionEntity studyPermission = optStudyPermission.get();
-    if (!optStudyPermission.isPresent() || Permission.VIEW == studyPermission.getEdit()) {
-      throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity =
+        userRegAdminRepository.findById(enrollmentRequest.getUserId());
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    if (CLOSE_STUDY.equalsIgnoreCase(studyPermission.getStudy().getType())) {
+    StudyEntity study = null;
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<StudyEntity> optStudy = studyRepository.findById(enrollmentRequest.getStudyId());
+      study = optStudy.orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND));
+    } else {
+      Optional<StudyPermissionEntity> optStudyPermission =
+          studyPermissionRepository.findByStudyIdAndUserId(
+              enrollmentRequest.getStudyId(), enrollmentRequest.getUserId());
+
+      StudyPermissionEntity studyPermission =
+          optStudyPermission.orElseThrow(
+              () -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED));
+
+      if (Permission.VIEW == studyPermission.getEdit()) {
+        throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+      }
+      study = studyPermission.getStudy();
+    }
+
+    if (CLOSE_STUDY.equalsIgnoreCase(study.getType())) {
       throw new ErrorCodeException(ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_CLOSE_STUDY);
     }
 

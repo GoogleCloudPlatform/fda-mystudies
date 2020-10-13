@@ -240,7 +240,13 @@ public enum ErrorCode {
 
   INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status."),
 
-  INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value");
+  INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value"),
+
+  APP_PERMISSION_ACCESS_DENIED(
+      403,
+      "EC_0123",
+      HttpStatus.FORBIDDEN.toString(),
+      "You do not have permission to access this app");
 
   private final int status;
   private final String code;
