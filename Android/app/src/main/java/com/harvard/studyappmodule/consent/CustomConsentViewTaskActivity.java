@@ -145,7 +145,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
   private EligibilityConsent eligibilityConsent;
   private StudyList studyList;
   private String pdfPath;
-  String sharingConsent = "n/a";
+  String sharingConsent = "Not Applicable";
 
   public static Intent newIntent(
       Context context,
@@ -680,7 +680,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
       try {
         StepResult result = taskResult.getStepResult("sharing");
         if (result != null) {
-          JSONObject resultObj = new JSONObject(result.getResults().toString());
+          JSONObject resultObj = new JSONObject(result.getResults());
           sharingConsent = resultObj.get("answer").toString();
         }
       } catch (Exception e) {
