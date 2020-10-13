@@ -14,11 +14,8 @@
             <div>
               <div class="mb-xs">
                 Site Participant Registry
-                <span
-                  *ngIf="siteParticipants.participantRegistryDetail.siteStatus"
-                  class="active__"
-                >
-                  {{
+                 <span  [ngClass]="(siteParticipants.participantRegistryDetail.siteStatus === 1)? 'active__':'inActive__'" >
+                    {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
                       ? "Active"
                       : "Inactive"
