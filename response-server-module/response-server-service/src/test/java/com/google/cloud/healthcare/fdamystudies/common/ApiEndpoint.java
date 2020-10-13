@@ -12,27 +12,25 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-  HEALTH("http://localhost:8004/mystudies-response-server/healthCheck"),
+  HEALTH("http://localhost:8004/response-datastore/healthCheck"),
 
-  ADD("http://localhost:8004/mystudies-response-server/participant/add"),
+  ADD("http://localhost:8004/response-datastore/participant/add"),
 
-  STUDYMETADATA("http://localhost:8004/mystudies-response-server/studymetadata"),
+  STUDYMETADATA("http://localhost:8004/response-datastore/studymetadata"),
 
-  ADD_PARTICIPANT("http://localhost:8004/mystudies-response-server/participant/add"),
+  ADD_PARTICIPANT("http://localhost:8004/response-datastore/participant/add"),
 
   UPDATE_ACTIVITY_STATE(
-      "http://localhost:8004/mystudies-response-server/participant/update-activity-state"),
+      "http://localhost:8004/response-datastore/participant/update-activity-state"),
 
-  GET_ACTIVITY_STATE(
-      "http://localhost:8004/mystudies-response-server/participant/get-activity-state"),
+  GET_ACTIVITY_STATE("http://localhost:8004/response-datastore/participant/get-activity-state"),
 
   PROCESS_ACTIVITY_RESPONSE(
-      "http://localhost:8004/mystudies-response-server/participant/process-response"),
+      "http://localhost:8004/response-datastore/participant/process-response"),
 
-  GET_PROCESS_ACTIVITY_RESPONSE(
-      "http://localhost:8004/mystudies-response-server/participant/getresponse"),
+  GET_PROCESS_ACTIVITY_RESPONSE("http://localhost:8004/response-datastore/participant/getresponse"),
 
-  WITHDRAW("http://localhost:8004/mystudies-response-server/participant/withdraw");
+  WITHDRAW("http://localhost:8004/response-datastore/participant/withdraw");
   private String url;
 
   private ApiEndpoint(String url) {
