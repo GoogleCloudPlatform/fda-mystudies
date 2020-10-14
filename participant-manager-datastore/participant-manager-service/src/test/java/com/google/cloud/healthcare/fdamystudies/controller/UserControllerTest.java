@@ -259,9 +259,9 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 3: verify saved values
     assertAdminUser(userId, true);
-    assertAppPermissionDetails(userId);
-    assertStudyPermissionDetails(userId);
-    assertSitePermissionDetails(userId);
+    assertAppPermissionDetailsForSuperAdmin(userId);
+    assertStudyPermissionDetailsForSuperAdmin(userId);
+    assertSitePermissionDetailsForSuperAdmin(userId);
 
     verifyTokenIntrospectRequest();
   }
@@ -443,9 +443,9 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 3: verify updated values
     assertAdminDetails(adminforUpdate.getId(), true);
-    assertAppPermissionDetails(adminforUpdate.getId());
-    assertStudyPermissionDetails(adminforUpdate.getId());
-    assertSitePermissionDetails(adminforUpdate.getId());
+    assertAppPermissionDetailsForSuperAdmin(adminforUpdate.getId());
+    assertStudyPermissionDetailsForSuperAdmin(adminforUpdate.getId());
+    assertSitePermissionDetailsForSuperAdmin(adminforUpdate.getId());
 
     verifyTokenIntrospectRequest();
   }
@@ -1024,6 +1024,23 @@ public class UserControllerTest extends BaseMockIT {
     assertEquals(TestConstants.FIRST_NAME, adminUserEntity.getFirstName());
     assertEquals(TestConstants.LAST_NAME, adminUserEntity.getLastName());
     assertEquals(isSuperAdmin, adminUserEntity.isSuperAdmin());
+  }
+
+  private void assertAppPermissionDetailsForSuperAdmin(String userId) {
+    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
+    assertEquals(0, appPermissions.size());
+  }
+
+  private void assertStudyPermissionDetailsForSuperAdmin(String userId) {
+    List<StudyPermissionEntity> studyPermissions =
+        studyPermissionRepository.findByAdminUserId(userId);
+    assertEquals(0, studyPermissions.size());
+  }
+
+  private void assertSitePermissionDetailsForSuperAdmin(String userId) {
+    List<SitePermissionEntity> sitePermissions =
+        sitePermissionRepository.findSitePermissionByUserId(userId);
+    assertEquals(0, sitePermissions.size());
   }
 
   @AfterEach
