@@ -35,6 +35,7 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -84,6 +85,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserProfile() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -106,6 +108,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserNotExistForUserProfile() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -123,6 +126,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserNotActiveForUserProfile() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     // Step 1: change the status to inactive
     userRegAdminEntity.setStatus(CommonConstants.INACTIVE_STATUS);
@@ -145,6 +149,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserDetailsBySecurityCode() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(
@@ -169,6 +174,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnNotFoundForUserDetailsBySecurityCode() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
 
     mockMvc
         .perform(

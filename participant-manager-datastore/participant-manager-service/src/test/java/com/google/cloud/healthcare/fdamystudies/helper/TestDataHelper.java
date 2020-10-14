@@ -17,9 +17,11 @@ import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALI
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
 import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
@@ -105,7 +107,7 @@ public class TestDataHelper {
     headers.add("correlationId", IdGenerator.id());
     headers.add("appVersion", "1.0");
     headers.add("appId", "GCPMS001");
-    headers.add("source", "PARTICIPANT MANAGER");
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
     return headers;
   }
 
@@ -262,6 +264,7 @@ public class TestDataHelper {
     ParticipantStudyEntity participantStudyEntity = new ParticipantStudyEntity();
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(EnrollmentStatus.WITHDRAWN.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     participantStudyEntity.setSharing(DataSharingStatus.PROVIDED.value());
     return participantStudyRepository.saveAndFlush(participantStudyEntity);
