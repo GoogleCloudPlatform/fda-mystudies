@@ -41,3 +41,152 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.cluster_ca_certificate)
 }
 
+locals {
+  apps = [
+    "auth-server",
+    "hydra",
+    "response-datastore",
+    "study-builder",
+    "study-datastore",
+    "participant-consent-datastore",
+    "participant-enroll-datastore",
+    "participant-user-datastore",
+    "participant-manager",
+  ]
+  service_account_ids = [
+    "auth-server-gke-sa",
+    "hydra-gke-sa",
+    "response-datastore-gke-sa",
+    "study-builder-gke-sa",
+    "study-datastore-gke-sa",
+    "consent-datastore-gke-sa",
+    "enroll-datastore-gke-sa",
+    "user-datastore-gke-sa",
+    "manager-gke-sa",
+  ]
+  apps_db_names = {
+    "auth-server"                   = "?"
+    "hydra"                         = "?"
+    "response-datastore"            = "?"
+    "study-builder"                 = "?"
+    "study-datastore"               = "?"
+    "participant-consent-datastore" = "?"
+    "participant-enroll-datastore"  = "?"
+    "participant-user-datastore"    = "?"
+    "participant-manager"           = "?"
+  }
+  # App codes for auth server authentication.
+  auth_server_app_codes = [
+    "ma",      # Mobile App
+    "urs",     # User Registration Server
+    "rs",      # Response Server
+    "builder", # Study Builder
+  ]
+}
+
+# Data sources from Secret Manager.
+data "google_secret_manager_secret_version" "secrets" {
+  provider = google-beta
+  project  = "example-dev-secrets"
+  secret   = each.key
+
+  for_each = toset(concat(
+    [
+      "manual-study-builder-user",
+      "manual-study-builder-password",
+      "manual-mystudies-email-address",
+      "manual-mystudies-email-password",
+      "manual-mobile-app-appid",
+      "manual-android-bundle-id",
+      "manual-android-server-key",
+      "manual-ios-bundle-id",
+      "manual-ios-certificate",
+      "manual-ios-certificate-password",
+    ],
+    formatlist("auto-%s-db-user", local.apps),
+    formatlist("auto-%s-db-password", local.apps),
+    formatlist("auto-mystudies-%s-client-id", local.auth_server_app_codes),
+    formatlist("auto-mystudies-%s-secret-key", local.auth_server_app_codes))
+  )
+}
+
+# Secrets from Secret Manager.
+resource "kubernetes_secret" "apps_db_credentials" {
+  for_each = toset(local.apps)
+
+  metadata {
+    name = "${each.key}-db-credentials"
+  }
+
+  data = {
+    username = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-user"].secret_data
+    password = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-password"].secret_data
+    dbname   = local.apps_db_names[each.key]
+  }
+}
+
+# App-specific secrets.
+resource "kubernetes_secret" "response_server_secrets" {
+  metadata {
+    name = "response-server-secrets"
+  }
+
+  data = {
+    REGISTRATION_CLIENT_ID     = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-client-id"].secret_data
+    REGISTRATION_CLIENT_SECRET = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-secret-key"].secret_data
+  }
+}
+
+resource "kubernetes_secret" "user_registration_secrets" {
+  metadata {
+    name = "user-registration-secrets"
+  }
+
+  data = {
+    CLIENT_ID       = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-client-id"].secret_data
+    SECRET_KEY      = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-secret-key"].secret_data
+    GCP_BUCKET_NAME = "example-dev-mystudies-consent-documents"
+  }
+}
+
+resource "kubernetes_secret" "study_builder_secrets" {
+  metadata {
+    name = "study-builder-secrets"
+  }
+
+  data = {
+    CLIENT_ID  = data.google_secret_manager_secret_version.secrets["auto-mystudies-builder-client-id"].secret_data
+    SECRET_KEY = data.google_secret_manager_secret_version.secrets["auto-mystudies-builder-secret-key"].secret_data
+    BASE_URL   = "?"
+  }
+}
+
+resource "kubernetes_secret" "email_credentials" {
+  metadata {
+    name = "email-credentials"
+  }
+
+  data = {
+    email_address  = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
+    email_password = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
+  }
+}
+
+# gcloud keys from service accounts
+resource "google_service_account_key" "apps_service_account_keys" {
+  for_each = toset(local.service_account_ids)
+
+  service_account_id = "${each.key}@example-dev-apps.iam.gserviceaccount.com"
+}
+
+resource "kubernetes_secret" "apps_gcloud_keys" {
+  for_each = toset(local.service_account_ids)
+
+  metadata {
+    name = "${each.key}-gcloud-key"
+  }
+  data = {
+    "key.json" = base64decode(google_service_account_key.apps_service_account_keys[each.key].private_key)
+  }
+}
+
