@@ -99,7 +99,6 @@ public class ParticipantStudyEntity implements Serializable {
   private Integer adherence;
 
   @Column(name = "withdrawal_time")
-  @CreationTimestamp
   private Timestamp withdrawalDate;
 
   @Transient
