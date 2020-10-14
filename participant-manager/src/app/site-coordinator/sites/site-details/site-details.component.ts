@@ -122,9 +122,8 @@ export class SiteDetailsComponent
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
-            this.toastr.success(successResponse.message);
+            this.toastr.success('success');
           }
-          void this.router.navigate(['/coordinator/studies/sites']);
         }),
     );
   }
