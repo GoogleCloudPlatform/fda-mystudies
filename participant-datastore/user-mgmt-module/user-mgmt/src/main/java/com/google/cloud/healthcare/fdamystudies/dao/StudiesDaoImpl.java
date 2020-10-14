@@ -10,14 +10,10 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
-import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.LocationEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import java.sql.Timestamp;
@@ -57,8 +53,6 @@ public class StudiesDaoImpl implements StudiesDao {
 
     AppEntity appInfo = null;
 
-    UserRegAdminEntity superAdminUser;
-
     ErrorBean errorBean = null;
     Session session = this.sessionFactory.getCurrentSession();
     builder = session.getCriteriaBuilder();
@@ -73,14 +67,6 @@ public class StudiesDaoImpl implements StudiesDao {
     appPredicate[0] = builder.equal(appRoot.get("appId"), studyMetadataBean.getAppId());
     appCriteria.select(appRoot).where(appPredicate);
     appInfo = session.createQuery(appCriteria).uniqueResult();
-
-    CriteriaQuery<UserRegAdminEntity> urAdminUserCriteria =
-        builder.createQuery(UserRegAdminEntity.class);
-    Root<UserRegAdminEntity> urAdminUserRoot = urAdminUserCriteria.from(UserRegAdminEntity.class);
-    Predicate[] urAdminUserPredicate = new Predicate[1];
-    urAdminUserPredicate[0] = builder.equal(urAdminUserRoot.get("superAdmin"), true);
-    urAdminUserCriteria.select(urAdminUserRoot).where(urAdminUserPredicate);
-    superAdminUser = session.createQuery(urAdminUserCriteria).uniqueResult();
 
     if (studyInfo != null) {
 
@@ -117,14 +103,6 @@ public class StudiesDaoImpl implements StudiesDao {
         appInfo.setCreated(Timestamp.from(Instant.now()));
 
         session.save(appInfo);
-
-        AppPermissionEntity appPermission = new AppPermissionEntity();
-        appPermission.setApp(appInfo);
-        appPermission.setUrAdminUser(superAdminUser);
-        appPermission.setEdit(Permission.EDIT);
-        appPermission.setCreated(Timestamp.from(Instant.now()));
-        appPermission.setCreatedBy(superAdminUser.getId());
-        session.save(appPermission);
       }
 
       studyInfo = new StudyEntity();
@@ -141,15 +119,6 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setCreatedBy(String.valueOf(0));
       studyInfo.setCreated(Timestamp.from(Instant.now()));
       String generatedStudyid = (String) session.save(studyInfo);
-
-      StudyPermissionEntity studyPermission = new StudyPermissionEntity();
-      studyPermission.setApp(appInfo);
-      studyPermission.setStudy(studyInfo);
-      studyPermission.setUrAdminUser(superAdminUser);
-      studyPermission.setEdit(Permission.EDIT);
-      studyPermission.setCreated(Timestamp.from(Instant.now()));
-      studyPermission.setCreatedBy(superAdminUser.getId());
-      session.save(studyPermission);
 
       if (!StringUtils.isBlank(studyMetadataBean.getStudyType())
           && studyMetadataBean.getStudyType().equals(AppConstants.OPEN_STUDY)) {
