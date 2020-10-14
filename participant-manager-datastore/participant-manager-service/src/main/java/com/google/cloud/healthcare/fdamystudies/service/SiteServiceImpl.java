@@ -1004,13 +1004,13 @@ public class SiteServiceImpl implements SiteService {
                   return study;
                 })
             .collect(Collectors.toList());
-    List<EnrolledInvitedCount> enrolledInvitedCountList = null;
+    List<EnrolledInvitedCount> enrolledInvitedCountList = new ArrayList<>();
     if (CollectionUtils.isNotEmpty(sitePermissions)) {
       enrolledInvitedCountList = siteRepository.getEnrolledInvitedCountByUserId(userId);
     }
 
     Map<String, EnrolledInvitedCount> enrolledInvitedCountMap =
-        CollectionUtils.emptyIfNull(enrolledInvitedCountList)
+        enrolledInvitedCountList
             .stream()
             .collect(Collectors.toMap(EnrolledInvitedCount::getSiteId, Function.identity()));
 
@@ -1050,11 +1050,11 @@ public class SiteServiceImpl implements SiteService {
         StudyDetails studyDetail = StudyMapper.toStudyDetails(study);
         studyDetail.setStudyPermission(Permission.EDIT.value());
 
-        List<EnrolledInvitedCount> enrolledInvitedCountList =
-            siteRepository.getEnrolledInvitedCount();
+        List<EnrolledInvitedCount> enrolledInvitedCountList = new ArrayList<>();
+        enrolledInvitedCountList = siteRepository.getEnrolledInvitedCount();
 
         Map<String, EnrolledInvitedCount> enrolledInvitedCountMap =
-            CollectionUtils.emptyIfNull(enrolledInvitedCountList)
+            enrolledInvitedCountList
                 .stream()
                 .collect(Collectors.toMap(EnrolledInvitedCount::getSiteId, Function.identity()));
 
