@@ -19,7 +19,6 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
-import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -48,7 +47,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -337,13 +335,6 @@ public class StudyServiceImpl implements StudyService {
       for (ParticipantStudyEntity participantStudy : participantStudiesList) {
         ParticipantDetail participantDetail =
             ParticipantMapper.fromParticipantStudy(participantStudy);
-
-        String onboardingStatusCode =
-            participantStudy.getParticipantRegistrySite().getOnboardingStatus();
-        onboardingStatusCode =
-            StringUtils.defaultString(onboardingStatusCode, OnboardingStatus.DISABLED.getCode());
-        participantDetail.setOnboardingStatus(
-            OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
 
         registryParticipants.add(participantDetail);
       }
