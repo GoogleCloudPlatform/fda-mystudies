@@ -1,6 +1,5 @@
 import {Component, Output, Input, EventEmitter} from '@angular/core';
 import {SiteDetailsService} from '../shared/site-details.service';
-import {ApiResponse} from 'src/app/entity/api.response.model';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {ToastrService} from 'ngx-toastr';
