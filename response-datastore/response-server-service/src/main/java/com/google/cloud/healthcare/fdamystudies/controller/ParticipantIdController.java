@@ -16,7 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ResponseServerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
-import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
@@ -64,8 +64,8 @@ public class ParticipantIdController {
       return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
     }
     try {
-      ParticipantBo participantBo = new ParticipantBo();
-      participantBo.setTokenIdentifier(enrollmentTokenIdentifierBean.getTokenIdentifier());
+      ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
+      participantBo.setTokenId(enrollmentTokenIdentifierBean.getTokenIdentifier());
       participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
       participantBo.setCreatedBy(applicationId);
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
