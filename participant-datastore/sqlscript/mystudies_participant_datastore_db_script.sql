@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `participant_registry_site` (
   `email` varchar(320) DEFAULT NULL,
   `enrollment_token` varchar(32) DEFAULT NULL,
   `enrollment_token_expiry` datetime DEFAULT NULL,
-  `invitation_count` bigint(20) DEFAULT '0',
+  `invitation_count` bigint(20) NOT NULL DEFAULT '0',
   `invitation_time` datetime DEFAULT NULL,
   `updated_time` datetime DEFAULT NULL,
   `modified_by` varchar(255) DEFAULT NULL,
