@@ -22,8 +22,8 @@ import {Router} from '@angular/router';
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private readonly refreshTokenSubject: BehaviorSubject<
-    null
-  > = new BehaviorSubject<null>(null);
+    unknown
+  > = new BehaviorSubject<unknown>(null);
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
