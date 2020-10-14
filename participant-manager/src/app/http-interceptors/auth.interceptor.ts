@@ -59,6 +59,7 @@ export class AuthInterceptor implements HttpInterceptor {
     this.refreshTokenSubject.next(null);
     return this.authService.refreshToken().subscribe(
       (authServerResponse: AccessToken) => {
+        console.log('refresh token is successfull');
         this.refreshTokenSubject.next(authServerResponse);
         sessionStorage.setItem('accessToken', authServerResponse.access_token);
         sessionStorage.setItem(
@@ -133,8 +134,11 @@ export class AuthInterceptor implements HttpInterceptor {
   ): OperatorFunction<T, T> {
     return catchError(
       (err: unknown): Observable<T> => {
+        console.log('in error handler :');
+        console.log(err);
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
+            console.log('in 401 error status :');
             this.handle401Error(request, next);
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);

@@ -50,6 +50,8 @@ export class SiteListComponent implements OnInit {
       this.query$,
     ).pipe(
       map(([manageStudies, query]) => {
+        console.log('sitelist is success :');
+        console.log(manageStudies);
         this.manageStudiesBackup = {...manageStudies};
         this.manageStudiesBackup.studies = this.manageStudiesBackup.studies.filter(
           (study: Study) =>
