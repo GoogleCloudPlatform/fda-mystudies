@@ -14,7 +14,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.ActivityStateRequestBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ParticipantActivityBean;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantActivitiesDao;
 import com.google.cloud.healthcare.fdamystudies.exception.ProcessActivityStateException;
-import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +36,14 @@ public class ParticipantActivityStateResponseServiceImpl
   public ActivitiesBean getParticipantActivities(String studyId, String participantId)
       throws ProcessActivityStateException {
     logger.debug("ActivityResponseProcessorServiceImpl getParticipantActivitiesList() - Starts ");
-    List<ParticipantActivitiesBo> participantActivityList = null;
+    List<ParticipantActivitiesEntity> participantActivityList = null;
     ActivitiesBean retActivitiesBean = new ActivitiesBean();
     retActivitiesBean.setMessage(AppConstants.FAILURE);
     participantActivityList =
         participantActivitiesDao.getParticipantActivities(studyId, participantId);
     if (!participantActivityList.isEmpty()) {
       List<ParticipantActivityBean> participantActivityBeanList = new ArrayList<>();
-      for (ParticipantActivitiesBo participantActivity : participantActivityList) {
+      for (ParticipantActivitiesEntity participantActivity : participantActivityList) {
         if (participantActivity != null) {
           ParticipantActivityBean tempParticipantActivityBean = new ParticipantActivityBean();
           ActivityRunBean tempActivityRunBean = new ActivityRunBean();
@@ -61,14 +61,14 @@ public class ParticipantActivityStateResponseServiceImpl
           if (participantActivity.getBookmark() != null) {
             tempParticipantActivityBean.setBookmarked(participantActivity.getBookmark());
           }
-          if (participantActivity.getCompleted() != null) {
-            tempActivityRunBean.setCompleted(participantActivity.getCompleted());
+          if (participantActivity.getCompletedCount() != null) {
+            tempActivityRunBean.setCompleted(participantActivity.getCompletedCount());
           }
-          if (participantActivity.getMissed() != null) {
-            tempActivityRunBean.setMissed(participantActivity.getMissed());
+          if (participantActivity.getMissedCount() != null) {
+            tempActivityRunBean.setMissed(participantActivity.getMissedCount());
           }
-          if (participantActivity.getTotal() != null) {
-            tempActivityRunBean.setTotal(participantActivity.getTotal());
+          if (participantActivity.getTotalCount() != null) {
+            tempActivityRunBean.setTotal(participantActivity.getTotalCount());
           }
           tempParticipantActivityBean.setActivityRun(tempActivityRunBean);
           participantActivityBeanList.add(tempParticipantActivityBean);
@@ -87,13 +87,13 @@ public class ParticipantActivityStateResponseServiceImpl
     logger.debug("saveParticipantActivities() - Start ");
     if (activityStateRequestBean.getStudyId() != null
         && activityStateRequestBean.getParticipantId() != null) {
-      List<ParticipantActivitiesBo> inputParticipantActivitiesList =
+      List<ParticipantActivitiesEntity> inputParticipantActivitiesList =
           this.getDtoObject(activityStateRequestBean);
 
-      List<ParticipantActivitiesBo> existingParticipantActivitiesList =
+      List<ParticipantActivitiesEntity> existingParticipantActivitiesList =
           participantActivitiesDao.getParticipantActivities(
               activityStateRequestBean.getStudyId(), activityStateRequestBean.getParticipantId());
-      List<ParticipantActivitiesBo> participantActivitiesListToUpdate =
+      List<ParticipantActivitiesEntity> participantActivitiesListToUpdate =
           this.getConsolidatedParticipantListToUpdate(
               inputParticipantActivitiesList, existingParticipantActivitiesList);
 
@@ -113,14 +113,14 @@ public class ParticipantActivityStateResponseServiceImpl
     participantActivitiesDao.deleteParticipantActivites(studyId, participantId);
   }
 
-  private List<ParticipantActivitiesBo> getConsolidatedParticipantListToUpdate(
-      List<ParticipantActivitiesBo> inputParticipantActivitiesList,
-      List<ParticipantActivitiesBo> saveOrUpdateParticipantActivitiesList) {
+  private List<ParticipantActivitiesEntity> getConsolidatedParticipantListToUpdate(
+      List<ParticipantActivitiesEntity> inputParticipantActivitiesList,
+      List<ParticipantActivitiesEntity> saveOrUpdateParticipantActivitiesList) {
     if (!inputParticipantActivitiesList.isEmpty()) {
-      for (ParticipantActivitiesBo participantActivityInput : inputParticipantActivitiesList) {
+      for (ParticipantActivitiesEntity participantActivityInput : inputParticipantActivitiesList) {
         boolean isExistingRecord = false;
         if (!saveOrUpdateParticipantActivitiesList.isEmpty()) {
-          for (ParticipantActivitiesBo participantActivityExisting :
+          for (ParticipantActivitiesEntity participantActivityExisting :
               saveOrUpdateParticipantActivitiesList) {
             if (participantActivityInput
                 .getActivityId()
@@ -133,9 +133,10 @@ public class ParticipantActivityStateResponseServiceImpl
               participantActivityExisting.setActivityRunId(
                   participantActivityInput.getActivityRunId());
               participantActivityExisting.setBookmark(participantActivityInput.getBookmark());
-              participantActivityExisting.setTotal(participantActivityInput.getTotal());
-              participantActivityExisting.setCompleted(participantActivityInput.getCompleted());
-              participantActivityExisting.setMissed(participantActivityInput.getMissed());
+              participantActivityExisting.setTotalCount(participantActivityInput.getTotalCount());
+              participantActivityExisting.setCompletedCount(
+                  participantActivityInput.getCompletedCount());
+              participantActivityExisting.setMissedCount(participantActivityInput.getMissedCount());
             }
           }
         }
@@ -147,12 +148,12 @@ public class ParticipantActivityStateResponseServiceImpl
     return saveOrUpdateParticipantActivitiesList;
   }
 
-  private List<ParticipantActivitiesBo> getDtoObject(
+  private List<ParticipantActivitiesEntity> getDtoObject(
       ActivityStateRequestBean activityStateRequestBean) {
-    List<ParticipantActivitiesBo> retList = new ArrayList<>();
+    List<ParticipantActivitiesEntity> retList = new ArrayList<>();
     if (activityStateRequestBean != null && activityStateRequestBean.getActivity() != null) {
       for (ParticipantActivityBean activityRequestBean : activityStateRequestBean.getActivity()) {
-        ParticipantActivitiesBo tempParticipantActivitiesBo = new ParticipantActivitiesBo();
+        ParticipantActivitiesEntity tempParticipantActivitiesBo = new ParticipantActivitiesEntity();
         tempParticipantActivitiesBo.setActivityId(activityRequestBean.getActivityId());
         tempParticipantActivitiesBo.setActivityRunId(activityRequestBean.getActivityRunId());
         tempParticipantActivitiesBo.setActivityState(activityRequestBean.getActivityState());
@@ -161,9 +162,11 @@ public class ParticipantActivityStateResponseServiceImpl
         tempParticipantActivitiesBo.setParticipantId(activityStateRequestBean.getParticipantId());
         tempParticipantActivitiesBo.setStudyId(activityStateRequestBean.getStudyId());
         if (activityRequestBean.getActivityRun() != null) {
-          tempParticipantActivitiesBo.setTotal(activityRequestBean.getActivityRun().getTotal());
-          tempParticipantActivitiesBo.setMissed(activityRequestBean.getActivityRun().getMissed());
-          tempParticipantActivitiesBo.setCompleted(
+          tempParticipantActivitiesBo.setTotalCount(
+              activityRequestBean.getActivityRun().getTotal());
+          tempParticipantActivitiesBo.setMissedCount(
+              activityRequestBean.getActivityRun().getMissed());
+          tempParticipantActivitiesBo.setCompletedCount(
               activityRequestBean.getActivityRun().getCompleted());
         }
         retList.add(tempParticipantActivitiesBo);

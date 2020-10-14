@@ -67,7 +67,7 @@ export class StudyDetailsComponent
           (participant: RegistryParticipant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()) ||
             participant.locationName
-              .toLowerCase()
+              ?.toLowerCase()
               .includes(query.toLowerCase()),
         );
 
