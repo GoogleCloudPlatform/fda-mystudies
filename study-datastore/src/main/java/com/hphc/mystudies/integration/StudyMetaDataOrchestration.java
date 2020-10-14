@@ -68,12 +68,12 @@ public class StudyMetaDataOrchestration {
     return gatewayInfo;
   }
 
-  public StudyResponse studyList(String authorization, String applicationId, String orgId)
+  public StudyResponse studyList(String authorization, String applicationId)
       throws OrchestrationException {
     LOGGER.info("INFO: StudyMetaDataOrchestration - studyList() :: Starts");
     StudyResponse studyResponse = new StudyResponse();
     try {
-      studyResponse = studyMetaDataDao.studyList(authorization, applicationId, orgId);
+      studyResponse = studyMetaDataDao.studyList(authorization, applicationId);
     } catch (Exception e) {
       LOGGER.error("StudyMetaDataOrchestration - studyList() :: ERROR", e);
     }

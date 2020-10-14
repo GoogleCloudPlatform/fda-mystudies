@@ -1309,7 +1309,6 @@ CREATE TABLE IF NOT EXISTS `studies` (
   `has_questionnaire_draft` int(11) DEFAULT NULL,
   `enrollmentdate_as_anchordate` char(1) DEFAULT NULL,
   `app_id` varchar(255) DEFAULT NULL,
-  `org_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1063 DEFAULT CHARSET=utf8;
 
