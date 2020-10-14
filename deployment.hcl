@@ -1,5 +1,5 @@
 # {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
-# {{$ref := "ref=templates-v0.2.0"}}
+# {{$ref := "ref=templates-v0.4.0"}}
 
 # {{$prefix := "example"}}
 # {{$env := "dev"}}
@@ -8,7 +8,7 @@
 # {{$default_zone := "a"}}
 # {{$github_owner := "GoogleCloudPlatform"}}
 # {{$github_repo := "example"}}
-# {{$github_branch := "^master$" }}
+# {{$github_branch := "master" }}
 
 data = {
   parent_type     = "folder"
@@ -63,7 +63,7 @@ template "cicd" {
       owner = "{{$github_owner}}"
       name  = "{{$github_repo}}"
     }
-    branch_regex   = "{{$github_branch}}"
+    branch_name    = "{{$github_branch}}"
     terraform_root = "terraform"
 
     # Prepare and enable default triggers.
@@ -525,7 +525,7 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #   github {
 #     owner = "{{$github_owner}}"
 #     name  = "{{$github_repo}}"
-#     push { branch = "{{$github_branch}}" }
+#     push { branch = "^{{$github_branch}}$" }
 #   }
 #
 #   filename = "$${each.key}/cloudbuild.yaml"
