@@ -8,42 +8,40 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.text.RandomStringGenerator;
+import org.apache.commons.text.RandomStringGenerator.Builder;
+import org.apache.syncope.common.lib.SecureTextRandomProvider;
 
 public final class PasswordGenerator {
 
-  private static final String[] ALLOWED_CHAR_GROUPS =
-      new String[] {
-        "abcdefghijklmnopqrstuvwxyz", "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "0123456789", "!#$%&"
-      };
-
-  private static SecureRandom secureRandom = new SecureRandom();
+  public static final String SPECIAL_CHARS = "!#$%&()*?@{}";
 
   private PasswordGenerator() {}
 
   public static String generate(int length) {
+    int count = length / 4;
+    int extra = length % 4;
+
+    Builder builder =
+        new RandomStringGenerator.Builder().usingRandom(new SecureTextRandomProvider());
+
     StringBuilder password = new StringBuilder();
+    password
+        .append(builder.withinRange(48, 57).build().generate(count)) // numbers
+        .append(builder.withinRange(65, 90).build().generate(count + extra)) // upper case letters
+        .append(builder.withinRange(97, 122).build().generate(count)) // lower case letters
+        .append(builder.selectFrom(SPECIAL_CHARS.toCharArray()).build().generate(count));
 
-    while (password.length() < length) {
-      for (int i = 0; i < ALLOWED_CHAR_GROUPS.length; i++) {
-        int randomIndex = secureRandom.nextInt(ALLOWED_CHAR_GROUPS[i].length());
-        password.append(ALLOWED_CHAR_GROUPS[i].charAt(randomIndex));
-      }
-    }
+    List<Character> passwordChars =
+        password.chars().mapToObj(data -> (char) data).collect(Collectors.toList());
+    Collections.shuffle(passwordChars);
 
-    return shuffle(password.toString());
-  }
-
-  private static String shuffle(String value) {
-    List<String> letters = Arrays.asList(value.split(""));
-    Collections.shuffle(letters);
-    StringBuilder builder = new StringBuilder();
-    for (String letter : letters) {
-      builder.append(letter);
-    }
-    return builder.toString();
+    return passwordChars
+        .stream()
+        .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+        .toString();
   }
 }
