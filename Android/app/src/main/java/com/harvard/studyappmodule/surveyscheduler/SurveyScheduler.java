@@ -67,8 +67,8 @@ public class SurveyScheduler {
       if (userPreferences.getStudies().get(i).getStudyId().equalsIgnoreCase(studyId)) {
         try {
           joiningTime =
-                  AppController.getDateFormatForApi()
-                          .parse(userPreferences.getStudies().get(i).getEnrolledDate());
+              AppController.getDateFormatForApi()
+                  .parse(userPreferences.getStudies().get(i).getEnrolledDate());
         } catch (ParseException e) {
           Logger.log(e);
         }
@@ -83,29 +83,29 @@ public class SurveyScheduler {
     TimeZone currentTimeZone = TimeZone.getDefault();
     int currentOffset = currentTimeZone.getOffset(calendarCurrent.getTimeInMillis());
     if (AppController.getHelperSharedPreference()
-            .readPreference(context, context.getResources().getString(R.string.startOffset), "")
-            .equalsIgnoreCase("")) {
+        .readPreference(context, context.getResources().getString(R.string.startOffset), "")
+        .equalsIgnoreCase("")) {
       AppController.getHelperSharedPreference()
-              .writePreference(
-                      context,
-                      context.getResources().getString(R.string.startOffset),
-                      "" + currentTimeZone.getOffset(calendarCurrent.getTimeInMillis()));
+          .writePreference(
+              context,
+              context.getResources().getString(R.string.startOffset),
+              "" + currentTimeZone.getOffset(calendarCurrent.getTimeInMillis()));
     }
 
     return Integer.parseInt(
             AppController.getHelperSharedPreference()
-                    .readPreference(
-                            context, context.getResources().getString(R.string.startOffset), ""))
-            - currentOffset;
+                .readPreference(
+                    context, context.getResources().getString(R.string.startOffset), ""))
+        - currentOffset;
   }
 
   public void setRuns(
-          ActivitiesWS activity,
-          String studyId,
-          Date startTime,
-          Date endTime,
-          Date joiningTime,
-          Context context) {
+      ActivitiesWS activity,
+      String studyId,
+      Date startTime,
+      Date endTime,
+      Date joiningTime,
+      Context context) {
     this.startTime = startTime;
     this.endTime = endTime;
     this.studyId = studyId;
@@ -122,9 +122,9 @@ public class SurveyScheduler {
       } else if (activity.getFrequency().getType().equalsIgnoreCase(FREQUENCY_TYPE_MONTHLY)) {
         setMonthlyRun(activity, offset);
       } else if (activity
-              .getFrequency()
-              .getType()
-              .equalsIgnoreCase(FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
+          .getFrequency()
+          .getType()
+          .equalsIgnoreCase(FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
         setScheduledRun(activity, offset);
       } else if (activity.getFrequency().getType().equalsIgnoreCase(FREQUENCY_TYPE_ONE_TIME)) {
         setOneTimeRun(activity, offset);
@@ -162,18 +162,18 @@ public class SurveyScheduler {
           try {
             String date = AppController.getDateFormatForDailyRun().format(startDate);
             String startDateString =
-                    date + " " + activity.getFrequency().getRuns().get(j).getStartTime();
+                date + " " + activity.getFrequency().getRuns().get(j).getStartTime();
             Date startDateDate =
-                    AppController.getDateFormatForDailyRunStartAndEnd().parse(startDateString);
+                AppController.getDateFormatForDailyRunStartAndEnd().parse(startDateString);
             Calendar calendar1 = Calendar.getInstance();
             calendar1.setTime(startDateDate);
             Calendar calendarStartDate = Calendar.getInstance();
             calendarStartDate.setTimeInMillis(calendar1.getTimeInMillis());
             String endDateString =
-                    date + " " + activity.getFrequency().getRuns().get(j).getEndTime();
+                date + " " + activity.getFrequency().getRuns().get(j).getEndTime();
 
             Date endDateDate =
-                    AppController.getDateFormatForDailyRunStartAndEnd().parse(endDateString);
+                AppController.getDateFormatForDailyRunStartAndEnd().parse(endDateString);
             Calendar calendar2 = Calendar.getInstance();
             calendar2.setTime(endDateDate);
             Calendar calendarEndDate = Calendar.getInstance();
@@ -183,51 +183,51 @@ public class SurveyScheduler {
             } else if (joiningTime.after(calendarStartDate.getTime())) {
               if ((joiningTime.after(startTime) || joiningTime.equals(startTime))) {
                 if ((calendarEndDate.getTime().before(endTime)
-                        || calendarEndDate.getTime().equals(endTime))) {
+                    || calendarEndDate.getTime().equals(endTime))) {
                   activityRun =
-                          getActivityRun(
-                                  activity.getActivityId(),
-                                  studyId,
-                                  false,
-                                  appleyOffset(joiningTime, offset),
-                                  appleyOffset(calendarEndDate.getTime(), offset),
-                                  run);
+                      getActivityRun(
+                          activity.getActivityId(),
+                          studyId,
+                          false,
+                          appleyOffset(joiningTime, offset),
+                          appleyOffset(calendarEndDate.getTime(), offset),
+                          run);
                 } else {
                   if (joiningTime.before(endTime)) {
                     activityRun =
-                            getActivityRun(
-                                    activity.getActivityId(),
-                                    studyId,
-                                    false,
-                                    appleyOffset(joiningTime, offset),
-                                    appleyOffset(endTime, offset),
-                                    run);
+                        getActivityRun(
+                            activity.getActivityId(),
+                            studyId,
+                            false,
+                            appleyOffset(joiningTime, offset),
+                            appleyOffset(endTime, offset),
+                            run);
                   }
                 }
               }
             } else {
               if ((calendarStartDate.getTime().after(startTime)
-                      || calendarStartDate.getTime().equals(startTime))) {
+                  || calendarStartDate.getTime().equals(startTime))) {
                 if ((calendarEndDate.getTime().before(endTime)
-                        || calendarEndDate.getTime().equals(endTime))) {
+                    || calendarEndDate.getTime().equals(endTime))) {
                   activityRun =
-                          getActivityRun(
-                                  activity.getActivityId(),
-                                  studyId,
-                                  false,
-                                  appleyOffset(calendarStartDate.getTime(), offset),
-                                  appleyOffset(calendarEndDate.getTime(), offset),
-                                  run);
+                      getActivityRun(
+                          activity.getActivityId(),
+                          studyId,
+                          false,
+                          appleyOffset(calendarStartDate.getTime(), offset),
+                          appleyOffset(calendarEndDate.getTime(), offset),
+                          run);
                 } else {
                   if (calendarStartDate.getTime().before(endTime)) {
                     activityRun =
-                            getActivityRun(
-                                    activity.getActivityId(),
-                                    studyId,
-                                    false,
-                                    appleyOffset(calendarStartDate.getTime(), offset),
-                                    appleyOffset(endTime, offset),
-                                    run);
+                        getActivityRun(
+                            activity.getActivityId(),
+                            studyId,
+                            false,
+                            appleyOffset(calendarStartDate.getTime(), offset),
+                            appleyOffset(endTime, offset),
+                            run);
                   }
                 }
               }
@@ -235,16 +235,16 @@ public class SurveyScheduler {
             if (activityRun != null) {
               insertAndUpdateToDB(context, activityRun);
               NotificationModuleSubscriber notificationModuleSubscriber =
-                      new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+                  new NotificationModuleSubscriber(dbServiceSubscriber, realm);
               if (activity.getFrequency().getRuns().size() > 1) {
                 if (!removeOffset(activityRun.getEndDate(), offset).before(new Date())) {
                   notificationModuleSubscriber.generateActivityLocalNotification(
-                          activityRun, context, FREQUENCY_TYPE_WITHIN_A_DAY, offset);
+                      activityRun, context, FREQUENCY_TYPE_WITHIN_A_DAY, offset);
                 }
               } else {
                 if (!removeOffset(activityRun.getEndDate(), offset).before(new Date())) {
                   notificationModuleSubscriber.generateActivityLocalNotification(
-                          activityRun, context, FREQUENCY_TYPE_DAILY, offset);
+                      activityRun, context, FREQUENCY_TYPE_DAILY, offset);
                 }
               }
               run++;
@@ -285,24 +285,24 @@ public class SurveyScheduler {
         if (!activity.getStartTime().equalsIgnoreCase("")) {
           if (simpleDateFormat.parse(activity.getStartTime().split("\\.")[0]).before(endDate)) {
             activityRun =
-                    getActivityRun(
-                            activity.getActivityId(),
-                            studyId,
-                            false,
-                            appleyOffset(
-                                    simpleDateFormat.parse(activity.getStartTime().split("\\.")[0]), offset),
-                            appleyOffset(endDate, offset),
-                            1);
+                getActivityRun(
+                    activity.getActivityId(),
+                    studyId,
+                    false,
+                    appleyOffset(
+                        simpleDateFormat.parse(activity.getStartTime().split("\\.")[0]), offset),
+                    appleyOffset(endDate, offset),
+                    1);
           }
         } else {
           activityRun =
-                  getActivityRun(
-                          activity.getActivityId(),
-                          studyId,
-                          false,
-                          appleyOffset(calendarStart.getTime(), offset),
-                          appleyOffset(endDate, offset),
-                          1);
+              getActivityRun(
+                  activity.getActivityId(),
+                  studyId,
+                  false,
+                  appleyOffset(calendarStart.getTime(), offset),
+                  appleyOffset(endDate, offset),
+                  1);
         }
       } catch (ParseException e) {
         Logger.log(e);
@@ -310,10 +310,10 @@ public class SurveyScheduler {
       if (activityRun != null) {
         insertAndUpdateToDB(context, activityRun);
         NotificationModuleSubscriber notificationModuleSubscriber =
-                new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+            new NotificationModuleSubscriber(dbServiceSubscriber, realm);
         if (!removeOffset(activityRun.getEndDate(), offset).before(new Date())) {
           notificationModuleSubscriber.generateActivityLocalNotification(
-                  activityRun, context, FREQUENCY_TYPE_ONE_TIME, offset);
+              activityRun, context, FREQUENCY_TYPE_ONE_TIME, offset);
         }
       }
     }
@@ -355,20 +355,20 @@ public class SurveyScheduler {
         endCalendarTime.setTimeInMillis(endCalendarTime.getTimeInMillis());
 
         ActivityRun activityRun =
-                getActivityRun(
-                        activity.getActivityId(),
-                        studyId,
-                        false,
-                        appleyOffset(startCalendarTime.getTime(), offset),
-                        appleyOffset(endCalendarTime.getTime(), offset),
-                        run);
+            getActivityRun(
+                activity.getActivityId(),
+                studyId,
+                false,
+                appleyOffset(startCalendarTime.getTime(), offset),
+                appleyOffset(endCalendarTime.getTime(), offset),
+                run);
         if (activityRun != null) {
           insertAndUpdateToDB(context, activityRun);
           NotificationModuleSubscriber notificationModuleSubscriber =
-                  new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
           if (!removeOffset(activityRun.getEndDate(), offset).before(new Date())) {
             notificationModuleSubscriber.generateActivityLocalNotification(
-                    activityRun, context, FREQUENCY_TYPE_MONTHLY, offset);
+                activityRun, context, FREQUENCY_TYPE_MONTHLY, offset);
           }
           run++;
         }
@@ -388,51 +388,51 @@ public class SurveyScheduler {
         ActivityRun activityRun = null;
         try {
           if (joiningTime.after(
-                  simpleDateFormat.parse(
-                          activity.getFrequency().getRuns().get(j).getEndTime().split("\\.")[0]))) {
+              simpleDateFormat.parse(
+                  activity.getFrequency().getRuns().get(j).getEndTime().split("\\.")[0]))) {
           } else if (joiningTime.after(
-                  simpleDateFormat.parse(
-                          activity.getFrequency().getRuns().get(j).getStartTime().split("\\.")[0]))) {
+              simpleDateFormat.parse(
+                  activity.getFrequency().getRuns().get(j).getStartTime().split("\\.")[0]))) {
             Calendar calendarEnd = Calendar.getInstance();
             calendarEnd.setTime(
-                    simpleDateFormat.parse(
-                            activity.getFrequency().getRuns().get(j).getEndTime().split("\\.")[0]));
+                simpleDateFormat.parse(
+                    activity.getFrequency().getRuns().get(j).getEndTime().split("\\.")[0]));
             calendarEnd.setTimeInMillis(calendarEnd.getTimeInMillis());
             if (joiningTime.before(calendarEnd.getTime())) {
               if (joiningTime.before(endCalendar.getTime())) {
                 activityRun =
-                        getActivityRun(
-                                activity.getActivityId(),
-                                studyId,
-                                false,
-                                appleyOffset(joiningTime, offset),
-                                appleyOffset(calendarEnd.getTime(), offset),
-                                run);
+                    getActivityRun(
+                        activity.getActivityId(),
+                        studyId,
+                        false,
+                        appleyOffset(joiningTime, offset),
+                        appleyOffset(calendarEnd.getTime(), offset),
+                        run);
               }
             }
           } else {
             Calendar calendarStart = Calendar.getInstance();
             calendarStart.setTime(
-                    simpleDateFormat.parse(
-                            activity.getFrequency().getRuns().get(j).getStartTime().split("\\.")[0]));
+                simpleDateFormat.parse(
+                    activity.getFrequency().getRuns().get(j).getStartTime().split("\\.")[0]));
             calendarStart.setTimeInMillis(calendarStart.getTimeInMillis());
 
             Calendar calendarEnd = Calendar.getInstance();
             calendarEnd.setTime(
-                    simpleDateFormat.parse(
-                            activity.getFrequency().getRuns().get(j).getEndTime().split("\\.")[0]));
+                simpleDateFormat.parse(
+                    activity.getFrequency().getRuns().get(j).getEndTime().split("\\.")[0]));
             calendarEnd.setTimeInMillis(calendarEnd.getTimeInMillis());
             if (calendarStart.getTime().before(calendarEnd.getTime())) {
               if (appleyOffset(calendarStart.getTime(), offset)
-                      .before(appleyOffset(endCalendar.getTime(), offset))) {
+                  .before(appleyOffset(endCalendar.getTime(), offset))) {
                 activityRun =
-                        getActivityRun(
-                                activity.getActivityId(),
-                                studyId,
-                                false,
-                                appleyOffset(calendarStart.getTime(), offset),
-                                appleyOffset(calendarEnd.getTime(), offset),
-                                run);
+                    getActivityRun(
+                        activity.getActivityId(),
+                        studyId,
+                        false,
+                        appleyOffset(calendarStart.getTime(), offset),
+                        appleyOffset(calendarEnd.getTime(), offset),
+                        run);
               }
             }
           }
@@ -442,10 +442,10 @@ public class SurveyScheduler {
         if (activityRun != null) {
           insertAndUpdateToDB(context, activityRun);
           NotificationModuleSubscriber notificationModuleSubscriber =
-                  new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
           if (!removeOffset(activityRun.getEndDate(), offset).before(new Date())) {
             notificationModuleSubscriber.generateActivityLocalNotification(
-                    activityRun, context, FREQUENCY_TYPE_MANUALLY_SCHEDULE, offset);
+                activityRun, context, FREQUENCY_TYPE_MANUALLY_SCHEDULE, offset);
           }
 
           run++;
@@ -477,16 +477,16 @@ public class SurveyScheduler {
 
         if (startTimeCalender.get(Calendar.DAY_OF_WEEK) < startCalendar.get(Calendar.DAY_OF_WEEK)) {
           startCalendar.add(
-                  Calendar.DATE,
-                  -(startCalendar.get(Calendar.DAY_OF_WEEK)
-                          - startTimeCalender.get(Calendar.DAY_OF_WEEK)));
+              Calendar.DATE,
+              -(startCalendar.get(Calendar.DAY_OF_WEEK)
+                  - startTimeCalender.get(Calendar.DAY_OF_WEEK)));
         } else if (startTimeCalender.get(Calendar.DAY_OF_WEEK)
-                > startCalendar.get(Calendar.DAY_OF_WEEK)) {
+            > startCalendar.get(Calendar.DAY_OF_WEEK)) {
           startCalendar.add(
-                  Calendar.DATE,
-                  -7
-                          + (startTimeCalender.get(Calendar.DAY_OF_WEEK)
-                          - startCalendar.get(Calendar.DAY_OF_WEEK)));
+              Calendar.DATE,
+              -7
+                  + (startTimeCalender.get(Calendar.DAY_OF_WEEK)
+                      - startCalendar.get(Calendar.DAY_OF_WEEK)));
         }
         startCalendar.set(Calendar.HOUR_OF_DAY, startTimeCalender.get(Calendar.HOUR_OF_DAY));
         startCalendar.set(Calendar.MINUTE, startTimeCalender.get(Calendar.MINUTE));
@@ -501,20 +501,20 @@ public class SurveyScheduler {
         endCalenderTime.setTimeInMillis(endCalenderTime.getTimeInMillis());
 
         ActivityRun activityRun =
-                getActivityRun(
-                        activity.getActivityId(),
-                        studyId,
-                        false,
-                        appleyOffset(startCalenderTime.getTime(), offset),
-                        appleyOffset(endCalenderTime.getTime(), offset),
-                        run);
+            getActivityRun(
+                activity.getActivityId(),
+                studyId,
+                false,
+                appleyOffset(startCalenderTime.getTime(), offset),
+                appleyOffset(endCalenderTime.getTime(), offset),
+                run);
         if (activityRun != null) {
           insertAndUpdateToDB(context, activityRun);
           NotificationModuleSubscriber notificationModuleSubscriber =
-                  new NotificationModuleSubscriber(dbServiceSubscriber, realm);
+              new NotificationModuleSubscriber(dbServiceSubscriber, realm);
           if (!removeOffset(activityRun.getEndDate(), offset).before(new Date())) {
             notificationModuleSubscriber.generateActivityLocalNotification(
-                    activityRun, context, FREQUENCY_TYPE_WEEKLY, offset);
+                activityRun, context, FREQUENCY_TYPE_WEEKLY, offset);
           }
           run++;
         }
@@ -524,12 +524,12 @@ public class SurveyScheduler {
 
   /** get activity run for insert. */
   private ActivityRun getActivityRun(
-          String activityId,
-          String studyId,
-          boolean isCompleted,
-          Date startDate,
-          Date endDate,
-          int runId) {
+      String activityId,
+      String studyId,
+      boolean isCompleted,
+      Date startDate,
+      Date endDate,
+      int runId) {
     ActivityRun activityRun = new ActivityRun();
     activityRun.setActivityId(activityId);
     activityRun.setStudyId(studyId);
@@ -551,16 +551,16 @@ public class SurveyScheduler {
 
   // if currentRunId = 0 then no need to show the current run in UI
   public ActivityStatus getActivityStatus(
-          ActivityData activityData,
-          String studyId,
-          String activityId,
-          Date currentDate,
-          ActivitiesWS activityListItem) {
+      ActivityData activityData,
+      String studyId,
+      String activityId,
+      Date currentDate,
+      ActivitiesWS activityListItem) {
     String activityStatus = SurveyActivitiesFragment.YET_To_START;
     int currentRunId = 0;
 
     RealmResults<ActivityRun> activityRuns =
-            dbServiceSubscriber.getAllActivityRunFromDB(studyId, activityId, realm);
+        dbServiceSubscriber.getAllActivityRunFromDB(studyId, activityId, realm);
     activityRuns = activityRuns.sort("runId", Sort.ASCENDING);
 
     int missedRun = 0;
@@ -579,15 +579,15 @@ public class SurveyScheduler {
       Date activityRunEndDate = null;
       try {
         activityRunStDate =
-                simpleDateFormat.parse(simpleDateFormat.format(activityRuns.get(i).getStartDate()));
+            simpleDateFormat.parse(simpleDateFormat.format(activityRuns.get(i).getStartDate()));
         activityRunEndDate =
-                simpleDateFormat.parse(simpleDateFormat.format(activityRuns.get(i).getEndDate()));
+            simpleDateFormat.parse(simpleDateFormat.format(activityRuns.get(i).getEndDate()));
       } catch (ParseException e) {
         Logger.log(e);
       }
 
       if ((currentDate.equals(activityRunStDate) || currentDate.after(activityRunStDate))
-              && (currentDate.equals(activityRunEndDate) || currentDate.before(activityRunEndDate))) {
+          && (currentDate.equals(activityRunEndDate) || currentDate.before(activityRunEndDate))) {
         activityRun = activityRuns.get(i);
       } else if (currentDate.after(activityRunStDate)) {
         activityPreviousRun = activityRuns.get(i);
@@ -613,7 +613,7 @@ public class SurveyScheduler {
         if (activityData.getActivities().get(i).getActivityId().equalsIgnoreCase(activityId)) {
           activitiesForStatus = activityData.getActivities().get(i);
           if (activitiesForStatus.getActivityRunId() != null
-                  && !activitiesForStatus.getActivityRunId().equalsIgnoreCase("")) {
+              && !activitiesForStatus.getActivityRunId().equalsIgnoreCase("")) {
             activityIdAvailable = true;
           }
         }
@@ -647,7 +647,7 @@ public class SurveyScheduler {
     }
 
     Activities activities =
-            dbServiceSubscriber.getActivityPreferenceBySurveyId(studyId, activityId, realm);
+        dbServiceSubscriber.getActivityPreferenceBySurveyId(studyId, activityId, realm);
     int totalRun;
     SimpleDateFormat startTimeDateFormat = AppController.getDateFormatUtcNoZone();
     Date starttime = null;
@@ -659,7 +659,7 @@ public class SurveyScheduler {
     Date endtime = null;
     try {
       if (activityListItem.getEndTime() != null
-              && !activityListItem.getEndTime().equalsIgnoreCase("")) {
+          && !activityListItem.getEndTime().equalsIgnoreCase("")) {
         endtime = startTimeDateFormat.parse(activityListItem.getEndTime().split("\\.")[0]);
       }
     } catch (ParseException e) {
@@ -670,8 +670,8 @@ public class SurveyScheduler {
         missedRun = 0;
         completedRun = 0;
         totalRun =
-                getTotalRunsForUpcomingActivities(
-                        activityListItem, starttime, endtime, startTimeDateFormat);
+            getTotalRunsForUpcomingActivities(
+                activityListItem, starttime, endtime, startTimeDateFormat);
       } else if (AppController.isWithinRange(starttime, endtime)) {
         if (activities != null && activities.getActivityRun() != null) {
           completedRun = activities.getActivityRun().getCompleted();
@@ -725,10 +725,10 @@ public class SurveyScheduler {
   }
 
   private int getTotalRunsForUpcomingActivities(
-          ActivitiesWS activityListItem,
-          Date starttime,
-          Date endtime,
-          SimpleDateFormat startTimeDateFormat) {
+      ActivitiesWS activityListItem,
+      Date starttime,
+      Date endtime,
+      SimpleDateFormat startTimeDateFormat) {
     if (activityListItem.getFrequency().getType().equalsIgnoreCase(FREQUENCY_TYPE_DAILY)) {
       if (starttime != null) {
         Calendar startCalendar = Calendar.getInstance();
@@ -768,14 +768,14 @@ public class SurveyScheduler {
       }
       return totalRun;
     } else if (activityListItem
-            .getFrequency()
-            .getType()
-            .equalsIgnoreCase(FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
+        .getFrequency()
+        .getType()
+        .equalsIgnoreCase(FREQUENCY_TYPE_MANUALLY_SCHEDULE)) {
       return activityListItem.getFrequency().getRuns().size();
     } else if (activityListItem
-            .getFrequency()
-            .getType()
-            .equalsIgnoreCase(FREQUENCY_TYPE_ONE_TIME)) {
+        .getFrequency()
+        .getType()
+        .equalsIgnoreCase(FREQUENCY_TYPE_ONE_TIME)) {
       return 1;
     }
     return 0;
@@ -818,12 +818,12 @@ public class SurveyScheduler {
         try {
           if (!activityListDataDB.getActivities().get(i).getState().equalsIgnoreCase("deleted")) {
             ActivityStatus activityStatus =
-                    getActivityStatus(
-                            activityData,
-                            studyId,
-                            activityListDataDB.getActivities().get(i).getActivityId(),
-                            calendarCurrentTime.getTime(),
-                            activityListDataDB.getActivities().get(i));
+                getActivityStatus(
+                    activityData,
+                    studyId,
+                    activityListDataDB.getActivities().get(i).getActivityId(),
+                    calendarCurrentTime.getTime(),
+                    activityListDataDB.getActivities().get(i));
             if (activityStatus != null) {
               if (activityStatus.getCompletedRun() >= 0) {
                 completed = completed + activityStatus.getCompletedRun();
