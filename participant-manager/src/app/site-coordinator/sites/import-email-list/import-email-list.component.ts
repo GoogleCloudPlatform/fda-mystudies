@@ -43,13 +43,13 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
       this.siteDetailsService
         .importParticipants(this.siteId, formData)
         .subscribe(
-          (successResponse: ApiResponse) => {
+          (successResponse: ImportParticipantEmailResponse) => {
             if (getMessage(successResponse.code)) {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
             }
-            this.import.emit();
+            this.import.emit(successResponse);
           },
           (error) => {
             this.toastr.error(error);
