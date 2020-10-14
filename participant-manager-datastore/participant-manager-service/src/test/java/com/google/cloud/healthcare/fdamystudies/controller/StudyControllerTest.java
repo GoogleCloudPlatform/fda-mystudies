@@ -599,6 +599,25 @@ public class StudyControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
   }
 
+  @Test
+  public void shouldReturnUserNotFoundForUpdateTargetEnrollment() throws Exception {
+    UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .content(asJsonString(targetEnrollmentRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
   @AfterEach
   public void clean() {
     testDataHelper.cleanUp();
