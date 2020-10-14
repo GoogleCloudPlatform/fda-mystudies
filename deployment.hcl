@@ -104,6 +104,9 @@ template "audit" {
     logs_storage_bucket = {
       name = "{{$prefix}}-{{$env}}-7yr-audit-logs"
     }
+    additional_filters = [
+      "logName=\\\"logs/application-audit-log\\\"",
+    ]
   }
 }
 
