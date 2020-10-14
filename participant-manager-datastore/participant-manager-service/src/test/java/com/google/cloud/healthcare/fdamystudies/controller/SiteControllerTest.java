@@ -431,6 +431,24 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnUserNotFoundForSiteParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnSitePermissionAccessDeniedError() throws Exception {
     // Site 1: set manage site permission to no permission
     userRegAdminEntity.setSuperAdmin(false);
@@ -977,6 +995,26 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.error_description",
                 is(ErrorCode.PARTICIPANT_REGISTRY_SITE_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForParticipantDetails() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
