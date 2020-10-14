@@ -9,9 +9,9 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
 public enum Permission {
-  NO_PERMISSION(null),
   VIEW(0),
-  EDIT(1);
+  EDIT(1),
+  NO_PERMISSION(null);
 
   private Integer value;
 
