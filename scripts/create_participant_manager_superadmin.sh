@@ -18,6 +18,9 @@ set -e
 DATA_PROJECT=${PREFIX}-${ENV}-data
 SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
 
+echo "Inserting/updating superadmin user in 'oauth_server_hydra' database"
+echo "USE \`oauth_server_hydra\`;" >> ${TMPFILE}
+
 SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 HASH=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 DATE=`date -v +30d +"%F %T"`
@@ -34,6 +37,22 @@ echo "REPLACE into users (id, app_id, email, status, temp_reg_id, user_id, user_
   \"bd676334dd745c6afaa6547f9736a4c4df411a3ca2c4f514070daae31008cd9d\",
   \"96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508\",
   \"{\"password\": {\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":${TIMESTAMP}}, \"password_history\": [{\"hash\": \"${HASH}\", \"salt\": \"${SALT}\", \"expire_timestamp\":${TIMESTAMP}}]}\");
+" >> ${TMPFILE}
+
+
+echo "USE \`mystudies_participant_datastore\`;" >> ${TMPFILE}
+echo "Insert default location"
+echo "REPLACE INTO locations
+  (id, custom_id, is_default, name, status)
+VALUES
+	(\"1\", \"location1\", \"Y\", \"Default Location\", 1);
+" >> ${TMPFILE}
+
+echo "Insert ur_admin_user record in 'mystudies_participant_datastore' database"
+echo "REPLACE INTO ur_admin_user
+  (id, created_by, email, first_name, location_permission, security_code, security_code_expire_date, status, super_admin, ur_admin_auth_id)
+VALUES
+  (\"c9d30d67-0477-4a8c-8490-0fa1e0300bd0\", \"1\", \"${EMAIL}\", \"Admin\", 1, \"af92f34e0ae6fc3c707446797b7db5b4be78ec699899061a448f8bc18990d75f\", \"2022-09-25 20:06:43\", 1, b'1', \"96494ebc2ae5ac344437ec19bfc0b09267a876015b277e1f6e9bfc871f578508\");
 " >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
