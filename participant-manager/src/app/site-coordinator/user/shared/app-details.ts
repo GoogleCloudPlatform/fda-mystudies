@@ -26,11 +26,11 @@ export interface App {
   customId: string;
   name: string;
   permission: Permission | null;
-  totalStudiesCount: number;
+  totalStudiesCount?: number;
   totalSitesCount: number;
   selected: boolean;
   selectedSitesCount: number;
-  selectedStudiesCount: number;
+  selectedStudiesCount?: number;
   studies: Study[];
 }
 
