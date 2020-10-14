@@ -61,14 +61,14 @@ public class ParticipantActivityStateResponseServiceImpl
           if (participantActivity.getBookmark() != null) {
             tempParticipantActivityBean.setBookmarked(participantActivity.getBookmark());
           }
-          if (participantActivity.getCompleted() != null) {
-            tempActivityRunBean.setCompleted(participantActivity.getCompleted());
+          if (participantActivity.getCompletedCount() != null) {
+            tempActivityRunBean.setCompleted(participantActivity.getCompletedCount());
           }
-          if (participantActivity.getMissed() != null) {
-            tempActivityRunBean.setMissed(participantActivity.getMissed());
+          if (participantActivity.getMissedCount() != null) {
+            tempActivityRunBean.setMissed(participantActivity.getMissedCount());
           }
-          if (participantActivity.getTotal() != null) {
-            tempActivityRunBean.setTotal(participantActivity.getTotal());
+          if (participantActivity.getTotalCount() != null) {
+            tempActivityRunBean.setTotal(participantActivity.getTotalCount());
           }
           tempParticipantActivityBean.setActivityRun(tempActivityRunBean);
           participantActivityBeanList.add(tempParticipantActivityBean);
@@ -133,9 +133,10 @@ public class ParticipantActivityStateResponseServiceImpl
               participantActivityExisting.setActivityRunId(
                   participantActivityInput.getActivityRunId());
               participantActivityExisting.setBookmark(participantActivityInput.getBookmark());
-              participantActivityExisting.setTotal(participantActivityInput.getTotal());
-              participantActivityExisting.setCompleted(participantActivityInput.getCompleted());
-              participantActivityExisting.setMissed(participantActivityInput.getMissed());
+              participantActivityExisting.setTotalCount(participantActivityInput.getTotalCount());
+              participantActivityExisting.setCompletedCount(
+                  participantActivityInput.getCompletedCount());
+              participantActivityExisting.setMissedCount(participantActivityInput.getMissedCount());
             }
           }
         }
@@ -161,9 +162,11 @@ public class ParticipantActivityStateResponseServiceImpl
         tempParticipantActivitiesBo.setParticipantId(activityStateRequestBean.getParticipantId());
         tempParticipantActivitiesBo.setStudyId(activityStateRequestBean.getStudyId());
         if (activityRequestBean.getActivityRun() != null) {
-          tempParticipantActivitiesBo.setTotal(activityRequestBean.getActivityRun().getTotal());
-          tempParticipantActivitiesBo.setMissed(activityRequestBean.getActivityRun().getMissed());
-          tempParticipantActivitiesBo.setCompleted(
+          tempParticipantActivitiesBo.setTotalCount(
+              activityRequestBean.getActivityRun().getTotal());
+          tempParticipantActivitiesBo.setMissedCount(
+              activityRequestBean.getActivityRun().getMissed());
+          tempParticipantActivitiesBo.setCompletedCount(
               activityRequestBean.getActivityRun().getCompleted());
         }
         retList.add(tempParticipantActivitiesBo);

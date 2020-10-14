@@ -65,14 +65,14 @@ public class ParticipantActivitiesEntity implements Serializable {
   @Column(name = "activity_run_id", nullable = false, length = XS_LENGTH)
   private String activityRunId;
 
-  @Column(name = "total")
-  private Integer total;
+  @Column(name = "total_count")
+  private Integer totalCount;
 
-  @Column(name = "completed")
-  private Integer completed;
+  @Column(name = "completed_count")
+  private Integer completedCount;
 
-  @Column(name = "missed")
-  private Integer missed;
+  @Column(name = "missed_count")
+  private Integer missedCount;
 
   @Column(name = "created_time")
   @CreationTimestamp

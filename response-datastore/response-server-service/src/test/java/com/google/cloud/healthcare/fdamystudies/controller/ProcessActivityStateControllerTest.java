@@ -205,10 +205,10 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
-        resultsList.get(0).getTotal());
+        resultsList.get(0).getTotalCount());
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
-        resultsList.get(0).getCompleted());
+        resultsList.get(0).getCompletedCount());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -261,10 +261,10 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
-        resultsList.get(0).getTotal());
+        resultsList.get(0).getTotalCount());
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
-        resultsList.get(0).getCompleted());
+        resultsList.get(0).getCompletedCount());
 
     // Validate 2nd activity state
     assertEquals(
@@ -279,10 +279,10 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     assertEquals(
         inputActivityStateBean.getActivity().get(1).getActivityRun().getTotal(),
-        resultsList.get(1).getTotal());
+        resultsList.get(1).getTotalCount());
     assertEquals(
         inputActivityStateBean.getActivity().get(1).getActivityRun().getCompleted(),
-        resultsList.get(1).getCompleted());
+        resultsList.get(1).getCompletedCount());
   }
 
   @AfterEach
