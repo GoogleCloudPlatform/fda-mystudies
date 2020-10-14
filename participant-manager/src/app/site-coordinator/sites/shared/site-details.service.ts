@@ -4,7 +4,7 @@ import {EntityService} from '../../../service/entity.service';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environment';
-import {AddEmail} from './add-email';
+import {AddEmail, AddEmailResponse} from './add-email';
 import {
   InviteSend,
   StatusUpdate,
@@ -12,6 +12,7 @@ import {
 } from '../../participant-details/participant-details';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {OnboardingStatus} from 'src/app/shared/enums';
+import {ImportParticipantEmailResponse} from './import-participants';
 @Injectable({
   providedIn: 'root',
 })
@@ -76,8 +77,8 @@ export class SiteDetailsService {
   addParticipants(
     siteId: string,
     modelEmail: AddEmail,
-  ): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(
+  ): Observable<AddEmailResponse> {
+    return this.http.post<AddEmailResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(siteId)}/participants`,
       modelEmail,
     );
@@ -99,8 +100,8 @@ export class SiteDetailsService {
   importParticipants(
     siteId: string,
     formData: FormData,
-  ): Observable<ApiResponse> {
-    return this.http.post<ApiResponse>(
+  ): Observable<ImportParticipantEmailResponse> {
+    return this.http.post<ImportParticipantEmailResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/import`,
