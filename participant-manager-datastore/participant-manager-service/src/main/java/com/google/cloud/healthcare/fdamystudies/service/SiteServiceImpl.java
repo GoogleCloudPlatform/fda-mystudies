@@ -163,8 +163,6 @@ public class SiteServiceImpl implements SiteService {
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
-  @Autowired private UserRegAdminRepository userRegAdminRepository;
-
   @Override
   @Transactional
   public SiteResponse addSite(SiteRequest siteRequest) {
