@@ -84,7 +84,7 @@ public class LoginController {
 
   private static final String MOBILE_APP = "mobileApp";
 
-  private XLogger logger = XLoggerFactory.getXLogger(UserController.class.getName());
+  private XLogger logger = XLoggerFactory.getXLogger(LoginController.class.getName());
 
   @Autowired private OAuthService oauthService;
 
@@ -290,37 +290,47 @@ public class LoginController {
   @ExceptionHandler(Exception.class)
   public ModelAndView handleError(HttpServletRequest req, Exception ex) {
     logger.error(String.format("Request %s failed with an exception", req.getRequestURL()), ex);
-    ModelAndView modelView = new ModelAndView();
-    modelView.setViewName(ERROR_VIEW_NAME);
-
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
-    auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
-
-    return modelView;
+    return displayErrorPage(req);
   }
 
   @ExceptionHandler(ErrorCodeException.class)
-  public ModelAndView handleErrorCodeException(HttpServletRequest req, ErrorCodeException ex)
-      throws UnsupportedEncodingException {
-    logger.error(
-        String.format("Request %s failed with an ErrorCodeException", req.getRequestURL()), ex);
-    String mobilePlatform = cookieHelper.getCookieValue(req, MOBILE_PLATFORM_COOKIE);
-    mobilePlatform = StringUtils.defaultIfEmpty(mobilePlatform, MobilePlatform.UNKNOWN.getValue());
-    String source = cookieHelper.getCookieValue(req, SOURCE_COOKIE);
+  public ModelAndView handleErrorCodeException(HttpServletRequest req, ErrorCodeException ex) {
+    try {
+      logger.error(
+          String.format(
+              "Request %s failed with an ErrorCode=%s", req.getRequestURL(), ex.getErrorCode()));
+      String mobilePlatform = cookieHelper.getCookieValue(req, MOBILE_PLATFORM_COOKIE);
+      mobilePlatform =
+          StringUtils.defaultIfEmpty(mobilePlatform, MobilePlatform.UNKNOWN.getValue());
+      String source = cookieHelper.getCookieValue(req, SOURCE_COOKIE);
 
+      ModelAndView modelView = new ModelAndView();
+      modelView.setViewName(LOGIN_VIEW_NAME);
+      modelView.addObject("loginRequest", new LoginRequest());
+      modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
+      modelView.addObject(
+          FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform, source));
+      modelView.addObject(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
+      modelView.addObject(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source));
+      modelView.addObject(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
+      modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
+
+      PlatformComponent platformComponent = PlatformComponent.fromValue(source);
+      modelView.addObject(MOBILE_APP, platformComponent.equals(PlatformComponent.MOBILE_APPS));
+
+      AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
+      auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
+
+      return modelView;
+    } catch (Exception e) {
+      logger.error("Exception in handleErrorCodeException()", e);
+      return displayErrorPage(req);
+    }
+  }
+
+  private ModelAndView displayErrorPage(HttpServletRequest req) {
     ModelAndView modelView = new ModelAndView();
-    modelView.setViewName(LOGIN_VIEW_NAME);
-    modelView.addObject("loginRequest", new LoginRequest());
-    modelView.addObject(ERROR_DESCRIPTION, ex.getErrorCode().getDescription());
-    modelView.addObject(
-        FORGOT_PASSWORD_LINK, redirectConfig.getForgotPasswordUrl(mobilePlatform, source));
-    modelView.addObject(SIGNUP_LINK, redirectConfig.getSignupUrl(mobilePlatform));
-    modelView.addObject(TERMS_LINK, redirectConfig.getTermsUrl(mobilePlatform, source));
-    modelView.addObject(PRIVACY_POLICY_LINK, redirectConfig.getPrivacyPolicyUrl(mobilePlatform));
-    modelView.addObject(ABOUT_LINK, redirectConfig.getAboutUrl(mobilePlatform));
-
-    PlatformComponent platformComponent = PlatformComponent.fromValue(source);
-    modelView.addObject(MOBILE_APP, platformComponent.equals(PlatformComponent.MOBILE_APPS));
+    modelView.setViewName(ERROR_VIEW_NAME);
 
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(req);
     auditHelper.logEvent(SIGNIN_FAILED, auditRequest);
