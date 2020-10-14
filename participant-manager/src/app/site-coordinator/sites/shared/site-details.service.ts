@@ -106,7 +106,7 @@ export class SiteDetailsService {
         siteId,
       )}/participants/import`,
       formData,
-      {headers: {skip: 'true'}},
+      {headers: {skipIfUpload: 'true'}},
     );
   }
 }
