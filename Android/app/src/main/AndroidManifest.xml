@@ -249,10 +249,6 @@
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="17d66c1b46986f6f6633cc62617443d13b9fbf1d" />
-
         <activity
             android:name=".studyappmodule.EligibilityEnrollmentActivity"
             android:configChanges="screenLayout|orientation"
@@ -271,10 +267,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.BackboneApp"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="17d66c1b46986f6f6633cc62617443d13b9fbf1d" />
 
         <activity
             android:name=".WebViewActivity"
