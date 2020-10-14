@@ -15,7 +15,7 @@ public final class IdGenerator {
 
   private IdGenerator() {}
 
-  /** Generates a random Id using UUID and current time (milliseconds). */
+  /** Generate a random Id using UUID and replace hyphen (-) with random alpha numeric letter */
   public static String id() {
     String uuid = UUID.randomUUID().toString();
     StringBuilder builder = new StringBuilder();
