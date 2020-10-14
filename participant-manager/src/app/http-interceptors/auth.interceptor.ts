@@ -121,7 +121,7 @@ export class AuthInterceptor implements HttpInterceptor {
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
 
-      if (!req.headers.get('skip')) {
+      if (!req.headers.get('skipIfUpload')) {
         headers = headers.append('Content-Type', 'application/json');
       }
       return req.clone({headers});
