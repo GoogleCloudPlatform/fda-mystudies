@@ -475,9 +475,9 @@ class ActivitiesViewController: UIViewController {
 
   /// Updates Activity Run Status.
   /// - Parameter status: Status of the Activity.
-  func updateActivityRun(status: UserActivityStatus.ActivityStatus) {
+  func updateActivityRun(status: UserActivityStatus.ActivityStatus, alert: Bool = true) {
 
-    let activity = Study.currentActivity!
+    guard let activity = Study.currentActivity else { return }
 
     let activityStatus = User.currentUser.updateActivityStatus(
       studyId: activity.studyId!,
@@ -505,7 +505,7 @@ class ActivitiesViewController: UIViewController {
     DBHandler.updateParticipationStatus(for: activity)
 
     if status == .completed {
-      self.updateCompletionAdherence()
+      self.updateCompletionAdherence(with: alert)
     }
 
   }
@@ -516,7 +516,7 @@ class ActivitiesViewController: UIViewController {
   ///     adherence =  (totalCompletedRuns*100) / (totalCompletedRuns + totalIncompletedRuns)
   ///
   /// Also alerts the user about the study Completion Status.
-  func updateCompletionAdherence() {
+  func updateCompletionAdherence(with alert: Bool = true) {
 
     var totalRuns = 0
     var totalCompletedRuns = 0
@@ -574,8 +574,7 @@ class ActivitiesViewController: UIViewController {
       }
 
     }
-
-    if completion == 100 {
+    if completion == 100 && alert {
 
       if !(ud.bool(forKey: fullCompletionKey)) {
         let message =
@@ -620,8 +619,8 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// To update Activity Status To Complete.
-  func updateActivityStatusToComplete() {
-    self.updateActivityRun(status: .completed)
+  func updateActivityStatusToComplete(alert: Bool) {
+    self.updateActivityRun(status: .completed, alert: alert)
   }
 
   /// Schedules AD resources with activity response.
@@ -647,7 +646,7 @@ class ActivitiesViewController: UIViewController {
   }
 
   /// Save completed staus in database.
-  func updateRunStatusToComplete() {
+  func updateRunStatusToComplete(with alert: Bool = true) {
     guard let currentActivity = Study.currentActivity,
       let activityID = currentActivity.actvityId,
       let studyID = currentActivity.studyId
@@ -659,7 +658,7 @@ class ActivitiesViewController: UIViewController {
       activityId: activityID,
       studyId: studyID
     )
-    self.updateActivityStatusToComplete()
+    self.updateActivityStatusToComplete(alert: alert)
     let activityResponse = self.lastActivityResponse ?? [:]
     lastActivityResponse = [:]
     let isActivitylifeTimeUpdated = DBHandler.updateTargetActivityAnchorDateDetail(
@@ -1050,7 +1049,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
 
     } else if requestName as String == ResponseMethods.processResponse.method.methodName {
       self.removeProgressIndicator()
-      self.updateRunStatusToComplete()
+      self.updateRunStatusToComplete(with: false)
       self.checkForActivitiesUpdates()
 
     } else if requestName as String == WCPMethods.studyUpdates.method.methodName {
@@ -1120,7 +1119,7 @@ extension ActivitiesViewController: NMWebServiceDelegate {
       }
     case ResponseMethods.processResponse.method.methodName:
       if error.code == kNoNetworkErrorCode {
-        self.updateRunStatusToComplete()
+        self.updateRunStatusToComplete(with: false)
       } else {
         self.lastActivityResponse = nil
       }
