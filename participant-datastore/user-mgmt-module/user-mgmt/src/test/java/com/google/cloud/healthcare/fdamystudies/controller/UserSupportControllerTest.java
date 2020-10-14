@@ -79,8 +79,6 @@ public class UserSupportControllerTest extends BaseMockIT {
 
     verifyMimeMessage(appConfig.getFeedbackToEmail(), appConfig.getFromEmail(), subject, body);
 
-    verifyTokenIntrospectRequest(1);
-
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
 
@@ -123,8 +121,6 @@ public class UserSupportControllerTest extends BaseMockIT {
             appConfig.getContactusMailBody(), templateArgs);
 
     verifyMimeMessage(appConfig.getContactusToEmail(), appConfig.getFromEmail(), subject, body);
-
-    verifyTokenIntrospectRequest(1);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
