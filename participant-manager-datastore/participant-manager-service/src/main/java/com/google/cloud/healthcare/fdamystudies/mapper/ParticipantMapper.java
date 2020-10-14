@@ -39,14 +39,27 @@ public final class ParticipantMapper {
     ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setId(participantStudy.getId());
     participantDetail.setEnrollmentStatus(participantStudy.getStatus());
-    participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());
-    participantDetail.setSiteId(participantStudy.getSite().getId());
-    participantDetail.setCustomLocationId(participantStudy.getSite().getLocation().getCustomId());
-    participantDetail.setLocationName(participantStudy.getSite().getLocation().getName());
 
-    String invitedDate =
-        DateTimeUtils.format(participantStudy.getParticipantRegistrySite().getInvitationDate());
-    participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    if (participantStudy.getSite() != null) {
+      participantDetail.setSiteId(participantStudy.getSite().getId());
+      participantDetail.setCustomLocationId(participantStudy.getSite().getLocation().getCustomId());
+      participantDetail.setLocationName(participantStudy.getSite().getLocation().getName());
+    }
+    if (participantStudy.getParticipantRegistrySite() != null) {
+      if (participantStudy.getParticipantRegistrySite().getEmail() != null) {
+        participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());
+      }
+      String onboardingStatusCode =
+          participantStudy.getParticipantRegistrySite().getOnboardingStatus();
+      onboardingStatusCode =
+          StringUtils.defaultString(onboardingStatusCode, OnboardingStatus.DISABLED.getCode());
+      participantDetail.setOnboardingStatus(
+          OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
+
+      String invitedDate =
+          DateTimeUtils.format(participantStudy.getParticipantRegistrySite().getInvitationDate());
+      participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    }
 
     String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
     participantDetail.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));

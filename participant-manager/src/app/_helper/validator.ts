@@ -20,7 +20,9 @@ export function passwordValidator(): ValidatorFn {
     const specialCharsPattern = /^[\w&.-]+$/;
 
     const value = control.value as string;
-    if (
+    if (control.value === '') {
+      return {emptyError: true};
+    } else if (
       value.length < 8 ||
       value.length > 64 ||
       !uppercasePattern.test(control.value) ||
