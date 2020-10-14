@@ -25,7 +25,6 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 import com.harvard.R;
 import com.harvard.studyappmodule.activitybuilder.model.servicemodel.ActivityInfoData;
-import com.harvard.usermodule.webservicemodel.RefreshToken;
 import com.harvard.usermodule.webservicemodel.TokenData;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
