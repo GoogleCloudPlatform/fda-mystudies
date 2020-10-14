@@ -63,9 +63,9 @@ import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
 import com.google.cloud.healthcare.fdamystudies.dao.CloudFirestoreResponsesDaoImpl;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
-import com.google.cloud.healthcare.fdamystudies.repository.ParticipantBoRepository;
-import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesBo;
-import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantInfoRepository;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesEntity;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.utils.Constants;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
@@ -90,9 +90,9 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
 
   @Autowired private TestDataHelper testDataHelper;
 
-  @Autowired private ParticipantBoRepository participantBoRepository;
+  @Autowired private ParticipantInfoRepository participantBoRepository;
 
-  private ParticipantBo participantBo;
+  private ParticipantInfoEntity participantBo;
 
   @MockBean private CloudFirestoreResponsesDaoImpl responsesDaoMock;
 
@@ -115,7 +115,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   @Test
   public void shouldSaveProcessActivityResponse() throws Exception {
     Map<String, Object> dataToStore = new HashMap<>();
-    dataToStore.put(PARTICIPANT_ID_KEY, participantBo.getParticipantIdentifier());
+    dataToStore.put(PARTICIPANT_ID_KEY, participantBo.getParticipantId());
 
     // Step-1 saveActivityResponseData
     doNothing()
@@ -140,9 +140,9 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message", is(SUCCESS)));
 
     // Step-3: verify saved values
-    List<ParticipantActivitiesBo> participantActivitiesList =
+    List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
-            STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_ID_VALUE, participantBo.getParticipantId());
 
     assertNotNull(participantActivitiesList);
     assertEquals(1, participantActivitiesList.size());
@@ -159,7 +159,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
         getRequestedFor(
             urlEqualTo(
                 "/participant-enroll-datastore/participantInfo?studyId=ASignature01&participantId="
-                    + participantBo.getParticipantIdentifier())));
+                    + participantBo.getParticipantId())));
 
     verify(
         1,
@@ -173,8 +173,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(ACTIVITY_COLLECTION_NAME_VALUE, activityCollectionNameCaptor.getValue());
     assertEquals(
-        participantBo.getParticipantIdentifier(),
-        dataToStoreCaptor.getValue().get(PARTICIPANT_ID_KEY));
+        participantBo.getParticipantId(), dataToStoreCaptor.getValue().get(PARTICIPANT_ID_KEY));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(activityResponseBean.getMetadata().getStudyId());
@@ -258,7 +257,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             STUDY_COLLECTION_NAME_VALUE,
             STUDY_ID_VALUE,
             SITE_ID_VALUE,
-            participantBo.getParticipantIdentifier(),
+            participantBo.getParticipantId(),
             ACTIVITY_ID_VALUE,
             QUESTION_KEY_VALUE))
         .thenReturn(storedResponseBean);
@@ -274,9 +273,8 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                     .queryParam("appId", "appId")
                     .queryParam("studyId", STUDY_ID_VALUE)
                     .queryParam("siteId", SITE_ID_VALUE)
-                    .queryParam("participantId", participantBo.getParticipantIdentifier())
-                    .queryParam(
-                        PARTICIPANT_TOKEN_IDENTIFIER_KEY, participantBo.getTokenIdentifier())
+                    .queryParam("participantId", participantBo.getParticipantId())
+                    .queryParam(PARTICIPANT_TOKEN_IDENTIFIER_KEY, participantBo.getTokenId())
                     .queryParam("activityId", ACTIVITY_ID_VALUE)
                     .queryParam("questionKey", QUESTION_KEY_VALUE))
             .andDo(print())
@@ -299,7 +297,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
     assertEquals(SITE_ID_VALUE, siteIdCaptor.getValue());
-    assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+    assertEquals(participantBo.getParticipantId(), participantIdCaptor.getValue());
     assertEquals(ACTIVITY_ID_VALUE, activityIdCaptor.getValue());
     assertEquals(QUESTION_KEY_VALUE, questionKeyCaptor.getValue());
 
@@ -308,7 +306,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     auditRequest.setAppId("appId");
     auditRequest.setSiteId(SITE_ID_VALUE);
     auditRequest.setStudyId(STUDY_ID_VALUE);
-    auditRequest.setParticipantId(participantBo.getParticipantIdentifier());
+    auditRequest.setParticipantId(participantBo.getParticipantId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(READ_OPERATION_FOR_RESPONSE_DATA_SUCCEEDED.getEventCode(), auditRequest);
@@ -342,7 +340,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     doNothing()
         .when(responsesDaoMock)
         .updateWithdrawalStatusForParticipant(
-            STUDY_COLLECTION_NAME_VALUE, STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_COLLECTION_NAME_VALUE, STUDY_ID_VALUE, participantBo.getParticipantId());
 
     // Step-2 call API to update withdraw status of participant from study
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
@@ -355,16 +353,16 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers)
                 .queryParam("deleteResponses", "")
-                .queryParam("participantId", participantBo.getParticipantIdentifier())
+                .queryParam("participantId", participantBo.getParticipantId())
                 .queryParam("studyId", STUDY_ID_VALUE))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(SUCCESS)));
 
     // Step 3: verify deleted values
-    List<ParticipantActivitiesBo> participantActivitiesList =
+    List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
-            STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_ID_VALUE, participantBo.getParticipantId());
     assertTrue(participantActivitiesList.isEmpty());
 
     verify(responsesDaoMock)
@@ -376,12 +374,12 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     // Step 4: assert argument capture
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
-    assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+    assertEquals(participantBo.getParticipantId(), participantIdCaptor.getValue());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(VALID_USER_ID);
     auditRequest.setStudyId(STUDY_ID_VALUE);
-    auditRequest.setParticipantId(participantBo.getParticipantIdentifier());
+    auditRequest.setParticipantId(participantBo.getParticipantId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
     auditEventMap.put(
@@ -405,7 +403,7 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
             STUDY_COLLECTION_NAME_VALUE,
             STUDY_ID_VALUE,
             ACTIVITY_COLLECTION_NAME_VALUE,
-            participantBo.getParticipantIdentifier());
+            participantBo.getParticipantId());
 
     // Step-2 call API to delete participant from study
     ActivityResponseBean activityResponseBean = setActivityResponseBean();
@@ -418,16 +416,16 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
                 .content(JsonUtils.asJsonString(activityResponseBean))
                 .headers(headers)
                 .queryParam("deleteResponses", "true")
-                .queryParam("participantId", participantBo.getParticipantIdentifier())
+                .queryParam("participantId", participantBo.getParticipantId())
                 .queryParam("studyId", STUDY_ID_VALUE))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.message", is(SUCCESS)));
 
     // Step 3: verify deleted values
-    List<ParticipantActivitiesBo> participantActivitiesList =
+    List<ParticipantActivitiesEntity> participantActivitiesList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(
-            STUDY_ID_VALUE, participantBo.getParticipantIdentifier());
+            STUDY_ID_VALUE, participantBo.getParticipantId());
     assertTrue(participantActivitiesList.isEmpty());
 
     verify(responsesDaoMock)
@@ -441,11 +439,11 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
     assertEquals(STUDY_COLLECTION_NAME_VALUE, studyCollectionNameCaptor.getValue());
     assertEquals(STUDY_ID_VALUE, studyIdCaptor.getValue());
     assertEquals(ACTIVITY_COLLECTION_NAME_VALUE, activityCollectionNameCaptor.getValue());
-    assertEquals(participantBo.getParticipantIdentifier(), participantIdCaptor.getValue());
+    assertEquals(participantBo.getParticipantId(), participantIdCaptor.getValue());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setStudyId(STUDY_ID_VALUE);
-    auditRequest.setParticipantId(participantBo.getParticipantIdentifier());
+    auditRequest.setParticipantId(participantBo.getParticipantId());
     auditRequest.setUserId(VALID_USER_ID);
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
@@ -483,12 +481,12 @@ public class ProcessActivityResponseControllerTest extends BaseMockIT {
   private ActivityResponseBean setActivityResponseBean() {
     ActivityResponseBean activityResponseBean = new ActivityResponseBean();
     activityResponseBean.setApplicationId("UNCSTAND001");
-    activityResponseBean.setParticipantId(participantBo.getParticipantIdentifier());
+    activityResponseBean.setParticipantId(participantBo.getParticipantId());
     activityResponseBean.getMetadata().setActivityId(ACTIVITY_ID_VALUE);
     activityResponseBean.getMetadata().setVersion("1.0");
     activityResponseBean.getMetadata().setStudyId(STUDY_ID_VALUE);
     activityResponseBean.setType("questionnaire");
-    activityResponseBean.setTokenIdentifier(participantBo.getTokenIdentifier());
+    activityResponseBean.setTokenIdentifier(participantBo.getTokenId());
     return activityResponseBean;
   }
 }
