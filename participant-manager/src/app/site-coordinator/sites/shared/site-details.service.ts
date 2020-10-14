@@ -13,6 +13,7 @@ import {
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {OnboardingStatus} from 'src/app/shared/enums';
 import {skip} from 'rxjs/operators';
+import {ImportParticipantEmailResponse} from './import-particpants';
 @Injectable({
   providedIn: 'root',
 })
@@ -98,11 +99,11 @@ export class SiteDetailsService {
   importParticipants(
     siteId: string,
     formData: FormData,
-  ): Observable<ApiResponse> {
+  ): Observable<ImportParticipantEmailResponse> {
     // const httpOptionsForUpload = {
     //   headers: new HttpHeaders().set(skip, true),
     // };
-    return this.http.post<ApiResponse>(
+    return this.http.post<ImportParticipantEmailResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(
         siteId,
       )}/participants/import`,

@@ -1,6 +1,6 @@
 import {Component, Output, Input, EventEmitter} from '@angular/core';
 import {SiteDetailsService} from '../shared/site-details.service';
-import {ApiResponse} from 'src/app/entity/api.response.model';
+import {ImportParticipantEmailResponse} from '../shared/import-particpants';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {ToastrService} from 'ngx-toastr';
@@ -12,10 +12,13 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
-  @Output() import = new EventEmitter();
+  @Output() import: EventEmitter<
+    ImportParticipantEmailResponse
+  > = new EventEmitter<ImportParticipantEmailResponse>();
   @Input() siteIdImportEmail = '';
   fileName = '';
   file?: File;
+  newlyimportedEmails: string[] = [];
   constructor(
     private readonly siteDetailsService: SiteDetailsService,
     private readonly toastr: ToastrService,
@@ -40,13 +43,14 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
       this.siteDetailsService
         .importParticipants(this.siteIdImportEmail, formData)
         .subscribe(
-          (successResponse: ApiResponse) => {
+          (successResponse: ImportParticipantEmailResponse) => {
+            console.log(successResponse);
             if (getMessage(successResponse.code)) {
               this.toastr.success(getMessage(successResponse.code));
             } else {
               this.toastr.success(successResponse.message);
             }
-            this.import.emit();
+            this.import.emit(successResponse);
           },
           (error) => {
             this.toastr.error(error);

@@ -13,6 +13,10 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {OnboardingStatus} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
+import {
+  ImportParticipantEmailResponse,
+  Participant,
+} from '../shared/import-particpants';
 const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
@@ -34,7 +38,7 @@ export class SiteDetailsComponent
   userIds: string[] = [];
   onBoardingStatus = OnboardingStatus;
   activeTab = OnboardingStatus.All;
-
+  newlyImportedParticipants: Participant[] = [];
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -47,10 +51,8 @@ export class SiteDetailsComponent
     super();
   }
   openModal(templateRef: TemplateRef<unknown>, importType: string): void {
-    console.log(importType);
     if (importType === 'addEmail') {
       this.siteIdAddEmail = this.siteId;
-      console.log(this.siteIdAddEmail);
     } else {
       this.siteIdImportEmail = this.siteId;
     }
@@ -81,6 +83,20 @@ export class SiteDetailsComponent
         this.siteDetailsBackup = JSON.parse(
           JSON.stringify(siteDetails),
         ) as SiteParticipants;
+
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants.map(
+          (participant) => {
+            const result = this.newlyImportedParticipants.filter(
+              (newlyVreatedEmails) =>
+                newlyVreatedEmails.email === participant.email,
+            );
+            if (result.length > 0) {
+              participant.newlyCreatedUser = true;
+            }
+            return participant;
+          },
+        );
+
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),
@@ -194,8 +210,8 @@ export class SiteDetailsComponent
     this.changeTab(OnboardingStatus.New);
   }
 
-  onFileImportSuccess(): void {
-    this.siteIdImportEmail = '';
+  onFileImportSuccess(event: ImportParticipantEmailResponse): void {
+    this.newlyImportedParticipants = event.participants;
     this.modalRef.hide();
     this.changeTab(OnboardingStatus.New);
   }

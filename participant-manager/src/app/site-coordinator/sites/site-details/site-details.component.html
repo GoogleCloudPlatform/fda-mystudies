@@ -434,7 +434,8 @@
                       <input
                         type="checkbox"
                         id="{{ participant.id }}"
-                        (change)="rowCheckBoxChange($event)"
+                        [checked]="participant.newlyCreatedUser"
+                         (change)="rowCheckBoxChange($event)"
                       />
                       <label for="{{ participant.id }}">
                         <span
@@ -573,7 +574,7 @@
         ></app-add-email>
         <app-import-email-list
           [siteIdImportEmail]="siteIdImportEmail"
-          (import)="onFileImportSuccess()"
+          (import)="onFileImportSuccess($event)"
           (cancel)="cancel()"
         ></app-import-email-list>
       </div>
