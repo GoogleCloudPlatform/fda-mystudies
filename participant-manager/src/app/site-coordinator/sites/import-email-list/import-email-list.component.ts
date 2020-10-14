@@ -18,7 +18,7 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Input() siteIdImportEmail = '';
   fileName = '';
   file?: File;
-  newlyimportedEmails: string[] = [];
+
   constructor(
     private readonly siteDetailsService: SiteDetailsService,
     private readonly toastr: ToastrService,

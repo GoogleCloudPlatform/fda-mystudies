@@ -569,7 +569,7 @@
       <div class="modal-body modal__body">
         <app-add-email
           [siteIdAddEmail]="siteIdAddEmail"
-          (addEmail)="onSucceedAddEmail()"
+          (addEmail)="onSucceedAddEmail($event)"
           (cancel)="cancel()"
         ></app-add-email>
         <app-import-email-list

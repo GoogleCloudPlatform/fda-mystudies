@@ -204,16 +204,31 @@ export class SiteDetailsComponent
     }
   }
 
-  onSucceedAddEmail(): void {
+  onSucceedAddEmail(event: Participant[]): void {
+    this.newlyImportedParticipants = event;
+    this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
+      this.userIds.push(newlyCreatedparticpants.id),
+    );
     this.siteIdAddEmail = '';
     this.modalRef.hide();
-    this.changeTab(OnboardingStatus.New);
+    this.sendResend = 'Send Invitation';
+    this.enableDisable = 'Disable Invitation';
+    this.activeTab = OnboardingStatus.New;
+    this.toggleDisplay = false;
+    this.fetchSiteParticipant(OnboardingStatus.New);
   }
 
   onFileImportSuccess(event: ImportParticipantEmailResponse): void {
     this.newlyImportedParticipants = event.participants;
+    this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
+      this.userIds.push(newlyCreatedparticpants.id),
+    );
     this.modalRef.hide();
-    this.changeTab(OnboardingStatus.New);
+    this.sendResend = 'Send Invitation';
+    this.enableDisable = 'Disable Invitation';
+    this.activeTab = OnboardingStatus.New;
+    this.toggleDisplay = false;
+    this.fetchSiteParticipant(OnboardingStatus.New);
   }
   cancel(): void {
     this.siteIdAddEmail = '';
