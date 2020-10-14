@@ -62,11 +62,11 @@ spec:
               value: "smtp.gmail.com"
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445/hydra"
+              value: "http://hydra-np:4445"
             - name: HYDRA_PUBLIC_URL
-              value: "http://hydra-np:4444/hydra"
+              value: "http://hydra-np:4444"
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000/oauth-scim-module"
+              value: "http://auth-server-np:50000"
             # MISC
             - name: LOG_PATH
               valueFrom:

@@ -49,9 +49,9 @@ spec:
                   key: secret_key
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445/hydra"
+              value: "http://hydra-np:4445"
             - name: RESPONSE_DATASTORE_URL
-              value: "http://response-datastore-np:50000/response-datastore"
+              value: "http://response-datastore-np:50000"
             # MISC
             - name: LOG_PATH
               valueFrom:

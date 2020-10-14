@@ -49,7 +49,7 @@ spec:
                   key: secret_key
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445/hydra"
+              value: "http://hydra-np:4445"
             # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:

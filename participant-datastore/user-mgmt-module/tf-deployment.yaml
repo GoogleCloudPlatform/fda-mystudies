@@ -83,9 +83,9 @@ spec:
               value: "production"
             # SERVER CALLS
             - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000/oauth-scim-module"
+              value: "http://auth-server-np:50000"
             - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445/hydra"
+              value: "http://hydra-np:4445"
             # MISC
             - name: ORG_NAME
               valueFrom:
