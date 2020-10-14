@@ -8,9 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_SEND_FAILED_EXCEPTION;
-import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_ALREADY_EXISTS;
-
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EmailRequest;
@@ -49,6 +46,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.EMAIL_SEND_FAILED_EXCEPTION;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_ALREADY_EXISTS;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService {
@@ -124,7 +124,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     userDetails = userDetailsRepository.saveAndFlush(userDetails);
 
     auditRequest.setUserId(userDetails.getUserId());
-    userMgmntAuditHelper.logEvent(UserMgmntEvent.USER_CREATED, auditRequest);
+    userMgmntAuditHelper.logEvent(UserMgmntEvent.REGISTRATION_SUCCEEDED, auditRequest);
 
     // generate save and email the verification code
     userDetails = generateAndSaveVerificationCode(userDetails);
