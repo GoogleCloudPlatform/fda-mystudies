@@ -22,8 +22,8 @@ import {Router} from '@angular/router';
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private readonly refreshTokenSubject: BehaviorSubject<
-    unknown
-  > = new BehaviorSubject<unknown>(null);
+    null
+  > = new BehaviorSubject<null>(null);
   constructor(
     private readonly spinner: NgxSpinnerService,
     private readonly toasterService: ToastrService,
@@ -66,21 +66,21 @@ export class AuthInterceptor implements HttpInterceptor {
           authServerResponse.refresh_token,
         );
         return next.handle(this.setHeaders(request)).pipe(
-          catchError((error) => {
+          catchError((error: unknown) => {
             return throwError(error);
           }),
         );
       },
-      (error) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const customError = error.error as ApiResponse;
-        if (getMessage(customError.error_code)) {
-          this.toasterService.error(getMessage(customError.error_code));
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (error.status === 401) {
-          sessionStorage.clear();
-          void this.router.navigate(['/']);
+      (error: unknown) => {
+        if (error instanceof HttpErrorResponse) {
+          const customError = error.error as ApiResponse;
+          if (getMessage(customError.error_code)) {
+            this.toasterService.error(getMessage(customError.error_code));
+          }
+          if (error.status === 401) {
+            sessionStorage.clear();
+            void this.router.navigate(['/']);
+          }
         }
       },
     );
@@ -135,7 +135,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return catchError(
       (err: unknown): Observable<T> => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status === 401) {
+          if (err.status === 401 || err.status === 500) {
             this.handle401Error(request, next);
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
