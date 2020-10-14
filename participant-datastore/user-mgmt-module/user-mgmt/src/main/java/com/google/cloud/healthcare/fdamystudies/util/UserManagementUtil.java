@@ -114,6 +114,7 @@ public class UserManagementUtil {
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.set(AppConstants.APPLICATION_ID, null);
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
     request = new HttpEntity<>(null, headers);
 
