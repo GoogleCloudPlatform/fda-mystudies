@@ -74,9 +74,11 @@ resource "random_password" "system_secrets" {
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  version = "~> 9.1.0"
 
   name                    = "example-dev-secrets"
   org_id                  = ""

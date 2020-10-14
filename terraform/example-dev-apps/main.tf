@@ -68,9 +68,11 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
-  source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
+  version = "~> 9.1.0"
 
   name                    = "example-dev-apps"
   org_id                  = ""
@@ -165,7 +167,7 @@ module "example_dev" {
 
 module "example_dev_gke_cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
-  version = "~> 10.0.0"
+  version = "~> 11.1.0"
 
   # Required.
   name               = "example-dev-gke-cluster"
@@ -189,6 +191,7 @@ module "example_dev_gke_cluster" {
   skip_provisioners       = true
   enable_private_endpoint = false
   release_channel         = "STABLE"
+
 }
 
 resource "google_service_account" "auth_server_gke_sa" {
