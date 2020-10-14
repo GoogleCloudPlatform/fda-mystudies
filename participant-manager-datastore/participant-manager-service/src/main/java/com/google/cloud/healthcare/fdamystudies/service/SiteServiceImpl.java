@@ -155,8 +155,6 @@ public class SiteServiceImpl implements SiteService {
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
 
-  @Autowired private UserRegAdminRepository userRegAdminRepository;
-
   @Autowired private StudyConsentRepository studyConsentRepository;
 
   @Autowired private AppPropertyConfig appPropertyConfig;
