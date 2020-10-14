@@ -16,6 +16,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetailRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DateTimeUtils;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -38,7 +39,12 @@ public final class ParticipantMapper {
   public static ParticipantDetail fromParticipantStudy(ParticipantStudyEntity participantStudy) {
     ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setId(participantStudy.getId());
-    participantDetail.setEnrollmentStatus(participantStudy.getStatus());
+
+    if (participantStudy.getStatus().equalsIgnoreCase(EnrollmentStatus.IN_PROGRESS.getStatus())) {
+      participantDetail.setEnrollmentStatus(EnrollmentStatus.ENROLLED.getStatus());
+    } else {
+      participantDetail.setEnrollmentStatus(participantStudy.getStatus());
+    }
 
     if (participantStudy.getSite() != null) {
       participantDetail.setSiteId(participantStudy.getSite().getId());
@@ -49,6 +55,7 @@ public final class ParticipantMapper {
       if (participantStudy.getParticipantRegistrySite().getEmail() != null) {
         participantDetail.setEmail(participantStudy.getParticipantRegistrySite().getEmail());
       }
+
       String onboardingStatusCode =
           participantStudy.getParticipantRegistrySite().getOnboardingStatus();
       onboardingStatusCode =
