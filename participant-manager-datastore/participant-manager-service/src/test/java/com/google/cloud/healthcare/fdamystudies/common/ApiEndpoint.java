@@ -37,14 +37,16 @@ public enum ApiEndpoint {
   ADD_NEW_PARTICIPANT(
       "http://localhost:8080/participant-manager-datastore/sites/{siteId}/participants"),
 
-  DECOMISSION_SITE("http://localhost:8080/participant-manager-datastore/sites/{siteId}/decommission"),
+  DECOMISSION_SITE(
+      "http://localhost:8080/participant-manager-datastore/sites/{siteId}/decommission"),
 
   GET_LOCATIONS("http://localhost:8003/participant-manager-datastore/locations"),
 
   GET_LOCATION_BY_LOCATION_ID(
       "http://localhost:8003/participant-manager-datastore/locations/{locationId}"),
 
-  GET_APP_PARTICIPANTS("http://localhost:8080/participant-manager-datastore/apps/{app}/participants"),
+  GET_APP_PARTICIPANTS(
+      "http://localhost:8080/participant-manager-datastore/apps/{app}/participants"),
 
   ADD_NEW_USER("http://localhost:8003/participant-manager-datastore/users"),
 
