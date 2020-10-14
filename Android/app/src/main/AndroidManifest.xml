@@ -379,7 +379,7 @@
 
         <provider
             android:name=".offlinemodule.auth.StubContentProvider"
-            android:authorities="com.harvard.fda.offlineModule.auth.syncadapterexample.provider"
+            android:authorities="@string/sync_provider"
             android:exported="false"
             android:syncable="true"
             tools:replace="android:authorities" />
