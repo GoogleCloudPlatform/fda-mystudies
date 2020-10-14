@@ -20,6 +20,7 @@ spec:
         - name: participant-consent-datastore
           image: gcr.io/fda-mystudies-dev-apps/participant-consent-datastore:latest
           env:
+            - # DB ACCESS
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
@@ -35,23 +36,28 @@ spec:
                 secretKeyRef:
                   name: participant-consent-datastore-db-credentials
                   key: dbname
-            - name: CONSENT_MGMT_CLIENT_ID
+            # AUTHENTICATION
+            - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: participant-consent-datastore-secrets
-                  key: CLIENT_ID
-            - name: CONSENT_MGMT_CLIENT_SECRET
+                  key: client_id
+            - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: participant-consent-datastore-secrets
-                  key: SECRET_KEY
+                  key: secret_key
+            # SERVER CALLS
+            - name: HYDRA_ADMIN_URL
+              value: "http://hydra-np:4445/hydra"
+            # MISC
             - name: GCP_BUCKET_NAME
               valueFrom:
                 secretKeyRef:
                   name: participant-consent-datastore-secrets
-                  key: GCP_BUCKET_NAME
-            - name: HYDRA_ADMIN_URL
-              value: "hydra:4445"
+                  key: gcp_bucket_name
+            - name: LOG_PATH
+              value: ""
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
