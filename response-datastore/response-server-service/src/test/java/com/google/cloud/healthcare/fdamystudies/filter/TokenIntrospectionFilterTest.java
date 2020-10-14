@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +53,6 @@ public class TokenIntrospectionFilterTest extends BaseMockIT {
     mockMvc
         .perform(get(apiEnum.getPath()).contextPath(getContextPath()).headers(getCommonHeaders()))
         .andDo(print());
-
     verifyTokenIntrospectRequest(1);
   }
 
@@ -61,6 +61,7 @@ public class TokenIntrospectionFilterTest extends BaseMockIT {
     headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
     return headers;
   }
 }
