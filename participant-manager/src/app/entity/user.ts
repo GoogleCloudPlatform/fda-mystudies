@@ -46,7 +46,7 @@ export interface User extends ApiResponse {
 
   apps: App[];
 
-  manageLocationsSelected: boolean;
+  manageLocationsSelected?: boolean;
 }
 
 export interface SetUpUser {
