@@ -30,9 +30,9 @@ public final class PasswordGenerator {
 
     StringBuilder password = new StringBuilder();
     password
-        .append(builder.withinRange(48, 57).build().generate(count)) // numbers
-        .append(builder.withinRange(65, 90).build().generate(count + extra)) // upper case letters
-        .append(builder.withinRange(97, 122).build().generate(count)) // lower case letters
+        .append(builder.withinRange('0', '9').build().generate(count))
+        .append(builder.withinRange('A', 'Z').build().generate(count + extra))
+        .append(builder.withinRange('a', 'z').build().generate(count))
         .append(builder.selectFrom(SPECIAL_CHARS.toCharArray()).build().generate(count));
 
     List<Character> passwordChars =
