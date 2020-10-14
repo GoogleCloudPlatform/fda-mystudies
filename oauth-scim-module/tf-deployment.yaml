@@ -69,7 +69,10 @@ spec:
               value: "http://auth-server-np:50000/oauth-scim-module"
             # MISC
             - name: LOG_PATH
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:

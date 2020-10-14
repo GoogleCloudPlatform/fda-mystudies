@@ -78,7 +78,7 @@ spec:
                   key: secret_key
             # PUSH NOTIFICATIONS
             - name: FCM_API_URL
-                value: ""
+              value: ""
             - name: IOS_NOTIFICATION_TYPE
               value: "production"
             # SERVER CALLS
@@ -88,13 +88,19 @@ spec:
               value: "http://hydra-np:4445/hydra"
             # MISC
             - name: ORG_NAME
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: org_name
             - name: LOG_PATH
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
             - name: INSTITUTION_RESOURCES_BUCKET_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-secrets
+                  name: shared-secrets
                   key: institution_resources_bucket_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"

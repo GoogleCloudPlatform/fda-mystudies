@@ -54,10 +54,13 @@ spec:
             - name: GCP_BUCKET_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-consent-datastore-secrets
+                  name: shared-secrets
                   key: gcp_bucket_name
             - name: LOG_PATH
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
