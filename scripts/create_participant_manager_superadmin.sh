@@ -19,8 +19,7 @@ DATA_PROJECT=${PREFIX}-${ENV}-data
 SQL_IMPORT_BUCKET=${PREFIX}-${ENV}-mystudies-sql-import
 
 SALT=`printf "%s" uuidgen | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
-CRYPT=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
-HASH=`printf "%s" $CRYPT | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
+HASH=`printf "%s%s" $SALT $PWD | iconv -t utf-8 | openssl dgst -sha512 | sed 's/^.* //'`
 DATE=`date -v +30d +"%F %T"`
 TIMESTAMP=`date -d "$DATE" +'%s.%3N'`
 
