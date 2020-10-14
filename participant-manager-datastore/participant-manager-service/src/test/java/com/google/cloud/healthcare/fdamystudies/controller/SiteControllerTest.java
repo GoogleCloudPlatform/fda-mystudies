@@ -288,7 +288,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description",
-                is(ErrorCode.CANNOT_ADD_SITE_FOR_DECOMMISSIONED_lOCATION.getDescription())));
+                is(ErrorCode.CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION.getDescription())));
 
     verifyTokenIntrospectRequest();
   }

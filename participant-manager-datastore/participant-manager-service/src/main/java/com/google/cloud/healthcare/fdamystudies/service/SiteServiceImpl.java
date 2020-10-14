@@ -180,7 +180,7 @@ public class SiteServiceImpl implements SiteService {
     if (!optLocation.isPresent()) {
       throw new ErrorCodeException(ErrorCode.LOCATION_NOT_FOUND);
     } else if (optLocation.get().getStatus().equals(INACTIVE_STATUS)) {
-      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_DECOMMISSIONED_lOCATION);
+      throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION);
     }
 
     Optional<StudyEntity> optStudyEntity = studyRepository.findById(siteRequest.getStudyId());
