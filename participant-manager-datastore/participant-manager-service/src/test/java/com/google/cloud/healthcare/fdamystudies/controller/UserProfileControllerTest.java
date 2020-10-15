@@ -415,6 +415,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect DEACTIVATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -450,6 +451,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect REACTIVATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -481,6 +483,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserNotFoundForDeactivateUser() throws Exception {
     // Step 2: Call the API and expect USER_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
     PatchUserRequest statusRequest = new PatchUserRequest();
     statusRequest.setStatus(UserStatus.ACTIVE.getValue());
 
