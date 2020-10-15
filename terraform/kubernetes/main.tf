@@ -155,8 +155,8 @@ resource "kubernetes_secret" "hydra_credentials" {
   }
 
   data = {
-    username      = data.google_secret_manager_secret_version.secrets["auto-hydra-db-user"].secret_data
-    password      = data.google_secret_manager_secret_version.secrets["auto-hydra-db-password"].secret_data
+    dbusername    = data.google_secret_manager_secret_version.secrets["auto-hydra-db-user"].secret_data
+    dbpassword    = data.google_secret_manager_secret_version.secrets["auto-hydra-db-password"].secret_data
     system_secret = data.google_secret_manager_secret_version.secrets["auto-hydra-system-secret"].secret_data
     dbname        = "hydra"
   }
