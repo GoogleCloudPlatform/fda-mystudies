@@ -78,11 +78,8 @@ export class AuthInterceptor implements HttpInterceptor {
         if (getMessage(customError.error_code)) {
           this.toasterService.error(getMessage(customError.error_code));
         }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (error.status === 401) {
           sessionStorage.clear();
           void this.router.navigate(['/']);
-        }
       },
     );
   }

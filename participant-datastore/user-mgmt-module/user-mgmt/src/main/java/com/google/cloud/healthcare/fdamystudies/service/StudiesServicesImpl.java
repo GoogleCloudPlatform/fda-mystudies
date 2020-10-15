@@ -88,7 +88,7 @@ public class StudiesServicesImpl implements StudiesServices {
       NotificationForm notificationForm, AuditLogEventRequest auditRequest) throws IOException {
     HashSet<String> studySet = new HashSet<>();
     HashSet<String> appSet = new HashSet<>();
-    Map<Integer, Map<String, JSONArray>> studiesMap = null;
+    Map<String, Map<String, JSONArray>> studiesMap = null;
     Map<Object, StudyEntity> studyInfobyStudyCustomId = new HashMap<>();
     Map<String, JSONArray> allDeviceTokens = new HashMap<>();
     Map<Object, AppEntity> appInfobyAppCustomId = new HashMap<>();
@@ -198,7 +198,7 @@ public class StudiesServicesImpl implements StudiesServices {
   }
 
   private PushNotificationResponse sendStudyLevelNotification(
-      Map<Integer, Map<String, JSONArray>> studiesMap,
+      Map<String, Map<String, JSONArray>> studiesMap,
       Map<Object, StudyEntity> studyInfobyStudyCustomId,
       Map<Object, AppEntity> appInfobyAppCustomId,
       NotificationBean notificationBean)
