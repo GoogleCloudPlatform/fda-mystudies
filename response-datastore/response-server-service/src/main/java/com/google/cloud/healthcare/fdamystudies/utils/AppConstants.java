@@ -31,8 +31,8 @@ public class AppConstants {
   // approach is a short-term workaround.
   public static final String DUMMY_SUM_QUESTION_KEY = "_SUM";
   public static final String FIELD_PATH_ACTIVITY_ID = "metadata.activityId";
-  public static final String PARTICIPANT_TOKEN_IDENTIFIER_KEY = "tokenIdentifier";
-  public static final String PARTICIPANT_IDENTIFIER_KEY = "participantIdentifier";
+  public static final String PARTICIPANT_TOKEN_IDENTIFIER_KEY = "tokenId";
+  public static final String PARTICIPANT_IDENTIFIER_KEY = "participantId";
   public static final String GROUPED_FIELD_KEY = "grouped";
   public static final Object DATA_FIELD_KEY = "data";
   public static final String RESULTS_FIELD_KEY = "results";
