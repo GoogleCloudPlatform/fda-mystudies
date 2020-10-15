@@ -940,9 +940,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
-      auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
 
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -1075,9 +1073,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     StudyBuilderAuditEvent eventEnum = null;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
-      auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
 
@@ -1256,9 +1252,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sessionObject.getSessionId());
       auditRequest.setStudyId(customStudyId);
-      auditRequest.setUserId(String.valueOf(sessionObject.getUserId()));
       values.put(QUESTION_ID, questionnaireId.toString());
       values.put(STEP_ID, stepId.toString());
       searchQuery =
