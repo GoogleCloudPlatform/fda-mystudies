@@ -12,10 +12,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
@@ -456,7 +455,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertEquals(expectedPasswordHash, actualPasswordHash);
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
@@ -549,9 +548,9 @@ public class UserControllerTest extends BaseMockIT {
     userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
     JsonNode userInfo = userEntity.getUserInfo();
     String rawSalt = salt();
-    String encrypted = encrypt(CURRENT_PASSWORD_VALUE, rawSalt);
+    String hashValue = hash(CURRENT_PASSWORD_VALUE, rawSalt);
     ObjectNode passwordNode = getObjectNode();
-    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(HASH, hashValue);
     passwordNode.put(SALT, rawSalt);
     passwordNode.put(EXPIRE_TIMESTAMP, Instant.now().plus(Duration.ofMinutes(15)).toEpochMilli());
     ((ObjectNode) userInfo).set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
@@ -674,7 +673,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
 
