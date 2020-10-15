@@ -13,7 +13,7 @@ import {
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {OnboardingStatus} from 'src/app/shared/enums';
 import {skip} from 'rxjs/operators';
-import {ImportParticipantEmailResponse} from './import-particpants';
+import {ImportParticipantEmailResponse} from './import-participants';
 @Injectable({
   providedIn: 'root',
 })
@@ -108,7 +108,7 @@ export class SiteDetailsService {
         siteId,
       )}/participants/import`,
       formData,
-      {headers: {skip: 'true'}},
+      {headers: {skipIfUpload: 'true'}},
     );
   }
 }

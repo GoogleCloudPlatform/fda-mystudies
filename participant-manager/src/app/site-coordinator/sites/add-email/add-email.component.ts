@@ -1,10 +1,11 @@
 import {Component, EventEmitter, Output, Input} from '@angular/core';
 import {AddEmail, AddEmailResponse} from '../shared/add-email';
 import {SiteDetailsService} from '../shared/site-details.service';
+
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {ToastrService} from 'ngx-toastr';
-import {Participant} from '../shared/import-particpants';
+import {Participant} from '../shared/import-participants';
 @Component({
   selector: 'app-add-email',
   templateUrl: './add-email.component.html',
@@ -17,7 +18,7 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
   >();
   addParticipantEmail = {} as Participant;
   addparticipantEmailArray: Participant[] = [];
-  @Input() siteIdAddEmail = '';
+  @Input() siteId = '';
   model: AddEmail;
   constructor(
     private readonly siteDetailedService: SiteDetailsService,
@@ -30,7 +31,7 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
   addParticipant(): void {
     this.subs.add(
       this.siteDetailedService
-        .addParticipants(this.siteIdAddEmail, this.model)
+        .addParticipants(this.siteId, this.model)
         .subscribe(
           (successResponse: AddEmailResponse) => {
             this.addParticipantEmail.id = successResponse.participantId;
@@ -41,7 +42,6 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
             } else {
               this.toastr.success(successResponse.message);
             }
-            console.log(this.addparticipantEmailArray);
             this.addEmail.emit(this.addparticipantEmailArray);
           },
           (error) => {

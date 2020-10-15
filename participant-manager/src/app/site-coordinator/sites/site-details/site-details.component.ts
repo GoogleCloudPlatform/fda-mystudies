@@ -16,7 +16,7 @@ import {SearchService} from 'src/app/shared/search.service';
 import {
   ImportParticipantEmailResponse,
   Participant,
-} from '../shared/import-particpants';
+} from '../shared/import-participants';
 const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
@@ -30,8 +30,7 @@ export class SiteDetailsComponent
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
-  siteIdAddEmail = '';
-  siteIdImportEmail = '';
+
   sendResend = '';
   enableDisable = '';
   toggleDisplay = false;
@@ -50,16 +49,9 @@ export class SiteDetailsComponent
   ) {
     super();
   }
-  openModal(templateRef: TemplateRef<unknown>, importType: string): void {
-    if (importType === 'addEmail') {
-      this.siteIdAddEmail = this.siteId;
-    } else {
-      this.siteIdImportEmail = this.siteId;
-    }
-
+  openModal(templateRef: TemplateRef<unknown>): void {
     this.modalRef = this.modalService.show(templateRef);
   }
-
   ngOnInit(): void {
     this.sharedService.updateSearchPlaceHolder('Search Participant Email');
     this.subs.add(
@@ -129,7 +121,6 @@ export class SiteDetailsComponent
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
-
   decommissionSite(): void {
     this.subs.add(
       this.particpantDetailService
@@ -138,12 +129,12 @@ export class SiteDetailsComponent
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
-            this.toastr.success('success');
+            this.toastr.success(successResponse.message);
+            void this.router.navigate(['/coordinator/studies/sites']);
           }
         }),
     );
   }
-
   sendInvitation(): void {
     if (this.userIds.length > 0) {
       if (this.userIds.length > MAXIMUM_USER_COUNT) {
@@ -208,7 +199,6 @@ export class SiteDetailsComponent
     this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
       this.userIds.push(newlyCreatedparticpants.id),
     );
-    this.siteIdAddEmail = '';
     this.modalRef.hide();
     this.sendResend = 'Send Invitation';
     this.enableDisable = 'Disable Invitation';
@@ -228,10 +218,5 @@ export class SiteDetailsComponent
     this.activeTab = OnboardingStatus.New;
     this.toggleDisplay = false;
     this.fetchSiteParticipant(OnboardingStatus.New);
-  }
-  cancel(): void {
-    this.siteIdAddEmail = '';
-    this.siteIdImportEmail = '';
-    this.modalRef.hide();
   }
 }

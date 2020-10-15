@@ -1,9 +1,9 @@
 import {Component, Output, Input, EventEmitter} from '@angular/core';
 import {SiteDetailsService} from '../shared/site-details.service';
-import {ImportParticipantEmailResponse} from '../shared/import-particpants';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {ToastrService} from 'ngx-toastr';
+import {ImportParticipantEmailResponse} from '../shared/import-participants';
 
 @Component({
   selector: 'app-import-email-list',
@@ -15,10 +15,9 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Output() import: EventEmitter<
     ImportParticipantEmailResponse
   > = new EventEmitter<ImportParticipantEmailResponse>();
-  @Input() siteIdImportEmail = '';
+  @Input() siteId = '';
   fileName = '';
   file?: File;
-
   constructor(
     private readonly siteDetailsService: SiteDetailsService,
     private readonly toastr: ToastrService,
@@ -41,10 +40,9 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
       const formData = new FormData();
       formData.append('file', this.file, this.file.name);
       this.siteDetailsService
-        .importParticipants(this.siteIdImportEmail, formData)
+        .importParticipants(this.siteId, formData)
         .subscribe(
           (successResponse: ImportParticipantEmailResponse) => {
-            console.log(successResponse);
             if (getMessage(successResponse.code)) {
               this.toastr.success(getMessage(successResponse.code));
             } else {
