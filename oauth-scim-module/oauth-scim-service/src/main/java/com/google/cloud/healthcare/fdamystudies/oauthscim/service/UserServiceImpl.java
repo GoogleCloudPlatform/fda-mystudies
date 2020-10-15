@@ -201,6 +201,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optUserEntity.get();
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     if (userEntity.getStatus() == UserAccountStatus.PENDING_CONFIRMATION.getStatus()) {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_NOT_VERIFIED);
     }
@@ -209,12 +210,20 @@ public class UserServiceImpl implements UserService {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
     }
 
+    if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      JsonNode accountLockedPwdNode = userInfo.get(ACCOUNT_LOCKED_PASSWORD);
+      if (null != accountLockedPwdNode
+          && Instant.now().toEpochMilli()
+              < accountLockedPwdNode.get(EXPIRE_TIMESTAMP).longValue()) {
+        throw new ErrorCodeException(ErrorCode.ACCOUNT_LOCKED);
+      }
+    }
+
     Integer accountStatusBeforePasswordReset = userEntity.getStatus();
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-      ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
       setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
       userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
       userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
