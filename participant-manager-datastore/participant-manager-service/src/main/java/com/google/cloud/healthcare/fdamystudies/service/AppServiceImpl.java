@@ -86,6 +86,17 @@ public class AppServiceImpl implements AppService {
   public AppResponse getApps(String userId) {
     logger.entry("getApps(userId)");
 
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!(optUserRegAdminEntity.isPresent())) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      AppResponse appResponse = getAppsForSuperAdmin(optUserRegAdminEntity.get());
+      logger.exit(String.format("total apps for superadmin=%d", appResponse.getApps().size()));
+      return appResponse;
+    }
+
     List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
     if (CollectionUtils.isEmpty(appPermissions)) {
       throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
@@ -132,7 +143,63 @@ public class AppServiceImpl implements AppService {
         appIdbyUsersCount,
         sitePermissionByAppInfoAndStudyInfo,
         siteWithInvitedParticipantCountMap,
-        siteWithEnrolledParticipantCountMap);
+        siteWithEnrolledParticipantCountMap,
+        optUserRegAdminEntity.get());
+  }
+
+  private AppResponse getAppsForSuperAdmin(UserRegAdminEntity userRegAdminEntity) {
+    List<AppCount> appUsersCountList = userDetailsRepository.findAppUsersCount();
+    Map<String, AppCount> appUsersCountMap =
+        appUsersCountList
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
+    List<AppCount> studiesList = studyRepository.findAppStudiesCount();
+    Map<String, AppCount> appStudiesCountMap =
+        studiesList.stream().collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
+    List<AppCount> appInvitedCountList = appRepository.findInvitedCountByAppId();
+    Map<String, AppCount> appInvitedCountMap =
+        appInvitedCountList
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
+    List<AppCount> appEnrolledCountList = appRepository.findEnrolledCountByAppId();
+    Map<String, AppCount> appEnrolledCountMap =
+        appEnrolledCountList
+            .stream()
+            .collect(Collectors.toMap(AppCount::getAppId, Function.identity()));
+
+    List<AppEntity> apps = appRepository.findAll();
+    List<AppDetails> appDetailsList = new ArrayList<>();
+    for (AppEntity app : apps) {
+      AppDetails appDetails = AppMapper.toAppDetails(app);
+      appDetails.setAppUsersCount(appUsersCountMap.get(app.getId()).getCount());
+      appDetails.setStudiesCount(appStudiesCountMap.get(app.getId()).getCount());
+      appDetails.setPermission(Permission.EDIT.value());
+      Long enrolledCount = getCount(appEnrolledCountMap, app.getId());
+      Long invitedCount = getCount(appInvitedCountMap, app.getId());
+      appDetails.setEnrolledCount(enrolledCount);
+      appDetails.setInvitedCount(invitedCount);
+      double percentage = 0;
+      if (appDetails.getInvitedCount() != 0
+          && appDetails.getInvitedCount() >= appDetails.getEnrolledCount()) {
+        percentage =
+            (Double.valueOf(appDetails.getEnrolledCount()) * 100)
+                / Double.valueOf(appDetails.getInvitedCount());
+        appDetails.setEnrollmentPercentage(percentage);
+      }
+      appDetailsList.add(appDetails);
+    }
+    return new AppResponse(
+        MessageCode.GET_APPS_SUCCESS, appDetailsList, userRegAdminEntity.isSuperAdmin());
+  }
+
+  private Long getCount(Map<String, AppCount> map, String appId) {
+    if (map.containsKey(appId)) {
+      return map.get(appId).getCount();
+    }
+    return 0L;
   }
 
   private AppResponse prepareAppResponse(
@@ -142,7 +209,8 @@ public class AppServiceImpl implements AppService {
       Map<AppEntity, Map<StudyEntity, List<SitePermissionEntity>>>
           sitePermissionByAppInfoAndStudyInfo,
       Map<String, Long> siteWithInvitedParticipantCountMap,
-      Map<String, Long> siteWithEnrolledParticipantCountMap) {
+      Map<String, Long> siteWithEnrolledParticipantCountMap,
+      UserRegAdminEntity userRegAdminEntity) {
     List<AppDetails> apps = new ArrayList<>();
     for (Map.Entry<AppEntity, Map<StudyEntity, List<SitePermissionEntity>>> entry :
         sitePermissionByAppInfoAndStudyInfo.entrySet()) {
@@ -174,7 +242,11 @@ public class AppServiceImpl implements AppService {
         sitePermissions.stream().collect(Collectors.groupingBy(SitePermissionEntity::getStudy));
 
     AppResponse appResponse =
-        new AppResponse(MessageCode.GET_APPS_SUCCESS, apps, studyPermissionMap.size());
+        new AppResponse(
+            MessageCode.GET_APPS_SUCCESS,
+            apps,
+            studyPermissionMap.size(),
+            userRegAdminEntity.isSuperAdmin());
     logger.exit(String.format("total apps=%d", appResponse.getApps().size()));
     return appResponse;
   }
@@ -338,16 +410,23 @@ public class AppServiceImpl implements AppService {
   public AppParticipantsResponse getAppParticipants(
       String appId, String adminId, AuditLogEventRequest auditRequest) {
     logger.entry("getAppParticipants(appId, adminId)");
-    Optional<AppPermissionEntity> optAppPermissionEntity =
-        appPermissionRepository.findByUserIdAndAppId(adminId, appId);
-
-    if (!optAppPermissionEntity.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(adminId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    AppPermissionEntity appPermission = optAppPermissionEntity.get();
-
-    AppEntity app = appPermission.getApp();
+    AppEntity app = null;
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<AppEntity> optAppEntity = appRepository.findById(appId);
+      app = optAppEntity.orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_NOT_FOUND));
+    } else {
+      Optional<AppPermissionEntity> optAppPermissionEntity =
+          appPermissionRepository.findByUserIdAndAppId(adminId, appId);
+      app =
+          optAppPermissionEntity
+              .orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_PERMISSION_ACCESS_DENIED))
+              .getApp();
+    }
 
     List<UserDetailsEntity> userDetails = userDetailsRepository.findByAppId(app.getId());
     List<StudyEntity> studyEntity = studyRepository.findByAppId(app.getId());
