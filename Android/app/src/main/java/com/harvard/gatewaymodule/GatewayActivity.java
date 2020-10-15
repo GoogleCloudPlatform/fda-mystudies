@@ -57,6 +57,11 @@ public class GatewayActivity extends AppCompatActivity {
     setFont();
     bindEvents();
     setViewPagerView();
+
+    if (getIntent().getStringExtra("action") != null
+            && getIntent().getStringExtra("action").equalsIgnoreCase(AppController.loginCallback)) {
+      loadLogin();
+    }
   }
 
   @Override
@@ -99,23 +104,7 @@ public class GatewayActivity extends AppCompatActivity {
         new View.OnClickListener() {
           @Override
           public void onClick(View view) {
-            SharedPreferenceHelper.writePreference(
-                GatewayActivity.this, getString(R.string.loginflow), "Gateway");
-            SharedPreferenceHelper.writePreference(
-                GatewayActivity.this, getString(R.string.logintype), "signIn");
-            CustomTabsIntent customTabsIntent =
-                new CustomTabsIntent.Builder()
-                    .setToolbarColor(getResources().getColor(R.color.colorAccent))
-                    .setShowTitle(true)
-                    .setCloseButtonIcon(
-                        BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
-                    .setStartAnimations(
-                        GatewayActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
-                    .setExitAnimations(
-                        GatewayActivity.this, R.anim.slide_in_left, R.anim.slide_out_right)
-                    .build();
-            customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
-            startActivity(customTabsIntent.intent);
+            loadLogin();
           }
         });
 
@@ -182,5 +171,24 @@ public class GatewayActivity extends AppCompatActivity {
     if (requestCode == UPGRADE) {
       alertDialog.dismiss();
     }
+  }
+
+  private void loadLogin() {
+    SharedPreferenceHelper.writePreference(
+        GatewayActivity.this, getString(R.string.loginflow), "Gateway");
+    SharedPreferenceHelper.writePreference(
+        GatewayActivity.this, getString(R.string.logintype), "signIn");
+    CustomTabsIntent.Builder builder =
+        new CustomTabsIntent.Builder()
+            .setToolbarColor(getResources().getColor(R.color.colorAccent))
+            .setShowTitle(true)
+            .setCloseButtonIcon(
+                BitmapFactory.decodeResource(getResources(), R.drawable.backeligibility))
+            .setStartAnimations(GatewayActivity.this, R.anim.slide_in_right, R.anim.slide_out_left)
+            .setExitAnimations(GatewayActivity.this, R.anim.slide_in_left, R.anim.slide_out_right);
+
+    CustomTabsIntent customTabsIntent = builder.build();
+    customTabsIntent.intent.setData(Uri.parse(Urls.LOGIN_URL));
+    startActivity(customTabsIntent.intent);
   }
 }
