@@ -20,6 +20,7 @@ spec:
         - name: auth-server
           image: gcr.io/fda-mystudies-dev-apps/auth-server:latest
           env:
+            # DB ACCESS
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
@@ -35,6 +36,18 @@ spec:
                 secretKeyRef:
                   name: auth-server-db-credentials
                   key: dbname
+            # AUTHENTICATION
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: client_id
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-secrets
+                  key: secret_key
+            # MAIL SERVER
             - name: FROM_EMAIL_ADDRESS
               valueFrom:
                 secretKeyRef:
@@ -45,14 +58,23 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: "/secrets/gcloud_key/key.json"
             - name: SMTP_HOSTNAME
               value: "smtp.gmail.com"
-            - name: SMTP_USE_IP_WHITELIST
-              value: "false"
-            - name: FROM_EMAIL_DOMAIN
-              value: ""
+            # SERVER CALLS
+            - name: HYDRA_ADMIN_URL
+              value: "http://hydra-np:4445"
+            - name: HYDRA_PUBLIC_URL
+              value: "http://hydra-np:4444"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000"
+            # MISC
+            - name: LOG_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:

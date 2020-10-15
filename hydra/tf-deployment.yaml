@@ -43,8 +43,8 @@ spec:
         - name: BASE_URL
           valueFrom:
             secretKeyRef:
-              name: hydra-secrets
-              key: BASE_URL
+              name: shared-secrets
+              key: base_url
         ports:
         - containerPort: 4444 # public
         - containerPort: 4445 # admin
