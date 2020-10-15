@@ -52,11 +52,11 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: smtp_hostname
-            - name: SMTP_USE_IP_WHITELIST
+            - name: SMTP_USE_IP_ALLOWLIST
               valueFrom:
                 secretKeyRef:
                   name: email-credentials
-                  key: smtp_use_ip_whitelist
+                  key: smtp_use_ip_allowlist
             - name: FROM_EMAIL_DOMAIN
               valueFrom:
                 secretKeyRef:

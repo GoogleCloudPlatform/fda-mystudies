@@ -228,10 +228,90 @@ resource "google_secret_manager_secret" "manual_mystudies_smtp_hostname" {
 }
 
 
-resource "google_secret_manager_secret" "manual_mystudies_smtp_use_ip_whitelist" {
+resource "google_secret_manager_secret" "manual_mystudies_smtp_use_ip_allowlist" {
   provider = google-beta
 
-  secret_id = "manual-mystudies-smtp-use-ip-whitelist"
+  secret_id = "manual-mystudies-smtp-use-ip-allowlist"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_log_path" {
+  provider = google-beta
+
+  secret_id = "manual-log-path"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_org_name" {
+  provider = google-beta
+
+  secret_id = "manual-org-name"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_terms_url" {
+  provider = google-beta
+
+  secret_id = "manual-terms-url"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_privacy_url" {
+  provider = google-beta
+
+  secret_id = "manual-privacy-url"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_fcm_api_url" {
+  provider = google-beta
+
+  secret_id = "manual-fcm-api-url"
   project   = module.project.project_id
 
   replication {
