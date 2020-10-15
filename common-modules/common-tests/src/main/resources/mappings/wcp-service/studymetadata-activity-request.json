@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "GET",
-		"url": "/StudyMetaData/activity?studyId=ASignature01&activityId=Activity&activityVersion=1.0"
+		"url": "/study-datastore/activity?studyId=ASignature01&activityId=Activity&activityVersion=1.0"
 	},
 	"response": {
 		"status": 200,

@@ -208,11 +208,11 @@ public class CommonDaoImpl implements CommonDao {
   }
 
   @Override
-  public Map<Integer, Map<String, JSONArray>> getStudyLevelDeviceToken(
+  public Map<String, Map<String, JSONArray>> getStudyLevelDeviceToken(
       List<StudyEntity> studyInfos) {
     logger.info("CommonDaoImpl.getStudyLevelDeviceToken() - starts");
 
-    Map<Integer, Map<String, JSONArray>> studyDeviceTokenMap = new HashMap<>();
+    Map<String, Map<String, JSONArray>> studyDeviceTokenMap = new HashMap<>();
     Session session = this.sessionFactory.getCurrentSession();
 
     if (studyInfos != null && !studyInfos.isEmpty()) {
@@ -232,7 +232,7 @@ public class CommonDaoImpl implements CommonDao {
       if (rs != null) {
         for (Object[] objects : rs) {
 
-          Integer studyId = (Integer) objects[0];
+          String studyId = (String) objects[0];
           String deviceToken = (String) objects[1];
           String deviceType = (String) objects[2];
           if (deviceToken != null) {
