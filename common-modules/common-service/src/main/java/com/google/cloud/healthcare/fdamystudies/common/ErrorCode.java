@@ -247,7 +247,7 @@ public enum ErrorCode {
       "EC_0123",
       HttpStatus.FORBIDDEN.toString(),
       "You do not have permission to access this app"),
-  
+
   CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
       400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site for decommissioned location."),
 
