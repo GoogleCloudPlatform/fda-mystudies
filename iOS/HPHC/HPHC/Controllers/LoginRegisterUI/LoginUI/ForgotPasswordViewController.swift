@@ -196,7 +196,8 @@ extension ForgotPasswordViewController: NMWebServiceDelegate {
     self.removeProgressIndicator()
 
     if requestName as String == AuthServerMethods.forgotPassword.description
-    && error.code == HTTPError.forbidden.rawValue {
+      && error.code == HTTPError.forbidden.rawValue
+    {
       self.navigateToVerifyViewController()
     } else {
       // if resend email fails

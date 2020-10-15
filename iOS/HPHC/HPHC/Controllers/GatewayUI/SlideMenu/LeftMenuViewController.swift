@@ -646,7 +646,8 @@ extension LeftMenuViewController: NMWebServiceDelegate {
         }
       )
     } else if requestName as String == AuthServerMethods.logout.description
-    && error.code == HTTPError.forbidden.rawValue {
+      && error.code == HTTPError.forbidden.rawValue
+    {
       self.signout()
     } else {
       UIUtilities.showAlertWithTitleAndMessage(
