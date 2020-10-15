@@ -302,12 +302,16 @@ public class SiteServiceImpl implements SiteService {
   private ErrorCode validationForAddNewParticipant(
       ParticipantDetailRequest participant, String userId, SiteEntity site) {
 
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = validateUserId(userId);
 
-    if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getCanEdit().equals(Permission.EDIT)) {
-      return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+    if (!optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(userId, participant.getSiteId());
+
+      if (!optSitePermission.isPresent()
+          || !optSitePermission.get().getCanEdit().equals(Permission.EDIT)) {
+        return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+      }
     }
 
     if (site.getStudy() != null && OPEN_STUDY.equals(site.getStudy().getType())) {
@@ -322,6 +326,14 @@ public class SiteServiceImpl implements SiteService {
       return ErrorCode.EMAIL_EXISTS;
     }
     return null;
+  }
+
+  private Optional<UserRegAdminEntity> validateUserId(String userId) {
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+    return optUserRegAdminEntity;
   }
 
   @Override
@@ -339,17 +351,27 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.SITE_NOT_FOUND);
     }
 
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
-
-    if (!optSitePermission.isPresent()
-        || Permission.NO_PERMISSION
-            == Permission.fromValue(optSitePermission.get().getCanEdit().value())) {
-      throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    ParticipantRegistryDetail participantRegistryDetail = null;
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    ParticipantRegistryDetail participantRegistryDetail =
-        ParticipantMapper.fromSite(optSite.get(), optSitePermission.get(), siteId);
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      participantRegistryDetail =
+          ParticipantMapper.fromSite(optSite.get(), Permission.EDIT, siteId);
+    } else {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
+
+      if (!optSitePermission.isPresent()
+          || Permission.NO_PERMISSION
+              == Permission.fromValue(optSitePermission.get().getCanEdit().value())) {
+        throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      }
+      participantRegistryDetail =
+          ParticipantMapper.fromSite(optSite.get(), optSitePermission.get().getCanEdit(), siteId);
+    }
     Map<String, Long> statusWithCountMap = getOnboardingStatusWithCount(siteId);
     participantRegistryDetail.setCountByStatus(statusWithCountMap);
 
@@ -677,12 +699,18 @@ public class SiteServiceImpl implements SiteService {
       return ErrorCode.PARTICIPANT_REGISTRY_SITE_NOT_FOUND;
     }
 
-    Optional<SitePermissionEntity> sitePermission =
-        sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
-            userId, optParticipantRegistry.get().getSite().getId());
-    if (!sitePermission.isPresent()) {
-      logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
-      return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+    if (!optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<SitePermissionEntity> sitePermission =
+          sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
+              userId, optParticipantRegistry.get().getSite().getId());
+      if (!sitePermission.isPresent()) {
+        logger.exit(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+        return ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED;
+      }
     }
     return null;
   }
@@ -700,13 +728,18 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
     }
 
-    Optional<SitePermissionEntity> optSitePermissionEntity =
-        sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
-            inviteParticipantRequest.getUserId(), inviteParticipantRequest.getSiteId());
-    if (!optSitePermissionEntity.isPresent()
-        || Permission.EDIT
-            != Permission.fromValue(optSitePermissionEntity.get().getCanEdit().value())) {
-      throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity =
+        validateUserId(inviteParticipantRequest.getUserId());
+
+    if (!optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<SitePermissionEntity> optSitePermissionEntity =
+          sitePermissionRepository.findSitePermissionByUserIdAndSiteId(
+              inviteParticipantRequest.getUserId(), inviteParticipantRequest.getSiteId());
+      if (!optSitePermissionEntity.isPresent()
+          || Permission.EDIT
+              != Permission.fromValue(optSitePermissionEntity.get().getCanEdit().value())) {
+        throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      }
     }
 
     List<ParticipantRegistrySiteEntity> participantsList =
@@ -840,13 +873,17 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.OPEN_STUDY);
     }
 
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findSitePermissionByUserIdAndSiteId(userId, siteId);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = validateUserId(userId);
 
-    if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getCanEdit().value().equals(Permission.EDIT.value())) {
-      participantManagerHelper.logEvent(PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED, auditRequest, map);
-      throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    if (!optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findSitePermissionByUserIdAndSiteId(userId, siteId);
+
+      if (!optSitePermission.isPresent()
+          || !optSitePermission.get().getCanEdit().value().equals(Permission.EDIT.value())) {
+        participantManagerHelper.logEvent(PARTICIPANTS_EMAIL_LIST_IMPORT_FAILED, auditRequest, map);
+        throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      }
     }
 
     // iterate and save valid email id's
@@ -951,13 +988,18 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.SITE_NOT_EXIST_OR_INACTIVE);
     }
 
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findByUserIdAndSiteId(
-            participantStatusRequest.getUserId(), participantStatusRequest.getSiteId());
+    Optional<UserRegAdminEntity> optUserRegAdminEntity =
+        validateUserId(participantStatusRequest.getUserId());
 
-    if (!optSitePermission.isPresent()
-        || !optSitePermission.get().getCanEdit().value().equals(Permission.EDIT.value())) {
-      throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+    if (!optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(
+              participantStatusRequest.getUserId(), participantStatusRequest.getSiteId());
+
+      if (!optSitePermission.isPresent()
+          || !optSitePermission.get().getCanEdit().value().equals(Permission.EDIT.value())) {
+        throw new ErrorCodeException(ErrorCode.MANAGE_SITE_PERMISSION_ACCESS_DENIED);
+      }
     }
 
     OnboardingStatus onboardingStatus =
