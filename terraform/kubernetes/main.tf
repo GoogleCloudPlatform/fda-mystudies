@@ -125,13 +125,27 @@ resource "kubernetes_secret" "apps_credentials" {
   }
 
   data = {
-    username   = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-user"].secret_data
-    password   = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-password"].secret_data
+    dbusername = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-user"].secret_data
+    dbpassword = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-password"].secret_data
     client_id  = data.google_secret_manager_secret_version.secrets["auto-${each.key}-client-id"].secret_data
     secret_key = data.google_secret_manager_secret_version.secrets["auto-${each.key}-secret-key"].secret_data
     dbname     = local.apps_db_names[each.key]
   }
 }
+
+# Client-side credentials.
+resource "kubernetes_secret" "client_side_credentials" {
+
+  metadata {
+    name = "client-side-credentials"
+  }
+
+  data = {
+    client_id  = data.google_secret_manager_secret_version.secrets["auto-auth-server-client-id"].secret_data
+    secret_key = data.google_secret_manager_secret_version.secrets["auto-auth-server-secret-key"].secret_data
+  }
+}
+
 
 # Hydra credentials.
 resource "kubernetes_secret" "hydra_credentials" {
@@ -141,9 +155,10 @@ resource "kubernetes_secret" "hydra_credentials" {
   }
 
   data = {
-    username = data.google_secret_manager_secret_version.secrets["auto-hydra-db-user"].secret_data
-    password = data.google_secret_manager_secret_version.secrets["auto-hydra-db-password"].secret_data
-    dbname   = "hydra"
+    username      = data.google_secret_manager_secret_version.secrets["auto-hydra-db-user"].secret_data
+    password      = data.google_secret_manager_secret_version.secrets["auto-hydra-db-password"].secret_data
+    system_secret = data.google_secret_manager_secret_version.secrets["auto-hydra-system-secret"].secret_data
+    dbname        = "hydra"
   }
 }
 
@@ -154,11 +169,12 @@ resource "kubernetes_secret" "email_credentials" {
   }
 
   data = {
-    email_address         = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
-    email_password        = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
-    contact_email_address = "?"
-    from_email_address    = "?"
-    smtp_host             = "?"
+    email_address  = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
+    email_password = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
+    # TODO(zohrehj): add manual secrets for these and fill in references below.
+    smtp_use_ip_whitelist = "?"
+    from_email_domain     = "?"
+    smtp_hostname         = "?"
   }
 }
 
