@@ -26,7 +26,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantActivitiesRepository;
-import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantActivitiesEntity;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
 import com.google.cloud.healthcare.fdamystudies.utils.Constants;
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
@@ -189,7 +189,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     String participantId = inputActivityStateBean.getParticipantId();
 
     // Step 2: verify updated values
-    List<ParticipantActivitiesBo> resultsList =
+    List<ParticipantActivitiesEntity> resultsList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
     assertNotNull(resultsList);
     assertEquals(1, resultsList.size());
@@ -205,10 +205,10 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
-        resultsList.get(0).getTotal());
+        resultsList.get(0).getTotalCount());
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
-        resultsList.get(0).getCompleted());
+        resultsList.get(0).getCompletedCount());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -243,7 +243,7 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
     String studyId = inputActivityStateBean.getStudyId();
     String participantId = inputActivityStateBean.getParticipantId();
 
-    List<ParticipantActivitiesBo> resultsList =
+    List<ParticipantActivitiesEntity> resultsList =
         participantActivitiesRepository.findByStudyIdAndParticipantId(studyId, participantId);
     assertNotNull(resultsList);
     assertEquals(2, resultsList.size());
@@ -261,10 +261,10 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getTotal(),
-        resultsList.get(0).getTotal());
+        resultsList.get(0).getTotalCount());
     assertEquals(
         inputActivityStateBean.getActivity().get(0).getActivityRun().getCompleted(),
-        resultsList.get(0).getCompleted());
+        resultsList.get(0).getCompletedCount());
 
     // Validate 2nd activity state
     assertEquals(
@@ -279,10 +279,10 @@ public class ProcessActivityStateControllerTest extends BaseMockIT {
 
     assertEquals(
         inputActivityStateBean.getActivity().get(1).getActivityRun().getTotal(),
-        resultsList.get(1).getTotal());
+        resultsList.get(1).getTotalCount());
     assertEquals(
         inputActivityStateBean.getActivity().get(1).getActivityRun().getCompleted(),
-        resultsList.get(1).getCompleted());
+        resultsList.get(1).getCompletedCount());
   }
 
   @AfterEach

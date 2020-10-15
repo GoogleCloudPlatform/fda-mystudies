@@ -149,11 +149,11 @@ public class SiteServiceImpl implements SiteService {
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
+
   @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
-
-  @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
 
@@ -167,17 +167,18 @@ public class SiteServiceImpl implements SiteService {
   @Transactional
   public SiteResponse addSite(SiteRequest siteRequest) {
     logger.entry("begin addSite()");
-    boolean canEdit = isEditPermissionAllowed(siteRequest.getStudyId(), siteRequest.getUserId());
 
-    if (!canEdit) {
-      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+    Optional<UserRegAdminEntity> optUser = userRegAdminRepository.findById(siteRequest.getUserId());
+    if (!optUser.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
+
+    UserRegAdminEntity userRegAdmin = optUser.get();
 
     List<SiteEntity> sitesList =
         siteRepository.findByLocationIdAndStudyId(
             siteRequest.getLocationId(), siteRequest.getStudyId());
     if (CollectionUtils.isNotEmpty(sitesList)) {
-      sitesList.get(0);
       throw new ErrorCodeException(ErrorCode.SITE_EXISTS);
     }
 
@@ -193,9 +194,17 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.CANNOT_ADD_SITE_FOR_OPEN_STUDY);
     }
 
+    if (!userRegAdmin.isSuperAdmin()
+        && !isEditPermissionAllowed(siteRequest.getStudyId(), siteRequest.getUserId())) {
+      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+    }
+
     SiteResponse siteResponse =
         saveSiteWithSitePermissions(
-            siteRequest.getStudyId(), siteRequest.getLocationId(), siteRequest.getUserId());
+            siteRequest.getStudyId(),
+            siteRequest.getLocationId(),
+            siteRequest.getUserId(),
+            userRegAdmin);
     logger.exit(
         String.format(
             "Site %s added to locationId=%s and studyId=%s",
@@ -204,35 +213,37 @@ public class SiteServiceImpl implements SiteService {
   }
 
   private SiteResponse saveSiteWithSitePermissions(
-      String studyId, String locationId, String userId) {
+      String studyId, String locationId, String userId, UserRegAdminEntity userRegAdmin) {
     logger.entry("saveSiteWithStudyPermission()");
 
-    List<StudyPermissionEntity> userStudypermissionList =
-        studyPermissionRepository.findByStudyId(studyId);
-
     SiteEntity site = new SiteEntity();
+    site.setCreatedBy(userId);
+    site.setStatus(SiteStatus.ACTIVE.value());
+
     Optional<StudyEntity> studyInfo = studyRepository.findById(studyId);
     if (studyInfo.isPresent()) {
       site.setStudy(studyInfo.get());
     }
+
     Optional<LocationEntity> location = locationRepository.findById(locationId);
     if (location.isPresent()) {
       site.setLocation(location.get());
     }
-    site.setCreatedBy(userId);
-    site.setStatus(SiteStatus.ACTIVE.value());
-    addSitePermissions(userId, userStudypermissionList, site);
+
+    if (!userRegAdmin.isSuperAdmin()) {
+      addSitePermissions(userId, studyId, site);
+    }
+
     site = siteRepository.save(site);
 
-    logger.exit(
-        String.format(
-            "saved siteId=%s with %d site permissions",
-            site.getId(), site.getSitePermissions().size()));
+    logger.exit(String.format("saved siteId=%s", site.getId()));
     return SiteMapper.toSiteResponse(site);
   }
 
-  private void addSitePermissions(
-      String userId, List<StudyPermissionEntity> userStudypermissionList, SiteEntity site) {
+  private void addSitePermissions(String userId, String studyId, SiteEntity site) {
+    List<StudyPermissionEntity> userStudypermissionList =
+        studyPermissionRepository.findByStudyId(studyId);
+
     for (StudyPermissionEntity studyPermission : userStudypermissionList) {
       Permission editPermission =
           studyPermission.getUrAdminUser().getId().equals(userId)
