@@ -54,7 +54,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -104,10 +103,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
-      // services
-      UUID uuid = UUID.randomUUID(); // Generates random UUID.
-      auditRequest.setCorrelationId(uuid.toString().toUpperCase());
       auditRequest.setUserId(String.valueOf(userBO2.getUserId()));
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
@@ -158,6 +153,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 isValid = true;
                 SessionObject sessionObject = new SessionObject();
                 sessionObject.setUserId(userBO.getUserId());
+
+                auditRequest.setUserId(String.valueOf(userBO.getUserId()));
 
                 auditLogEventHelper.logEvent(NEW_USER_ACCOUNT_ACTIVATED, auditRequest);
                 auditLogEventHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
@@ -227,8 +224,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     StudyBuilderAuditEvent eventEnum = null;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sesObj.getSessionId());
-      auditRequest.setUserId(String.valueOf(userId));
       if ((newPassword != null)
           && (newPassword.contains(sesObj.getFirstName())
               || newPassword.contains(sesObj.getLastName()))) {

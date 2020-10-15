@@ -23,14 +23,12 @@ public enum ApiEndpoint {
   UPDATE_ACTIVITY_STATE(
       "http://localhost:8004/response-datastore/participant/update-activity-state"),
 
-  GET_ACTIVITY_STATE(
-      "http://localhost:8004/response-datastore/participant/get-activity-state"),
+  GET_ACTIVITY_STATE("http://localhost:8004/response-datastore/participant/get-activity-state"),
 
   PROCESS_ACTIVITY_RESPONSE(
       "http://localhost:8004/response-datastore/participant/process-response"),
 
-  GET_PROCESS_ACTIVITY_RESPONSE(
-      "http://localhost:8004/response-datastore/participant/getresponse"),
+  GET_PROCESS_ACTIVITY_RESPONSE("http://localhost:8004/response-datastore/participant/getresponse"),
 
   WITHDRAW("http://localhost:8004/response-datastore/participant/withdraw");
   private String url;

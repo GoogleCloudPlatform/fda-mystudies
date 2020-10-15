@@ -31,6 +31,7 @@ import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -91,6 +92,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     sesObj.setCreatedDate(userdetails.getCreatedOn());
     sesObj.setRole(userdetails.getRoleName());
     sesObj.setAccessLevel(userdetails.getAccessLevel());
+    sesObj.setCorrelationId(UUID.randomUUID().toString());
 
     if (response.isCommitted()) {
       logger.info("Can't redirect");

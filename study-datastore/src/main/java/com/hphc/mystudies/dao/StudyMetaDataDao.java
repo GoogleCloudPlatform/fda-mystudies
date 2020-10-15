@@ -228,8 +228,7 @@ public class StudyMetaDataDao {
   }
 
   @SuppressWarnings("unchecked")
-  public StudyResponse studyList(String authorization, String applicationId, String orgId)
-      throws DAOException {
+  public StudyResponse studyList(String authorization, String applicationId) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Starts");
     Session session = null;
     StudyResponse studyResponse = new StudyResponse();
@@ -253,9 +252,6 @@ public class StudyMetaDataDao {
                         + " and SDTO.appId='"
                         + applicationId
                         + "'"
-                        + " and SDTO.orgId='"
-                        + orgId
-                        + "' "
                         + " and (SDTO.status= :status OR SDTO.live=1)")
                 .setString(
                     StudyMetaDataEnum.QF_STATUS.value(),
