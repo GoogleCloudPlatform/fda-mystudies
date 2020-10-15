@@ -32,7 +32,7 @@ terraform {
 # Create the project, enable APIs, and create the deletion lien, if specified.
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  version = "~> 9.1.0"
 
   name                    = "example-dev-devops"
   org_id                  = ""
@@ -65,7 +65,6 @@ resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
   members = ["group:example-dev-devops-owners@example.com"]
-
 }
 
 # Org level IAM permissions for org admins.
