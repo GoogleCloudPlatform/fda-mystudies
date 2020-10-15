@@ -169,6 +169,8 @@ In the ./kubernetes/ingress.yaml file:
 In ./participant-manager/src/environments/environment.prod.ts
 
 * Change the domain name to match your organization.
+* Change `clientId` to the value of `auto-auth-server-client-id`; this value
+ can be found in your secret project's secret manager.
 
 ### GKE Cluster - Terraform
 
