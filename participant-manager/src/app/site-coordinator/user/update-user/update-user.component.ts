@@ -216,7 +216,7 @@ export class UpdateUserComponent
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.status;
-     delete this.user.manageLocationsSelected;
+    delete this.user.manageLocationsSelected;
     this.user.apps.map((app) => {
       delete app['selectedStudiesCount'];
       delete app['totalStudiesCount'];
