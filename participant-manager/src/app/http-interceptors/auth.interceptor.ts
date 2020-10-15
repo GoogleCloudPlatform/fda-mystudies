@@ -102,8 +102,10 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
+      console.log('inside auth content type');
+      console.log(req.headers);
       if (!req.headers.has('content-type')) {
-        headers = headers.append(
+                headers = headers.append(
           'Content-Type',
           'application/x-www-form-urlencoded',
         );

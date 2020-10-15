@@ -7,6 +7,7 @@ import {ToastrService} from 'ngx-toastr';
 import {Router} from '@angular/router';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {CookieService} from 'ngx-cookie-service';
+import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -22,10 +23,14 @@ export class ForgotPasswordComponent extends UnsubscribeOnDestroyAdapter {
     private readonly toastr: ToastrService,
     private readonly router: Router,
     public cookieService: CookieService,
+        private readonly authService: AuthService,
+
   ) {
     super();
     this.forgotPasswordForm = fb.group({
       email: '',
+      appId: this.authService.appId,
+
     });
   }
 

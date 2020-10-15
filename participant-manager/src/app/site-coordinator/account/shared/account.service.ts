@@ -47,6 +47,8 @@ export class AccountService {
         this.authService.getAuthUserId(),
       )}/change_password`,
       changePassword,
+            {headers: {'Content-Type':'application/json'}},
+
     );
   }
 }
