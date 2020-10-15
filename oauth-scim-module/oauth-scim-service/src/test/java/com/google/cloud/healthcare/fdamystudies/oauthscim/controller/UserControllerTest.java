@@ -14,9 +14,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
 import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ACCOUNT_LOCKED;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
@@ -32,6 +36,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -41,6 +46,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +77,8 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserReposit
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -533,6 +541,40 @@ public class UserControllerTest extends BaseMockIT {
     String expectedResponse = readJsonFile("/response/forgot_password_bad_request.json");
 
     JSONAssert.assertEquals(expectedResponse, actualResponse, JSONCompareMode.NON_EXTENSIBLE);
+  }
+
+  @Test
+  public void shouldReturnAccountLockedError() throws Exception {
+
+    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
+    JsonNode userInfo = userEntity.getUserInfo();
+    String rawSalt = salt();
+    String encrypted = encrypt(CURRENT_PASSWORD_VALUE, rawSalt);
+    ObjectNode passwordNode = getObjectNode();
+    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(SALT, rawSalt);
+    passwordNode.put(EXPIRE_TIMESTAMP, Instant.now().plus(Duration.ofMinutes(15)).toEpochMilli());
+    ((ObjectNode) userInfo).set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
+    userEntity.setUserInfo(userInfo);
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", "CorrelationIdValue_For_5XX_failure");
+
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(containsString(ACCOUNT_LOCKED.getDescription())));
   }
 
   @Test

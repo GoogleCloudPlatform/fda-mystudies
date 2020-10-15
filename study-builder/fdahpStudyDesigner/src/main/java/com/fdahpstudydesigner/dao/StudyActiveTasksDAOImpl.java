@@ -92,7 +92,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     Map<String, String> values = new HashMap<String, String>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sesObj.getSessionId());
       auditRequest.setStudyId(customStudyId);
       session = hibernateTemplate.getSessionFactory().openSession();
       if (activeTaskBo != null) {

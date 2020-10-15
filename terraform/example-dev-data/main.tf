@@ -25,9 +25,11 @@ terraform {
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
-  source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
+  version = "~> 9.1.0"
 
   name                    = "example-dev-data"
   org_id                  = ""
@@ -56,7 +58,7 @@ module "example_dev_mystudies_firestore_data" {
 
 module "project_iam_members" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 6.2.0"
+  version = "~> 6.3.0"
 
   projects = [module.project.project_id]
   mode     = "additive"

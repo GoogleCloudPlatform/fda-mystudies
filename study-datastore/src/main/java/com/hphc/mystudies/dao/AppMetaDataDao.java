@@ -558,7 +558,7 @@ public class AppMetaDataDao {
     return message;
   }
 
-  public AppVersionInfo getAppVersionInfo(String appId, String orgId) {
+  public AppVersionInfo getAppVersionInfo(String appId) {
     LOGGER.info("INFO: AppMetaDataDao - getAppVersionInfo() :: Starts");
     Session session = null;
     AppVersionInfo appVersionInfo = null;
@@ -569,7 +569,6 @@ public class AppMetaDataDao {
               session
                   .getNamedQuery("AppVersionInfo.findAll")
                   .setParameter("appId", appId)
-                  .setParameter("orgId", orgId)
                   .uniqueResult();
     } catch (Exception e) {
       LOGGER.error("ERROR: AppMetaDataDao - getAppVersionInfo()", e);

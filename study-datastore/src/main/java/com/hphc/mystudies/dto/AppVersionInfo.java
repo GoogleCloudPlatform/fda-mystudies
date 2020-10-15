@@ -38,7 +38,7 @@ import javax.persistence.Table;
     value = {
       @NamedQuery(
           name = "AppVersionInfo.findAll",
-          query = "FROM AppVersionInfo where appId=:appId AND orgId=:orgId"),
+          query = "FROM AppVersionInfo where appId=:appId"),
     })
 public class AppVersionInfo implements Serializable {
 
@@ -57,9 +57,6 @@ public class AppVersionInfo implements Serializable {
 
   @Column(name = "app_id")
   private String appId;
-
-  @Column(name = "org_id")
-  private String orgId;
 
   @Column(name = "android_force_update")
   private Boolean androidForceUpdate;
@@ -95,10 +92,6 @@ public class AppVersionInfo implements Serializable {
     return appId;
   }
 
-  public String getOrgId() {
-    return orgId;
-  }
-
   public Boolean getAndroidForceUpdate() {
     return androidForceUpdate;
   }
@@ -109,10 +102,6 @@ public class AppVersionInfo implements Serializable {
 
   public void setAppId(String appId) {
     this.appId = appId;
-  }
-
-  public void setOrgId(String orgId) {
-    this.orgId = orgId;
   }
 
   public void setAndroidForceUpdate(Boolean androidForceUpdate) {
