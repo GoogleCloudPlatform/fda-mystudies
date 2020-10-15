@@ -410,16 +410,23 @@ public class AppServiceImpl implements AppService {
   public AppParticipantsResponse getAppParticipants(
       String appId, String adminId, AuditLogEventRequest auditRequest) {
     logger.entry("getAppParticipants(appId, adminId)");
-    Optional<AppPermissionEntity> optAppPermissionEntity =
-        appPermissionRepository.findByUserIdAndAppId(adminId, appId);
-
-    if (!optAppPermissionEntity.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(adminId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    AppPermissionEntity appPermission = optAppPermissionEntity.get();
-
-    AppEntity app = appPermission.getApp();
+    AppEntity app = null;
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<AppEntity> optAppEntity = appRepository.findById(appId);
+      app = optAppEntity.orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_NOT_FOUND));
+    } else {
+      Optional<AppPermissionEntity> optAppPermissionEntity =
+          appPermissionRepository.findByUserIdAndAppId(adminId, appId);
+      app =
+          optAppPermissionEntity
+              .orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_PERMISSION_ACCESS_DENIED))
+              .getApp();
+    }
 
     List<UserDetailsEntity> userDetails = userDetailsRepository.findByAppId(app.getId());
     List<StudyEntity> studyEntity = studyRepository.findByAppId(app.getId());

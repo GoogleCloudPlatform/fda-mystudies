@@ -259,8 +259,52 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnGetAppParticipants() throws Exception {
+  public void shouldReturnGetAppParticipantsForSuperAdmin() throws Exception {
     // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity
+    studyEntity.setApp(appEntity);
+    siteEntity.setStudy(studyEntity);
+    locationEntity = testDataHelper.createLocation();
+    siteEntity.setLocation(locationEntity);
+    participantStudyEntity.setUserDetails(userDetailsEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    // Step 2: Call API to return GET_APPS_PARTICIPANTS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participants").isArray())
+        .andExpect(jsonPath("$.participants", hasSize(1)))
+        .andExpect(jsonPath("$.participants[0].enrolledStudies").isArray())
+        .andExpect(jsonPath("$.participants[0].enrolledStudies", hasSize(1)))
+        .andExpect(jsonPath("$.participants[0].email").value(userDetailsEntity.getEmail()))
+        .andExpect(
+            jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
+        .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
+        .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setAppId(appEntity.getAppId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(APP_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, APP_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnGetAppParticipants() throws Exception {
+    // Step 1 : Set studyEntity,siteEntity,locationEntity,userDetailsEntity and superAdmin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
     locationEntity = testDataHelper.createLocation();
@@ -303,7 +347,8 @@ public class AppControllerTest extends BaseMockIT {
   @Test
   public void shouldNotReturnAppsForGetAppParticipants() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
-    headers.add(USER_ID_HEADER, IdGenerator.id());
+    testDataHelper.getAppRepository().deleteAll();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -313,6 +358,28 @@ public class AppControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description").value(ErrorCode.APP_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnAppPermissionAccessDenied() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+    testDataHelper.getAppRepository().deleteAll();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.APP_PERMISSION_ACCESS_DENIED.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
@@ -331,6 +398,24 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.violations").isArray())
         .andExpect(jsonPath("$.violations[0].path").value("userId"))
         .andExpect(jsonPath("$.violations[0].message").value("header is required"));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForGetAppParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
