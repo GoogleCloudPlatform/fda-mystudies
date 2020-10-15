@@ -22,15 +22,22 @@
 
 package com.fdahpstudydesigner.dao;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.ACCOUNT_LOCKED;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.FAILED_ATTEMPT;
+import static com.fdahpstudydesigner.common.StudyBuilderConstants.LOCK_TIME;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPasswordHistory;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.service.LoginService;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +60,8 @@ public class LoginDAOImpl implements LoginDAO {
   @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private LoginService loginService;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   HibernateTemplate hibernateTemplate;
   private Query query = null;
@@ -373,7 +382,7 @@ public class LoginDAOImpl implements LoginDAO {
   }
 
   @Override
-  public void updateFailAttempts(String userEmailId) {
+  public void updateFailAttempts(String userEmailId, AuditLogEventRequest auditRequest) {
     logger.info("LoginDAOImpl - updateUser() - Starts");
     Session session = null;
     UserAttemptsBo attemptsBo = null;
@@ -431,16 +440,15 @@ public class LoginDAOImpl implements LoginDAO {
         if (isAcountLocked) {
           SessionObject sessionObject = new SessionObject();
           sessionObject.setUserId(userBO.getUserId());
-          String activityDetails =
-              FdahpStudyDesignerConstants.USER_LOCKED_ACTIVITY_DEATILS_MESSAGE.replace(
-                  "&name", userEmailId);
-          auditLogDAO.saveToAuditLog(
-              session,
-              transaction,
-              sessionObject,
-              FdahpStudyDesignerConstants.USER_LOCKED_ACTIVITY_MESSAGE,
-              activityDetails,
-              "LoginDAOImpl - updateUser()");
+
+          Map<String, String> values = new HashMap<>();
+          values.put(LOCK_TIME, String.valueOf(USER_LOCK_DURATION));
+          values.put(FAILED_ATTEMPT, String.valueOf(MAX_ATTEMPTS));
+          auditRequest.setUserId(userEmailId);
+          auditRequest.setUserAccessLevel(userBO.getAccessLevel());
+          auditRequest.setSource(ACCOUNT_LOCKED.getSource().getValue());
+          auditRequest.setDestination(ACCOUNT_LOCKED.getDestination().getValue());
+          auditLogEventHelper.logEvent(ACCOUNT_LOCKED, auditRequest, values);
         } else {
           SessionObject sessionObject = new SessionObject();
           sessionObject.setUserId(userBO.getUserId());
