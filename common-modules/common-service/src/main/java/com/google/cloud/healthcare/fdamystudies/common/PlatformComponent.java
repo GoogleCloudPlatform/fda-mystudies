@@ -56,7 +56,11 @@ public enum PlatformComponent {
       "The UI that administrators use to invite participants to studies and track enrollment progress"),
 
   CLOUD_STORAGE(
-      "CLOUD STORAGE", "for storing and accessing data on Google Cloud Platform infrastructure");
+      "CLOUD STORAGE", "for storing and accessing data on Google Cloud Platform infrastructure"),
+
+  NATIVE_PUSH_NOTIFICATION_SERVER(
+      "NATIVE PUSH NOTIFICATION SERVER",
+      "This will enables third party application developers to send notification data to applications installed on native mobile device");
 
   private String value;
 
