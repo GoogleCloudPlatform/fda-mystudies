@@ -48,9 +48,9 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use Face ID for quick and secure access to the app. </string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to access your Health App data to read data from Health to answer questions.</string>
+	<string>$(PRODUCT_NAME) would like to access the Health app to read data from Health to include in the study.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>$(PRODUCT_NAME) would like to update your Health App data to save your responses.</string>
+	<string>$(PRODUCT_NAME) would like to update the Health app to add your study responses.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to access your Location to answer location-based questions and will not result in your location automatically getting submitted as a response.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
