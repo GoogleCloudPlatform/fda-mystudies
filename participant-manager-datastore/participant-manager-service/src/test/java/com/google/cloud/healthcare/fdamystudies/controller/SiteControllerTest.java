@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO_OF_RECORDS;
@@ -246,6 +247,33 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnCannotAddSiteForDeactivatedStudyError() throws Exception {
+    // Step 1: Set study type to open
+    SiteRequest siteRequest = newSiteRequest();
+    studyEntity.setStatus(DEACTIVATED);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 2: Call API and expect CANNOT_ADD_SITE_FOR_OPEN_STUDY error
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ADD_NEW_SITE.getPath())
+                .content(asJsonString(siteRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnUserNotFoundForAddNewSite() throws Exception {
     SiteRequest siteRequest = newSiteRequest();
     testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
@@ -254,7 +282,7 @@ public class SiteControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, IdGenerator.id());
 
     // Step 2: Call API and expect USER_NOT_FOUND error
-    
+
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_NEW_SITE.getPath())
@@ -264,9 +292,10 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
-    
+
     verifyTokenIntrospectRequest();
   }
+
   @Test
   public void shouldReturnLocationNotFoundError() throws Exception {
     SiteRequest siteRequest = newSiteRequest();
