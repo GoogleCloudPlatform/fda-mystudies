@@ -255,7 +255,7 @@ public class SiteControllerTest extends BaseMockIT {
     headers.add(USER_ID_HEADER, IdGenerator.id());
 
     // Step 2: Call API and expect USER_NOT_FOUND error
-    
+
     mockMvc
         .perform(
             post(ApiEndpoint.ADD_NEW_SITE.getPath())
@@ -265,9 +265,10 @@ public class SiteControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
-    
+
     verifyTokenIntrospectRequest();
   }
+
   @Test
   public void shouldReturnLocationNotFoundError() throws Exception {
     SiteRequest siteRequest = newSiteRequest();
@@ -809,6 +810,39 @@ public class SiteControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(auditEventMap, SITE_DECOMMISSIONED_FOR_STUDY);
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldDecomissionSiteForSuperAdmin() throws Exception {
+    // Step 1: set status to ACTIVE
+    siteEntity.setStatus(SiteStatus.ACTIVE.value());
+    siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    userRegAdminEntity.setSuperAdmin(true);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    // Step 2: Call API and expect DECOMMISSION_SITE_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.siteId", notNullValue()))
+            .andExpect(jsonPath("$.siteStatus", is(SiteStatus.DEACTIVE.value())))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.DECOMMISSION_SITE_SUCCESS.getMessage())))
+            .andReturn();
+
+    String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
+
+    // Step 3: verify updated values
+    Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
+    SiteEntity siteEntity = optSiteEntity.get();
+    assertNotNull(siteEntity);
+    assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
   }
 
   @Test
