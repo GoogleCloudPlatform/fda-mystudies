@@ -909,6 +909,19 @@ resource "kubernetes_secret" "hydra_credentials" {
   }
 }
 
+# Study builder connect credentials.
+resource "kubernetes_secret" "study_builder_connect_credentials" {
+
+  metadata {
+    name = "study-builder-connect-credentials"
+  }
+
+  data = {
+    username    = data.google_secret_manager_secret_version.secrets["manual-study-builder-user"].secret_data
+    password    = data.google_secret_manager_secret_version.secrets["manual-study-builder-password"].secret_data
+  }
+}
+
 # Email credentials.
 resource "kubernetes_secret" "email_credentials" {
   metadata {
