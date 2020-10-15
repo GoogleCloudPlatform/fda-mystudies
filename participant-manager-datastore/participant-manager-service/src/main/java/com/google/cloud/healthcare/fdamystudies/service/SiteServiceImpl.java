@@ -18,7 +18,6 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OP
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_JOIN;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.ENROLLMENT_TARGET_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.INVITATION_EMAIL_SENT;
 import static com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent.PARTICIPANTS_EMAIL_LIST_IMPORTED;
@@ -149,11 +148,11 @@ public class SiteServiceImpl implements SiteService {
 
   @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
-  @Autowired private UserRegAdminRepository userRegAdminRepository;
-
   @Autowired private SitePermissionRepository sitePermissionRepository;
 
   @Autowired private ParticipantStudyRepository participantStudyRepository;
+
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
 
   @Autowired private StudyConsentRepository studyConsentRepository;
 
@@ -503,7 +502,14 @@ public class SiteServiceImpl implements SiteService {
       String userId, String siteId, AuditLogEventRequest auditRequest) {
     logger.entry("toggleSiteStatus()");
 
-    validateDecommissionSiteRequest(userId, siteId);
+    Optional<UserRegAdminEntity> optUser = userRegAdminRepository.findById(userId);
+    if (!optUser.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
+
+    UserRegAdminEntity user = optUser.get();
+
+    validateDecommissionSiteRequest(userId, siteId, user);
 
     Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
     auditRequest.setUserId(userId);
@@ -526,7 +532,11 @@ public class SiteServiceImpl implements SiteService {
 
     site.setStatus(SiteStatus.DEACTIVE.value());
     siteRepository.saveAndFlush(site);
-    updateSitePermissions(siteId);
+    if (!user.isSuperAdmin()) {
+      updateSitePermissions(siteId);
+    }
+
+    deactivateYetToEnrollParticipants(siteId);
 
     participantManagerHelper.logEvent(SITE_DECOMMISSIONED_FOR_STUDY, auditRequest, map);
 
@@ -535,33 +545,41 @@ public class SiteServiceImpl implements SiteService {
         site.getId(), site.getStatus(), MessageCode.DECOMMISSION_SITE_SUCCESS);
   }
 
-  private void validateDecommissionSiteRequest(String userId, String siteId) {
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
-    if (!optSitePermission.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.SITE_NOT_FOUND);
+  private void validateDecommissionSiteRequest(
+      String userId, String siteId, UserRegAdminEntity user) {
+
+    StudyEntity study = null;
+    if (user.isSuperAdmin()) {
+      Optional<SiteEntity> optSite = siteRepository.findById(siteId);
+      if (optSite.isPresent()) {
+        SiteEntity site = optSite.get();
+        study = site.getStudy();
+      }
+    } else {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(userId, siteId);
+      if (!optSitePermission.isPresent()) {
+        throw new ErrorCodeException(ErrorCode.SITE_NOT_FOUND);
+      }
+      SitePermissionEntity sitePermission = optSitePermission.get();
+      study = sitePermission.getStudy();
+
+      if (!isEditPermissionAllowed(study.getId(), userId)) {
+        throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+      }
     }
 
-    SitePermissionEntity sitePermission = optSitePermission.get();
-    if (OPEN.equalsIgnoreCase(sitePermission.getStudy().getType())) {
+    if (OPEN.equalsIgnoreCase(study.getType())) {
       throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY);
-    }
-
-    String studyId = sitePermission.getStudy().getId();
-    boolean canEdit = isEditPermissionAllowed(studyId, userId);
-    if (!canEdit) {
-      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
     }
 
     List<String> status = Arrays.asList(ENROLLED_STATUS, STATUS_ACTIVE);
     Optional<Long> optParticipantStudyCount =
-        participantStudyRepository.findByStudyIdAndStatus(status, studyId);
+        participantStudyRepository.findByStudyIdAndStatus(status, study.getId());
 
     if (optParticipantStudyCount.isPresent() && optParticipantStudyCount.get() > 0) {
       throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS);
     }
-
-    return;
   }
 
   private void updateSitePermissions(String siteId) {
@@ -604,29 +622,21 @@ public class SiteServiceImpl implements SiteService {
         sitePermissionRepository.delete(sitePermission);
       }
     }
-    deactivateYetToEnrollParticipants(siteId);
   }
 
   private void deactivateYetToEnrollParticipants(String siteId) {
-    List<ParticipantStudyEntity> participantStudies =
-        (List<ParticipantStudyEntity>)
-            CollectionUtils.emptyIfNull(
-                participantStudyRepository.findBySiteIdAndStatus(siteId, YET_TO_JOIN));
-
-    List<String> participantRegistrySiteIds =
-        participantStudies
-            .stream()
-            .distinct()
-            .map(participantStudy -> participantStudy.getParticipantRegistrySite().getId())
-            .collect(Collectors.toList());
-
     List<ParticipantRegistrySiteEntity> participantRegistrySites =
-        participantRegistrySiteRepository.findAllById(participantRegistrySiteIds);
+        participantRegistrySiteRepository.findBySiteId(siteId);
 
-    for (ParticipantRegistrySiteEntity participantRegistrySite :
-        CollectionUtils.emptyIfNull(participantRegistrySites)) {
-      participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
-      participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+    if (CollectionUtils.isNotEmpty(participantRegistrySites)) {
+      for (ParticipantRegistrySiteEntity participantRegistrySite : participantRegistrySites) {
+        String onboardingStatusCode = participantRegistrySite.getOnboardingStatus();
+        if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
+            || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
+          participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+        }
+        participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+      }
     }
   }
 
