@@ -11,6 +11,7 @@ package com.google.cloud.healthcare.fdamystudies.service;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
 import com.google.cloud.healthcare.fdamystudies.dao.EnrollmentTokenDao;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
@@ -50,9 +51,13 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
 
   @Override
   @Transactional(readOnly = true)
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String studyId) {
+  public boolean isValidStudyToken(
+      @NotNull String token, @NotNull String studyId, @NotNull String userId) {
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Starts ");
-    boolean isValidStudyToken = enrollmentTokenDao.isValidStudyToken(token, studyId);
+    // fetching registered emailid
+    UserDetailsEntity userDetails = commonService.getUserInfoDetails(userId);
+    boolean isValidStudyToken =
+        enrollmentTokenDao.isValidStudyToken(token, studyId, userDetails.getEmail());
     logger.info("EnrollmentTokenServiceImpl isValidStudyToken() - Ends ");
     return isValidStudyToken;
   }

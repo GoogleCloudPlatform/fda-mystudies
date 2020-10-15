@@ -257,7 +257,7 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH);
 
     HttpHeaders headers = TestUtils.getCommonHeaders();
-    headers.add(Constants.USER_ID_HEADER, Constants.NEW_USER_ID);
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
     headers.add("Authorization", VALID_BEARER_TOKEN);
 
     mockMvc
