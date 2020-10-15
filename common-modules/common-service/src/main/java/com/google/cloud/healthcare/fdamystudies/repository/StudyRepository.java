@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.LocationIdStudyNamesPair;
+import com.google.cloud.healthcare.fdamystudies.model.StudyCount;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import java.util.List;
 import java.util.Optional;
@@ -46,4 +47,31 @@ public interface StudyRepository extends JpaRepository<StudyEntity, String> {
 
   @Query("SELECT study FROM StudyEntity study where study.app.id = :appInfoId")
   public List<StudyEntity> findByAppId(String appInfoId);
+
+  @Query(
+      value =
+          "SELECT studyId, SUM(target_invited_count) AS count "
+              + "FROM ( "
+              + "SELECT study.id AS studyId, SUM(site.target_enrollment) AS target_invited_count "
+              + "FROM study_info study, sites site "
+              + "WHERE study.id=site.study_id AND study.type='OPEN' "
+              + "GROUP BY study.id "
+              + "UNION ALL "
+              + "SELECT study.id AS studyId, SUM(invitation_count) AS target_invited_count "
+              + "FROM study_info study, participant_registry_site prs "
+              + "WHERE study.id=prs.study_info_id "
+              + "GROUP BY study.id "
+              + ") rstAlias "
+              + "GROUP BY studyId ",
+      nativeQuery = true)
+  public List<StudyCount> findInvitedCountByStudyId();
+
+  @Query(
+      value =
+          "SELECT study.id AS studyId, COUNT(psi.site_id) count "
+              + "FROM study_info study, participant_study_info psi "
+              + "WHERE study.id=psi.study_info_id "
+              + "GROUP BY study.id ",
+      nativeQuery = true)
+  public List<StudyCount> findEnrolledCountByStudyId();
 }
