@@ -1,9 +1,8 @@
 /*
  * Copyright 2020 Google LLC
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.common;
@@ -52,9 +51,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -68,6 +69,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @PropertySource(value = {"classpath:application-mockit.properties"})
@@ -84,11 +87,13 @@ public class BaseMockIT {
 
   @Rule public TestName testName = new TestName();
 
-  @Resource private WebApplicationContext webAppContext;
+  @Resource protected WebApplicationContext webAppContext;
 
   @Autowired private AuditEventService mockAuditService;
 
   @Mock @Autowired protected RestTemplate restTemplate;
+
+  @Autowired protected FilterChainProxy filterChainProxy;
 
   protected ObjectMapper mapper = new ObjectMapper();
 
@@ -117,8 +122,10 @@ public class BaseMockIT {
 
   @Before
   public void setUp() {
-
     logger.debug(String.format("BEGIN TEST: %s", testName.getMethodName()));
+
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
     mockMvc = MockMvcBuilders.webAppContextSetup(webAppContext).build();
     initSecurityContext();
@@ -189,9 +196,9 @@ public class BaseMockIT {
     headers.add("correlationId", UUID.randomUUID().toString());
 
     headers.add("appVersion", applicationVersion);
-    headers.add("appId", "STUDY BUILDER");
-    headers.add("source", "STUDY BUILDER");
-    headers.add("mobilePlatform", "UNKNOWN");
+    headers.add("appId", PlatformComponent.STUDY_BUILDER.getValue());
+    headers.add("source", PlatformComponent.STUDY_BUILDER.getValue());
+    headers.add("mobilePlatform", MobilePlatform.UNKNOWN.getValue());
     return headers;
   }
 
@@ -256,9 +263,19 @@ public class BaseMockIT {
       assertNotNull(auditRequest.getPlatformVersion());
       assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getAppVersion());
-      assertNotNull(auditRequest.getMobilePlatform());
-      assertNotNull(auditRequest.getUserAccessLevel());
+
+      if (!isPreLoginAuditEvent(auditRequest)) {
+        assertNotNull(auditRequest.getMobilePlatform());
+        assertNotNull(auditRequest.getUserAccessLevel());
+      }
     }
+  }
+
+  private boolean isPreLoginAuditEvent(AuditLogEventRequest auditRequest) {
+    return StudyBuilderAuditEvent.SIGNIN_FAILED.getEventCode().equals(auditRequest.getEventCode())
+        || StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER
+            .getEventCode()
+            .equals(auditRequest.getEventCode());
   }
 
   protected void addParams(MockHttpServletRequestBuilder requestBuilder, Object formModel)

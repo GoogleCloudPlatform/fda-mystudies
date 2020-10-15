@@ -121,14 +121,14 @@ public class AppMetaDataOrchestration {
     return updateAppVersionResponse;
   }
 
-  public AppVersionInfoBean getAppVersionInfo(String appId, String orgId) {
+  public AppVersionInfoBean getAppVersionInfo(String appId) {
     LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Starts");
     AppVersionInfoBean aAppVersionInfoBean;
     AppVersionInfo appVersionInfo = null;
     DeviceVersion android = new DeviceVersion();
     DeviceVersion ios = new DeviceVersion();
 
-    appVersionInfo = appMetaDataDao.getAppVersionInfo(appId, orgId);
+    appVersionInfo = appMetaDataDao.getAppVersionInfo(appId);
     if (appVersionInfo == null) {
       LOGGER.info("INFO: AppMetaDataOrchestration - getAppVersionInfo() :: Ends");
       return null;

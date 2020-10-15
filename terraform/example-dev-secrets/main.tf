@@ -30,7 +30,7 @@ resource "random_string" "strings" {
     "mystudies_ma_client_id",
     "mystudies_rs_client_id",
     "mystudies_urs_client_id",
-    "mystudies_wcp_client_id",
+    "study_builder_client_id",
     "response_datastore_db_user",
     "study_builder_db_user",
     "study_datastore_db_user",
@@ -51,7 +51,7 @@ resource "random_password" "passwords" {
     "mystudies_rs_secret_key",
     "mystudies_sql_default_user_password",
     "mystudies_urs_secret_key",
-    "mystudies_wcp_secret_key",
+    "study_builder_secret_key",
     "response_datastore_db_password",
     "study_builder_db_password",
     "study_datastore_db_password",
@@ -74,9 +74,11 @@ resource "random_password" "system_secrets" {
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  version = "~> 9.1.0"
 
   name                    = "example-dev-secrets"
   org_id                  = ""
@@ -90,10 +92,10 @@ module "project" {
   ]
 }
 
-resource "google_secret_manager_secret" "manual_mystudies_wcp_user" {
+resource "google_secret_manager_secret" "manual_study_builder_user" {
   provider = google-beta
 
-  secret_id = "manual-mystudies-wcp-user"
+  secret_id = "manual-study-builder-user"
   project   = module.project.project_id
 
   replication {
@@ -106,10 +108,10 @@ resource "google_secret_manager_secret" "manual_mystudies_wcp_user" {
 }
 
 
-resource "google_secret_manager_secret" "manual_mystudies_wcp_password" {
+resource "google_secret_manager_secret" "manual_study_builder_password" {
   provider = google-beta
 
-  secret_id = "manual-mystudies-wcp-password"
+  secret_id = "manual-study-builder-password"
   project   = module.project.project_id
 
   replication {
@@ -514,10 +516,10 @@ resource "google_secret_manager_secret_version" "auto_mystudies_urs_secret_key_d
   secret_data = random_password.passwords["mystudies_urs_secret_key"].result
 }
 
-resource "google_secret_manager_secret" "auto_mystudies_wcp_client_id" {
+resource "google_secret_manager_secret" "auto_study_builder_client_id" {
   provider = google-beta
 
-  secret_id = "auto-mystudies-wcp-client-id"
+  secret_id = "auto-study-builder-client-id"
   project   = module.project.project_id
 
   replication {
@@ -529,17 +531,17 @@ resource "google_secret_manager_secret" "auto_mystudies_wcp_client_id" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_mystudies_wcp_client_id_data" {
+resource "google_secret_manager_secret_version" "auto_study_builder_client_id_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_mystudies_wcp_client_id.id
-  secret_data = random_string.strings["mystudies_wcp_client_id"].result
+  secret      = google_secret_manager_secret.auto_study_builder_client_id.id
+  secret_data = random_string.strings["study_builder_client_id"].result
 }
 
-resource "google_secret_manager_secret" "auto_mystudies_wcp_secret_key" {
+resource "google_secret_manager_secret" "auto_study_builder_secret_key" {
   provider = google-beta
 
-  secret_id = "auto-mystudies-wcp-secret-key"
+  secret_id = "auto-study-builder-secret-key"
   project   = module.project.project_id
 
   replication {
@@ -551,11 +553,11 @@ resource "google_secret_manager_secret" "auto_mystudies_wcp_secret_key" {
   }
 }
 
-resource "google_secret_manager_secret_version" "auto_mystudies_wcp_secret_key_data" {
+resource "google_secret_manager_secret_version" "auto_study_builder_secret_key_data" {
   provider = google-beta
 
-  secret      = google_secret_manager_secret.auto_mystudies_wcp_secret_key.id
-  secret_data = random_password.passwords["mystudies_wcp_secret_key"].result
+  secret      = google_secret_manager_secret.auto_study_builder_secret_key.id
+  secret_data = random_password.passwords["study_builder_secret_key"].result
 }
 
 resource "google_secret_manager_secret" "auto_response_datastore_db_password" {
