@@ -24,17 +24,17 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-db-credentials
-                  key: username
+                  name: study-builder-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-db-credentials
-                  key: password
+                  name: study-builder-credentials
+                  key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-db-credentials
+                  name: study-builder-credentials
                   key: dbname
             # MAIL SERVER
             - name: FROM_EMAIL_ADDRESS
@@ -48,9 +48,15 @@ spec:
                   name: email-credentials
                   key: email_password
             - name: SMTP_HOSTNAME
-              value: "smtp.gmail.com"
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_hostname
             - name: SMTP_USE_IP_WHITELIST
-              value: "false"
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_use_ip_whitelist
             - name: FROM_EMAIL_DOMAIN
               valueFrom:
                 secretKeyRef:
@@ -60,12 +66,12 @@ spec:
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-secrets
+                  name: study-builder-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-secrets
+                  name: study-builder-credentials
                   key: secret_key
             # SERVER CALLS
             - name: BASE_URL

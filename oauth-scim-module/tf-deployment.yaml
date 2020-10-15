@@ -24,28 +24,28 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: auth-server-db-credentials
-                  key: username
+                  name: auth-server-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: auth-server-db-credentials
-                  key: password
+                  name: auth-server-credentials
+                  key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: auth-server-db-credentials
+                  name: auth-server-credentials
                   key: dbname
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: auth-server-secrets
+                  name: client-side-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: auth-server-secrets
+                  name: client-side-credentials
                   key: secret_key
             # MAIL SERVER
             - name: FROM_EMAIL_ADDRESS
@@ -59,7 +59,10 @@ spec:
                   name: email-credentials
                   key: email_password
             - name: SMTP_HOSTNAME
-              value: "smtp.gmail.com"
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_hostname
             # SERVER CALLS
             - name: HYDRA_ADMIN_URL
               value: "http://hydra-np:4445"

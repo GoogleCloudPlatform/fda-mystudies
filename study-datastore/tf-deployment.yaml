@@ -24,17 +24,17 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-datastore-db-credentials
-                  key: username
+                  name: study-datastore-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-datastore-db-credentials
-                  key: password
+                  name: study-datastore-credentials
+                  key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: study-datastore-db-credentials
+                  name: study-datastore-credentials
                   key: dbname
             # SERVER CALLS
             - name: PARTICIPANT_USER_DATASTORE_URL

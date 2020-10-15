@@ -60,7 +60,10 @@ spec:
                   name: email-credentials
                   key: email_password
             - name: SMTP_HOSTNAME
-              value: smtp.gmail.com
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_hostname
             - name: MAIL_CONTACT_EMAIL
               valueFrom:
                 secretKeyRef:
