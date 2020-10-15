@@ -164,6 +164,86 @@ resource "google_secret_manager_secret" "manual_mystudies_email_password" {
 }
 
 
+resource "google_secret_manager_secret" "manual_mystudies_from_email_address" {
+  provider = google-beta
+
+  secret_id = "manual-mystudies-from-email-address"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_mystudies_contact_email_address" {
+  provider = google-beta
+
+  secret_id = "manual-mystudies-contact-email-address"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_mystudies_from_email_domain" {
+  provider = google-beta
+
+  secret_id = "manual-mystudies-from-email-domain"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_mystudies_smtp_hostname" {
+  provider = google-beta
+
+  secret_id = "manual-mystudies-smtp-hostname"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
+resource "google_secret_manager_secret" "manual_mystudies_smtp_use_ip_whitelist" {
+  provider = google-beta
+
+  secret_id = "manual-mystudies-smtp-use-ip-whitelist"
+  project   = module.project.project_id
+
+  replication {
+    user_managed {
+      replicas {
+        location = "us-central1"
+      }
+    }
+  }
+}
+
+
 resource "google_secret_manager_secret" "manual_mobile_app_appid" {
   provider = google-beta
 

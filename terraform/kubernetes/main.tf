@@ -88,6 +88,11 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-study-builder-password",
       "manual-mystudies-email-address",
       "manual-mystudies-email-password",
+      "manual-mystudies-contact-email-address",
+      "manual-mystudies-from-email-address",
+      "manual-mystudies-from-email-domain",
+      "manual-mystudies-smtp-hostname",
+      "manual-mystudies-smtp-use-ip-whitelist",
       "manual-mobile-app-appid",
       "manual-android-bundle-id",
       "manual-android-server-key",
@@ -182,12 +187,13 @@ resource "kubernetes_secret" "email_credentials" {
   }
 
   data = {
-    email_address  = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
-    email_password = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
-    # TODO(zohrehj): add manual secrets for these and fill in references below.
-    smtp_use_ip_whitelist = "?"
-    from_email_domain     = "?"
-    smtp_hostname         = "?"
+    email_address         = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
+    email_password        = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
+    contact_email_domain  = data.google_secret_manager_secret_version.secrets["manual-mystudies-contact-email-address"].secret_data
+    from_email_address    = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-address"].secret_data
+    from_email_domain     = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-domain"].secret_data
+    smtp_hostname         = data.google_secret_manager_secret_version.secrets["manual-mystudies-smtp-hostname"].secret_data
+    smtp_use_ip_whitelist = data.google_secret_manager_secret_version.secrets["manual-mystudies-smtp-use-ip-whitelist"].secret_data
   }
 }
 
