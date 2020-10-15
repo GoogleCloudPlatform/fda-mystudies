@@ -77,10 +77,7 @@ class SignInViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupNavigation()
-    setupProgressView()
-    setupEstimatedProgressObserver()
     DispatchQueue.main.async {
-      self.webKitView.navigationDelegate = self
       self.load()
       self.initializeTermsAndPolicy()
     }
@@ -90,7 +87,9 @@ class SignInViewController: UIViewController {
     super.viewWillAppear(animated)
     // unhide navigationbar
     self.navigationController?.setNavigationBarHidden(false, animated: true)
-
+    self.webKitView.navigationDelegate = self
+    setupProgressView()
+    setupEstimatedProgressObserver()
     if viewLoadFrom != .signUp {
       User.resetCurrentUser()
     }
