@@ -15,7 +15,7 @@ import {Permission} from 'src/app/shared/permission-enums';
 import {TemplateRef} from '@angular/core';
 import {RegistryParticipant} from 'src/app/shared/participant';
 import {SearchService} from 'src/app/shared/search.service';
-
+import {Location} from '@angular/common';
 @Component({
   selector: 'app-study-details',
   templateUrl: './study-details.component.html',
@@ -33,6 +33,7 @@ export class StudyDetailsComponent
   enrollmentStatus = EnrollmentStatus;
   permission = Permission;
   constructor(
+    private readonly locationLibrary: Location,
     private readonly modalService: BsModalService,
     private modalRef: BsModalRef,
     private readonly studyDetailsService: StudyDetailsService,
@@ -90,5 +91,8 @@ export class StudyDetailsComponent
       }),
     );
     this.modalRef.hide();
+  }
+  backClicked(): void {
+    this.locationLibrary.back();
   }
 }

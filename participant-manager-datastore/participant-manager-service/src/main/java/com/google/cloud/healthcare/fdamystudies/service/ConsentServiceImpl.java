@@ -20,8 +20,10 @@ import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SitePermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyConsentEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.SitePermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyConsentRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.Storage;
@@ -53,6 +55,8 @@ public class ConsentServiceImpl implements ConsentService {
 
   @Autowired private ParticipantManagerAuditLogHelper participantManagerHelper;
 
+  @Autowired private UserRegAdminRepository userRegAdminRepository;
+
   @Override
   @Transactional(readOnly = true)
   public ConsentDocumentResponse getConsentDocument(
@@ -68,12 +72,19 @@ public class ConsentServiceImpl implements ConsentService {
     }
 
     StudyConsentEntity studyConsentEntity = optStudyConsent.get();
-    Optional<SitePermissionEntity> optSitePermission =
-        sitePermissionRepository.findByUserIdAndSiteId(
-            userId, studyConsentEntity.getParticipantStudy().getSite().getId());
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
+    }
 
-    if (!optSitePermission.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+    if (!optUserRegAdminEntity.get().isSuperAdmin()) {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(
+              userId, studyConsentEntity.getParticipantStudy().getSite().getId());
+
+      if (!optSitePermission.isPresent()) {
+        throw new ErrorCodeException(ErrorCode.SITE_PERMISSION_ACCESS_DENIED);
+      }
     }
 
     String document = null;

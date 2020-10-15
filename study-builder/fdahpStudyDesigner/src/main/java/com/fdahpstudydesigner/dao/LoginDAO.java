@@ -22,6 +22,7 @@
 
 package com.fdahpstudydesigner.dao;
 
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.bo.UserPasswordHistory;
@@ -47,7 +48,7 @@ public interface LoginDAO {
 
   public void resetFailAttempts(String userEmailId);
 
-  public void updateFailAttempts(String userEmailId);
+  public void updateFailAttempts(String userEmailId, AuditLogEventRequest auditRequest);
 
   public String updatePasswordHistory(Integer userId, String userPassword);
 

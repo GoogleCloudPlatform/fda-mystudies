@@ -79,6 +79,7 @@ const errorMessages = {
     'You need to have permission to one or more studies to see app level information.',
   EC_0064: 'email_id already exist',
   EC_0122: 'Cannot add site for decommissioned location.',
+  EC_0123: 'You do not have permission to access this app',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;
