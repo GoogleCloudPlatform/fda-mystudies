@@ -91,7 +91,7 @@ public class AppController {
   private static KeyStore keyStore;
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
-  public static String loginCallback="login_callback";
+  public static String loginCallback = "login_callback";
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
     if (sharedPreferenceHelper == null) {
