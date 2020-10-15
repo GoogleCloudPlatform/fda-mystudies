@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class PasswordGeneratorTest {
 
   @ParameterizedTest
-  @ValueSource(ints = {0, 4, 8, 10, 12})
+  @ValueSource(ints = {8, 10, 12})
   public void isValidPassword(int passwordLength) {
     String password = PasswordGenerator.generate(passwordLength);
 
