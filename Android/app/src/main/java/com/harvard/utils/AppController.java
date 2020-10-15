@@ -91,6 +91,7 @@ public class AppController {
   private static KeyStore keyStore;
   private static final String TAG = "FDAKeystore";
   private static String keystoreValue = null;
+  public static String loginCallback="login_callback";
 
   public static SharedPreferenceHelper getHelperSharedPreference() {
     if (sharedPreferenceHelper == null) {
@@ -868,12 +869,14 @@ public class AppController {
       Intent intent = new Intent(context, StudyActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      mainIntent.putExtra("action", loginCallback);
       context.startActivity(mainIntent);
       ((Activity) context).finish();
     } else {
       Intent intent = new Intent(context, StandaloneActivity.class);
       ComponentName cn = intent.getComponent();
       Intent mainIntent = Intent.makeRestartActivityTask(cn);
+      mainIntent.putExtra("action", loginCallback);
       context.startActivity(mainIntent);
       ((Activity) context).finish();
     }
