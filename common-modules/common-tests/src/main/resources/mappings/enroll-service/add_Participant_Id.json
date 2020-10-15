@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "POST",
-		"url": "/mystudies-response-server/participant/add"
+		"url": "/response-datastore/participant/add"
 	},
 	"response": {
 		"status": 200,

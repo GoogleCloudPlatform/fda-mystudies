@@ -39,7 +39,7 @@ Note: Consider including {ENV} in {PREFIX}.
 
 Follow the
 [installation instructions](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine/#installation)
-to install the tfengine binary v0.2.0.
+to install the tfengine binary v0.4.0.
 
 ## Layout of the generated Terraform configs
 
