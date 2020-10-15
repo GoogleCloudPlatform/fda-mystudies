@@ -41,7 +41,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -240,7 +239,6 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Disabled
   // TODO(#668) Remove @Disabled when Github test case failed issue fix
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();

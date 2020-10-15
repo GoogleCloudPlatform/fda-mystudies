@@ -8,27 +8,27 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
-import java.security.SecureRandom;
 import java.util.UUID;
-import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 public final class IdGenerator {
 
-  private static SecureRandom secureRandom = new SecureRandom();
-
   private IdGenerator() {}
 
-  /**
-   * Generates a random Id using UUID and current time (milliseconds). Returns Sha256 Hex value of
-   * random id (length=64).
-   */
+  /** Generate a random Id using UUID and replace hyphen (-) with random alpha numeric letter */
   public static String id() {
-    String millis = String.valueOf(System.currentTimeMillis());
-    StringBuilder builder = new StringBuilder(UUID.randomUUID().toString());
-    for (int i = 0; i < millis.length(); i++) {
-      int index = secureRandom.nextInt(builder.length() - 1);
-      builder.insert(index, millis.charAt(i));
+    String uuid = UUID.randomUUID().toString();
+    StringBuilder builder = new StringBuilder();
+
+    // replace hyphen (-) with random alpha numeric letter
+    for (int i = 0; i < uuid.length(); i++) {
+      if (uuid.charAt(i) == '-') {
+        builder.append(RandomStringUtils.randomAlphanumeric(1));
+      } else {
+        builder.append(uuid.charAt(i));
+      }
     }
-    return DigestUtils.sha256Hex(builder.toString());
+
+    return builder.toString().toLowerCase();
   }
 }
