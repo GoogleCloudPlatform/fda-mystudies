@@ -42,17 +42,27 @@ provider "kubernetes" {
 }
 
 locals {
+  # hydra is treated separately.
   apps = [
     "auth-server",
-    "hydra",
     "response-datastore",
     "study-builder",
     "study-datastore",
     "participant-consent-datastore",
     "participant-enroll-datastore",
     "participant-user-datastore",
-    "participant-manager",
+    "participant-manager-datastore",
   ]
+  apps_db_names = {
+    "auth-server"                   = "oauth_server_hydra"
+    "response-datastore"            = "mystudies_response_server"
+    "study-builder"                 = "fda_hphc"
+    "study-datastore"               = "fda_hphc"
+    "participant-consent-datastore" = "mystudies_participant_datastore"
+    "participant-enroll-datastore"  = "mystudies_participant_datastore"
+    "participant-user-datastore"    = "mystudies_participant_datastore"
+    "participant-manager-datastore" = "mystudies_participant_datastore"
+  }
   service_account_ids = [
     "auth-server-gke-sa",
     "hydra-gke-sa",
@@ -62,25 +72,7 @@ locals {
     "consent-datastore-gke-sa",
     "enroll-datastore-gke-sa",
     "user-datastore-gke-sa",
-    "manager-gke-sa",
-  ]
-  apps_db_names = {
-    "auth-server"                   = "?"
-    "hydra"                         = "?"
-    "response-datastore"            = "?"
-    "study-builder"                 = "?"
-    "study-datastore"               = "?"
-    "participant-consent-datastore" = "?"
-    "participant-enroll-datastore"  = "?"
-    "participant-user-datastore"    = "?"
-    "participant-manager"           = "?"
-  }
-  # App codes for auth server authentication.
-  auth_server_app_codes = [
-    "ma",      # Mobile App
-    "urs",     # User Registration Server
-    "rs",      # Response Server
-    "builder", # Study Builder
+    "participant-manager-gke-sa",
   ]
 }
 
@@ -102,73 +94,71 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-bundle-id",
       "manual-ios-certificate",
       "manual-ios-certificate-password",
+      "auto-hydra-db-password",
+      "auto-hydra-db-user",
     ],
     formatlist("auto-%s-db-user", local.apps),
     formatlist("auto-%s-db-password", local.apps),
-    formatlist("auto-mystudies-%s-client-id", local.auth_server_app_codes),
-    formatlist("auto-mystudies-%s-secret-key", local.auth_server_app_codes))
+    formatlist("auto-%s-client-id", local.apps),
+    formatlist("auto-%s-secret-key", local.apps))
   )
 }
 
-# Secrets from Secret Manager.
-resource "kubernetes_secret" "apps_db_credentials" {
+# Shared secrets.
+resource "kubernetes_secret" "shared_secrets" {
+  metadata {
+    name = "shared-secrets"
+  }
+
+  data = {
+    gcp_bucket_name = "example-dev-mystudies-consent-documents"
+    base_url        = "https://example-dev.example.com."
+  }
+}
+
+# App credentials.
+resource "kubernetes_secret" "apps_credentials" {
   for_each = toset(local.apps)
 
   metadata {
-    name = "${each.key}-db-credentials"
+    name = "${each.key}-credentials"
   }
 
   data = {
     username = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-user"].secret_data
     password = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-password"].secret_data
+    username = data.google_secret_manager_secret_version.secrets["auto-${each.key}-client-id"].secret_data
+    password = data.google_secret_manager_secret_version.secrets["auto-${each.key}-secret-key"].secret_data
     dbname   = local.apps_db_names[each.key]
   }
 }
 
-# App-specific secrets.
-resource "kubernetes_secret" "response_server_secrets" {
+# Hydra credentials.
+resource "kubernetes_secret" "hydra_credentials" {
+
   metadata {
-    name = "response-server-secrets"
+    name = "hydra-credentials"
   }
 
   data = {
-    REGISTRATION_CLIENT_ID     = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-client-id"].secret_data
-    REGISTRATION_CLIENT_SECRET = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-secret-key"].secret_data
+    username = data.google_secret_manager_secret_version.secrets["auto-hydra-db-user"].secret_data
+    password = data.google_secret_manager_secret_version.secrets["auto-hydra-db-password"].secret_data
+    dbname   = "hydra"
   }
 }
 
-resource "kubernetes_secret" "user_registration_secrets" {
-  metadata {
-    name = "user-registration-secrets"
-  }
-
-  data = {
-    CLIENT_ID       = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-client-id"].secret_data
-    SECRET_KEY      = data.google_secret_manager_secret_version.secrets["auto-mystudies-urs-secret-key"].secret_data
-    GCP_BUCKET_NAME = "example-dev-mystudies-consent-documents"
-  }
-}
-
-resource "kubernetes_secret" "study_builder_secrets" {
-  metadata {
-    name = "study-builder-secrets"
-  }
-
-  data = {
-    CLIENT_ID  = data.google_secret_manager_secret_version.secrets["auto-mystudies-builder-client-id"].secret_data
-    SECRET_KEY = data.google_secret_manager_secret_version.secrets["auto-mystudies-builder-secret-key"].secret_data
-    BASE_URL   = "?"
-  }
-}
-
+# Email credentials.
 resource "kubernetes_secret" "email_credentials" {
   metadata {
     name = "email-credentials"
   }
 
   data = {
-    email_address  = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
-    email_password = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
+    email_address         = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
+    email_password        = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
+    contact_email_address = "?"
+    from_email_address    = "?"
+    smtp_host             = "?"
   }
 }
 
