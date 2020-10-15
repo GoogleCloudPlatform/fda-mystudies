@@ -393,6 +393,8 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAccessDeniedForAddNewParticipant() throws Exception {
     // Step 1: set manage site permission to view only
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
     sitePermissionEntity.setCanEdit(Permission.VIEW);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
@@ -486,6 +488,27 @@ public class SiteControllerTest extends BaseMockIT {
     auditEventMap.put(PARTICIPANT_EMAIL_ADDED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, PARTICIPANT_EMAIL_ADDED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForAddNewParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    ParticipantDetailRequest participantRequest = newParticipantRequest();
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ADD_NEW_PARTICIPANT.getPath(), siteEntity.getId())
+                .content(asJsonString(participantRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
     verifyTokenIntrospectRequest();
   }
 
@@ -1239,6 +1262,26 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnUserNotFoundForInviteParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    InviteParticipantRequest inviteParticipantRequest = new InviteParticipantRequest();
+    inviteParticipantRequest.setIds(Arrays.asList(participantRegistrySiteEntity.getId()));
+    mockMvc
+        .perform(
+            post(ApiEndpoint.INVITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                .content(asJsonString(inviteParticipantRequest))
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnFailedInvitationForDisabledParticipant() throws Exception {
     studyEntity.setApp(appEntity);
     siteEntity.setStudy(studyEntity);
@@ -1367,6 +1410,8 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnAccessDeniedForImportNewParticipant() throws Exception {
     // Step 1: set manage site permission to view only
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
     sitePermissionEntity.setCanEdit(Permission.VIEW);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
@@ -1387,6 +1432,26 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(MANAGE_SITE_PERMISSION_ACCESS_DENIED.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForImportNewParticipant() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    MockMultipartFile file = getMultipartFile("classpath:Email_Import_Template.xlsx");
+    mockMvc
+        .perform(
+            multipart(ApiEndpoint.IMPORT_PARTICIPANT.getPath(), siteEntity.getId())
+                .file(file)
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
 
     verifyTokenIntrospectRequest();
   }
@@ -1591,8 +1656,29 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnUserNotFoundForUpdateOnboardingStatus() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(newParticipantStatusRequest()))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnAccessDeniedError() throws Exception {
-    // Step 1: set manage site permission to view only
+    // Step 1: set manage site permission to view only and set super admin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     sitePermissionEntity = siteEntity.getSitePermissions().get(0);
     sitePermissionEntity.setCanEdit(Permission.VIEW);
     testDataHelper.getSiteRepository().saveAndFlush(siteEntity);

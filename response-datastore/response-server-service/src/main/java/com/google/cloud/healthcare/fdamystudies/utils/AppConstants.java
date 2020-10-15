@@ -47,8 +47,6 @@ public class AppConstants {
   public static final String ACTIVITY_VERSION_PARAM = "activityVersion";
   public static final String ERROR_STR = "Error";
   public static final String OPTIONS_METHOD = "OPTIONS";
-  public static final String CLIENT_ID_PARAM = "clientId";
-  public static final String CLIENT_SECRET_PARAM = "secretKey";
   public static final String SITE_ID_KEY = "siteId";
   public static final String STUDY_VERSION_KEY = "studyVersion";
   public static final String SHARING_CONSENT_KEY = "sharingConsent";

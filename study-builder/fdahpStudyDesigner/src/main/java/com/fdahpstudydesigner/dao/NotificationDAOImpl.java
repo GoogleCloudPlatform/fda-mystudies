@@ -327,7 +327,6 @@ public class NotificationDAOImpl implements NotificationDAO {
     Integer notificationId = 0;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sessionObject.getSessionId());
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       if (notificationBO.getNotificationId() == null) {
