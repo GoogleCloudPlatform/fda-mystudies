@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "POST",
-		"url": "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true"
+		"url": "/response-datastore/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true"
 	},
 	"response": {
 		"status": 200,

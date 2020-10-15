@@ -12,7 +12,6 @@ import com.google.cloud.healthcare.fdamystudies.bean.ParticipantStudyInformation
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationConfiguration;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.ProcessResponseException;
-import com.google.cloud.healthcare.fdamystudies.utils.ResponseServerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +28,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoService {
   @Autowired private RestTemplate restTemplate;
   @Autowired private ApplicationConfiguration appConfig;
+  @Autowired private OAuthService oauthService;
 
   private static final Logger logger =
       LoggerFactory.getLogger(ParticipantStudyInfoServiceImpl.class);
@@ -42,10 +42,7 @@ public class ParticipantStudyInfoServiceImpl implements ParticipantStudyInfoServ
     ResponseEntity<?> responseEntity = null;
     headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.set(AppConstants.CLIENT_ID_PARAM, appConfig.getRegServerClientId());
-    headers.set(
-        AppConstants.CLIENT_SECRET_PARAM,
-        ResponseServerUtil.getHashedValue(appConfig.getRegServerClientSecret()));
+    headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
     UriComponentsBuilder getPartInfoUriBuilder =
         UriComponentsBuilder.fromHttpUrl(appConfig.getRegServerPartStudyInfoUrl())

@@ -4,11 +4,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.google.cloud.healthcare.fdamystudies</groupId>
-  <artifactId>response-server-module</artifactId>
+  <artifactId>response-datastore</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>response-server-module</name>
+  <name>response-datastore</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
