@@ -125,11 +125,11 @@ resource "kubernetes_secret" "apps_credentials" {
   }
 
   data = {
-    username = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-user"].secret_data
-    password = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-password"].secret_data
-    username = data.google_secret_manager_secret_version.secrets["auto-${each.key}-client-id"].secret_data
-    password = data.google_secret_manager_secret_version.secrets["auto-${each.key}-secret-key"].secret_data
-    dbname   = local.apps_db_names[each.key]
+    username   = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-user"].secret_data
+    password   = data.google_secret_manager_secret_version.secrets["auto-${each.key}-db-password"].secret_data
+    client_id  = data.google_secret_manager_secret_version.secrets["auto-${each.key}-client-id"].secret_data
+    secret_key = data.google_secret_manager_secret_version.secrets["auto-${each.key}-secret-key"].secret_data
+    dbname     = local.apps_db_names[each.key]
   }
 }
 
