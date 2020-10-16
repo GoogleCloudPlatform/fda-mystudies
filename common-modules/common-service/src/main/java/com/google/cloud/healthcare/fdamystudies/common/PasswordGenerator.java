@@ -9,11 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
 import java.security.SecureRandom;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.text.RandomStringGenerator;
 import org.apache.syncope.common.lib.SecureTextRandomProvider;
@@ -83,13 +80,31 @@ public final class PasswordGenerator {
 
   private static void addMissingChar(
       char[] passwordChars, Map<String, Integer> countMap, String key) {
-    char randomChar = getRandomChar(key);
-    if (!countMap.containsKey(key)) {
-      countMap = sortMapByValue(countMap);
-      String firstKey = countMap.entrySet().iterator().next().getKey();
-      int position = findFirstIndexOf(passwordChars, firstKey);
-      passwordChars[position] = randomChar;
-      countMap.put(key, 1);
+    while (!insertNewChar(passwordChars, countMap, key)) ;
+  }
+
+  private static boolean insertNewChar(
+      char[] passwordChars, Map<String, Integer> countMap, String key) {
+    int position = secureRandom.nextInt(passwordChars.length);
+    char oldChar = passwordChars[position];
+    char newChar = getRandomChar(key);
+    if (Character.isDigit(oldChar) && countMap.get(DIGITS_KEY) > 1) {
+      passwordChars[position] = newChar;
+      incrementCount(countMap, key);
+      decrementCount(countMap, DIGITS_KEY);
+      return true;
+    } else if (Character.isLowerCase(oldChar) && LOWERCASE_KEY.equals(key)) {
+      passwordChars[position] = newChar;
+      incrementCount(countMap, key);
+      decrementCount(countMap, LOWERCASE_KEY);
+      return true;
+    } else if (Character.isUpperCase(oldChar) && UPPERCASE_KEY.equals(key)) {
+      passwordChars[position] = newChar;
+      incrementCount(countMap, key);
+      decrementCount(countMap, UPPERCASE_KEY);
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -114,29 +129,11 @@ public final class PasswordGenerator {
     }
   }
 
-  private static int findFirstIndexOf(char[] letters, String key) {
-    for (int i = 0; i < letters.length; i++) {
-      if (Character.isDigit(letters[i]) && DIGITS_KEY.equals(key)) {
-        return i;
-      } else if (Character.isLowerCase(letters[i]) && LOWERCASE_KEY.equals(key)) {
-        return i;
-      } else if (Character.isUpperCase(letters[i]) && UPPERCASE_KEY.equals(key)) {
-        return i;
-      }
+  private static void decrementCount(Map<String, Integer> countMap, String key) {
+    if (countMap.containsKey(key)) {
+      countMap.put(key, countMap.get(key) - 1);
+    } else {
+      countMap.put(key, 1);
     }
-    return 0;
-  }
-
-  private static Map<String, Integer> sortMapByValue(Map<String, Integer> countMap) {
-    return countMap
-        .entrySet()
-        .stream()
-        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
-        .collect(
-            Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue,
-                (oldValue, newValue) -> oldValue,
-                LinkedHashMap::new));
   }
 }
