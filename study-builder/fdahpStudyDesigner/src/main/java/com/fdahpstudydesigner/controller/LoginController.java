@@ -71,7 +71,7 @@ public class LoginController {
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.info("LoginController - addPassword() - Starts");
-    ModelAndView mv = new ModelAndView("redirect:login.do");
+    ModelAndView mv = new ModelAndView("redirect:sessionOut.do");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
       HttpSession session = request.getSession(false);
