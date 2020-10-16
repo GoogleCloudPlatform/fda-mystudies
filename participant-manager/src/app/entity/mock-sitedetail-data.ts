@@ -5,8 +5,11 @@ import {
   UpdateInviteResponse,
 } from '../site-coordinator/participant-details/participant-details';
 import {ApiResponse} from './api.response.model';
+
 import {RegistryParticipant} from '../shared/participant';
 import {SiteParticipants} from '../site-coordinator/sites/shared/site-detail.model';
+import {AddEmailResponse} from '../site-coordinator/sites/shared/add-email';
+import {ImportParticipantEmailResponse} from '../site-coordinator/sites/shared/import-participants';
 
 export const expectedSiteParticipantDetails = {
   participantRegistryDetail: {
@@ -21,6 +24,7 @@ export const expectedSiteParticipantDetails = {
     customLocationId: 'Location1',
     locationName: 'Location1',
     targetEnrollment: 1,
+
     registryParticipants: [
       {
         customLocationId: '',
@@ -35,6 +39,7 @@ export const expectedSiteParticipantDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        newlyCreatedUser: true,
       },
       {
         customLocationId: '',
@@ -91,8 +96,8 @@ export const expectedSendInviteResponse = {
 
 export const expectedAddParticipantResponse = {
   message: 'Email added successfully',
-} as ApiResponse;
+} as AddEmailResponse;
 
 export const expectedImportedEmailListResponse = {
   message: 'Email imported successfully',
-} as ApiResponse;
+} as ImportParticipantEmailResponse;

@@ -415,6 +415,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setId(adminforUpdate.getId());
     mockMvc
@@ -457,6 +458,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     DocumentContext json = JsonPath.parse(updateAdminUserRequestJson);
     updateAdminUserRequestJson =
         json.set("$.apps[0].studies[0].sites[0].siteId", siteEntity.getId())
@@ -501,6 +503,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     DocumentContext json = JsonPath.parse(updateAdminUserRequestJson);
     updateAdminUserRequestJson =
         json.set("$.apps[0].studies[0].studyId", studyEntity.getId())
@@ -546,6 +549,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     DocumentContext json = JsonPath.parse(updateAdminUserRequestJson);
     updateAdminUserRequestJson =
         json.set("$.apps[0].id", appEntity.getId())
@@ -588,6 +592,7 @@ public class UserControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnUserNotFoundErrorForUpdateUser() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setSuperAdmin(false);
     mockMvc
@@ -609,6 +614,7 @@ public class UserControllerTest extends BaseMockIT {
     userRegAdminEntity = testDataHelper.createNonSuperAdmin();
     adminforUpdate = testDataHelper.createSuperAdmin();
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setId(adminforUpdate.getId());
     mockMvc
@@ -634,6 +640,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect must not be blank
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())
@@ -652,6 +659,7 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnPermissionMissingErrorForUpdateUser() throws Exception {
     adminforUpdate = testDataHelper.createSuperAdmin();
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())

@@ -16,7 +16,7 @@ export interface User extends ApiResponse {
 
   emailChanged: number;
 
-  status: Status;
+  status?: Status;
 
   manageUsers: number;
 
