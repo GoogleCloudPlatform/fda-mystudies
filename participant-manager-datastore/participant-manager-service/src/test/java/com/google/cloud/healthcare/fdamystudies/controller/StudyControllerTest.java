@@ -221,6 +221,9 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAppNotFoundForStudyParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -241,6 +244,9 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnAccessDeniedForStudyParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -261,7 +267,60 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnStudyParticipantsForSuperAdmin() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    locationEntity = testDataHelper.createLocation();
+    studyEntity.setType(OPEN_STUDY);
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setTargetEnrollment(0);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(1)))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].siteId")
+                .value(siteEntity.getId()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].locationName")
+                .value(locationEntity.getName()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
+                .value(participantStudyEntity.getStatus()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.targetEnrollment")
+                .value(siteEntity.getTargetEnrollment()));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnStudyParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -446,6 +505,24 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnUserNotFoundForStudyParticipants() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnUserNotFound() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
 
@@ -464,9 +541,55 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldUpdateTargetEnrollmentForSuperAdmin() throws Exception {
+    // Step 1:Set request body
+    UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
+
+    // Step 2: Call API and expect TARGET_ENROLLMENT_UPDATE_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
+                    .headers(headers)
+                    .content(asJsonString(targetEnrollmentRequest))
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.siteId", notNullValue()))
+            .andExpect(
+                jsonPath(
+                    "$.message", is(MessageCode.TARGET_ENROLLMENT_UPDATE_SUCCESS.getMessage())))
+            .andReturn();
+
+    String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
+
+    // Step 3: verify updated values
+    Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
+    SiteEntity siteEntity = optSiteEntity.get();
+    assertNotNull(siteEntity);
+    assertEquals(siteEntity.getStudy().getId(), studyEntity.getId());
+    assertEquals(siteEntity.getTargetEnrollment(), targetEnrollmentRequest.getTargetEnrollment());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setSiteId(siteEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(ENROLLMENT_TARGET_UPDATED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, ENROLLMENT_TARGET_UPDATED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldUpdateTargetEnrollment() throws Exception {
     // Step 1:Set request body
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
 
     // Step 2: Call API and expect TARGET_ENROLLMENT_UPDATE_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
@@ -536,6 +659,8 @@ public class StudyControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnStudyPermissionAccessDeniedForUpdateTargetEnrollment() throws Exception {
     // Step 1:Set permission to READ_VIEW
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
     UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
     StudyPermissionEntity studyPermissionEntity = studyEntity.getStudyPermissions().get(0);
     studyPermissionEntity.setEdit(Permission.VIEW);
@@ -610,6 +735,25 @@ public class StudyControllerTest extends BaseMockIT {
                 is(
                     ErrorCode.CANNOT_UPDATE_ENROLLMENT_TARGET_FOR_DECOMMISSIONED_SITE
                         .getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForUpdateTargetEnrollment() throws Exception {
+    UpdateTargetEnrollmentRequest targetEnrollmentRequest = newUpdateEnrollmentTargetRequest();
+
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, IdGenerator.id());
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_TARGET_ENROLLMENT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .content(asJsonString(targetEnrollmentRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
 
     verifyTokenIntrospectRequest();
   }

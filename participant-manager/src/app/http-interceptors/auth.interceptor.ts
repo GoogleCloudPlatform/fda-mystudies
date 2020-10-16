@@ -67,19 +67,20 @@ export class AuthInterceptor implements HttpInterceptor {
           authServerResponse.refresh_token,
         );
         return next.handle(this.setHeaders(request)).pipe(
-          catchError((error) => {
+          catchError((error: unknown) => {
             return throwError(error);
           }),
         );
       },
-      (error) => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        const customError = error.error as ApiResponse;
-        if (getMessage(customError.error_code)) {
-          this.toasterService.error(getMessage(customError.error_code));
+      (error: unknown) => {
+        if (error instanceof HttpErrorResponse) {
+          const customError = error.error as ApiResponse;
+          if (getMessage(customError.error_code)) {
+            this.toasterService.error(getMessage(customError.error_code));
+          }
+            sessionStorage.clear();
+            void this.router.navigate(['/']);
         }
-          sessionStorage.clear();
-          void this.router.navigate(['/']);
       },
     );
   }
@@ -99,10 +100,8 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
-      console.log('inside auth content type');
-      console.log(req.headers);
-      if (!req.headers.has('content-type')) {
-                headers = headers.append(
+      if (!req.headers.has('Content-Type')) {
+        headers = headers.append(
           'Content-Type',
           'application/x-www-form-urlencoded',
         );
@@ -120,8 +119,9 @@ export class AuthInterceptor implements HttpInterceptor {
           'Authorization',
           `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
         );
+
       if (!req.headers.get('skipIfUpload')) {
-        headers = headers.append('content-type', 'application/json');
+        headers = headers.append('Content-Type', 'application/json');
       }
       return req.clone({headers});
     }
@@ -137,7 +137,6 @@ export class AuthInterceptor implements HttpInterceptor {
         console.log(err);
         if (err instanceof HttpErrorResponse) {
           if (err.status === 401) {
-            console.log('in 401 error status :');
             this.handle401Error(request, next);
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);

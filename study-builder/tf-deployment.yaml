@@ -1,42 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: participant-user-datastore
+  name: study-builder
   labels:
-    app: participant-user-datastore
+    app: study-builder
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: participant-user-datastore
+      app: study-builder
   template:
     metadata:
       labels:
-        app: participant-user-datastore
+        app: study-builder
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: participant-user-datastore
-          image: gcr.io/fda-mystudies-dev-apps/participant-user-datastore:latest
+        - name: study-builder
+          image: gcr.io/fda-mystudies-dev-apps/study-builder:latest
           env:
             # DB ACCESS
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-credentials
+                  name: study-builder-credentials
                   key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-credentials
+                  name: study-builder-credentials
                   key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-credentials
+                  name: study-builder-credentials
                   key: dbname
-            # EMAIL SERVER
+            # MAIL SERVER
             - name: FROM_EMAIL_ADDRESS
               valueFrom:
                 secretKeyRef:
@@ -47,16 +47,6 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
-            - name: MAIL_FROM_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: email-credentials
-                  key: from_email_address
-            - name: MAIL_CONTACT_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: email-credentials
-                  key: contact_email_address
             - name: SMTP_HOSTNAME
               valueFrom:
                 secretKeyRef:
@@ -72,53 +62,36 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: from_email_domain
-            # AUTHENTICATION
+            #  AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-credentials
+                  name: study-builder-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-credentials
+                  name: study-builder-credentials
                   key: secret_key
-            # PUSH NOTIFICATIONS
-            - name: FCM_API_URL
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: fcm_api_url
-            - name: IOS_NOTIFICATION_TYPE
-              value: "production"
             # SERVER CALLS
-            - name: SCIM_AUTH_URL
-              value: "http://auth-server-np:50000"
-            - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: base_url
+            - name: PARTICIPANT_USER_DATASTORE_URL
+              value: "http://participant-user-datastore-np:50000"
+            - name: RESPONSE_DATASTORE_URL
+              value: "http://response-datastore-np:50000"
             # MISC
-            - name: ORG_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: org_name
-            - name: LOG_PATH
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: log_path
-            - name: INSTITUTION_RESOURCES_BUCKET_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: institution_resources_bucket_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
+
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /participant-user-datastore/healthCheck
+              path: /studybuilder/healthCheck.do
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
@@ -136,4 +109,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-user-datastore-gcloud-key
+          secretName: study-builder-gcloud-key

@@ -1,73 +1,67 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: participant-consent-datastore
+  name: study-datastore
   labels:
-    app: participant-consent-datastore
+    app: study-datastore
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: participant-consent-datastore
+      app: study-datastore
   template:
     metadata:
       labels:
-        app: participant-consent-datastore
+        app: study-datastore
       annotations:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: participant-consent-datastore
-          image: gcr.io/fda-mystudies-dev-apps/participant-consent-datastore:latest
+        - name: study-datastore
+          image: gcr.io/fda-mystudies-dev-apps/study-datastore:latest
           env:
             # DB ACCESS
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: participant-consent-datastore-credentials
+                  name: study-datastore-credentials
                   key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: participant-consent-datastore-credentials
+                  name: study-datastore-credentials
                   key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-consent-datastore-credentials
+                  name: study-datastore-credentials
                   key: dbname
-            # AUTHENTICATION
-            - name: CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: participant-consent-datastore-credentials
-                  key: client_id
-            - name: SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: participant-consent-datastore-credentials
-                  key: secret_key
             # SERVER CALLS
-            - name: HYDRA_ADMIN_URL
-              value: "http://hydra-np:4445"
+            - name: PARTICIPANT_USER_DATASTORE_URL
+              value: "http://participant-user-datastore-np:50000"
             # MISC
-            - name: GCP_BUCKET_NAME
+            - name: BASE_URL
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: gcp_bucket_name
-            - name: LOG_PATH
+                  key: base_url
+            - name: TERMS_AND_CONDITION_URL
               valueFrom:
                 secretKeyRef:
                   name: shared-secrets
-                  key: log_path
+                  key: terms_url
+            - name: PRIVACY_POLICY_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: privacy_url
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:
           - containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /participant-consent-datastore/healthCheck
+              path: /study-datastore/healthCheck
               port: 8080
           volumeMounts:
           - name: gcloud-key-volume
@@ -85,4 +79,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-consent-datastore-gcloud-key
+          secretName: study-datastore-gcloud-key

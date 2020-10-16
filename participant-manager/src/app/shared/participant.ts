@@ -23,7 +23,7 @@ export interface RegistryParticipant {
   enrolledStudies: string[];
   enrollments: Enrollment[];
   consentHistory: Consent[];
-  newlyCreatedUser: boolean;
+  newlyCreatedUser?: boolean;
 }
 export interface Site {
   siteId: string;

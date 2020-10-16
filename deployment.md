@@ -312,10 +312,10 @@ regenerating the Terraform configs several times.
 
 ### Step 10: Mobile app setups
 
-1. Build and destribute iOS and Android apps following their individual
+1. Build and distribute iOS and Android apps following their individual
     instructions.
 
-1. Once you have setup push notification for the apps, copy the values to their
+1. Once you have set up push notification for the apps, copy the values to their
     corresponding secrets:
 
     ```bash

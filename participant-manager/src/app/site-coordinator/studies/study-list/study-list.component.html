@@ -13,11 +13,11 @@
             <div>
               <div class="flex__ flex__row align__items__center">
                 <div class="img__container__left" *ngIf="study.logoImageUrl">
-                  <img [src]="study.logoImageUrl" />
+                  <img [src]="study.logoImageUrl" alt="" />
                 </div>
                 <div>
                   <div class="blue__text__md text-capitalize">
-                    {{ study.customId }}
+                    {{ study.name }}
                   </div>
                   <div
                     class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"

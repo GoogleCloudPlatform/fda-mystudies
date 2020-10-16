@@ -12,11 +12,13 @@
             <div>
               <div class="mb-xs">
                 Site Participant Registry
-                <span [ngClass]="
+                <span
+                  [ngClass]="
                     siteParticipants.participantRegistryDetail.siteStatus === 1
                       ? 'active__'
                       : 'inActive__'
-                  ">
+                  "
+                >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
                       ? "Active"
@@ -71,12 +73,18 @@
                   <div [ngClass]="toggleDisplay ? 'show' : ''" class="dropdown-content participantSlideDown">
                     <div class="flex__justify__space-between mb-xs">
                       <div class="mr-sm">
-                        <button class="primary__btn font__bold" (click)="openModal(addEmail)">
+                        <button
+                          class="primary__btn font__bold"
+                          (click)="openModal(addEmail)"
+                        >
                           Add Email
                         </button>
                       </div>
                       <div>
-                        <button class="primary__btn font__bold" (click)="openModal(importEmaillist)">
+                        <button
+                          class="primary__btn font__bold"
+                          (click)="openModal(importEmaillist)"
+                        >
                           Import Email List
                         </button>
                       </div>
@@ -120,12 +128,18 @@
               <div [ngClass]="toggleDisplay ? 'show' : ''" lass="dropdown-content participantSlideDown">
                 <div class="flex__justify__space-between mb-xs">
                   <div class="mr-sm">
-                    <button class="primary__btn font__bold" (click)="openModal(addEmail)">
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(addEmail)"
+                    >
                       Add Email
                     </button>
                   </div>
                   <div>
-                    <button class="primary__btn font__bold" (click)="openModal(importEmaillist)">
+                    <button
+                      class="primary__btn font__bold"
+                      (click)="openModal(importEmaillist)"
+                    >
                       Import Email List
                     </button>
                   </div>
@@ -338,8 +352,10 @@
             <tbody>
               <tr *ngFor="let participant of mf.data">
                 <!-- for all Selected -->
-                <td *ngIf="activeTab == onBoardingStatus.All"
-                  [routerLink]="['/coordinator/participant', participant.id]">
+                <td
+                  *ngIf="activeTab == onBoardingStatus.All"
+                  [routerLink]="['/coordinator/participant', participant.id]"
+                >
                   <span class="no_st_en">{{ participant.email }}</span>
                 </td>
 
@@ -347,13 +363,20 @@
                 <td *ngIf="activeTab == onBoardingStatus.New">
                   <div>
                     <div class="form-group mb-none">
-                      <input type="checkbox" id="{{ participant.id }}" [checked]="participant.newlyCreatedUser"
-                        (change)="rowCheckBoxChange($event)" />
+                      <input
+                        type="checkbox"
+                        id="{{ participant.id }}"
+                        [checked]="participant.newlyCreatedUser"
+                        (change)="rowCheckBoxChange($event)"
+                      />
                       <label for="{{ participant.id }}">
-                        <span class="no_st_en" [routerLink]="[
+                        <span
+                          class="no_st_en"
+                          [routerLink]="[
                             '/coordinator/participant',
                             participant.id
-                          ]">
+                          ]"
+                        >
                           {{ participant.email }}
                         </span>
                       </label>
@@ -380,19 +403,26 @@
                       <div *ngIf="participant.enrollmentStatus == 'Yet to Enroll'">
                         <input type="checkbox" id="{{ participant.id }}" (change)="rowCheckBoxChange($event)" />
                         <label for="{{ participant.id }}">
-                          <span class="no_st_en" [routerLink]="[
+                          <span
+                            class="no_st_en"
+                            [routerLink]="[
                               '/coordinator/participant',
                               participant.id
-                            ]">
+                            ]"
+                          >
                             {{ participant.email }}
                           </span>
                         </label>
                       </div>
-                      <div *ngIf="participant.enrollmentStatus != 'Yet to Enroll'">
-                        <span [routerLink]="[
+                      <div
+                        *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
+                      >
+                        <span
+                          [routerLink]="[
                             '/coordinator/participant',
                             participant.id
-                          ]">
+                          ]"
+                        >
                           {{ participant.email }}
                         </span>
                       </div>
@@ -408,10 +438,13 @@
                     <div class="form-group mb-none">
                       <input type="checkbox" id="{{ participant.id }}" (change)="rowCheckBoxChange($event)" />
                       <label for="{{ participant.id }}">
-                        <span class="no_st_en" [routerLink]="[
+                        <span
+                          class="no_st_en"
+                          [routerLink]="[
                             '/coordinator/participant',
                             participant.id
-                          ]">
+                          ]"
+                        >
                           {{ participant.email }}
                         </span>
                       </label>
@@ -452,14 +485,20 @@
 
     <ng-template #addEmail>
       <div class="modal-body modal__body">
-        <app-add-email [siteId]="siteId" (addEmail)="onSucceedAddEmail($event)" (cancel)="modalRef.hide()">
-        </app-add-email>
+        <app-add-email
+          [siteId]="siteId"
+          (addEmail)="onSucceedAddEmail($event)"
+          (cancel)="modalRef.hide()"
+        ></app-add-email>
       </div>
     </ng-template>
     <ng-template #importEmaillist>
       <div class="modal-body modal__body">
-        <app-import-email-list [siteId]="siteId" (import)="onFileImportSuccess($event)" (cancel)="modalRef.hide()">
-        </app-import-email-list>
+        <app-import-email-list
+          [siteId]="siteId"
+          (import)="onFileImportSuccess($event)"
+          (cancel)="modalRef.hide()"
+        ></app-import-email-list>
       </div>
     </ng-template>
   </div>

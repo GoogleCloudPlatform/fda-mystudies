@@ -18,7 +18,7 @@ public enum ApiEndpoint {
 
   HEALTH("http://localhost:8080/participant-manager-datastore/healthCheck"),
 
-  SET_UP_ACCOUNT("http://localhost:8080/participant-manager-datastore/users/"),
+  SET_UP_ACCOUNT("http://localhost:8080/participant-manager-datastore/users/setUpAccount"),
 
   PATCH_USER("http://localhost:8080/participant-manager-datastore/users/{userId}"),
 

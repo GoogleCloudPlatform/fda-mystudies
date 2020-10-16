@@ -16,7 +16,6 @@ import {TemplateRef} from '@angular/core';
 import {RegistryParticipant} from 'src/app/shared/participant';
 import {SearchService} from 'src/app/shared/search.service';
 import {Location} from '@angular/common';
-
 @Component({
   selector: 'app-study-details',
   templateUrl: './study-details.component.html',
