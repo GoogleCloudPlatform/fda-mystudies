@@ -1,9 +1,9 @@
+name: Build studybuilder
 on:
   pull_request:
     paths:
     - 'study-builder/fdahpStudyDesigner/**'
     - '.github/workflows/build-studybuilder.yml'
-name: Build studybuilder
 jobs:
   build:
     runs-on: ubuntu-latest
