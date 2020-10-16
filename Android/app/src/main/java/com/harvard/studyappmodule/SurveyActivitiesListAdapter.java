@@ -400,41 +400,7 @@ public class SurveyActivitiesListAdapter
           .getType()
           .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
         try {
-          if (endDate != null) {
-            if (items.get(position).getSchedulingType().equalsIgnoreCase("AnchorDate")
-                && items.get(position).getAnchorDate() != null
-                && items.get(position).getAnchorDate().getSourceType() != null
-                && items
-                    .get(position)
-                    .getAnchorDate()
-                    .getSourceType()
-                    .equalsIgnoreCase("EnrollmentDate")
-                && items.get(position).getAnchorDate().getStart() == null
-                && items.get(position).getAnchorDate().getEnd() != null
-                && joiningDate.after(startDate)) {
-              Calendar joiningCalendar = Calendar.getInstance();
-              joiningCalendar.setTime(joiningDate);
-              Calendar startCalendar = Calendar.getInstance();
-              startCalendar.setTime(startDate);
-              startCalendar.set(Calendar.DAY_OF_MONTH, joiningCalendar.get(Calendar.DAY_OF_MONTH));
-              startCalendar.set(Calendar.MONTH, joiningCalendar.get(Calendar.MONTH));
-              startCalendar.set(Calendar.YEAR, joiningCalendar.get(Calendar.YEAR));
-              holder.date.setText(
-                  simpleDateFormatForOtherFreq.format(startCalendar.getTime())
-                      + " to "
-                      + simpleDateFormatForOtherFreq.format(endDate));
-            } else {
-              holder.date.setText(
-                  simpleDateFormatForOtherFreq.format(startDate)
-                      + " to "
-                      + simpleDateFormatForOtherFreq.format(endDate));
-            }
-          } else {
-            holder.date.setText(
-                context.getResources().getString(R.string.from)
-                    + " : "
-                    + simpleDateFormatForOtherFreq.format(startDate));
-          }
+          holder.date.setText(getDates(items, endDate, position, startDate, joiningDate, context));
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -759,5 +725,50 @@ public class SurveyActivitiesListAdapter
       Logger.log(e);
     }
     return pos;
+  }
+
+  public String getDates(
+      ArrayList<ActivitiesWS> items,
+      Date endDate,
+      int position,
+      Date startDate,
+      Date joiningDate,
+      Context context) {
+    SimpleDateFormat simpleDateFormatForOtherFreq = AppController.getDateFormatForOtherFreq();
+    String date = "";
+    if (endDate != null) {
+      if (items.get(position).getSchedulingType().equalsIgnoreCase("AnchorDate")
+          && items.get(position).getAnchorDate() != null
+          && items.get(position).getAnchorDate().getSourceType() != null
+          && items.get(position).getAnchorDate().getSourceType().equalsIgnoreCase("EnrollmentDate")
+          && items.get(position).getAnchorDate().getStart() == null
+          && items.get(position).getAnchorDate().getEnd() != null
+          && joiningDate.after(startDate)) {
+        Calendar joiningCalendar = Calendar.getInstance();
+        joiningCalendar.setTime(joiningDate);
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(startDate);
+        startCalendar.set(Calendar.DAY_OF_MONTH, joiningCalendar.get(Calendar.DAY_OF_MONTH));
+        startCalendar.set(Calendar.MONTH, joiningCalendar.get(Calendar.MONTH));
+        startCalendar.set(Calendar.YEAR, joiningCalendar.get(Calendar.YEAR));
+
+        date =
+            simpleDateFormatForOtherFreq.format(startCalendar.getTime())
+                + " to "
+                + simpleDateFormatForOtherFreq.format(endDate);
+      } else {
+
+        date =
+            simpleDateFormatForOtherFreq.format(startDate)
+                + " to "
+                + simpleDateFormatForOtherFreq.format(endDate);
+      }
+    } else {
+      date =
+          context.getResources().getString(R.string.from)
+              + " : "
+              + simpleDateFormatForOtherFreq.format(startDate);
+    }
+    return date;
   }
 }

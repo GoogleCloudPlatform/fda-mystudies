@@ -724,7 +724,7 @@ public class SurveyScheduler {
     return activityStatusData;
   }
 
-  private int getTotalRunsForUpcomingActivities(
+  public int getTotalRunsForUpcomingActivities(
       ActivitiesWS activityListItem,
       Date starttime,
       Date endtime,
