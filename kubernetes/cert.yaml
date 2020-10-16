@@ -4,4 +4,4 @@ metadata:
   name: fda-mystudies-cert
 spec:
   domains:
-    - fda-mystudies.domain.com
+    - mystudies.hcls.joonix.net

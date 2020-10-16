@@ -1,6 +1,6 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/study-designer', '.']
-  dir: "study-builder"
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/study-builder', '.']
+  dir: "study-builder/fdahpStudyDesigner"
 
-images: ['gcr.io/$PROJECT_ID/study-designer']
+images: ['gcr.io/$PROJECT_ID/study-builder']
