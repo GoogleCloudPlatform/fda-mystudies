@@ -12,7 +12,7 @@ export interface Study {
   studyPermission: number;
   totalSitesCount: number;
   type: string;
-  logo: string;
+  logoImageUrl: string;
   invited?: number;
   enrolled?: number;
 }
