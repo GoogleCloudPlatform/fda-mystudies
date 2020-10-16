@@ -21,8 +21,7 @@ spec:
         - name: participant-manager-datastore
           image: gcr.io/fda-mystudies-dev-apps/participant-manager-datastore:latest
           env:
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: "/secrets/gcloud_key/key.json"
+            # DB ACCESS
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
@@ -38,38 +37,18 @@ spec:
                 secretKeyRef:
                   name: participant-manager-datastore-db-credentials
                   key: password
+            # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: participant-manager-datastore-secrets
-                  key: CLIENT_ID
+                  key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: participant-manager-datastore-secrets
-                  key: SECRET_KEY
-            - name: BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: participant-manager-datastore-secrets
-                  key: BASE_URL
-            - name: GCP_BUCKET_NAME
-            valueFrom:
-              secretKeyRef:
-                name: participant-manager-datastore-secrets
-                key: GCP_BUCKET_NAME
-            # email configs
-            - name:  MAIL_PROTOCOL
-              value: smtp
-            - name: MAIL_HOST
-              value: smtp.gmail.com
-            - name: MAIL_PORT
-              value: 465
-            - name: MAIL_FROM_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: email-credentials
-                  key: email_address
+                  key: secret_key
+            # MAIL SERVER
             - name: MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -80,8 +59,49 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
+            - name: SMTP_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_hostname
             - name: MAIL_CONTACT_EMAIL
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: contact_email_address
+            - name: MAIL_FROM_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: from_email_address
+            # SERVER CALLS
+            - name: HYDRA_ADMIN_URL
+              value: "http://hydra-np:4445"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000"
+            # MISC
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: base_url
+            - name: GCP_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: gcp_bucket_name
+            - name: ORG_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: org_name
+            - name: LOG_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
 
           ports:
           - containerPort: 8080

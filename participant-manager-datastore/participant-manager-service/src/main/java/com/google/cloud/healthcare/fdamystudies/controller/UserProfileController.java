@@ -86,7 +86,7 @@ public class UserProfileController {
   }
 
   @PostMapping(
-      value = "/users/",
+      value = "/users/setUpAccount",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SetUpAccountResponse> setUpAccount(
