@@ -87,7 +87,6 @@ Upload the SQL files to the bucket:
 
 ```bash
 $ gsutil cp \
-  ./auth-server-ws/auth_server_db_script.sql \
   ./study-builder/sqlscript/* \
   ./response-datastore/sqlscripts/mystudies_response_server_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
@@ -101,12 +100,6 @@ if the connection name is "myproject-data:us-east1:mystudies", you should use
 just "mystudies".
 
 Import the scripts, in this order:
-
-#### Auth server
-
-```bash
-gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/auth_server_db_script.sql
-```
 
 #### Study builder
 
