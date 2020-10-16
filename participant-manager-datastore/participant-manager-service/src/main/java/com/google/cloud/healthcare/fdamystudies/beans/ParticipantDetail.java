@@ -53,8 +53,6 @@ public class ParticipantDetail {
 
   private String appName;
 
-  private String onboardringStatus;
-
   private String invitationDate;
 
   private String userDetailsId;
