@@ -15,39 +15,39 @@ public class AuditLogEventRequest implements Serializable {
 
   private String eventCode;
 
-private String description;
+  private String description;
 
-private String source;
+  private String source;
 
-private String destination;
+  private String destination;
 
-private String resourceServer;
+  private String resourceServer;
 
-private String userId;
+  private String userId;
 
-private String userAccessLevel;
+  private String userAccessLevel;
 
-private String sourceApplicationVersion;
+  private String sourceApplicationVersion;
 
-private String destinationApplicationVersion;
+  private String destinationApplicationVersion;
 
-private String platformVersion;
+  private String platformVersion;
 
-private Timestamp occurred;
+  private Timestamp occurred;
 
-private String appId;
+  private String appId;
 
-private String userIp;
+  private String userIp;
 
-private String mobilePlatform;
+  private String mobilePlatform;
 
-private String appVersion;
+  private String appVersion;
 
-private String participantId;
+  private String participantId;
 
-private String studyId;
+  private String studyId;
 
-private String studyVersion;
+  private String studyVersion;
 
-private String siteId;
+  private String siteId;
 }
