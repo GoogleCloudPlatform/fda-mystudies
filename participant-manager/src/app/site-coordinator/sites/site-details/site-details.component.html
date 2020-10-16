@@ -1,5 +1,5 @@
 <ng-container *ngIf="siteParticipants$ | async as siteParticipants">
-  <div>
+  <div class="site__details">
     <div class="subheader p-none pl-none">
       <div class="max__w__1280 m-none">
         <div class="flex__justify__space-between">
@@ -11,11 +11,17 @@
                 <img src="assets/svgs/back-arrow.svg" alt="" />
               </a>
             </div>
-            <div>
+            <div class="pl-1">
               <div class="mb-xs">
                 Site Participant Registry
-                 <span  [ngClass]="(siteParticipants.participantRegistryDetail.siteStatus === 1)? 'active__':'inActive__'" >
-                    {{
+                <span
+                  [ngClass]="
+                    siteParticipants.participantRegistryDetail.siteStatus === 1
+                      ? 'active__'
+                      : 'inActive__'
+                  "
+                >
+                  {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
                       ? "Active"
                       : "Decommissioned"
@@ -91,7 +97,7 @@
                         </button>
                       </div>
                     </div>
-                    <div class="flex__row__reverse">
+                    <div class="flex__row__reverse pr-3">
                       <a
                         download="Email_Import_Template"
                         target="_blank"
@@ -372,14 +378,14 @@
       <div class="tab-content site__table">
         <div>
           <table
-            class="table table-striped"
+            class="table table-striped custom__table"
             [mfData]="
               siteParticipants.participantRegistryDetail.registryParticipants
             "
             #mf="mfDataTable"
             [mfRowsOnPage]="10"
           >
-            <thead>
+            <thead class="custom__thead">
               <tr>
                 <span
                   class="sort__by__text mobile__view mr-sm"
@@ -417,8 +423,11 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let participant of mf.data">
+            <tbody class="custom__tbody">
+              <tr
+                *ngFor="let participant of mf.data"
+                class="border__bottom__red border-top__c4d1e6 progress__bar"
+              >
                 <!-- for all Selected -->
                 <td
                   *ngIf="activeTab == onBoardingStatus.All"
@@ -552,7 +561,7 @@
                 </td>
               </tr>
             </tbody>
-            <tfoot>
+            <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">
                   <mfBootstrapPaginator></mfBootstrapPaginator>

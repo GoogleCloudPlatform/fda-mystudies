@@ -16,12 +16,12 @@
 <div class="max__w__1280 m-none" *ngIf="manageUser$ | async as manageUsers">
   <div class="cards1 m-none">
     <table
-      class="table table-striped"
+      class="table table-striped custom__table"
       [mfData]="manageUsers.users"
       #mf="mfDataTable"
       [mfRowsOnPage]="10"
     >
-      <thead>
+      <thead class="custom__thead">
         <tr>
           <th>
             <mfDefaultSorter by="firstName">First Name</mfDefaultSorter>
@@ -37,8 +37,9 @@
           </th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class="custom__tbody">
         <tr
+          class="border__bottom__red border-top__c4d1e6 progress__bar"
           *ngFor="let user of mf.data"
           routerLink="/coordinator/users/{{ user.id }}"
         >
@@ -60,7 +61,7 @@
           </td>
         </tr>
       </tbody>
-      <tfoot>
+      <tfoot class="custom__tfoot">
         <tr>
           <td colspan="4">
             <mfBootstrapPaginator></mfBootstrapPaginator>

@@ -1041,3 +1041,42 @@ pre {
 .subheader {
   min-height: 67px;
 }
+
+.fa {
+  color: var(--white);
+}
+
+.site__details .subheader {
+  min-height: 67px;
+  line-height: 100% !important;
+}
+
+.participant__details .subheader {
+  min-height: 67px;
+  line-height: 100% !important;
+}
+
+tfoot.custom__tfoot th,
+tfoot.custom__tfoot td {
+  border: none;
+  background: #f2f5f8 !important;
+  font-weight: normal;
+  border-bottom: none;
+  border-top: none;
+}
+
+.table.custom__table {
+  box-shadow: none !important;
+  border-radius: 7px;
+  background: var(--white);
+}
+tbody.custom__tbody,
+thead.custom__thead {
+  box-shadow: 1px 1px 5px 0px #ccd7e2;
+  border-radius: 7px;
+  background: var(--white);
+}
+
+.ng-select .ng-arrow-wrapper {
+  top: -10px !important;
+}
