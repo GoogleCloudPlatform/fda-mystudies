@@ -46,6 +46,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -133,13 +134,21 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnUnauthorized() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", INVALID_BEARER_TOKEN);
+    headers.add("Origin", "http://localhost:4200");
 
-    performPost(
-        ApiEndpoint.USERS.getPath(),
-        asJsonString(newUserRequest()),
-        headers,
-        "Invalid token",
-        UNAUTHORIZED);
+    mockMvc
+        .perform(
+            post(ApiEndpoint.USERS.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(newUserRequest()))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error_description").value(ErrorCode.UNAUTHORIZED.getDescription()))
+        .andExpect(header().string("Access-Control-Allow-Headers", "*"))
+        .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+        .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4200"))
+        .andReturn();
 
     verify(
         1,
