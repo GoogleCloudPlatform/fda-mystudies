@@ -100,6 +100,22 @@ module "example_dev_mystudies_consent_documents" {
   ]
 }
 
+module "example_dev_mystudies_institution_resources" {
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name       = "example-dev-mystudies-institution-resources"
+  project_id = module.project.project_id
+  location   = "us-central1"
+
+  iam_members = [
+    {
+      member = "serviceAccount:user-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
+    },
+  ]
+}
+
 module "example_dev_mystudies_fda_resources" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"

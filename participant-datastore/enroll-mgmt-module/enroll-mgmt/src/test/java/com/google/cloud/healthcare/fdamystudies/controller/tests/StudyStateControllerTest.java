@@ -32,7 +32,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.controller.StudyStateController;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
@@ -57,6 +62,10 @@ public class StudyStateControllerTest extends BaseMockIT {
   @Autowired private ObjectMapper objectMapper;
 
   @Autowired protected MockMvc mockMvc;
+
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
+
+  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   protected ObjectMapper getObjectMapper() {
     return objectMapper;
@@ -286,7 +295,17 @@ public class StudyStateControllerTest extends BaseMockIT {
             .filter(s -> s.getParticipantId().equals(Constants.PARTICIPANT_ID))
             .findFirst();
 
+    Optional<ParticipantStudyEntity> participantStudy =
+        participantStudyRepository.findByParticipantId(Constants.PARTICIPANT_ID);
+
+    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+        participantRegistrySiteRepository.findById(
+            participantStudy.get().getParticipantRegistrySite().getId());
+
     assertTrue(study.isPresent());
+    assertEquals(
+        optParticipantRegistrySite.get().getOnboardingStatus(),
+        OnboardingStatus.DISABLED.getCode());
     assertEquals(AppConstants.WITHDRAWN, study.get().getStatus());
   }
 
