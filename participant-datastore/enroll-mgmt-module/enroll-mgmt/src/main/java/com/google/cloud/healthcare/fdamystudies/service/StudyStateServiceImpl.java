@@ -274,6 +274,8 @@ public class StudyStateServiceImpl implements StudyStateService {
       ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
       participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
       participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+      participantStudy.get().setParticipantId(null);
+      participantStudyRepository.saveAndFlush(participantStudy.get());
 
       enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
       respBean = new WithDrawFromStudyRespBean();
