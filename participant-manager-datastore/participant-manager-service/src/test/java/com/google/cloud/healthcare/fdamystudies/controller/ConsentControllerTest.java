@@ -24,6 +24,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
@@ -146,7 +147,9 @@ public class ConsentControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnSitePermissionAccessDeniedForConsentDocument() throws Exception {
-    // Site 1: set siteEntity without sitePermissionEntity
+    // Step 1: set siteEntity without sitePermissionEntity and set super admin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
     siteEntity = testDataHelper.newSiteEntity();
     studyConsentEntity.getParticipantStudy().setSite(siteEntity);
     testDataHelper.getStudyConsentRepository().save(studyConsentEntity);
@@ -215,6 +218,31 @@ public class ConsentControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath(
                 "$.error_description", is(ErrorCode.CONSENT_DATA_NOT_AVAILABLE.getDescription())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForConsentDocument() throws Exception {
+    // Step 1: set siteEntity without sitePermissionEntity and set super admin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+    siteEntity = testDataHelper.newSiteEntity();
+    studyConsentEntity.getParticipantStudy().setSite(siteEntity);
+    testDataHelper.getStudyConsentRepository().save(studyConsentEntity);
+
+    // Step 2: Call API and expect SITE_PERMISSION_ACEESS_DENIED error
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, IdGenerator.id());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_CONSENT_DOCUMENT.getPath(), studyConsentEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error_description", is(ErrorCode.USER_NOT_FOUND.getDescription())));
 
     verifyTokenIntrospectRequest();
   }

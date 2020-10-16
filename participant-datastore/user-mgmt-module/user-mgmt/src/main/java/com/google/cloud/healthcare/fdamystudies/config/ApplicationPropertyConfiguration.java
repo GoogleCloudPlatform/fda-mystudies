@@ -52,10 +52,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${ios.push.notification.type}")
   private String iosPushNotificationType;
 
-  // Comma separated list of whitelisted domains.
-  @Value("${email.whitelisted_domains}")
-  private String whitelistedUserDomains;
-
   // Feedback & Contactus mail content starts
   @Value("${feedback.mail.content}")
   private String feedbackMailBody;
@@ -75,9 +71,6 @@ public class ApplicationPropertyConfiguration {
   @Value("${contactus.email}")
   private String contactusToEmail;
   // Feedback & Contactus mail content ends
-
-  @Value("${cloud.institution.bucket}")
-  private String institutionBucketName;
 
   @Value("${org.name}")
   private String orgName;
