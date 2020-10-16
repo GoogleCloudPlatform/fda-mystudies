@@ -169,12 +169,12 @@ public class LoginController {
       userId = sesObj.getUserId();
       String newPassword =
           (null != request.getParameter("newPassword"))
-                  && !"".equals(request.getParameter("newPassword"))
+              && !"".equals(request.getParameter("newPassword"))
               ? request.getParameter("newPassword").replaceAll(request.getParameter("_csrf"), "")
               : "";
       String oldPassword =
           (null != request.getParameter("oldPassword"))
-                  && !"".equals(request.getParameter("oldPassword"))
+              && !"".equals(request.getParameter("oldPassword"))
               ? request.getParameter("oldPassword").replaceAll(request.getParameter("_csrf"), "")
               : "";
       message = loginService.changePassword(userId, newPassword, oldPassword, sesObj);
@@ -237,12 +237,6 @@ public class LoginController {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     try {
-      SessionObject sesObj =
-          (SessionObject)
-              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      UUID uuid = UUID.randomUUID(); // Generates random UUID.
-      auditRequest.setCorrelationId(
-          sesObj == null ? uuid.toString().toUpperCase() : sesObj.getSessionId());
       String email =
           ((null != request.getParameter("email")) && !"".equals(request.getParameter("email")))
               ? request.getParameter("email")
@@ -421,9 +415,6 @@ public class LoginController {
     ModelAndView mv = new ModelAndView("redirect:login.do");
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      SessionObject sesObj =
-          (SessionObject)
-              request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
       ModelMap map = new ModelMap();
       if (null != request.getSession(false).getAttribute("sucMsg")) {
         map.addAttribute("sucMsg", request.getSession(false).getAttribute("sucMsg"));
