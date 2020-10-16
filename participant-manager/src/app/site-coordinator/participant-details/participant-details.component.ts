@@ -84,8 +84,8 @@ export class ParticipantDetailsComponent
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.getParticipant();
           }
+          this.getParticipant();
         }),
     );
   }
@@ -104,8 +104,8 @@ export class ParticipantDetailsComponent
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.getParticipant();
           }
+           this.getParticipant();
         }),
     );
   }
