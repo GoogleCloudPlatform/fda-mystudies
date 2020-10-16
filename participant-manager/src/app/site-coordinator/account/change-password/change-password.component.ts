@@ -66,9 +66,9 @@ export class ChangePasswordComponent
         }
         void this.router.navigate(['/coordinator/accounts']);
       },
-      (error) => {
-        this.toastr.error(getMessage(error));
-      },
+      // (error) => {
+      //   this.toastr.error(getMessage(error));
+      // },
     );
   }
   cancel() {
