@@ -82,7 +82,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
         session
             .createQuery(
                 "from ParticipantRegistrySiteEntity PS where study.customId =:studyId and"
-                    + " enrollmentToken=:token and email=:email")
+                    + " upper(trim(enrollmentToken))=:token and email=:email")
             .setParameter("studyId", studyId)
             .setParameter("token", token.toUpperCase())
             .setParameter("email", email)
@@ -117,7 +117,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
                 "from ParticipantStudyEntity PS,StudyEntity SB, ParticipantRegistrySiteEntity PR"
                     + " where SB.id =PS.study.id and PS.participantRegistrySite.id=PR.id"
                     + " and PS.status in (:studyStateStatus) "
-                    + " and PS.status='Enrolled' and PR.enrollmentToken=:token and SB.customId=:studyId")
+                    + " and upper(trim(PR.enrollmentToken))=:token and SB.customId=:studyId")
             .setParameter("studyStateStatus", studyStateStatus)
             .setParameter("token", tokenValue.toUpperCase())
             .setParameter("studyId", studyId)
@@ -216,7 +216,10 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
         participantRegistryRoot =
             participantRegistryCriteria.from(ParticipantRegistrySiteEntity.class);
         participantRegistryPredicates[0] =
-            criteriaBuilder.equal(participantRegistryRoot.get("enrollmentToken"), tokenValue);
+            criteriaBuilder.equal(
+                criteriaBuilder.upper(
+                    criteriaBuilder.trim(participantRegistryRoot.get("enrollmentToken"))),
+                tokenValue);
         participantRegistryCriteria
             .select(participantRegistryRoot)
             .where(participantRegistryPredicates);

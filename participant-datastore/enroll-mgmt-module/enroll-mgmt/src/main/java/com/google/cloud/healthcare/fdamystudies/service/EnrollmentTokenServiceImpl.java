@@ -80,13 +80,13 @@ public class EnrollmentTokenServiceImpl implements EnrollmentTokenService {
       AuditLogEventRequest auditRequest) {
     logger.info("EnrollmentTokenServiceImpl enrollParticipant() - Starts ");
     boolean isTokenRequired = enrollmentTokenDao.enrollmentTokenRequired(shortName);
-    String hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue);
+    String hashedTokenValue = EnrollmentManagementUtil.getHashedValue(tokenValue.toUpperCase());
     String participantId =
         enrollUtil.getParticipantId("", hashedTokenValue, shortName, auditRequest);
     EnrollmentResponseBean participantBean =
         enrollmentTokenDao.enrollParticipant(
             shortName,
-            tokenValue,
+            tokenValue.toUpperCase(),
             commonService.getUserInfoDetails(userId),
             isTokenRequired,
             participantId);

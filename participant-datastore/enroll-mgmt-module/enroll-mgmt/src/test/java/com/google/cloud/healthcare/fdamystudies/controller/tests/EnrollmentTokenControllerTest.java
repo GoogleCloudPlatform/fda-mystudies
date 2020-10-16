@@ -12,9 +12,11 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.E
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.PARTICIPANT_ID_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_ELIGIBLE_FOR_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.USER_FOUND_INELIGIBLE_FOR_STUDY;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -192,7 +194,6 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
 
   @Test
   public void enrollParticipantSuccessStudyTypeClose() throws Exception {
-
     // study type close
     String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
     HttpHeaders headers = TestUtils.getCommonHeaders();
@@ -219,6 +220,76 @@ public class EnrollmentTokenControllerTest extends BaseMockIT {
     verifyAuditEventCall(auditEventMap, PARTICIPANT_ID_RECEIVED);
 
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void enrollParticipantSuccessForCaseInsensitiveToken() throws Exception {
+    // study type close
+    String requestJson = getEnrollmentJson("6DL0pOqf", Constants.STUDYOF_HEALTH_CLOSE);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ENROLL_PATH.getPath())
+                .headers(headers)
+                .content(requestJson)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_ID_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PARTICIPANT_ID_RECEIVED);
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldFailEnrollmentForExistingParticipant() throws Exception {
+    // study type close
+    String requestJson = getEnrollmentJson(Constants.TOKEN_NEW, Constants.STUDYOF_HEALTH_CLOSE);
+    HttpHeaders headers = TestUtils.getCommonHeaders();
+    headers.add(Constants.USER_ID_HEADER, Constants.VALID_USER_ID);
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ENROLL_PATH.getPath())
+                .headers(headers)
+                .content(requestJson)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(Constants.STUDYOF_HEALTH_CLOSE);
+    auditRequest.setUserId(Constants.VALID_USER_ID);
+    auditRequest.setParticipantId("i4ts7dsf50c6me154sfsdfdv");
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(PARTICIPANT_ID_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, PARTICIPANT_ID_RECEIVED);
+
+    verifyTokenIntrospectRequest();
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.ENROLL_PATH.getPath())
+                .headers(headers)
+                .content(requestJson)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.message", is("Token already in use")));
   }
 
   @Test
