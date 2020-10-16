@@ -156,7 +156,9 @@ public class SurveyActivitiesListAdapter
             .get(holder.getAdapterPosition())
             .equalsIgnoreCase(status.get(holder.getAdapterPosition() - 1))) {
       holder.stateLayout.setVisibility(View.VISIBLE);
+      holder.hrLine1.setVisibility(View.GONE);
     } else {
+      holder.hrLine1.setVisibility(View.VISIBLE);
       holder.stateLayout.setVisibility(View.GONE);
     }
 
@@ -168,7 +170,6 @@ public class SurveyActivitiesListAdapter
     } else {
       holder.container2.setVisibility(View.GONE);
       holder.container.setVisibility(View.VISIBLE);
-      holder.hrLine1.setVisibility(View.VISIBLE);
       if (status
               .get(holder.getAdapterPosition())
               .equalsIgnoreCase(SurveyActivitiesFragment.STATUS_UPCOMING)

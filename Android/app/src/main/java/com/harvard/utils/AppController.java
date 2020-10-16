@@ -182,6 +182,11 @@ public class AppController {
     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
   }
 
+  public static void getHelperHideKeyboardContext(Context context, View view) {
+    InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+  }
+
   public static final int getColor(Context context, int id) {
     final int version = Build.VERSION.SDK_INT;
     if (version >= 23) {
