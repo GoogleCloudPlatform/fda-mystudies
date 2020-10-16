@@ -48,9 +48,11 @@ resource "google_firestore_index" "activities_index" {
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  version = "~> 9.1.0"
 
   name                    = "mystudies-dev-firebase"
   org_id                  = ""
@@ -66,7 +68,7 @@ module "project" {
 
 module "project_iam_members" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 6.2.0"
+  version = "~> 6.3.0"
 
   projects = [module.project.project_id]
   mode     = "additive"

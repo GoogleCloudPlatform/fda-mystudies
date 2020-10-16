@@ -25,9 +25,11 @@ terraform {
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  version = "~> 9.1.0"
 
   name                    = "mystudies-dev-audit"
   org_id                  = ""
@@ -64,7 +66,7 @@ resource "google_logging_folder_sink" "bigquery_audit_logs_sink" {
   name             = "bigquery-audit-logs-sink"
   folder           = var.folder
   include_children = true
-  filter           = "logName:\"logs/cloudaudit.googleapis.com\""
+  filter           = "logName:\"logs/cloudaudit.googleapis.com\" OR logName=\"logs/application-audit-log\""
   destination      = "bigquery.googleapis.com/projects/${module.project.project_id}/datasets/${module.bigquery_destination.bigquery_dataset.dataset_id}"
 }
 
@@ -99,13 +101,13 @@ resource "google_logging_folder_sink" "storage_audit_logs_sink" {
   name             = "storage-audit-logs-sink"
   folder           = var.folder
   include_children = true
-  filter           = "logName:\"logs/cloudaudit.googleapis.com\""
+  filter           = "logName:\"logs/cloudaudit.googleapis.com\" OR logName=\"logs/application-audit-log\""
   destination      = "storage.googleapis.com/${module.storage_destination.bucket.name}"
 }
 
 module "storage_destination" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
-  version = "~> 1.6.0"
+  version = "~> 1.7.0"
 
   name          = "mystudies-dev-7yr-audit-logs"
   project_id    = module.project.project_id

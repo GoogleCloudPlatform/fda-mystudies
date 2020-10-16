@@ -719,7 +719,6 @@ class DBHandler: NSObject {
       .filter {
         $0.sourceActivityId == activityId
           && $0.studyId == studyId
-          && $0.startDate == nil
       }
 
     guard let dbActivity = dbActivities.last

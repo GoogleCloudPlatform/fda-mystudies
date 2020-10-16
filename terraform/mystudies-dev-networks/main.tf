@@ -25,9 +25,11 @@ terraform {
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  version = "~> 9.1.0"
 
   name                    = "mystudies-dev-networks"
   org_id                  = ""
@@ -51,7 +53,7 @@ resource "google_compute_shared_vpc_host_project" "host" {
 
 module "bastion_vm" {
   source  = "terraform-google-modules/bastion-host/google"
-  version = "~> 2.7.0"
+  version = "~> 2.10.0"
 
   name         = "bastion-vm"
   project      = module.project.project_id
@@ -66,6 +68,8 @@ module "bastion_vm" {
   image_project = "ubuntu-os-cloud"
 
 
+
+
   startup_script = <<EOF
 sudo apt-get -y update
 sudo apt-get -y install mysql-client
@@ -77,7 +81,7 @@ EOF
 
 module "mystudies_dev_network" {
   source  = "terraform-google-modules/network/google"
-  version = "~> 2.4.0"
+  version = "~> 2.5.0"
 
   network_name = "mystudies-dev-network"
   project_id   = module.project.project_id
@@ -116,7 +120,7 @@ module "mystudies_dev_network" {
 
 module "cloud_sql_private_service_access_mystudies_dev_network" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
-  version = "~> 3.2.0"
+  version = "~> 4.1.0"
 
   project_id  = module.project.project_id
   vpc_network = module.mystudies_dev_network.network_name

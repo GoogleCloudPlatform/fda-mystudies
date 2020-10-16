@@ -31,9 +31,11 @@ data "google_secret_manager_secret_version" "mystudies_db_default_password" {
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
-  source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
+  version = "~> 9.1.0"
 
   name                    = "mystudies-dev-data"
   org_id                  = ""
@@ -62,7 +64,7 @@ module "mystudies_dev_mystudies_firestore_data" {
 
 module "mystudies" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/safer_mysql"
-  version = "~> 3.2.0"
+  version = "~> 4.1.0"
 
   name              = "mystudies"
   project_id        = module.project.project_id
@@ -76,7 +78,7 @@ module "mystudies" {
 
 module "project_iam_members" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 6.2.0"
+  version = "~> 6.3.0"
 
   projects = [module.project.project_id]
   mode     = "additive"
@@ -119,6 +121,22 @@ module "mystudies_dev_mystudies_consent_documents" {
     },
     {
       member = "serviceAccount:participant-manager-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com"
+      role   = "roles/storage.objectAdmin"
+    },
+  ]
+}
+
+module "mystudies_dev_mystudies_institution_resources" {
+  source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
+  version = "~> 1.4"
+
+  name       = "mystudies-dev-mystudies-institution-resources"
+  project_id = module.project.project_id
+  location   = "us-east1"
+
+  iam_members = [
+    {
+      member = "serviceAccount:user-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
   ]

@@ -89,7 +89,7 @@ Upload the SQL files to the bucket:
 $ gsutil cp \
   ./auth-server-ws/auth_server_db_script.sql \
   ./study-builder/sqlscript/* \
-  ./response-datastore/mystudies_response_server_db_script.sql \
+  ./response-datastore/sqlscripts/mystudies_response_server_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_user_registration_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
@@ -139,7 +139,7 @@ root of the repo):
 
 1. oauth-scim-module/tf-deployment.yaml
 1. hydra/tf-deployment.yaml
-1. response-server-module/tf-deployment.yaml
+1. response-datastore/tf-deployment.yaml
 1. study-builder/tf-deployment.yaml
 1. study-datastore/tf-deployment.yaml
 1. participant-datastore/consent-mgmt-module/tf-deployment.yaml
@@ -169,6 +169,8 @@ In the ./kubernetes/ingress.yaml file:
 In ./participant-manager/src/environments/environment.prod.ts
 
 * Change the domain name to match your organization.
+* Change `clientId` to the value of `auto-auth-server-client-id`; this value
+ can be found in your secret project's secret manager.
 
 ### GKE Cluster - Terraform
 
@@ -232,7 +234,7 @@ Apply all deployments:
 ```bash
 $ kubectl apply \
   -f ./study-datastore/tf-deployment.yaml \
-  -f ./response-server-ws/tf-deployment.yaml \
+  -f ./response-datastore/tf-deployment.yaml \
   -f ./participant-datastore/consent-mgmt-module/tf-deployment.yaml \
   -f ./participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
   -f ./participant-datastore/user-mgmt-module/tf-deployment.yaml \
@@ -248,7 +250,7 @@ Apply all services:
 ```bash
 $ kubectl apply \
   -f ./study-datastore/tf-service.yaml \
-  -f ./response-server-ws/tf-service.yaml \
+  -f ./response-datastore/tf-service.yaml \
   -f ./participant-datastore/consent-mgmt-module/tf-service.yaml \
   -f ./participant-datastore/enroll-mgmt-module/tf-service.yaml \
   -f ./participant-datastore/user-mgmt-module/tf-service.yaml \

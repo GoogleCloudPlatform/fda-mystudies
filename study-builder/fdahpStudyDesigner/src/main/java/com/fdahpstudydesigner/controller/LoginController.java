@@ -40,7 +40,6 @@ import com.fdahpstudydesigner.util.SessionObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
-import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -72,7 +71,7 @@ public class LoginController {
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.info("LoginController - addPassword() - Starts");
-    ModelAndView mv = new ModelAndView("redirect:login.do");
+    ModelAndView mv = new ModelAndView("redirect:sessionOut.do");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
       HttpSession session = request.getSession(false);
@@ -346,8 +345,6 @@ public class LoginController {
     sesObj =
         (SessionObject)
             request.getSession(false).getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-    auditRequest.setCorrelationId(sesObj.getSessionId());
-    auditRequest.setUserId(sesObj.getEmail());
     try {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
       if (auth != null) {
@@ -361,8 +358,6 @@ public class LoginController {
       request.getSession(true).setAttribute("sucMsg", sucMsg);
     } catch (Exception e) {
       logger.error("LoginController - sessionOut() - ERROR ", e);
-      auditRequest.setCorrelationId(sesObj.getSessionId());
-      auditRequest.setUserId(sesObj.getEmail());
       auditRequest.setSource(USER_SIGNOUT_FAILED.getSource().getValue());
       auditRequest.setDestination(USER_SIGNOUT_FAILED.getDestination().getValue());
       auditLogEventHelper.logEvent(USER_SIGNOUT_FAILED, auditRequest);
@@ -457,10 +452,6 @@ public class LoginController {
         map.addAttribute("userBO", userBO);
         mv = new ModelAndView("signUpPage", map);
       } else {
-        // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
-        // services
-        UUID uuid = UUID.randomUUID(); // Generates random UUID.
-        auditRequest.setCorrelationId(uuid.toString().toUpperCase());
         auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
         mv = new ModelAndView("userPasswordReset", map);
       }

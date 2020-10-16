@@ -81,8 +81,6 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
     StudyBuilderAuditEvent auditLogEvent = null;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setUserId(String.valueOf(userId));
-      auditRequest.setCorrelationId(userSession.getSessionId());
       message = dashBoardAndProfiledao.updateProfileDetails(userBO, userId);
       if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         auditLogEvent = USER_ACCOUNT_UPDATED;
