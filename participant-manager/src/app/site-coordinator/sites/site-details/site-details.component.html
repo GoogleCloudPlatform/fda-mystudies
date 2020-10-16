@@ -1,15 +1,17 @@
 <ng-container *ngIf="siteParticipants$ | async as siteParticipants">
-  <div>
+  <div class="site__details">
     <div class="subheader p-none pl-none">
       <div class="max__w__1280 m-none">
         <div class="flex__justify__space-between">
-          <div class="subheader__title flex__justify__space-between align__items__baseline">
+          <div
+            class="subheader__title flex__justify__space-between align__items__baseline"
+          >
             <div>
               <a routerLink="/coordinator/studies/sites">
                 <img src="assets/svgs/back-arrow.svg" alt="" />
               </a>
             </div>
-            <div>
+            <div class="pl-1">
               <div class="mb-xs">
                 Site Participant Registry
                 <span
@@ -65,12 +67,18 @@
             <div class="flex__justify__space-between">
               <div>
                 <div class="dropdown">
-                  <button name="btnToggleParticipant" class="dropbtn btn banner__primary__btn mr-sm tnsb"
-                    (click)="toggleParticipant()">
+                  <button
+                    name="btnToggleParticipant"
+                    class="dropbtn btn banner__primary__btn mr-sm tnsb"
+                    (click)="toggleParticipant()"
+                  >
                     Add Participants
                     <i class="fa fa-caret-down"></i>
                   </button>
-                  <div [ngClass]="toggleDisplay ? 'show' : ''" class="dropdown-content participantSlideDown">
+                  <div
+                    [ngClass]="toggleDisplay ? 'show' : ''"
+                    class="dropdown-content participantSlideDown"
+                  >
                     <div class="flex__justify__space-between mb-xs">
                       <div class="mr-sm">
                         <button
@@ -89,9 +97,13 @@
                         </button>
                       </div>
                     </div>
-                    <div class="flex__row__reverse">
-                      <a download="Email_Import_Template" target="_blank" href="/assets/Email_Import_Template.xlsx"
-                        class="p-none">
+                    <div class="flex__row__reverse pr-3">
+                      <a
+                        download="Email_Import_Template"
+                        target="_blank"
+                        href="/assets/Email_Import_Template.xlsx"
+                        class="p-none"
+                      >
                         <div class="download__text">Download Template</div>
                       </a>
                     </div>
@@ -99,8 +111,11 @@
                 </div>
               </div>
               <div>
-                <button name="buttonDecommision" class="btn banner__default__btn flex__row__reverse pad__5__13"
-                  (click)="decommissionSite()">
+                <button
+                  name="buttonDecommision"
+                  class="btn banner__default__btn flex__row__reverse pad__5__13"
+                  (click)="decommissionSite()"
+                >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
                       ? "Decommission Site for Study"
@@ -120,12 +135,18 @@
         <div class="flex__ flex__justify__center">
           <div>
             <div class="dropdown">
-              <button name="btnToggleParticipant" class="dropbtn btn banner__primary__btn mr-sm font12"
-                (click)="toggleParticipant()">
+              <button
+                name="btnToggleParticipant"
+                class="dropbtn btn banner__primary__btn mr-sm font12"
+                (click)="toggleParticipant()"
+              >
                 Add Participants
                 <i class="fa fa-caret-down"></i>
               </button>
-              <div [ngClass]="toggleDisplay ? 'show' : ''" lass="dropdown-content participantSlideDown">
+              <div
+                [ngClass]="toggleDisplay ? 'show' : ''"
+                lass="dropdown-content participantSlideDown"
+              >
                 <div class="flex__justify__space-between mb-xs">
                   <div class="mr-sm">
                     <button
@@ -145,8 +166,12 @@
                   </div>
                 </div>
                 <div class="flex__row__reverse">
-                  <a download="Email_Import_Template" target="_blank" href="/assets/Email_Import_Template.xlsx"
-                    class="p-none">
+                  <a
+                    download="Email_Import_Template"
+                    target="_blank"
+                    href="/assets/Email_Import_Template.xlsx"
+                    class="p-none"
+                  >
                     <div class="download__text">Download Template</div>
                   </a>
                 </div>
@@ -154,8 +179,11 @@
             </div>
           </div>
           <div>
-            <button name="buttonDecommision" class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
-              (click)="decommissionSite()">
+            <button
+              name="buttonDecommision"
+              class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
+              (click)="decommissionSite()"
+            >
               Decommission Site for Study
             </button>
           </div>
@@ -174,7 +202,11 @@
             </a>
           </li>
           <li [ngClass]="{active: activeTab == onBoardingStatus.New}">
-            <a class="classNew" data-toggle="tab" (click)="changeTab(onBoardingStatus.New)">
+            <a
+              class="classNew"
+              data-toggle="tab"
+              (click)="changeTab(onBoardingStatus.New)"
+            >
               New
               <span class="font11">
                 ({{
@@ -208,22 +240,33 @@
       </div>
       <div class="sred">
         <div class="flex__ flex__justify__center">
-          <div *ngIf="
+          <div
+            *ngIf="
               activeTab == onBoardingStatus.New ||
               activeTab == onBoardingStatus.Invited
-            " class="mr-sm">
-            <button class="dropbtn btn banner__primary__btn white__text bt__font12__pad113" (click)="sendInvitation()">
+            "
+            class="mr-sm"
+          >
+            <button
+              class="dropbtn btn banner__primary__btn white__text bt__font12__pad113"
+              (click)="sendInvitation()"
+            >
               {{ sendResend }}
             </button>
           </div>
 
-          <div class="sendResendActiveClass" *ngIf="
+          <div
+            class="sendResendActiveClass"
+            *ngIf="
               activeTab == onBoardingStatus.New ||
               activeTab == onBoardingStatus.Invited ||
               activeTab == onBoardingStatus.Disabled
-            ">
-            <button class="btn banner__default__btn flex__row__reverse pad__5__13 bt__font12__pad113"
-              (click)="toggleInvitation()">
+            "
+          >
+            <button
+              class="btn banner__default__btn flex__row__reverse pad__5__13 bt__font12__pad113"
+              (click)="toggleInvitation()"
+            >
               {{ enableDisable }}
             </button>
           </div>
@@ -233,7 +276,9 @@
 
     <div class="max__w__1280 p-none site__participant">
       <div class="desk__view">
-        <div class="flex__justify__space-between bg__white yel__tabs border-bottom__dee2e6">
+        <div
+          class="flex__justify__space-between bg__white yel__tabs border-bottom__dee2e6"
+        >
           <div>
             <ul class="nav nav-tabs">
               <li [ngClass]="{active: activeTab == onBoardingStatus.All}">
@@ -248,7 +293,11 @@
                 </a>
               </li>
               <li [ngClass]="{active: activeTab == onBoardingStatus.New}">
-                <a class="classNew" data-toggle="tab" (click)="changeTab(onBoardingStatus.New)">
+                <a
+                  class="classNew"
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.New)"
+                >
                   New
                   <span class="font11">
                     ({{
@@ -259,7 +308,10 @@
                 </a>
               </li>
               <li [ngClass]="{active: activeTab == onBoardingStatus.Invited}">
-                <a data-toggle="tab" (click)="changeTab(onBoardingStatus.Invited)">
+                <a
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.Invited)"
+                >
                   Invited
                   <span class="font11">
                     ({{
@@ -270,7 +322,10 @@
                 </a>
               </li>
               <li [ngClass]="{active: activeTab == onBoardingStatus.Disabled}">
-                <a data-toggle="tab" (click)="changeTab(onBoardingStatus.Disabled)">
+                <a
+                  data-toggle="tab"
+                  (click)="changeTab(onBoardingStatus.Disabled)"
+                >
                   Disabled
                   <span class="font11">
                     ({{
@@ -285,23 +340,34 @@
           </div>
           <div class="pr-xlg">
             <div class="flex__justify__space-between mb-xs">
-              <div *ngIf="
+              <div
+                *ngIf="
                   activeTab == onBoardingStatus.New ||
                   activeTab == onBoardingStatus.Invited
-                " class="mr-sm">
-                <button name="sendInvite" class="dropbtn btn banner__primary__btn white__text bt__font12__pad113"
-                  (click)="sendInvitation()">
+                "
+                class="mr-sm"
+              >
+                <button
+                  name="sendInvite"
+                  class="dropbtn btn banner__primary__btn white__text bt__font12__pad113"
+                  (click)="sendInvitation()"
+                >
                   {{ sendResend }}
                 </button>
               </div>
-              <div class="sendResendActiveClass" *ngIf="
+              <div
+                class="sendResendActiveClass"
+                *ngIf="
                   activeTab == onBoardingStatus.New ||
                   activeTab == onBoardingStatus.Invited ||
                   activeTab == onBoardingStatus.Disabled
-                ">
-                <button name="toggleInvite"
+                "
+              >
+                <button
+                  name="toggleInvite"
                   class="btn banner__default__btn flex__row__reverse pad__5__13 bt__font12__pad113"
-                  (click)="toggleInvitation()">
+                  (click)="toggleInvitation()"
+                >
                   {{ enableDisable }}
                 </button>
               </div>
@@ -311,16 +377,26 @@
       </div>
       <div class="tab-content site__table">
         <div>
-          <table class="table table-striped" [mfData]="
+          <table
+            class="table table-striped custom__table"
+            [mfData]="
               siteParticipants.participantRegistryDetail.registryParticipants
-            " #mf="mfDataTable" [mfRowsOnPage]="10">
-            <thead>
+            "
+            #mf="mfDataTable"
+            [mfRowsOnPage]="10"
+          >
+            <thead class="custom__thead">
               <tr>
-                <span class="sort__by__text mobile__view mr-sm" style="background: transparent">
+                <span
+                  class="sort__by__text mobile__view mr-sm"
+                  style="background: transparent"
+                >
                   Sort By:
                 </span>
                 <th>
-                  <mfDefaultSorter by="email">Participant Email</mfDefaultSorter>
+                  <mfDefaultSorter by="email">
+                    Participant Email
+                  </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
@@ -349,8 +425,11 @@
                 </th>
               </tr>
             </thead>
-            <tbody>
-              <tr *ngFor="let participant of mf.data">
+            <tbody class="custom__tbody">
+              <tr
+                *ngFor="let participant of mf.data"
+                class="border__bottom__red border-top__c4d1e6 progress__bar"
+              >
                 <!-- for all Selected -->
                 <td
                   *ngIf="activeTab == onBoardingStatus.All"
@@ -384,14 +463,16 @@
                   </div>
                 </td>
                 <td *ngIf="activeTab == onBoardingStatus.All">
-                  <div [ngClass]="{
+                  <div
+                    [ngClass]="{
                       participant__label:
                         participant.onboardingStatus ==
                         onBoardingStatus.Invited,
                       inactive__text:
                         participant.onboardingStatus ==
                         onBoardingStatus.Disabled
-                    }">
+                    }"
+                  >
                     {{ participant.onboardingStatus }}
                   </div>
                 </td>
@@ -400,8 +481,14 @@
                 <td *ngIf="activeTab == onBoardingStatus.Invited">
                   <div>
                     <div class="form-group mb-none">
-                      <div *ngIf="participant.enrollmentStatus == 'Yet to Enroll'">
-                        <input type="checkbox" id="{{ participant.id }}" (change)="rowCheckBoxChange($event)" />
+                      <div
+                        *ngIf="participant.enrollmentStatus == 'Yet to Enroll'"
+                      >
+                        <input
+                          type="checkbox"
+                          id="{{ participant.id }}"
+                          (change)="rowCheckBoxChange($event)"
+                        />
                         <label for="{{ participant.id }}">
                           <span
                             class="no_st_en"
@@ -436,7 +523,11 @@
                 <td *ngIf="activeTab === onBoardingStatus.Disabled">
                   <div>
                     <div class="form-group mb-none">
-                      <input type="checkbox" id="{{ participant.id }}" (change)="rowCheckBoxChange($event)" />
+                      <input
+                        type="checkbox"
+                        id="{{ participant.id }}"
+                        (change)="rowCheckBoxChange($event)"
+                      />
                       <label for="{{ participant.id }}">
                         <span
                           class="no_st_en"
@@ -456,12 +547,14 @@
                 </td>
                 <!-- Belongs to all and invited and disabled  -->
                 <td *ngIf="activeTab != onBoardingStatus.New">
-                  <div [ngClass]="{
+                  <div
+                    [ngClass]="{
                       participant__label:
                         participant.enrollmentStatus == 'Enrolled',
                       inactive__text:
                         participant.enrollmentStatus == 'Withdrawn'
-                    }">
+                    }"
+                  >
                     {{ participant.enrollmentStatus }}
                   </div>
                 </td>
@@ -471,7 +564,7 @@
                 </td>
               </tr>
             </tbody>
-            <tfoot>
+            <tfoot class="custom__tfoot">
               <tr>
                 <td colspan="4">
                   <mfBootstrapPaginator></mfBootstrapPaginator>
