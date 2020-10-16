@@ -118,7 +118,7 @@ gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix
 #### Participant datastore
 
 ```bash
-gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_user_registration_db_script.sql
+gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_participant_datastore_db_script.sql
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_app_info_update_db_script.sql
 ```
 
