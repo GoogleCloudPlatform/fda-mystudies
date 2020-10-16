@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.MOBILE_APPS;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.NATIVE_PUSH_NOTIFICATION_SERVER;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_DATASTORE;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.RESPONSE_DATASTORE;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.SCIM_AUTH_SERVER;
@@ -179,14 +180,14 @@ public enum UserMgmntEvent implements AuditLogEvent {
 
   PUSH_NOTIFICATION_SENT(
       PARTICIPANT_DATASTORE,
-      null,
+      NATIVE_PUSH_NOTIFICATION_SERVER,
       null,
       "Push Notifications successfully sent to native platforms' notifications cloud services for delivery to app users/participants.",
       "PUSH_NOTIFICATION_SENT"),
 
   PUSH_NOTIFICATION_FAILED(
       PARTICIPANT_DATASTORE,
-      null,
+      NATIVE_PUSH_NOTIFICATION_SERVER,
       null,
       "Push Notifications failed to be sent to native platforms' notifications cloud service for delivery to app users/participants.",
       "PUSH_NOTIFICATION_FAILED"),

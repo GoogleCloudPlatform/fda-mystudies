@@ -83,7 +83,7 @@
                       <div class="mr-sm">
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(addParticipants, 'addEmail')"
+                          (click)="openModal(addEmail)"
                         >
                           Add Email
                         </button>
@@ -91,7 +91,7 @@
                       <div>
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(addParticipants, 'importEmail')"
+                          (click)="openModal(importEmaillist)"
                         >
                           Import Email List
                         </button>
@@ -151,7 +151,7 @@
                   <div class="mr-sm">
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(addParticipants, 'addEmail')"
+                      (click)="openModal(addEmail)"
                     >
                       Add Email
                     </button>
@@ -159,7 +159,7 @@
                   <div>
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(addParticipants, 'importEmail')"
+                      (click)="openModal(importEmaillist)"
                     >
                       Import Email List
                     </button>
@@ -394,7 +394,9 @@
                   Sort By:
                 </span>
                 <th>
-                  <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
+                  <mfDefaultSorter by="email">
+                    Participant Email
+                  </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
@@ -443,6 +445,7 @@
                       <input
                         type="checkbox"
                         id="{{ participant.id }}"
+                        [checked]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
                       <label for="{{ participant.id }}">
@@ -573,17 +576,21 @@
       </div>
     </div>
 
-    <ng-template #addParticipants>
+    <ng-template #addEmail>
       <div class="modal-body modal__body">
         <app-add-email
-          [siteIdAddEmail]="siteIdAddEmail"
-          (addEmail)="onSucceedAddEmail()"
-          (cancel)="cancel()"
+          [siteId]="siteId"
+          (addEmail)="onSucceedAddEmail($event)"
+          (cancel)="modalRef.hide()"
         ></app-add-email>
+      </div>
+    </ng-template>
+    <ng-template #importEmaillist>
+      <div class="modal-body modal__body">
         <app-import-email-list
-          [siteIdImportEmail]="siteIdImportEmail"
-          (import)="onFileImportSuccess()"
-          (cancel)="cancel()"
+          [siteId]="siteId"
+          (import)="onFileImportSuccess($event)"
+          (cancel)="modalRef.hide()"
         ></app-import-email-list>
       </div>
     </ng-template>

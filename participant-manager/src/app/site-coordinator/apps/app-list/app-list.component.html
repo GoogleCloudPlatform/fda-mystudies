@@ -1,7 +1,9 @@
 <div class="max__w__1280">
   <div class="tab-content">
     <ng-container *ngIf="manageApp$ | async as manageApps">
-      <div *ngIf="manageApps.studyPermissionCount >= 2">
+      <div
+        *ngIf="manageApps.superAdmin || manageApps.studyPermissionCount >= 2"
+      >
         <div
           *ngFor="let app of manageApps.apps"
           class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row"

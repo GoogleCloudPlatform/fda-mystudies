@@ -12,7 +12,7 @@ export interface Study {
   studyPermission: number;
   totalSitesCount: number;
   type: string;
-  logo: string;
+  logoImageUrl: string;
   invited?: number;
   enrolled?: number;
 }
@@ -20,7 +20,9 @@ export interface Study {
 export interface StudyResponse {
   studies: Study[];
   sitePermissionCount: number;
+  superAdmin: boolean;
   status: number;
   message: string;
   code: string;
+  superAdmin: boolean;
 }

@@ -62,6 +62,7 @@ export class AuthService {
       .set('state', uuidv4())
       .set('source', this.source)
       // .set('env', 'localhost')
+
       .toString();
     window.location.href = `${environment.loginUrl}?${params}`;
   }
