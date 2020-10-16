@@ -811,6 +811,8 @@ public class UserControllerTest extends BaseMockIT {
       userRegAdminEntity = testDataHelper.createSuperAdmin();
       userRegAdminEntity.setEmail(String.valueOf(i) + EMAIL_VALUE);
       userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
       Thread.sleep(5);
     }
 
