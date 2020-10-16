@@ -20,25 +20,27 @@ spec:
       - name: hydra-ic
         image: gcr.io/fda-mystudies-dev-apps/hydra:latest
         env:
+        # DB ACCESS
         - name: DB_USER
           valueFrom:
             secretKeyRef:
-              name: hydra-db-credentials
-              key: username
+              name: hydra-credentials
+              key: dbusername
         - name: DB_PASS
           valueFrom:
             secretKeyRef:
-              name: hydra-db-credentials
-              key: password
+              name: hydra-credentials
+              key: dbpassword
         - name: DB_NAME
           valueFrom:
             secretKeyRef:
-              name: hydra-db-credentials
+              name: hydra-credentials
               key: dbname
+        # MISC
         - name: SYSTEM_SECRET
           valueFrom:
             secretKeyRef:
-              name: hydra-secrets
+              name: hydra-credentials
               key: system_secret
         - name: BASE_URL
           valueFrom:

@@ -24,17 +24,17 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-db-credentials
-                  key: username
+                  name: participant-user-datastore-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-db-credentials
-                  key: password
+                  name: participant-user-datastore-credentials
+                  key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-db-credentials
+                  name: participant-user-datastore-credentials
                   key: dbname
             # EMAIL SERVER
             - name: FROM_EMAIL_ADDRESS
@@ -57,28 +57,38 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: contact_email_address
-            - name: MAIL_HOST
-              value: "gmail"
             - name: SMTP_HOSTNAME
-              value: "smtp.gmail.com"
-            - name: SMTP_USE_IP_WHITELIST
-              value: "false"
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_hostname
+            - name: SMTP_USE_IP_ALLOWLIST
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_use_ip_allowlist
             - name: FROM_EMAIL_DOMAIN
-              value: "hcls.joonix.net"
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: from_email_domain
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-secrets
+                  name: participant-user-datastore-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: participant-user-datastore-secrets
+                  name: participant-user-datastore-credentials
                   key: secret_key
             # PUSH NOTIFICATIONS
             - name: FCM_API_URL
-              value: ""
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: fcm_api_url
             - name: IOS_NOTIFICATION_TYPE
               value: "production"
             # SERVER CALLS
@@ -104,7 +114,6 @@ spec:
                   key: institution_resources_bucket_name
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
-
           ports:
           - containerPort: 8080
           readinessProbe:

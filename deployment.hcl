@@ -138,6 +138,36 @@ template "project_secrets" {
         {
           secret_id = "manual-mystudies-email-password"
         },
+        {
+          secret_id = "manual-mystudies-from-email-address"
+        },
+        {
+          secret_id = "manual-mystudies-contact-email-address"
+        },
+        {
+          secret_id = "manual-mystudies-from-email-domain"
+        },
+        {
+          secret_id = "manual-mystudies-smtp-hostname"
+        },
+        {
+          secret_id = "manual-mystudies-smtp-use-ip-allowlist"
+        },
+        {
+          secret_id = "manual-log-path"
+        },
+        {
+          secret_id = "manual-org-name"
+        },
+        {
+          secret_id = "manual-terms-url"
+        },
+        {
+          secret_id = "manual-privacy-url"
+        },
+        {
+          secret_id = "manual-fcm-api-url"
+        },
         # AppId for the mobile app. This needs to be in the app_info table in participant database.
         {
           secret_id = "manual-mobile-app-appid"
@@ -739,6 +769,13 @@ EOF
           }]
         },
         {
+          name = "{{$prefix}}-{{$env}}-mystudies-institution-resources"
+          iam_members = [{
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+          }]
+        },
+        {
           name = "{{$prefix}}-{{$env}}-mystudies-fda-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
@@ -835,6 +872,16 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-study-builder-password",
       "manual-mystudies-email-address",
       "manual-mystudies-email-password",
+      "manual-mystudies-contact-email-address",
+      "manual-mystudies-from-email-address",
+      "manual-mystudies-from-email-domain",
+      "manual-mystudies-smtp-hostname",
+      "manual-mystudies-smtp-use-ip-allowlist",
+      "manual-log-path",
+      "manual-org-name",
+      "manual-terms-url",
+      "manual-privacy-url",
+      "manual-fcm-api-url",
       "manual-mobile-app-appid",
       "manual-android-bundle-id",
       "manual-android-server-key",
@@ -858,8 +905,15 @@ resource "kubernetes_secret" "shared_secrets" {
   }
 
   data = {
-    gcp_bucket_name = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
-    base_url        = "https://{{$prefix}}-{{$env}}.{{$domain}}."
+    gcp_bucket_name                   = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
+    institution_resources_bucket_name = "{{$prefix}}-{{$env}}-mystudies-institution-resources"
+    base_url                          = "https://{{$prefix}}-{{$env}}.{{$domain}}."
+    firestore_project_id              = "{{$prefix}}-{{$env}}-firebase"
+    log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
+    org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
+    terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
+    privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
+    fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
   }
 }
 
@@ -909,6 +963,19 @@ resource "kubernetes_secret" "hydra_credentials" {
   }
 }
 
+# Study builder connect credentials.
+resource "kubernetes_secret" "study_builder_connect_credentials" {
+
+  metadata {
+    name = "study-builder-connect-credentials"
+  }
+
+  data = {
+    username    = data.google_secret_manager_secret_version.secrets["manual-study-builder-user"].secret_data
+    password    = data.google_secret_manager_secret_version.secrets["manual-study-builder-password"].secret_data
+  }
+}
+
 # Email credentials.
 resource "kubernetes_secret" "email_credentials" {
   metadata {
@@ -918,10 +985,11 @@ resource "kubernetes_secret" "email_credentials" {
   data = {
     email_address         = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
     email_password        = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
-    # TODO(zohrehj): add manual secrets for these and fill in references below.
-    smtp_use_ip_whitelist = "?"
-    from_email_domain     = "?"
-    smtp_hostname         = "?"
+    contact_email_domain  = data.google_secret_manager_secret_version.secrets["manual-mystudies-contact-email-address"].secret_data
+    from_email_address    = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-address"].secret_data
+    from_email_domain     = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-domain"].secret_data
+    smtp_hostname         = data.google_secret_manager_secret_version.secrets["manual-mystudies-smtp-hostname"].secret_data
+    smtp_use_ip_allowlist = data.google_secret_manager_secret_version.secrets["manual-mystudies-smtp-use-ip-allowlist"].secret_data
   }
 }
 

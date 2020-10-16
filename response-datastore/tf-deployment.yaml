@@ -24,40 +24,40 @@ spec:
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: response-datastore-db-credentials
-                  key: username
+                  name: response-datastore-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: response-datastore-db-credentials
-                  key: password
+                  name: response-datastore-credentials
+                  key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: response-datastore-db-credentials
+                  name: response-datastore-credentials
                   key: dbname
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: response-datastore-secrets
+                  name: response-datastore-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: response-datastore-secrets
+                  name: response-datastore-credentials
                   key: secret_key
             # STUDY BUILDER AUTHENTICATION
             - name: STUDY_BUILDER_USER
               valueFrom:
                 secretKeyRef:
-                  name: response-datastore-secrets
-                  key: study_builder_user
+                  name: study-builder-connect-credentials
+                  key: username
             - name: STUDY_BUILDER_PASS
               valueFrom:
                 secretKeyRef:
-                  name: response-datastore-secrets
-                  key: study_builder_pass
+                  name: study-builder-connect-credentials
+                  key: password
             # SERVER CALLS
             - name: AUTH_SERVER_URL
               value: "http://auth-server-np:50000"

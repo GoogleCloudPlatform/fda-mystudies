@@ -62,6 +62,7 @@ module "bastion_vm" {
   network      = module.example_dev_network.network.network.self_link
   subnet       = module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link
   members      = ["group:example-dev-bastion-accessors@example.com"]
+
   image_family = "ubuntu-2004-lts"
 
   image_project = "ubuntu-os-cloud"
@@ -141,13 +142,15 @@ module "example_dev_router" {
 
       subnetworks = [
         {
-          name                     = "${module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link}"
-          source_ip_ranges_to_nat  = ["PRIMARY_IP_RANGE"]
+          name                    = "${module.example_dev_network.subnets["us-central1/example-dev-bastion-subnet"].self_link}"
+          source_ip_ranges_to_nat = ["PRIMARY_IP_RANGE"]
+
           secondary_ip_range_names = []
         },
         {
-          name                     = "${module.example_dev_network.subnets["us-central1/example-dev-gke-subnet"].self_link}"
-          source_ip_ranges_to_nat  = ["ALL_IP_RANGES"]
+          name                    = "${module.example_dev_network.subnets["us-central1/example-dev-gke-subnet"].self_link}"
+          source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
+
           secondary_ip_range_names = []
         },
       ]
