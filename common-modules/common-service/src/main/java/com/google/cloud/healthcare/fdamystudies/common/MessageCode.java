@@ -63,7 +63,8 @@ public enum MessageCode {
   PARTICIPANTS_INVITED_SUCCESS(
       HttpStatus.OK, "MSG_0018", "Invitation to particiapant sent successfully"),
 
-  PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG_0019", "Your password has been reset successfully"),
+  PASSWORD_RESET_SUCCESS(
+      HttpStatus.OK, "MSG_0019", "Successfully sent new password to registered email"),
 
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
       HttpStatus.ACCEPTED, "MSG_0020", "Email accepted by receiving mail server"),
