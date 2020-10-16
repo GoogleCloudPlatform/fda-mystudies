@@ -206,7 +206,7 @@ public class LoginControllerTest extends BaseMockIT {
         .perform(requestBuilder)
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:login.do"));
+        .andExpect(view().name("redirect:sessionOut.do"));
 
     verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
     verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);

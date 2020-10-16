@@ -374,14 +374,17 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private ErrorCode validateUpdateUserRequest(UserRequest user, String superAdminUserId) {
     logger.entry("validateUpdateUserRequest()");
+    Optional<UserRegAdminEntity> optSuperAdmin =
+        userAdminRepository.findById(user.getSignedInUserId());
+    UserRegAdminEntity admin =
+        optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+    if (!admin.isSuperAdmin()) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
+
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
     if (!optAdminDetails.isPresent() || user.getId() == null) {
       return ErrorCode.USER_NOT_FOUND;
-    }
-
-    UserRegAdminEntity loggedInUserDetails = optAdminDetails.get();
-    if (!loggedInUserDetails.isSuperAdmin()) {
-      return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
     }
 
     if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
