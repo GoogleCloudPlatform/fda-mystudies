@@ -8,13 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.INVALID_LOGIN_CREDENTIALS;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.PASSWORD_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.TEMP_PASSWORD_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_NOT_FOUND;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ABOUT_LINK;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
@@ -487,9 +486,9 @@ public class LoginControllerTest extends BaseMockIT {
 
     JsonNode userInfo = userEntity.getUserInfo();
     String rawSalt = salt();
-    String encrypted = encrypt(PASSWORD_VALUE, rawSalt);
+    String hashValue = hash(PASSWORD_VALUE, rawSalt);
     ObjectNode passwordNode = getObjectNode();
-    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(HASH, hashValue);
     passwordNode.put(SALT, rawSalt);
     passwordNode.put(EXPIRE_TIMESTAMP, Instant.now().plus(Duration.ofMinutes(15)).toEpochMilli());
     ((ObjectNode) userInfo).set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
@@ -533,9 +532,9 @@ public class LoginControllerTest extends BaseMockIT {
 
     JsonNode userInfo = userEntity.getUserInfo();
     String rawSalt = salt();
-    String encrypted = encrypt(PASSWORD_VALUE, rawSalt);
+    String hashValue = hash(PASSWORD_VALUE, rawSalt);
     ObjectNode passwordNode = getObjectNode();
-    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(HASH, hashValue);
     passwordNode.put(SALT, rawSalt);
     passwordNode.put(EXPIRE_TIMESTAMP, Instant.now().plus(Duration.ofMinutes(15)).toEpochMilli());
     ((ObjectNode) userInfo).set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
@@ -715,9 +714,9 @@ public class LoginControllerTest extends BaseMockIT {
     // Attempt to login within 15 min. of Account locked
     JsonNode userInfo = userEntity.getUserInfo();
     String rawSalt = salt();
-    String encrypted = encrypt(ACCOUNT_LOCKED_PASSWORD, rawSalt);
+    String hashValue = hash(ACCOUNT_LOCKED_PASSWORD, rawSalt);
     ObjectNode passwordNode = getObjectNode();
-    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(HASH, hashValue);
     passwordNode.put(SALT, rawSalt);
     passwordNode.put(EXPIRE_TIMESTAMP, Instant.now().plus(Duration.ofMinutes(15)).toEpochMilli());
     passwordNode.put(OTP_USED, true);

@@ -53,4 +53,6 @@ public class UserRequest {
   private String id;
 
   private String superAdminUserId;
+
+  private String signedInUserId;
 }

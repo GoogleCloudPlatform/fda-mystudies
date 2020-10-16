@@ -8,8 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.EnrolledInvitedCount;
+import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
 import java.util.List;
 import java.util.Optional;
