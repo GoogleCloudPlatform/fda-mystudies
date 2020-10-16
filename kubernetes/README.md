@@ -88,7 +88,7 @@ Upload the SQL files to the bucket:
 ```bash
 $ gsutil cp \
   ./study-builder/sqlscript/* \
-  ./response-datastore/sqlscripts/mystudies_response_server_db_script.sql \
+  ./response-datastore/sqlscript/mystudies_response_server_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
   ./participant-datastore/sqlscript/mystudies_user_registration_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
