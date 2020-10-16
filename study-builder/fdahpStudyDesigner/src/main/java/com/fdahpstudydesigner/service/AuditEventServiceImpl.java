@@ -6,12 +6,13 @@
  * https://opensource.org/licenses/MIT.
  */
 
-package com.google.cloud.healthcare.fdamystudies.service;
+package com.fdahpstudydesigner.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectMapper;
+import static com.fdahpstudydesigner.common.JsonUtils.getObjectMapper;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.google.cloud.MonitoredResource;
-import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.logging.LogEntry;
 import com.google.cloud.logging.Logging;
 import com.google.cloud.logging.LoggingOptions;
@@ -19,43 +20,36 @@ import com.google.cloud.logging.Payload;
 import com.google.cloud.logging.Severity;
 import java.util.Collections;
 import java.util.Map;
-import org.slf4j.ext.XLogger;
-import org.slf4j.ext.XLoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 @Service
-@ConditionalOnProperty(
-    value = "commonservice.auditlogevent.enabled",
-    havingValue = "true",
-    matchIfMissing = true)
 public class AuditEventServiceImpl implements AuditEventService {
 
-  private XLogger logger = XLoggerFactory.getXLogger(AuditEventServiceImpl.class.getName());
+  private static Logger logger = Logger.getLogger(AuditEventServiceImpl.class);
 
   private static final String AUDIT_LOG_NAME = "application-audit-log";
 
   @Override
   public void postAuditLogEvent(AuditLogEventRequest auditRequest) {
-    logger.entry(
+    logger.debug(
         String.format("begin postAuditLogEvent() for %s event", auditRequest.getEventCode()));
 
+    JsonNode requestBody = getObjectMapper().convertValue(auditRequest, JsonNode.class);
     Logging logging = LoggingOptions.getDefaultInstance().getService();
 
     // The data to write to the log
     Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
 
-    LogEntry entry =
-        LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
+    LogEntry entry = LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
             .setTimestamp(auditRequest.getOccurred().getTime())
             .setSeverity(Severity.INFO)
             .setLogName(AUDIT_LOG_NAME)
             .setResource(MonitoredResource.newBuilder("global").build())
             .build();
-
     // Writes the log entry asynchronously
     logging.write(Collections.singleton(entry));
-    logger.exit(
-        String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
+
+    logger.debug(String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }
 }

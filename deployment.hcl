@@ -907,7 +907,7 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     gcp_bucket_name                   = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
     institution_resources_bucket_name = "{{$prefix}}-{{$env}}-mystudies-institution-resources"
-    base_url                          = "https://{{$env}}.{{$prefix}}.{{$domain}}."
+    base_url                          = "https://demo.{{$prefix}}.{{$domain}}."
     firestore_project_id              = "{{$prefix}}-{{$env}}-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
