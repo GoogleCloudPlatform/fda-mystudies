@@ -71,7 +71,9 @@ describe('SetUpAccountService', () => {
         expect(successResponse).toEqual(expectedsetUpResponse),
       );
 
-    const httpReq = httpTest.expectOne(`${environment.baseUrl}/users/setUpAccount/`);
+    const httpReq = httpTest.expectOne(
+      `${environment.baseUrl}/users/setUpAccount/`,
+    );
     expect(httpReq.request.method).toEqual('POST');
 
     httpReq.flush(expectedsetUpResponse);
