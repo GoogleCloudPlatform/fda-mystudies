@@ -247,11 +247,14 @@ public enum ErrorCode {
       "EC_0123",
       HttpStatus.FORBIDDEN.toString(),
       "You do not have permission to access this app"),
-  
+
   CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
       400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site for decommissioned location."),
 
-  TEMP_PASSWORD_INVALID(400, "EC_0122", Constants.BAD_REQUEST, "Temporary password is invalid");
+  TEMP_PASSWORD_INVALID(400, "EC_0122", Constants.BAD_REQUEST, "Temporary password is invalid"),
+
+  CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
+      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study");
 
   private final int status;
   private final String code;
