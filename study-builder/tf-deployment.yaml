@@ -20,21 +20,23 @@ spec:
         - name: study-builder
           image: gcr.io/fda-mystudies-dev-apps/study-builder:latest
           env:
+            # DB ACCESS
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-db-credentials
-                  key: username
+                  name: study-builder-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-db-credentials
-                  key: password
+                  name: study-builder-credentials
+                  key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: study-designer-db-credentials
+                  name: study-builder-credentials
                   key: dbname
+            # MAIL SERVER
             - name: FROM_EMAIL_ADDRESS
               valueFrom:
                 secretKeyRef:
@@ -45,30 +47,46 @@ spec:
                 secretKeyRef:
                   name: email-credentials
                   key: email_password
+            - name: SMTP_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_hostname
+            - name: SMTP_USE_IP_ALLOWLIST
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_use_ip_allowlist
+            - name: FROM_EMAIL_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: from_email_domain
+            #  AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-secrets
-                  key: CLIENT_ID
+                  name: study-builder-credentials
+                  key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: study-builder-secrets
-                  key: SECRET_KEY
-            - name: STUDY_BUILDER_URL
-              value: "https://fda-mystudies.domain.com/studybuilder/"
+                  name: study-builder-credentials
+                  key: secret_key
+            # SERVER CALLS
+            - name: BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: base_url
             - name: PARTICIPANT_USER_DATASTORE_URL
-              value: "http://participant-user-datastore-np:50000/participant-user-datastore"
+              value: "http://participant-user-datastore-np:50000"
             - name: RESPONSE_DATASTORE_URL
-              value: "http://response-datastore-np:50000/response-datastore"
+              value: "http://response-datastore-np:50000"
+            # MISC
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
-            - name: SMTP_HOSTNAME
-              value: "smtp.gmail.com"
-            - name: SMTP_USE_IP_WHITELIST
-              value: "false"
-            - name: FROM_EMAIL_DOMAIN
-              value: ""
+
           ports:
           - containerPort: 8080
           readinessProbe:

@@ -138,6 +138,36 @@ template "project_secrets" {
         {
           secret_id = "manual-mystudies-email-password"
         },
+        {
+          secret_id = "manual-mystudies-from-email-address"
+        },
+        {
+          secret_id = "manual-mystudies-contact-email-address"
+        },
+        {
+          secret_id = "manual-mystudies-from-email-domain"
+        },
+        {
+          secret_id = "manual-mystudies-smtp-hostname"
+        },
+        {
+          secret_id = "manual-mystudies-smtp-use-ip-allowlist"
+        },
+        {
+          secret_id = "manual-log-path"
+        },
+        {
+          secret_id = "manual-org-name"
+        },
+        {
+          secret_id = "manual-terms-url"
+        },
+        {
+          secret_id = "manual-privacy-url"
+        },
+        {
+          secret_id = "manual-fcm-api-url"
+        },
         # AppId for the mobile app. This needs to be in the app_info table in participant database.
         {
           secret_id = "manual-mobile-app-appid"
@@ -162,12 +192,8 @@ template "project_secrets" {
           secret_id = "manual-ios-certificate-password"
         },
         {
-          secret_id   = "auto-auth-server-db-password"
-          secret_data = "$${random_password.passwords[\"auth_server_db_password\"].result}"
-        },
-        {
-          secret_id   = "auto-auth-server-db-user"
-          secret_data = "$${random_string.strings[\"auth_server_db_user\"].result}"
+          secret_id   = "auto-mystudies-sql-default-user-password"
+          secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
         },
         {
           secret_id   = "auto-hydra-db-password"
@@ -182,32 +208,44 @@ template "project_secrets" {
           secret_data = "$${random_password.system_secrets[\"hydra_system_secret\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-ma-client-id"
-          secret_data = "$${random_string.strings[\"mystudies_ma_client_id\"].result}"
+          secret_id   = "auto-auth-server-db-user"
+          secret_data = "$${random_string.strings[\"auth_server_db_user\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-ma-secret-key"
-          secret_data = "$${random_password.passwords[\"mystudies_ma_secret_key\"].result}"
+          secret_id   = "auto-auth-server-db-password"
+          secret_data = "$${random_password.passwords[\"auth_server_db_password\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-rs-client-id"
-          secret_data = "$${random_string.strings[\"mystudies_rs_client_id\"].result}"
+          secret_id   = "auto-auth-server-client-id"
+          secret_data = "$${random_string.strings[\"auth_server_client_id\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-rs-secret-key"
-          secret_data = "$${random_password.passwords[\"mystudies_rs_secret_key\"].result}"
+          secret_id   = "auto-auth-server-secret-key"
+          secret_data = "$${random_password.passwords[\"auth_server_secret_key\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-sql-default-user-password"
-          secret_data = "$${random_password.passwords[\"mystudies_sql_default_user_password\"].result}"
+          secret_id   = "auto-response-datastore-db-user"
+          secret_data = "$${random_string.strings[\"response_datastore_db_user\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-urs-client-id"
-          secret_data = "$${random_string.strings[\"mystudies_urs_client_id\"].result}"
+          secret_id   = "auto-response-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"response_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-mystudies-urs-secret-key"
-          secret_data = "$${random_password.passwords[\"mystudies_urs_secret_key\"].result}"
+          secret_id   = "auto-response-datastore-client-id"
+          secret_data = "$${random_string.strings[\"response_datastore_client_id\"].result}"
+        },
+        {
+          secret_id   = "auto-response-datastore-secret-key"
+          secret_data = "$${random_password.passwords[\"response_datastore_secret_key\"].result}"
+        },
+        {
+          secret_id   = "auto-study-builder-db-user"
+          secret_data = "$${random_string.strings[\"study_builder_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-study-builder-db-password"
+          secret_data = "$${random_password.passwords[\"study_builder_db_password\"].result}"
         },
         {
           secret_id   = "auto-study-builder-client-id"
@@ -218,60 +256,84 @@ template "project_secrets" {
           secret_data = "$${random_password.passwords[\"study_builder_secret_key\"].result}"
         },
         {
-          secret_id   = "auto-response-datastore-db-password"
-          secret_data = "$${random_password.passwords[\"response-datastore_db_password\"].result}"
-        },
-        {
-          secret_id   = "auto-response-datastore-db-user"
-          secret_data = "$${random_string.strings[\"response-datastore_db_user\"].result}"
-        },
-        {
-          secret_id   = "auto-study-builder-db-password"
-          secret_data = "$${random_password.passwords[\"study_builder_db_password\"].result}"
-        },
-        {
-          secret_id   = "auto-study-builder-db-user"
-          secret_data = "$${random_string.strings[\"study_builder_db_user\"].result}"
+          secret_id   = "auto-study-datastore-db-user"
+          secret_data = "$${random_string.strings[\"study_datastore_db_user\"].result}"
         },
         {
           secret_id   = "auto-study-datastore-db-password"
           secret_data = "$${random_password.passwords[\"study_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-study-datastore-db-user"
-          secret_data = "$${random_string.strings[\"study_datastore_db_user\"].result}"
+          secret_id   = "auto-study-datastore-client-id"
+          secret_data = "$${random_string.strings[\"study_datastore_client_id\"].result}"
         },
         {
-          secret_id   = "auto-participant-consent-datastore-db-password"
-          secret_data = "$${random_password.passwords[\"participant_consent_datastore_db_password\"].result}"
+          secret_id   = "auto-study-datastore-secret-key"
+          secret_data = "$${random_password.passwords[\"study_datastore_secret_key\"].result}"
         },
         {
           secret_id   = "auto-participant-consent-datastore-db-user"
           secret_data = "$${random_string.strings[\"participant_consent_datastore_db_user\"].result}"
         },
         {
-          secret_id   = "auto-participant-enroll-datastore-db-password"
-          secret_data = "$${random_password.passwords[\"participant_enroll_datastore_db_password\"].result}"
+          secret_id   = "auto-participant-consent-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_consent_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-consent-datastore-client-id"
+          secret_data = "$${random_string.strings[\"participant_consent_datastore_client_id\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-consent-datastore-secret-key"
+          secret_data = "$${random_password.passwords[\"participant_consent_datastore_secret_key\"].result}"
         },
         {
           secret_id   = "auto-participant-enroll-datastore-db-user"
           secret_data = "$${random_string.strings[\"participant_enroll_datastore_db_user\"].result}"
         },
         {
-          secret_id   = "auto-participant-user-datastore-db-password"
-          secret_data = "$${random_password.passwords[\"participant_user_datastore_db_password\"].result}"
+          secret_id   = "auto-participant-enroll-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_enroll_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-client-id"
+          secret_data = "$${random_string.strings[\"participant_enroll_datastore_client_id\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-enroll-datastore-secret-key"
+          secret_data = "$${random_password.passwords[\"participant_enroll_datastore_secret_key\"].result}"
         },
         {
           secret_id   = "auto-participant-user-datastore-db-user"
           secret_data = "$${random_string.strings[\"participant_user_datastore_db_user\"].result}"
         },
         {
-          secret_id   = "auto-participant-manager-db-password"
-          secret_data = "$${random_password.passwords[\"participant_manager_db_password\"].result}"
+          secret_id   = "auto-participant-user-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_user_datastore_db_password\"].result}"
         },
         {
-          secret_id   = "auto-participant-manager-db-user"
-          secret_data = "$${random_string.strings[\"participant_manager_db_user\"].result}"
+          secret_id   = "auto-participant-user-datastore-client-id"
+          secret_data = "$${random_string.strings[\"participant_user_datastore_client_id\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-user-datastore-secret-key"
+          secret_data = "$${random_password.passwords[\"participant_user_datastore_secret_key\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-manager-datastore-db-user"
+          secret_data = "$${random_string.strings[\"participant_manager_datastore_db_user\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-manager-datastore-db-password"
+          secret_data = "$${random_password.passwords[\"participant_manager_datastore_db_password\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-manager-datastore-client-id"
+          secret_data = "$${random_string.strings[\"participant_manager_datastore_client_id\"].result}"
+        },
+        {
+          secret_id   = "auto-participant-manager-datastore-secret-key"
+          secret_data = "$${random_password.passwords[\"participant_manager_datastore_secret_key\"].result}"
         },
       ]
     }
@@ -280,17 +342,21 @@ template "project_secrets" {
 resource "random_string" "strings" {
   for_each = toset([
     "auth_server_db_user",
-    "mystudies_ma_client_id",
-    "mystudies_rs_client_id",
-    "mystudies_urs_client_id",
-    "study_builder_client_id",
+    "auth_server_client_id",
     "response_datastore_db_user",
+    "response_datastore_client_id",
     "study_builder_db_user",
+    "study_builder_client_id",
     "study_datastore_db_user",
+    "study_datastore_client_id",
     "participant_consent_datastore_db_user",
+    "participant_consent_datastore_client_id",
     "participant_enroll_datastore_db_user",
+    "participant_enroll_datastore_client_id",
     "participant_user_datastore_db_user",
-    "participant_manager_db_user",
+    "participant_user_datastore_client_id",
+    "participant_manager_datastore_db_user",
+    "participant_manager_datastore_client_id",
     "hydra_db_user",
   ])
   length  = 16
@@ -299,19 +365,23 @@ resource "random_string" "strings" {
 
 resource "random_password" "passwords" {
   for_each = toset([
-    "auth_server_db_password",
-    "mystudies_ma_secret_key",
-    "mystudies_rs_secret_key",
     "mystudies_sql_default_user_password",
-    "mystudies_urs_secret_key",
-    "study_builder_secret_key",
+    "auth_server_db_password",
+    "auth_server_secret_key",
     "response_datastore_db_password",
+    "response_datastore_secret_key",
     "study_builder_db_password",
+    "study_builder_secret_key",
     "study_datastore_db_password",
+    "study_datastore_secret_key",
     "participant_consent_datastore_db_password",
+    "participant_consent_datastore_secret_key",
     "participant_enroll_datastore_db_password",
+    "participant_enroll_datastore_secret_key",
     "participant_user_datastore_db_password",
-    "participant_manager_db_password",
+    "participant_user_datastore_secret_key",
+    "participant_manager_datastore_db_password",
+    "participant_manager_datastore_secret_key",
     "hydra_db_password",
   ])
   length  = 16
@@ -699,6 +769,13 @@ EOF
           }]
         },
         {
+          name = "{{$prefix}}-{{$env}}-mystudies-institution-resources"
+          iam_members = [{
+            role   = "roles/storage.objectAdmin"
+            member = "serviceAccount:user-datastore-gke-sa@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+          }]
+        },
+        {
           name = "{{$prefix}}-{{$env}}-mystudies-fda-resources"
           iam_members = [{
             role   = "roles/storage.objectAdmin"
@@ -746,6 +823,192 @@ provider "kubernetes" {
   client_certificate     = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_certificate)
   client_key             = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.client_key)
   cluster_ca_certificate = base64decode(data.google_container_cluster.gke_cluster.master_auth.0.cluster_ca_certificate)
+}
+
+locals {
+  # hydra is treated separately.
+  apps = [
+    "auth-server",
+    "response-datastore",
+    "study-builder",
+    "study-datastore",
+    "participant-consent-datastore",
+    "participant-enroll-datastore",
+    "participant-user-datastore",
+    "participant-manager-datastore",
+  ]
+  apps_db_names = {
+    "auth-server"                   = "oauth_server_hydra"
+    "response-datastore"            = "mystudies_response_server"
+    "study-builder"                 = "fda_hphc"
+    "study-datastore"               = "fda_hphc"
+    "participant-consent-datastore" = "mystudies_participant_datastore"
+    "participant-enroll-datastore"  = "mystudies_participant_datastore"
+    "participant-user-datastore"    = "mystudies_participant_datastore"
+    "participant-manager-datastore" = "mystudies_participant_datastore"
+  }
+  service_account_ids = [
+    "auth-server-gke-sa",
+    "hydra-gke-sa",
+    "response-datastore-gke-sa",
+    "study-builder-gke-sa",
+    "study-datastore-gke-sa",
+    "consent-datastore-gke-sa",
+    "enroll-datastore-gke-sa",
+    "user-datastore-gke-sa",
+    "participant-manager-gke-sa",
+  ]
+}
+
+# Data sources from Secret Manager.
+data "google_secret_manager_secret_version" "secrets" {
+  provider = google-beta
+  project  = "{{$prefix}}-{{$env}}-secrets"
+  secret   = each.key
+
+  for_each = toset(concat(
+    [
+      "manual-study-builder-user",
+      "manual-study-builder-password",
+      "manual-mystudies-email-address",
+      "manual-mystudies-email-password",
+      "manual-mystudies-contact-email-address",
+      "manual-mystudies-from-email-address",
+      "manual-mystudies-from-email-domain",
+      "manual-mystudies-smtp-hostname",
+      "manual-mystudies-smtp-use-ip-allowlist",
+      "manual-log-path",
+      "manual-org-name",
+      "manual-terms-url",
+      "manual-privacy-url",
+      "manual-fcm-api-url",
+      "manual-mobile-app-appid",
+      "manual-android-bundle-id",
+      "manual-android-server-key",
+      "manual-ios-bundle-id",
+      "manual-ios-certificate",
+      "manual-ios-certificate-password",
+      "auto-hydra-db-password",
+      "auto-hydra-db-user",
+    ],
+    formatlist("auto-%s-db-user", local.apps),
+    formatlist("auto-%s-db-password", local.apps),
+    formatlist("auto-%s-client-id", local.apps),
+    formatlist("auto-%s-secret-key", local.apps))
+  )
+}
+
+# Shared secrets.
+resource "kubernetes_secret" "shared_secrets" {
+  metadata {
+    name = "shared-secrets"
+  }
+
+  data = {
+    gcp_bucket_name                   = "{{$prefix}}-{{$env}}-mystudies-consent-documents"
+    institution_resources_bucket_name = "{{$prefix}}-{{$env}}-mystudies-institution-resources"
+    base_url                          = "https://{{$prefix}}-{{$env}}.{{$domain}}."
+    firestore_project_id              = "{{$prefix}}-{{$env}}-firebase"
+    log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
+    org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
+    terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
+    privacy_url                       = data.google_secret_manager_secret_version.secrets["manual-privacy-url"].secret_data
+    fcm_api_url                       = data.google_secret_manager_secret_version.secrets["manual-fcm-api-url"].secret_data
+  }
+}
+
+# App credentials.
+resource "kubernetes_secret" "apps_credentials" {
+  for_each = toset(local.apps)
+
+  metadata {
+    name = "$${each.key}-credentials"
+  }
+
+  data = {
+    dbusername  = data.google_secret_manager_secret_version.secrets["auto-$${each.key}-db-user"].secret_data
+    dbpassword  = data.google_secret_manager_secret_version.secrets["auto-$${each.key}-db-password"].secret_data
+    client_id   = data.google_secret_manager_secret_version.secrets["auto-$${each.key}-client-id"].secret_data
+    secret_key  = data.google_secret_manager_secret_version.secrets["auto-$${each.key}-secret-key"].secret_data
+    dbname      = local.apps_db_names[each.key]
+  }
+}
+
+# Client-side credentials.
+resource "kubernetes_secret" "client_side_credentials" {
+
+  metadata {
+    name = "client-side-credentials"
+  }
+
+  data = {
+    client_id  = data.google_secret_manager_secret_version.secrets["auto-auth-server-client-id"].secret_data
+    secret_key = data.google_secret_manager_secret_version.secrets["auto-auth-server-secret-key"].secret_data
+  }
+}
+
+
+# Hydra credentials.
+resource "kubernetes_secret" "hydra_credentials" {
+
+  metadata {
+    name = "hydra-credentials"
+  }
+
+  data = {
+    dbusername    = data.google_secret_manager_secret_version.secrets["auto-hydra-db-user"].secret_data
+    dbpassword    = data.google_secret_manager_secret_version.secrets["auto-hydra-db-password"].secret_data
+    system_secret = data.google_secret_manager_secret_version.secrets["auto-hydra-system-secret"].secret_data
+    dbname        = "hydra"
+  }
+}
+
+# Study builder connect credentials.
+resource "kubernetes_secret" "study_builder_connect_credentials" {
+
+  metadata {
+    name = "study-builder-connect-credentials"
+  }
+
+  data = {
+    username    = data.google_secret_manager_secret_version.secrets["manual-study-builder-user"].secret_data
+    password    = data.google_secret_manager_secret_version.secrets["manual-study-builder-password"].secret_data
+  }
+}
+
+# Email credentials.
+resource "kubernetes_secret" "email_credentials" {
+  metadata {
+    name = "email-credentials"
+  }
+
+  data = {
+    email_address         = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
+    email_password        = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
+    contact_email_domain  = data.google_secret_manager_secret_version.secrets["manual-mystudies-contact-email-address"].secret_data
+    from_email_address    = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-address"].secret_data
+    from_email_domain     = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-domain"].secret_data
+    smtp_hostname         = data.google_secret_manager_secret_version.secrets["manual-mystudies-smtp-hostname"].secret_data
+    smtp_use_ip_allowlist = data.google_secret_manager_secret_version.secrets["manual-mystudies-smtp-use-ip-allowlist"].secret_data
+  }
+}
+
+# gcloud keys from service accounts
+resource "google_service_account_key" "apps_service_account_keys" {
+  for_each = toset(local.service_account_ids)
+
+  service_account_id = "$${each.key}@{{$prefix}}-{{$env}}-apps.iam.gserviceaccount.com"
+}
+
+resource "kubernetes_secret" "apps_gcloud_keys" {
+  for_each = toset(local.service_account_ids)
+
+  metadata {
+    name = "$${each.key}-gcloud-key"
+  }
+  data = {
+    "key.json" = base64decode(google_service_account_key.apps_service_account_keys[each.key].private_key)
+  }
 }
 EOF
     }
