@@ -453,7 +453,12 @@ public class UserServiceImpl implements UserService {
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
-    throw new ErrorCodeException(ErrorCode.INVALID_LOGIN_CREDENTIALS);
+    ErrorCode errorCode =
+        userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
+            ? ErrorCode.ACCOUNT_LOCKED
+            : ErrorCode.INVALID_LOGIN_CREDENTIALS;
+
+    throw new ErrorCodeException(errorCode);
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
