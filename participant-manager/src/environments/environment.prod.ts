@@ -1,10 +1,10 @@
 // Replace the example domain name with your deployed address.
 export const environment = {
   production: true,
-  baseUrl: 'https://fda-mystudies.domain.com/participant-manager-datastore',
-  loginUrl: 'https://fda-mystudies.domain.com/hydra/oauth2/auth',
-  authServerUrl: 'https://fda-mystudies.domain.com/oauth-scim-service',
-  redirectUrl: 'https://fda-mystudies.domain.com/oauth-scim-service/callback',
-  clientId: 'MYSTUDIES_OAUTH_CLIENT',
+  baseUrl: 'https://demo.mystudies.hcls.joonix.net/participant-manager-datastore',
+  loginUrl: 'https://demo.mystudies.hcls.joonix.net/hydra/oauth2/auth',
+  authServerUrl: 'https://demo.mystudies.hcls.joonix.net/oauth-scim-service',
+  redirectUrl: 'https://demo.mystudies.hcls.joonix.net/oauth-scim-service/callback',
+  clientId: '8bubPH]-m3-Kl[71',
   appVersion: 'v0.1',
 };
