@@ -249,6 +249,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
               participants.setParticipantRegistrySite(participantRegistry);
               participants.setStatus(AppConstants.ENROLLED);
               participants.setEnrolledDate(Timestamp.from(Instant.now()));
+              participants.setWithdrawalDate(null);
               session.update(participants);
               countAddParticipant = String.valueOf(1);
             } else {
@@ -307,6 +308,7 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
           participants.setStatus(AppConstants.ENROLLED);
           participants.setEnrolledDate(Timestamp.from(Instant.now()));
           participants.setSite(site);
+          participants.setWithdrawalDate(null);
           session.update(participants);
           countAddParticipant = String.valueOf(1);
         } else {
