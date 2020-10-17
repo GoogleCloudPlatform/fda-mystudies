@@ -90,7 +90,7 @@ export class SiteDetailsComponent
             return participant;
           },
         );
-
+        this.newlyImportedParticipants = [];
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),
