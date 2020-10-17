@@ -27,12 +27,8 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationBean;
 import com.google.cloud.healthcare.fdamystudies.beans.NotificationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
-import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDaoImpl;
-import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
-import com.google.cloud.healthcare.fdamystudies.model.StudyPermissionEntity;
-import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
@@ -45,7 +41,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -138,7 +133,7 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void addUpdateStudyMetadataSuccessForPermissions() throws Exception {
+  public void addStudyMetadataSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();
     StudyMetadataBean studyMetaDataBean = createStudyMetadataBean();
     studyMetaDataBean.setStudyId(Constants.NEW_STUDY_ID);
@@ -146,38 +141,16 @@ public class StudiesControllerTest extends BaseMockIT {
     String requestJson = getObjectMapper().writeValueAsString(studyMetaDataBean);
     performPost(
         STUDY_METADATA_PATH, requestJson, headers, String.valueOf(HttpStatus.OK.value()), OK);
-
-    List<AppPermissionEntity> appPermissionList = appPermissionRepository.findAll();
-    List<StudyPermissionEntity> studyPermissionList = studyPermissionRepository.findAll();
-    List<UserRegAdminEntity> userRegAdminUserList = userRegAdminUserRepository.findAll();
-
-    AppPermissionEntity appPermission =
-        appPermissionList
-            .stream()
-            .filter(x -> x.getApp().getAppId().equals(Constants.NEW_APP_ID_VALUE))
+    HashSet<String> set = new HashSet<>();
+    set.add(Constants.NEW_STUDY_ID);
+    List<StudyEntity> list = commonDao.getStudyInfoSet(set);
+    StudyEntity studyInfoBo =
+        list.stream()
+            .filter(x -> x.getCustomId().equals(Constants.NEW_STUDY_ID))
             .findFirst()
             .orElse(null);
-    StudyPermissionEntity studyPermission =
-        studyPermissionList
-            .stream()
-            .filter(x -> x.getStudy().getCustomId().equals(Constants.NEW_STUDY_ID))
-            .findFirst()
-            .orElse(null);
-    UserRegAdminEntity userRegAdminUser =
-        userRegAdminUserList.stream().filter(x -> x.isSuperAdmin()).findFirst().orElse(null);
-
-    assertNotNull(userRegAdminUser);
-    assertNotNull(appPermission);
-    assertNotNull(appPermission.getUrAdminUser());
-    assertEquals(Constants.NEW_APP_ID_VALUE, appPermission.getApp().getAppId());
-    assertEquals(Permission.EDIT, appPermission.getEdit());
-    assertEquals(appPermission.getCreatedBy(), userRegAdminUser.getId());
-
-    assertNotNull(studyPermission);
-    assertNotNull(studyPermission.getUrAdminUser());
-    assertEquals(Constants.NEW_STUDY_ID, studyPermission.getStudy().getCustomId());
-    assertEquals(Permission.EDIT, studyPermission.getEdit());
-    assertEquals(studyPermission.getCreatedBy(), userRegAdminUser.getId());
+    assertNotNull(studyInfoBo);
+    assertEquals(Constants.NEW_STUDY_ID, studyInfoBo.getCustomId());
   }
 
   @Test
@@ -266,7 +239,6 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Disabled
   // TODO(#668) Remove @Disabled when Github test case failed issue fix
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();

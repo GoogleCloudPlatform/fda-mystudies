@@ -21,7 +21,7 @@ public class ApplicationConfiguration {
   @Value("${firestore.project.id}")
   private String firestoreProjectId;
 
-  @Value("${wcp.study.activity.metadata.url}")
+  @Value("${studybuilder.study.activity.metadata.url}")
   private String wcpStudyActivityMetadataUrl;
 
   @Value("${response.data.file.path}")
@@ -45,10 +45,10 @@ public class ApplicationConfiguration {
   @Value("${save.raw.response.data}")
   private String saveRawResponseData;
 
-  @Value("${wcp.bundle.id}")
+  @Value("${studybuilder.bundle.id}")
   private String wcpBundleId;
 
-  @Value("${wcp.app.token}")
+  @Value("${studybuilder.app.token}")
   private String wcpAppToken;
 
   @Value("${security.oauth2.client.client-id}")

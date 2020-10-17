@@ -20,6 +20,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserResponse;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
@@ -27,8 +28,12 @@ import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfig
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.AppRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -71,6 +76,10 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
   @Autowired private UserMgmntAuditHelper userMgmntAuditHelper;
 
   @Autowired private AppRepository appRepository;
+
+  @Autowired private UserAppDetailsRepository userAppDetailsRepository;
+
+  @Autowired private AuthInfoRepository authInfoRepository;
 
   @Value("${register.url}")
   private String authRegisterUrl;
@@ -121,6 +130,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     // save authUserId and verfication code
     userDetails.setUserId(authUserResponse.getUserId());
     userDetails = userDetailsRepository.saveAndFlush(userDetails);
+
+    // save to UserAppDetailsEntity and AuthInfoEntity
+    saveAuthInfoAndUserAppDetails(userDetails);
 
     auditRequest.setUserId(userDetails.getUserId());
     userMgmntAuditHelper.logEvent(UserMgmntEvent.USER_CREATED, auditRequest);
@@ -181,7 +193,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     userRequest.setEmail(user.getEmailId());
     userRequest.setPassword(user.getPassword());
     userRequest.setAppId(user.getAppId());
-    userRequest.setStatus(UserStatus.PENDING_EMAIL_CONFIRMATION.getValue());
+    userRequest.setStatus(UserAccountStatus.PENDING_CONFIRMATION.getStatus());
 
     HttpEntity<UserRequest> requestEntity = new HttpEntity<>(userRequest, headers);
 
@@ -207,5 +219,18 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             appConfig.getConfirmationMail(),
             templateArgs);
     return emailService.sendMimeMail(emailRequest);
+  }
+
+  private void saveAuthInfoAndUserAppDetails(UserDetailsEntity userDetails) {
+
+    AuthInfoEntity authInfo = new AuthInfoEntity();
+    authInfo.setApp(userDetails.getApp());
+    authInfo.setUserDetails(userDetails);
+    authInfoRepository.saveAndFlush(authInfo);
+
+    UserAppDetailsEntity userAppDetails = new UserAppDetailsEntity();
+    userAppDetails.setApp(userDetails.getApp());
+    userAppDetails.setUserDetails(userDetails);
+    userAppDetailsRepository.saveAndFlush(userAppDetails);
   }
 }

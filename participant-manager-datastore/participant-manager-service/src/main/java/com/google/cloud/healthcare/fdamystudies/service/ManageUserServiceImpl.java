@@ -328,18 +328,6 @@ public class ManageUserServiceImpl implements ManageUserService {
     UserRegAdminEntity superAdminDetails =
         UserMapper.fromUserRequest(user, Long.valueOf(appConfig.getSecurityCodeExpireDate()));
 
-    List<AppPermissionEntity> appPermissions =
-        getAppPermissisonsForSuperAdmin(user, superAdminDetails);
-    superAdminDetails.getAppPermissions().addAll(appPermissions);
-
-    List<StudyPermissionEntity> studyPermissions =
-        getStudyPermissisonsForSuperAdmin(user, superAdminDetails);
-    superAdminDetails.getStudyPermissions().addAll(studyPermissions);
-
-    List<SitePermissionEntity> sitePermissions =
-        getSitePermissisonsForSuperAdmin(user, superAdminDetails);
-    superAdminDetails.getSitePermissions().addAll(sitePermissions);
-
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
     EmailResponse emailResponse = sendInvitationEmail(user, superAdminDetails.getSecurityCode());
@@ -356,53 +344,6 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     logger.exit(String.format(CommonConstants.MESSAGE_CODE_LOG, MessageCode.ADD_NEW_USER_SUCCESS));
     return new AdminUserResponse(MessageCode.ADD_NEW_USER_SUCCESS, superAdminDetails.getId());
-  }
-
-  private List<SitePermissionEntity> getSitePermissisonsForSuperAdmin(
-      UserRequest user, UserRegAdminEntity superAdminDetails) {
-    logger.entry("getSitePermissisonsForSuperAdmin()");
-    List<SiteEntity> sites =
-        (List<SiteEntity>) CollectionUtils.emptyIfNull(siteRepository.findAll());
-    List<SitePermissionEntity> sitePermissions = new ArrayList<>();
-    for (SiteEntity siteInfo : sites) {
-      SitePermissionEntity sitePermission =
-          UserMapper.newSitePermissionEntity(user, null, superAdminDetails, siteInfo);
-      sitePermissions.add(sitePermission);
-    }
-
-    logger.exit(String.format("total site permissions=%d", sitePermissions.size()));
-    return sitePermissions;
-  }
-
-  private List<StudyPermissionEntity> getStudyPermissisonsForSuperAdmin(
-      UserRequest user, UserRegAdminEntity superAdminDetails) {
-    logger.entry("getStudyPermissisonsForSuperAdmin()");
-    List<StudyEntity> studies =
-        (List<StudyEntity>) CollectionUtils.emptyIfNull(studyRepository.findAll());
-    List<StudyPermissionEntity> studyPermissions = new ArrayList<>();
-    for (StudyEntity studyInfo : studies) {
-      StudyPermissionEntity studyPermission =
-          UserMapper.newStudyPermissionEntity(user, superAdminDetails, null, studyInfo);
-      studyPermissions.add(studyPermission);
-    }
-
-    logger.exit(String.format("total study permissions=%d", studyPermissions.size()));
-    return studyPermissions;
-  }
-
-  private List<AppPermissionEntity> getAppPermissisonsForSuperAdmin(
-      UserRequest user, UserRegAdminEntity superAdminDetails) {
-    logger.entry("getAppPermissisonsForSuperAdmin()");
-    List<AppEntity> apps = (List<AppEntity>) CollectionUtils.emptyIfNull(appRepository.findAll());
-    List<AppPermissionEntity> appPermissions = new ArrayList<>();
-    for (AppEntity app : apps) {
-      AppPermissionEntity appPermission =
-          UserMapper.newAppPermissionEntity(user, superAdminDetails, app);
-      appPermissions.add(appPermission);
-    }
-
-    logger.exit(String.format("total app permissions=%d", appPermissions.size()));
-    return appPermissions;
   }
 
   @Override
@@ -433,14 +374,17 @@ public class ManageUserServiceImpl implements ManageUserService {
 
   private ErrorCode validateUpdateUserRequest(UserRequest user, String superAdminUserId) {
     logger.entry("validateUpdateUserRequest()");
+    Optional<UserRegAdminEntity> optSuperAdmin =
+        userAdminRepository.findById(user.getSignedInUserId());
+    UserRegAdminEntity admin =
+        optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+    if (!admin.isSuperAdmin()) {
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
+
     Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
     if (!optAdminDetails.isPresent() || user.getId() == null) {
       return ErrorCode.USER_NOT_FOUND;
-    }
-
-    UserRegAdminEntity loggedInUserDetails = optAdminDetails.get();
-    if (!loggedInUserDetails.isSuperAdmin()) {
-      return ErrorCode.NOT_SUPER_ADMIN_ACCESS;
     }
 
     if (!user.isSuperAdmin() && !hasAtleastOnePermission(user)) {
@@ -461,21 +405,6 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     UserRegAdminEntity adminDetails = optAdminDetails.get();
     adminDetails = UserMapper.fromUpdateUserRequest(user, adminDetails);
-
-    deleteAllPermissions(user.getId());
-
-    user.setSuperAdminUserId(superAdminUserId);
-
-    List<AppPermissionEntity> appPermissions = getAppPermissisonsForSuperAdmin(user, adminDetails);
-    adminDetails.getAppPermissions().addAll(appPermissions);
-
-    List<StudyPermissionEntity> studyPermissions =
-        getStudyPermissisonsForSuperAdmin(user, adminDetails);
-    adminDetails.getStudyPermissions().addAll(studyPermissions);
-
-    List<SitePermissionEntity> sitePermissions =
-        getSitePermissisonsForSuperAdmin(user, adminDetails);
-    adminDetails.getSitePermissions().addAll(sitePermissions);
 
     userAdminRepository.saveAndFlush(adminDetails);
 

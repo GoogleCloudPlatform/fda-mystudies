@@ -8,23 +8,24 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
-public final class EncryptionUtils {
+public final class HashUtils {
 
-  private static XLogger logger = XLoggerFactory.getXLogger(EncryptionUtils.class.getName());
+  private static XLogger logger = XLoggerFactory.getXLogger(HashUtils.class.getName());
 
-  private EncryptionUtils() {}
+  private HashUtils() {}
 
   public static String salt() {
     return DigestUtils.sha512Hex(IdGenerator.id());
   }
 
-  public static String encrypt(String input, String rawSalt) {
+  public static String hash(String input, String rawSalt) {
     StringBuilder sb = new StringBuilder();
     try {
       byte[] salt = rawSalt.getBytes();
@@ -42,12 +43,9 @@ public final class EncryptionUtils {
         sb.append(hex);
       }
     } catch (Exception e) {
-      logger.error("encrypt() failed with an exception", e);
+      logger.error("hash() failed with an exception", e);
+      throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
     }
     return sb.toString();
-  }
-
-  public static String hash(String value) {
-    return DigestUtils.sha512Hex(value);
   }
 }
