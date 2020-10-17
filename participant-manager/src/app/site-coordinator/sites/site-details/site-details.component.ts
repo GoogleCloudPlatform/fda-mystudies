@@ -124,6 +124,7 @@ export class SiteDetailsComponent
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
+
   decommissionSite(): void {
     this.subs.add(
       this.particpantDetailService
@@ -222,10 +223,9 @@ export class SiteDetailsComponent
     this.fetchSiteParticipant(OnboardingStatus.New);
   }
 
-  selectAll() {
+  selectAll(): void {
     this.userIds = [];
     if (this.selectedAll) {
-      // this.checkedEmails = this.siteDetailsBackup.participantRegistryDetail.registryParticipants;
       for (
         let i = 0;
         i <
