@@ -1,7 +1,7 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: fda-mystudies-cert
+  name: mystudies-cert
 spec:
   domains:
     - mystudies.hcls.joonix.net
