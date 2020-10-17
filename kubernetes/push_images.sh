@@ -3,7 +3,6 @@
 # This is a helper script to copy all container images between repositories.
 # Only copies the "latest" tags.
 
-
 if [ "$#" -ne 2 ]; then
   cat >&2 <<EOF
 Invalid number of arguments
