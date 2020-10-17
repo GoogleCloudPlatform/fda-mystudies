@@ -38,6 +38,7 @@ import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.SiteStatus;
 import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
@@ -278,6 +279,7 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setTargetEnrollment(0);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
@@ -331,6 +333,7 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setTargetEnrollment(0);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
@@ -372,6 +375,46 @@ public class StudyControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnYetToJoinStatusForOnboardingStatusNew() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    locationEntity = testDataHelper.createLocation();
+    studyEntity.setType(OPEN_STUDY);
+    siteEntity.setLocation(locationEntity);
+    siteEntity.setTargetEnrollment(0);
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_STUDY_PARTICIPANT.getPath(), studyEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
+                .value(EnrollmentStatus.YET_TO_JOIN.getStatus()));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnStudyParticipantsForInProgressStatus() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
@@ -382,6 +425,7 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setTargetEnrollment(0);
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
     participantStudyEntity.setStudy(studyEntity);
     participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
