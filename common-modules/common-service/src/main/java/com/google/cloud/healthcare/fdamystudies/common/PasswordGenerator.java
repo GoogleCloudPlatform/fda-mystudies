@@ -43,18 +43,16 @@ public final class PasswordGenerator {
                         || (codePoint >= '0' && codePoint <= '9')
                         || (codePoint >= 'A' && codePoint <= 'Z'))
             .build()
-            .generate(length - 1);
+            .generate(length);
 
     StringBuilder builder = new StringBuilder(password);
-    char specialChar = SPECIAL_CHARS.charAt(secureRandom.nextInt(SPECIAL_CHARS.length()));
-    int position = secureRandom.nextInt(password.length());
-    builder.insert(position, specialChar);
 
-    return convertToValidPassword(builder.toString());
+    return convertToValidPassword(builder);
   }
 
-  private static String convertToValidPassword(String password) {
-    char[] passwordChars = password.toCharArray();
+  private static String convertToValidPassword(StringBuilder password) {
+    char[] passwordChars = password.toString().toCharArray();
+
     Map<String, Integer> countMap = new HashMap<>();
     for (char c : passwordChars) {
       if (Character.isDigit(c)) {
@@ -66,15 +64,38 @@ public final class PasswordGenerator {
       }
     }
 
+    char specialChar = SPECIAL_CHARS.charAt(secureRandom.nextInt(SPECIAL_CHARS.length()));
+    int position = secureRandom.nextInt(password.length());
+
     if (countMap.containsKey(DIGITS_KEY)
         && countMap.containsKey(LOWERCASE_KEY)
         && countMap.containsKey(UPPERCASE_KEY)) {
-      return password;
+      passwordChars[position] = specialChar;
+      return String.valueOf(passwordChars);
     }
 
-    addMissingChar(passwordChars, countMap, DIGITS_KEY);
-    addMissingChar(passwordChars, countMap, LOWERCASE_KEY);
-    addMissingChar(passwordChars, countMap, UPPERCASE_KEY);
+    String[] keys = {DIGITS_KEY, LOWERCASE_KEY, UPPERCASE_KEY};
+
+    for (int i = 0; i < keys.length; i++) {
+      if (!countMap.containsKey(DIGITS_KEY)
+          || !countMap.containsKey(LOWERCASE_KEY)
+          || !countMap.containsKey(UPPERCASE_KEY)) {
+        while (insertNewChar(passwordChars, countMap, keys[i])) {
+          if (countMap.containsKey(DIGITS_KEY)
+              && countMap.containsKey(LOWERCASE_KEY)
+              && countMap.containsKey(UPPERCASE_KEY)) {
+            //   passwordChars[position] = specialChar;
+            return String.valueOf(passwordChars);
+          }
+        }
+      }
+      //    if (!countMap.containsKey(LOWERCASE_KEY)) {
+      //      addMissingChar(passwordChars, countMap, LOWERCASE_KEY);
+      //    }
+      //    if (!countMap.containsKey(UPPERCASE_KEY)) {
+      //      addMissingChar(passwordChars, countMap, UPPERCASE_KEY);
+      //    }
+    }
     return String.valueOf(passwordChars);
   }
 
@@ -93,12 +114,12 @@ public final class PasswordGenerator {
       incrementCount(countMap, key);
       decrementCount(countMap, DIGITS_KEY);
       return true;
-    } else if (Character.isLowerCase(oldChar) && LOWERCASE_KEY.equals(key)) {
+    } else if (Character.isLowerCase(oldChar) && countMap.get(LOWERCASE_KEY) > 1) {
       passwordChars[position] = newChar;
       incrementCount(countMap, key);
       decrementCount(countMap, LOWERCASE_KEY);
       return true;
-    } else if (Character.isUpperCase(oldChar) && UPPERCASE_KEY.equals(key)) {
+    } else if (Character.isUpperCase(oldChar) && countMap.get(UPPERCASE_KEY) > 1) {
       passwordChars[position] = newChar;
       incrementCount(countMap, key);
       decrementCount(countMap, UPPERCASE_KEY);
