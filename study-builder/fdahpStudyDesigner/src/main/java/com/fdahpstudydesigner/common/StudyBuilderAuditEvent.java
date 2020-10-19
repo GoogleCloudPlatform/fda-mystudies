@@ -12,7 +12,6 @@ import static com.fdahpstudydesigner.common.PlatformComponent.PARTICIPANT_DATAST
 import static com.fdahpstudydesigner.common.PlatformComponent.RESPONSE_DATASTORE;
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_BUILDER;
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_DATASTORE;
-
 import lombok.Getter;
 
 @Getter
@@ -459,7 +458,21 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
-      "ACCOUNT_LOCKED");
+      "ACCOUNT_LOCKED"),
+
+  NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE(
+      STUDY_DATASTORE,
+      PARTICIPANT_DATASTORE,
+      null,
+      "App/study notifications metadata sent.",
+      "NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE"),
+
+  NOTIFICATION_METADATA_SEND_OPERATION_FAILED(
+      STUDY_DATASTORE,
+      PARTICIPANT_DATASTORE,
+      null,
+      "Failed to send app/study notifications metadata.",
+      "NOTIFICATION_METADATA_SEND_OPERATION_FAILED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;
