@@ -93,7 +93,7 @@ public class SessionObject implements Serializable {
     return lastName;
   }
 
-  public String getPasswordExpairdedDateTime() {
+  public String getPasswordExpiryDateTime() {
     return passwordExpairdedDateTime;
   }
 
@@ -181,8 +181,8 @@ public class SessionObject implements Serializable {
     this.loginStatus = loginStatus;
   }
 
-  public void setPasswordExpairdedDateTime(String passwordExpairdedDateTime) {
-    this.passwordExpairdedDateTime = passwordExpairdedDateTime;
+  public void setPasswordExpiryDateTime(String passwordExpiryDateTime) {
+    this.passwordExpiryDateTime = passwordExpiryDateTime;
   }
 
   public void setPhoneNumber(String phoneNumber) {

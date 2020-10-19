@@ -1,17 +1,19 @@
 # Script to insert the first participant manager superadmin into auth server.
 # Run like:
-# $ ./scripts/create_participant_manager_superadmin.sh <email> <password>
+# $ ./scripts/create_participant_manager_superadmin.sh <prefix> <env> <email> <password>
 
 #!/bin/bash
 
-if [ "$#" -ne 2 ]; then
-  echo 'Please provide email and password in the order of <email> <password>'
+if [ "$#" -ne 4 ]; then
+  echo 'Please provide deployment prefix and env, as well as superadmin email and password in the order of <prefix> <env> <email> <password>'
   exit 1
 fi
 
-EMAIL="${1}"
-PWD="${2}"
-shift 2
+PREFIX=${1}
+ENV=${2}
+EMAIL="${3}"
+PWD="${4}"
+shift 4
 
 set -e
 
@@ -57,7 +59,7 @@ VALUES
 " >> ${TMPFILE}
 
 # Upload TMPFILE to GCS.
-GCS_FILE=gs://${SQL_IMPORT_BUCKET}/push_notification_info.sql
+GCS_FILE=gs://${SQL_IMPORT_BUCKET}/participant_manager_superadmin.sql
 echo "Copying the sql file to ${GCS_FILE}"
 gsutil mv ${TMPFILE} ${GCS_FILE}
 
