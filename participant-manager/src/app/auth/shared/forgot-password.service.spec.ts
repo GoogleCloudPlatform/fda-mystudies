@@ -51,7 +51,7 @@ describe('ForgotPasswordService', () => {
       );
 
     const httpReq = httpTest.expectOne(
-      `${environment.authServerUrl}/users/reset_password`,
+      `${environment.authServerUrl}/user/reset_password`,
     );
     expect(httpReq.request.method).toEqual('POST');
 
@@ -73,7 +73,7 @@ describe('ForgotPasswordService', () => {
       },
     );
     const httpReq = httpTest.expectOne(
-      `${environment.authServerUrl}/users/reset_password`,
+      `${environment.authServerUrl}/user/reset_password`,
     );
     expect(httpReq.request.method).toEqual('POST');
     httpTest.verify();
