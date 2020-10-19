@@ -94,7 +94,7 @@ public class SessionObject implements Serializable {
   }
 
   public String getPasswordExpiryDateTime() {
-    return passwordExpairdedDateTime;
+    return passwordExpiryDateTime;
   }
 
   public String getPhoneNumber() {
