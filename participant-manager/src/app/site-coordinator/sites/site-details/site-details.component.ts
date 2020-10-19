@@ -224,33 +224,15 @@ export class SiteDetailsComponent
   selectAll(): void {
     this.userIds = [];
     if (this.selectedAll) {
-      for (
-        let i = 0;
-        i <
-        this.siteDetailsBackup.participantRegistryDetail.registryParticipants
-          .length;
-        i++
-      ) {
-        this.siteDetailsBackup.participantRegistryDetail.registryParticipants[
-          i
-        ].newlyCreatedUser = this.selectedAll;
-        this.userIds.push(
-          this.siteDetailsBackup.participantRegistryDetail.registryParticipants[
-            i
-          ].id,
-        );
+      for (const participants of this.siteDetailsBackup
+        .participantRegistryDetail.registryParticipants) {
+        participants.newlyCreatedUser = this.selectedAll;
+        this.userIds.push(participants.id);
       }
     } else {
-      for (
-        let i = 0;
-        i <
-        this.siteDetailsBackup.participantRegistryDetail.registryParticipants
-          .length;
-        i++
-      ) {
-        this.siteDetailsBackup.participantRegistryDetail.registryParticipants[
-          i
-        ].newlyCreatedUser = this.selectedAll;
+      for (const participants of this.siteDetailsBackup
+        .participantRegistryDetail.registryParticipants) {
+        participants.newlyCreatedUser = this.selectedAll;
       }
     }
   }
