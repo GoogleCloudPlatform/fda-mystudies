@@ -38,7 +38,6 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_REVIEW_
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_MARKED_COMPLETE;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
-
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.DynamicBean;
 import com.fdahpstudydesigner.bean.DynamicFrequencyBean;
@@ -7036,5 +7035,25 @@ public class StudyDAOImpl implements StudyDAO {
     }
     logger.info("StudyDAOImpl - getEligibilityType() - Ends");
     return eligibilityType;
+  }
+
+  @Override
+  public StudyBo getStudy(Integer id) {
+    logger.info("StudyDAOImpl - getStudy() - Starts");
+    Session session = null;
+    StudyBo study = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      Query query = session.getNamedQuery("getStudy").setInteger("id", id);
+      study = (StudyBo) query.uniqueResult();
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getStudy() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("StudyDAOImpl - getStudy() - Ends");
+    return study;
   }
 }

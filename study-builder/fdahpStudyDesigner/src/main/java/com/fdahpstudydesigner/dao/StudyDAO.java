@@ -120,6 +120,8 @@ public interface StudyDAO {
 
   public StudyBo getStudyById(String studyId, Integer userId);
 
+  public StudyBo getStudy(Integer id);
+
   public EligibilityBo getStudyEligibiltyByStudyId(String studyId);
 
   public List<StudyListBean> getStudyList(Integer userId);
