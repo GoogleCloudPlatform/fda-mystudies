@@ -47,6 +47,8 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTING
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -55,7 +57,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -67,6 +68,7 @@ import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
+import com.fdahpstudydesigner.dao.NotificationDAOImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
 import java.util.ArrayList;
@@ -75,6 +77,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -100,6 +103,8 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String STUDY_META_DATA_URI = "/studymetadata";
 
   private static final String TEST_STUDY_ID_STRING = "678680";
+
+  @Autowired NotificationDAOImpl notificationDaoImpl;
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
@@ -789,16 +794,29 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
-    ResourceBO ResourceBO = new ResourceBO();
+    ResourceBO resourceBO = new ResourceBO();
+    resourceBO.setResourceText("text");
+    resourceBO.setStudyId(123);
+    resourceBO.setAction(true);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_RESOURCE.getPath())
             .headers(headers)
             .sessionAttrs(sessionAttributes);
 
-    addParams(requestBuilder, ResourceBO);
+    addParams(requestBuilder, resourceBO);
 
     mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
+
+    List<NotificationBO> notificationList =
+        notificationDaoImpl.getNotificationList(resourceBO.getStudyId());
+    assertNotNull(notificationList);
+
+    for (NotificationBO notification : notificationList) {
+      if (notification.getCreatedBy().equals(Integer.parseInt(USER_ID_VALUE))) {
+        assertEquals(resourceBO.getResourceText(), notification.getNotificationText());
+      }
+    }
 
     verifyAuditEventCall(STUDY_NEW_RESOURCE_CREATED);
   }
