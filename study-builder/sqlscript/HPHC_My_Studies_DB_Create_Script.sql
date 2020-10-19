@@ -219,18 +219,7 @@ CREATE TABLE IF NOT EXISTS `app_versions` (
   PRIMARY KEY (`av_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Data exporting was unselected.
--- Dumping structure for table fda_hphc.audit_log
-DROP TABLE IF EXISTS `audit_log`;
-CREATE TABLE IF NOT EXISTS `audit_log` (
-  `audit_log_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `activity` varchar(200) NOT NULL,
-  `activity_details` varchar(2000) NOT NULL,
-  `class_method_name` varchar(100) NOT NULL,
-  `created_date_time` varchar(50) NOT NULL,
-  PRIMARY KEY (`audit_log_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3246 DEFAULT CHARSET=utf8;
+
 
 -- Data exporting was unselected.
 -- Dumping structure for table fda_hphc.auth_info

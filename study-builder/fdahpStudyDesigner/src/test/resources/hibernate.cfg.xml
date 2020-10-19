@@ -41,7 +41,6 @@
       class="com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo" />
     <mapping class="com.fdahpstudydesigner.bo.ActiveTaskStepBo" />
     <mapping class="com.fdahpstudydesigner.bo.AnchorDateTypeBo" />
-    <mapping class="com.fdahpstudydesigner.bo.AuditLogBO" />
     <mapping class="com.fdahpstudydesigner.bo.Checklist" />
     <mapping
       class="com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo" />
