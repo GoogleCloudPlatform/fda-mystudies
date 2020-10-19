@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.common;
 
+import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -42,7 +43,8 @@ public final class HashUtils {
         sb.append(hex);
       }
     } catch (Exception e) {
-      logger.error("encrypt() failed with an exception", e);
+      logger.error("hash() failed with an exception", e);
+      throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
     }
     return sb.toString();
   }

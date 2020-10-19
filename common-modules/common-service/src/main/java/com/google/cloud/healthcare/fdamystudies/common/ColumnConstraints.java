@@ -24,5 +24,5 @@ public final class ColumnConstraints {
 
   public static final int LARGE_LENGTH = 255;
 
-  public static final int ID_LENGTH = 128;
+  public static final int ID_LENGTH = 64;
 }
