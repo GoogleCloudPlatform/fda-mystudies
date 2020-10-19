@@ -1,4 +1,4 @@
-name: lint-response-datastore
+name: lint-oauth-scim
 
 on:
   pull_request:
