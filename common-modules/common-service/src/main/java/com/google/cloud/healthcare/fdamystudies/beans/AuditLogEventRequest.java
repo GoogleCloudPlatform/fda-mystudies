@@ -67,7 +67,7 @@ public class AuditLogEventRequest implements Serializable {
   @Size(max = 20)
   private String platformVersion;
 
-  @PastOrPresent private Timestamp occured;
+  @PastOrPresent private Timestamp occurred;
 
   @Size(max = 64)
   private String appId;
