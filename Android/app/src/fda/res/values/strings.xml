@@ -25,6 +25,6 @@
 
     <!--must change strings-->
     <string name="FileProvider_authorities">com.myfileprovider</string>
-    <string name="google_maps_Key">MAPS_KEY</string> // replace this with google map key
-    <string name="deeplink_host">gcp</string> // replace this with the deeplink host
+    <string name="google_maps_Key">MAPS_KEY</string> <!-- replace this with google map key -->
+    <string name="deeplink_host">gcp</string> <!-- replace this with the deeplink host -->
 </resources>
