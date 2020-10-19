@@ -23,5 +23,4 @@ export interface StudyResponse {
   status: number;
   message: string;
   code: string;
-  superAdmin: boolean;
 }
