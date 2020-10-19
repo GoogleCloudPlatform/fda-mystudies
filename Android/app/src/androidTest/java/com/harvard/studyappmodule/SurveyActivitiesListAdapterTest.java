@@ -8,6 +8,7 @@
 
 package com.harvard.studyappmodule;
 
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -52,6 +53,7 @@ public class SurveyActivitiesListAdapterTest {
   private static final String TEST_RESULT_ONE = "05:40PM, Oct 09, 2020 to 11:59PM, Oct 12, 2020";
   private static final String TEST_RESULT_TWO = "12:10PM, Oct 09, 2020 to 11:59PM, Oct 12, 2020";
   private static final String TEST_RESULT_THREE = "From : 12:10PM, Oct 09, 2020";
+  private static final String TEST_EXCEPTION_MESSAGE = "Invalid date format";
 
   @Test
   public void getDatesAdapterTest() {
@@ -66,37 +68,37 @@ public class SurveyActivitiesListAdapterTest {
       endDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_END_TIME.split(TEST_REGEX)[0]);
       joiningdate = AppController.getDateFormatForApi().parse(TEST_ACTIVITYESWS_JOIN_TIME);
     } catch (ParseException e) {
-      e.printStackTrace();
+      fail(TEST_EXCEPTION_MESSAGE);
     }
     SurveyActivitiesListAdapter surveyActivitiesListAdapter =
         new SurveyActivitiesListAdapter(null, null, null, null, null, false, null);
-    String anchorDate =
-        surveyActivitiesListAdapter.getDates(
+    String conditionOne =
+        surveyActivitiesListAdapter.getDateRange(
             activitiesws,
             endDate,
             TEST_POSITION,
             joiningdate,
             startDate,
             InstrumentationRegistry.getTargetContext());
-    assertThat(anchorDate, equalTo(TEST_RESULT_ONE));
-    String notAnchorDate =
-        surveyActivitiesListAdapter.getDates(
+    assertThat(conditionOne, equalTo(TEST_RESULT_ONE));
+    String conditionTwo =
+        surveyActivitiesListAdapter.getDateRange(
             activitiesws,
             endDate,
             TEST_POSITION,
             startDate,
             joiningdate,
             InstrumentationRegistry.getTargetContext());
-    assertThat(notAnchorDate, equalTo(TEST_RESULT_TWO));
-    String notEndDate =
-        surveyActivitiesListAdapter.getDates(
+    assertThat(conditionTwo, equalTo(TEST_RESULT_TWO));
+    String conditionThree =
+        surveyActivitiesListAdapter.getDateRange(
             activitiesws,
             null,
             TEST_POSITION,
             startDate,
             joiningdate,
             InstrumentationRegistry.getTargetContext());
-    assertThat(notEndDate, equalTo(TEST_RESULT_THREE));
+    assertThat(conditionThree, equalTo(TEST_RESULT_THREE));
   }
 
   private ActivitiesWS getactivitieswsdata() {

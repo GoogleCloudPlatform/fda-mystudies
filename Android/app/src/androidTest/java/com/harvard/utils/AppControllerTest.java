@@ -8,6 +8,7 @@
 
 package com.harvard.utils;
 
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -22,9 +23,10 @@ public class AppControllerTest {
   private static final String TEST_REGEX = "\\.";
   private static final boolean TEST_TRUE = true;
   private static final boolean TEST_FALSE = false;
+  private static final String TEST_EXCEPTION_MESSAGE = "Invalid date format";
 
   @Test
-  public void isWithinRangeTest() {
+  public void isDateWithinRangeTest() {
     SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtcNoZone();
     Date startDate = null;
     Date endDate = null;
@@ -32,7 +34,7 @@ public class AppControllerTest {
       startDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
       endDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_END_TIME.split(TEST_REGEX)[0]);
     } catch (ParseException e) {
-      e.printStackTrace();
+      fail(TEST_EXCEPTION_MESSAGE);
     }
     boolean isWithRange = AppController.isWithinRange(startDate, endDate);
     assertThat(isWithRange, equalTo(TEST_FALSE));
@@ -47,7 +49,7 @@ public class AppControllerTest {
     try {
       startDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
     } catch (ParseException e) {
-      e.printStackTrace();
+      fail(TEST_EXCEPTION_MESSAGE);
     }
     boolean checkAfter = AppController.checkafter(startDate);
     assertThat(checkAfter, equalTo(TEST_FALSE));

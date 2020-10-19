@@ -400,7 +400,7 @@ public class SurveyActivitiesListAdapter
           .getType()
           .equalsIgnoreCase(SurveyScheduler.FREQUENCY_TYPE_ONE_TIME)) {
         try {
-          holder.date.setText(getDates(items, endDate, position, startDate, joiningDate, context));
+          holder.date.setText(getDateRange(items, endDate, position, startDate, joiningDate, context));
         } catch (Exception e) {
           Logger.log(e);
         }
@@ -727,7 +727,7 @@ public class SurveyActivitiesListAdapter
     return pos;
   }
 
-  public String getDates(
+  public String getDateRange(
       ArrayList<ActivitiesWS> items,
       Date endDate,
       int position,

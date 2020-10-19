@@ -8,6 +8,7 @@
 
 package com.harvard.studyappmodule.surveyscheduler;
 
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -51,6 +52,7 @@ public class SurveySchedulerTest {
   private static final int TEST_END_DAYS = 1;
   private static final int TEST_START_DAYS = 10;
   private static final boolean TEST_BRANCHING = false;
+  private static final String TEST_EXCEPTION_MESSAGE = "Invalid date format";
 
   @Test
   public void getTotalRunsForUpcomingActivitiesTest() {
@@ -61,7 +63,7 @@ public class SurveySchedulerTest {
       startDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
       endDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_END_TIME.split(TEST_REGEX)[0]);
     } catch (ParseException e) {
-      e.printStackTrace();
+      fail(TEST_EXCEPTION_MESSAGE);
     }
     SurveyScheduler surveyScheduler = new SurveyScheduler(null, null);
     int oneTimeValue =

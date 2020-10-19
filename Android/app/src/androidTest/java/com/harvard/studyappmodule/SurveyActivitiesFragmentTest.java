@@ -8,8 +8,10 @@
 
 package com.harvard.studyappmodule;
 
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 
 import android.support.test.InstrumentationRegistry;
 import com.harvard.storagemodule.DbServiceSubscriber;
@@ -23,6 +25,7 @@ import io.realm.RealmResults;
 import java.text.ParseException;
 import java.util.Date;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +47,7 @@ public class SurveyActivitiesFragmentTest {
   private static final String TEST_STUDYID_KEY = "studyId";
   private static final String TEST_USERID_VALUE = "Test_user1234";
   private static final String TEST_STUDYID_VALUE = "Test_Study_1221";
-  private static final int TEST_POSITION = 1;
+  private static final String TEST_EXCEPTION_MESSAGE = "Invalid date format";
 
   @Before
   public void setUp() {
@@ -53,7 +56,7 @@ public class SurveyActivitiesFragmentTest {
   }
 
   @Test
-  public void getJoinDate() {
+  public void getJoiningDateOfStudyTest() {
     Date testDate = null;
     realm.beginTransaction();
     realm.copyToRealmOrUpdate(getStudyData());
@@ -67,7 +70,7 @@ public class SurveyActivitiesFragmentTest {
     try {
       testDate = AppController.getDateFormatForApi().parse(TEST_ENROLLMENTDATE);
     } catch (ParseException e) {
-      e.printStackTrace();
+      fail(TEST_EXCEPTION_MESSAGE);
     }
     assertThat(joiningDate.toString(), equalTo(testDate.toString()));
   }
