@@ -149,7 +149,6 @@ public class FdahpStudyDesignerConstants {
   public static final String DRAFT_ACTIVITY = "draftActivity";
   public static final String DRAFT_CONSCENT = "draftConscent";
 
-  public static final String DRAFT_QUESTIONNAIRE = "draftQuestionnaire";
   // Update version draft update flag
   public static final String DRAFT_STUDY = "draftStudy";
 

@@ -57,8 +57,6 @@ public class LoginDAOImpl implements LoginDAO {
 
   private static Logger logger = Logger.getLogger(LoginDAOImpl.class.getName());
 
-  @Autowired private AuditLogDAO auditLogDAO;
-
   @Autowired private LoginService loginService;
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
@@ -452,13 +450,6 @@ public class LoginDAOImpl implements LoginDAO {
         } else {
           SessionObject sessionObject = new SessionObject();
           sessionObject.setUserId(userBO.getUserId());
-          auditLogDAO.saveToAuditLog(
-              session,
-              transaction,
-              sessionObject,
-              FdahpStudyDesignerConstants.PASS_FAIL_ACTIVITY_MESSAGE,
-              FdahpStudyDesignerConstants.PASS_FAIL_ACTIVITY_DEATILS_MESSAGE,
-              "LoginDAOImpl - updateUser()");
         }
       }
       transaction.commit();

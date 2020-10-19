@@ -34,7 +34,6 @@ import com.fdahpstudydesigner.bo.QuestionnaireCustomScheduleBo;
 import com.fdahpstudydesigner.bo.QuestionnairesFrequenciesBo;
 import com.fdahpstudydesigner.bo.QuestionnairesStepsBo;
 import com.fdahpstudydesigner.bo.QuestionsBo;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.StudyQuestionnaireDAO;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -53,8 +52,6 @@ import org.springframework.stereotype.Service;
 public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService {
 
   private static Logger logger = Logger.getLogger(StudyQuestionnaireServiceImpl.class);
-
-  @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private StudyQuestionnaireDAO studyQuestionnaireDAO;
 
@@ -584,8 +581,6 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
       QuestionsBo questionsBo, SessionObject sesObj, String customStudyId) {
     logger.info("StudyQuestionnaireServiceImpl - saveOrUpdateQuestion - Starts");
     QuestionsBo addQuestionsBo = null;
-    String activitydetails = "";
-    String activity = "";
     try {
       if (null != questionsBo) {
         if (questionsBo.getId() != null) {
@@ -694,36 +689,7 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
 
         addQuestionsBo.setCustomStudyId(customStudyId);
         addQuestionsBo = studyQuestionnaireDAO.saveOrUpdateQuestion(addQuestionsBo);
-        if ((null != addQuestionsBo) && (questionsBo.getType() != null)) {
-          if (questionsBo
-              .getType()
-              .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
-            activity = "Question of form step saved.";
-            activitydetails =
-                "Content saved for question of form step. (Question ID = "
-                    + addQuestionsBo.getId()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ")";
-          } else if (questionsBo
-              .getType()
-              .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
-            activity = "Question of form step checked for minimum content completeness.";
-            activitydetails =
-                "Question  succesfully checked for minimum content completeness and marked 'Done'. (Question ID = "
-                    + addQuestionsBo.getId()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ")";
-          }
-          auditLogDAO.saveToAuditLog(
-              null,
-              null,
-              sesObj,
-              activity,
-              activitydetails,
-              "StudyQuestionnaireServiceImpl - saveOrUpdateQuestion");
-        }
+        if ((null != addQuestionsBo) && (questionsBo.getType() != null)) {}
       }
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveOrUpdateQuestion - Error", e);

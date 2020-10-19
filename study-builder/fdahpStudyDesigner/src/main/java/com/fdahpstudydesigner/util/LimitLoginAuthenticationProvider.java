@@ -29,7 +29,6 @@ import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import java.text.ParseException;
@@ -51,8 +50,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider {
 
   private static Logger logger = Logger.getLogger(LimitLoginAuthenticationProvider.class.getName());
-
-  @Autowired private AuditLogDAO auditLogDAO;
 
   private LoginDAOImpl loginDAO;
 
