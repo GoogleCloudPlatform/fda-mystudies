@@ -689,7 +689,6 @@ public class StudyQuestionnaireServiceImpl implements StudyQuestionnaireService 
 
         addQuestionsBo.setCustomStudyId(customStudyId);
         addQuestionsBo = studyQuestionnaireDAO.saveOrUpdateQuestion(addQuestionsBo);
-        if ((null != addQuestionsBo) && (questionsBo.getType() != null)) {}
       }
     } catch (Exception e) {
       logger.error("StudyQuestionnaireServiceImpl - saveOrUpdateQuestion - Error", e);
