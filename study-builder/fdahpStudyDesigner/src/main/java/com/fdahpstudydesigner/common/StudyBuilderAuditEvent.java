@@ -459,7 +459,17 @@ public enum StudyBuilderAuditEvent {
       STUDY_DATASTORE,
       null,
       "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
-      "ACCOUNT_LOCKED");
+      "ACCOUNT_LOCKED"),
+
+  PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      null,
+      "PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT"),
+
+  SESSION_EXPIRY(
+      STUDY_BUILDER, STUDY_DATASTORE, null, "User session timed out or expired.", "SESSION_EXPIRY");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

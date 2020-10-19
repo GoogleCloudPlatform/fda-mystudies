@@ -30,6 +30,8 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHAN
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_SENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_REQUESTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
 
@@ -612,7 +614,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   // Send mail to user when account locked due to invalid login credentials
-  public void sendLockedAccountPasswordResetLinkToMail(String email) {
+  public void sendLockedAccountPasswordResetLinkToMail(
+      String email, AuditLogEventRequest auditRequest) {
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Starts");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -645,10 +648,12 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
           EmailNotification.sendEmailNotification(
               "accountLockedSubject", dynamicContent, email, null, null);
+          auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
         }
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - ERROR ", e);
+      auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
     }
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Ends");
   }
