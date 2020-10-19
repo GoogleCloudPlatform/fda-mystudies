@@ -508,11 +508,9 @@ public class NotificationDAOImpl implements NotificationDAO {
   public List<NotificationBO> getNotificationList(Integer studyId) {
     logger.info("NotificationDAOImpl - getNotificationList() - Starts");
     Session session = null;
-    List<NotificationBO> notificationList = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      Query query = session.getNamedQuery("getNotification").setInteger("studyId", studyId);
-      notificationList = query.list();
+      return session.getNamedQuery("getNotification").setInteger("studyId", studyId).list();
     } catch (Exception e) {
       logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
     } finally {
@@ -521,6 +519,6 @@ public class NotificationDAOImpl implements NotificationDAO {
       }
     }
     logger.info("NotificationDAOImpl - getNotificationList() - Ends");
-    return notificationList;
+    return null;
   }
 }
