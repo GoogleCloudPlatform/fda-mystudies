@@ -22,15 +22,17 @@
   }
   .bg__white label {
     margin-bottom: 0;
-    font-size: 68.8%;
+    font-size: 70.8%;
     line-height: 87.5%;
     color: var(--light-blue);
+    text-transform: capitalize;
   }
   .bg__white .label {
     margin-bottom: 0;
     font-size: 68.8%;
     line-height: 87.5%;
     color: var(--light-blue);
+    text-transform: capitalize;
   }
   .bg__white input {
     background: transparent;
@@ -80,7 +82,7 @@
     content: "";
     appearance: none;
     background-color: transparent;
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--geyser-gray);
     padding: 7px;
     display: inline-block;
     position: relative;
@@ -89,7 +91,8 @@
     margin-right: 10px;
   }
   .user__details .form-group .custom__labels label:before {
-    content: "../svgs/tick.svg";
+    content: url("assets/svgs/tick.svg");
+
     appearance: none;
     background-color: transparent;
     border: none;
@@ -139,7 +142,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--alto-gray);
     border-radius: 100%;
     background: var(--white);
   }
@@ -174,7 +177,7 @@
     top: 0;
     width: 15px;
     height: 15px;
-    border: 1px solid var(--periwinkle-gray);
+    border: 1px solid var(--alto-gray);
     border-radius: 100%;
     background: var(--white);
   }

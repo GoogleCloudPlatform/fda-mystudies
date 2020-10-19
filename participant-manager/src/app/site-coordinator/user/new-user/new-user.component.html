@@ -139,7 +139,10 @@
                   data-tip="A superadmin user has application-wide permissions; can manage users and in addition, can manage locations and all sites, studies and apps. Non-superadmin users or Site Admins, will have permission-based access to manage locations and specific sites, studies and apps only."
                   tabindex="1"
                 >
-                  <i class="fa fa-info-circle ml-sm" aria-hidden="true"></i>
+                  <i
+                    class="fa fa-info-circle add_user_info_icon ml-sm"
+                    aria-hidden="true"
+                  ></i>
                 </span>
               </label>
             </div>
@@ -148,7 +151,7 @@
       </div>
     </section>
     <div *ngIf="!user.superAdmin">
-      <h2 class="subheader__title text-weight-semibold mb-sm">Permissions</h2>
+      <h2 class="subheader__title mb-sm">Permissions</h2>
 
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="row">
@@ -204,7 +207,7 @@
       </section>
       <section class="bg__white card__inside__pad box__shadow-cmn m-none">
         <div class="form-group">
-          <div class="user__card__title pb-xlg">Sites, Studies and Apps</div>
+          <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
           <div class="select__form-control__parent">
             <label class="wrap">Add an app</label>
             <ng-select
@@ -382,7 +385,10 @@
                                     | i18nPlural: sitesMessageMapping
                                 }}
                               </div>
-                              <div *ngFor="let site of study.sites">
+                              <div
+                                *ngFor="let site of study.sites"
+                                class="pb-sm"
+                              >
                                 <div class="custom__labels">
                                   <input
                                     (change)="
@@ -457,7 +463,7 @@
         [disabled]="!addUserForm.form.valid || disableButton"
         type="submit"
         name="add"
-        class="btn bt__add bt__add__auto mr-lg"
+        class="btn bt__add bt__add__auto mr-sm"
       >
         Add user and invite
       </button>
