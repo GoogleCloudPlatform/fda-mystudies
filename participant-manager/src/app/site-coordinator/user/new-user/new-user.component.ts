@@ -139,7 +139,6 @@ export class AddNewUserComponent
   }
 
   add(): void {
-this.disableButton=true;
   const permissionsSelected = this.selectedApps.filter(
       (app) => app.selectedSitesCount > 0,
     );
@@ -147,6 +146,7 @@ this.disableButton=true;
       this.user.superAdmin ||
       (this.selectedApps.length > 0 && permissionsSelected.length > 0)
     ) {
+      this.disableButton=true;
       if (this.user.superAdmin) {
         this.user.apps = [];
       } else {
