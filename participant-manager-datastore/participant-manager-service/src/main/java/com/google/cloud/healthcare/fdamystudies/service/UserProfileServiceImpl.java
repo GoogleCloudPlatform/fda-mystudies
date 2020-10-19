@@ -164,6 +164,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     userRegAdminUser.setFirstName(setUpAccountRequest.getFirstName());
     userRegAdminUser.setLastName(setUpAccountRequest.getLastName());
     userRegAdminUser.setStatus(UserStatus.ACTIVE.getValue());
+    userRegAdminUser.setSecurityCode(null);
+    userRegAdminUser.setSecurityCodeExpireDate(null);
     userRegAdminUser = userRegAdminRepository.saveAndFlush(userRegAdminUser);
 
     SetUpAccountResponse setUpAccountResponse =
