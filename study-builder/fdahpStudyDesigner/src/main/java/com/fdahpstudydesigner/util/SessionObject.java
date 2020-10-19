@@ -41,7 +41,7 @@ public class SessionObject implements Serializable {
   private boolean isSuperAdmin = false;
   private String lastName = "";
   private boolean loginStatus = false;
-  private String passwordExpairdedDateTime;
+  private String passwordExpiryDateTime;
   private String phoneNumber = "";
   private String privacyPolicyText = "";
   private List<Integer> studySession;
