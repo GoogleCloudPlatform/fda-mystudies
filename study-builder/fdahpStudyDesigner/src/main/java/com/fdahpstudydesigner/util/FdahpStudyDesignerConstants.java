@@ -187,6 +187,7 @@ public class FdahpStudyDesignerConstants {
       "Questionnaire form question has been deleted";
   public static final String FORMSTEP_QUESTION_DONE = "Questionnaire form question completed";
   public static final String FORMSTEP_QUESTION_SAVED = "Questionnaire form question saved";
+  public static final String DRAFT_QUESTIONNAIRE = "draftQuestionnaire";
 
   public static final String FORMSTEP_SAVED = "Questionnaire form step saved";
   public static final String FREQUENCY_TYPE_DAILY = "Daily";
