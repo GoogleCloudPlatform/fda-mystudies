@@ -38,6 +38,7 @@ export class SiteDetailsComponent
   onBoardingStatus = OnboardingStatus;
   activeTab = OnboardingStatus.All;
   newlyImportedParticipants: Participant[] = [];
+  selectedAll = false;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -88,7 +89,7 @@ export class SiteDetailsComponent
             return participant;
           },
         );
-
+        this.newlyImportedParticipants = [];
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),
@@ -101,6 +102,7 @@ export class SiteDetailsComponent
     this.query$.next(query.trim().toLowerCase());
   }
   changeTab(tab: OnboardingStatus): void {
+    this.selectedAll = false;
     this.sendResend =
       tab === OnboardingStatus.New ? 'Send Invitation' : 'Resend Invitation';
     this.enableDisable =
@@ -217,5 +219,39 @@ export class SiteDetailsComponent
     this.activeTab = OnboardingStatus.New;
     this.toggleDisplay = false;
     this.fetchSiteParticipant(OnboardingStatus.New);
+  }
+
+  selectAll(): void {
+    this.userIds = [];
+    if (this.selectedAll) {
+      for (
+        let i = 0;
+        i <
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants
+          .length;
+        i++
+      ) {
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants[
+          i
+        ].newlyCreatedUser = this.selectedAll;
+        this.userIds.push(
+          this.siteDetailsBackup.participantRegistryDetail.registryParticipants[
+            i
+          ].id,
+        );
+      }
+    } else {
+      for (
+        let i = 0;
+        i <
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants
+          .length;
+        i++
+      ) {
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants[
+          i
+        ].newlyCreatedUser = this.selectedAll;
+      }
+    }
   }
 }
