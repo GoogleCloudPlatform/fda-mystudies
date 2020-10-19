@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -97,7 +98,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findBySecurityCode(securityCode);
 
     if (!optUserRegAdminUser.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.INVALID_SECURITY_CODE);
+      return new UserProfileResponse("login", HttpStatus.OK.value());
     }
 
     UserRegAdminEntity user = optUserRegAdminUser.get();
