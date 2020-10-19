@@ -78,7 +78,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gcp"
+                    android:host="@string/deeplink_host"
                     android:pathPrefix="/mystudies/signup"
                     android:scheme="app" />
             </intent-filter>
@@ -96,7 +96,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gcp"
+                    android:host="@string/deeplink_host"
                     android:pathPrefix="/mystudies/callback"
                     android:scheme="app" />
             </intent-filter>
@@ -107,7 +107,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gcp"
+                    android:host="@string/deeplink_host"
                     android:pathPrefix="/mystudies/activation"
                     android:scheme="app" />
             </intent-filter>
@@ -125,7 +125,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gcp"
+                    android:host="@string/deeplink_host"
                     android:pathPrefix="/mystudies/error"
                     android:scheme="app" />
             </intent-filter>
@@ -160,7 +160,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gcp"
+                    android:host="@string/deeplink_host"
                     android:pathPrefix="/mystudies/forgotPassword"
                     android:scheme="app" />
             </intent-filter>
@@ -220,7 +220,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gcp"
+                    android:host="@string/deeplink_host"
                     android:pathPrefix="/mystudies/privacyPolicy"
                     android:scheme="app" />
             </intent-filter>
@@ -231,7 +231,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="gcp"
+                    android:host="@string/deeplink_host"
                     android:pathPrefix="/mystudies/terms"
                     android:scheme="app" />
             </intent-filter>
@@ -301,7 +301,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="MAPS_KEY" />
+            android:value="@string/google_maps_Key" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
