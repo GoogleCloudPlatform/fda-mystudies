@@ -21,7 +21,7 @@ USE `oauth_server_hydra`;
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` varchar(255) NOT NULL,
-  `app_id` varchar(100) NOT NULL,
+  `app_id` varchar(64) NOT NULL,
   `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `email` varchar(320) NOT NULL,
   `status` int(11) NOT NULL,
