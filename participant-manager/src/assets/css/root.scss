@@ -43,7 +43,7 @@ html {
     height: 32px;
     font-size: 87.5%;
     background-color: var(--aqualight-gray);
-    background-image: "../svgs/search.svg";
+    background-image: url("assets/svgs/search.svg");
     background-repeat: no-repeat;
     background-position: 5%;
     text-indent: 25px;
@@ -312,9 +312,6 @@ html {
     right: 10px;
     color: var(--grey-dark);
   }
-  .ng-dropdown-panel {
-    position: inherit;
-  }
   .ng-value {
     display: none;
   }
@@ -361,7 +358,7 @@ html {
   }
   .subheader {
     min-height: 67px;
-    line-height: 65px;
+    line-height: 63px;
   }
 }
 
@@ -406,7 +403,7 @@ header {
   width: 100%;
   height: 3px;
   position: absolute;
-  bottom: -17px;
+  bottom: -14px;
   left: 0;
 }
 
@@ -519,6 +516,7 @@ footer ul li:last-child a {
 
 .progress__bar__row:last-child {
   border-bottom: 1px solid var(--periwinkle-gray);
+  border-top: none;
 }
 
 .progress-bar-next__title {
@@ -528,6 +526,10 @@ footer ul li:last-child a {
 
 .img__container__left img {
   border-radius: 50%;
+  width: auto;
+  height: auto;
+  max-width: 58px;
+  max-height: 58px;
 }
 
 .primary__btn {
@@ -589,7 +591,7 @@ footer ul li:last-child a {
 
 .pro__top {
   position: absolute;
-  background: var(----dark-blue);
+  background: var(--dark-blue);
   height: 7px;
   border-radius: 27px;
   left: -1px;
@@ -638,15 +640,6 @@ footer ul li:last-child a {
   line-height: 100%;
 }
 
-.inActive__ {
-  padding: 6px 13px;
-  background: var(--bold-gray);
-  font-size: 75%;
-  color: var(--white);
-  display: inline-block;
-  border-radius: 58px;
-  line-height: 100%;
-}
 .btn.disabled,
 .btn:disabled {
   cursor: not-allowed;
@@ -800,7 +793,8 @@ footer ul li:last-child a {
 }
 
 .fa__plus__minus[aria-expanded="true"] {
-  background: "../svgs/minus.svg" no-repeat;
+  background-image: url("/assets/svgs/minus.svg");
+  background-repeat: no-repeat;
   display: block;
   background-position: 98%;
   width: 16px;
@@ -808,7 +802,8 @@ footer ul li:last-child a {
 }
 
 .fa__plus__minus[aria-expanded="false"] {
-  background: "../svgs/plus.svg" no-repeat;
+  background-image: url("/assets/svgs/plus.svg");
+  background-repeat: no-repeat;
   display: block;
   background-position: 98%;
   width: 16px;
@@ -1042,10 +1037,6 @@ pre {
   min-height: 67px;
 }
 
-.fa {
-  color: var(--white);
-}
-
 .site__details .subheader {
   min-height: 67px;
   line-height: 100% !important;
@@ -1079,4 +1070,8 @@ thead.custom__thead {
 
 .ng-select .ng-arrow-wrapper {
   top: -10px !important;
+}
+
+.add_user_info_icon {
+  color: var(--grey);
 }
