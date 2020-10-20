@@ -8,6 +8,7 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
@@ -1140,6 +1141,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
         .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
         .andExpect(jsonPath("$.participantDetails.siteId", notNullValue()))
+        .andExpect(jsonPath("$.participantDetails.studyType", is(CLOSE_STUDY)))
         .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
         .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(1)))
         .andExpect(
