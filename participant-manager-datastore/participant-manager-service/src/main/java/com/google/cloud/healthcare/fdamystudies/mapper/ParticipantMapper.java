@@ -179,9 +179,7 @@ public final class ParticipantMapper {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
       String enrollmentStatus =
-          EnrollmentStatus.IN_PROGRESS
-                  .getStatus()
-                  .equalsIgnoreCase(participantsEnrollment.getStatus())
+          EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantsEnrollment.getStatus())
               ? EnrollmentStatus.ENROLLED.getStatus()
               : participantsEnrollment.getStatus();
       enrollment.setEnrollmentStatus(enrollmentStatus);
