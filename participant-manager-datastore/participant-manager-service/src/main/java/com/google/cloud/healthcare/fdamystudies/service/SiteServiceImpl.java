@@ -322,12 +322,19 @@ public class SiteServiceImpl implements SiteService {
       return ErrorCode.OPEN_STUDY;
     }
 
-    Optional<ParticipantRegistrySiteEntity> registry =
+    List<ParticipantRegistrySiteEntity> registryList =
         participantRegistrySiteRepository.findByStudyIdAndEmail(
             site.getStudy().getId(), participant.getEmail());
 
-    if (registry.isPresent()) {
-      return ErrorCode.EMAIL_EXISTS;
+    if (CollectionUtils.isNotEmpty(registryList)) {
+      for (ParticipantRegistrySiteEntity participantRegistrySite : registryList) {
+        if (!participantRegistrySite
+                .getOnboardingStatus()
+                .equals(OnboardingStatus.DISABLED.getCode())
+            || participantRegistrySite.getSite().equals(site)) {
+          return ErrorCode.EMAIL_EXISTS;
+        }
+      }
     }
     return null;
   }
@@ -1023,9 +1030,32 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.INVALID_ONBOARDING_STATUS);
     }
 
-    participantRegistrySiteRepository.updateOnboardingStatus(
-        participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    List<ParticipantRegistrySiteEntity> participantregistryList =
+        participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
+
+    if (!OnboardingStatus.NEW.equals(onboardingStatus)) {
+      participantRegistrySiteRepository.updateOnboardingStatus(
+          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    } else {
+      List<String> emails =
+          participantregistryList
+              .stream()
+              .map(ParticipantRegistrySiteEntity::getEmail)
+              .collect(Collectors.toList());
+
+      Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+          participantRegistrySiteRepository.findExistingRecordByStudyIdAndEmails(optSite.get().getStudyId(), emails);
+
+      if (optParticipantRegistrySite.isPresent()) {
+        throw new ErrorCodeException(ErrorCode.CANNOT_ENABLE_PARTICIPANT);
+      }
+
+      participantRegistrySiteRepository.updateOnboardingStatus(
+          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    }
+
     SiteEntity site = optSite.get();
+
     auditRequest.setSiteId(site.getId());
     auditRequest.setUserId(participantStatusRequest.getUserId());
     auditRequest.setStudyId(site.getStudyId());
