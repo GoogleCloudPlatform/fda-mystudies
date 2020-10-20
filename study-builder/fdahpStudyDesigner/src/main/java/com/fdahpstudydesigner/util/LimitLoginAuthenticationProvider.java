@@ -115,10 +115,9 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
               authentication.getCredentials(),
               new ArrayList<GrantedAuthority>());
 
-      // if reach here, means login success, else an exception will be
-      // thrown
-      // reset the user_attempts
+      // if reach here, means login success, else an exception will be thrown
       Authentication auth = super.authenticate(token);
+      // reset the user_attempts
       loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
 
       if (userBO != null) {
