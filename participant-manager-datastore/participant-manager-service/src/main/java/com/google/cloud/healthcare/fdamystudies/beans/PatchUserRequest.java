@@ -13,4 +13,6 @@ public class PatchUserRequest {
   @NotNull private Integer status;
 
   private String userId;
+
+  private String signedInUserId;
 }

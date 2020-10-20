@@ -227,8 +227,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         1,
         postRequestedFor(
             urlEqualTo(
-                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true"
-            )));
+                "/response-datastore/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);

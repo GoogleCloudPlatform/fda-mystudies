@@ -99,7 +99,7 @@ public final class AuditEventMapper {
     auditRequest.setSourceApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setDestinationApplicationVersion(commonPropConfig.getApplicationVersion());
     auditRequest.setPlatformVersion(commonPropConfig.getApplicationVersion());
-    auditRequest.setOccured(new Timestamp(Instant.now().toEpochMilli()));
+    auditRequest.setOccurred(new Timestamp(Instant.now().toEpochMilli()));
     return auditRequest;
   }
 }

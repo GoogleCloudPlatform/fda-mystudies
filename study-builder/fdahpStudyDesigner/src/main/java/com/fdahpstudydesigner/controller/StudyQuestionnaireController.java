@@ -196,8 +196,6 @@ public class StudyQuestionnaireController {
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("questionnairesId"))
                 ? ""
                 : request.getParameter("questionnairesId");
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         auditRequest.setStudyId(customStudyId);
         if (!formId.isEmpty() && !questionId.isEmpty()) {
           message =
@@ -278,8 +276,6 @@ public class StudyQuestionnaireController {
       SessionObject sesObj =
           (SessionObject)
               request.getSession().getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      auditRequest.setCorrelationId(sesObj.getSessionId());
-      auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
       Integer sessionStudyCount =
           StringUtils.isNumeric(request.getParameter("_S"))
               ? Integer.parseInt(request.getParameter("_S"))
@@ -2088,8 +2084,6 @@ public class StudyQuestionnaireController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         customStudyId =
             (String)
                 request

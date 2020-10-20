@@ -63,8 +63,6 @@ public class NotificationDAOImpl implements NotificationDAO {
 
   private static Logger logger = Logger.getLogger(NotificationDAOImpl.class);
 
-  @Autowired private AuditLogDAO auditLogDAO;
-
   @Autowired private StudyBuilderAuditEventHelper auditLogHelper;
 
   HibernateTemplate hibernateTemplate;
@@ -83,7 +81,6 @@ public class NotificationDAOImpl implements NotificationDAO {
     String message = FdahpStudyDesignerConstants.FAILURE;
     String queryString = "";
     int i = 0;
-    String activitydetails = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -99,26 +96,7 @@ public class NotificationDAOImpl implements NotificationDAO {
           message = FdahpStudyDesignerConstants.SUCCESS;
         }
       }
-      if (!notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
-        activitydetails =
-            "Gateway (app-level) notification deleted. (Notification ID = "
-                + notificationIdForDelete
-                + ")";
-      } else {
-        activitydetails =
-            "Notification for Study successfully deleted. (Notification ID = "
-                + notificationIdForDelete
-                + ")";
-      }
-      // Audit logging of action performed
-      message =
-          auditLogDAO.saveToAuditLog(
-              session,
-              transaction,
-              sessionObject,
-              notificationType,
-              activitydetails,
-              "NotificationDAOImpl - deleteNotification");
+
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -327,7 +305,6 @@ public class NotificationDAOImpl implements NotificationDAO {
     Integer notificationId = 0;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sessionObject.getSessionId());
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
       if (notificationBO.getNotificationId() == null) {
@@ -417,7 +394,6 @@ public class NotificationDAOImpl implements NotificationDAO {
       }
       // Audit log capturing for specified request
       if (notificationId != null) {
-        String activitydetails = "";
         StudyBuilderAuditEvent auditLogEvent = null;
         Map<String, String> values = new HashMap<>();
         values.put(NOTIFICATION_ID, String.valueOf(notificationId));
@@ -433,23 +409,6 @@ public class NotificationDAOImpl implements NotificationDAO {
                     ? APP_LEVEL_NOTIFICATION_REPLICATED_FOR_RESEND
                     : APP_LEVEL_NOTIFICATION_CREATED;
           }
-        } else if ("update".equals(buttonType)) {
-          activitydetails =
-              "Gateway (app-level) notification updated. (Notification ID = "
-                  + notificationId
-                  + ")";
-        } else if ("resend".equals(buttonType)
-            && !notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
-          activitydetails =
-              "Gateway (app-level) notification resend. (Notification ID = " + notificationId + ")";
-        } else if ("resend".equals(buttonType)
-            && notificationType.equals(FdahpStudyDesignerConstants.STUDYLEVEL)) {
-          activitydetails =
-              "Notification for Study successfully resent. (Study ID = "
-                  + notificationBO.getCustomStudyId()
-                  + ", Notification ID = "
-                  + notificationId
-                  + ")";
         } else if ("save".equals(buttonType)
             && FdahpStudyDesignerConstants.STUDYLEVEL.equals(notificationType)) {
           values.put(NOTIFICATION_ID, String.valueOf(notificationId));
