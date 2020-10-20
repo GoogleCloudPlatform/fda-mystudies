@@ -24,9 +24,9 @@ package com.fdahpstudydesigner.scheduler;
 
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_METADATA_SEND_OPERATION_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE;
+
 import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
-import com.fdahpstudydesigner.bo.AuditLogBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.PlatformComponent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
@@ -79,8 +79,6 @@ public class FDASchedulerService {
 
   private static final Map<?, ?> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
-  @Autowired AuditLogDAO auditLogDAO;
-
   @Autowired private LoginDAO loginDAO;
 
   @Autowired private NotificationDAO notificationDAO;
@@ -101,29 +99,9 @@ public class FDASchedulerService {
   @Scheduled(cron = "0 0 0 * * ?")
   public void createAuditLogs() {
     logger.info("FDASchedulerService - createAuditLogs - Starts");
-    List<AuditLogBO> auditLogs = null;
     StringBuilder logString = null;
     try {
-      auditLogs = auditLogDAO.getTodaysAuditLogs();
-      if ((auditLogs != null) && !auditLogs.isEmpty()) {
-        logString = new StringBuilder();
-        for (AuditLogBO auditLogBO : auditLogs) {
-          logString.append(auditLogBO.getAuditLogId()).append("\t");
-          logString.append(auditLogBO.getCreatedDateTime()).append("\t");
-          if (auditLogBO.getUserBO() != null) {
-            logString
-                .append(auditLogBO.getUserBO().getFirstName())
-                .append(" ")
-                .append(auditLogBO.getUserBO().getLastName())
-                .append("\t");
-          } else {
-            logString.append("anonymous user").append("\t");
-          }
-          logString.append(auditLogBO.getClassMethodName()).append("\t");
-          logString.append(auditLogBO.getActivity()).append("\t");
-          logString.append(auditLogBO.getActivityDetails()).append("\n");
-        }
-      }
+      logString = new StringBuilder();
       if ((logString != null) && StringUtils.isNotBlank(logString.toString())) {
         String date =
             new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE)
