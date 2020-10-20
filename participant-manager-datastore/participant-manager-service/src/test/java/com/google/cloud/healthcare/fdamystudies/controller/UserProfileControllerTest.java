@@ -326,7 +326,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditEventMap.put(USER_ACCOUNT_ACTIVATED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, USER_ACCOUNT_ACTIVATED);
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -356,7 +355,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditEventMap.put(USER_ACCOUNT_ACTIVATION_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, USER_ACCOUNT_ACTIVATION_FAILED);
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -380,8 +378,6 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isInternalServerError())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.APPLICATION_ERROR.getDescription())));
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -403,8 +399,6 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isInternalServerError());
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
