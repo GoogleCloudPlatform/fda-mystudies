@@ -59,17 +59,14 @@ export class ChangePasswordComponent
       ),
       newPassword: String(this.resetPasswordForm.controls['newPassword'].value),
     };
-    this.accountService.changePassword(changePassword).subscribe(
-      (successResponse: ApiResponse) => {
+    this.accountService
+      .changePassword(changePassword)
+      .subscribe((successResponse: ApiResponse) => {
         if (getMessage(successResponse.code)) {
           this.toastr.success(getMessage(successResponse.code));
         }
         void this.router.navigate(['/coordinator/accounts']);
-      },
-      // (error) => {
-      //   this.toastr.error(getMessage(error));
-      // },
-    );
+      });
   }
   cancel() {
     void this.router.navigate(['/coordinator/accounts']);

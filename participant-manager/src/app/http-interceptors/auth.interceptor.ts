@@ -78,8 +78,8 @@ export class AuthInterceptor implements HttpInterceptor {
           if (getMessage(customError.error_code)) {
             this.toasterService.error(getMessage(customError.error_code));
           }
-            sessionStorage.clear();
-            void this.router.navigate(['/']);
+          sessionStorage.clear();
+          void this.router.navigate(['/']);
         }
       },
     );

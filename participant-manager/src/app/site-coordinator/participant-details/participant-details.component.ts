@@ -6,9 +6,10 @@ import {ParticipantDetailsService} from './participant-details.service';
 import {ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {OnboardingStatus} from 'src/app/shared/enums';
+import {EnrollmentStatus, OnboardingStatus, StudyType} from 'src/app/shared/enums';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Location} from '@angular/common';
+import {RegistryParticipant} from 'src/app/shared/participant';
 @Component({
   selector: 'app-participant-details',
   templateUrl: './participant-details.component.html',
@@ -22,6 +23,7 @@ export class ParticipantDetailsComponent
   enableDisable = '';
   participant$: Observable<Participant> = of();
   onBoardingStatus = OnboardingStatus;
+  studyTypes = StudyType;
 
   constructor(
     private readonly locationLibrary: Location,
@@ -105,11 +107,18 @@ export class ParticipantDetailsComponent
           } else {
             this.toastr.success('Success');
           }
-           this.getParticipant();
+          this.getParticipant();
         }),
     );
   }
   backClicked(): void {
     this.locationLibrary.back();
   }
+  diableButton(participantDetails:RegistryParticipant):boolean {
+    if (participantDetails.enrollments.length>0 &&
+      participantDetails.enrollments[0].enrollmentStatus === EnrollmentStatus.Enrolled) {
+          return true;
+      }
+return false;
+}
 }

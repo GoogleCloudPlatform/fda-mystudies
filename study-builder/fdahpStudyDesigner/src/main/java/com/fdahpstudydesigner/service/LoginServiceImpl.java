@@ -41,7 +41,6 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.common.StudyBuilderConstants;
 import com.fdahpstudydesigner.common.UserAccessLevel;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.EmailNotification;
@@ -70,8 +69,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   private static Logger logger = Logger.getLogger(LoginServiceImpl.class.getName());
 
-  @Autowired private AuditLogDAO auditLogDAO;
-
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Autowired private HttpServletRequest request;
@@ -98,8 +95,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     String passwordCount = propMap.get("password.history.count");
     List<UserPasswordHistory> passwordHistories = null;
     Boolean isValidPassword = true;
-    String activity = "";
-    String activityDetail = "";
     Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
@@ -144,7 +139,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               userBO.setAccountNonExpired(true);
               userBO.setAccountNonLocked(true);
               userBO.setCredentialsNonExpired(true);
-              userBO.setPasswordExpairdedDateTime(
+              userBO.setPasswordExpiryDateTime(
                   new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
                       .format(new Date()));
               result = loginDAO.updateUser(userBO);
@@ -218,8 +213,6 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
         Integer.parseInt(propMap.get("password.max.char.match.count"));
     List<UserPasswordHistory> passwordHistories = null;
     Boolean isValidPassword = false;
-    String activity = "";
-    String activityDetail = "";
     int countPassChar = 0;
     StudyBuilderAuditEvent eventEnum = null;
     try {
@@ -264,8 +257,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               loginDAO.updatePasswordHistory(
                   userId, FdahpStudyDesignerUtil.getEncryptedPassword(newPassword));
               eventEnum = PASSWORD_CHANGE_SUCCEEDED;
-              auditLogDAO.saveToAuditLog(
-                  null, null, sesObj, activity, activityDetail, "LoginDAOImpl - changePassword");
+
             } else {
               eventEnum = PASSWORD_CHANGE_FAILED;
             }
@@ -374,25 +366,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   public Boolean logUserLogOut(SessionObject sessionObject) {
     logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Starts");
     Boolean isLogged = false;
-    String activity = "";
-    String activityDetail = "";
     try {
-      activity = "User logout.";
-      activityDetail =
-          "User successfully signed out. (Account Details:- First Name = "
-              + sessionObject.getFirstName()
-              + ", Last Name = "
-              + sessionObject.getLastName()
-              + ", Email ="
-              + sessionObject.getEmail()
-              + ").";
-      auditLogDAO.saveToAuditLog(
-          null,
-          null,
-          sessionObject,
-          activity,
-          activityDetail,
-          "FdahpStudyDesignerPreHandlerInterceptor - preHandle()");
+
       isLogged = true;
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isFrocelyLogOutUser() - ERROR ", e);

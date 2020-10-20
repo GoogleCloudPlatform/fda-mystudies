@@ -35,7 +35,7 @@
                 <div
                   *ngIf="
                     studyDetails.participantRegistryDetail.studyType ===
-                      studyTypes.Open
+                    studyTypes.Open
                   "
                   class="pr-xlg"
                 >
@@ -64,9 +64,10 @@
         </div>
         <div
           *ngIf="
-            studyDetails.participantRegistryDetail.studyType === studyTypes.Open  &&
-                    studyDetails.participantRegistryDetail
-                      .openStudySitePermission === permission.ViewAndEdit
+            studyDetails.participantRegistryDetail.studyType ===
+              studyTypes.Open &&
+            studyDetails.participantRegistryDetail.openStudySitePermission ===
+              permission.ViewAndEdit
           "
           class="pr-xlg"
         >
