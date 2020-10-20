@@ -48,7 +48,7 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTING
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -796,7 +796,6 @@ public class StudyControllerTest extends BaseMockIT {
 
     ResourceBO resourceBO = new ResourceBO();
     resourceBO.setResourceText("text");
-    resourceBO.setStudyId(123);
     resourceBO.setAction(true);
 
     MockHttpServletRequestBuilder requestBuilder =
@@ -809,14 +808,51 @@ public class StudyControllerTest extends BaseMockIT {
     mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
 
     List<NotificationBO> notificationList =
-        notificationDaoImpl.getNotificationList(resourceBO.getStudyId());
-    assertNotNull(notificationList);
+        notificationDaoImpl.getNotificationList(Integer.valueOf(STUDY_ID_VALUE));
+    assertTrue(notificationList.size() > 0);
 
     for (NotificationBO notification : notificationList) {
       if (notification.getCreatedBy().equals(Integer.parseInt(USER_ID_VALUE))) {
         assertEquals(resourceBO.getResourceText(), notification.getNotificationText());
       }
     }
+
+    verifyAuditEventCall(STUDY_NEW_RESOURCE_CREATED);
+  }
+
+  @Test
+  public void shouldNotSaveNotificationBo() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ResourceBO resourceBO = new ResourceBO();
+    resourceBO.setResourceText("text");
+    resourceBO.setAction(true);
+    resourceBO.setResourceVisibility(false);
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_RESOURCE.getPath())
+            .headers(headers)
+            .param("resourceVisibilityParam", "0")
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, resourceBO);
+
+    mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
+
+    List<NotificationBO> notificationList =
+        notificationDaoImpl.getNotificationList(Integer.valueOf(STUDY_ID_VALUE));
+    assertEquals(0, notificationList.size());
 
     verifyAuditEventCall(STUDY_NEW_RESOURCE_CREATED);
   }
