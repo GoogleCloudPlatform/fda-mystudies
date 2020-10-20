@@ -108,6 +108,7 @@ describe('SetUpAccountComponent', () => {
   it('should setup account with valid inputs', fakeAsync(async () => {
     fixture.detectChanges();
     component.user.password = 'Abcd@123456';
+    component.showScreen=true;
     const submitButton = updateUser.nativeElement as HTMLInputElement;
     firstName.setValue('kamin');
     lastName.setValue('Dsouza');
