@@ -48,8 +48,7 @@ export interface User extends ApiResponse {
 
   manageLocationsSelected?: boolean;
 
-    redirectTo?:string;
-
+  redirectTo?: string;
 }
 
 export interface SetUpUser {

@@ -32,7 +32,7 @@ export class AccountService {
       {headers: {'Content-Type': 'application/json'}},
     );
   }
-  
+
   updateUserProfile(
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
