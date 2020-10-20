@@ -7,9 +7,9 @@ import {PageNotFoundComponent} from './page-not-found/page-not-found.component';
 import {SiteCoordinatorModule} from './site-coordinator/site-coordinator.module';
 import {LoginCallbackComponent} from './auth/login-callback/login-callback.component';
 import {AuthGuard} from './service/auth.guard';
-import { ErrorComponent } from './error/error.component';
-import { TermsComponent } from './terms/terms.component';
-import { AboutComponent } from './about/about.component';
+import {ErrorComponent} from './error/error.component';
+import {TermsComponent} from './terms/terms.component';
+import {AboutComponent} from './about/about.component';
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -27,9 +27,9 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
-   {path: 'error/:errorCode', component: ErrorComponent},
-    {path: 'terms', component: TermsComponent},
-     {path: 'about', component: AboutComponent},
+  {path: 'error/:errorCode', component: ErrorComponent},
+  {path: 'terms', component: TermsComponent},
+  {path: 'about', component: AboutComponent},
   {path: '', redirectTo: '/login', pathMatch: 'full'},
   {path: '**', component: PageNotFoundComponent},
 ];

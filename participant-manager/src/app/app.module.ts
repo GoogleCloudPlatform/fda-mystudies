@@ -17,9 +17,9 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ModalModule, BsModalRef} from 'ngx-bootstrap/modal';
 import {LoginCallbackComponent} from './auth/login-callback/login-callback.component';
 import {CookieService} from 'ngx-cookie-service';
-import { ErrorComponent } from './error/error.component';
-import { TermsComponent } from './terms/terms.component';
-import { AboutComponent } from './about/about.component';
+import {ErrorComponent} from './error/error.component';
+import {TermsComponent} from './terms/terms.component';
+import {AboutComponent} from './about/about.component';
 
 @NgModule({
   declarations: [
