@@ -69,7 +69,7 @@ import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
 import com.tom_roush.pdfbox.pdmodel.PDPageContentStream;
@@ -889,8 +889,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             + getIntent().getStringExtra(STUDYID)
             + "&studyVersion="
             + studyList.getStudyVersion();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_UPDATES,
@@ -902,7 +902,7 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
 
-    getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
   }

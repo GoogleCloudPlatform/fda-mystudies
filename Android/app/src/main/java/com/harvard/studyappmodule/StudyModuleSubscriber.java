@@ -36,11 +36,11 @@ import com.harvard.usermodule.event.GetTermsAndConditionEvent;
 
 public class StudyModuleSubscriber extends BaseSubscriber {
   public void onEvent(GetUserStudyInfoEvent getUserStudyInfoEvent) {
-    FdaEventBus.postEvent(getUserStudyInfoEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getUserStudyInfoEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetConsentMetaDataEvent getConsentMetaDataEvent) {
-    FdaEventBus.postEvent(getConsentMetaDataEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getConsentMetaDataEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
@@ -48,11 +48,11 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(GetUserStudyListEvent getUserStudyListEvent) {
-    FdaEventBus.postEvent(getUserStudyListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getUserStudyListEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetTermsAndConditionEvent getTermsAndConditionEvent) {
-    FdaEventBus.postEvent(getTermsAndConditionEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getTermsAndConditionEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(EnrollIdEvent enrollIdEvent) {
@@ -60,11 +60,11 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(GetActivityListEvent getActivityListEvent) {
-    FdaEventBus.postEvent(getActivityListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getActivityListEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetActivityInfoEvent getActivityInfoEvent) {
-    FdaEventBus.postEvent(getActivityInfoEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getActivityInfoEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(ContactUsEvent contactUsEvent) {
@@ -72,11 +72,11 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(FeedbackEvent feedbackEvent) {
-    FdaEventBus.postEvent(feedbackEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(feedbackEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(GetResourceListEvent getResourceListEvent) {
-    FdaEventBus.postEvent(getResourceListEvent.getWcpConfigEvent());
+    FdaEventBus.postEvent(getResourceListEvent.getStudyDatastoreConfigEvent());
   }
 
   public void onEvent(UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {

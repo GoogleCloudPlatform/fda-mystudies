@@ -13,7 +13,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
-        buildConfigField("String", "BASE_URL_WCP_SERVER", apikeyProperties['BASE_URL_WCP_SERVER'])
+        buildConfigField("String", "BASE_URL_STUDY_DATASTORE_SERVER", apikeyProperties['BASE_URL_STUDY_DATASTORE_SERVER'])
         buildConfigField("String", "BASE_URL_REGISTRATION_SERVER", apikeyProperties['BASE_URL_REGISTRATION_SERVER'])
         buildConfigField("String", "BASE_URL_REGISTRATION_CONSENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_CONSENT_SERVER'])
         buildConfigField("String", "BASE_URL_REGISTRATION_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_ENROLLMENT_SERVER'])

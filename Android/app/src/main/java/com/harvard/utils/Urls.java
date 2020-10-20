@@ -19,7 +19,7 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 
 public class Urls {
-  public static String BASE_URL_WCP_SERVER = BuildConfig.BASE_URL_WCP_SERVER;
+  public static String BASE_URL_STUDY_DATASTORE_SERVER = BuildConfig.BASE_URL_STUDY_DATASTORE_SERVER;
   public static String BASE_URL_REGISTRATION_SERVER = BuildConfig.BASE_URL_REGISTRATION_SERVER;
   public static String BASE_URL_REGISTRATION_CONSENT_SERVER =
           BuildConfig.BASE_URL_REGISTRATION_CONSENT_SERVER;
@@ -72,7 +72,7 @@ public class Urls {
   public static String UPDATE_ELIGIBILITY_CONSENT = "/updateEligibilityConsentStatus";
   public static String CONSENTPDF = "/consentDocument";
 
-  // WCP server
+  // Study Datastore server
   public static String STUDY_INFO = "/studyInfo";
   public static String CONSENT_METADATA = "/eligibilityConsent";
   public static String ACTIVITY = "/activity";

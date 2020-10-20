@@ -23,64 +23,64 @@ import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 
 public class WebserviceSubscriber extends BaseSubscriber {
-  public void onEvent(WcpConfigEvent wcpConfigEvent) {
+  public void onEvent(StudyDatastoreConfigEvent studyDatastoreConfigEvent) {
     String url = "";
-    if (wcpConfigEvent
+    if (studyDatastoreConfigEvent
         .getContext()
         .getResources()
         .getString(R.string.app_stage)
         .equalsIgnoreCase("development")) {
-      url = wcpConfigEvent.getDevelopmentUrl() + wcpConfigEvent.getUrl();
+      url = studyDatastoreConfigEvent.getDevelopmentUrl() + studyDatastoreConfigEvent.getUrl();
     } else {
-      url = wcpConfigEvent.getProductionUrl() + wcpConfigEvent.getUrl();
+      url = studyDatastoreConfigEvent.getProductionUrl() + studyDatastoreConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
-    if (wcpConfigEvent.getRequestType().equalsIgnoreCase("get")) {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+    if (studyDatastoreConfigEvent.getRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallGet(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
-    } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+              studyDatastoreConfigEvent.getHeaders(),
+              studyDatastoreConfigEvent.getClassT(),
+              studyDatastoreConfigEvent.getResponseCode(),
+              studyDatastoreConfigEvent.getV(),
+              studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
+    } else if (studyDatastoreConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallPostJson(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParamsJson(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
-    } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+              studyDatastoreConfigEvent.getHeaders(),
+              studyDatastoreConfigEvent.getClassT(),
+              studyDatastoreConfigEvent.getRequestParamsJson(),
+              studyDatastoreConfigEvent.getResponseCode(),
+              studyDatastoreConfigEvent.getV(),
+              studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
+    } else if (studyDatastoreConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParamsJson(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+              studyDatastoreConfigEvent.getHeaders(),
+              studyDatastoreConfigEvent.getClassT(),
+              studyDatastoreConfigEvent.getRequestParamsJson(),
+              studyDatastoreConfigEvent.getResponseCode(),
+          studyDatastoreConfigEvent.getV(),
+          studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
     } else {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParams(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+          studyDatastoreConfigEvent.getHeaders(),
+          studyDatastoreConfigEvent.getClassT(),
+          studyDatastoreConfigEvent.getRequestParams(),
+          studyDatastoreConfigEvent.getResponseCode(),
+          studyDatastoreConfigEvent.getV(),
+          studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
     }
   }
 

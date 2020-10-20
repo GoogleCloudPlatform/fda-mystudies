@@ -100,7 +100,7 @@ import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -320,11 +320,11 @@ public class SurveyActivitiesFragment extends Fragment
             + ((SurveyActivity) context).getStudyId()
             + "&studyVersion="
             + studyList.getStudyVersion();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get", url, STUDY_UPDATES, context, StudyUpdate.class, null, header, null, false, this);
 
-    getUserStudyListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyList(getUserStudyListEvent);
   }
@@ -337,8 +337,8 @@ public class SurveyActivitiesFragment extends Fragment
     GetActivityListEvent getActivityListEvent = new GetActivityListEvent();
     HashMap<String, String> header = new HashMap();
     String url = Urls.ACTIVITY_LIST + "?studyId=" + ((SurveyActivity) context).getStudyId();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             ACTIVTTYLIST_RESPONSECODE,
@@ -350,7 +350,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getActivityListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getActivityListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetActivityList(getActivityListEvent);
   }
@@ -370,12 +370,12 @@ public class SurveyActivitiesFragment extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
 
       String url =
-          Urls.BASE_URL_WCP_SERVER
+          Urls.BASE_URL_STUDY_DATASTORE_SERVER
               + Urls.CONSENT_METADATA
               + "?studyId="
               + ((SurveyActivity) context).getStudyId();
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -1417,8 +1417,8 @@ public class SurveyActivitiesFragment extends Fragment
     header.put("studyId", studyId);
     String url = Urls.RESOURCE_LIST + "?studyId=" + studyId;
     GetResourceListEvent getResourceListEvent = new GetResourceListEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             RESOURCE_REQUEST_CODE,
@@ -1430,7 +1430,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getResourceListEvent.setWcpConfigEvent(wcpConfigEvent);
+    getResourceListEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetResourceListEvent(getResourceListEvent);
   }
@@ -1440,8 +1440,8 @@ public class SurveyActivitiesFragment extends Fragment
     HashMap<String, String> header = new HashMap<>();
     String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -1453,7 +1453,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
   }
@@ -2646,8 +2646,8 @@ public class SurveyActivitiesFragment extends Fragment
             + activityId
             + "&activityVersion="
             + activityVersion;
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             ACTIVTTYINFO_RESPONSECODE,
@@ -2659,7 +2659,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
 
-    getActivityInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getActivityInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetActivityInfo(getActivityInfoEvent);
   }

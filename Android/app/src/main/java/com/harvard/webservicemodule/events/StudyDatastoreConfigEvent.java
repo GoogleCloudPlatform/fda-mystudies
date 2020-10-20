@@ -20,8 +20,8 @@ import com.harvard.utils.Urls;
 import java.util.HashMap;
 import org.json.JSONObject;
 
-public class WcpConfigEvent<V> extends WebserviceConfigEvent {
-  public WcpConfigEvent(
+public class StudyDatastoreConfigEvent<V> extends WebserviceConfigEvent {
+  public StudyDatastoreConfigEvent(
       String method,
       String url,
       int requestCode,
@@ -37,11 +37,11 @@ public class WcpConfigEvent<V> extends WebserviceConfigEvent {
 
   @Override
   public String getProductionUrl() {
-    return Urls.BASE_URL_WCP_SERVER;
+    return Urls.BASE_URL_STUDY_DATASTORE_SERVER;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return Urls.BASE_URL_WCP_SERVER;
+    return Urls.BASE_URL_STUDY_DATASTORE_SERVER;
   }
 }
