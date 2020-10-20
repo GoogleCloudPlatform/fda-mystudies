@@ -84,8 +84,6 @@ public class UsersServiceImpl implements UsersService {
 
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(userSession.getSessionId());
-      auditRequest.setUserId(String.valueOf(userId));
       msg = usersDAO.activateOrDeactivateUser(userId, userStatus, loginUser, userSession);
       superAdminEmailList = usersDAO.getSuperAdminList();
       userBo = usersDAO.getUserDetails(userId);

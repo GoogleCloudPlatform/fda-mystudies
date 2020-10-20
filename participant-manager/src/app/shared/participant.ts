@@ -8,7 +8,7 @@ export interface RegistryParticipant {
   invitedDate: string;
   siteId: string;
   customLocationId: string;
-  locationName: string;
+  locationName?: string;
   participantRegistrySiteid?: string;
   customStudyId?: string;
   studyName?: string;
@@ -23,6 +23,7 @@ export interface RegistryParticipant {
   enrolledStudies: string[];
   enrollments: Enrollment[];
   consentHistory: Consent[];
+  newlyCreatedUser?: boolean;
 }
 export interface Site {
   siteId: string;
