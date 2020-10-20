@@ -17,8 +17,10 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,11 +35,15 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
 
   private XLogger logger = XLoggerFactory.getXLogger(FilterChainExceptionHandler.class.getName());
 
+  @Value("${cors.allowed.origins:}")
+  private String corsAllowedOrigins;
+
   @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
     try {
+      addCorsHeaders(request, response);
       filterChain.doFilter(request, response);
     } catch (HttpClientErrorException | HttpServerErrorException e) {
       ErrorResponse er = new ErrorResponse(e);
@@ -57,6 +63,27 @@ public class FilterChainExceptionHandler extends OncePerRequestFilter {
       JsonNode reponse =
           JsonUtils.getObjectMapper().convertValue(ErrorCode.APPLICATION_ERROR, JsonNode.class);
       response.getOutputStream().write(reponse.toString().getBytes());
+    }
+  }
+
+  private void addCorsHeaders(HttpServletRequest request, HttpServletResponse res) {
+    if (StringUtils.isEmpty(corsAllowedOrigins)) {
+      return;
+    }
+
+    res.setHeader("Access-Control-Allow-Headers", "*");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+
+    if (!StringUtils.contains(corsAllowedOrigins, ",")) {
+      res.setHeader("Access-Control-Allow-Origin", corsAllowedOrigins);
+    } else {
+      String[] corsOrgins = corsAllowedOrigins.split(",");
+      for (String url : corsOrgins) {
+        if (StringUtils.contains(url, request.getHeader("Origin"))) {
+          res.setHeader("Access-Control-Allow-Origin", url);
+          break;
+        }
+      }
     }
   }
 }

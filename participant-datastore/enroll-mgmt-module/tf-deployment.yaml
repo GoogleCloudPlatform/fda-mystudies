@@ -20,35 +20,44 @@ spec:
         - name: participant-enroll-datastore
           image: gcr.io/fda-mystudies-dev-apps/participant-enroll-datastore:latest
           env:
+            # DB ACCESS
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: participant-enroll-datastore-db-credentials
-                  key: username
+                  name: participant-enroll-datastore-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: participant-enroll-datastore-db-credentials
-                  key: password
+                  name: participant-enroll-datastore-credentials
+                  key: dbpassword
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-enroll-datastore-db-credentials
+                  name: participant-enroll-datastore-credentials
                   key: dbname
+            # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: participant-enroll-datastore-secrets
-                  key: CLIENT_ID
+                  name: participant-enroll-datastore-credentials
+                  key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: participant-enroll-datastore-secrets
-                  key: SECRET_KEY
+                  name: participant-enroll-datastore-credentials
+                  key: secret_key
+            # SERVER CALLS
             - name: HYDRA_ADMIN_URL
-                value: "hydra:4445"
-            - name: RESPONSE_SERVER_URL
-              value: "response-server-np:50000"
+              value: "http://hydra-np:4445"
+            - name: RESPONSE_DATASTORE_URL
+              value: "http://response-datastore-np:50000"
+            # MISC
+            - name: LOG_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
             - name: GOOGLE_APPLICATION_CREDENTIALS
               value: "/secrets/gcloud_key/key.json"
           ports:

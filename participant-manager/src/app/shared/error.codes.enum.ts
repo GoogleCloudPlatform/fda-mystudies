@@ -78,6 +78,11 @@ const errorMessages = {
   EC_0063:
     'You need to have permission to one or more studies to see app level information.',
   EC_0064: 'email_id already exist',
+  EC_0122: 'Cannot add site for decommissioned location.',
+  EC_0123: 'You do not have permission to access this app',
+  EC_0124: 'Cannot add site to Deactivated study',
+  EC_0125:
+    'Invitation cannot be enabled as participant record is enabled in another site with in same study.',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 export type ErrorCode = keyof typeof errorMessages;

@@ -85,8 +85,6 @@ describe('LocationsListComponent', () => {
 
     it('should not have search box ', () => {
       const compiled = fixture.nativeElement as HTMLElement;
-      console.log('search box');
-      console.log(compiled.querySelector('.search-icon')?.classList.length);
       expect(compiled.querySelector('.search-icon')?.classList.length).toBe(
         undefined,
         'should not have search box',

@@ -87,7 +87,8 @@ class ActivityFormStep: ActivityStep {
           let questionStep: ActivityQuestionStep? = ActivityQuestionStep()
           questionStep?.initWithDict(stepDict: dict)
 
-          let orkQuestionStep: ORKQuestionStep = (questionStep?.getQuestionStep())!
+          guard let orkQuestionStep = questionStep?.getQuestionStep()
+          else { continue }
 
           let formItem01 = ORKFormItem(
             identifier: orkQuestionStep.identifier,

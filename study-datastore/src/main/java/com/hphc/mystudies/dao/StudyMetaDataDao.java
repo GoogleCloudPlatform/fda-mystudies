@@ -228,8 +228,7 @@ public class StudyMetaDataDao {
   }
 
   @SuppressWarnings("unchecked")
-  public StudyResponse studyList(String authorization, String applicationId, String orgId)
-      throws DAOException {
+  public StudyResponse studyList(String authorization, String applicationId) throws DAOException {
     LOGGER.info("INFO: StudyMetaDataDao - studyList() :: Starts");
     Session session = null;
     StudyResponse studyResponse = new StudyResponse();
@@ -253,9 +252,6 @@ public class StudyMetaDataDao {
                         + " and SDTO.appId='"
                         + applicationId
                         + "'"
-                        + " and SDTO.orgId='"
-                        + orgId
-                        + "' "
                         + " and (SDTO.status= :status OR SDTO.live=1)")
                 .setString(
                     StudyMetaDataEnum.QF_STATUS.value(),
@@ -473,8 +469,8 @@ public class StudyMetaDataDao {
                   questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
                   questionStep.setResultType(StudyMetaDataConstants.QUESTION_BOOLEAN);
                   questionStep.setKey(eligibilityTest.getShortTitle());
-                  questionStep.setTitle(eligibilityTest.getShortTitle());
-                  questionStep.setText(eligibilityTest.getQuestion());
+                  questionStep.setTitle(eligibilityTest.getQuestion());
+                  questionStep.setText(StudyMetaDataConstants.ELIGIBILITY_TEXT);
                   questionStep.setSkippable(false);
                   questionStep.setGroupName("");
                   questionStep.setRepeatable(false);
@@ -659,8 +655,8 @@ public class StudyMetaDataDao {
                 questionStep.setType(StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION);
                 questionStep.setResultType(StudyMetaDataConstants.QUESTION_TEXT_CHOICE);
                 questionStep.setKey(comprehensionQuestionDto.getId().toString());
-                questionStep.setTitle("");
-                questionStep.setText(comprehensionQuestionDto.getQuestionText());
+                questionStep.setTitle(comprehensionQuestionDto.getQuestionText());
+                questionStep.setText(StudyMetaDataConstants.COMPREHENSION_TEXT);
                 questionStep.setSkippable(false);
                 questionStep.setGroupName("");
                 questionStep.setRepeatable(false);

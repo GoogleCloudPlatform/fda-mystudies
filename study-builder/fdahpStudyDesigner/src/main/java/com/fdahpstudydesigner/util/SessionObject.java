@@ -41,7 +41,7 @@ public class SessionObject implements Serializable {
   private boolean isSuperAdmin = false;
   private String lastName = "";
   private boolean loginStatus = false;
-  private String passwordExpairdedDateTime;
+  private String passwordExpiryDateTime;
   private String phoneNumber = "";
   private String privacyPolicyText = "";
   private List<Integer> studySession;
@@ -55,6 +55,11 @@ public class SessionObject implements Serializable {
   private String role = "";
   private String sessionId;
   private String accessLevel = "";
+  private String correlationId;
+
+  public String getCorrelationId() {
+    return correlationId;
+  }
 
   public Integer getAdminstratorId() {
     return adminstratorId;
@@ -88,8 +93,8 @@ public class SessionObject implements Serializable {
     return lastName;
   }
 
-  public String getPasswordExpairdedDateTime() {
-    return passwordExpairdedDateTime;
+  public String getPasswordExpiryDateTime() {
+    return passwordExpiryDateTime;
   }
 
   public String getPhoneNumber() {
@@ -176,8 +181,8 @@ public class SessionObject implements Serializable {
     this.loginStatus = loginStatus;
   }
 
-  public void setPasswordExpairdedDateTime(String passwordExpairdedDateTime) {
-    this.passwordExpairdedDateTime = passwordExpairdedDateTime;
+  public void setPasswordExpiryDateTime(String passwordExpiryDateTime) {
+    this.passwordExpiryDateTime = passwordExpiryDateTime;
   }
 
   public void setPhoneNumber(String phoneNumber) {
@@ -246,5 +251,9 @@ public class SessionObject implements Serializable {
 
   public void setAccessLevel(String accessLevel) {
     this.accessLevel = accessLevel;
+  }
+
+  public void setCorrelationId(String correlationId) {
+    this.correlationId = correlationId;
   }
 }

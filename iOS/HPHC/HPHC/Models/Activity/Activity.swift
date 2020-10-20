@@ -246,7 +246,7 @@ class Activity {
         if Utilities.isValidObject(
           someObject: frequencyDict[kActivityFrequencyRuns] as AnyObject
         ) {
-          self.frequencyRuns = frequencyDict[kActivityFrequencyRuns] as? [[String: Any]]
+          self.frequencyRuns = frequencyDict[kActivityFrequencyRuns] as? [[String: Any]] ?? []
         }
         if Utilities.isValidObject(
           someObject: frequencyDict[kActivityManualAnchorRuns] as AnyObject
@@ -375,13 +375,16 @@ class Activity {
       startDateString = (startDateString ?? "") + " " + startTime
       let startdate = Utilities.findDateFromString(dateString: startDateString ?? "")
 
-      // update end date
-      var endDateString = Utilities.formatterShort?.string(from: lifeTime.1!)
-      let endTime =
-        (self.anchorDate?.endTime == nil)
-        ? "00:00:00" : (self.anchorDate?.endTime)!
-      endDateString = (endDateString ?? "") + " " + endTime
-      let endDate = Utilities.findDateFromString(dateString: endDateString ?? "")
+      // Update End date and time.
+      var endDate: Date?
+      if let anchorEndDate = lifeTime.1,
+        let endTime = self.anchorDate?.endTime,
+        let updatedEndDate = DateHelper.updateTime(of: anchorEndDate, with: endTime)
+      {
+        endDate = updatedEndDate
+      } else if self.anchorDate?.endDays == 0 {  // LifeTime Anchor activity.
+        endDate = nil
+      }
 
       self.startDate = startdate
       self.endDate = endDate

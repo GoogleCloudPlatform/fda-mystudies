@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public enum ApiEndpoint {
-
   UPDATE_STUDY_STATE_PATH("http://localhost:8080/participant-enroll-datastore/updateStudyState"),
 
   STUDY_STATE_PATH("http://localhost:8080/participant-enroll-datastore/studyState"),
