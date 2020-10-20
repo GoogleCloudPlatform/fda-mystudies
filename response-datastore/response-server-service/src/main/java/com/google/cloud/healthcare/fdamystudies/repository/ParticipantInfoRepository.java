@@ -8,15 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.repository;
 
-import com.google.cloud.healthcare.fdamystudies.model.PersonalizedUserReportEntity;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PersonalizedUserReportRepository
-    extends JpaRepository<PersonalizedUserReportEntity, Integer> {
+public interface ParticipantInfoRepository extends JpaRepository<ParticipantInfoEntity, Integer> {
 
-  public List<PersonalizedUserReportEntity> findByUserDetailsUserIdAndStudyInfoCustomId(
-      String userId, String studyCustomId);
+  List<ParticipantInfoEntity> findByParticipantId(String participantId);
 }

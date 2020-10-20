@@ -1,10 +1,10 @@
+name: Build participant-user-datastore
 on:
   pull_request:
     paths:
     - 'common-modules/**'
     - 'participant-datastore/user-mgmt-module/**'
     - '.github/workflows/build-participant-user-datastore.yml'
-name: Build participant-datastore-mgmt-module
 jobs:
   build:
     runs-on: ubuntu-latest

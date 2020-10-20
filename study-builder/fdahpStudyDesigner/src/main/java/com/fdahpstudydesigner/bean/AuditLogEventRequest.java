@@ -41,7 +41,7 @@ public class AuditLogEventRequest implements Serializable {
 
   private String platformVersion;
 
-  private Timestamp occured;
+  private Timestamp occurred;
 
   private String appId;
 

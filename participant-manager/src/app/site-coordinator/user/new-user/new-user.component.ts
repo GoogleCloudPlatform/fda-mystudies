@@ -151,6 +151,7 @@ export class AddNewUserComponent
         this.user.superAdmin = false;
         this.user.apps = this.selectedApps;
       }
+      this.removeExtraAttributesFromApiRequest();
       this.userService
         .add(this.user)
         .subscribe((successResponse: ApiResponse) => {
@@ -165,5 +166,8 @@ export class AddNewUserComponent
       );
       return;
     }
+  }
+  removeExtraAttributesFromApiRequest(): void {
+    delete this.user.manageLocationsSelected;
   }
 }

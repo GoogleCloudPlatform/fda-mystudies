@@ -1,11 +1,10 @@
 /*
  * Copyright © 2017-2018 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
- * associated documentation files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge, publish, distribute,
- * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ * Copyright 2020 Google LLC Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"), to deal in the
+ * Software without restriction, including without limitation the rights to use, copy, modify,
+ * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+ * to whom the Software is furnished to do so, subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all copies or
  * substantial portions of the Software.
@@ -22,10 +21,16 @@
 
 package com.fdahpstudydesigner.util;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_SUCCEEDED;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bo.UserAttemptsBo;
 import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
+import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,37 +51,36 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
 
   private static Logger logger = Logger.getLogger(LimitLoginAuthenticationProvider.class.getName());
 
-  @Autowired private AuditLogDAO auditLogDAO;
-
   private LoginDAOImpl loginDAO;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
 
   @Override
   public Authentication authenticate(Authentication authentication) {
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
-    UserBO userBO;
+    UserBO userBO = null;
     final Integer MAX_ATTEMPTS = Integer.valueOf(propMap.get("max.login.attempts"));
     final Integer USER_LOCK_DURATION =
         Integer.valueOf(propMap.get("user.lock.duration.in.minutes"));
     final String lockMsg = propMap.get("user.lock.msg");
+    ServletRequestAttributes attributes =
+        (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    AuditLogEventRequest auditRequest =
+        AuditEventMapper.fromHttpServletRequest(attributes.getRequest());
+    String username = (String) authentication.getPrincipal();
+
     try {
-      ServletRequestAttributes attributes =
-          (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-      attributes.getRequest();
-      String username = (String) authentication.getPrincipal();
       if (StringUtils.isNotEmpty(username)) {
         userBO = loginDAO.getValidUserByEmail(username.toLowerCase());
         if (userBO == null) {
-          auditLogDAO.saveToAuditLog(
-              null,
-              null,
-              null,
-              FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_MESSAGE,
-              FdahpStudyDesignerConstants.USER_EMAIL_FAIL_ACTIVITY_DEATILS_MESSAGE,
-              "LimitLoginAuthenticationProvider - authenticate()");
+          auditRequest.setSource(SIGNIN_FAILED_UNREGISTERED_USER.getSource().getValue());
+          auditRequest.setDestination(SIGNIN_FAILED_UNREGISTERED_USER.getDestination().getValue());
+          auditLogEventHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
         }
       }
+
       UserAttemptsBo userAttempts =
           loginDAO.getUserAttempts(authentication.getName().toLowerCase());
 
@@ -92,6 +96,10 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
                 .after(
                     new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
                         .parse(FdahpStudyDesignerUtil.getCurrentDateTime()))) {
+
+          auditRequest.setSource(SIGNIN_FAILED.getSource().getValue());
+          auditRequest.setDestination(SIGNIN_FAILED.getDestination().getValue());
+          auditLogEventHelper.logEvent(SIGNIN_FAILED, auditRequest);
           throw new LockedException(lockMsg);
         }
       } catch (ParseException e) {
@@ -104,21 +112,29 @@ public class LimitLoginAuthenticationProvider extends DaoAuthenticationProvider 
               authentication.getCredentials(),
               new ArrayList<GrantedAuthority>());
 
-      // if reach here, means login success, else an exception will be
-      // thrown
-      // reset the user_attempts
+      // if reach here, means login success, else an exception will be thrown
       Authentication auth = super.authenticate(token);
+      // reset the user_attempts
       loginDAO.resetFailAttempts(authentication.getName().toLowerCase());
+
+      if (userBO != null) {
+        auditRequest.setUserId(userBO.getUserEmail());
+        auditRequest.setUserAccessLevel(userBO.getAccessLevel());
+      }
+      auditRequest.setSource(SIGNIN_SUCCEEDED.getSource().getValue());
+      auditRequest.setDestination(SIGNIN_SUCCEEDED.getDestination().getValue());
+      auditLogEventHelper.logEvent(SIGNIN_SUCCEEDED, auditRequest);
       return auth;
 
     } catch (BadCredentialsException e) {
-
       // invalid login, update to user_attempts
-      loginDAO.updateFailAttempts(authentication.getName().toLowerCase());
+      loginDAO.updateFailAttempts(authentication.getName().toLowerCase(), auditRequest);
+      auditRequest.setSource(SIGNIN_FAILED.getSource().getValue());
+      auditRequest.setDestination(SIGNIN_FAILED.getDestination().getValue());
+      auditLogEventHelper.logEvent(SIGNIN_FAILED, auditRequest);
       throw e;
 
     } catch (LockedException e) {
-
       logger.error(
           "LimitLoginAuthenticationProvider - authenticate - ERROR - this user is locked! ", e);
       String error;

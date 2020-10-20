@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -86,7 +87,7 @@ public class UserProfileController {
   }
 
   @PostMapping(
-      value = "/users/",
+      value = "/users/setUpAccount",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<SetUpAccountResponse> setUpAccount(
@@ -107,14 +108,15 @@ public class UserProfileController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<PatchUserResponse> updateUserAccountStatus(
+      @RequestHeader(name = "userId") String signedInUserId,
       @PathVariable String userId,
-      @Valid @RequestBody PatchUserRequest statusRequest,
+      @Valid @RequestBody PatchUserRequest userRequest,
       HttpServletRequest request) {
     logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
 
-    statusRequest.setUserId(userId);
-    PatchUserResponse deactivateResponse =
-        userProfileService.updateUserAccountStatus(statusRequest);
+    userRequest.setUserId(userId);
+    userRequest.setSignedInUserId(signedInUserId);
+    PatchUserResponse deactivateResponse = userProfileService.updateUserAccountStatus(userRequest);
 
     logger.exit(String.format(STATUS_LOG, deactivateResponse.getHttpStatusCode()));
     return ResponseEntity.status(deactivateResponse.getHttpStatusCode()).body(deactivateResponse);

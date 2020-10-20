@@ -13,6 +13,10 @@ import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapte
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {OnboardingStatus} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
+import {
+  ImportParticipantEmailResponse,
+  Participant,
+} from '../shared/import-participants';
 const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
@@ -33,7 +37,8 @@ export class SiteDetailsComponent
   userIds: string[] = [];
   onBoardingStatus = OnboardingStatus;
   activeTab = OnboardingStatus.All;
-
+  newlyImportedParticipants: Participant[] = [];
+  selectedAll = false;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -71,6 +76,20 @@ export class SiteDetailsComponent
         this.siteDetailsBackup = JSON.parse(
           JSON.stringify(siteDetails),
         ) as SiteParticipants;
+
+        this.siteDetailsBackup.participantRegistryDetail.registryParticipants.map(
+          (participant) => {
+            const result = this.newlyImportedParticipants.filter(
+              (newlyVreatedEmails) =>
+                newlyVreatedEmails.email === participant.email,
+            );
+            if (result.length > 0) {
+              participant.newlyCreatedUser = true;
+            }
+            return participant;
+          },
+        );
+        this.newlyImportedParticipants = [];
         this.siteDetailsBackup.participantRegistryDetail.registryParticipants = this.siteDetailsBackup.participantRegistryDetail.registryParticipants.filter(
           (participant: RegistryParticipant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),
@@ -83,6 +102,7 @@ export class SiteDetailsComponent
     this.query$.next(query.trim().toLowerCase());
   }
   changeTab(tab: OnboardingStatus): void {
+    this.selectedAll = false;
     this.sendResend =
       tab === OnboardingStatus.New ? 'Send Invitation' : 'Resend Invitation';
     this.enableDisable =
@@ -94,9 +114,7 @@ export class SiteDetailsComponent
     this.userIds = [];
     this.fetchSiteParticipant(tab);
   }
-  redirectParticipant(userId: string): void {
-    void this.router.navigate(['/user/participantDetail', userId]);
-  }
+
   rowCheckBoxChange(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     if (checkbox.checked) {
@@ -113,8 +131,7 @@ export class SiteDetailsComponent
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
-            this.toastr.success(successResponse.message);
-            void this.router.navigate(['/sites']);
+            this.toastr.success('success');
           }
         }),
     );
@@ -134,9 +151,9 @@ export class SiteDetailsComponent
               if (getMessage(successResponse.code)) {
                 this.toastr.success(getMessage(successResponse.code));
               } else {
-                this.toastr.success(successResponse.message);
-                this.changeTab(OnboardingStatus.Invited);
+                this.toastr.success('success');
               }
+              this.changeTab(OnboardingStatus.Invited);
             }),
         );
       }
@@ -164,12 +181,12 @@ export class SiteDetailsComponent
                 this.toastr.success(getMessage(successResponse.code));
               } else {
                 this.toastr.success(successResponse.message);
-                this.changeTab(
-                  this.activeTab === OnboardingStatus.Disabled
-                    ? OnboardingStatus.Disabled
-                    : OnboardingStatus.New,
-                );
               }
+              this.changeTab(
+                this.activeTab === OnboardingStatus.Disabled
+                  ? OnboardingStatus.Disabled
+                  : OnboardingStatus.New,
+              );
             }),
         );
       }
@@ -178,13 +195,45 @@ export class SiteDetailsComponent
     }
   }
 
-  onSucceedAddEmail(): void {
+  onSucceedAddEmail(event: Participant[]): void {
+    this.newlyImportedParticipants = event;
+    this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
+      this.userIds.push(newlyCreatedparticpants.id),
+    );
     this.modalRef.hide();
+    this.sendResend = 'Send Invitation';
+    this.enableDisable = 'Disable Invitation';
+    this.activeTab = OnboardingStatus.New;
+    this.toggleDisplay = false;
     this.fetchSiteParticipant(OnboardingStatus.New);
   }
 
-  onFileImportSuccess(): void {
-    this.fetchSiteParticipant(OnboardingStatus.New);
+  onFileImportSuccess(event: ImportParticipantEmailResponse): void {
+    this.newlyImportedParticipants = event.participants;
+    this.newlyImportedParticipants.map((newlyCreatedparticpants) =>
+      this.userIds.push(newlyCreatedparticpants.id),
+    );
     this.modalRef.hide();
+    this.sendResend = 'Send Invitation';
+    this.enableDisable = 'Disable Invitation';
+    this.activeTab = OnboardingStatus.New;
+    this.toggleDisplay = false;
+    this.fetchSiteParticipant(OnboardingStatus.New);
+  }
+
+  selectAll(): void {
+    this.userIds = [];
+    if (this.selectedAll) {
+      for (const participants of this.siteDetailsBackup
+        .participantRegistryDetail.registryParticipants) {
+        participants.newlyCreatedUser = this.selectedAll;
+        this.userIds.push(participants.id);
+      }
+    } else {
+      for (const participants of this.siteDetailsBackup
+        .participantRegistryDetail.registryParticipants) {
+        participants.newlyCreatedUser = this.selectedAll;
+      }
+    }
   }
 }

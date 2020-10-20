@@ -227,8 +227,6 @@ public class DashBoardAndProfileController {
             if (null != roleBO) {
               userBO.setRoleName(roleBO.getRoleName());
             }
-            auditRequest.setUserId(String.valueOf(userSession.getUserId()));
-            auditRequest.setCorrelationId(userSession.getSessionId());
             auditLogHelper.logEvent(ACCOUNT_DETAILS_VIEWED, auditRequest);
           }
         }

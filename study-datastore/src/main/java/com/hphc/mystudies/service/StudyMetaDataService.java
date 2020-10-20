@@ -117,16 +117,13 @@ public class StudyMetaDataService {
   public Object studyList(
       @HeaderParam("Authorization") String authorization,
       @HeaderParam("applicationId") String applicationId,
-      @HeaderParam("orgId") String orgId,
       @Context ServletContext context,
       @Context HttpServletResponse response) {
     LOGGER.info("INFO: StudyMetaDataService - studyList() :: Starts");
     StudyResponse studyResponse = new StudyResponse();
     try {
-      if (!StringUtils.isEmpty(authorization)
-          && !StringUtils.isEmpty(applicationId)
-          && !StringUtils.isEmpty(orgId)) {
-        studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId, orgId);
+      if (!StringUtils.isEmpty(authorization) && !StringUtils.isEmpty(applicationId)) {
+        studyResponse = studyMetaDataOrchestration.studyList(authorization, applicationId);
         if (!studyResponse.getMessage().equals(StudyMetaDataConstants.SUCCESS)) {
           StudyMetaDataUtil.getFailureResponse(
               ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
@@ -927,13 +924,11 @@ public class StudyMetaDataService {
   @Consumes(MediaType.APPLICATION_JSON)
   @Path("versionInfo")
   public Object getAppVersionInfo(
-      @HeaderParam("applicationId") String appId,
-      @HeaderParam("orgId") String orgId,
-      @Context HttpServletResponse response) {
+      @HeaderParam("applicationId") String appId, @Context HttpServletResponse response) {
     AppVersionInfoBean appVersionInfoBean = null;
     LOGGER.info("INFO: StudyMetaDataService - getAppVersionInfo() :: Starts");
 
-    if (StringUtils.isBlank(appId) || StringUtils.isBlank(orgId)) {
+    if (StringUtils.isBlank(appId)) {
       StudyMetaDataUtil.getFailureResponse(
           ErrorCodes.STATUS_102,
           ErrorCodes.UNKNOWN,
@@ -945,7 +940,7 @@ public class StudyMetaDataService {
     }
 
     try {
-      appVersionInfoBean = appMetaDataOrchestration.getAppVersionInfo(appId, orgId);
+      appVersionInfoBean = appMetaDataOrchestration.getAppVersionInfo(appId);
       if (appVersionInfoBean == null) {
         StudyMetaDataUtil.getFailureResponse(
             ErrorCodes.STATUS_103, ErrorCodes.NO_DATA, StudyMetaDataConstants.FAILURE, response);
