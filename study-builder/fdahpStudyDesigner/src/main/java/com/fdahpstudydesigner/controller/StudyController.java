@@ -437,8 +437,6 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         String studyId =
             (String)
                 request
@@ -1820,9 +1818,6 @@ public class StudyController {
         studyBos = studyService.getStudyList(sesObj.getUserId());
         map.addAttribute("studyBos", studyBos);
         map.addAttribute("studyListId", "true");
-
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         auditLogEventHelper.logEvent(STUDY_LIST_VIEWED, auditRequest);
 
         mav = new ModelAndView("studyListPage", map);
@@ -2033,8 +2028,6 @@ public class StudyController {
                 request
                     .getSession()
                     .getAttribute(sessionStudyCount + FdahpStudyDesignerConstants.CUSTOM_STUDY_ID);
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         auditRequest.setStudyId(customStudyId);
         // markCompleted in param specify that notification to update it
         // as completed in table StudySequenceBo
@@ -2181,8 +2174,6 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         String studyId =
             (String)
                 request
@@ -2698,8 +2689,6 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         String studyId =
             (String)
                 request
@@ -3112,8 +3101,6 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         if (studyBo.getId() == null) {
           StudySequenceBo studySequenceBo = new StudySequenceBo();
           studySequenceBo.setBasicInfo(true);
@@ -3278,8 +3265,6 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         if (consentInfoBo != null) {
           if ((consentInfoBo.getStudyId() != null) && (consentInfoBo.getId() == null)) {
             int order = studyService.consentInfoOrder(consentInfoBo.getStudyId());
@@ -3346,8 +3331,6 @@ public class StudyController {
       if ((sesObj != null)
           && (sesObj.getStudySession() != null)
           && sesObj.getStudySession().contains(sessionStudyCount)) {
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
         String textOrPdfParam =
             FdahpStudyDesignerUtil.isEmpty(request.getParameter("textOrPdfParam"))
                 ? ""
@@ -3616,10 +3599,8 @@ public class StudyController {
                   sessionStudyCount + FdahpStudyDesignerConstants.STUDY_ID,
                   eligibilityBo.getStudyId() + "");
         }
-        auditRequest.setCorrelationId(sesObj.getSessionId());
-        auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
-        auditRequest.setStudyId(customStudyId);
 
+        auditRequest.setStudyId(customStudyId);
         map.addAttribute("_S", sessionStudyCount);
         if (FdahpStudyDesignerConstants.SUCCESS.equals(result)) {
           if ((eligibilityBo != null) && ("save").equals(eligibilityBo.getActionType())) {
@@ -4748,8 +4729,6 @@ public class StudyController {
                   : 0);
       if (sesObj != null) {
         if ((sesObj.getStudySessionBeans() != null) && !sesObj.getStudySessionBeans().isEmpty()) {
-          auditRequest.setCorrelationId(sesObj.getSessionId());
-          auditRequest.setUserId(String.valueOf(sesObj.getUserId()));
           for (StudySessionBean sessionBean : sesObj.getStudySessionBeans()) {
             if ((sessionBean != null)
                 && sessionBean.getPermission().equals(permission)
@@ -5199,10 +5178,6 @@ public class StudyController {
     Map<String, String> map = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      HttpSession session = request.getSession();
-      SessionObject userSession =
-          (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      auditRequest.setCorrelationId(userSession.getSessionId());
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
@@ -5247,10 +5222,6 @@ public class StudyController {
     Map<String, String> map = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      HttpSession session = request.getSession();
-      SessionObject userSession =
-          (SessionObject) session.getAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT);
-      auditRequest.setCorrelationId(userSession.getSessionId());
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);

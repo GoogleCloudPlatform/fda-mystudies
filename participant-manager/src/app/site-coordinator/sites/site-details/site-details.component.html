@@ -15,13 +15,16 @@
               <div class="mb-xs">
                 Site Participant Registry
                 <span
-                  *ngIf="siteParticipants.participantRegistryDetail.siteStatus"
-                  class="active__"
+                  [ngClass]="
+                    siteParticipants.participantRegistryDetail.siteStatus === 1
+                      ? 'active__'
+                      : 'inActive__'
+                  "
                 >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
                       ? "Active"
-                      : "Inactive"
+                      : "Decommissioned"
                   }}
                 </span>
               </div>
@@ -80,7 +83,7 @@
                       <div class="mr-sm">
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(addParticipants)"
+                          (click)="openModal(addEmail)"
                         >
                           Add Email
                         </button>
@@ -88,7 +91,7 @@
                       <div>
                         <button
                           class="primary__btn font__bold"
-                          (click)="openModal(addParticipants)"
+                          (click)="openModal(importEmaillist)"
                         >
                           Import Email List
                         </button>
@@ -148,7 +151,7 @@
                   <div class="mr-sm">
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(addParticipants)"
+                      (click)="openModal(addEmail)"
                     >
                       Add Email
                     </button>
@@ -156,7 +159,7 @@
                   <div>
                     <button
                       class="primary__btn font__bold"
-                      (click)="openModal(addParticipants)"
+                      (click)="openModal(importEmaillist)"
                     >
                       Import Email List
                     </button>
@@ -391,7 +394,18 @@
                   Sort By:
                 </span>
                 <th>
-                  <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
+                  <span *ngIf="activeTab !== onBoardingStatus.All">
+                    <input
+                      type="checkbox"
+                      id="css"
+                      [(ngModel)]="selectedAll"
+                      (change)="selectAll()"
+                    />
+                    <label for="css"></label>
+                  </span>
+                  <mfDefaultSorter by="email">
+                    Participant Email
+                  </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
@@ -425,7 +439,7 @@
                 <!-- for all Selected -->
                 <td
                   *ngIf="activeTab == onBoardingStatus.All"
-                  (click)="redirectParticipant(participant.id)"
+                  [routerLink]="['/coordinator/participant', participant.id]"
                 >
                   <span class="no_st_en">{{ participant.email }}</span>
                 </td>
@@ -437,12 +451,16 @@
                       <input
                         type="checkbox"
                         id="{{ participant.id }}"
+                        [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
                       <label for="{{ participant.id }}">
                         <span
                           class="no_st_en"
-                          (click)="redirectParticipant(participant.id)"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
                         >
                           {{ participant.email }}
                         </span>
@@ -475,12 +493,17 @@
                         <input
                           type="checkbox"
                           id="{{ participant.id }}"
+                          [(ngModel)]="participant.newlyCreatedUser"
                           (change)="rowCheckBoxChange($event)"
                         />
+
                         <label for="{{ participant.id }}">
                           <span
                             class="no_st_en"
-                            (click)="redirectParticipant(participant.id)"
+                            [routerLink]="[
+                              '/coordinator/participant',
+                              participant.id
+                            ]"
                           >
                             {{ participant.email }}
                           </span>
@@ -489,7 +512,12 @@
                       <div
                         *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
                       >
-                        <span (click)="redirectParticipant(participant.id)">
+                        <span
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
+                        >
                           {{ participant.email }}
                         </span>
                       </div>
@@ -506,12 +534,16 @@
                       <input
                         type="checkbox"
                         id="{{ participant.id }}"
+                        [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
                       <label for="{{ participant.id }}">
                         <span
                           class="no_st_en"
-                          (click)="redirectParticipant(participant.id)"
+                          [routerLink]="[
+                            '/coordinator/participant',
+                            participant.id
+                          ]"
                         >
                           {{ participant.email }}
                         </span>
@@ -553,16 +585,20 @@
       </div>
     </div>
 
-    <ng-template #addParticipants>
+    <ng-template #addEmail>
       <div class="modal-body modal__body">
         <app-add-email
           [siteId]="siteId"
-          (addEmail)="onSucceedAddEmail()"
+          (addEmail)="onSucceedAddEmail($event)"
           (cancel)="modalRef.hide()"
         ></app-add-email>
+      </div>
+    </ng-template>
+    <ng-template #importEmaillist>
+      <div class="modal-body modal__body">
         <app-import-email-list
           [siteId]="siteId"
-          (import)="onFileImportSuccess()"
+          (import)="onFileImportSuccess($event)"
           (cancel)="modalRef.hide()"
         ></app-import-email-list>
       </div>

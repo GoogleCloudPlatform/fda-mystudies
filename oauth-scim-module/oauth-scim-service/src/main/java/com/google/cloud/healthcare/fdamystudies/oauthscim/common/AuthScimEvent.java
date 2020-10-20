@@ -8,13 +8,13 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.common;
 
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_USER_DATASTORE;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.SCIM_AUTH_SERVER;
+
 import com.google.cloud.healthcare.fdamystudies.common.AuditLogEvent;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
 import java.util.Optional;
 import lombok.Getter;
-
-import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_USER_DATASTORE;
-import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.SCIM_AUTH_SERVER;
 
 @Getter
 public enum AuthScimEvent implements AuditLogEvent {

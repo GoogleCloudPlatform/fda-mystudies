@@ -12,4 +12,5 @@ export interface App {
 export interface ManageApps {
   apps: App[];
   studyPermissionCount: number;
+  superAdmin: boolean;
 }

@@ -8,9 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
@@ -139,10 +138,10 @@ public class UserServiceImpl implements UserService {
       String password, JsonNode userInfoJsonNode, int accountStatus) {
     // encrypt the password using random salt
     String rawSalt = salt();
-    String encrypted = encrypt(password, rawSalt);
+    String hashValue = hash(password, rawSalt);
 
     ObjectNode passwordNode = getObjectNode();
-    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(HASH, hashValue);
     passwordNode.put(SALT, rawSalt);
 
     UserAccountStatus userAccountStatus = UserAccountStatus.valueOf(accountStatus);
@@ -202,6 +201,7 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optUserEntity.get();
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     if (userEntity.getStatus() == UserAccountStatus.PENDING_CONFIRMATION.getStatus()) {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_NOT_VERIFIED);
     }
@@ -210,12 +210,20 @@ public class UserServiceImpl implements UserService {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
     }
 
+    if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      JsonNode accountLockedPwdNode = userInfo.get(ACCOUNT_LOCKED_PASSWORD);
+      if (null != accountLockedPwdNode
+          && Instant.now().toEpochMilli()
+              < accountLockedPwdNode.get(EXPIRE_TIMESTAMP).longValue()) {
+        throw new ErrorCodeException(ErrorCode.ACCOUNT_LOCKED);
+      }
+    }
+
     Integer accountStatusBeforePasswordReset = userEntity.getStatus();
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-      ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
       setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
       userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
       userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
@@ -316,7 +324,7 @@ public class UserServiceImpl implements UserService {
     // determine whether the current password matches the password stored in database
     String hash = getTextValue(passwordNode, HASH);
     String rawSalt = getTextValue(passwordNode, SALT);
-    String currentPasswordHash = hash(encrypt(userRequest.getCurrentPassword(), rawSalt));
+    String currentPasswordHash = hash(userRequest.getCurrentPassword(), rawSalt);
 
     if (!StringUtils.equals(currentPasswordHash, hash)) {
       return userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
@@ -330,7 +338,7 @@ public class UserServiceImpl implements UserService {
     for (JsonNode pwd : passwordHistory) {
       salt = getTextValue(pwd, SALT);
       prevPasswordHash = getTextValue(pwd, HASH);
-      String newPasswordHash = hash(encrypt(userRequest.getNewPassword(), salt));
+      String newPasswordHash = hash(userRequest.getNewPassword(), salt);
       if (StringUtils.equals(prevPasswordHash, newPasswordHash)) {
         return ErrorCode.ENFORCE_PASSWORD_HISTORY;
       }
@@ -377,7 +385,7 @@ public class UserServiceImpl implements UserService {
     validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
 
     // compare passwords
-    String passwordHash = hash(encrypt(user.getPassword(), salt));
+    String passwordHash = hash(user.getPassword(), salt);
     if (StringUtils.equals(passwordHash, hash)) {
       // reset login attempts
       return updateLoginAttemptsAndAuthenticationTime(userEntity, userInfo, auditRequest);
@@ -445,7 +453,12 @@ public class UserServiceImpl implements UserService {
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
-    throw new ErrorCodeException(ErrorCode.INVALID_LOGIN_CREDENTIALS);
+    ErrorCode errorCode =
+        userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
+            ? ErrorCode.ACCOUNT_LOCKED
+            : ErrorCode.INVALID_LOGIN_CREDENTIALS;
+
+    throw new ErrorCodeException(errorCode);
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(

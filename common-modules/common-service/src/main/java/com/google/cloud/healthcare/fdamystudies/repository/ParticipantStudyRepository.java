@@ -71,4 +71,7 @@ public interface ParticipantStudyRepository extends JpaRepository<ParticipantStu
       "SELECT ps FROM ParticipantStudyEntity ps WHERE ps.participantRegistrySite.id in (:registryIds)")
   public List<ParticipantStudyEntity> findParticipantsByParticipantRegistrySite(
       List<String> registryIds);
+
+  @Query("SELECT ps FROM ParticipantStudyEntity ps WHERE ps.participantId = :participantId")
+  public Optional<ParticipantStudyEntity> findByParticipantId(String participantId);
 }
