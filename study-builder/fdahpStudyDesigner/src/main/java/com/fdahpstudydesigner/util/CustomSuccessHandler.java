@@ -88,7 +88,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     sesObj.setCurrentHomeUrl("/" + projectName + targetUrl);
     sesObj.setEmail(userdetails.getUserEmail());
     sesObj.setUserPermissions(FdahpStudyDesignerUtil.getSessionUserRole());
-    sesObj.setPasswordExpairdedDateTime(userdetails.getPasswordExpairdedDateTime());
+    sesObj.setPasswordExpiryDateTime(userdetails.getPasswordExpiryDateTime());
     sesObj.setCreatedDate(userdetails.getCreatedOn());
     sesObj.setRole(userdetails.getRoleName());
     sesObj.setAccessLevel(userdetails.getAccessLevel());

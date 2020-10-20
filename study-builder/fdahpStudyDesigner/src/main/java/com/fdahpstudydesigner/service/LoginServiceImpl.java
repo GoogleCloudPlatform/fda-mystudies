@@ -144,7 +144,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               userBO.setAccountNonExpired(true);
               userBO.setAccountNonLocked(true);
               userBO.setCredentialsNonExpired(true);
-              userBO.setPasswordExpairdedDateTime(
+              userBO.setPasswordExpiryDateTime(
                   new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
                       .format(new Date()));
               result = loginDAO.updateUser(userBO);
