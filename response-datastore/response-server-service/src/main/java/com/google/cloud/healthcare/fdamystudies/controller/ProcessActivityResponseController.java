@@ -47,7 +47,7 @@ import com.google.cloud.healthcare.fdamystudies.bean.SuccessResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ResponseServerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
-import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantInfoEntity;
 import com.google.cloud.healthcare.fdamystudies.service.ActivityResponseProcessorService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantActivityStateResponseService;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
@@ -152,9 +152,9 @@ public class ProcessActivityResponseController {
       responseServerAuditLogHelper.logEvent(ACTIVITY_RESPONSE_RECEIVED, auditRequest, activityMap);
 
       // Check if participant is valid
-      ParticipantBo participantBo = new ParticipantBo();
-      participantBo.setTokenIdentifier(secureEnrollmentToken);
-      participantBo.setParticipantIdentifier(participantId);
+      ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
+      participantBo.setTokenId(secureEnrollmentToken);
+      participantBo.setParticipantId(participantId);
 
       if (participantService.isValidParticipant(participantBo)) {
 
@@ -425,9 +425,9 @@ public class ProcessActivityResponseController {
       auditRequest.setParticipantId(participantId);
 
       // Check if participant is valid
-      ParticipantBo participantBo = new ParticipantBo();
-      participantBo.setTokenIdentifier(tokenIdentifier);
-      participantBo.setParticipantIdentifier(participantId);
+      ParticipantInfoEntity participantBo = new ParticipantInfoEntity();
+      participantBo.setTokenId(tokenIdentifier);
+      participantBo.setParticipantId(participantId);
 
       if (participantService.isValidParticipant(participantBo)) {
 

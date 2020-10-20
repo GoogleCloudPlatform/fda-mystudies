@@ -638,6 +638,15 @@ footer ul li:last-child a {
   line-height: 100%;
 }
 
+.inActive__ {
+  padding: 6px 13px;
+  background: var(--bold-gray);
+  font-size: 75%;
+  color: var(--white);
+  display: inline-block;
+  border-radius: 58px;
+  line-height: 100%;
+}
 .btn.disabled,
 .btn:disabled {
   cursor: not-allowed;
