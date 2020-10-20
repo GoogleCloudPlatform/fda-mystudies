@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -97,7 +98,7 @@ public class UserProfileServiceImpl implements UserProfileService {
         userRegAdminRepository.findBySecurityCode(securityCode);
 
     if (!optUserRegAdminUser.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.INVALID_SECURITY_CODE);
+      return new UserProfileResponse("login", HttpStatus.OK.value());
     }
 
     UserRegAdminEntity user = optUserRegAdminUser.get();
@@ -163,6 +164,8 @@ public class UserProfileServiceImpl implements UserProfileService {
     userRegAdminUser.setFirstName(setUpAccountRequest.getFirstName());
     userRegAdminUser.setLastName(setUpAccountRequest.getLastName());
     userRegAdminUser.setStatus(UserStatus.ACTIVE.getValue());
+    userRegAdminUser.setSecurityCode(null);
+    userRegAdminUser.setSecurityCodeExpireDate(null);
     userRegAdminUser = userRegAdminRepository.saveAndFlush(userRegAdminUser);
 
     SetUpAccountResponse setUpAccountResponse =
@@ -206,33 +209,33 @@ public class UserProfileServiceImpl implements UserProfileService {
   public PatchUserResponse updateUserAccountStatus(PatchUserRequest statusRequest) {
     logger.entry("updateUserAccountStatus()");
 
-    Optional<UserRegAdminEntity> optUserRegAdmin =
-        userRegAdminRepository.findById(statusRequest.getUserId());
-    if (!optUserRegAdmin.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
-    }
-
-    UserRegAdminEntity userRegAdmin = optUserRegAdmin.get();
-
-    if (!userRegAdmin.isSuperAdmin()) {
+    Optional<UserRegAdminEntity> optSuperAdmin =
+        userRegAdminRepository.findById(statusRequest.getSignedInUserId());
+    UserRegAdminEntity admin =
+        optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+    if (!admin.isSuperAdmin()) {
       throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
     }
+
+    Optional<UserRegAdminEntity> optUser =
+        userRegAdminRepository.findById(statusRequest.getUserId());
+    optUser.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
 
     UserStatus userStatus = UserStatus.fromValue(statusRequest.getStatus());
     if (userStatus == null) {
       throw new ErrorCodeException(ErrorCode.INVALID_USER_STATUS);
     }
 
+    UserRegAdminEntity user = optUser.get();
     if (UserStatus.ACTIVE == userStatus || UserStatus.DEACTIVATED == userStatus) {
-      updateUserAccountStatusInAuthServer(
-          userRegAdmin.getUrAdminAuthId(), statusRequest.getStatus());
+      updateUserAccountStatusInAuthServer(user.getUrAdminAuthId(), statusRequest.getStatus());
     }
 
-    userRegAdmin.setStatus(statusRequest.getStatus());
-    userRegAdminRepository.saveAndFlush(userRegAdmin);
+    user.setStatus(statusRequest.getStatus());
+    userRegAdminRepository.saveAndFlush(user);
 
     MessageCode messageCode =
-        (userRegAdmin.getStatus() == UserStatus.ACTIVE.getValue()
+        (user.getStatus() == UserStatus.ACTIVE.getValue()
             ? MessageCode.REACTIVATE_USER_SUCCESS
             : MessageCode.DEACTIVATE_USER_SUCCESS);
 

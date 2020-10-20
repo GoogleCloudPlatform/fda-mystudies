@@ -1,22 +1,14 @@
-/*
- * Copyright 2020 Google LLC
- *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
- */
+package com.hphc.mystudies.bean;
 
-package com.fdahpstudydesigner.bean;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 @Setter
 public class AuditLogEventRequest implements Serializable {
-
   private static final long serialVersionUID = 1L;
 
   private String correlationId;
