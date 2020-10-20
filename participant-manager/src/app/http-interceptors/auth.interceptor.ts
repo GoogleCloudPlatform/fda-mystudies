@@ -18,6 +18,7 @@ import {environment} from 'src/environments/environment';
 import {CookieService} from 'ngx-cookie-service';
 import {AccessToken} from '../entity/access-token';
 import {Router} from '@angular/router';
+import { GenericErrorCode, getGenericMessage } from '../shared/generic.error.codes.enum';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
@@ -143,6 +144,8 @@ export class AuthInterceptor implements HttpInterceptor {
             const customError = err.error as ApiResponse;
             if (getMessage(customError.error_code)) {
               this.toasterService.error(getMessage(customError.error_code));
+            } else if (getGenericMessage(customError.error_code as GenericErrorCode)) {
+             void this.router.navigate(['/error/', customError.error_code]);
             } else {
               this.toasterService.error(
                 `Error Code: ${err.status}\nMessage: ${err.message}`,
