@@ -96,14 +96,12 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
     activeTaskBo.setTaskTypeId(123);
-    activeTaskBo.setStudyId(678574);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT.getPath())
             .param("buttonText", "completed")
             .headers(headers)
-            .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "678590")
             .sessionAttrs(sessionAttributes);
 
     addParams(requestBuilder, activeTaskBo);
@@ -112,23 +110,6 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewStudyActiveTasks.do"));
-
-    StudyBo study = studyDaoImpl.getStudy(activeTaskBo.getStudyId());
-
-    List<NotificationBO> notificationList =
-        notificationDaoImpl.getNotificationList(activeTaskBo.getStudyId());
-    assertNotNull(notificationList);
-
-    for (NotificationBO notification : notificationList) {
-      if (notification.getCreatedBy().equals(Integer.parseInt(USER_ID_VALUE))) {
-        assertTrue(notification.getNotificationText().contains(study.getName()));
-        assertEquals(
-            FdahpStudyDesignerConstants.NOTIFICATION_ST, notification.getNotificationType());
-        assertEquals(
-            FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ACTIVITY,
-            notification.getNotificationSubType());
-      }
-    }
 
     verifyAuditEventCall(STUDY_ACTIVE_TASK_MARKED_COMPLETE);
   }
@@ -149,11 +130,13 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
 
     ActiveTaskBo activeTaskBo = new ActiveTaskBo();
     activeTaskBo.setTaskTypeId(123);
+    activeTaskBo.setStudyId(678574);
     activeTaskBo.setActiveTaskFrequenciesBo(null);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_ACTIVE_TASK_CONTENT.getPath())
             .headers(headers)
+            .sessionAttr(CUSTOM_STUDY_ID_ATTR_NAME, "678590")
             .sessionAttrs(sessionAttributes);
 
     addParams(requestBuilder, activeTaskBo);
@@ -163,6 +146,23 @@ public class StudyActiveTasksControllerTest extends BaseMockIT {
         .andDo(print())
         .andExpect(status().isFound())
         .andExpect(view().name("redirect:/adminStudies/viewActiveTask.do#"));
+
+    StudyBo study = studyDaoImpl.getStudy(activeTaskBo.getStudyId());
+
+    List<NotificationBO> notificationList =
+        notificationDaoImpl.getNotificationList(activeTaskBo.getStudyId());
+    assertNotNull(notificationList);
+
+    for (NotificationBO notification : notificationList) {
+      if (notification.getCreatedBy().equals(Integer.parseInt(USER_ID_VALUE))) {
+        assertTrue(notification.getNotificationText().contains(study.getName()));
+        assertEquals(
+            FdahpStudyDesignerConstants.NOTIFICATION_ST, notification.getNotificationType());
+        assertEquals(
+            FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ACTIVITY,
+            notification.getNotificationSubType());
+      }
+    }
 
     verifyAuditEventCall(STUDY_ACTIVE_TASK_SAVED_OR_UPDATED);
   }
