@@ -67,8 +67,8 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import com.tom_roush.pdfbox.pdmodel.PDDocument;
 import com.tom_roush.pdfbox.pdmodel.PDPage;
@@ -490,8 +490,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             + SharedPreferenceHelper.readPreference(
                 CustomConsentViewTaskActivity.this, getString(R.string.auth), ""));
 
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+        new ParticipantDatastoreServerEnrollmentConfigEvent(
             "post_json",
             Urls.ENROLL_ID,
             ENROLL_ID_RESPONSECODE,
@@ -503,8 +503,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             CustomConsentViewTaskActivity.this);
     EnrollIdEvent enrollIdEvent = new EnrollIdEvent();
-    enrollIdEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    enrollIdEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+        participantDatastoreServerEnrollmentConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performEnrollId(enrollIdEvent);
   }
@@ -560,8 +560,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
     } catch (JSONException e) {
       Logger.log(e);
     }
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+        new ParticipantDatastoreServerEnrollmentConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -573,8 +573,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+        participantDatastoreServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -947,8 +947,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
         Logger.log(e);
       }
 
-      RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
-          new RegistrationServerConsentConfigEvent(
+      ParticipantDatastoreServerConsentConfigEvent participantDatastoreServerConsentConfigEvent =
+          new ParticipantDatastoreServerConsentConfigEvent(
               "post_object",
               Urls.UPDATE_ELIGIBILITY_CONSENT,
               UPDATE_ELIGIBILITY_CONSENT_RESPONSECODE,
@@ -961,8 +961,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
               CustomConsentViewTaskActivity.this);
       UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent =
           new UpdateEligibilityConsentStatusEvent();
-      updateEligibilityConsentStatusEvent.setRegistrationServerConsentConfigEvent(
-          registrationServerConsentConfigEvent);
+      updateEligibilityConsentStatusEvent.setParticipantDatastoreServerConsentConfigEvent(
+          participantDatastoreServerConsentConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performUpdateEligibilityConsent(updateEligibilityConsentStatusEvent);
     } else {
@@ -993,8 +993,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             .readPreference(
                 CustomConsentViewTaskActivity.this, getResources().getString(R.string.userid), ""));
 
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+        new ParticipantDatastoreServerEnrollmentConfigEvent(
             "get",
             Urls.STUDY_STATE,
             GET_PREFERENCES,
@@ -1006,8 +1006,8 @@ public class CustomConsentViewTaskActivity extends AppCompatActivity
             false,
             this);
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-    getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    getPreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+        participantDatastoreServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }

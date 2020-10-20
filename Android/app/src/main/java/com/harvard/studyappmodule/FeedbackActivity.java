@@ -31,7 +31,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
 import java.util.HashMap;
 
 public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsyncRequestComplete {
@@ -117,8 +117,8 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
     HashMap<String, String> params = new HashMap<>();
     params.put("subject", subject.getText().toString());
     params.put("body", feedbackEdittext.getText().toString());
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
+        new ParticipantDatastoreServerConfigEvent(
             "post",
             Urls.FEEDBACK,
             FEEDBACK,
@@ -130,7 +130,7 @@ public class FeedbackActivity extends AppCompatActivity implements ApiCall.OnAsy
             false,
             this);
 
-    contactUsEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    contactUsEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performContactUsEvent(contactUsEvent);
   }

@@ -14,9 +14,9 @@ android {
         multiDexEnabled true
         buildConfigField("String", "API_KEY", apikeyProperties['API_KEY'])
         buildConfigField("String", "BASE_URL_STUDY_DATASTORE_SERVER", apikeyProperties['BASE_URL_STUDY_DATASTORE_SERVER'])
-        buildConfigField("String", "BASE_URL_REGISTRATION_SERVER", apikeyProperties['BASE_URL_REGISTRATION_SERVER'])
-        buildConfigField("String", "BASE_URL_REGISTRATION_CONSENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_CONSENT_SERVER'])
-        buildConfigField("String", "BASE_URL_REGISTRATION_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_REGISTRATION_ENROLLMENT_SERVER'])
+        buildConfigField("String", "BASE_URL_PARTICIPANT_DATASTORE_SERVER", apikeyProperties['BASE_URL_PARTICIPANT_DATASTORE_SERVER'])
+        buildConfigField("String", "BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER", apikeyProperties['BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER'])
+        buildConfigField("String", "BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER'])
         buildConfigField("String", "BASE_URL_AUTH_SERVER", apikeyProperties['BASE_URL_AUTH_SERVER'])
         buildConfigField("String", "BASE_URL_HYDRA_SERVER", apikeyProperties['BASE_URL_HYDRA_SERVER'])
         buildConfigField("String", "BASE_URL_RESPONSE_SERVER", apikeyProperties['BASE_URL_RESPONSE_SERVER'])

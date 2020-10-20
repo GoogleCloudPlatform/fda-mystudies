@@ -56,7 +56,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
 import io.realm.Realm;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -135,8 +135,8 @@ public class ProfileFragment extends Fragment
         AppController.getHelperSharedPreference()
             .readPreference(context, context.getString(R.string.userid), ""));
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
+        new ParticipantDatastoreServerConfigEvent(
             "get",
             Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
@@ -147,7 +147,7 @@ public class ProfileFragment extends Fragment
             null,
             false,
             this);
-    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }
@@ -661,7 +661,7 @@ public class ProfileFragment extends Fragment
             Urls.UPDATE_USER_PROFILE,
             "",
             obj.toString(),
-            "RegistrationServer",
+            "ParticipantDatastoreServer",
             userProfileId,
             "",
             "");
@@ -669,8 +669,8 @@ public class ProfileFragment extends Fragment
         Logger.log(e);
       }
 
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
+          new ParticipantDatastoreServerConfigEvent(
               "post_object",
               Urls.UPDATE_USER_PROFILE,
               UPDATE_USER_PROFILE_REQUEST,
@@ -681,7 +681,7 @@ public class ProfileFragment extends Fragment
               obj,
               false,
               ProfileFragment.this);
-      updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+      updateUserProfileEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
     } catch (Exception e) {

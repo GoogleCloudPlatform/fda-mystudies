@@ -15,17 +15,17 @@
 
 package com.harvard.usermodule.event;
 
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
 
 public class UpdatePreferenceEvent {
-  private RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent;
+  private ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent;
 
-  public RegistrationServerEnrollmentConfigEvent getRegistrationServerEnrollmentConfigEvent() {
-    return registrationServerEnrollmentConfigEvent;
+  public ParticipantDatastoreServerEnrollmentConfigEvent getParticipantDatastoreServerEnrollmentConfigEvent() {
+    return participantDatastoreServerEnrollmentConfigEvent;
   }
 
-  public void setRegistrationServerEnrollmentConfigEvent(
-      RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent) {
-    this.registrationServerEnrollmentConfigEvent = registrationServerEnrollmentConfigEvent;
+  public void setParticipantDatastoreServerEnrollmentConfigEvent(
+      ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent) {
+    this.participantDatastoreServerEnrollmentConfigEvent = participantDatastoreServerEnrollmentConfigEvent;
   }
 }

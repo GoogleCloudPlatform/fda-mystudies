@@ -42,7 +42,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -419,8 +419,8 @@ public class DeleteAccountActivity extends AppCompatActivity
       Logger.log(e);
     }
     try {
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
+          new ParticipantDatastoreServerConfigEvent(
               "delete_object",
               Urls.DELETE_ACCOUNT,
               DELETE_ACCOUNT_REPSONSECODE,
@@ -431,7 +431,7 @@ public class DeleteAccountActivity extends AppCompatActivity
               obj,
               false,
               this);
-      deleteAccountEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+      deleteAccountEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performDeleteAccount(deleteAccountEvent);
     } catch (Exception e) {

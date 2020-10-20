@@ -38,7 +38,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
 import java.util.Calendar;
 import java.util.HashMap;
 import org.json.JSONException;
@@ -346,8 +346,8 @@ public class LoginCallbackActivity extends AppCompatActivity
       }
     }
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
+        new ParticipantDatastoreServerConfigEvent(
             "post_object",
             Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
@@ -359,7 +359,7 @@ public class LoginCallbackActivity extends AppCompatActivity
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updateUserProfileEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }
@@ -370,8 +370,8 @@ public class LoginCallbackActivity extends AppCompatActivity
     header.put("userId", userId);
 
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
+        new ParticipantDatastoreServerConfigEvent(
             "get",
             Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
@@ -382,7 +382,7 @@ public class LoginCallbackActivity extends AppCompatActivity
             null,
             false,
             this);
-    getUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    getUserProfileEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }

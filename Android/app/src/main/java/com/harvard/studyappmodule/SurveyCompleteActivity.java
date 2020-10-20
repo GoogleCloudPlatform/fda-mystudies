@@ -46,7 +46,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -880,7 +880,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
-            "RegistrationServerEnrollment",
+            "ParticipantDatastoreServerEnrollment",
             "",
             "",
             "");
@@ -989,7 +989,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.UPDATE_STUDY_PREFERENCE,
             "",
             getStudyPreferenceJson("" + (int) completion, "" + (int) adherence).toString(),
-            "RegistrationServerEnrollment",
+            "ParticipantDatastoreServerEnrollment",
             "",
             "",
             "");
@@ -1171,8 +1171,8 @@ public class SurveyCompleteActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
 
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+        new ParticipantDatastoreServerEnrollmentConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
@@ -1184,8 +1184,8 @@ public class SurveyCompleteActivity extends AppCompatActivity
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+        participantDatastoreServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

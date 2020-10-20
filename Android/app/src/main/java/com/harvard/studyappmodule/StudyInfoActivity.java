@@ -68,7 +68,7 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -612,8 +612,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+        new ParticipantDatastoreServerEnrollmentConfigEvent(
             "get",
             Urls.STUDY_STATE,
             GET_PREFERENCES,
@@ -625,8 +625,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-    getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    getPreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+        participantDatastoreServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }
@@ -889,7 +889,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           Urls.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "RegistrationServerEnrollment",
+          "ParticipantDatastoreServerEnrollment",
           "",
           studyId,
           "");
@@ -897,8 +897,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Logger.log(e);
     }
     //////////
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+        new ParticipantDatastoreServerEnrollmentConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
@@ -910,8 +910,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+        participantDatastoreServerEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

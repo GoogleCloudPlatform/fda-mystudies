@@ -39,7 +39,7 @@ import com.harvard.usermodule.UserModulePresenter;
 import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -224,7 +224,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
       Logger.log(e);
     }
 
-    if (serverType.equalsIgnoreCase("RegistrationServerEnrollment")) {
+    if (serverType.equalsIgnoreCase("ParticipantDatastoreServerEnrollment")) {
       HashMap<String, String> header = new HashMap();
       header.put(
           "auth",
@@ -236,8 +236,8 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               .readPreference(this, getResources().getString(R.string.userid), ""));
 
       UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-      RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-          new RegistrationServerEnrollmentConfigEvent(
+      ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+          new ParticipantDatastoreServerEnrollmentConfigEvent(
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -248,8 +248,8 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               jsonObject,
               false,
               this);
-      updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-          registrationServerEnrollmentConfigEvent);
+      updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+          participantDatastoreServerEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
     } else if (serverType.equalsIgnoreCase("ResponseServer")) {

@@ -44,7 +44,7 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
-    FdaEventBus.postEvent(verifyEnrollmentIdEvent.registrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(verifyEnrollmentIdEvent.participantDatastoreServerEnrollmentConfigEvent());
   }
 
   public void onEvent(GetUserStudyListEvent getUserStudyListEvent) {
@@ -56,7 +56,7 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(EnrollIdEvent enrollIdEvent) {
-    FdaEventBus.postEvent(enrollIdEvent.getRegistrationServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(enrollIdEvent.getParticipantDatastoreServerEnrollmentConfigEvent());
   }
 
   public void onEvent(GetActivityListEvent getActivityListEvent) {
@@ -68,7 +68,7 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(ContactUsEvent contactUsEvent) {
-    FdaEventBus.postEvent(contactUsEvent.getRegistrationServerConfigEvent());
+    FdaEventBus.postEvent(contactUsEvent.getParticipantDatastoreServerConfigEvent());
   }
 
   public void onEvent(FeedbackEvent feedbackEvent) {
@@ -81,7 +81,7 @@ public class StudyModuleSubscriber extends BaseSubscriber {
 
   public void onEvent(UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {
     FdaEventBus.postEvent(
-        updateEligibilityConsentStatusEvent.getRegistrationServerConsentConfigEvent());
+        updateEligibilityConsentStatusEvent.getParticipantDatastoreServerConsentConfigEvent());
   }
 
   public void onEvent(ProcessResponseEvent processResponseEvent) {

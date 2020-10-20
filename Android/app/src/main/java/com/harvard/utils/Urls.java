@@ -20,11 +20,11 @@ import com.harvard.FdaApplication;
 
 public class Urls {
   public static String BASE_URL_STUDY_DATASTORE_SERVER = BuildConfig.BASE_URL_STUDY_DATASTORE_SERVER;
-  public static String BASE_URL_REGISTRATION_SERVER = BuildConfig.BASE_URL_REGISTRATION_SERVER;
-  public static String BASE_URL_REGISTRATION_CONSENT_SERVER =
-          BuildConfig.BASE_URL_REGISTRATION_CONSENT_SERVER;
-  public static String BASE_URL_REGISTRATION_ENROLLMENT_SERVER =
-          BuildConfig.BASE_URL_REGISTRATION_ENROLLMENT_SERVER;
+  public static String BASE_URL_PARTICIPANT_DATASTORE_SERVER = BuildConfig.BASE_URL_PARTICIPANT_DATASTORE_SERVER;
+  public static String BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER =
+          BuildConfig.BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER;
+  public static String BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER =
+          BuildConfig.BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER;
   public static String BASE_URL_AUTH_SERVER = BuildConfig.BASE_URL_AUTH_SERVER;
   public static String BASE_URL_RESPONSE_SERVER = BuildConfig.BASE_URL_RESPONSE_SERVER;
 
@@ -51,7 +51,7 @@ public class Urls {
           + "&redirect_uri=" + AUTH_SERVER_REDIRECT_URL
           + "&state=" + FdaApplication.getRandomString();
 
-  // Registration Server
+  // participant-datastore Server
   public static String REGISTER_USER = "/register";
   public static String UPDATE_USER_PROFILE = "/updateUserProfile";
   public static String GET_USER_PROFILE = "/userProfile";
@@ -62,13 +62,13 @@ public class Urls {
   public static String CONTACT_US = "/contactUs";
   public static String FEEDBACK = "/feedback";
 
-  // Registration Enrollment Server
+  // participant-datastore Enrollment Server
   public static String UPDATE_STUDY_PREFERENCE = "/updateStudyState";
   public static String STUDY_STATE = "/studyState";
   public static String VALIDATE_ENROLLMENT_ID = "/validateEnrollmentToken";
   public static String ENROLL_ID = "/enroll";
 
-  // Registration consent Server
+  // participant-datastore consent Server
   public static String UPDATE_ELIGIBILITY_CONSENT = "/updateEligibilityConsentStatus";
   public static String CONSENTPDF = "/consentDocument";
 

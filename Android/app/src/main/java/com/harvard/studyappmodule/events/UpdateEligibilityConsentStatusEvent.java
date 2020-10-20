@@ -15,18 +15,18 @@
 
 package com.harvard.studyappmodule.events;
 
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerConsentConfigEvent;
 
 public class UpdateEligibilityConsentStatusEvent {
 
-  private RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent;
+  private ParticipantDatastoreServerConsentConfigEvent participantDatastoreServerConsentConfigEvent;
 
-  public RegistrationServerConsentConfigEvent getRegistrationServerConsentConfigEvent() {
-    return registrationServerConsentConfigEvent;
+  public ParticipantDatastoreServerConsentConfigEvent getParticipantDatastoreServerConsentConfigEvent() {
+    return participantDatastoreServerConsentConfigEvent;
   }
 
-  public void setRegistrationServerConsentConfigEvent(
-      RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent) {
-    this.registrationServerConsentConfigEvent = registrationServerConsentConfigEvent;
+  public void setParticipantDatastoreServerConsentConfigEvent(
+      ParticipantDatastoreServerConsentConfigEvent participantDatastoreServerConsentConfigEvent) {
+    this.participantDatastoreServerConsentConfigEvent = participantDatastoreServerConsentConfigEvent;
   }
 }

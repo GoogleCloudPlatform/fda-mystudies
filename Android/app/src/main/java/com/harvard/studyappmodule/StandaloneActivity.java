@@ -63,8 +63,8 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -205,8 +205,8 @@ public class StandaloneActivity extends AppCompatActivity
                     .readPreference(
                         StandaloneActivity.this, getResources().getString(R.string.userid), ""));
 
-            RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-                new RegistrationServerEnrollmentConfigEvent(
+            ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
+                new ParticipantDatastoreServerEnrollmentConfigEvent(
                     "get",
                     Urls.STUDY_STATE,
                     GET_PREFERENCES,
@@ -218,8 +218,8 @@ public class StandaloneActivity extends AppCompatActivity
                     false,
                     this);
             GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-            getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-                registrationServerEnrollmentConfigEvent);
+            getPreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
+                participantDatastoreServerEnrollmentConfigEvent);
             UserModulePresenter userModulePresenter = new UserModulePresenter();
             userModulePresenter.performGetUserPreference(getPreferenceEvent);
           } else {
@@ -854,8 +854,8 @@ public class StandaloneActivity extends AppCompatActivity
             .readPreference(
                 StandaloneActivity.this, getResources().getString(R.string.userid), ""));
     String url = Urls.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
-    RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent =
-        new RegistrationServerConsentConfigEvent(
+    ParticipantDatastoreServerConsentConfigEvent participantDatastoreServerConsentConfigEvent =
+        new ParticipantDatastoreServerConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
@@ -866,7 +866,7 @@ public class StandaloneActivity extends AppCompatActivity
             null,
             false,
             StandaloneActivity.this);
-    consentPdfEvent.setRegistrationServerConsentConfigEvent(registrationServerConsentConfigEvent);
+    consentPdfEvent.setParticipantDatastoreServerConsentConfigEvent(participantDatastoreServerConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
   }
