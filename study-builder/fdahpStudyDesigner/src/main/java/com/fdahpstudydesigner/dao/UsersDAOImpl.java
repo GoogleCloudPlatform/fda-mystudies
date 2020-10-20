@@ -49,8 +49,6 @@ public class UsersDAOImpl implements UsersDAO {
 
   private static Logger logger = Logger.getLogger(UsersDAOImpl.class);
 
-  @Autowired private AuditLogDAO auditLogDAO;
-
   HibernateTemplate hibernateTemplate;
 
   private Transaction transaction = null;
@@ -69,8 +67,6 @@ public class UsersDAOImpl implements UsersDAO {
     int count = 0;
     Query query = null;
     Boolean forceLogout = false;
-    String activity = "";
-    String activityDetail = "";
     UserBO userBO = null;
     int userStatusNew;
     try {
@@ -80,27 +76,10 @@ public class UsersDAOImpl implements UsersDAO {
       if (userStatus == 0) {
         userStatusNew = 1;
         forceLogout = false;
-        activity = "User activated.";
-        activityDetail =
-            "User Account activated. (Account Details:- First Name = "
-                + userBO.getFirstName()
-                + " Last Name = "
-                + userBO.getLastName()
-                + ", Email ="
-                + userBO.getUserEmail()
-                + ")";
+
       } else {
         userStatusNew = 0;
         forceLogout = true;
-        activity = "User deactivated.";
-        activityDetail =
-            "User account  de-activated. (Account Details:- First Name = "
-                + userBO.getFirstName()
-                + " Last Name = "
-                + userBO.getLastName()
-                + ", Email ="
-                + userBO.getUserEmail()
-                + ")";
       }
       query =
           session.createQuery(
@@ -114,13 +93,7 @@ public class UsersDAOImpl implements UsersDAO {
                   + userId);
       count = query.executeUpdate();
       if (count > 0) {
-        auditLogDAO.saveToAuditLog(
-            session,
-            transaction,
-            userSession,
-            activity,
-            activityDetail,
-            "UsersDAOImpl - activateOrDeactivateUser()");
+
         msg = FdahpStudyDesignerConstants.SUCCESS;
       }
       transaction.commit();

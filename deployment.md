@@ -310,7 +310,21 @@ regenerating the Terraform configs several times.
     to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from
     secrets into CloudSQL.
 
-### Step 10: Mobile app setups
+### Step 10: Superadmin accounts
+In order to access Study Builder or Participant Manager web UIs for the first time,
+an initial superadmin account needs to be generated for each application.
+
+1. **Participant Manager** 
+`create_participant_manager_superadmin.sh` accepts an email and password and
+generates an initial superadmin account for Participant Manager.
+```bash
+./scripts/create_participant_manager_superadmin.sh <email> <password>
+```
+
+1.  **Study Builder**
+(TBD)
+
+### Step 11: Mobile app setups
 
 1. Build and distribute iOS and Android apps following their individual
     instructions.
@@ -335,7 +349,7 @@ regenerating the Terraform configs several times.
     to reflect proper {PREFIX} and {ENV}, and run to copy push notification info
     from secrets into CloudSQL.
 
-### Step 11: Clean up
+### Step 12: Clean up
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.
