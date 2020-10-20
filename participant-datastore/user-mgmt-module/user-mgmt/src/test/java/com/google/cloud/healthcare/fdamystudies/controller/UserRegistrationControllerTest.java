@@ -35,7 +35,11 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRegistrationForm;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.AuthInfoRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.UserAppDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.CommonService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
@@ -64,6 +68,10 @@ public class UserRegistrationControllerTest extends BaseMockIT {
   @Autowired private ObjectMapper objectMapper;
 
   @Autowired private UserDetailsRepository userDetailsRepository;
+
+  @Autowired private UserAppDetailsRepository userAppDetailsRepository;
+
+  @Autowired private AuthInfoRepository authInfoRepository;
 
   @Autowired ApplicationPropertyConfiguration appConfig;
 
@@ -192,6 +200,12 @@ public class UserRegistrationControllerTest extends BaseMockIT {
         1,
         postRequestedFor(urlEqualTo("/oauth-scim-service/users"))
             .withRequestBody(new ContainsPattern(Constants.PASSWORD)));
+
+    Optional<UserAppDetailsEntity> optUserAppDetails =
+        userAppDetailsRepository.findByUserDetails(userDetails);
+    Optional<AuthInfoEntity> optAuthInfo = authInfoRepository.findByUserDetails(userDetails);
+    assertNotNull(optAuthInfo);
+    assertNotNull(optUserAppDetails);
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setAppId(Constants.APP_ID_VALUE);

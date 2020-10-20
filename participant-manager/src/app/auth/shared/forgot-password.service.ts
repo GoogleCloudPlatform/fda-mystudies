@@ -13,7 +13,7 @@ export class ForgotPasswordService {
 
   resetPassword(resetData: Resetpassword): Observable<ApiResponse> {
     return this.http.post<ApiResponse>(
-      `${environment.authServerUrl}/users/reset_password`,
+      `${environment.authServerUrl}/user/reset_password`,
       resetData,
     );
   }

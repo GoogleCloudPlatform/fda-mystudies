@@ -47,7 +47,7 @@ public class AuditEventServiceImpl implements AuditEventService {
 
     LogEntry entry =
         LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
-            .setTimestamp(auditRequest.getOccured().getTime())
+            .setTimestamp(auditRequest.getOccurred().getTime())
             .setSeverity(Severity.INFO)
             .setLogName(AUDIT_LOG_NAME)
             .setResource(MonitoredResource.newBuilder("global").build())

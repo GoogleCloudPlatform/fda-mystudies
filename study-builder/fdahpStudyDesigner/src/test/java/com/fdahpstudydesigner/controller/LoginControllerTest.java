@@ -1,9 +1,8 @@
 /*
  * Copyright 2020 Google LLC
  *
- * Use of this source code is governed by an MIT-style
- * license that can be found in the LICENSE file or at
- * https://opensource.org/licenses/MIT.
+ * Use of this source code is governed by an MIT-style license that can be found in the LICENSE file
+ * or at https://opensource.org/licenses/MIT.
  */
 
 package com.fdahpstudydesigner.controller;
@@ -15,12 +14,15 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHAN
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -33,9 +35,33 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 public class LoginControllerTest extends BaseMockIT {
+
+  @Test
+  public void shouldFailSigninDueToUnsupportedColumn() throws Exception {
+    MockMvc mockMvc =
+        MockMvcBuilders.webAppContextSetup(webAppContext)
+            .dispatchOptions(true)
+            .addFilters(filterChainProxy)
+            .build();
+
+    final ResultActions resultActions =
+        mockMvc.perform(
+            formLogin("/j_spring_security_check").user(SESSION_USER_EMAIL).password("secret"));
+
+    resultActions
+        .andDo(print())
+        .andExpect(MockMvcResultMatchers.status().isFound())
+        .andExpect(redirectedUrl("/errorRedirect.do?error=Y"));
+
+    verifyAuditEventCall(SIGNIN_FAILED_UNREGISTERED_USER);
+  }
 
   @Test
   public void shouldLogoutSuccessfully() throws Exception {
@@ -180,7 +206,7 @@ public class LoginControllerTest extends BaseMockIT {
         .perform(requestBuilder)
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:login.do"));
+        .andExpect(view().name("redirect:sessionOut.do"));
 
     verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
     verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);
