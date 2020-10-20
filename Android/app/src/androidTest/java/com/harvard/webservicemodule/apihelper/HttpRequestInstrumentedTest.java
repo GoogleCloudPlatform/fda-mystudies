@@ -37,7 +37,7 @@ public class HttpRequestInstrumentedTest {
   @Test
   public void getRequestTest() {
     StringBuilder studyListUrl = new StringBuilder();
-    studyListUrl.append(Urls.BASE_URL_STUDY_DATASTORE_SERVER);
+    studyListUrl.append(Urls.BASE_URL_STUDY_DATASTORE);
     studyListUrl.append(Urls.STUDY_LIST);
     Responsemodel responsemodel =
         HttpRequest.getRequest(studyListUrl.toString(), null, SERVER_TYPE_STUDY_DATASTORE_SERVER);

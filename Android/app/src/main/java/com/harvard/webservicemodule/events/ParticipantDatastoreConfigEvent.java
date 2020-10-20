@@ -63,11 +63,11 @@ public class ParticipantDatastoreConfigEvent<V> extends WebserviceConfigEvent {
 
   @Override
   public String getProductionUrl() {
-    return Urls.BASE_URL_PARTICIPANT_DATASTORE_SERVER;
+    return Urls.BASE_URL_PARTICIPANT_DATASTORE;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return Urls.BASE_URL_PARTICIPANT_DATASTORE_SERVER;
+    return Urls.BASE_URL_PARTICIPANT_DATASTORE;
   }
 }

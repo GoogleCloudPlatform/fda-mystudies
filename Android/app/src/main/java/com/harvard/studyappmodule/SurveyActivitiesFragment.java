@@ -98,7 +98,7 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
@@ -370,7 +370,7 @@ public class SurveyActivitiesFragment extends Fragment
       ConnectionDetector connectionDetector = new ConnectionDetector(context);
 
       String url =
-          Urls.BASE_URL_STUDY_DATASTORE_SERVER
+          Urls.BASE_URL_STUDY_DATASTORE
               + Urls.CONSENT_METADATA
               + "?studyId="
               + ((SurveyActivity) context).getStudyId();
@@ -2393,8 +2393,8 @@ public class SurveyActivitiesFragment extends Fragment
     } catch (JSONException e) {
       Logger.log(e);
     }
-    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
-        new ParticipantDatastoreEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
@@ -2406,8 +2406,8 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(
-        participantDatastoreEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

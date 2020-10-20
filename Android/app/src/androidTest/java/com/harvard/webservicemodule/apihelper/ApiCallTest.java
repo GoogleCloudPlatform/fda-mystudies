@@ -35,7 +35,7 @@ public class ApiCallTest {
   @Test
   public void apiCallGetTest() {
     StringBuilder studyListUrl = new StringBuilder();
-    studyListUrl.append(Urls.BASE_URL_STUDY_DATASTORE_SERVER);
+    studyListUrl.append(Urls.BASE_URL_STUDY_DATASTORE);
     studyListUrl.append(Urls.STUDY_LIST);
     async = new ApiCallSyncronizer();
     ApiCall apiCall = new ApiCall(InstrumentationRegistry.getTargetContext());

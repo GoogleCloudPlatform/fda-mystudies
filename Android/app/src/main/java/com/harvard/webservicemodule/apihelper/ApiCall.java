@@ -343,7 +343,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         response = "success";
 
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(Urls.BASE_URL_STUDY_DATASTORE_SERVER + "/activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_STUDY_DATASTORE + "/activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponseData());
@@ -477,7 +477,7 @@ public class ApiCall<T, V> extends AsyncTask<T, String, String> {
         }
       } else {
         obj = parseJson(responseModel, genericClass);
-        if (urlPassed.contains(Urls.BASE_URL_STUDY_DATASTORE_SERVER + "/activity")) {
+        if (urlPassed.contains(Urls.BASE_URL_STUDY_DATASTORE + "/activity")) {
           try {
             ActivityInfoData activityInfoData = (ActivityInfoData) obj;
             JSONObject jsonObject = new JSONObject(responseModel.getResponseData());

@@ -66,7 +66,7 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -461,7 +461,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
           new ConnectionDetector(StandaloneStudyInfoActivity.this);
 
       String url =
-          Urls.BASE_URL_STUDY_DATASTORE_SERVER + Urls.CONSENT_METADATA + "?studyId=" + AppConfig.StudyId;
+          Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + AppConfig.StudyId;
       if (connectionDetector.isConnectingToInternet()) {
         responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
@@ -837,8 +837,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(
                 StandaloneStudyInfoActivity.this, getResources().getString(R.string.userid), ""));
-    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreConfigEvent =
-        new ParticipantDatastoreEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "get",
             Urls.STUDY_STATE,
             GET_PREFERENCES,
@@ -850,7 +850,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             false,
             this);
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-    getPreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(participantDatastoreConfigEvent);
+    getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }

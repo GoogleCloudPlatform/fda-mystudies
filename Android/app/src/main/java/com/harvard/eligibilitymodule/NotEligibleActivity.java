@@ -29,7 +29,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,8 +87,8 @@ public class NotEligibleActivity extends AppCompatActivity
     } catch (JSONException e) {
       Logger.log(e);
     }
-    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
-        new ParticipantDatastoreEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -100,8 +100,8 @@ public class NotEligibleActivity extends AppCompatActivity
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(
-        participantDatastoreEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

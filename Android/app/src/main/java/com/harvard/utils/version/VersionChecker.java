@@ -32,7 +32,7 @@ public class VersionChecker extends AsyncTask<String, String, String> {
   private String newVersion;
   private boolean force = false;
   private Upgrade upgrade;
-  private String versionUrl = Urls.BASE_URL_STUDY_DATASTORE_SERVER + Urls.VERSION_INFO;
+  private String versionUrl = Urls.BASE_URL_STUDY_DATASTORE + Urls.VERSION_INFO;
   public static String PLAY_STORE_URL =
       "https://play.google.com/store/apps/details?id=" + AppConfig.PackageName;
 

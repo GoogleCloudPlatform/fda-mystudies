@@ -32,7 +32,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
 import java.util.HashMap;
 
 public class EligibilityEnrollmentActivity extends AppCompatActivity
@@ -135,8 +135,8 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
             + SharedPreferenceHelper.readPreference(
                 EligibilityEnrollmentActivity.this, getString(R.string.auth), ""));
 
-    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
-        new ParticipantDatastoreEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_json",
             Urls.VALIDATE_ENROLLMENT_ID,
             VERIFY_ENROLLMENT_ID,
@@ -148,8 +148,8 @@ public class EligibilityEnrollmentActivity extends AppCompatActivity
             false,
             EligibilityEnrollmentActivity.this);
     VerifyEnrollmentIdEvent verifyEnrollmentIdEvent = new VerifyEnrollmentIdEvent();
-    verifyEnrollmentIdEvent.setParticipantDatastoreEnrollmentConfigEvent(
-        participantDatastoreEnrollmentConfigEvent);
+    verifyEnrollmentIdEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performVerifyEnrollmentId(verifyEnrollmentIdEvent);
   }

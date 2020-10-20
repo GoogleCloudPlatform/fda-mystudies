@@ -116,7 +116,7 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(UpdatePreferenceEvent updatePreferenceEvent) {
-    FdaEventBus.postEvent(updatePreferenceEvent.getParticipantDatastoreEnrollmentConfigEvent());
+    FdaEventBus.postEvent(updatePreferenceEvent.getParticipantEnrollmentDatastoreConfigEvent());
   }
 
   public void onEvent(ResendEmailEvent resendEmailEvent) {
@@ -128,7 +128,7 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(GetPreferenceEvent getPreferenceEvent) {
-    FdaEventBus.postEvent(getPreferenceEvent.getParticipantDatastoreEnrollmentConfigEvent());
+    FdaEventBus.postEvent(getPreferenceEvent.getParticipantEnrollmentDatastoreConfigEvent());
   }
 
   public void onEvent(DeleteAccountEvent deleteAccountEvent) {
@@ -136,6 +136,6 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(ConsentPdfEvent consentPdfEvent) {
-    FdaEventBus.postEvent(consentPdfEvent.getParticipantDatastoreConsentConfigEvent());
+    FdaEventBus.postEvent(consentPdfEvent.getParticipantConsentDatastoreConfigEvent());
   }
 }

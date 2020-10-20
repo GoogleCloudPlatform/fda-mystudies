@@ -19,14 +19,14 @@ import com.harvard.BuildConfig;
 import com.harvard.FdaApplication;
 
 public class Urls {
-  public static String BASE_URL_STUDY_DATASTORE_SERVER = BuildConfig.BASE_URL_STUDY_DATASTORE_SERVER;
-  public static String BASE_URL_PARTICIPANT_DATASTORE_SERVER = BuildConfig.BASE_URL_PARTICIPANT_DATASTORE_SERVER;
-  public static String BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER =
-          BuildConfig.BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER;
-  public static String BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER =
-          BuildConfig.BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER;
+  public static String BASE_URL_STUDY_DATASTORE = BuildConfig.BASE_URL_STUDY_DATASTORE;
+  public static String BASE_URL_PARTICIPANT_DATASTORE = BuildConfig.BASE_URL_PARTICIPANT_DATASTORE;
+  public static String BASE_URL_PARTICIPANT_CONSENT_DATASTORE =
+          BuildConfig.BASE_URL_PARTICIPANT_CONSENT_DATASTORE;
+  public static String BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE =
+          BuildConfig.BASE_URL_PARTICIPANT_ENROLLMENT_DATASTORE;
   public static String BASE_URL_AUTH_SERVER = BuildConfig.BASE_URL_AUTH_SERVER;
-  public static String BASE_URL_RESPONSE_DATASTORE_SERVER = BuildConfig.BASE_URL_RESPONSE_DATASTORE_SERVER;
+  public static String BASE_URL_RESPONSE_DATASTORE = BuildConfig.BASE_URL_RESPONSE_DATASTORE;
 
   // Auth Server
   public static String LOGIN = "/login";
@@ -88,7 +88,7 @@ public class Urls {
 
   // Response server
   public static String PROCESS_RESPONSE = "/participant/process-response";
-  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_DATASTORE_SERVER + "/participant/getresponse?";
+  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_DATASTORE + "/participant/getresponse?";
   public static String UPDATE_ACTIVITY_PREFERENCE = "/participant/update-activity-state";
   public static String ACTIVITY_STATE = "/participant/get-activity-state";
 }

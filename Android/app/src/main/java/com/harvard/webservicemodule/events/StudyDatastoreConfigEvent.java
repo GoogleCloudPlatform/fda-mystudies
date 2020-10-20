@@ -37,11 +37,11 @@ public class StudyDatastoreConfigEvent<V> extends WebserviceConfigEvent {
 
   @Override
   public String getProductionUrl() {
-    return Urls.BASE_URL_STUDY_DATASTORE_SERVER;
+    return Urls.BASE_URL_STUDY_DATASTORE;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return Urls.BASE_URL_STUDY_DATASTORE_SERVER;
+    return Urls.BASE_URL_STUDY_DATASTORE;
   }
 }
