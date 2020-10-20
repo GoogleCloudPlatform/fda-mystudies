@@ -69,8 +69,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
   private static Logger logger = Logger.getLogger(StudyQuestionnaireDAOImpl.class.getName());
 
-  @Autowired private AuditLogDAO auditLogDAO;
-
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Autowired private HttpServletRequest request;
@@ -1351,8 +1349,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     logger.info("StudyQuestionnaireDAOImpl - deleteQuestuionnaireInfo() - Starts");
     Session session = null;
     String message = FdahpStudyDesignerConstants.FAILURE;
-    String activitydetails = "";
-    String activity = "";
     StudyVersionBo studyVersionBo = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -1401,20 +1397,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         message =
             deleteQuestuionnaireInfo(studyId, questionnaireId, customStudyId, session, transaction);
       }
-      // STUDY_QUESTIONNAIRE_DELETED
-      activity = FdahpStudyDesignerConstants.QUESTIONNAIRE_ACTIVITY + " was deleted.";
-      activitydetails =
-          FdahpStudyDesignerConstants.QUESTIONNAIRE_ACTIVITY
-              + " was deleted. (Study ID = "
-              + customStudyId
-              + ")";
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - deleteQuestuionnaireInfo");
 
       queryString =
           "DELETE From NotificationBO where questionnarieId="
@@ -3154,8 +3136,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateFromQuestionnaireStep() - Starts");
     Session session = null;
     QuestionnairesStepsBo addOrUpdateQuestionnairesStepsBo = null;
-    String activitydetails = "";
-    String activity = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -3216,13 +3196,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(false);
-            activity = "Content saved for Form Step.";
-            activitydetails =
-                "Content saved for Form Step. (Question Key = "
-                    + questionnairesStepsBo.getStepShortTitle()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ")";
+
             query =
                 session.createSQLQuery(
                     "update questionnaires q set q.status=0 where q.id="
@@ -3232,14 +3206,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(true);
-            activity =
-                "Question of form step succesfully checked for minimum content completeness.";
-            activitydetails =
-                "Question of form step succesfully checked for minimum content completeness and marked 'Done'.(Question Key = "
-                    + questionnairesStepsBo.getStepShortTitle()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ")";
           }
         }
         int count = 0;
@@ -3284,13 +3250,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           session.createQuery(updateQuery).executeUpdate();
         }
       }
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sesObj,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - saveOrUpdateFromQuestionnaireStep");
 
       transaction.commit();
     } catch (Exception e) {
@@ -3311,8 +3270,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateInstructionsBo() - Starts");
     Session session = null;
     QuestionnairesStepsBo existedQuestionnairesStepsBo = null;
-    String activitydetails = "";
-    String activity = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -3380,13 +3337,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
             questionnairesStepsBo.setStatus(false);
-            activity = FdahpStudyDesignerConstants.INSTRUCTION_ACTIVITY + " saved.";
-            activitydetails =
-                "Content saved for  instruction Step. (Step Key  = "
-                    + instructionsBo.getInstructionTitle()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ")";
+
             query =
                 session.createSQLQuery(
                     "update questionnaires q set q.status=0 where q.id="
@@ -3396,13 +3347,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
             questionnairesStepsBo.setStatus(true);
-            activity = FdahpStudyDesignerConstants.INSTRUCTION_ACTIVITY + " marked Done.";
-            activitydetails =
-                "Instruction step succesfully checked for minimum content completeness and marked 'Done'. (Step Key  = "
-                    + instructionsBo.getInstructionTitle()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ")";
           }
         }
         int count = 0;
@@ -3435,13 +3379,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
           session.createQuery(updateQuery).executeUpdate();
         }
       }
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - saveOrUpdateInstructionsBo");
+
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -3669,8 +3607,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       QuestionnaireBo questionnaireBo, SessionObject sessionObject, String customStudyId) {
     logger.info("StudyQuestionnaireDAOImpl - saveORUpdateQuestionnaire() - Starts");
     Session session = null;
-    String activitydetails = "";
-    String activity = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -3864,23 +3800,8 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
             customStudyId);
       }
 
-      activity = "Content saved for questionnaire.";
-      activitydetails = "Content saved for questionnaire. (Study ID = " + customStudyId + ").";
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - saveORUpdateQuestionnaire");
-
       if ((questionnaireBo != null) && questionnaireBo.getStatus()) {
-        auditLogDAO.updateDraftToEditedStatus(
-            session,
-            transaction,
-            sessionObject.getUserId(),
-            FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
-            questionnaireBo.getStudyId());
+
         // Notification Purpose needed Started
         queryString = " From StudyBo where customStudyId='" + customStudyId + "' and live=1";
         StudyBo studyBo = (StudyBo) session.createQuery(queryString).uniqueResult();
@@ -3947,8 +3868,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     logger.info("StudyQuestionnaireDAOImpl - saveOrUpdateQuestionStep() - Starts");
     Session session = null;
     QuestionnairesStepsBo addOrUpdateQuestionnairesStepsBo = null;
-    String activitydetails = "";
-    String activity = "";
     boolean isChange = false;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
@@ -4001,13 +3920,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(false);
-            activity = "Question step saved.";
-            activitydetails =
-                "Content saved for question step. (Step Key  = "
-                    + questionnairesStepsBo.getStepShortTitle()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ") ";
+
             query =
                 session.createSQLQuery(
                     "update questionnaires q set q.status=0 where q.id="
@@ -4017,13 +3930,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
               .getType()
               .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_COMPLETE)) {
             addOrUpdateQuestionnairesStepsBo.setStatus(true);
-            activity = "Question step successfully checked for minimum content completeness.";
-            activitydetails =
-                "Question step successfully checked for minimum content completeness and marked 'Done'. (Step Key  = "
-                    + questionnairesStepsBo.getStepShortTitle()
-                    + ", Study ID = "
-                    + customStudyId
-                    + ") ";
           }
         }
         int count = 0;
@@ -4259,14 +4165,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
         }
       }
 
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - saveOrUpdateInstructionsBo");
-
       transaction.commit();
     } catch (Exception e) {
       transaction.rollback();
@@ -4296,8 +4194,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
     String message = FdahpStudyDesignerConstants.FAILURE;
     String timeRange = "";
     Session newSession = null;
-    String activity = "";
-    String activitydetails = "";
     try {
       if (session == null) {
         newSession = hibernateTemplate.getSessionFactory().openSession();
@@ -4342,36 +4238,7 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
       } else {
         session.createSQLQuery(formQuery).executeUpdate();
       }
-      activity = FdahpStudyDesignerConstants.FORMSTEP_ACTIVITY + " saved.";
-      activitydetails = "Content saved for Form Step. (Study ID = " + customStudyId + ")";
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - updateLineChartSchedule()");
 
-      activity = FdahpStudyDesignerConstants.QUESTIONSTEP_ACTIVITY + " saved.";
-      activitydetails = "Content saved for Question Step. (Study ID = " + customStudyId + ")";
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - updateLineChartSchedule()");
-
-      activity = FdahpStudyDesignerConstants.FORMSTEP_QUESTION_ACTIVITY + " saved.";
-      activitydetails =
-          "Content saved for Question of Form Step. (Study ID = " + customStudyId + ")";
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sessionObject,
-          activity,
-          activitydetails,
-          "StudyQuestionnaireDAOImpl - updateLineChartSchedule()");
       if (session == null) {
         transaction.commit();
       }
@@ -4754,12 +4621,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .executeUpdate();
               if (count1 > 0) {
                 studySequence.setStudyExcQuestionnaries(false);
-                auditLogDAO.updateDraftToEditedStatus(
-                    session,
-                    transaction,
-                    sessionObject.getUserId(),
-                    FdahpStudyDesignerConstants.DRAFT_QUESTIONNAIRE,
-                    studyId);
               }
               int count2 =
                   session
@@ -4774,12 +4635,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
                       .executeUpdate();
               if (count2 > 0) {
                 studySequence.setStudyExcActiveTask(false);
-                auditLogDAO.updateDraftToEditedStatus(
-                    session,
-                    transaction,
-                    sessionObject.getUserId(),
-                    FdahpStudyDesignerConstants.DRAFT_ACTIVETASK,
-                    studyId);
               }
               int count3 =
                   session
@@ -4792,12 +4647,6 @@ public class StudyQuestionnaireDAOImpl implements StudyQuestionnaireDAO {
 
               if (count3 > 0) {
                 studySequence.setMiscellaneousResources(false);
-                auditLogDAO.updateDraftToEditedStatus(
-                    session,
-                    transaction,
-                    sessionObject.getUserId(),
-                    FdahpStudyDesignerConstants.DRAFT_STUDY,
-                    studyId);
               }
               session.saveOrUpdate(studySequence);
             }

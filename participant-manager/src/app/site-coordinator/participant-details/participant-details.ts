@@ -22,7 +22,7 @@ export interface UpdateInviteResponse extends ApiResponse {
 }
 
 export interface Participant {
-  participantDetail: RegistryParticipant;
+  participantDetails: RegistryParticipant;
   status: number;
   message: string;
   code: string;
