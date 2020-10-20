@@ -45,13 +45,13 @@ export class ParticipantDetailsComponent
     this.participant$ = this.participantDetailsService.get(this.participantId);
     this.participant$.subscribe((participant) => {
       this.sendResend =
-        participant.participantDetail.onboardingStatus ===
+        participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.New
           ? 'Send Invitation'
           : 'Resend Invitation';
 
       this.enableDisable =
-        participant.participantDetail.onboardingStatus ===
+        participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.Disabled
           ? 'Enable Invitation'
           : 'Disable Invitation';
@@ -84,8 +84,8 @@ export class ParticipantDetailsComponent
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.getParticipant();
           }
+          this.getParticipant();
         }),
     );
   }
@@ -104,8 +104,8 @@ export class ParticipantDetailsComponent
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.getParticipant();
           }
+          this.getParticipant();
         }),
     );
   }
