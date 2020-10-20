@@ -57,7 +57,7 @@ public enum ApiEndpoint {
   GET_USER_DETAILS("http://localhost:8080/participant-manager-datastore/users"),
 
   GET_PARTICIPANT_DETAILS(
-      "http://localhost:8080/participant-manager-datastore/sites/{participantRegistrySite}/participant"),
+      "http://localhost:8080/participant-manager-datastore/sites/{participantRegistrySiteId}/participant"),
 
   INVITE_PARTICIPANTS(
       "http://localhost:8003/participant-manager-datastore/sites/{siteId}/participants/invite"),
