@@ -14,7 +14,7 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ParticipantDatastoreServerConsentConfigEvent<V> extends WebserviceConfigEvent {
+public class ParticipantDatastoreEnrollmentConfigEvent<V> extends WebserviceConfigEvent {
 
   /**
    * @param method
@@ -27,7 +27,7 @@ public class ParticipantDatastoreServerConsentConfigEvent<V> extends WebserviceC
    * @param jsonobj
    * @param showAlert
    */
-  public ParticipantDatastoreServerConsentConfigEvent(
+  public ParticipantDatastoreEnrollmentConfigEvent(
       String method,
       String url,
       int requestCode,
@@ -41,7 +41,7 @@ public class ParticipantDatastoreServerConsentConfigEvent<V> extends WebserviceC
     super(method, url, requestCode, context, modelclass, params, headers, jsonobj, showAlert, v);
   }
 
-  public ParticipantDatastoreServerConsentConfigEvent(
+  public ParticipantDatastoreEnrollmentConfigEvent(
       String method,
       String url,
       int requestCode,
@@ -56,11 +56,11 @@ public class ParticipantDatastoreServerConsentConfigEvent<V> extends WebserviceC
 
   @Override
   public String getProductionUrl() {
-    return Urls.BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER;
+    return Urls.BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return Urls.BASE_URL_PARTICIPANT_DATASTORE_CONSENT_SERVER;
+    return Urls.BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER;
   }
 }

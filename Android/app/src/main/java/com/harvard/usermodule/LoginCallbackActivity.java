@@ -38,7 +38,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.Calendar;
 import java.util.HashMap;
 import org.json.JSONException;
@@ -346,8 +346,8 @@ public class LoginCallbackActivity extends AppCompatActivity
       }
     }
 
-    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
-        new ParticipantDatastoreServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
@@ -359,7 +359,7 @@ public class LoginCallbackActivity extends AppCompatActivity
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
+    updateUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }
@@ -370,8 +370,8 @@ public class LoginCallbackActivity extends AppCompatActivity
     header.put("userId", userId);
 
     GetUserProfileEvent getUserProfileEvent = new GetUserProfileEvent();
-    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
-        new ParticipantDatastoreServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "get",
             Urls.GET_USER_PROFILE,
             USER_PROFILE_REQUEST,
@@ -382,7 +382,7 @@ public class LoginCallbackActivity extends AppCompatActivity
             null,
             false,
             this);
-    getUserProfileEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
+    getUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserProfile(getUserProfileEvent);
   }

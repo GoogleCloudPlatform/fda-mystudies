@@ -15,17 +15,17 @@
 
 package com.harvard.usermodule.event;
 
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 
 public class RegisterUserEvent {
-  private ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent;
+  private ParticipantDatastoreConfigEvent participantDatastoreConfigEvent;
 
-  public ParticipantDatastoreServerConfigEvent getParticipantDatastoreServerConfigEvent() {
-    return participantDatastoreServerConfigEvent;
+  public ParticipantDatastoreConfigEvent getParticipantDatastoreConfigEvent() {
+    return participantDatastoreConfigEvent;
   }
 
-  public void setParticipantDatastoreServerConfigEvent(
-      ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent) {
-    this.participantDatastoreServerConfigEvent = participantDatastoreServerConfigEvent;
+  public void setParticipantDatastoreConfigEvent(
+      ParticipantDatastoreConfigEvent participantDatastoreConfigEvent) {
+    this.participantDatastoreConfigEvent = participantDatastoreConfigEvent;
   }
 }

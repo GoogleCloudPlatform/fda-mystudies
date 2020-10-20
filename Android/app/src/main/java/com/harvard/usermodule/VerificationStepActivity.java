@@ -38,7 +38,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 
 public class VerificationStepActivity extends AppCompatActivity
@@ -188,8 +188,8 @@ public class VerificationStepActivity extends AppCompatActivity
 
               params.put("emailId", emailId);
               params.put("code", verificationCode.getText().toString());
-              ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
-                  new ParticipantDatastoreServerConfigEvent(
+              ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+                  new ParticipantDatastoreConfigEvent(
                       "post",
                       Urls.CONFIRM_REGISTER_USER,
                       CONFIRM_REGISTER_USER_RESPONSE,
@@ -200,7 +200,7 @@ public class VerificationStepActivity extends AppCompatActivity
                       null,
                       false,
                       VerificationStepActivity.this);
-              verifyUserEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
+              verifyUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
               UserModulePresenter userModulePresenter = new UserModulePresenter();
               userModulePresenter.performVerifyRegistration(verifyUserEvent);
             }
@@ -218,8 +218,8 @@ public class VerificationStepActivity extends AppCompatActivity
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("emailId", emailId);
-            ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
-                new ParticipantDatastoreServerConfigEvent(
+            ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+                new ParticipantDatastoreConfigEvent(
                     "post",
                     Urls.RESEND_CONFIRMATION,
                     RESEND_CONFIRMATION,
@@ -230,7 +230,7 @@ public class VerificationStepActivity extends AppCompatActivity
                     null,
                     false,
                     VerificationStepActivity.this);
-            resendEmailEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
+            resendEmailEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
             UserModulePresenter userModulePresenter = new UserModulePresenter();
             userModulePresenter.performResendEmail(resendEmailEvent);
           }

@@ -15,17 +15,17 @@
 
 package com.harvard.studyappmodule.events;
 
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
 
 public class VerifyEnrollmentIdEvent {
-  private ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent;
+  private ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent;
 
-  public ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent() {
-    return participantDatastoreServerEnrollmentConfigEvent;
+  public ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent() {
+    return participantDatastoreEnrollmentConfigEvent;
   }
 
-  public void setParticipantDatastoreServerEnrollmentConfigEvent(
-      ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent) {
-    this.participantDatastoreServerEnrollmentConfigEvent = participantDatastoreServerEnrollmentConfigEvent;
+  public void setParticipantDatastoreEnrollmentConfigEvent(
+      ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent) {
+    this.participantDatastoreEnrollmentConfigEvent = participantDatastoreEnrollmentConfigEvent;
   }
 }

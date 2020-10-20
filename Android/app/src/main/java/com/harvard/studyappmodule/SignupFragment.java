@@ -55,7 +55,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -303,8 +303,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       HashMap<String, String> params = new HashMap<>();
       params.put("emailId", email.getText().toString());
       params.put("password", password.getText().toString());
-      ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
-          new ParticipantDatastoreServerConfigEvent(
+      ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+          new ParticipantDatastoreConfigEvent(
               "post",
               Urls.REGISTER_USER,
               REGISTRATION_REQUEST,
@@ -316,7 +316,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
               false,
               this);
       RegisterUserEvent registerUserEvent = new RegisterUserEvent();
-      registerUserEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
+      registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performRegistration(registerUserEvent);
     }
@@ -458,8 +458,8 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
       Logger.log(e);
     }
 
-    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
-        new ParticipantDatastoreServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
@@ -471,7 +471,7 @@ public class SignupFragment extends Fragment implements ApiCall.OnAsyncRequestCo
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
+    updateUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }

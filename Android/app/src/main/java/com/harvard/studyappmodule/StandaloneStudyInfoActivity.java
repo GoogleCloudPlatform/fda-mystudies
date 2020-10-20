@@ -66,7 +66,7 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -837,8 +837,8 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(
                 StandaloneStudyInfoActivity.this, getResources().getString(R.string.userid), ""));
-    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerConfigEvent =
-        new ParticipantDatastoreServerEnrollmentConfigEvent(
+    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreEnrollmentConfigEvent(
             "get",
             Urls.STUDY_STATE,
             GET_PREFERENCES,
@@ -850,7 +850,7 @@ public class StandaloneStudyInfoActivity extends AppCompatActivity
             false,
             this);
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-    getPreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(participantDatastoreServerConfigEvent);
+    getPreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }

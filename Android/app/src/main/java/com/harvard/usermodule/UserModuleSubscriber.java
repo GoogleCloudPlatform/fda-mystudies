@@ -50,12 +50,12 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** Register user. */
   public void onEvent(RegisterUserEvent registerUserEvent) {
-    FdaEventBus.postEvent(registerUserEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(registerUserEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** verify account. */
   public void onEvent(VerifyUserEvent verifyUserEvent) {
-    FdaEventBus.postEvent(verifyUserEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(verifyUserEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** set touchId. */
@@ -74,12 +74,12 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** touchId login. */
   public void onEvent(TouchIdSigninEvent touchIdSigninEvent) {
-    FdaEventBus.postEvent(touchIdSigninEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(touchIdSigninEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** Participent Enrollment. */
   public void onEvent(ParticipentEnrollmentEvent participentEnrollmentEvent) {
-    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseDatastoreConfigEvent());
   }
 
   /** Forgot password. */
@@ -94,33 +94,33 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** delete account from registration server. */
   public void onEvent(DeleteAccountRegServerEvent deleteAccountRegServerEvent) {
-    FdaEventBus.postEvent(deleteAccountRegServerEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountRegServerEvent.getParticipantDatastoreConfigEvent());
   }
 
   /** delete account from response server. */
   public void onEvent(DeleteAccountResServerEvent deleteAccountResServerEvent) {
-    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseDatastoreConfigEvent());
   }
 
   /** Sign out. */
   public void onEvent(SignOutEvent signOutEvent) {
-    FdaEventBus.postEvent(signOutEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(signOutEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(GetUserProfileEvent getUserProfileEvent) {
-    FdaEventBus.postEvent(getUserProfileEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(getUserProfileEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(UpdateUserProfileEvent updateUserProfileEvent) {
-    FdaEventBus.postEvent(updateUserProfileEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(updateUserProfileEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(UpdatePreferenceEvent updatePreferenceEvent) {
-    FdaEventBus.postEvent(updatePreferenceEvent.getParticipantDatastoreServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(updatePreferenceEvent.getParticipantDatastoreEnrollmentConfigEvent());
   }
 
   public void onEvent(ResendEmailEvent resendEmailEvent) {
-    FdaEventBus.postEvent(resendEmailEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(resendEmailEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(LogoutEvent logoutEvent) {
@@ -128,14 +128,14 @@ public class UserModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(GetPreferenceEvent getPreferenceEvent) {
-    FdaEventBus.postEvent(getPreferenceEvent.getParticipantDatastoreServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(getPreferenceEvent.getParticipantDatastoreEnrollmentConfigEvent());
   }
 
   public void onEvent(DeleteAccountEvent deleteAccountEvent) {
-    FdaEventBus.postEvent(deleteAccountEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(ConsentPdfEvent consentPdfEvent) {
-    FdaEventBus.postEvent(consentPdfEvent.getParticipantDatastoreServerConsentConfigEvent());
+    FdaEventBus.postEvent(consentPdfEvent.getParticipantDatastoreConsentConfigEvent());
   }
 }

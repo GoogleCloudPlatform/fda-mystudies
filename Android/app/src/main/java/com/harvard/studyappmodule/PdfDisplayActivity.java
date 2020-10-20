@@ -45,7 +45,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerConsentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConsentConfigEvent;
 import io.realm.Realm;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -174,8 +174,8 @@ public class PdfDisplayActivity extends AppCompatActivity
         AppController.getHelperSharedPreference()
             .readPreference(this, getResources().getString(R.string.userid), ""));
     String url = Urls.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
-    ParticipantDatastoreServerConsentConfigEvent participantDatastoreServerConsentConfigEvent =
-        new ParticipantDatastoreServerConsentConfigEvent(
+    ParticipantDatastoreConsentConfigEvent participantDatastoreConsentConfigEvent =
+        new ParticipantDatastoreConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
@@ -187,7 +187,7 @@ public class PdfDisplayActivity extends AppCompatActivity
             false,
             PdfDisplayActivity.this);
     ConsentPdfEvent consentPdfEvent = new ConsentPdfEvent();
-    consentPdfEvent.setParticipantDatastoreServerConsentConfigEvent(participantDatastoreServerConsentConfigEvent);
+    consentPdfEvent.setParticipantDatastoreConsentConfigEvent(participantDatastoreConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
   }

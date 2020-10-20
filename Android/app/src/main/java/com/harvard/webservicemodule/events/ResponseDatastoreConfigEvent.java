@@ -21,34 +21,22 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ParticipantDatastoreServerConfigEvent<V> extends WebserviceConfigEvent {
-
-  /**
-   * @param method
-   * @param url
-   * @param requestCode
-   * @param context
-   * @param modelclass
-   * @param params
-   * @param headers
-   * @param jsonobj
-   * @param showAlert
-   */
-  public ParticipantDatastoreServerConfigEvent(
+public class ResponseDatastoreConfigEvent<V> extends WebserviceConfigEvent {
+  public ResponseDatastoreConfigEvent(
       String method,
       String url,
       int requestCode,
       Context context,
       Class modelclass,
-      HashMap<String, String> params,
-      HashMap<String, String> headers,
+      HashMap params,
+      HashMap header,
       JSONObject jsonobj,
       boolean showAlert,
-      V v) {
-    super(method, url, requestCode, context, modelclass, params, headers, jsonobj, showAlert, v);
+      V o) {
+    super(method, url, requestCode, context, modelclass, params, header, jsonobj, showAlert, o);
   }
 
-  public ParticipantDatastoreServerConfigEvent(
+  public ResponseDatastoreConfigEvent(
       String method,
       String url,
       int requestCode,
@@ -63,11 +51,11 @@ public class ParticipantDatastoreServerConfigEvent<V> extends WebserviceConfigEv
 
   @Override
   public String getProductionUrl() {
-    return Urls.BASE_URL_PARTICIPANT_DATASTORE_SERVER;
+    return Urls.BASE_URL_RESPONSE_DATASTORE_SERVER;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return Urls.BASE_URL_PARTICIPANT_DATASTORE_SERVER;
+    return Urls.BASE_URL_RESPONSE_DATASTORE_SERVER;
   }
 }

@@ -44,7 +44,7 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(VerifyEnrollmentIdEvent verifyEnrollmentIdEvent) {
-    FdaEventBus.postEvent(verifyEnrollmentIdEvent.participantDatastoreServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(verifyEnrollmentIdEvent.participantDatastoreEnrollmentConfigEvent());
   }
 
   public void onEvent(GetUserStudyListEvent getUserStudyListEvent) {
@@ -56,7 +56,7 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(EnrollIdEvent enrollIdEvent) {
-    FdaEventBus.postEvent(enrollIdEvent.getParticipantDatastoreServerEnrollmentConfigEvent());
+    FdaEventBus.postEvent(enrollIdEvent.getParticipantDatastoreEnrollmentConfigEvent());
   }
 
   public void onEvent(GetActivityListEvent getActivityListEvent) {
@@ -68,7 +68,7 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(ContactUsEvent contactUsEvent) {
-    FdaEventBus.postEvent(contactUsEvent.getParticipantDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(contactUsEvent.getParticipantDatastoreConfigEvent());
   }
 
   public void onEvent(FeedbackEvent feedbackEvent) {
@@ -81,22 +81,22 @@ public class StudyModuleSubscriber extends BaseSubscriber {
 
   public void onEvent(UpdateEligibilityConsentStatusEvent updateEligibilityConsentStatusEvent) {
     FdaEventBus.postEvent(
-        updateEligibilityConsentStatusEvent.getParticipantDatastoreServerConsentConfigEvent());
+        updateEligibilityConsentStatusEvent.getParticipantDatastoreConsentConfigEvent());
   }
 
   public void onEvent(ProcessResponseEvent processResponseEvent) {
-    FdaEventBus.postEvent(processResponseEvent.getResponseDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(processResponseEvent.getResponseDatastoreConfigEvent());
   }
 
   public void onEvent(WithdrawFromStudyEvent withdrawFromStudyEvent) {
-    FdaEventBus.postEvent(withdrawFromStudyEvent.getResponseDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(withdrawFromStudyEvent.getResponseDatastoreConfigEvent());
   }
 
   public void onEvent(ProcessResponseDataEvent processResponseDataEvent) {
-    FdaEventBus.postEvent(processResponseDataEvent.getResponseDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(processResponseDataEvent.getResponseDatastoreConfigEvent());
   }
 
   public void onEvent(ActivityStateEvent activityStateEvent) {
-    FdaEventBus.postEvent(activityStateEvent.getResponseDatastoreServerConfigEvent());
+    FdaEventBus.postEvent(activityStateEvent.getResponseDatastoreConfigEvent());
   }
 }

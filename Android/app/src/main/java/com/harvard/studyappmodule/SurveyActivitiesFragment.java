@@ -98,8 +98,8 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -652,8 +652,8 @@ public class SurveyActivitiesFragment extends Fragment
               + ((SurveyActivity) context).getStudyId()
               + "&participantId="
               + studies.getParticipantId();
-      ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
-          new ResponseDatastoreServerConfigEvent(
+      ResponseDatastoreConfigEvent responseDatastoreConfigEvent =
+          new ResponseDatastoreConfigEvent(
               "get",
               url,
               GET_PREFERENCES,
@@ -665,7 +665,7 @@ public class SurveyActivitiesFragment extends Fragment
               false,
               this);
       ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-      activityStateEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
+      activityStateEvent.setResponseDatastoreConfigEvent(responseDatastoreConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performActivityState(activityStateEvent);
 
@@ -2393,8 +2393,8 @@ public class SurveyActivitiesFragment extends Fragment
     } catch (JSONException e) {
       Logger.log(e);
     }
-    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
-        new ParticipantDatastoreServerEnrollmentConfigEvent(
+    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
+        new ParticipantDatastoreEnrollmentConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_STUDY_PREFERENCE,
@@ -2406,8 +2406,8 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
-        participantDatastoreServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(
+        participantDatastoreEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -2848,7 +2848,7 @@ public class SurveyActivitiesFragment extends Fragment
           Urls.UPDATE_ACTIVITY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "ResponseDatastoreServer",
+          "ResponseDatastore",
           "",
           "",
           studyIdActivityId);
@@ -2856,8 +2856,8 @@ public class SurveyActivitiesFragment extends Fragment
       Logger.log(e);
     }
 
-    ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
-        new ResponseDatastoreServerConfigEvent(
+    ResponseDatastoreConfigEvent responseDatastoreConfigEvent =
+        new ResponseDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -2869,7 +2869,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
     ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-    activityStateEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
+    activityStateEvent.setResponseDatastoreConfigEvent(responseDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performActivityState(activityStateEvent);
   }

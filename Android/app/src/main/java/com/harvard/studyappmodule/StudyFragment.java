@@ -69,8 +69,8 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerConsentConfigEvent;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConsentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -859,8 +859,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
               AppController.getHelperSharedPreference()
                   .readPreference(context, getResources().getString(R.string.userid), ""));
 
-          ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
-              new ParticipantDatastoreServerEnrollmentConfigEvent(
+          ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
+              new ParticipantDatastoreEnrollmentConfigEvent(
                   "get",
                   Urls.STUDY_STATE,
                   GET_PREFERENCES,
@@ -872,8 +872,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
                   false,
                   this);
           GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-          getPreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
-              participantDatastoreServerEnrollmentConfigEvent);
+          getPreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(
+              participantDatastoreEnrollmentConfigEvent);
           UserModulePresenter userModulePresenter = new UserModulePresenter();
           userModulePresenter.performGetUserPreference(getPreferenceEvent);
         }
@@ -1034,8 +1034,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
         AppController.getHelperSharedPreference()
             .readPreference(context, getResources().getString(R.string.userid), ""));
     String url = Urls.CONSENTPDF + "?studyId=" + studyId + "&consentVersion=";
-    ParticipantDatastoreServerConsentConfigEvent participantDatastoreServerConsentConfigEvent =
-        new ParticipantDatastoreServerConsentConfigEvent(
+    ParticipantDatastoreConsentConfigEvent participantDatastoreConsentConfigEvent =
+        new ParticipantDatastoreConsentConfigEvent(
             "get",
             url,
             CONSENTPDF,
@@ -1046,7 +1046,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             null,
             false,
             StudyFragment.this);
-    consentPdfEvent.setParticipantDatastoreServerConsentConfigEvent(participantDatastoreServerConsentConfigEvent);
+    consentPdfEvent.setParticipantDatastoreConsentConfigEvent(participantDatastoreConsentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performConsentPdf(consentPdfEvent);
   }
@@ -1392,7 +1392,7 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
           Urls.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "ParticipantDatastoreServerEnrollment",
+          "ParticipantDatastoreEnrollment",
           "",
           studyId,
           "");
@@ -1401,8 +1401,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
     }
     //////////
 
-    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
-        new ParticipantDatastoreServerEnrollmentConfigEvent(
+    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
+        new ParticipantDatastoreEnrollmentConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
@@ -1414,8 +1414,8 @@ public class StudyFragment extends Fragment implements ApiCall.OnAsyncRequestCom
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
-        participantDatastoreServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(
+        participantDatastoreEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

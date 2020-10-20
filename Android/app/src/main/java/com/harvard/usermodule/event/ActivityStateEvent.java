@@ -8,16 +8,16 @@
 
 package com.harvard.usermodule.event;
 
-import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 
 public class ActivityStateEvent {
-  private ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent;
+  private ResponseDatastoreConfigEvent responseDatastoreConfigEvent;
 
-  public ResponseDatastoreServerConfigEvent getResponseDatastoreServerConfigEvent() {
-    return responseDatastoreServerConfigEvent;
+  public ResponseDatastoreConfigEvent getResponseDatastoreConfigEvent() {
+    return responseDatastoreConfigEvent;
   }
 
-  public void setResponseDatastoreServerConfigEvent(ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent) {
-    this.responseDatastoreServerConfigEvent = responseDatastoreServerConfigEvent;
+  public void setResponseDatastoreConfigEvent(ResponseDatastoreConfigEvent responseDatastoreConfigEvent) {
+    this.responseDatastoreConfigEvent = responseDatastoreConfigEvent;
   }
 }

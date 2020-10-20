@@ -60,8 +60,8 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -914,8 +914,8 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
       Logger.log(e);
     }
 
-    ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
-        new ParticipantDatastoreServerEnrollmentConfigEvent(
+    ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
+        new ParticipantDatastoreEnrollmentConfigEvent(
             "post_object",
             Urls.WITHDRAW,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -927,8 +927,8 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
-        participantDatastoreServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(
+        participantDatastoreEnrollmentConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }
@@ -1011,8 +1011,8 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
     } catch (JSONException e) {
       Logger.log(e);
     }
-    ParticipantDatastoreServerConfigEvent participantDatastoreServerConfigEvent =
-        new ParticipantDatastoreServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "delete_object",
             Urls.DELETE_ACCOUNT,
             DELETE_ACCOUNT_REPSONSECODE,
@@ -1023,7 +1023,7 @@ public class SurveyResourcesFragment<T> extends Fragment implements ApiCall.OnAs
             obj,
             false,
             this);
-    deleteAccountEvent.setParticipantDatastoreServerConfigEvent(participantDatastoreServerConfigEvent);
+    deleteAccountEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performDeleteAccount(deleteAccountEvent);
   }

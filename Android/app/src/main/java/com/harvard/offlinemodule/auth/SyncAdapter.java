@@ -36,8 +36,8 @@ import com.harvard.utils.ActiveTaskService;
 import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreEnrollmentConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.HashMap;
@@ -119,7 +119,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
       Logger.log(e);
     }
 
-    if (serverType.equalsIgnoreCase("ParticipantDatastoreServerEnrollment")) {
+    if (serverType.equalsIgnoreCase("ParticipantDatastoreEnrollment")) {
       HashMap<String, String> header = new HashMap();
       header.put(
           "auth",
@@ -131,8 +131,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
               .readPreference(context, context.getResources().getString(R.string.userid), ""));
 
       UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-      ParticipantDatastoreServerEnrollmentConfigEvent participantDatastoreServerEnrollmentConfigEvent =
-          new ParticipantDatastoreServerEnrollmentConfigEvent(
+      ParticipantDatastoreEnrollmentConfigEvent participantDatastoreEnrollmentConfigEvent =
+          new ParticipantDatastoreEnrollmentConfigEvent(
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -143,11 +143,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
               jsonObject,
               false,
               this);
-      updatePreferenceEvent.setParticipantDatastoreServerEnrollmentConfigEvent(
-          participantDatastoreServerEnrollmentConfigEvent);
+      updatePreferenceEvent.setParticipantDatastoreEnrollmentConfigEvent(
+          participantDatastoreEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
-    } else if (serverType.equalsIgnoreCase("ResponseDatastoreServer")) {
+    } else if (serverType.equalsIgnoreCase("ResponseDatastore")) {
       HashMap<String, String> header = new HashMap();
       header.put(
           "auth",
@@ -158,8 +158,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
           AppController.getHelperSharedPreference()
               .readPreference(context, context.getResources().getString(R.string.userid), ""));
       ProcessResponseEvent processResponseEvent = new ProcessResponseEvent();
-      ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
-          new ResponseDatastoreServerConfigEvent(
+      ResponseDatastoreConfigEvent responseDatastoreConfigEvent =
+          new ResponseDatastoreConfigEvent(
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -171,7 +171,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
               false,
               this);
 
-      processResponseEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
+      processResponseEvent.setResponseDatastoreConfigEvent(responseDatastoreConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performProcessResponse(processResponseEvent);
     }
