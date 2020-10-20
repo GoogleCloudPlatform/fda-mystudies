@@ -31,9 +31,9 @@
         </property>
     </bean>
     <util:properties id="propertyConfigurer"
-                     location="classpath:application_local.properties"/>
+                     location="classpath:application.properties"/>
     <context:property-placeholder
-            location="classpath:application_local.properties"/>
+            location="classpath:application.properties"/>
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName"
