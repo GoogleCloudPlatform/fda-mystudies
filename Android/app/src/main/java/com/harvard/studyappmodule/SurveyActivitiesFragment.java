@@ -99,7 +99,7 @@ import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
 import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -652,8 +652,8 @@ public class SurveyActivitiesFragment extends Fragment
               + ((SurveyActivity) context).getStudyId()
               + "&participantId="
               + studies.getParticipantId();
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
+      ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
+          new ResponseDatastoreServerConfigEvent(
               "get",
               url,
               GET_PREFERENCES,
@@ -665,7 +665,7 @@ public class SurveyActivitiesFragment extends Fragment
               false,
               this);
       ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-      activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+      activityStateEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performActivityState(activityStateEvent);
 
@@ -2848,7 +2848,7 @@ public class SurveyActivitiesFragment extends Fragment
           Urls.UPDATE_ACTIVITY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "ResponseServer",
+          "ResponseDatastoreServer",
           "",
           "",
           studyIdActivityId);
@@ -2856,8 +2856,8 @@ public class SurveyActivitiesFragment extends Fragment
       Logger.log(e);
     }
 
-    ResponseServerConfigEvent responseServerConfigEvent =
-        new ResponseServerConfigEvent(
+    ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
+        new ResponseDatastoreServerConfigEvent(
             "post_object",
             Urls.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -2869,7 +2869,7 @@ public class SurveyActivitiesFragment extends Fragment
             false,
             this);
     ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-    activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+    activityStateEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performActivityState(activityStateEvent);
   }

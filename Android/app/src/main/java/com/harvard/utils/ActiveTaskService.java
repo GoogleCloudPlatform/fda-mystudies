@@ -40,7 +40,7 @@ import com.harvard.usermodule.event.UpdatePreferenceEvent;
 import com.harvard.usermodule.webservicemodel.LoginData;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.Calendar;
@@ -252,7 +252,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
           participantDatastoreServerEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
-    } else if (serverType.equalsIgnoreCase("ResponseServer")) {
+    } else if (serverType.equalsIgnoreCase("ResponseDatastoreServer")) {
       HashMap<String, String> header = new HashMap();
       header.put(
           "auth",
@@ -264,8 +264,8 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               .readPreference(this, getResources().getString(R.string.userid), ""));
 
       ProcessResponseEvent processResponseEvent = new ProcessResponseEvent();
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
+      ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
+          new ResponseDatastoreServerConfigEvent(
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -277,7 +277,7 @@ public class ActiveTaskService extends Service implements ApiCall.OnAsyncRequest
               false,
               this);
 
-      processResponseEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+      processResponseEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performProcessResponse(processResponseEvent);
     }

@@ -79,7 +79,7 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** Participent Enrollment. */
   public void onEvent(ParticipentEnrollmentEvent participentEnrollmentEvent) {
-    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(participentEnrollmentEvent.getResponseDatastoreServerConfigEvent());
   }
 
   /** Forgot password. */
@@ -99,7 +99,7 @@ public class UserModuleSubscriber extends BaseSubscriber {
 
   /** delete account from response server. */
   public void onEvent(DeleteAccountResServerEvent deleteAccountResServerEvent) {
-    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(deleteAccountResServerEvent.getResponseDatastoreServerConfigEvent());
   }
 
   /** Sign out. */

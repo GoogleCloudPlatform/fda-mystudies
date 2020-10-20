@@ -22,7 +22,7 @@ import com.harvard.webservicemodule.events.AuthServerConfigEvent;
 import com.harvard.webservicemodule.events.ParticipantDatastoreServerConfigEvent;
 import com.harvard.webservicemodule.events.ParticipantDatastoreServerConsentConfigEvent;
 import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
 import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 
 public class WebserviceSubscriber extends BaseSubscriber {
@@ -280,50 +280,50 @@ public class WebserviceSubscriber extends BaseSubscriber {
     }
   }
 
-  public void onEvent(ResponseServerConfigEvent responseServerConfigEvent) {
+  public void onEvent(ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent) {
     String url = "";
-    if (responseServerConfigEvent
+    if (responseDatastoreServerConfigEvent
         .getContext()
         .getResources()
         .getString(R.string.app_stage)
         .equalsIgnoreCase("development")) {
-      url = responseServerConfigEvent.getDevelopmentUrl() + responseServerConfigEvent.getUrl();
+      url = responseDatastoreServerConfigEvent.getDevelopmentUrl() + responseDatastoreServerConfigEvent.getUrl();
     } else {
-      url = responseServerConfigEvent.getProductionUrl() + responseServerConfigEvent.getUrl();
+      url = responseDatastoreServerConfigEvent.getProductionUrl() + responseDatastoreServerConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
-    if (responseServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
-      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
+    if (responseDatastoreServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(responseDatastoreServerConfigEvent.getContext());
       apiCall.apiCallGet(
           url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
-    } else if (responseServerConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
-      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
+          responseDatastoreServerConfigEvent.getHeaders(),
+          responseDatastoreServerConfigEvent.getClassT(),
+          responseDatastoreServerConfigEvent.getResponseCode(),
+          responseDatastoreServerConfigEvent.getV(),
+          responseDatastoreServerConfigEvent.isShowAlert(),
+          "ResponseDatastoreServer");
+    } else if (responseDatastoreServerConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(responseDatastoreServerConfigEvent.getContext());
       apiCall.apiCallPostJson(
           url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getRequestParamsJson(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
+          responseDatastoreServerConfigEvent.getHeaders(),
+          responseDatastoreServerConfigEvent.getClassT(),
+          responseDatastoreServerConfigEvent.getRequestParamsJson(),
+          responseDatastoreServerConfigEvent.getResponseCode(),
+          responseDatastoreServerConfigEvent.getV(),
+          responseDatastoreServerConfigEvent.isShowAlert(),
+          "ResponseDatastoreServer");
     } else {
-      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(responseDatastoreServerConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
           url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getRequestParams(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
+          responseDatastoreServerConfigEvent.getHeaders(),
+          responseDatastoreServerConfigEvent.getClassT(),
+          responseDatastoreServerConfigEvent.getRequestParams(),
+          responseDatastoreServerConfigEvent.getResponseCode(),
+          responseDatastoreServerConfigEvent.getV(),
+          responseDatastoreServerConfigEvent.isShowAlert(),
+          "ResponseDatastoreServer");
     }
   }
 

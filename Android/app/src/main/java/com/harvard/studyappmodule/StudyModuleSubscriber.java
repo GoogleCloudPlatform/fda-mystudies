@@ -85,18 +85,18 @@ public class StudyModuleSubscriber extends BaseSubscriber {
   }
 
   public void onEvent(ProcessResponseEvent processResponseEvent) {
-    FdaEventBus.postEvent(processResponseEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(processResponseEvent.getResponseDatastoreServerConfigEvent());
   }
 
   public void onEvent(WithdrawFromStudyEvent withdrawFromStudyEvent) {
-    FdaEventBus.postEvent(withdrawFromStudyEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(withdrawFromStudyEvent.getResponseDatastoreServerConfigEvent());
   }
 
   public void onEvent(ProcessResponseDataEvent processResponseDataEvent) {
-    FdaEventBus.postEvent(processResponseDataEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(processResponseDataEvent.getResponseDatastoreServerConfigEvent());
   }
 
   public void onEvent(ActivityStateEvent activityStateEvent) {
-    FdaEventBus.postEvent(activityStateEvent.getResponseServerConfigEvent());
+    FdaEventBus.postEvent(activityStateEvent.getResponseDatastoreServerConfigEvent());
   }
 }

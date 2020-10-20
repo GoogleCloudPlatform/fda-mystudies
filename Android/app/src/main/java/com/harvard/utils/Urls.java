@@ -26,7 +26,7 @@ public class Urls {
   public static String BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER =
           BuildConfig.BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER;
   public static String BASE_URL_AUTH_SERVER = BuildConfig.BASE_URL_AUTH_SERVER;
-  public static String BASE_URL_RESPONSE_SERVER = BuildConfig.BASE_URL_RESPONSE_SERVER;
+  public static String BASE_URL_RESPONSE_DATASTORE_SERVER = BuildConfig.BASE_URL_RESPONSE_DATASTORE_SERVER;
 
   // Auth Server
   public static String LOGIN = "/login";
@@ -88,7 +88,7 @@ public class Urls {
 
   // Response server
   public static String PROCESS_RESPONSE = "/participant/process-response";
-  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_SERVER + "/participant/getresponse?";
+  public static String PROCESSRESPONSEDATA = BASE_URL_RESPONSE_DATASTORE_SERVER + "/participant/getresponse?";
   public static String UPDATE_ACTIVITY_PREFERENCE = "/participant/update-activity-state";
   public static String ACTIVITY_STATE = "/participant/get-activity-state";
 }

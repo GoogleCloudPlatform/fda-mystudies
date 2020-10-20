@@ -15,16 +15,16 @@
 
 package com.harvard.usermodule.event;
 
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
 
 public class DeleteAccountResServerEvent {
-  private ResponseServerConfigEvent responseServerConfigEvent;
+  private ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent;
 
-  public ResponseServerConfigEvent getResponseServerConfigEvent() {
-    return responseServerConfigEvent;
+  public ResponseDatastoreServerConfigEvent getResponseDatastoreServerConfigEvent() {
+    return responseDatastoreServerConfigEvent;
   }
 
-  public void setResponseServerConfigEvent(ResponseServerConfigEvent responseServerConfigEvent) {
-    this.responseServerConfigEvent = responseServerConfigEvent;
+  public void setResponseDatastoreServerConfigEvent(ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent) {
+    this.responseDatastoreServerConfigEvent = responseDatastoreServerConfigEvent;
   }
 }

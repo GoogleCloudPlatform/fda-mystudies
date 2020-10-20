@@ -1,6 +1,5 @@
 /*
  * Copyright © 2017-2019 Harvard Pilgrim Health Care Institute (HPHCI) and its Contributors.
- * Copyright 2020 Google LLC
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction, including
  * without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -13,49 +12,48 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.harvard.webservicemodule.events;
+package com.harvard.studyappmodule.responseservermodel;
 
-import android.content.Context;
-import com.harvard.utils.Urls;
-import java.util.HashMap;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.ArrayList;
 
-public class ResponseServerConfigEvent<V> extends WebserviceConfigEvent {
-  public ResponseServerConfigEvent(
-      String method,
-      String url,
-      int requestCode,
-      Context context,
-      Class modelclass,
-      HashMap params,
-      HashMap header,
-      JSONObject jsonobj,
-      boolean showAlert,
-      V o) {
-    super(method, url, requestCode, context, modelclass, params, header, jsonobj, showAlert, o);
+public class ResponseDatastoreServerData {
+  private ArrayList<Errors> errors;
+
+  private String exception;
+
+  private boolean success;
+
+  private Data data;
+
+  public Data getData() {
+    return data;
   }
 
-  public ResponseServerConfigEvent(
-      String method,
-      String url,
-      int requestCode,
-      Context context,
-      Class modelclass,
-      HashMap<String, String> headers,
-      JSONArray jsonArray,
-      boolean showAlert,
-      V v) {
-    super(method, url, requestCode, context, modelclass, headers, jsonArray, showAlert, v);
+  public void setData(Data data) {
+    this.data = data;
   }
 
-  @Override
-  public String getProductionUrl() {
-    return Urls.BASE_URL_RESPONSE_SERVER;
+  public ArrayList<Errors> getErrors() {
+    return errors;
   }
 
-  @Override
-  public String getDevelopmentUrl() {
-    return Urls.BASE_URL_RESPONSE_SERVER;
+  public void setErrors(ArrayList<Errors> errors) {
+    this.errors = errors;
+  }
+
+  public String getException() {
+    return exception;
+  }
+
+  public void setException(String exception) {
+    this.exception = exception;
+  }
+
+  public boolean isSuccess() {
+    return success;
+  }
+
+  public void setSuccess(boolean success) {
+    this.success = success;
   }
 }

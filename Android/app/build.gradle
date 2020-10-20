@@ -19,7 +19,7 @@ android {
         buildConfigField("String", "BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER", apikeyProperties['BASE_URL_PARTICIPANT_DATASTORE_ENROLLMENT_SERVER'])
         buildConfigField("String", "BASE_URL_AUTH_SERVER", apikeyProperties['BASE_URL_AUTH_SERVER'])
         buildConfigField("String", "BASE_URL_HYDRA_SERVER", apikeyProperties['BASE_URL_HYDRA_SERVER'])
-        buildConfigField("String", "BASE_URL_RESPONSE_SERVER", apikeyProperties['BASE_URL_RESPONSE_SERVER'])
+        buildConfigField("String", "BASE_URL_RESPONSE_DATASTORE_SERVER", apikeyProperties['BASE_URL_RESPONSE_DATASTORE_SERVER'])
         buildConfigField("String", "APP_TYPE", apikeyProperties['APP_TYPE'])
         buildConfigField("String", "APP_ID", apikeyProperties['APP_ID'])
         buildConfigField("String", "HYDRA_CLIENT_ID", apikeyProperties['HYDRA_CLIENT_ID'])

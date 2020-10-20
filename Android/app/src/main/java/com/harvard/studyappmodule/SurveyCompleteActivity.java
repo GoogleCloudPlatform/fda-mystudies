@@ -47,7 +47,7 @@ import com.harvard.utils.SharedPreferenceHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.HashMap;
@@ -139,8 +139,8 @@ public class SurveyCompleteActivity extends AppCompatActivity
           SharedPreferenceHelper.readPreference(
               SurveyCompleteActivity.this, getString(R.string.userid), ""));
 
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
+      ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
+          new ResponseDatastoreServerConfigEvent(
               "post_object",
               Urls.PROCESS_RESPONSE,
               PROCESS_RESPONSE_RESPONSECODE,
@@ -151,7 +151,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               getResponseDataJson(activityObj, activities, studies),
               false,
               this);
-      processResponseEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+      processResponseEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performProcessResponse(processResponseEvent);
 
@@ -577,8 +577,8 @@ public class SurveyCompleteActivity extends AppCompatActivity
             .readPreference(this, getResources().getString(R.string.userid), ""));
     header.put("participantId", studies.getParticipantId());
 
-    ResponseServerConfigEvent responseServerConfigEvent =
-        new ResponseServerConfigEvent(
+    ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
+        new ResponseDatastoreServerConfigEvent(
             "post_object",
             Urls.UPDATE_ACTIVITY_PREFERENCE,
             UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -592,7 +592,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
 
     dbServiceSubscriber.closeRealmObj(realm);
     ActivityStateEvent activityStateEvent = new ActivityStateEvent();
-    activityStateEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+    activityStateEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performActivityState(activityStateEvent);
   }
@@ -798,7 +798,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.PROCESS_RESPONSE,
             "",
             getResponseDataJson(activityObj, activities, studies).toString(),
-            "ResponseServer",
+            "ResponseDatastoreServer",
             "",
             "",
             "");
@@ -823,7 +823,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
             Urls.UPDATE_ACTIVITY_PREFERENCE,
             "",
             getActivityPreferenceJson().toString(),
-            "ResponseServer",
+            "ResponseDatastoreServer",
             "",
             "",
             "");
@@ -931,7 +931,7 @@ public class SurveyCompleteActivity extends AppCompatActivity
               Urls.UPDATE_ACTIVITY_PREFERENCE,
               "",
               getActivityPreferenceJson().toString(),
-              "ResponseServer",
+              "ResponseDatastoreServer",
               "",
               "",
               "");

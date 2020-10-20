@@ -37,7 +37,7 @@ import com.harvard.utils.AppController;
 import com.harvard.utils.Logger;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.ParticipantDatastoreServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreServerConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmResults;
 import java.util.HashMap;
@@ -147,7 +147,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
           participantDatastoreServerEnrollmentConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
-    } else if (serverType.equalsIgnoreCase("ResponseServer")) {
+    } else if (serverType.equalsIgnoreCase("ResponseDatastoreServer")) {
       HashMap<String, String> header = new HashMap();
       header.put(
           "auth",
@@ -158,8 +158,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
           AppController.getHelperSharedPreference()
               .readPreference(context, context.getResources().getString(R.string.userid), ""));
       ProcessResponseEvent processResponseEvent = new ProcessResponseEvent();
-      ResponseServerConfigEvent responseServerConfigEvent =
-          new ResponseServerConfigEvent(
+      ResponseDatastoreServerConfigEvent responseDatastoreServerConfigEvent =
+          new ResponseDatastoreServerConfigEvent(
               httpMethod,
               url,
               UPDATE_USERPREFERENCE_RESPONSECODE,
@@ -171,7 +171,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
               false,
               this);
 
-      processResponseEvent.setResponseServerConfigEvent(responseServerConfigEvent);
+      processResponseEvent.setResponseDatastoreServerConfigEvent(responseDatastoreServerConfigEvent);
       StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
       studyModulePresenter.performProcessResponse(processResponseEvent);
     }
