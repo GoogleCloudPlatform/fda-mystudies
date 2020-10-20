@@ -89,7 +89,7 @@ public class FDASchedulerService {
 
   @Autowired private NotificationService notificationService;
 
-  @Autowired private StudyBuilderAuditEventHelper auditLogEvtHelper;
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
@@ -267,6 +267,6 @@ public class FDASchedulerService {
     auditRequest.setDescription(eventEnum.getDescription());
     auditRequest.setEventCode(eventEnum.getEventCode());
     auditRequest.setOccurred(new Timestamp(Instant.now().toEpochMilli()));
-    auditLogEvtHelper.logEvent(eventEnum, auditRequest);
+    auditLogEventHelper.logEvent(eventEnum, auditRequest);
   }
 }
