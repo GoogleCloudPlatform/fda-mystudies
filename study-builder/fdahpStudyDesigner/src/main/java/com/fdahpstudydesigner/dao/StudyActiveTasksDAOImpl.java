@@ -66,7 +66,6 @@ import org.springframework.stereotype.Repository;
 public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
   private static Logger logger = Logger.getLogger(StudyActiveTasksDAOImpl.class.getName());
-  @Autowired private AuditLogDAO auditLogDAO;
   @Autowired private HttpServletRequest request;
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
   HibernateTemplate hibernateTemplate;
@@ -85,8 +84,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     StudyVersionBo studyVersionBo = null;
     String deleteActQuery = "";
     String deleteQuery = "";
-    String activity = "";
-    String activityDetails = "";
     StudyBuilderAuditEvent eventEnum = null;
     Map<String, String> values = new HashMap<String, String>();
     try {
@@ -117,13 +114,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         // do hard delete active task
         if (studyVersionBo != null) {
           // soft delete active task after study launch
-          activity = "Active Task was deactivated.";
-          activityDetails =
-              "Active Task was deactivated. (Active Task Key = "
-                  + activeTaskBo.getShortTitle()
-                  + ", Study ID = "
-                  + customStudyId
-                  + ")";
+
           deleteActQuery =
               "update ActiveTaskAtrributeValuesBo set active=0 where activeTaskId="
                   + activeTaskBo.getId();
@@ -155,13 +146,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
           values.put("activetask_id", activeTaskBo.getId().toString());
           eventEnum = STUDY_ACTIVE_TASK_DELETED;
-          activity = "Active Task was deleted.";
-          activityDetails =
-              "Active Task was deleted. (Active Task Key = "
-                  + activeTaskBo.getShortTitle()
-                  + ", Study ID = "
-                  + customStudyId
-                  + ")";
         }
         query = session.createQuery(deleteActQuery);
         query.executeUpdate();
@@ -176,13 +160,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
 
         message = FdahpStudyDesignerConstants.SUCCESS;
         auditLogEventHelper.logEvent(eventEnum, auditRequest, values);
-        auditLogDAO.saveToAuditLog(
-            session,
-            transaction,
-            sesObj,
-            activity,
-            activityDetails,
-            "StudyActiveTasksDAOImpl - deleteActiveTAsk");
+
         transaction.commit();
       }
     } catch (Exception e) {
@@ -623,8 +601,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     Session session = null;
     StudySequenceBo studySequence = null;
     List<ActiveTaskAtrributeValuesBo> taskAttributeValueBos = new ArrayList<>();
-    String activitydetails = "";
-    String activity = "";
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       transaction = session.beginTransaction();
@@ -671,32 +647,8 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           studySequence.setStudyExcActiveTask(false);
         }
         session.saveOrUpdate(studySequence);
-      }
-
-      if (activeTaskBo
-          .getButtonText()
-          .equalsIgnoreCase(FdahpStudyDesignerConstants.ACTION_TYPE_SAVE)) {
-        activity = "Content saved for Active Task.";
-        activitydetails =
-            "Content saved for Active Task. (Active Task Key  = "
-                + activeTaskBo.getShortTitle()
-                + ",  Study ID = "
-                + customStudyId
-                + ")";
       } else {
-        activity = "Active Task succesfully checked for minimum content completeness.";
-        activitydetails =
-            "Active Task succesfully checked for minimum content completeness and marked 'Done'. (Active Task Key = "
-                + activeTaskBo.getShortTitle()
-                + ", Study ID ="
-                + customStudyId
-                + ")";
-        auditLogDAO.updateDraftToEditedStatus(
-            session,
-            transaction,
-            sesObj.getUserId(),
-            FdahpStudyDesignerConstants.DRAFT_ACTIVETASK,
-            activeTaskBo.getStudyId());
+
         // Notification Purpose needed Started
         queryString = " From StudyBo where customStudyId='" + customStudyId + "' and live=1";
         StudyBo studyBo = (StudyBo) session.createQuery(queryString).uniqueResult();
@@ -739,13 +691,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
         }
         // Notification Purpose needed End
       }
-      auditLogDAO.saveToAuditLog(
-          session,
-          transaction,
-          sesObj,
-          activity,
-          activitydetails,
-          "StudyActiveTasksDAOImpl - saveOrUpdateActiveTaskInfo");
 
       transaction.commit();
     } catch (Exception e) {
