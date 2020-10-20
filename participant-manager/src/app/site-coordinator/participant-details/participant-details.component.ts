@@ -105,7 +105,7 @@ export class ParticipantDetailsComponent
           } else {
             this.toastr.success('Success');
           }
-           this.getParticipant();
+          this.getParticipant();
         }),
     );
   }

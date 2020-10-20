@@ -22,6 +22,17 @@ export class AccountService {
     );
   }
 
+  changePassword(changePassword: ChangePassword): Observable<ApiResponse> {
+    return this.http.put<ApiResponse>(
+      `${environment.authServerUrl}/users/${encodeURIComponent(
+        this.authService.getAuthUserId(),
+      )}/change_password`,
+      changePassword,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      {headers: {'Content-Type': 'application/json'}},
+    );
+  }
+  
   updateUserProfile(
     profileToBeUpdated: UpdateProfile,
   ): Observable<ApiResponse> {
@@ -39,16 +50,6 @@ export class AccountService {
         this.authService.getAuthUserId(),
       )}/logout`,
       '',
-    );
-  }
-  changePassword(changePassword: ChangePassword): Observable<ApiResponse> {
-    return this.http.put<ApiResponse>(
-      `${environment.authServerUrl}/users/${encodeURIComponent(
-        this.authService.getAuthUserId(),
-      )}/change_password`,
-      changePassword,
-            {headers: {'Content-Type':'application/json'}},
-
     );
   }
 }

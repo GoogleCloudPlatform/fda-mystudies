@@ -38,7 +38,6 @@ export class SiteDetailsComponent
   onBoardingStatus = OnboardingStatus;
   activeTab = OnboardingStatus.All;
   newlyImportedParticipants: Participant[] = [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectedAll = false;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,

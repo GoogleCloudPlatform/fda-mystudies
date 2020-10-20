@@ -394,14 +394,18 @@
                   Sort By:
                 </span>
                 <th>
-                     <span *ngIf="activeTab !== onBoardingStatus.All">
-                    <input type="checkbox" id="css" [(ngModel)]="selectedAll" (change)="selectAll();">
+                  <span *ngIf="activeTab !== onBoardingStatus.All">
+                    <input
+                      type="checkbox"
+                      id="css"
+                      [(ngModel)]="selectedAll"
+                      (change)="selectAll()"
+                    />
                     <label for="css"></label>
-                   
                   </span>
-                    <mfDefaultSorter by="email">
+                  <mfDefaultSorter by="email">
                     Participant Email
-                    </mfDefaultSorter>
+                  </mfDefaultSorter>
                 </th>
                 <th *ngIf="activeTab == onBoardingStatus.All">
                   <mfDefaultSorter by="onboardingStatus">
@@ -450,8 +454,8 @@
                       <input
                         type="checkbox"
                         id="{{ participant.id }}"
-                         [(ngModel)]="participant.newlyCreatedUser"
-                                             (change)="rowCheckBoxChange($event)"
+                        [(ngModel)]="participant.newlyCreatedUser"
+                        (change)="rowCheckBoxChange($event)"
                       />
                       <label for="{{ participant.id }}">
                         <span
@@ -492,9 +496,10 @@
                         <input
                           type="checkbox"
                           id="{{ participant.id }}"
-                            [(ngModel)]="participant.newlyCreatedUser"
+                          [(ngModel)]="participant.newlyCreatedUser"
                           (change)="rowCheckBoxChange($event)"
                         />
+
                         <label for="{{ participant.id }}">
                           <span
                             class="no_st_en"
@@ -532,7 +537,7 @@
                       <input
                         type="checkbox"
                         id="{{ participant.id }}"
-                          [(ngModel)]="participant.newlyCreatedUser"
+                        [(ngModel)]="participant.newlyCreatedUser"
                         (change)="rowCheckBoxChange($event)"
                       />
                       <label for="{{ participant.id }}">
