@@ -441,7 +441,25 @@ public enum StudyBuilderAuditEvent {
       RESPONSE_DATASTORE,
       null,
       "Failed to send study metadata.",
-      "STUDY_METADATA_SEND_FAILED");
+      "STUDY_METADATA_SEND_FAILED"),
+
+  SIGNIN_SUCCEEDED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "SIGNIN_SUCCEEDED"),
+
+  SIGNIN_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "SIGNIN_FAILED"),
+
+  SIGNIN_FAILED_UNREGISTERED_USER(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Sign-in failure due to unregistered username.",
+      "SIGNIN_FAILED_UNREGISTERED_USER"),
+
+  ACCOUNT_LOCKED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
+      "ACCOUNT_LOCKED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

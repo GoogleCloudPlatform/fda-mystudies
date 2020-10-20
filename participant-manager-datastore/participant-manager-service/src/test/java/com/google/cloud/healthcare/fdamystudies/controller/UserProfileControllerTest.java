@@ -326,7 +326,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditEventMap.put(USER_ACCOUNT_ACTIVATED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, USER_ACCOUNT_ACTIVATED);
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -356,7 +355,6 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditEventMap.put(USER_ACCOUNT_ACTIVATION_FAILED.getEventCode(), auditRequest);
 
     verifyAuditEventCall(auditEventMap, USER_ACCOUNT_ACTIVATION_FAILED);
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -380,8 +378,6 @@ public class UserProfileControllerTest extends BaseMockIT {
         .andExpect(status().isInternalServerError())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.APPLICATION_ERROR.getDescription())));
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -403,8 +399,6 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isInternalServerError());
-
-    verifyTokenIntrospectRequest();
   }
 
   @Test
@@ -415,6 +409,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect DEACTIVATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -450,6 +445,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect REACTIVATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
 
     mockMvc
         .perform(
@@ -481,6 +477,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   public void shouldReturnUserNotFoundForDeactivateUser() throws Exception {
     // Step 2: Call the API and expect USER_NOT_FOUND error
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add("userId", userRegAdminEntity.getId());
     PatchUserRequest statusRequest = new PatchUserRequest();
     statusRequest.setStatus(UserStatus.ACTIVE.getValue());
 
