@@ -89,7 +89,7 @@ public class LoginDAOImpl implements LoginDAO {
         }
         adminUserBO.setModifiedBy(userId);
         adminUserBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDate());
-        adminUserBO.setPasswordExpairdedDateTime(
+        adminUserBO.setPasswordExpiryDateTime(
             new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME).format(new Date()));
         session.update(adminUserBO);
         message = FdahpStudyDesignerConstants.SUCCESS;
