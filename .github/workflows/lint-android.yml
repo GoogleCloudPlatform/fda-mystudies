@@ -16,7 +16,7 @@ jobs:
       uses: nikitasavinov/checkstyle-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        reporter: 'github-pr-review'
+        reporter: 'github-pr-check'
         level: warning
         workdir: ./Android
         tool_name: Android Checks
