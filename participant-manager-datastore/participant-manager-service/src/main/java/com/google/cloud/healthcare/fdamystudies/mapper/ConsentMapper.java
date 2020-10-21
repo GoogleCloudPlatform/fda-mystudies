@@ -25,10 +25,10 @@ public final class ConsentMapper {
     consentHistory.setConsentDocumentPath(studyConsent.getPdfPath());
     consentHistory.setConsentVersion(studyConsent.getVersion());
 
-    String consentDate = DateTimeUtils.format(studyConsent.getParticipantStudy().getEnrolledDate());
+    String consentDate = DateTimeUtils.format(studyConsent.getConsentDate());
     consentHistory.setConsentedDate(StringUtils.defaultIfEmpty(consentDate, NOT_APPLICABLE));
 
-    consentHistory.setDataSharingPermissions(studyConsent.getParticipantStudy().getSharing());
+    consentHistory.setDataSharingPermissions(studyConsent.getSharing());
     return consentHistory;
   }
 }
