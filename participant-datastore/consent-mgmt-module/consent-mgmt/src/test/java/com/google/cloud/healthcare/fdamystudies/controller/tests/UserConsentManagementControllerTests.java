@@ -127,6 +127,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             studyInfoBean.getStudyInfoId(),
             consentStatus.getConsent().getVersion());
     assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -232,6 +234,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             studyInfoBean.getStudyInfoId(),
             consentStatus.getConsent().getVersion());
     assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -335,6 +339,8 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             studyInfoBean.getStudyInfoId(),
             consentStatus.getConsent().getVersion());
     assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
