@@ -7,7 +7,7 @@
           <div class="row border-bottom__c4d1e6">
             <div class="col-xs-12 col-md-12 p-none">
               <div class="form-group">
-                <label for="email">Email</label>
+                <label for="email">Email ID</label>
                 <input
                   class="form-control"
                   id="email"
@@ -74,7 +74,7 @@
           </div>
         </div>
       </div>
-      <div class="btn__container flex__justify__space-between mb-xlg">
+      <div class="btn__container flex__justify__space-between mb-lg">
         <div>
           <button
             type="submit"
@@ -98,7 +98,11 @@
           </button>
         </div>
       </div>
-      <span><a [routerLink]="['change-password']">Change password?</a></span>
+      <span>
+        <a [routerLink]="['change-password']" class="font12 change__password">
+          <span class="under-below">Change Password?</span>
+        </a>
+      </span>
     </form>
   </div>
 </section>

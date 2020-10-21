@@ -7,8 +7,10 @@
           class="bg__white cards box__shadow-cmn ml-none mr-none studies_row"
         >
           <div class="flex__ flex__row">
-            <div class="img__container__left" *ngIf="study.logoImageUrl">
-              <img [src]="study.logoImageUrl" alt="" />
+            <div class="img__container__left">
+              <div class="deafult__img">
+                <img [src]="study.logoImageUrl" alt="" />
+              </div>
             </div>
             <div class="width__100">
               <div class="row">
@@ -41,6 +43,7 @@
                   class="col-xs-12 col-md-12 p-none border__bottom__red border-top__c4d1e6 progress__bar"
                 >
                   <div
+                    class="outline__none"
                     *ngFor="let site of study.sites"
                     [routerLink]="
                       study.type === studyTypes.Open
@@ -52,11 +55,14 @@
                       <div class="col-xs-12 col-md-8 p-none cursor__pointer">
                         <span
                           *ngIf="study.type !== studyTypes.Open"
-                          class="sites_row"
+                          class="sites_row font14"
                         >
                           {{ site.name }}
                         </span>
-                        <span *ngIf="study.type === studyTypes.Open">
+                        <span
+                          *ngIf="study.type === studyTypes.Open"
+                          class="font14"
+                        >
                           Enrollment Registry
                         </span>
                       </div>
@@ -95,7 +101,7 @@
               >
                 <button
                   name="add"
-                  class="primary__btn add__site btn__container font__bold"
+                  class="primary__btn add__site btn__container"
                   (click)="openAddSiteModal(template, study)"
                 >
                   + Add Site
