@@ -49,10 +49,7 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
               this.toastr.success(successResponse.message);
             }
             this.import.emit(successResponse);
-          },
-          (error) => {
-            this.toastr.error(error);
-          },
+          }
         );
     } else {
       this.toastr.error('Please select a file to upload.');

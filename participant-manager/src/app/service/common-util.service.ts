@@ -10,7 +10,7 @@
 
 //   addAuditEventHeaders(headers: HttpHeaders): void {
 //     headers
-//       .set('correlationId', sessionStorage.getItem('correlationId') || '')
+//       .set('correlationId', localStorage.getItem('correlationId') || '')
 //       .set('appId', `${environment.appId}`)
 //       .set('source', `${environment.source}`)
 //       .set('mobilePlatform', `${environment.mobilePlatform}`);
@@ -24,16 +24,16 @@
 //   }
 
 //   addOptionalHeaders(headers: HttpHeaders): void {
-//     if (sessionStorage.hasOwnProperty('userId')) {
-//       headers.set('userId', sessionStorage.getItem('userId') || '');
+//     if (localStorage.hasOwnProperty('userId')) {
+//       headers.set('userId', localStorage.getItem('userId') || '');
 //     }
-//     if (sessionStorage.hasOwnProperty('authUserId')) {
-//       headers.set('authUserId', sessionStorage.getItem('authUserId') || '');
+//     if (localStorage.hasOwnProperty('authUserId')) {
+//       headers.set('authUserId', localStorage.getItem('authUserId') || '');
 //     }
-//     if (sessionStorage.hasOwnProperty('accessToken')) {
+//     if (localStorage.hasOwnProperty('accessToken')) {
 //       headers.set(
 //         'Authorization',
-//         'Bearer ' + sessionStorage.getItem('accessToken') || '',
+//         'Bearer ' + localStorage.getItem('accessToken') || '',
 //       );
 //     }
 //   }
