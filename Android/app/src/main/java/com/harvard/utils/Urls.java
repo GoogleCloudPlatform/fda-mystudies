@@ -38,7 +38,7 @@ public class Urls {
   public static String FORGOT_PASSWORD = "/user/reset_password";
   public static String LOGOUT = "/logout";
   public static String AUTH_SERVER_REDIRECT_URL = BuildConfig.BASE_URL_AUTH_SERVER + "/callback";
-  public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "/auth"
+  public static String LOGIN_URL = BuildConfig.BASE_URL_HYDRA_SERVER + "/oauth2/auth"
           + "?client_id=" + BuildConfig.HYDRA_CLIENT_ID
           + "&scope=offline_access"
           + "&response_type=code"
