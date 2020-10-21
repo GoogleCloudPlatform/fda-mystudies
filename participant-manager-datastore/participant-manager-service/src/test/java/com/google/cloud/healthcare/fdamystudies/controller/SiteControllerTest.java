@@ -608,10 +608,11 @@ public class SiteControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnSiteParticipantsRegistryForInProgressStatus() throws Exception {
+    // Step 1: set enrollment status to 'IN_PROGRESS'
     participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
     participantStudyEntity = participantStudyRepository.saveAndFlush(participantStudyEntity);
 
-    // Step 1: set onboarding status to 'E'
+    // Step 2: set onboarding status to 'E'
     siteEntity.setStudy(studyEntity);
     //  testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
@@ -621,7 +622,8 @@ public class SiteControllerTest extends BaseMockIT {
         .getParticipantRegistrySiteRepository()
         .saveAndFlush(participantRegistrySiteEntity);
 
-    // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS
+    // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS and enrollment status as
+    // ENROLLED
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -629,7 +631,6 @@ public class SiteControllerTest extends BaseMockIT {
         .perform(
             get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
                 .headers(headers)
-                .param("onboardingStatus", OnboardingStatus.NEW.getCode())
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
@@ -640,7 +641,10 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             (jsonPath("$.participantRegistryDetail.registryParticipants[0].onboardingStatus")
                 .value(OnboardingStatus.ENROLLED.getStatus())))
-        .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(1)))
+        .andExpect(
+            (jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
+                .value(EnrollmentStatus.ENROLLED.getStatus())))
+        .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(0)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
