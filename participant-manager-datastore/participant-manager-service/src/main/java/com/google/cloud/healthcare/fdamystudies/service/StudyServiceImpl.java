@@ -17,8 +17,10 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -279,14 +281,21 @@ public class StudyServiceImpl implements StudyService {
       Map<String, Long> siteWithEnrolledParticipantCountMap,
       Map.Entry<StudyEntity, List<SitePermissionEntity>> entry,
       StudyDetails studyDetail) {
-    Long studyInvitedCount = 0L;
+    long studyInvitedCount = 0L;
     Long studyEnrolledCount = 0L;
     for (SitePermissionEntity sitePermission : entry.getValue()) {
-      studyInvitedCount =
-          getStudyInvitedCount(
-              siteWithInvitedParticipantCountMap, entry, studyInvitedCount, sitePermission);
+      String siteId = sitePermission.getSite().getId();
+      String studyType = entry.getKey().getType();
+      if (siteWithInvitedParticipantCountMap.containsKey(siteId) && studyType.equals(CLOSE_STUDY)) {
+        studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
+      }
 
-      if (siteWithEnrolledParticipantCountMap.containsKey(sitePermission.getSite().getId())) {
+      if (sitePermission.getSite().getTargetEnrollment() != null
+          && entry.getKey().getType().equals(OPEN_STUDY)) {
+        studyInvitedCount = sitePermission.getSite().getTargetEnrollment();
+      }
+
+      if (siteWithEnrolledParticipantCountMap.containsKey(siteId)) {
         studyEnrolledCount +=
             siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
       }
@@ -302,29 +311,13 @@ public class StudyServiceImpl implements StudyService {
     }
   }
 
-  private Long getStudyInvitedCount(
-      Map<String, Long> siteWithInvitedParticipantCountMap,
-      Map.Entry<StudyEntity, List<SitePermissionEntity>> entry,
-      Long studyInvitedCount,
-      SitePermissionEntity sitePermission) {
-    String siteId = sitePermission.getSite().getId();
-    String studyType = entry.getKey().getType();
-    if (siteWithInvitedParticipantCountMap.get(siteId) != null && studyType.equals(CLOSE_STUDY)) {
-      studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
-    }
-
-    if (sitePermission.getSite().getTargetEnrollment() != null && studyType.equals(OPEN_STUDY)) {
-      studyInvitedCount += sitePermission.getSite().getTargetEnrollment();
-    }
-    return studyInvitedCount;
-  }
-
   private Map<String, Long> getSiteWithEnrolledParticipantCountMap(List<String> usersSiteIds) {
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
 
     return participantsEnrollments
         .stream()
+        .filter(e -> e.getStatus().equals(EnrollmentStatus.IN_PROGRESS.getStatus()))
         .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
   }
 
@@ -336,10 +329,8 @@ public class StudyServiceImpl implements StudyService {
 
     return participantRegistry
         .stream()
-        .collect(
-            Collectors.groupingBy(
-                e -> e.getSite().getId(),
-                Collectors.summingLong(ParticipantRegistrySiteEntity::getInvitationCount)));
+        .filter(e -> e.getOnboardingStatus().equals(OnboardingStatus.INVITED.getCode()))
+        .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
   }
 
   @Override
@@ -356,23 +347,31 @@ public class StudyServiceImpl implements StudyService {
       throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
     }
 
-    Optional<StudyPermissionEntity> optStudyPermission =
-        studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
-
-    if (!optStudyPermission.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    StudyPermissionEntity studyPermission = optStudyPermission.get();
+    AppEntity app = null;
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      StudyEntity study = optStudy.get();
+      Optional<AppEntity> optApp = appRepository.findById(study.getApp().getId());
+      app = optApp.orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_NOT_FOUND));
+    } else {
+      Optional<StudyPermissionEntity> optStudyPermission =
+          studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
+      app =
+          optStudyPermission
+              .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
+              .getApp();
 
-    if (studyPermission.getApp() == null) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+      if (app == null) {
+        throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+      }
     }
-
-    Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
     return prepareRegistryParticipantResponse(
-        optStudy.get(), optApp.get(), userId, auditRequest, page, limit);
+        optStudy.get(), app, userId, auditRequest, page, limit);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
@@ -398,22 +397,38 @@ public class StudyServiceImpl implements StudyService {
       }
     }
 
-    List<ParticipantStudyEntity> participantStudiesList = null;
+    List<ParticipantRegistrySiteEntity> participantSiteList = null;
     if (page != null && limit != null) {
-      Page<ParticipantStudyEntity> participantStudyPage =
-          participantStudyRepository.findParticipantsByStudyForPage(
+      Page<ParticipantRegistrySiteEntity> participantSitePage =
+          participantRegistrySiteRepository.findByStudyIdForPagination(
               study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
-      participantStudiesList = participantStudyPage.getContent();
+      participantSiteList = participantSitePage.getContent();
     } else {
-      participantStudiesList = participantStudyRepository.findParticipantsByStudy(study.getId());
+      participantSiteList = participantRegistrySiteRepository.findByStudyId(study.getId());
     }
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
-    if (CollectionUtils.isNotEmpty(participantStudiesList)) {
-      for (ParticipantStudyEntity participantStudy : participantStudiesList) {
+    List<String> registryIds =
+        CollectionUtils.emptyIfNull(participantSiteList)
+            .stream()
+            .map(ParticipantRegistrySiteEntity::getId)
+            .collect(Collectors.toList());
+
+    List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
+    // Check not empty for Ids to avoid SQLSyntaxErrorException
+    if (CollectionUtils.isNotEmpty(registryIds)) {
+      participantStudies =
+          (List<ParticipantStudyEntity>)
+              CollectionUtils.emptyIfNull(
+                  participantStudyRepository.findParticipantsByParticipantRegistrySite(
+                      registryIds));
+    }
+
+    if (CollectionUtils.isNotEmpty(participantSiteList)) {
+      for (ParticipantRegistrySiteEntity participantSite : participantSiteList) {
         ParticipantDetail participantDetail =
-            ParticipantMapper.fromParticipantStudy(participantStudy);
+            ParticipantMapper.fromParticipantStudy(participantSite, participantStudies);
 
         registryParticipants.add(participantDetail);
       }

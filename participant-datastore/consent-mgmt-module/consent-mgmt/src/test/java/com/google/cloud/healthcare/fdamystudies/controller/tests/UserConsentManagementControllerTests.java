@@ -118,6 +118,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
+    StudyInfoBean studyInfoBean =
+        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+
+    StudyConsentEntity studyConsent =
+        userConsentManagementService.getStudyConsent(
+            Constants.VALID_USER_ID,
+            studyInfoBean.getStudyInfoId(),
+            consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
@@ -213,6 +225,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
+    StudyInfoBean studyInfoBean =
+        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+
+    StudyConsentEntity studyConsent =
+        userConsentManagementService.getStudyConsent(
+            Constants.VALID_USER_ID,
+            studyInfoBean.getStudyInfoId(),
+            consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
@@ -305,6 +329,18 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)))
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
+
+    StudyInfoBean studyInfoBean =
+        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+
+    StudyConsentEntity studyConsent =
+        userConsentManagementService.getStudyConsent(
+            Constants.VALID_USER_ID,
+            studyInfoBean.getStudyInfoId(),
+            consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);

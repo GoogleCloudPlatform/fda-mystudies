@@ -84,16 +84,16 @@ describe('ParticipantDetailsComponent', () => {
 
   it('should check participant details are not empty', () => {
     component.participant$.subscribe((participant) => {
-      expect(participant.participantDetail).toEqual(
-        expectedParticipantDetails.participantDetail,
+      expect(participant.participantDetails).toEqual(
+        expectedParticipantDetails.participantDetails,
       );
     });
   });
 
   it('should check participant `email` and `id` is mandatory', () => {
     component.participant$.subscribe((participant) => {
-      expect(participant.participantDetail.email).toEqual(
-        expectedParticipantDetails.participantDetail.email,
+      expect(participant.participantDetails.email).toEqual(
+        expectedParticipantDetails.participantDetails.email,
       );
     });
   });
