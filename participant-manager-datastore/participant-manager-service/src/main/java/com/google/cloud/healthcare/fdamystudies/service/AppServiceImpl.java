@@ -176,6 +176,8 @@ public class AppServiceImpl implements AppService {
       AppDetails appDetails = AppMapper.toAppDetails(app);
       if (appUsersCountMap.containsKey(app.getId())) {
         appDetails.setAppUsersCount(appUsersCountMap.get(app.getId()).getCount());
+      } else {
+        appDetails.setAppUsersCount(0L);
       }
       appDetails.setStudiesCount(appStudiesCountMap.get(app.getId()).getCount());
       appDetails.setPermission(Permission.EDIT.value());
