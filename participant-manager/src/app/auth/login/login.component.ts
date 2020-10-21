@@ -10,7 +10,7 @@ export class LoginComponent {
   constructor(private readonly authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.initSessionStorage();
+    this.authService.initlocalStorage();
     setTimeout(() => {
       this.authService.beginLoginConsentFlow();
     }, 1000);

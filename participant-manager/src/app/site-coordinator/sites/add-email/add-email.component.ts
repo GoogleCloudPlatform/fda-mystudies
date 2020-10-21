@@ -43,10 +43,7 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
               this.toastr.success(successResponse.message);
             }
             this.addEmail.emit(this.addparticipantEmailArray);
-          },
-          (error) => {
-            this.toastr.error(error);
-          },
+          }
         ),
     );
   }

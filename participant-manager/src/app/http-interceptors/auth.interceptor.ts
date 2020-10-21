@@ -65,8 +65,8 @@ export class AuthInterceptor implements HttpInterceptor {
       (authServerResponse: AccessToken) => {
         console.log('refresh token is successfull');
         this.refreshTokenSubject.next(authServerResponse);
-        sessionStorage.setItem('accessToken', authServerResponse.access_token);
-        sessionStorage.setItem(
+        localStorage.setItem('accessToken', authServerResponse.access_token);
+        localStorage.setItem(
           'refreshToken',
           authServerResponse.refresh_token,
         );
@@ -82,7 +82,7 @@ export class AuthInterceptor implements HttpInterceptor {
           if (getMessage(customError.error_code)) {
             this.toasterService.error(getMessage(customError.error_code));
           }
-          sessionStorage.clear();
+          localStorage.clear();
           void this.router.navigate(['/']);
         }
       },
@@ -92,7 +92,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (req.url.includes(`${environment.authServerUrl}`)) {
       let headers = req.headers
         .set('Accept', 'application/json')
-        .set('correlationId', sessionStorage.getItem('correlationId') || '')
+        .set('correlationId', localStorage.getItem('correlationId') || '')
         .set('appId', this.authService.appId)
         .set('mobilePlatform', this.authService.mobilePlatform)
         .set('Access-Control-Allow-Origin', '*')
@@ -102,7 +102,7 @@ export class AuthInterceptor implements HttpInterceptor {
         )
         .set(
           'Authorization',
-          `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
+          `Bearer ${localStorage.getItem('accessToken') || ''} `,
         );
       if (!req.headers.has('Content-Type')) {
         headers = headers.append(
@@ -113,7 +113,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return req.clone({headers});
     } else {
       let headers = req.headers
-        .set('userId', sessionStorage.getItem('userId') || '')
+        .set('userId', localStorage.getItem('userId') || '')
         .set('Access-Control-Allow-Origin', '*')
         .set(
           'Access-Control-Allow-Headers',
@@ -121,7 +121,7 @@ export class AuthInterceptor implements HttpInterceptor {
         )
         .set(
           'Authorization',
-          `Bearer ${sessionStorage.getItem('accessToken') || ''} `,
+          `Bearer ${localStorage.getItem('accessToken') || ''} `,
         );
 
       if (!req.headers.get('skipIfUpload')) {

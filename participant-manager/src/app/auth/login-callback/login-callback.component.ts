@@ -32,13 +32,13 @@ export class LoginCallbackComponent implements OnInit {
             .getToken(params.code, params.userId)
             .pipe(
               switchMap((authServerResponse: AccessToken) => {
-                sessionStorage.setItem('code', params.code);
-                sessionStorage.setItem('authUserId', params.userId);
-                sessionStorage.setItem(
+                localStorage.setItem('code', params.code);
+                localStorage.setItem('authUserId', params.userId);
+                localStorage.setItem(
                   'accessToken',
                   authServerResponse.access_token,
                 );
-                sessionStorage.setItem(
+                localStorage.setItem(
                   'refreshToken',
                   authServerResponse.refresh_token,
                 );
@@ -48,8 +48,8 @@ export class LoginCallbackComponent implements OnInit {
             .subscribe(
               (userProfile: Profile) => {
                 this.userState.setCurrentUserName(userProfile.firstName);
-                sessionStorage.setItem('userId', userProfile.userId);
-                sessionStorage.setItem('user', JSON.stringify(userProfile));
+                localStorage.setItem('userId', userProfile.userId);
+                localStorage.setItem('user', JSON.stringify(userProfile));
 
                 if (
                   params.accountStatus === '3' ||
@@ -61,9 +61,6 @@ export class LoginCallbackComponent implements OnInit {
                 } else {
                   void this.router.navigate(['/coordinator/studies/sites']);
                 }
-              },
-              (error) => {
-                this.toastr.error(error);
               },
             );
         }
