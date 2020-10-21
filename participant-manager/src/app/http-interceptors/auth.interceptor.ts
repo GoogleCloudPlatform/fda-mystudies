@@ -80,7 +80,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse) {
           const customError = error.error as ApiResponse;
           if (getMessage(customError.error_code)) {
-            this.toasterService.error(getMessage(customError.error_code));
+            this.toasterService.error('Session Expired');
           }
           localStorage.clear();
           void this.router.navigate(['/']);
