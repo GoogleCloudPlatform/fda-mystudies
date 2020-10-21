@@ -1,14 +1,14 @@
 @import "./colors.scss";
 #body-container {
   label {
-    font-weight: 700;
+    font-weight: 600;
   }
   input,
   textarea,
   select {
     font-size: 120%;
     border: none;
-    font-weight: 700;
+    font-weight: 600;
   }
   input:focus,
   textarea:focus,
@@ -38,9 +38,9 @@
     background: transparent;
     font-size: 100%;
     padding: 0px;
-    color: var(--black);
+    color: var(--space-gray);
     height: auto;
-    font-weight: 700;
+    font-weight: 600;
   }
   .select__form-control {
     padding: 0;
@@ -196,7 +196,7 @@
   }
   .form-item__element--select {
     font-size: 100%;
-    font-weight: 700;
+    font-weight: 600;
   }
   .form-item__element--select:invalid {
     color: var(--oslo-gray);
@@ -209,8 +209,8 @@
     font-size: 100%;
   }
   .form-item__element--select option {
-    color: var(--black);
-    font-weight: 700;
+    color: var(--space-gray);
+    font-weight: 600;
     font-size: 100%;
   }
 }

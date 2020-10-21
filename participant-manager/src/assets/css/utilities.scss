@@ -127,6 +127,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    outline: none;
   }
   .flex__justify__center {
     justify-content: center;
@@ -147,10 +148,10 @@
     background-color: var(--light-green);
   }
   .txt__green {
-    background-color: var(--light-green);
+    color: var(--light-green);
   }
   .txt__light-gray {
-    background-color: var(--light-green);
+    color: var(--light-gray);
   }
   .visibility__hidden {
     visibility: hidden;

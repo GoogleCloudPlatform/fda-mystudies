@@ -39,7 +39,7 @@ html {
   }
   .search__ {
     border: transparent;
-    min-width: 300px;
+    min-width: 300px !important;
     height: 32px;
     font-size: 87.5%;
     background-color: var(--aqualight-gray);
@@ -136,6 +136,7 @@ html {
     font-weight: normal;
     border-bottom: none;
     border-top: none;
+    outline: none;
   }
   .table th {
     border-top: none;
@@ -150,9 +151,11 @@ html {
     font-size: 87.5%;
     padding: 75% 30px;
     font-weight: 600;
+    outline: none;
   }
   .table tfoot tr td {
     border-top: none;
+    outline: none;
   }
   .pagination {
     justify-content: center;
@@ -538,11 +541,12 @@ footer ul li:last-child a {
   background: var(--white);
   border: 1px solid var(--periwinkle-gray);
   border-radius: 4px;
-  padding: 5px 13px;
+  padding: 4.5px 10px;
+  font-weight: 500;
 }
 
 .bt__so {
-  padding: 7px 32px;
+  padding: 7px 28px;
   color: var(--light-red);
   font-size: 100%;
 }
@@ -1084,4 +1088,30 @@ thead.custom__thead {
 
 .add_user_info_icon {
   color: var(--grey);
+}
+
+.deafult__img {
+  background-image: url("assets/images/list-default.gif");
+  width: 58px;
+  height: 58px;
+}
+
+button:focus {
+  outline: none !important;
+}
+
+.outline__none {
+  outline: none !important;
+}
+
+.add__site {
+  width: 100%;
+  height: 100%;
+  max-width: 90px;
+  max-height: 32px;
+}
+
+.helpout_svg {
+  width: 18px;
+  height: 18px;
 }
