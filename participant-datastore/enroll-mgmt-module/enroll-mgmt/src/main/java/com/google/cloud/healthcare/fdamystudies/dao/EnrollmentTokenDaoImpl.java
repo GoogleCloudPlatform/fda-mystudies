@@ -105,7 +105,6 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
   public boolean hasParticipant(@NotNull String studyId, @NotNull String tokenValue) {
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Started ");
     List<Object[]> participantList = null;
-    boolean hasParticipant = false;
     Session session = this.sessionFactory.getCurrentSession();
     List<String> studyStateStatus = new ArrayList<>();
     studyStateStatus.add(ParticipantStudyStateStatus.ENROLLED.getValue());
@@ -128,12 +127,9 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
             .setParameter("token", tokenValue.toUpperCase())
             .setParameter("studyId", studyId)
             .getResultList();
-    if (!participantList.isEmpty()) {
-      hasParticipant = true;
-    }
 
     logger.info("EnrollmentTokenDaoImpl hasParticipant() - Ends ");
-    return hasParticipant;
+    return participantList != null && !participantList.isEmpty();
   }
 
   @Override
