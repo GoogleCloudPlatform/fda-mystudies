@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.EnrollmentResponseBean;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteEntity;
@@ -111,14 +112,19 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
     studyStateStatus.add(ParticipantStudyStateStatus.WITHDRAWN.getValue());
     studyStateStatus.add(ParticipantStudyStateStatus.INPROGRESS.getValue());
 
+    List<String> onboardingStatus = new ArrayList<>();
+    onboardingStatus.add(OnboardingStatus.ENROLLED.getCode());
+    onboardingStatus.add(OnboardingStatus.DISABLED.getCode());
     participantList =
         session
             .createQuery(
                 "from ParticipantStudyEntity PS,StudyEntity SB, ParticipantRegistrySiteEntity PR"
                     + " where SB.id =PS.study.id and PS.participantRegistrySite.id=PR.id"
                     + " and PS.status in (:studyStateStatus) "
+                    + " and PR.onboardingStatus in (:onboardingStatus)"
                     + " and upper(trim(PR.enrollmentToken))=:token and SB.customId=:studyId")
             .setParameter("studyStateStatus", studyStateStatus)
+            .setParameter("onboardingStatus", onboardingStatus)
             .setParameter("token", tokenValue.toUpperCase())
             .setParameter("studyId", studyId)
             .getResultList();
