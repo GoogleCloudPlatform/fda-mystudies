@@ -345,6 +345,37 @@ public class AppControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnGetAppParticipantsWithoutParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+    userDetailsEntity.setApp(null);
+    testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
+        .andExpect(jsonPath("$.name").value(appEntity.getAppName()))
+        .andExpect(jsonPath("$.participants").isEmpty());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setAppId(appEntity.getAppId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(APP_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, APP_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldNotReturnAppsForGetAppParticipants() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     testDataHelper.getAppRepository().deleteAll();
