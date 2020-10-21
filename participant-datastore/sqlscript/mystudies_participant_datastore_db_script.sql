@@ -89,8 +89,6 @@ CREATE TABLE IF NOT EXISTS `auth_info` (
   `app_info_id` varchar(255) NOT NULL,
   `user_details_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `auth_info_remote_notification_flag_idx` (`remote_notification_flag`),
-  KEY `auth_info_device_type_idx` (`device_type`),
   KEY `FK8j1wwvyet40uoxl6qtiygixhk` (`app_info_id`),
   KEY `FKil5ax9t3bmtnmodgajy1c7edk` (`user_details_id`),
   KEY `auth_info_device_type_idx` (`device_type`),
