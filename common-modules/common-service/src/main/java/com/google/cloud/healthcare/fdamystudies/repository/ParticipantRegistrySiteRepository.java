@@ -80,4 +80,11 @@ public interface ParticipantRegistrySiteRepository
   @Query(
       "update ParticipantRegistrySiteEntity pr set pr.onboardingStatus=:status where pr.id IN (:ids)")
   public void updateOnboardingStatus(@Param("status") String status, List<String> ids);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id=:studyId")
+  public List<ParticipantRegistrySiteEntity> findByStudyId(String studyId);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id=:studyId")
+  public Page<ParticipantRegistrySiteEntity> findByStudyIdForPagination(
+      String studyId, Pageable pageable);
 }

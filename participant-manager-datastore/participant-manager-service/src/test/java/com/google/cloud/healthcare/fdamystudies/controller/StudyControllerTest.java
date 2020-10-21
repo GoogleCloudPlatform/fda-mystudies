@@ -394,7 +394,9 @@ public class StudyControllerTest extends BaseMockIT {
                 .contextPath(getContextPath()))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.participantRegistryDetail.studyId").value(studyEntity.getId()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.studyId")
+                .value(participantRegistrySiteEntity.getStudy().getId()))
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
         .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants", hasSize(1)))
         .andExpect(
@@ -406,6 +408,9 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
                 .value(EnrollmentStatus.ENROLLED.getStatus()))
+        .andExpect(
+            jsonPath("$.participantRegistryDetail.registryParticipants[0].siteId")
+                .value(participantRegistrySiteEntity.getSite().getId()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.targetEnrollment")
                 .value(siteEntity.getTargetEnrollment()));
@@ -440,6 +445,8 @@ public class StudyControllerTest extends BaseMockIT {
       siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
       siteEntity.setLocation(locationEntity);
       testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+      participantRegistrySiteEntity =
+          testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
       participantStudyEntity =
           testDataHelper.createParticipantStudyEntity(
               siteEntity, studyEntity, participantRegistrySiteEntity);
