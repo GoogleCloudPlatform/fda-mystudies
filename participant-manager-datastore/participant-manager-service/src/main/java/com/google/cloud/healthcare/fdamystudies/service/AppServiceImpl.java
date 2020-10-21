@@ -436,11 +436,8 @@ public class AppServiceImpl implements AppService {
       Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>>
           participantEnrollmentsByUserDetailsAndStudy =
               getEnrolledParticipants(userDetails, studyEntity);
-
-      if (participantEnrollmentsByUserDetailsAndStudy != null) {
-        participants =
-            prepareParticpantDetails(userDetails, participantEnrollmentsByUserDetailsAndStudy);
-      }
+      participants =
+          prepareParticpantDetails(userDetails, participantEnrollmentsByUserDetailsAndStudy);
     }
 
     AppParticipantsResponse appParticipantsResponse =
