@@ -12,10 +12,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
@@ -47,6 +46,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -134,13 +134,21 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnUnauthorized() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", INVALID_BEARER_TOKEN);
+    headers.add("Origin", "http://localhost:4200");
 
-    performPost(
-        ApiEndpoint.USERS.getPath(),
-        asJsonString(newUserRequest()),
-        headers,
-        "Invalid token",
-        UNAUTHORIZED);
+    mockMvc
+        .perform(
+            post(ApiEndpoint.USERS.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(newUserRequest()))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error_description").value(ErrorCode.UNAUTHORIZED.getDescription()))
+        .andExpect(header().string("Access-Control-Allow-Headers", "*"))
+        .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+        .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4200"))
+        .andReturn();
 
     verify(
         1,
@@ -456,7 +464,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertEquals(expectedPasswordHash, actualPasswordHash);
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
@@ -549,9 +557,9 @@ public class UserControllerTest extends BaseMockIT {
     userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
     JsonNode userInfo = userEntity.getUserInfo();
     String rawSalt = salt();
-    String encrypted = encrypt(CURRENT_PASSWORD_VALUE, rawSalt);
+    String hashValue = hash(CURRENT_PASSWORD_VALUE, rawSalt);
     ObjectNode passwordNode = getObjectNode();
-    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(HASH, hashValue);
     passwordNode.put(SALT, rawSalt);
     passwordNode.put(EXPIRE_TIMESTAMP, Instant.now().plus(Duration.ofMinutes(15)).toEpochMilli());
     ((ObjectNode) userInfo).set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
@@ -658,7 +666,7 @@ public class UserControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
 
     String subject = getMailResetSubject();
-    String body = "Thank you for reaching out for password help for your account";
+    String body = "Thank you for reaching out for password help";
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
@@ -674,7 +682,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
 

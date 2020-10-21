@@ -71,7 +71,7 @@ public class LoginController {
   @RequestMapping("/addPassword.do")
   public ModelAndView addPassword(HttpServletRequest request, UserBO userBO) {
     logger.info("LoginController - addPassword() - Starts");
-    ModelAndView mv = new ModelAndView("redirect:login.do");
+    ModelAndView mv = new ModelAndView("redirect:sessionOut.do");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
       HttpSession session = request.getSession(false);
@@ -179,7 +179,7 @@ public class LoginController {
               : "";
       message = loginService.changePassword(userId, newPassword, oldPassword, sesObj);
       if (FdahpStudyDesignerConstants.SUCCESS.equals(message)) {
-        sesObj.setPasswordExpairdedDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
+        sesObj.setPasswordExpiryDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
         mv =
             new ModelAndView(
                 "redirect:sessionOut.do?sucMsg=" + propMap.get("user.force.logout.success"));

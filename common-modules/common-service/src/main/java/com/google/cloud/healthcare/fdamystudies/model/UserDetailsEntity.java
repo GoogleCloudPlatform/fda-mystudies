@@ -27,10 +27,8 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -123,11 +121,6 @@ public class UserDetailsEntity implements Serializable {
   @ToString.Exclude
   @Column(name = "user_id", length = SMALL_LENGTH)
   private String userId;
-
-  // Use UserInstitution class to access institution.
-  @Getter(AccessLevel.NONE)
-  @OneToOne(mappedBy = "userDetails", fetch = FetchType.LAZY)
-  private UserInstitutionEntity userInstitutionEntity;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "userDetails")
   private List<ParticipantStudyEntity> participantStudies = new ArrayList<>();

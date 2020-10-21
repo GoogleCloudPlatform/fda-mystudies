@@ -356,23 +356,31 @@ public class StudyServiceImpl implements StudyService {
       throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
     }
 
-    Optional<StudyPermissionEntity> optStudyPermission =
-        studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
-
-    if (!optStudyPermission.isPresent()) {
-      throw new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED);
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    if (!optUserRegAdminEntity.isPresent()) {
+      throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    StudyPermissionEntity studyPermission = optStudyPermission.get();
+    AppEntity app = null;
+    if (optUserRegAdminEntity.get().isSuperAdmin()) {
+      StudyEntity study = optStudy.get();
+      Optional<AppEntity> optApp = appRepository.findById(study.getApp().getId());
+      app = optApp.orElseThrow(() -> new ErrorCodeException(ErrorCode.APP_NOT_FOUND));
+    } else {
+      Optional<StudyPermissionEntity> optStudyPermission =
+          studyPermissionRepository.findByStudyIdAndUserId(studyId, userId);
+      app =
+          optStudyPermission
+              .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
+              .getApp();
 
-    if (studyPermission.getApp() == null) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+      if (app == null) {
+        throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
+      }
     }
-
-    Optional<AppEntity> optApp = appRepository.findById(optStudyPermission.get().getApp().getId());
 
     return prepareRegistryParticipantResponse(
-        optStudy.get(), optApp.get(), userId, auditRequest, page, limit);
+        optStudy.get(), app, userId, auditRequest, page, limit);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
@@ -398,22 +406,38 @@ public class StudyServiceImpl implements StudyService {
       }
     }
 
-    List<ParticipantStudyEntity> participantStudiesList = null;
+    List<ParticipantRegistrySiteEntity> participantSiteList = null;
     if (page != null && limit != null) {
-      Page<ParticipantStudyEntity> participantStudyPage =
-          participantStudyRepository.findParticipantsByStudyForPage(
+      Page<ParticipantRegistrySiteEntity> participantSitePage =
+          participantRegistrySiteRepository.findByStudyIdForPagination(
               study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
-      participantStudiesList = participantStudyPage.getContent();
+      participantSiteList = participantSitePage.getContent();
     } else {
-      participantStudiesList = participantStudyRepository.findParticipantsByStudy(study.getId());
+      participantSiteList = participantRegistrySiteRepository.findByStudyId(study.getId());
     }
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
-    if (CollectionUtils.isNotEmpty(participantStudiesList)) {
-      for (ParticipantStudyEntity participantStudy : participantStudiesList) {
+    List<String> registryIds =
+        CollectionUtils.emptyIfNull(participantSiteList)
+            .stream()
+            .map(ParticipantRegistrySiteEntity::getId)
+            .collect(Collectors.toList());
+
+    List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
+    // Check not empty for Ids to avoid SQLSyntaxErrorException
+    if (CollectionUtils.isNotEmpty(registryIds)) {
+      participantStudies =
+          (List<ParticipantStudyEntity>)
+              CollectionUtils.emptyIfNull(
+                  participantStudyRepository.findParticipantsByParticipantRegistrySite(
+                      registryIds));
+    }
+
+    if (CollectionUtils.isNotEmpty(participantSiteList)) {
+      for (ParticipantRegistrySiteEntity participantSite : participantSiteList) {
         ParticipantDetail participantDetail =
-            ParticipantMapper.fromParticipantStudy(participantStudy);
+            ParticipantMapper.fromParticipantStudy(participantSite, participantStudies);
 
         registryParticipants.add(participantDetail);
       }
