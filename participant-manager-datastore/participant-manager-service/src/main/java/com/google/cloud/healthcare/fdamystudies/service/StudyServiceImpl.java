@@ -397,22 +397,38 @@ public class StudyServiceImpl implements StudyService {
       }
     }
 
-    List<ParticipantStudyEntity> participantStudiesList = null;
+    List<ParticipantRegistrySiteEntity> participantSiteList = null;
     if (page != null && limit != null) {
-      Page<ParticipantStudyEntity> participantStudyPage =
-          participantStudyRepository.findParticipantsByStudyForPage(
+      Page<ParticipantRegistrySiteEntity> participantSitePage =
+          participantRegistrySiteRepository.findByStudyIdForPagination(
               study.getId(), PageRequest.of(page, limit, Sort.by("created").descending()));
-      participantStudiesList = participantStudyPage.getContent();
+      participantSiteList = participantSitePage.getContent();
     } else {
-      participantStudiesList = participantStudyRepository.findParticipantsByStudy(study.getId());
+      participantSiteList = participantRegistrySiteRepository.findByStudyId(study.getId());
     }
 
     List<ParticipantDetail> registryParticipants = new ArrayList<>();
 
-    if (CollectionUtils.isNotEmpty(participantStudiesList)) {
-      for (ParticipantStudyEntity participantStudy : participantStudiesList) {
+    List<String> registryIds =
+        CollectionUtils.emptyIfNull(participantSiteList)
+            .stream()
+            .map(ParticipantRegistrySiteEntity::getId)
+            .collect(Collectors.toList());
+
+    List<ParticipantStudyEntity> participantStudies = new ArrayList<>();
+    // Check not empty for Ids to avoid SQLSyntaxErrorException
+    if (CollectionUtils.isNotEmpty(registryIds)) {
+      participantStudies =
+          (List<ParticipantStudyEntity>)
+              CollectionUtils.emptyIfNull(
+                  participantStudyRepository.findParticipantsByParticipantRegistrySite(
+                      registryIds));
+    }
+
+    if (CollectionUtils.isNotEmpty(participantSiteList)) {
+      for (ParticipantRegistrySiteEntity participantSite : participantSiteList) {
         ParticipantDetail participantDetail =
-            ParticipantMapper.fromParticipantStudy(participantStudy);
+            ParticipantMapper.fromParticipantStudy(participantSite, participantStudies);
 
         registryParticipants.add(participantDetail);
       }

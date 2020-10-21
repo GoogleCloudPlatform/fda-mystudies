@@ -24,8 +24,8 @@ SET @ios_certificate_password := '';
 SET @reg_email_body := '';
 SET @reg_email_sub := '';
 
-SET @app_info_id := 10;
-UPDATE mystudies_userregistration.app_info a 
+SET @id := 10;
+UPDATE mystudies_participant_datastore.app_info a 
    SET
 a.android_bundle_id=CASE WHEN @android_bundle_id<>'' THEN @android_bundle_id ELSE a.android_bundle_id END , 
 a.android_server_key= CASE WHEN @android_server_key<>'' THEN @android_server_key ELSE a.android_server_key END ,
@@ -42,4 +42,4 @@ a.ios_certificate_password= CASE WHEN @ios_certificate_password<> '' THEN @ios_c
 a.reg_email_body= CASE WHEN @reg_email_body<> '' THEN @reg_email_body ELSE a.reg_email_body END ,
 a.reg_email_sub= CASE WHEN @reg_email_sub<> '' THEN @reg_email_sub ELSE a.reg_email_sub END
 
-WHERE  a.app_info_id=@app_info_id
+WHERE  a.id=@id

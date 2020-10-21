@@ -57,8 +57,6 @@ public class LoginDAOImpl implements LoginDAO {
 
   private static Logger logger = Logger.getLogger(LoginDAOImpl.class.getName());
 
-  @Autowired private AuditLogDAO auditLogDAO;
-
   @Autowired private LoginService loginService;
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
@@ -91,7 +89,7 @@ public class LoginDAOImpl implements LoginDAO {
         }
         adminUserBO.setModifiedBy(userId);
         adminUserBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDate());
-        adminUserBO.setPasswordExpairdedDateTime(
+        adminUserBO.setPasswordExpiryDateTime(
             new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME).format(new Date()));
         session.update(adminUserBO);
         message = FdahpStudyDesignerConstants.SUCCESS;
@@ -452,13 +450,6 @@ public class LoginDAOImpl implements LoginDAO {
         } else {
           SessionObject sessionObject = new SessionObject();
           sessionObject.setUserId(userBO.getUserId());
-          auditLogDAO.saveToAuditLog(
-              session,
-              transaction,
-              sessionObject,
-              FdahpStudyDesignerConstants.PASS_FAIL_ACTIVITY_MESSAGE,
-              FdahpStudyDesignerConstants.PASS_FAIL_ACTIVITY_DEATILS_MESSAGE,
-              "LoginDAOImpl - updateUser()");
         }
       }
       transaction.commit();

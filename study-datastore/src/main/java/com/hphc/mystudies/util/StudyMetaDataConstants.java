@@ -300,4 +300,7 @@ public interface StudyMetaDataConstants {
   public static final String ANCHOR_TYPE_ACTIVITYRESPONSE = "ActivityResponse";
   public static final String SCHEDULETYPE_REGULAR = "Regular";
   public static final String SCHEDULETYPE_ANCHORDATE = "AnchorDate";
+  
+  public static final String ELIGIBILITY_TEXT = "Answer these questions to determine your eligibility for the study";
+  public static final String COMPREHENSION_TEXT = "Take this comprehension test to assess your understanding of the study:";
 }

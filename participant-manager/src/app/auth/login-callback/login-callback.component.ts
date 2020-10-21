@@ -51,8 +51,13 @@ export class LoginCallbackComponent implements OnInit {
                 sessionStorage.setItem('userId', userProfile.userId);
                 sessionStorage.setItem('user', JSON.stringify(userProfile));
 
-                if (params.accountStatus === 3) {
-                  void this.router.navigate(['/change-password']);
+                if (
+                  params.accountStatus === '3' ||
+                  params.accountStatus === '2'
+                ) {
+                  void this.router.navigate([
+                    '/coordinator/accounts/change-password',
+                  ]);
                 } else {
                   void this.router.navigate(['/coordinator/studies/sites']);
                 }
