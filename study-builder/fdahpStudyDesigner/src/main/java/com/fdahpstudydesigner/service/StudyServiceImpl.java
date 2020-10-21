@@ -1199,12 +1199,8 @@ public class StudyServiceImpl implements StudyService {
             notificationBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
           }
           if (!resourceBO2.isStudyProtocol()) {
-            if (resourceBO.isResourceVisibility()) {
-              saveNotiFlag = true;
-              notificationText = resourceBO2.getResourceText();
-            } else {
-              saveNotiFlag = false;
-            }
+            saveNotiFlag = true;
+            notificationText = resourceBO2.getResourceText();
           } else {
             if (studyBo.getLiveStudyBo() != null) {
               String studyName = studyBo.getName();
