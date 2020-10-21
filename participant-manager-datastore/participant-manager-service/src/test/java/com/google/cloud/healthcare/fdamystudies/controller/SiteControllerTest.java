@@ -1193,6 +1193,8 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())))
         .andExpect(
+            jsonPath("$.participantDetails.onboardingStatus", is(OnboardingStatus.NEW.getStatus())))
+        .andExpect(
             jsonPath(
                 "$.participantDetails.enrollments[0].enrollmentStatus",
                 is(EnrollmentStatus.ENROLLED.getStatus())));

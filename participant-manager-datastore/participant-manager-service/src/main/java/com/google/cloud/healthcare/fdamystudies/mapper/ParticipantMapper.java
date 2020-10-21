@@ -230,7 +230,7 @@ public final class ParticipantMapper {
         (OnboardingStatus.INVITED == onboardingStatus || OnboardingStatus.NEW == onboardingStatus)
             ? onboardingStatus.getStatus()
             : OnboardingStatus.DISABLED.getStatus();
-    participantDetail.setOnboardringStatus(status);
+    participantDetail.setOnboardingStatus(status);
     return participantDetail;
   }
 
