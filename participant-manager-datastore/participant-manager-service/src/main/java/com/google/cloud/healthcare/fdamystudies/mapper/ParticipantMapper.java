@@ -42,6 +42,23 @@ public final class ParticipantMapper {
     ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setId(participantSite.getId());
 
+    if (participantSite.getSite() != null) {
+      participantDetail.setSiteId(participantSite.getSite().getId());
+      participantDetail.setCustomLocationId(participantSite.getSite().getLocation().getCustomId());
+      participantDetail.setLocationName(participantSite.getSite().getLocation().getName());
+    }
+    if (participantSite.getEmail() != null) {
+      participantDetail.setEmail(participantSite.getEmail());
+    }
+    String onboardingStatusCode = participantSite.getOnboardingStatus();
+    onboardingStatusCode =
+        StringUtils.defaultString(onboardingStatusCode, OnboardingStatus.DISABLED.getCode());
+    participantDetail.setOnboardingStatus(
+        OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
+
+    String invitedDate = DateTimeUtils.format(participantSite.getInvitationDate());
+    participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+
     Map<String, ParticipantStudyEntity> idMap = new HashMap<>();
     for (ParticipantStudyEntity participantStudy : participantStudies) {
       if (participantStudy.getParticipantRegistrySite() != null) {
@@ -59,23 +76,6 @@ public final class ParticipantMapper {
       participantDetail.setEnrollmentDate(
           StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
     }
-
-    if (participantSite.getSite() != null) {
-      participantDetail.setSiteId(participantSite.getSite().getId());
-      participantDetail.setCustomLocationId(participantSite.getSite().getLocation().getCustomId());
-      participantDetail.setLocationName(participantSite.getSite().getLocation().getName());
-    }
-    if (participantSite.getEmail() != null) {
-      participantDetail.setEmail(participantSite.getEmail());
-    }
-    String onboardingStatusCode = participantSite.getOnboardingStatus();
-    onboardingStatusCode =
-        StringUtils.defaultString(onboardingStatusCode, OnboardingStatus.DISABLED.getCode());
-    participantDetail.setOnboardingStatus(
-        OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
-
-    String invitedDate = DateTimeUtils.format(participantSite.getInvitationDate());
-    participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
 
     return participantDetail;
   }
