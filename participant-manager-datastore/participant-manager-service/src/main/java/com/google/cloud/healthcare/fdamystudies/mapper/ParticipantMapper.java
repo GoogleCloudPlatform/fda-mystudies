@@ -189,7 +189,11 @@ public final class ParticipantMapper {
       ParticipantDetail participantDetail, List<ParticipantStudyEntity> participantsEnrollments) {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
-      enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
+      String enrollmentStatus =
+          EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantsEnrollment.getStatus())
+              ? EnrollmentStatus.ENROLLED.getStatus()
+              : participantsEnrollment.getStatus();
+      enrollment.setEnrollmentStatus(enrollmentStatus);
       enrollment.setParticipantId(participantsEnrollment.getParticipantId());
 
       String enrollmentDate = DateTimeUtils.format(participantsEnrollment.getEnrolledDate());
@@ -226,7 +230,7 @@ public final class ParticipantMapper {
         (OnboardingStatus.INVITED == onboardingStatus || OnboardingStatus.NEW == onboardingStatus)
             ? onboardingStatus.getStatus()
             : OnboardingStatus.DISABLED.getStatus();
-    participantDetail.setOnboardringStatus(status);
+    participantDetail.setOnboardingStatus(status);
     return participantDetail;
   }
 
