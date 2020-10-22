@@ -52,6 +52,8 @@ spec:
               value: "http://hydra-np:4445"
             - name: RESPONSE_DATASTORE_URL
               value: "http://response-datastore-np:50000"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000"
             # MISC
             - name: LOG_PATH
               valueFrom:

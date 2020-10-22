@@ -70,6 +70,7 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.service.NotificationService;
+import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.service.StudyQuestionnaireService;
 import com.fdahpstudydesigner.service.StudyService;
 import com.fdahpstudydesigner.service.UsersService;
@@ -126,6 +127,8 @@ public class StudyController {
   @Autowired private RestTemplate restTemplate;
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
+
+  @Autowired private OAuthService oauthService;
 
   @RequestMapping("/adminStudies/actionList.do")
   public ModelAndView actionList(HttpServletRequest request) {
@@ -5183,10 +5186,7 @@ public class StudyController {
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientId", map.get("security.oauth2.client.client-id"));
-      headers.set(
-          "secretKey",
-          FdahpStudyDesignerUtil.getHashedValue(map.get("security.oauth2.client.client-secret")));
+      headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
       userRegistrationServerUrl = map.get("userRegistrationServerUrl");
 
@@ -5227,10 +5227,7 @@ public class StudyController {
       map = FdahpStudyDesignerUtil.getAppProperties();
       headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
-      headers.set("clientId", map.get("security.oauth2.client.client-id"));
-      headers.set(
-          "secretKey",
-          FdahpStudyDesignerUtil.getHashedValue(map.get("security.oauth2.client.client-secret")));
+      headers.add("Authorization", "Bearer " + oauthService.getAccessToken());
 
       responseServerUrl = map.get("responseServerUrl");
 
