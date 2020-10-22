@@ -6,7 +6,7 @@ import {
 } from '../site-coordinator/participant-details/participant-details';
 import {ApiResponse} from './api.response.model';
 import {RegistryParticipant} from '../shared/participant';
-import { EnrollmentStatus } from '../shared/enums';
+import {EnrollmentStatus} from '../shared/enums';
 
 export const expectedParticipantDetails = {
   participantDetails: {
