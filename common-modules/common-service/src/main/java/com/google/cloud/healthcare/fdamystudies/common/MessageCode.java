@@ -102,7 +102,7 @@ public enum MessageCode {
   GET_USERS_SUCCESS(HttpStatus.OK, "MSG_0036", "User details fetched successfully"),
 
   INVITATION_SENT_SUCCESSFULLY(
-      HttpStatus.CREATED, "MSG_0037", "Invitation to user resent successfully");
+      HttpStatus.CREATED, "MSG_0043", "Invitation to user resent successfully");
 
   private final HttpStatus httpStatus;
   private final String code;

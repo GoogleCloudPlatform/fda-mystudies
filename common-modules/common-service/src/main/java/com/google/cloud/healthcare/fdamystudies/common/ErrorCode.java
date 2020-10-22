@@ -256,7 +256,19 @@ public enum ErrorCode {
   TEMP_PASSWORD_INVALID(400, "EC_0122", Constants.BAD_REQUEST, "Temporary password is invalid"),
 
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
-      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study");
+      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study"),
+
+  CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION(
+      403,
+      "EC_0126",
+      HttpStatus.FORBIDDEN.toString(),
+      "Cannot activate the site as the location is decommissioned"),
+
+  CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY(
+      403,
+      "EC_0127",
+      HttpStatus.FORBIDDEN.toString(),
+      "Cannot activate the site as the study is deactivated");
 
   private final int status;
   private final String code;
