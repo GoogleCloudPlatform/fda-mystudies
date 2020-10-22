@@ -230,12 +230,9 @@ public class NotificationDAOImpl implements NotificationDAO {
           new StringBuilder(
               "select n.notification_id as notificationId, n.notification_text as notificationText, s.custom_study_id as customStudyId, n.notification_type as notificationType, n.notification_subType as notificationSubType,n.app_id as appId ");
       sb.append("from (notification as n) LEFT OUTER JOIN studies as s ON s.id = n.study_id")
-          .append(" where n.schedule_date ='")
-          .append(date)
+          .append(" where n.schedule_date = :date")
           .append(
-              "' AND n.is_anchor_date = false AND n.notification_done = true AND n.schedule_time like '")
-          .append(time)
-          .append("%'")
+              " AND n.is_anchor_date = false AND n.notification_done = true AND n.schedule_time like :time")
           .append(" AND (n.notification_subType='")
           .append(FdahpStudyDesignerConstants.STUDY_EVENT)
           .append("' OR n.notification_type = '")
@@ -246,6 +243,8 @@ public class NotificationDAOImpl implements NotificationDAO {
       query =
           session
               .createSQLQuery(sb.toString())
+              .SetParameter("date", date)
+              .setParameter("time", time+"%")
               .addScalar("notificationId")
               .addScalar("notificationText")
               .addScalar("customStudyId")
