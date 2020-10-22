@@ -28,6 +28,8 @@ export class AccountService {
         this.authService.getAuthUserId(),
       )}/change_password`,
       changePassword,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      {headers: {'Content-Type': 'application/json'}},
     );
   }
   updateUserProfile(

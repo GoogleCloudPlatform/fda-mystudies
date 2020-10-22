@@ -74,4 +74,10 @@ public class StudyConsentEntity implements Serializable {
   @Column(name = "created_time")
   @CreationTimestamp
   private Timestamp created;
+
+  @Column(name = "data_sharing_status", length = SMALL_LENGTH)
+  private String sharing;
+
+  @Column(name = "consent_date")
+  private Timestamp consentDate;
 }

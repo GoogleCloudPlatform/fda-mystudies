@@ -23,11 +23,8 @@
 
 package com.fdahpstudydesigner.util;
 
-import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
-import com.fdahpstudydesigner.service.DashBoardAndProfileService;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
@@ -41,10 +38,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
-  @Autowired private AuditLogDAO auditLogDAO;
-
-  @Autowired private DashBoardAndProfileService dashBoardAndProfileService;
 
   private LoginDAOImpl loginDAO;
 
@@ -72,9 +65,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     SessionObject sesObj;
     Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
     String projectName = propMap.get("project.name");
-    String activity;
-    String activityDetail;
-    MasterDataBO masterDataBO;
     userdetails = loginDAO.getValidUserByEmail(authentication.getName());
     if (userdetails.isForceLogout()) {
       userdetails.setForceLogout(false);
@@ -88,7 +78,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     sesObj.setCurrentHomeUrl("/" + projectName + targetUrl);
     sesObj.setEmail(userdetails.getUserEmail());
     sesObj.setUserPermissions(FdahpStudyDesignerUtil.getSessionUserRole());
-    sesObj.setPasswordExpairdedDateTime(userdetails.getPasswordExpairdedDateTime());
+    sesObj.setPasswordExpiryDateTime(userdetails.getPasswordExpiryDateTime());
     sesObj.setCreatedDate(userdetails.getCreatedOn());
     sesObj.setRole(userdetails.getRoleName());
     sesObj.setAccessLevel(userdetails.getAccessLevel());
@@ -100,17 +90,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     request.getSession().setAttribute(FdahpStudyDesignerConstants.SESSION_OBJECT, sesObj);
-    activity = "User login.";
-    activityDetail =
-        "User successfully signed in. (Account Details:- First Name = "
-            + userdetails.getFirstName()
-            + ", Last Name = "
-            + userdetails.getLastName()
-            + ", Email ="
-            + userdetails.getUserEmail()
-            + ").";
-    auditLogDAO.saveToAuditLog(
-        null, null, sesObj, activity, activityDetail, "CustomSuccessHandler - handle");
 
     if (null != request.getSession(false).getAttribute("sucMsg")) {
       request.getSession(false).removeAttribute("sucMsg");

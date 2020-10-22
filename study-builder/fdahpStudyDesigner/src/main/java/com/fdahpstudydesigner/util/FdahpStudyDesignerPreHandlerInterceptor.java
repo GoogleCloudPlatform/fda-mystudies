@@ -111,7 +111,7 @@ public class FdahpStudyDesignerPreHandlerInterceptor extends HandlerInterceptorA
         } else if (!ajax && !uri.contains(sessionOutUrl)) {
           // Checking for password Expired Date Time from current
           // Session
-          passwordExpiredDateTime = session.getPasswordExpairdedDateTime();
+          passwordExpiredDateTime = session.getPasswordExpiryDateTime();
           if (StringUtils.isNotBlank(passwordExpiredDateTime)
               && FdahpStudyDesignerUtil.addDaysToDate(
                       new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
