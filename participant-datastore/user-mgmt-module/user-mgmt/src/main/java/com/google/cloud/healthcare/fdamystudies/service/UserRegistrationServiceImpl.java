@@ -135,7 +135,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     saveAuthInfoAndUserAppDetails(userDetails);
 
     auditRequest.setUserId(userDetails.getUserId());
-    userMgmntAuditHelper.logEvent(UserMgmntEvent.USER_CREATED, auditRequest);
+    userMgmntAuditHelper.logEvent(UserMgmntEvent.REGISTRATION_SUCCEEDED, auditRequest);
 
     // generate save and email the verification code
     userDetails = generateAndSaveVerificationCode(userDetails);
