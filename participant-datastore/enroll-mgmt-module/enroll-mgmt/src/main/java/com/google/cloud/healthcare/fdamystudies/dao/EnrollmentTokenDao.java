@@ -19,7 +19,8 @@ public interface EnrollmentTokenDao {
 
   public boolean hasParticipant(@NotNull String shortName, @NotNull String tokenValue);
 
-  public boolean isValidStudyToken(@NotNull String token, @NotNull String shortName);
+  public boolean isValidStudyToken(
+      @NotNull String token, @NotNull String shortName, @NotNull String email);
 
   public boolean enrollmentTokenRequired(@NotNull String shortName);
 

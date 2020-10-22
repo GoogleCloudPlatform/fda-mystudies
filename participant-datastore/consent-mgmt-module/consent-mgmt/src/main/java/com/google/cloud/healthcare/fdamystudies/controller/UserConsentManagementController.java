@@ -169,6 +169,8 @@ public class UserConsentManagementController {
                 consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
               }
               studyConsent.setParticipantStudy(participantStudies);
+              studyConsent.setConsentDate(participantStudies.getEnrolledDate());
+              studyConsent.setSharing(dataSharing.value());
               if (optUser.isPresent()) {
                 studyConsent.setUserDetails(optUser.get());
               }
@@ -186,6 +188,8 @@ public class UserConsentManagementController {
                 studyConsent.setStudy(optStudy.get());
               }
               studyConsent.setParticipantStudy(participantStudies);
+              studyConsent.setConsentDate(participantStudies.getEnrolledDate());
+              studyConsent.setSharing(dataSharing.value());
               studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
               studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
               if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
