@@ -43,6 +43,23 @@ public final class ParticipantMapper {
     ParticipantDetail participantDetail = new ParticipantDetail();
     participantDetail.setId(participantSite.getId());
 
+    if (participantSite.getSite() != null) {
+      participantDetail.setSiteId(participantSite.getSite().getId());
+      participantDetail.setCustomLocationId(participantSite.getSite().getLocation().getCustomId());
+      participantDetail.setLocationName(participantSite.getSite().getLocation().getName());
+    }
+    if (participantSite.getEmail() != null) {
+      participantDetail.setEmail(participantSite.getEmail());
+    }
+    String onboardingStatusCode = participantSite.getOnboardingStatus();
+    onboardingStatusCode =
+        StringUtils.defaultString(onboardingStatusCode, OnboardingStatus.DISABLED.getCode());
+    participantDetail.setOnboardingStatus(
+        OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
+
+    String invitedDate = DateTimeUtils.format(participantSite.getInvitationDate());
+    participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+
     Map<String, ParticipantStudyEntity> idMap = new HashMap<>();
     for (ParticipantStudyEntity participantStudy : participantStudies) {
       if (participantStudy.getParticipantRegistrySite() != null) {
@@ -61,30 +78,10 @@ public final class ParticipantMapper {
           StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
     }
 
-    if (participantSite.getSite() != null) {
-      participantDetail.setSiteId(participantSite.getSite().getId());
-      participantDetail.setCustomLocationId(participantSite.getSite().getLocation().getCustomId());
-      participantDetail.setLocationName(participantSite.getSite().getLocation().getName());
-    }
-
-    if (participantSite.getEmail() != null) {
-      participantDetail.setEmail(participantSite.getEmail());
-    }
-
-    String onboardingStatusCode = participantSite.getOnboardingStatus();
-    onboardingStatusCode =
-        StringUtils.defaultString(onboardingStatusCode, OnboardingStatus.DISABLED.getCode());
-    participantDetail.setOnboardingStatus(
-        OnboardingStatus.fromCode(onboardingStatusCode).getStatus());
-
     if (OnboardingStatus.INVITED.getCode().equalsIgnoreCase(onboardingStatusCode)
         || OnboardingStatus.NEW.getCode().equalsIgnoreCase(onboardingStatusCode)) {
       participantDetail.setEnrollmentStatus(YET_TO_ENROLL);
     }
-
-    String invitedDate = DateTimeUtils.format(participantSite.getInvitationDate());
-    participantDetail.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
-
     return participantDetail;
   }
 
@@ -197,7 +194,11 @@ public final class ParticipantMapper {
       ParticipantDetail participantDetail, List<ParticipantStudyEntity> participantsEnrollments) {
     for (ParticipantStudyEntity participantsEnrollment : participantsEnrollments) {
       Enrollment enrollment = new Enrollment();
-      enrollment.setEnrollmentStatus(participantsEnrollment.getStatus());
+      String enrollmentStatus =
+          EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantsEnrollment.getStatus())
+              ? EnrollmentStatus.ENROLLED.getStatus()
+              : participantsEnrollment.getStatus();
+      enrollment.setEnrollmentStatus(enrollmentStatus);
       enrollment.setParticipantId(participantsEnrollment.getParticipantId());
 
       String enrollmentDate = DateTimeUtils.format(participantsEnrollment.getEnrolledDate());
@@ -234,7 +235,7 @@ public final class ParticipantMapper {
         (OnboardingStatus.INVITED == onboardingStatus || OnboardingStatus.NEW == onboardingStatus)
             ? onboardingStatus.getStatus()
             : OnboardingStatus.DISABLED.getStatus();
-    participantDetail.setOnboardringStatus(status);
+    participantDetail.setOnboardingStatus(status);
     return participantDetail;
   }
 
