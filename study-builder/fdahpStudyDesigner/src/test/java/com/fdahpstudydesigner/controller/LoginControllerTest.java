@@ -206,7 +206,7 @@ public class LoginControllerTest extends BaseMockIT {
         .perform(requestBuilder)
         .andDo(print())
         .andExpect(status().isFound())
-        .andExpect(view().name("redirect:login.do"));
+        .andExpect(view().name("redirect:sessionOut.do"));
 
     verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATED);
     verifyAuditEventCall(PASSWORD_RESET_SUCCEEDED);
@@ -225,6 +225,34 @@ public class LoginControllerTest extends BaseMockIT {
         post(PathMappingUri.ADD_PASSWORD.getPath())
             .param("accessCode", "jf47Ll")
             .param("password", "Password@1234")
+            .param("securityToken", "N8K7zYrc0F")
+            .param("_csrf", "")
+            .headers(headers)
+            .sessionAttrs(getSessionAttributes());
+
+    addParams(requestBuilder, userBO);
+    mockMvc
+        .perform(requestBuilder)
+        .andDo(print())
+        .andExpect(status().isFound())
+        .andExpect(view().name("redirect:createPassword.do?securityToken=N8K7zYrc0F"));
+
+    verifyAuditEventCall(NEW_USER_ACCOUNT_ACTIVATION_FAILED_INVALID_ACCESS_CODE);
+  }
+
+  @Test
+  public void shouldNotAddPasswordForInvalidAccessCodeWithXSS() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    UserBO userBO = new UserBO();
+    userBO.setFirstName("<scrpt>alert('xss')</script><p>updated_first_name</p>");
+    userBO.setLastName("updated_last_name");
+    userBO.setPhoneNumber("654665146432");
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.ADD_PASSWORD.getPath())
+            .param("accessCode", "jf47Ll")
+            .param("password", "password@1234")
             .param("securityToken", "N8K7zYrc0F")
             .param("_csrf", "")
             .headers(headers)

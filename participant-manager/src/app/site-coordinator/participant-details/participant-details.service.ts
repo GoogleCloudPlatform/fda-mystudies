@@ -34,7 +34,7 @@ export class ParticipantDetailsService {
     return this.http.patch<ApiResponse>(
       `${environment.baseUrl}/sites/${encodeURIComponent(
         siteId,
-      )}/participants/activate`,
+      )}/participants/status`,
       participantToBeUpdated,
     );
   }

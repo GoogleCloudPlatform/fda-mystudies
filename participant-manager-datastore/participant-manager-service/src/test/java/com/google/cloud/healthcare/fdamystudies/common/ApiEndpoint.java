@@ -18,7 +18,7 @@ public enum ApiEndpoint {
 
   HEALTH("http://localhost:8080/participant-manager-datastore/healthCheck"),
 
-  SET_UP_ACCOUNT("http://localhost:8080/participant-manager-datastore/users/"),
+  SET_UP_ACCOUNT("http://localhost:8080/participant-manager-datastore/users/setUpAccount"),
 
   PATCH_USER("http://localhost:8080/participant-manager-datastore/users/{userId}"),
 
@@ -57,7 +57,7 @@ public enum ApiEndpoint {
   GET_USER_DETAILS("http://localhost:8080/participant-manager-datastore/users"),
 
   GET_PARTICIPANT_DETAILS(
-      "http://localhost:8080/participant-manager-datastore/sites/{participantRegistrySite}/participant"),
+      "http://localhost:8080/participant-manager-datastore/sites/{participantRegistrySiteId}/participant"),
 
   INVITE_PARTICIPANTS(
       "http://localhost:8003/participant-manager-datastore/sites/{siteId}/participants/invite"),
@@ -84,7 +84,10 @@ public enum ApiEndpoint {
   GET_ADMIN_DETAILS_AND_APPS(
       "http://localhost:8080/participant-manager-datastore/users/admin/{adminId}"),
 
-  GET_USERS("http://localhost:8080/participant-manager-datastore/users");
+  GET_USERS("http://localhost:8080/participant-manager-datastore/users"),
+
+  SEND_INVITATION_EMAIL(
+      "http://localhost:8080/participant-manager-datastore/users/{userId}/invite");
 
   private String url;
 

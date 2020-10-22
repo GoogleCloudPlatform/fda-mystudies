@@ -24,6 +24,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -61,6 +62,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -415,6 +419,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setId(adminforUpdate.getId());
     mockMvc
@@ -457,6 +462,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     DocumentContext json = JsonPath.parse(updateAdminUserRequestJson);
     updateAdminUserRequestJson =
         json.set("$.apps[0].studies[0].sites[0].siteId", siteEntity.getId())
@@ -501,6 +507,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     DocumentContext json = JsonPath.parse(updateAdminUserRequestJson);
     updateAdminUserRequestJson =
         json.set("$.apps[0].studies[0].studyId", studyEntity.getId())
@@ -546,6 +553,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect UPDATE_USER_SUCCESS message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     DocumentContext json = JsonPath.parse(updateAdminUserRequestJson);
     updateAdminUserRequestJson =
         json.set("$.apps[0].id", appEntity.getId())
@@ -588,6 +596,7 @@ public class UserControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnUserNotFoundErrorForUpdateUser() throws Exception {
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setSuperAdmin(false);
     mockMvc
@@ -609,6 +618,7 @@ public class UserControllerTest extends BaseMockIT {
     userRegAdminEntity = testDataHelper.createNonSuperAdmin();
     adminforUpdate = testDataHelper.createSuperAdmin();
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     UserRequest userRequest = newUserRequestForUpdate();
     userRequest.setId(adminforUpdate.getId());
     mockMvc
@@ -634,6 +644,7 @@ public class UserControllerTest extends BaseMockIT {
 
     // Step 2: Call the API and expect must not be blank
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())
@@ -652,6 +663,7 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnPermissionMissingErrorForUpdateUser() throws Exception {
     adminforUpdate = testDataHelper.createSuperAdmin();
     HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(USER_ID_HEADER, userRegAdminEntity.getId());
     mockMvc
         .perform(
             put(ApiEndpoint.UPDATE_USER.getPath(), userRegAdminEntity.getId())
@@ -803,6 +815,9 @@ public class UserControllerTest extends BaseMockIT {
       userRegAdminEntity = testDataHelper.createSuperAdmin();
       userRegAdminEntity.setEmail(String.valueOf(i) + EMAIL_VALUE);
       userRegAdminRepository.saveAndFlush(userRegAdminEntity);
+      // Pagination records should be in descending order of created timestamp
+      // Entities are not saved in sequential order so adding delay
+      Thread.sleep(5);
     }
 
     // Step 2: Call API and expect GET_ADMINS_SUCCESS message and fetch only 5 data out of 21
@@ -931,6 +946,109 @@ public class UserControllerTest extends BaseMockIT {
                 .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
 
     verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldSendInvitationEmail() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(CommonConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Step 1: change the security code expire date to before current date
+    UserRegAdminEntity user = new UserRegAdminEntity();
+    user.setEmail(TestConstants.EMAIL_ID);
+    user.setFirstName(TestConstants.FIRST_NAME);
+    user.setSecurityCodeExpireDate(
+        new Timestamp(Instant.now().minus(1, ChronoUnit.DAYS).toEpochMilli()));
+    testDataHelper.getUserRegAdminRepository().save(user);
+
+    // Step 2: Call the API and expect RESEND_INVITATION_SENT_SUCCESSFULLY message
+    MvcResult result =
+        mockMvc
+            .perform(
+                post(ApiEndpoint.SEND_INVITATION_EMAIL.getPath(), user.getId())
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(
+                jsonPath("$.message").value(MessageCode.INVITATION_SENT_SUCCESSFULLY.getMessage()))
+            .andExpect(jsonPath("$.userId", notNullValue()))
+            .andReturn();
+
+    String userId = JsonPath.read(result.getResponse().getContentAsString(), "$.userId");
+    Optional<UserRegAdminEntity> optUserRegAdminEntity = userRegAdminRepository.findById(userId);
+    UserRegAdminEntity userReg = optUserRegAdminEntity.get();
+    String subject = getMailSubject();
+    String body = getMailBody(optUserRegAdminEntity.get());
+    verifyMimeMessage(TestConstants.EMAIL_ID, appPropertyConfig.getFromEmail(), subject, body);
+
+    // Step 3: verify saved values
+    assertEquals(TestConstants.EMAIL_ID, userReg.getEmail());
+    assertEquals(TestConstants.FIRST_NAME, userReg.getFirstName());
+    assertTrue(
+        new Timestamp(Instant.now().toEpochMilli()).before(userReg.getSecurityCodeExpireDate()));
+    assertNotNull(userReg.getSecurityCode());
+  }
+
+  @Test
+  public void shouldReturnUserNotFoundForSendInvitationEmail() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(CommonConstants.USER_ID_HEADER, IdGenerator.id());
+
+    // Call the API and expect USER_NOT_FOUND message
+    mockMvc
+        .perform(
+            post(ApiEndpoint.SEND_INVITATION_EMAIL.getPath(), userRegAdminEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.USER_NOT_FOUND.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnNotSuperAdminError() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(CommonConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+
+    // Set super admin to false
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
+
+    // Call the API and expect NOT_SUPER_ADMIN_ACCESS message
+    mockMvc
+        .perform(
+            post(ApiEndpoint.SEND_INVITATION_EMAIL.getPath(), IdGenerator.id())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath("$.error_description")
+                .value(ErrorCode.NOT_SUPER_ADMIN_ACCESS.getDescription()));
+  }
+
+  @Test
+  public void shouldReturnApplicationError() throws Exception {
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.set(CommonConstants.USER_ID_HEADER, userRegAdminEntity.getId());
+
+    UserRegAdminEntity user = new UserRegAdminEntity();
+    user.setEmail(TestConstants.EMAIL_ID);
+    user.setFirstName(null);
+    testDataHelper.getUserRegAdminRepository().save(user);
+
+    // Call the API and expect APPLICATION_ERROR message
+    mockMvc
+        .perform(
+            post(ApiEndpoint.SEND_INVITATION_EMAIL.getPath(), user.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isInternalServerError())
+        .andExpect(
+            jsonPath("$.error_description").value(ErrorCode.APPLICATION_ERROR.getDescription()));
   }
 
   private String getMailSubject() {

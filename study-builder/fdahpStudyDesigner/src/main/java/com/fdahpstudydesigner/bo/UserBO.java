@@ -97,8 +97,8 @@ public class UserBO implements Serializable {
   @Column(name = "modified_date")
   private String modifiedOn;
 
-  @Column(name = "password_expairded_datetime")
-  private String passwordExpairdedDateTime;
+  @Column(name = "password_expiry_datetime")
+  private String passwordExpiryDateTime;
 
   @ManyToMany(
       fetch = FetchType.EAGER,
@@ -177,8 +177,8 @@ public class UserBO implements Serializable {
     return modifiedOn;
   }
 
-  public String getPasswordExpairdedDateTime() {
-    return passwordExpairdedDateTime;
+  public String getPasswordExpiryDateTime() {
+    return passwordExpiryDateTime;
   }
 
   public Set<UserPermissions> getPermissionList() {
@@ -305,8 +305,8 @@ public class UserBO implements Serializable {
     this.modifiedOn = modifiedOn;
   }
 
-  public void setPasswordExpairdedDateTime(String passwordExpairdedDateTime) {
-    this.passwordExpairdedDateTime = passwordExpairdedDateTime;
+  public void setPasswordExpiryDateTime(String passwordExpiryDateTime) {
+    this.passwordExpiryDateTime = passwordExpiryDateTime;
   }
 
   public void setPermissionList(Set<UserPermissions> permissionList) {

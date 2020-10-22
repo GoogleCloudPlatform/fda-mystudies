@@ -20,6 +20,15 @@
 
     <bean id="restTemplate"
           class="org.springframework.web.client.RestTemplate">
+      <property name="interceptors">
+        <list>
+          <ref bean="authTokenInterceptor" />
+        </list>
+      </property>
+    </bean>
+    
+    <bean id="authTokenInterceptor"
+          class="com.fdahpstudydesigner.util.RestTemplateAuthTokenModifierInterceptor">
     </bean>
 
     <context:component-scan
@@ -31,9 +40,9 @@
         </property>
     </bean>
     <util:properties id="propertyConfigurer"
-                     location="classpath:application_local.properties"/>
+                     location="classpath:application.properties"/>
     <context:property-placeholder
-            location="classpath:application_local.properties"/>
+            location="classpath:application.properties"/>
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName"
