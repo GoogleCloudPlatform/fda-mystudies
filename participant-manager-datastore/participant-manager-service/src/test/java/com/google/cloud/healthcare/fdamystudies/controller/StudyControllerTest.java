@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
@@ -111,6 +112,10 @@ public class StudyControllerTest extends BaseMockIT {
 
   @Test
   public void shouldReturnStudiesForSuperAdmin() throws Exception {
+    participantRegistrySiteEntity.setOnboardingStatus("I");
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus("inProgress");
+    testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
@@ -125,12 +130,18 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].type").value(studyEntity.getType()))
         .andExpect(jsonPath("$.superAdmin").value(true))
         .andExpect(jsonPath("$.studies[0].logoImageUrl").value(studyEntity.getLogoImageUrl()));
+        .andExpect(jsonPath("$.studies[0].invited").value(1))
+        .andExpect(jsonPath("$.studies[0].enrolled").value(1));
 
     verifyTokenIntrospectRequest();
   }
 
   @Test
   public void shouldReturnStudies() throws Exception {
+    participantRegistrySiteEntity.setOnboardingStatus("I");
+    testDataHelper.getParticipantRegistrySiteRepository().save(participantRegistrySiteEntity);
+    participantStudyEntity.setStatus("inProgress");
+    testDataHelper.getParticipantStudyRepository().save(participantStudyEntity);
     userRegAdminEntity.setSuperAdmin(false);
     testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
 
@@ -149,6 +160,8 @@ public class StudyControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.sitePermissionCount").value(1))
         .andExpect(jsonPath("$.superAdmin").value(false))
         .andExpect(jsonPath("$.studies[0].logoImageUrl").value(studyEntity.getLogoImageUrl()));
+        .andExpect(jsonPath("$.studies[0].invited").value(1))
+        .andExpect(jsonPath("$.studies[0].enrolled").value(1));
 
     verifyTokenIntrospectRequest();
   }
@@ -334,7 +347,7 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -356,7 +369,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .value(locationEntity.getName()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
-                .value(participantStudyEntity.getStatus()))
+                .value(ENROLLED_STATUS))
         .andExpect(
             jsonPath("$.participantRegistryDetail.targetEnrollment")
                 .value(siteEntity.getTargetEnrollment()));
