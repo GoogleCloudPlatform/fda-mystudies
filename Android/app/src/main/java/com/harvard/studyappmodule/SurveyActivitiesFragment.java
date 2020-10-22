@@ -1746,7 +1746,6 @@ public class SurveyActivitiesFragment extends Fragment
         ActivityData activityData =
             dbServiceSubscriber.getActivityPreference(
                 ((SurveyActivity) context).getStudyId(), realm);
-        //        Date joiningDate = new Date();
         Date joiningDate =
             survayScheduler.getJoiningDateOfStudy(
                 studyPreferences, ((SurveyActivity) context).getStudyId());

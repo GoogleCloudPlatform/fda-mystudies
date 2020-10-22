@@ -1,0 +1,19 @@
+{
+  "studyId": "REGteststudy",
+  "message": "monthly",
+  "activities": [
+    {
+      "activityId": "MonthlyTest",
+      "activityVersion": 1.0,
+      "studyId": "REGteststudy",
+      "activityState": "inProgress",
+      "activityRunId": 1,
+      "bookmarked": false,
+      "activityRun": {
+        "total": 8,
+        "missed": 0,
+        "completed": 1
+      }
+    }
+  ]
+}

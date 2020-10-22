@@ -25,7 +25,6 @@ import io.realm.RealmResults;
 import java.text.ParseException;
 import java.util.Date;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +46,7 @@ public class SurveyActivitiesFragmentTest {
   private static final String TEST_STUDYID_KEY = "studyId";
   private static final String TEST_USERID_VALUE = "Test_user1234";
   private static final String TEST_STUDYID_VALUE = "Test_Study_1221";
-  private static final String TEST_EXCEPTION_MESSAGE = "Invalid date format";
+  private static final String INVALID_DATE_FORMAT = "Invalid date format";
 
   @Before
   public void setUp() {
@@ -56,7 +55,7 @@ public class SurveyActivitiesFragmentTest {
   }
 
   @Test
-  public void getJoiningDateOfStudyTest() {
+  public void testJoiningDateOfStudy() {
     Date testDate = null;
     realm.beginTransaction();
     realm.copyToRealmOrUpdate(getStudyData());
@@ -70,7 +69,7 @@ public class SurveyActivitiesFragmentTest {
     try {
       testDate = AppController.getDateFormatForApi().parse(TEST_ENROLLMENTDATE);
     } catch (ParseException e) {
-      fail(TEST_EXCEPTION_MESSAGE);
+      fail(INVALID_DATE_FORMAT);
     }
     assertThat(joiningDate.toString(), equalTo(testDate.toString()));
   }

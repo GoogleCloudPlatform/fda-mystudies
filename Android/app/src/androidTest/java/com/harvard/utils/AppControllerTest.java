@@ -23,18 +23,18 @@ public class AppControllerTest {
   private static final String TEST_REGEX = "\\.";
   private static final boolean TEST_TRUE = true;
   private static final boolean TEST_FALSE = false;
-  private static final String TEST_EXCEPTION_MESSAGE = "Invalid date format";
+  private static final String INVALID_DATE_FORMAT = "Invalid date format";
 
   @Test
   public void isDateWithinRangeTest() {
-    SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtcNoZone();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
     Date startDate = null;
     Date endDate = null;
     try {
-      startDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
-      endDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_END_TIME.split(TEST_REGEX)[0]);
+      startDate = simpleDateFormat.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
+      endDate = simpleDateFormat.parse(TEST_ACTIVITYESWS_END_TIME.split(TEST_REGEX)[0]);
     } catch (ParseException e) {
-      fail(TEST_EXCEPTION_MESSAGE);
+      fail(INVALID_DATE_FORMAT);
     }
     boolean isWithRange = AppController.isWithinRange(startDate, endDate);
     assertThat(isWithRange, equalTo(TEST_FALSE));
@@ -44,12 +44,12 @@ public class AppControllerTest {
 
   @Test
   public void checkafterTest() {
-    SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtcNoZone();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
     Date startDate = null;
     try {
-      startDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
+      startDate = simpleDateFormat.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
     } catch (ParseException e) {
-      fail(TEST_EXCEPTION_MESSAGE);
+      fail(INVALID_DATE_FORMAT);
     }
     boolean checkAfter = AppController.checkafter(startDate);
     assertThat(checkAfter, equalTo(TEST_FALSE));

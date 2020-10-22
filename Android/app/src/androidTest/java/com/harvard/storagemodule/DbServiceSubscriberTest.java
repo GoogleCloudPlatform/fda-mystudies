@@ -118,7 +118,6 @@ public class DbServiceSubscriberTest {
             RealmResults<AnchorDate> anchorDateRealmResults =
                 realm.where(AnchorDate.class).equalTo(TEST_TYPE_KEY, TEST_FREQUENCY_TYPE).findAll();
             anchorDateRealmResults.deleteAllFromRealm();
-
             RealmResults<AnchorRuns> anchorRunsRealmResults =
                 realm
                     .where(AnchorRuns.class)
@@ -131,8 +130,8 @@ public class DbServiceSubscriberTest {
   }
 
   private ActivityListData getActivityListData() {
-    RealmList<ActivitiesWS> activitiesws1 = new RealmList<>();
-    activitiesws1.add(getactivitieswsdata());
+    RealmList<ActivitiesWS> activities = new RealmList<>();
+    activities.add(getactivitieswsdata());
     QuestionInfo questionInfo = new QuestionInfo();
     questionInfo.setActivityId(TEST_FETALKICK);
     questionInfo.setActivityVersion(TEST_ACTIVITY_VERSION);
@@ -141,7 +140,7 @@ public class DbServiceSubscriberTest {
     anchorDate.setQuestionInfo(questionInfo);
     anchorDate.setType(TEST_FREQUENCY_TYPE);
     ActivityListData activityListData = new ActivityListData();
-    activityListData.setActivities(activitiesws1);
+    activityListData.setActivities(activities);
     activityListData.setAnchorDate(anchorDate);
     activityListData.setMessage(TEST_MESSAGE);
     activityListData.setStudyId(TEST_FETALKICK);

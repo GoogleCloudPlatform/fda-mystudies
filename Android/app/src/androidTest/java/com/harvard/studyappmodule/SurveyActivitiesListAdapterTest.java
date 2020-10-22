@@ -8,12 +8,10 @@
 
 package com.harvard.studyappmodule;
 
+import static junit.framework.TestCase.assertTrue;
 import static junit.framework.TestCase.fail;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 import android.support.test.InstrumentationRegistry;
-import com.harvard.storagemodule.DbServiceSubscriber;
 import com.harvard.studyappmodule.activitylistmodel.ActivitiesWS;
 import com.harvard.studyappmodule.activitylistmodel.AnchorRuns;
 import com.harvard.studyappmodule.activitylistmodel.Frequency;
@@ -50,10 +48,10 @@ public class SurveyActivitiesListAdapterTest {
   private static final boolean TEST_BRANCHING = false;
   private static final int TEST_POSITION = 0;
   private static final String TEST_REGEX = "\\.";
-  private static final String TEST_RESULT_ONE = "05:40PM, Oct 09, 2020 to 11:59PM, Oct 12, 2020";
-  private static final String TEST_RESULT_TWO = "12:10PM, Oct 09, 2020 to 11:59PM, Oct 12, 2020";
-  private static final String TEST_RESULT_THREE = "From : 12:10PM, Oct 09, 2020";
-  private static final String TEST_EXCEPTION_MESSAGE = "Invalid date format";
+  private static final String TEST_RESULT_ONE = "05:40pm, Oct 09, 2020 to 11:59pm, Oct 12, 2020";
+  private static final String TEST_RESULT_TWO = "12:10pm, Oct 09, 2020 to 11:59pm, Oct 12, 2020";
+  private static final String TEST_RESULT_THREE = "From : 12:10pm, Oct 09, 2020";
+  private static final String INVALID_DATE_FORMAT = "Invalid date format";
 
   @Test
   public void getDatesAdapterTest() {
@@ -62,17 +60,17 @@ public class SurveyActivitiesListAdapterTest {
     Date endDate = null;
     Date joiningdate = null;
     activitiesws.add(getactivitieswsdata());
-    SimpleDateFormat simpleDateFormat5 = AppController.getDateFormatUtcNoZone();
+    SimpleDateFormat simpleDateFormat = AppController.getDateFormatUtcNoZone();
     try {
-      startDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
-      endDate = simpleDateFormat5.parse(TEST_ACTIVITYESWS_END_TIME.split(TEST_REGEX)[0]);
+      startDate = simpleDateFormat.parse(TEST_ACTIVITYESWS_START_TIME.split(TEST_REGEX)[0]);
+      endDate = simpleDateFormat.parse(TEST_ACTIVITYESWS_END_TIME.split(TEST_REGEX)[0]);
       joiningdate = AppController.getDateFormatForApi().parse(TEST_ACTIVITYESWS_JOIN_TIME);
     } catch (ParseException e) {
-      fail(TEST_EXCEPTION_MESSAGE);
+      fail(INVALID_DATE_FORMAT);
     }
     SurveyActivitiesListAdapter surveyActivitiesListAdapter =
         new SurveyActivitiesListAdapter(null, null, null, null, null, false, null);
-    String conditionOne =
+    String anchordate =
         surveyActivitiesListAdapter.getDateRange(
             activitiesws,
             endDate,
@@ -80,8 +78,9 @@ public class SurveyActivitiesListAdapterTest {
             joiningdate,
             startDate,
             InstrumentationRegistry.getTargetContext());
-    assertThat(conditionOne, equalTo(TEST_RESULT_ONE));
-    String conditionTwo =
+    assertTrue(anchordate.toLowerCase().contains(TEST_RESULT_ONE.toLowerCase()));
+
+    String regular =
         surveyActivitiesListAdapter.getDateRange(
             activitiesws,
             endDate,
@@ -89,8 +88,9 @@ public class SurveyActivitiesListAdapterTest {
             startDate,
             joiningdate,
             InstrumentationRegistry.getTargetContext());
-    assertThat(conditionTwo, equalTo(TEST_RESULT_TWO));
-    String conditionThree =
+    assertTrue(regular.toLowerCase().contains(TEST_RESULT_TWO.toLowerCase()));
+
+    String studyLifeTime =
         surveyActivitiesListAdapter.getDateRange(
             activitiesws,
             null,
@@ -98,7 +98,7 @@ public class SurveyActivitiesListAdapterTest {
             startDate,
             joiningdate,
             InstrumentationRegistry.getTargetContext());
-    assertThat(conditionThree, equalTo(TEST_RESULT_THREE));
+    assertTrue(studyLifeTime.toLowerCase().contains(TEST_RESULT_THREE.toLowerCase()));
   }
 
   private ActivitiesWS getactivitieswsdata() {
