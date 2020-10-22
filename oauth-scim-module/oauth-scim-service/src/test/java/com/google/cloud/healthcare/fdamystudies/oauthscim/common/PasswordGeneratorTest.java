@@ -54,7 +54,7 @@ public class PasswordGeneratorTest {
       assertTrue("Password should contain alteast one digit", numeric);
       assertTrue("Password should contain alteast one lowercase letter", lowerCase);
       assertTrue("Password should contain alteast one uppercase letter", upperCase);
-      //   assertTrue("Password should contain alteast one special character", specialChar);
+      assertTrue("Password should contain alteast one special character", specialChar);
       assertTrue("Password length mismatched", password.length() == passwordLength);
     }
     return password;
