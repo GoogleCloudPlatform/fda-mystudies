@@ -28,6 +28,7 @@ import com.fdahpstudydesigner.dao.LoginDAO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.service.NotificationService;
+import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
@@ -73,6 +74,8 @@ public class FDASchedulerService {
   @Autowired private UsersDAO usersDAO;
 
   @Autowired private NotificationService notificationService;
+
+  @Autowired private OAuthService oauthService;
 
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
@@ -193,12 +196,7 @@ public class FDASchedulerService {
                     + FdahpStudyDesignerUtil.getAppProperties().get("push.notification.uri"));
 
         post.setHeader("Content-type", "application/json");
-
-        post.setHeader("clientId", configMap.get("security.oauth2.client.client-id").toString());
-        post.setHeader(
-            "secretKey",
-            FdahpStudyDesignerUtil.getHashedValue(
-                configMap.get("security.oauth2.client.client-secret").toString()));
+        post.setHeader("Authorization", "Bearer " + oauthService.getAccessToken());
 
         StringEntity requestEntity =
             new StringEntity(json.toString(), ContentType.APPLICATION_JSON);

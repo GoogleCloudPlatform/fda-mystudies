@@ -110,4 +110,19 @@ public class UserController {
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }
+
+  @PostMapping(
+      value = "/users/{userId}/invite",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AdminUserResponse> sendInvitation(
+      @RequestHeader(name = "userId") String signedInUserId,
+      @PathVariable String userId,
+      HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    AdminUserResponse userResponse = manageUserService.sendInvitation(userId, signedInUserId);
+    logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+  }
 }
