@@ -332,8 +332,6 @@
           'click',
           function () {
             $("#doneId").prop('disabled', true);
-            $('#elaboratedRTE').summernote(
-                'code');
             valid = maxLenValEditor();
             if (isFromValid("#consentInfoFormId")
                 && valid) {
@@ -353,6 +351,7 @@
                 var briefSummaryText = replaceSpecialCharacters($(
                     "#briefSummary")
                     .val());
+                elaboratedContent = $('#elaboratedRTE').text(elaboratedContent).html();
                 $("#elaborated").val(
                     elaboratedContent);
                 $("#briefSummary").val(
