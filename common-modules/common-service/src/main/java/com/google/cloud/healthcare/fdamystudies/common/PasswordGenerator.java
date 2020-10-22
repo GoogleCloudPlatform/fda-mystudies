@@ -67,25 +67,33 @@ public final class PasswordGenerator {
       }
     }
 
-    if (countMap.containsKey(DIGITS_KEY)
-        && countMap.containsKey(LOWERCASE_KEY)
-        && countMap.containsKey(UPPERCASE_KEY)) {
+    if (isValidPassword(countMap)) {
       return String.valueOf(passwordChars);
     }
 
-    String[] keys = {DIGITS_KEY, LOWERCASE_KEY, UPPERCASE_KEY};
-
-    while (!countMap.containsKey(DIGITS_KEY)
-        || !countMap.containsKey(LOWERCASE_KEY)
-        || !countMap.containsKey(UPPERCASE_KEY)) {
-      for (int i = 0; i < keys.length; i++) {
-        insertNewChar(passwordChars, countMap, keys[i]);
-      }
+    while (!isValidPassword(countMap)) {
+      String missingCharKey = findMissingChar(countMap);
+      insertNewChar(passwordChars, countMap, missingCharKey);
     }
     return String.valueOf(passwordChars);
   }
 
-  private static boolean insertNewChar(
+  private static boolean isValidPassword(Map<String, Integer> countMap) {
+    return countMap.containsKey(DIGITS_KEY)
+        && countMap.containsKey(LOWERCASE_KEY)
+        && countMap.containsKey(UPPERCASE_KEY);
+  }
+
+  private static String findMissingChar(Map<String, Integer> countMap) {
+    if (!countMap.containsKey(DIGITS_KEY)) {
+      return DIGITS_KEY;
+    } else if (!countMap.containsKey(LOWERCASE_KEY)) {
+      return LOWERCASE_KEY;
+    }
+    return UPPERCASE_KEY;
+  }
+
+  private static void insertNewChar(
       char[] passwordChars, Map<String, Integer> countMap, String key) {
     int position = secureRandom.nextInt(passwordChars.length);
     char oldChar = passwordChars[position];
@@ -94,19 +102,14 @@ public final class PasswordGenerator {
       passwordChars[position] = newChar;
       incrementCount(countMap, key);
       decrementCount(countMap, DIGITS_KEY);
-      return true;
     } else if (Character.isLowerCase(oldChar) && countMap.get(LOWERCASE_KEY) > 1) {
       passwordChars[position] = newChar;
       incrementCount(countMap, key);
       decrementCount(countMap, LOWERCASE_KEY);
-      return true;
     } else if (Character.isUpperCase(oldChar) && countMap.get(UPPERCASE_KEY) > 1) {
       passwordChars[position] = newChar;
       incrementCount(countMap, key);
       decrementCount(countMap, UPPERCASE_KEY);
-      return true;
-    } else {
-      return false;
     }
   }
 
