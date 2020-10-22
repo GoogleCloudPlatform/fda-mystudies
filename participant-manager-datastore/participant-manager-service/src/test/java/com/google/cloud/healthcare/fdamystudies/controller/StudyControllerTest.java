@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.USER_ID_HEADER;
@@ -343,7 +344,7 @@ public class StudyControllerTest extends BaseMockIT {
     siteEntity.setStudy(studyEntity);
     participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
     participantStudyEntity.setStudy(studyEntity);
-    participantStudyEntity.setStatus(EnrollmentStatus.ENROLLED.getStatus());
+    participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
@@ -365,7 +366,7 @@ public class StudyControllerTest extends BaseMockIT {
                 .value(locationEntity.getName()))
         .andExpect(
             jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
-                .value(participantStudyEntity.getStatus()))
+                .value(ENROLLED_STATUS))
         .andExpect(
             jsonPath("$.participantRegistryDetail.targetEnrollment")
                 .value(siteEntity.getTargetEnrollment()));
