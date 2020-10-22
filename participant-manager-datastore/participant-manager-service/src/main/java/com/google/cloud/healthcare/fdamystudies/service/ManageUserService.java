@@ -25,4 +25,6 @@ public interface ManageUserService {
 
   public GetUsersResponse getUsers(
       String superAdminUserId, Integer page, Integer limit, AuditLogEventRequest auditRequest);
+
+  public AdminUserResponse sendInvitation(String userId, String superAdminUserId);
 }
