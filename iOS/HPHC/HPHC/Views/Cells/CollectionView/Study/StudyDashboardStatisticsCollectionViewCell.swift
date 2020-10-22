@@ -206,23 +206,23 @@ class StudyDashboardStatisticsCollectionViewCell: UICollectionViewCell {
 
     if data.calculation! == StatisticsFormula.maximum.rawValue {
       let max = array.max()
-      let maxValue: String! = String(format: "%.2f", max!)
+      let maxValue: String! = String(format: "%.2f", max! / 60)
       labelStatisticsCount?.text = maxValue
     }
     if data.calculation! == StatisticsFormula.minimum.rawValue {
       let min = array.min()
-      let minValue = String(format: "%.2f", min!)
+      let minValue = String(format: "%.2f", min! / 60)
       labelStatisticsCount?.text = minValue
     }
     if data.calculation! == StatisticsFormula.average.rawValue {
       let sumArray = array.reduce(0, +)
       let avgArrayValue = sumArray / Float(array.count)
-      let avgValue = String(format: "%.2f", avgArrayValue)
+      let avgValue = String(format: "%.2f", avgArrayValue / 60)
       labelStatisticsCount?.text = avgValue
     }
     if data.calculation! == StatisticsFormula.summation.rawValue {
       let sumArray = array.reduce(0, +)
-      let sumValue = String(format: "%.2f", sumArray)
+      let sumValue = String(format: "%.2f", sumArray / 60)
       labelStatisticsCount?.text = sumValue
     }
   }
