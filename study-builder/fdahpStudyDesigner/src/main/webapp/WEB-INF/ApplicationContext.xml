@@ -20,6 +20,15 @@
 
     <bean id="restTemplate"
           class="org.springframework.web.client.RestTemplate">
+      <property name="interceptors">
+        <list>
+          <ref bean="authTokenInterceptor" />
+        </list>
+      </property>
+    </bean>
+    
+    <bean id="authTokenInterceptor"
+          class="com.fdahpstudydesigner.util.RestTemplateAuthTokenModifierInterceptor">
     </bean>
 
     <context:component-scan
