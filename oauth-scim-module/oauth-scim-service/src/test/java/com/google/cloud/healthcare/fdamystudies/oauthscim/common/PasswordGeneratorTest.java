@@ -48,15 +48,13 @@ public class PasswordGeneratorTest {
       }
     }
 
-    if (password.length() == 0) {
-      assertTrue("should return empty value", password.length() == 0);
-    } else {
-      assertTrue("Password should contain alteast one digit", numeric);
-      assertTrue("Password should contain alteast one lowercase letter", lowerCase);
-      assertTrue("Password should contain alteast one uppercase letter", upperCase);
-      assertTrue("Password should contain alteast one special character", specialChar);
-      assertTrue("Password length mismatched", password.length() == passwordLength);
-    }
+    assertTrue("Password length should not be zero", password.length() != 0);
+    assertTrue("Password should contain alteast one digit", numeric);
+    assertTrue("Password should contain alteast one lowercase letter", lowerCase);
+    assertTrue("Password should contain alteast one uppercase letter", upperCase);
+    assertTrue("Password should contain alteast one special character", specialChar);
+    assertTrue("Password length mismatched", password.length() == passwordLength);
+
     return password;
   }
 }

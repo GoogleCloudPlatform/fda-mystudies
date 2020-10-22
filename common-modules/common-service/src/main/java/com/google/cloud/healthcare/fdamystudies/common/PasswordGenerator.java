@@ -25,7 +25,7 @@ public final class PasswordGenerator {
 
   private static SecureRandom secureRandom = new SecureRandom();
 
-  public static final String SPECIAL_CHARS = "!#$%&()*?@{}";
+  public static final String SPECIAL_CHARS = "!#$%&()*?@{}.;:,-_'\"/\\|=+^";
 
   private PasswordGenerator() {}
 
