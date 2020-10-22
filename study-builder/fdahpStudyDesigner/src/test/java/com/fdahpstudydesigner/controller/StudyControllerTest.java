@@ -56,6 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -65,10 +66,12 @@ import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
+import com.fdahpstudydesigner.common.JsonUtils;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -100,6 +103,8 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String STUDY_META_DATA_URI = "/studymetadata";
 
   private static final String TEST_STUDY_ID_STRING = "678680";
+
+  private static final String OAUTH_TOKEN = "/oauth2/token";
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
@@ -1151,6 +1156,14 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
+        .expect(requestTo(OAUTH_TOKEN))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(readJsonFile("/token_response_oauth_scim_service.json")));
+
+    mockServer
         .expect(requestTo(STUDIES_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
@@ -1203,6 +1216,14 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
+        .expect(requestTo(OAUTH_TOKEN))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(readJsonFile("/token_response_oauth_scim_service.json")));
+
+    mockServer
         .expect(requestTo(STUDIES_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
@@ -1232,5 +1253,11 @@ public class StudyControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(STUDY_METADATA_SEND_OPERATION_FAILED);
     verifyAuditEventCall(STUDY_METADATA_SEND_FAILED);
+  }
+
+  public static String readJsonFile(String filepath) throws IOException {
+    return JsonUtils.getObjectMapper()
+        .readValue(JsonUtils.class.getResourceAsStream(filepath), JsonNode.class)
+        .toString();
   }
 }
