@@ -8,7 +8,7 @@ import {ApiResponse} from './api.response.model';
 import {RegistryParticipant} from '../shared/participant';
 
 export const expectedParticipantDetails = {
-  participantDetail: {
+  participantDetails: {
     id: '1',
     email: 'test@grr.la',
     enrollmentStatus: 'Enrolled',
