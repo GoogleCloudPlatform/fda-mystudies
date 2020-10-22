@@ -119,6 +119,7 @@ public class StudyStateDaoImpl implements StudyStateDao {
     Root<ParticipantStudyEntity> participantStudyRoot = null;
     List<Predicate> predicates = new ArrayList<>();
     int isUpdated = 0;
+
     Session session = this.sessionFactory.getCurrentSession();
 
     criteriaBuilder = session.getCriteriaBuilder();
@@ -128,6 +129,7 @@ public class StudyStateDaoImpl implements StudyStateDao {
     studyEntityPredicates[0] = criteriaBuilder.equal(studyEntityRoot.get("customId"), studyId);
     studyEntityCriteria.select(studyEntityRoot).where(studyEntityPredicates);
     studiesBoList = session.createQuery(studyEntityCriteria).getResultList();
+
     if (!studiesBoList.isEmpty()) {
       studyEntity = studiesBoList.get(0);
       criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);

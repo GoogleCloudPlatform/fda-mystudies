@@ -156,7 +156,7 @@ CREATE TABLE IF NOT EXISTS `participant_registry_site` (
   `site_id` varchar(255) DEFAULT NULL,
   `study_info_id` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `participant_registry_site_email_study_info_id_uidx` (`email`,`study_info_id`),
+  UNIQUE KEY `participant_registry_site_email_study_info_id_enrollment_token_uidx` (`email`,`study_info_id`,`enrollment_token`),
   UNIQUE KEY `UK_f8207wc2n5trl8demmfsvxis1` (`enrollment_token`),
   KEY `FKa0f0un45iyajvjfqq6ok42lqc` (`site_id`),
   KEY `FKrtseodvj7n9yjtwfqiixtviec` (`study_info_id`),
