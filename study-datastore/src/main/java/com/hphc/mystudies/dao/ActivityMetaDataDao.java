@@ -473,14 +473,12 @@ public class ActivityMetaDataDao {
             session
                 .createQuery(
                     "from ActiveTaskAttrtibutesValuesDto ATAVDTO"
-                        + " where ATAVDTO.activeTaskId="
-                        + activeTaskDto.getId()
+                        + " where ATAVDTO.activeTaskId=:activeTaskId"
                         + " and ATAVDTO.activeTaskMasterAttrId in (select ATMADTO.masterId"
                         + " from ActiveTaskMasterAttributeDto ATMADTO"
-                        + " where ATMADTO.attributeType='"
-                        + StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE
-                        + "')"
-                        + " ORDER BY ATAVDTO.activeTaskMasterAttrId")
+                        + " where ATMADTO.attributeType=:attributeType"
+                        + " ORDER BY ATAVDTO.activeTaskMasterAttrId").setInteger("activeTaskId", activeTaskDto.getId())
+                			.setString("attributeType", StudyMetaDataConstants.ACTIVE_TASK_ATTRIBUTE_TYPE_CONFIGURE)
                 .list();
         if ((activeTaskAttrtibuteValuesList != null) && !activeTaskAttrtibuteValuesList.isEmpty()) {
 
@@ -493,9 +491,9 @@ public class ActivityMetaDataDao {
                 session
                     .createQuery(
                         " from ActiveTaskMasterAttributeDto ATMADTO"
-                            + " where ATMADTO.masterId in ("
-                            + StringUtils.join(taskMasterAttrIdList, ",")
-                            + ")")
+                            + " where ATMADTO.masterId in (:taskMasterAttrIdList"
+                            //+ StringUtils.join(taskMasterAttrIdList, ",")
+                            + ")").setParameterList("taskMasterAttrIdList",taskMasterAttrIdList)
                     .list();
 
             if ((activeTaskMaterList != null) && !activeTaskMaterList.isEmpty()) {
@@ -504,8 +502,8 @@ public class ActivityMetaDataDao {
                       session
                           .createQuery(
                               "from ActiveTaskListDto ATDTO"
-                                  + " where ATDTO.activeTaskListId="
-                                  + activeTaskMaterList.get(0).getTaskTypeId())
+                                  + " where ATDTO.activeTaskListId=:activeTaskListId")
+                          			.setInteger("activeTaskListId", activeTaskMaterList.get(0).getTaskTypeId())
                           .uniqueResult();
             }
           }
@@ -674,10 +672,9 @@ public class ActivityMetaDataDao {
             session
                 .createQuery(
                     "from QuestionnairesStepsDto QSDTO"
-                        + " where QSDTO.questionnairesId="
-                        + questionnaireDto.getId()
+                        + " where QSDTO.questionnairesId=:questRespId"
                         + " and QSDTO.status=true"
-                        + " ORDER BY QSDTO.sequenceNo")
+                        + " ORDER BY QSDTO.sequenceNo").setInteger("questRespId", questionnaireDto.getId())
                 .list();
         if ((questionaireStepsList != null) && !questionaireStepsList.isEmpty()) {
 
@@ -747,9 +744,8 @@ public class ActivityMetaDataDao {
                 session
                     .createQuery(
                         "from InstructionsDto IDTO"
-                            + " where IDTO.id in ("
-                            + StringUtils.join(instructionIdList, ",")
-                            + ") and IDTO.status=true")
+                            + " where IDTO.id in (:instructionIdList"
+                            + ") and IDTO.status=true").setParameterList("instructionIdList", instructionIdList)
                     .list();
             if ((instructionsDtoList != null) && !instructionsDtoList.isEmpty()) {
               stepsSequenceTreeMap =
@@ -774,9 +770,8 @@ public class ActivityMetaDataDao {
                 session
                     .createQuery(
                         " from QuestionsDto QDTO"
-                            + " where QDTO.id in ("
-                            + StringUtils.join(questionIdList, ",")
-                            + ") and QDTO.status=true")
+                            + " where QDTO.id in (:questionIdList"
+                            + ") and QDTO.status=true").setParameterList("questionIdList", questionIdList)
                     .list();
             if ((questionsList != null) && !questionsList.isEmpty()) {
               stepsSequenceTreeMap =
@@ -804,10 +799,9 @@ public class ActivityMetaDataDao {
                           "from FormMappingDto FMDTO"
                               + " where FMDTO.formId in (select FDTO.formId"
                               + " from FormDto FDTO"
-                              + " where FDTO.formId="
-                              + formId
+                              + " where FDTO.formId=:formId"
                               + ") and FMDTO.active=true"
-                              + " ORDER BY FMDTO.sequenceNo ")
+                              + " ORDER BY FMDTO.sequenceNo ").setInteger("formId", formId)
                       .list();
               if ((formList != null) && !formList.isEmpty()) {
                 stepsSequenceTreeMap =
@@ -1145,9 +1139,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from ActiveTaskCustomFrequenciesDto ATCFDTO"
-                      + " where ATCFDTO.activeTaskId="
-                      + activeTask.getId()
-                      + " ORDER BY frequencyStartDate ASC")
+                      + " where ATCFDTO.activeTaskId=:activeTaskId"
+                      + " ORDER BY frequencyStartDate ASC").setInteger("activeTaskId", activeTask.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList) {
@@ -1262,9 +1255,9 @@ public class ActivityMetaDataDao {
             session
                 .createQuery(
                     "from QuestionnairesFrequenciesDto QFDTO"
-                        + " where QFDTO.questionnairesId= :questionnairesId"
+                        + " where QFDTO.questionnairesId= :questRespId"
                         + " ORDER BY QFDTO.frequencyTime")
-                .setInteger(StudyMetaDataEnum.QF_QUESTIONNAIRE_ID.value(), questionaire.getId())
+                .setInteger("questRespId", questionaire.getId())
                 .list();
         if ((dailyFrequencyList != null) && !dailyFrequencyList.isEmpty()) {
           for (int i = 0; i < dailyFrequencyList.size(); i++) {
@@ -1297,9 +1290,9 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from QuestionnairesFrequenciesDto QFDTO"
-                          + " where QFDTO.questionnairesId= :questionnairesId"
+                          + " where QFDTO.questionnairesId= :questRespId"
                           + " ORDER BY QFDTO.frequencyTime")
-                  .setInteger(StudyMetaDataEnum.QF_QUESTIONNAIRE_ID.value(), questionaire.getId())
+                  .setInteger("questRespId", questionaire.getId())
                   .list();
           if ((dailyFrequencyList != null) && !dailyFrequencyList.isEmpty()) {
             for (int i = 0; i < dailyFrequencyList.size(); i++) {
@@ -1497,9 +1490,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from QuestionnairesCustomFrequenciesDto QCFDTO"
-                      + " where QCFDTO.questionnairesId="
-                      + questionaire.getId()
-                      + " ORDER BY frequencyStartDate ASC")
+                      + " where QCFDTO.questionnairesId=:questRespId"
+                      + " ORDER BY frequencyStartDate ASC").setInteger("questRespId", questionaire.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (QuestionnairesCustomFrequenciesDto customFrequencyDto :
@@ -1792,9 +1784,8 @@ public class ActivityMetaDataDao {
                     session
                         .createQuery(
                             "from QuestionReponseTypeDto QRTDTO"
-                                + " where QRTDTO.questionsResponseTypeId="
-                                + questionsDto.getId()
-                                + " ORDER BY QRTDTO.responseTypeId DESC")
+                                + " where QRTDTO.questionsResponseTypeId=:questRespType"
+                                + " ORDER BY QRTDTO.responseTypeId DESC").setInteger("questRespType", questionsDto.getId())
                         .setMaxResults(1)
                         .uniqueResult();
             if ((reponseType != null)
@@ -1860,9 +1851,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from QuestionReponseTypeDto QRTDTO"
-                              + " where QRTDTO.questionsResponseTypeId="
-                              + questionsDto.getId()
-                              + " ORDER BY QRTDTO.responseTypeId DESC")
+                              + " where QRTDTO.questionsResponseTypeId=:questRespType"
+                              + " ORDER BY QRTDTO.responseTypeId DESC").setInteger("questRespType", questionsDto.getId())
                       .setMaxResults(1)
                       .uniqueResult();
 
@@ -2007,9 +1997,8 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from QuestionsDto QDTO"
-                          + " where QDTO.id in ("
-                          + StringUtils.join(formQuestionIdsList, ',')
-                          + ")")
+                          + " where QDTO.id in (:formQuestionIdsList"
+                          + ")").setParameterList("formQuestionIdsList", formQuestionIdsList)
                   .list();
           if ((formQuestionsList != null) && !formQuestionsList.isEmpty()) {
             for (QuestionsDto formQuestionDto : formQuestionsList) {
@@ -2214,9 +2203,9 @@ public class ActivityMetaDataDao {
                 session
                     .createQuery(
                         "from QuestionReponseTypeDto QRTDTO"
-                            + " where QRTDTO.questionsResponseTypeId="
-                            + questionDto.getId()
+                            + " where QRTDTO.questionsResponseTypeId=:questionsResponseTypeId"
                             + " ORDER BY QRTDTO.responseTypeId DESC")
+                    .setInteger("questionsResponseTypeId", questionDto.getId())
                     .setMaxResults(1)
                     .uniqueResult();
         switch (questionResultType) {
@@ -2445,8 +2434,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
-                      + " where QRSTDTO.responseTypeId= :responseTypeId")
-              .setInteger(StudyMetaDataEnum.QF_RESPONSE_TYPE_ID.value(), questionDto.getId())
+                      + " where QRSTDTO.responseTypeId= :respType")
+              .setInteger("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2495,8 +2484,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
-                      + " where QRSTDTO.responseTypeId= :responseTypeId")
-              .setInteger(StudyMetaDataEnum.QF_RESPONSE_TYPE_ID.value(), questionDto.getId())
+                      + " where QRSTDTO.responseTypeId= :respType")
+              .setInteger("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2536,8 +2525,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
-                      + " where QRSTDTO.responseTypeId="
-                      + questionDto.getId())
+                      + " where QRSTDTO.responseTypeId=:respType")
+              .setInteger("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2584,8 +2573,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from QuestionResponseSubTypeDto QRSTDTO"
-                      + " where QRSTDTO.responseTypeId="
-                      + questionDto.getId())
+                      + " where QRSTDTO.responseTypeId=:respType")
+              .setInteger("respType", questionDto.getId())
               .list();
       if ((responseSubTypeList != null) && !responseSubTypeList.isEmpty()) {
         for (QuestionResponseSubTypeDto subType : responseSubTypeList) {
@@ -2612,9 +2601,9 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from QuestionReponseTypeDto QRTDTO"
-                          + " where QRTDTO.questionsResponseTypeId="
-                          + questionDto.getId()
+                          + " where QRTDTO.questionsResponseTypeId=:quesRespId"
                           + " ORDER BY QRTDTO.responseTypeId DESC")
+                  .setInteger("quesRespId", questionDto.getId())
                   .setMaxResults(1)
                   .uniqueResult();
 
@@ -2878,8 +2867,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from ActiveTaskFrequencyDto ATFDTO"
-                              + " where ATFDTO.activeTaskId="
-                              + activeTaskDto.getId())
+                              + " where ATFDTO.activeTaskId=:activeTaskId")
+                      .setInteger("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if ((activeTaskFrequency != null)
               && StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())) {
@@ -2918,9 +2907,8 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from ActiveTaskFrequencyDto ATFDTO"
-                          + " where ATFDTO.activeTaskId="
-                          + activeTaskDto.getId()
-                          + " ORDER BY ATFDTO.frequencyTime")
+                          + " where ATFDTO.activeTaskId=:activeTaskId"
+                          + " ORDER BY ATFDTO.frequencyTime").setInteger("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskFrequencyList != null) && !activeTaskFrequencyList.isEmpty()) {
             startDateTime =
@@ -2951,9 +2939,8 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
-                          + " where ATCFDTO.activeTaskId="
-                          + activeTaskDto.getId()
-                          + " ORDER BY ATCFDTO.frequencyTime")
+                          + " where ATCFDTO.activeTaskId=:activeTaskId"
+                          + " ORDER BY ATCFDTO.frequencyTime").setInteger("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
             String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
@@ -3037,8 +3024,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
-                              + " where QFDTO.questionnairesId="
-                              + questionaire.getId())
+                              + " where QFDTO.questionnairesId=:quesRespId")
+                      .setInteger("quesRespId", questionaire.getId())
                       .uniqueResult();
           if ((questionnairesFrequency != null)
               && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())) {
@@ -3077,9 +3064,8 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from QuestionnairesFrequenciesDto QFDTO"
-                          + " where QFDTO.questionnairesId="
-                          + questionaire.getId()
-                          + " ORDER BY QFDTO.frequencyTime")
+                          + " where QFDTO.questionnairesId=:quesRespId"
+                          + " ORDER BY QFDTO.frequencyTime").setInteger("quesRespId", questionaire.getId())
                   .list();
           if ((questionnairesFrequencyList != null) && !questionnairesFrequencyList.isEmpty()) {
             startDateTime =
@@ -3108,9 +3094,8 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
-                          + " where QCFDTO.questionnairesId="
-                          + questionaire.getId()
-                          + " ORDER BY QCFDTO.frequencyTime")
+                          + " where QCFDTO.questionnairesId=:quesResId"
+                          + " ORDER BY QCFDTO.frequencyTime").setInteger("quesResId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
               && !questionnaireCustomFrequencyList.isEmpty()) {
@@ -3849,9 +3834,11 @@ public class ActivityMetaDataDao {
     String searchQuery = "";
     try {
       ActivityAnchorDateBean activityAnchorDateBean = new ActivityAnchorDateBean();
-      searchQuery = "from AnchorDateTypeDto a where a.id=" + activeTaskDto.getAnchorDateId() + "";
+      searchQuery = "from AnchorDateTypeDto a where a.id=:anchorDateId";
       AnchorDateTypeDto anchorDateTypeDto =
-          (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
+          (AnchorDateTypeDto) session.createQuery(searchQuery)
+          .setInteger("anchorDateId", activeTaskDto.getAnchorDateId())
+          .uniqueResult();
       if (anchorDateTypeDto != null) {
         if (!anchorDateTypeDto
             .getName()
@@ -3865,18 +3852,16 @@ public class ActivityMetaDataDao {
                   + " s.questionnaires_id=qr.id"
                   + " and s.instruction_form_id=q.id"
                   + " and s.step_type='Question'"
-                  + " and qr.custom_study_id='"
-                  + activeTaskDto.getCustomStudyId()
-                  + "'"
-                  + " and qr.schedule_type='"
-                  + StudyMetaDataConstants.SCHEDULETYPE_REGULAR
-                  + "'"
-                  + " and qr.frequency = '"
-                  + StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME
-                  + "'"
-                  + " and q.anchor_date_id="
-                  + activeTaskDto.getAnchorDateId();
-          List<?> result = session.createSQLQuery(searchQuery).list();
+                  + " and qr.custom_study_id=:custStudyId"
+                  + " and qr.schedule_type=:schedulerType"
+                  + " and qr.frequency = :freqType"
+                  + " and q.anchor_date_id=:anchorDateId";
+          List<?> result = session.createSQLQuery(searchQuery)
+        		  .setString("custStudyId", activeTaskDto.getCustomStudyId())
+        		  .setString("schedulerType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
+        		  .setString("freqType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+        		  .setInteger("anchorDateId", activeTaskDto.getAnchorDateId())
+        		  .list();
           if ((null != result) && !result.isEmpty()) {
             Object[] objects = (Object[]) result.get(0);
             activityAnchorDateBean.setSourceKey((String) objects[0]);
@@ -3892,18 +3877,16 @@ public class ActivityMetaDataDao {
                     + " and f.formId=qsf.instructionFormId"
                     + " and qsf.stepType='Form'"
                     + " and qsf.questionnairesId=qq.id"
-                    + " and q.anchorDateId="
-                    + activeTaskDto.getAnchorDateId()
-                    + " and qq.customStudyId='"
-                    + activeTaskDto.getCustomStudyId()
-                    + "'"
-                    + " and qq.scheduleType='"
-                    + StudyMetaDataConstants.SCHEDULETYPE_REGULAR
-                    + "'"
-                    + " and qq.frequency = '"
-                    + StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME
-                    + "'";
-            List<?> result1 = session.createQuery(query).list();
+                    + " and q.anchorDateId=:anchorDateId"
+                    + " and qq.customStudyId=:custStudyId"
+                    + " and qq.scheduleType=:schedulerType"
+                    + " and qq.frequency = :freqType";
+            List<?> result1 = session.createQuery(query)
+            		.setInteger("anchorDateId", activeTaskDto.getAnchorDateId())
+            		.setString("custStudyId", activeTaskDto.getCustomStudyId())
+            		.setString("schedulerType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
+            		.setString("freqType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+            		.list();
             if ((null != result1) && !result1.isEmpty()) {
               Object[] objects = (Object[]) result1.get(0);
               activityAnchorDateBean.setSourceKey((String) objects[0]);
@@ -3924,9 +3907,9 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto QCFDTO"
-                          + " where QCFDTO.activeTaskId="
-                          + activeTaskDto.getId()
+                          + " where QCFDTO.activeTaskId=:activeTaskId"
                           + " order by QCFDTO.id")
+                  .setInteger("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
             start.setAnchorDays(
@@ -3956,9 +3939,9 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from ActiveTaskFrequencyDto QCFDTO"
-                          + " where QCFDTO.activeTaskId="
-                          + activeTaskDto.getId()
+                          + " where QCFDTO.activeTaskId=:activeTaskId"
                           + " order by QCFDTO.id")
+                  .setInteger("activeTaskId", activeTaskDto.getId())
                   .list();
 
           if ((taskFrequencyDtoList != null) && (taskFrequencyDtoList.size() > 0)) {
@@ -3978,8 +3961,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from ActiveTaskFrequencyDto QFDTO"
-                              + " where QFDTO.activeTaskId="
-                              + activeTaskDto.getId())
+                              + " where QFDTO.activeTaskId=:activeTaskId")
+                      .setInteger("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if (taskFrequencyDto != null) {
             if (taskFrequencyDto.getTimePeriodFromDays() != null) {
@@ -4054,8 +4037,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from QuestionnairesCustomFrequenciesDto QCFDTO"
-                      + " where QCFDTO.questionnairesId="
-                      + questionaire.getId())
+                      + " where QCFDTO.questionnairesId=:quesResId")
+              .setInteger("quesResId", questionaire.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (QuestionnairesCustomFrequenciesDto customFrequencyDto :
@@ -4109,18 +4092,16 @@ public class ActivityMetaDataDao {
                   + " s.questionnaires_id=qr.id"
                   + " and s.instruction_form_id=q.id"
                   + " and s.step_type='Question'"
-                  + " and qr.custom_study_id='"
-                  + questionaire.getCustomStudyId()
-                  + "'"
-                  + " and qr.schedule_type='"
-                  + StudyMetaDataConstants.SCHEDULETYPE_REGULAR
-                  + "'"
-                  + " and qr.frequency = '"
-                  + StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME
-                  + "'"
-                  + " and q.anchor_date_id="
-                  + questionaire.getAnchorDateId();
-          List<?> result = session.createSQLQuery(searchQuery).list();
+                  + " and qr.custom_study_id=:customStudyId"
+                  + " and qr.schedule_type=:scheduleType"
+                  + " and qr.frequency = :frequencyType"
+                  + " and q.anchor_date_id=:anchorDateId";
+          List<?> result = session.createSQLQuery(searchQuery)
+        		  .setString("customStudyId", questionaire.getCustomStudyId())
+        		  .setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
+        		  .setString("frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+        		  .setInteger("anchorDateId", questionaire.getAnchorDateId())
+        		  .list();
           if ((null != result) && !result.isEmpty()) {
             // for(int i=0;i<result.size();i++) {
             Object[] objects = (Object[]) result.get(0);
@@ -4138,18 +4119,16 @@ public class ActivityMetaDataDao {
                     + " and f.formId=qsf.instructionFormId"
                     + " and qsf.stepType='Form'"
                     + " and qsf.questionnairesId=qq.id"
-                    + " and q.anchorDateId="
-                    + questionaire.getAnchorDateId()
-                    + " and qq.customStudyId='"
-                    + questionaire.getCustomStudyId()
-                    + "'"
-                    + " and qq.scheduleType='"
-                    + StudyMetaDataConstants.SCHEDULETYPE_REGULAR
-                    + "'"
-                    + " and qq.frequency = '"
-                    + StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME
-                    + "'";
-            List<?> result1 = session.createQuery(query).list();
+                    + " and q.anchorDateId=:anchorDateId"
+                    + " and qq.customStudyId=:customStudyId"
+                    + " and qq.scheduleType=:scheduleType"
+                    + " and qq.frequency = :frequencyType";
+            List<?> result1 = session.createQuery(query)
+            		.setInteger("anchorDateId", questionaire.getAnchorDateId())
+            		.setString("customStudyId", questionaire.getCustomStudyId())
+            		.setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
+            		.setString("frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+            		.list();
             System.out.println("Total Number Of Records : " + result1.size());
             if ((null != result1) && !result1.isEmpty()) {
               Object[] objects = (Object[]) result1.get(0);
@@ -4171,9 +4150,9 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
-                          + " where QCFDTO.questionnairesId="
-                          + questionaire.getId()
+                          + " where QCFDTO.questionnairesId=:questId"
                           + " order by QCFDTO.id")
+                  .setInteger("questId", questionaire.getId())
                   .list();
           if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
             start.setAnchorDays(
@@ -4203,9 +4182,9 @@ public class ActivityMetaDataDao {
               session
                   .createQuery(
                       "from QuestionnairesFrequenciesDto QCFDTO"
-                          + " where QCFDTO.questionnairesId="
-                          + questionaire.getId()
+                          + " where QCFDTO.questionnairesId=:questId"
                           + " order by QCFDTO.id")
+                  .setInteger("questId", questionaire.getId())
                   .list();
 
           if ((QuestionnairesFrequenciesDtoList != null)
@@ -4229,8 +4208,8 @@ public class ActivityMetaDataDao {
                   session
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
-                              + " where QFDTO.questionnairesId="
-                              + questionaire.getId())
+                              + " where QFDTO.questionnairesId=:questId")
+                      .setInteger("questId", questionaire.getId())
                       .uniqueResult();
           if (questionnairesFrequency != null) {
             if (questionnairesFrequency.getTimePeriodFromDays() != null) {
@@ -4304,8 +4283,8 @@ public class ActivityMetaDataDao {
           session
               .createQuery(
                   "from ActiveTaskCustomFrequenciesDto QCFDTO"
-                      + " where QCFDTO.activeTaskId="
-                      + activeTaskDto.getId())
+                      + " where QCFDTO.activeTaskId=:activeTaskId")
+              .setInteger("activeTaskId", activeTaskDto.getId())
               .list();
       if ((manuallyScheduleFrequencyList != null) && !manuallyScheduleFrequencyList.isEmpty()) {
         for (ActiveTaskCustomFrequenciesDto customFrequencyDto : manuallyScheduleFrequencyList) {
