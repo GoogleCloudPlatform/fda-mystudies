@@ -114,13 +114,7 @@ export class ParticipantDetailsComponent
     this.locationLibrary.back();
   }
   diableButton(participantDetails: RegistryParticipant): boolean {
-    if (
-      participantDetails.enrollments.length > 0 &&
-      participantDetails.enrollments[0].enrollmentStatus ===
-        EnrollmentStatus.Enrolled
-    ) {
-      return true;
-    }
-    return false;
+    return participantDetails.enrollments.length > 0 &&
+      participantDetails.enrollments[0].enrollmentStatus === EnrollmentStatus.Enrolled
   }
 }
