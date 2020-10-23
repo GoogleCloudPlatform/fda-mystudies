@@ -144,9 +144,9 @@ public class LoginDAOImpl implements LoginDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       SQLQuery query =
           session.createSQLQuery(
-              "select * from user_attempts where BINARY email_id='" + userEmailId + "'");
-      query.addEntity(UserAttemptsBo.class);
-      attemptsBo = (UserAttemptsBo) query.uniqueResult();
+              "select * from user_attempts where BINARY email_id = :userEmailId")
+            .addEntity(UserAttemptsBo.class);
+      attemptsBo = (UserAttemptsBo) query.setParameter("userEmailId", userEmailId).uniqueResult();
     } catch (Exception e) {
       logger.error("LoginDAOImpl - getUserAttempts() - ERROR ", e);
     } finally {
@@ -192,13 +192,11 @@ public class LoginDAOImpl implements LoginDAO {
     Session session = null;
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
-      SQLQuery query =
+      Query query =
           session.createSQLQuery(
-              "select * from users UBO where BINARY lower(UBO.email) = '"
-                  + email.toLowerCase()
-                  + "'");
-      query.addEntity(UserBO.class);
-      userBo = (UserBO) query.uniqueResult();
+              "select * from users UBO where BINARY lower(UBO.email) = :email")
+              .addEntity(UserBO.class);
+      userBo = (UserBO) query.setParameter("email", email.toLowerCase()).uniqueResult();
       if (userBo != null) {
         userBo.setUserLastLoginDateTime(FdahpStudyDesignerUtil.getCurrentDateTime());
         if (userBo.getRoleId() != null) {
@@ -206,7 +204,8 @@ public class LoginDAOImpl implements LoginDAO {
               (String)
                   session
                       .createSQLQuery(
-                          "select role_name from roles where role_id=" + userBo.getRoleId())
+                          "select role_name from roles where role_id = :roleId")
+                      .setParameter("roleId", userBo.getRoleId())
                       .uniqueResult();
           if (StringUtils.isNotEmpty(role)) {
             userBo.setRoleName(role);
@@ -321,17 +320,15 @@ public class LoginDAOImpl implements LoginDAO {
           .append("(select upm.user_id from user_permission_mapping upm where upm.permission_id = ")
           .append(
               "(select up.permission_id from user_permissions up where up.permissions ='ROLE_SUPERADMIN')) ")
-          .append("AND u.user_login_datetime < '")
-          .append(lastLoginDateTime)
-          .append("' AND u.status=1");
-      query = session.createSQLQuery(sb.toString());
+          .append("AND u.user_login_datetime < :lastloginDate")
+          .append(" AND u.status=1");
+      query = session.createSQLQuery(sb.toString()).setParameter("lastloginDate", lastLoginDateTime);
       userBOList = query.list();
       if ((userBOList != null) && !userBOList.isEmpty()) {
         session
             .createSQLQuery(
-                "Update users set status = 0 WHERE user_id in("
-                    + StringUtils.join(userBOList, ",")
-                    + ")")
+                "Update users set status = 0 WHERE user_id in :users")
+            .setParameterList("users", userBOList)
             .executeUpdate();
       }
       transaction.commit();
@@ -431,9 +428,9 @@ public class LoginDAOImpl implements LoginDAO {
       }
       SQLQuery query =
           session.createSQLQuery(
-              "select * from users UBO where BINARY UBO.email = '" + userEmailId + "'");
-      query.addEntity(UserBO.class);
-      userBO = (UserBO) query.uniqueResult();
+              "select * from users UBO where BINARY UBO.email = :email")
+          .addEntity(UserBO.class);
+      userBO = (UserBO) query.setParameter("email", userEmailId).uniqueResult();
       if (userBO != null) {
         if (isAcountLocked) {
           SessionObject sessionObject = new SessionObject();

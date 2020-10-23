@@ -75,7 +75,7 @@ public interface StudyDAO {
   public boolean deleteStudyByCustomStudyId(String customStudyId);
 
   public String deleteStudyByIdOrCustomstudyId(
-      Session session, Transaction transaction, String studyId, String customStudyId);
+      Session session, Transaction transaction, List<Integer> studyIds, String customStudyId);
 
   public int eligibilityTestOrderCount(Integer eligibilityId);
 
