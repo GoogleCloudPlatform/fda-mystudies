@@ -10,8 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.service;
 
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATION_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETION_FAILED;
 
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
@@ -337,9 +337,9 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       userProfileManagementDao.deactivateUserAccount(userId);
       message = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
 
-      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATED, auditRequest);
+      userMgmntAuditHelper.logEvent(USER_DELETED, auditRequest);
     } else {
-      userMgmntAuditHelper.logEvent(USER_ACCOUNT_DEACTIVATION_FAILED, auditRequest);
+      userMgmntAuditHelper.logEvent(USER_DELETION_FAILED, auditRequest);
     }
 
     logger.info("UserManagementProfileServiceImpl - deActivateAcct() - Ends");
