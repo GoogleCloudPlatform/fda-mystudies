@@ -22,7 +22,6 @@ export class AddSiteComponent
   newSite = {} as Study;
   site = {} as AddSiteRequest;
   location$: Observable<ManageLocations> = of();
-
   constructor(
     private readonly siteService: SitesService,
     private readonly toastr: ToastrService,
