@@ -17,7 +17,7 @@ import {
   ImportParticipantEmailResponse,
   Participant,
 } from '../shared/import-participants';
-import { Permission } from 'src/app/shared/permission-enums';
+import {Permission} from 'src/app/shared/permission-enums';
 const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
