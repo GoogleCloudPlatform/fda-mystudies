@@ -7,7 +7,7 @@ import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
 import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
-import {EnrollmentStatus} from '../shared/enums';
+import {EnrollmentStatus, StudyType} from '../shared/enums';
 
 export const expectedSitesList = {
   studies: [
@@ -134,6 +134,7 @@ export const expectedStudiesDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        studyType: StudyType.Close,
       },
       {
         customLocationId: '',
@@ -148,6 +149,7 @@ export const expectedStudiesDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        studyType: StudyType.Close,
       },
       {
         customLocationId: '',
@@ -162,6 +164,7 @@ export const expectedStudiesDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        studyType: StudyType.Close,
       },
     ],
     countByStatus: {

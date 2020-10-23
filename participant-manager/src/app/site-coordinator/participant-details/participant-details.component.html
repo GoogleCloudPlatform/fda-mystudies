@@ -58,7 +58,11 @@
             </div>
           </div>
           <section
-            *ngIf="participant.participantDetails.studyType !== studyTypes.Open"
+            *ngIf="
+              participant.participantDetails.studyType !== studyTypes.Open &&
+              participant.participantDetails.sitePermission ===
+                permission.ViewAndEdit
+            "
             class="desk__view"
           >
             <div class="flex__justify__space-between">
@@ -102,7 +106,10 @@
     </section>
 
     <section
-      *ngIf="participant.participantDetails.studyType !== studyTypes.Open"
+      *ngIf="
+        participant.participantDetails.studyType !== studyTypes.Open &&
+        participant.participantDetails.sitePermission === permission.ViewAndEdit
+      "
       class="subheader p-none pl-none mobile__view border-top__c4d1e6"
     >
       <div class="flex__ flex__justify__center">
