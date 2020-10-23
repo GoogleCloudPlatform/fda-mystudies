@@ -664,6 +664,10 @@ public class SiteControllerTest extends BaseMockIT {
                 .value(OnboardingStatus.NEW.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(1)))
         .andExpect(
+            jsonPath(
+                "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
+                is("Yet to Enroll")))
+        .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
@@ -712,6 +716,10 @@ public class SiteControllerTest extends BaseMockIT {
             (jsonPath("$.participantRegistryDetail.registryParticipants[0].onboardingStatus")
                 .value(OnboardingStatus.NEW.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(1)))
+        .andExpect(
+            jsonPath(
+                "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
+                is("Yet to Enroll")))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
