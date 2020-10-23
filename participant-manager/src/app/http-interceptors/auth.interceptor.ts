@@ -81,10 +81,8 @@ export class AuthInterceptor implements HttpInterceptor {
           if (getMessage(customError.error_code)) {
             this.toasterService.error(getMessage(customError.error_code));
           }
-          if (error.status === 401) {
-            sessionStorage.clear();
-            void this.router.navigate(['/']);
-          }
+          sessionStorage.clear();
+          void this.router.navigate(['/']);
         }
       },
     );
@@ -139,7 +137,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return catchError(
       (err: unknown): Observable<T> => {
         if (err instanceof HttpErrorResponse) {
-          if (err.status === 401 || err.status === 500) {
+          if (err.status === 401) {
             this.handle401Error(request, next);
           } else if (err.error instanceof ErrorEvent) {
             this.toasterService.error(err.error.message);
