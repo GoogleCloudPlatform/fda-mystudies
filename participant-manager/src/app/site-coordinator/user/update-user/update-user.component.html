@@ -25,6 +25,13 @@
               : "Deactivate User"
           }}
         </button>
+        <button
+          *ngIf="user.status === userStatus.Invited"
+          (click)="resendInvitation()"
+          class="btn banner__default__btn pad__5__13 bt__font12__pad113 ml-sm"
+        >
+          Resend Invitation
+        </button>
       </div>
     </div>
   </div>
