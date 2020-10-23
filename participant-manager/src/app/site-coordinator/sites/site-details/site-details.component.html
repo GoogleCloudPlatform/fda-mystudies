@@ -64,7 +64,13 @@
             </div>
           </div>
           <div class="desk__view">
-            <div class="flex__justify__space-between">
+            <div
+              *ngIf="
+                siteParticipants.participantRegistryDetail.sitePermission ===
+                permission.ViewAndEdit
+              "
+              class="flex__justify__space-between"
+            >
               <div>
                 <div class="dropdown">
                   <button
@@ -131,7 +137,13 @@
 
     <!-- ForMobile View  -->
     <div class="mobile__view yel__tabs">
-      <div class="p-md pb-none">
+      <div
+        *ngIf="
+          siteParticipants.participantRegistryDetail.sitePermission ===
+          permission.ViewAndEdit
+        "
+        class="p-md pb-none"
+      >
         <div class="flex__ flex__justify__center">
           <div>
             <div class="dropdown">
@@ -239,7 +251,13 @@
         </ul>
       </div>
       <div class="sred">
-        <div class="flex__ flex__justify__center">
+        <div
+          *ngIf="
+            siteParticipants.participantRegistryDetail.sitePermission ===
+            permission.ViewAndEdit
+          "
+          class="flex__ flex__justify__center"
+        >
           <div
             *ngIf="
               activeTab == onBoardingStatus.New ||
@@ -339,7 +357,13 @@
             </ul>
           </div>
           <div class="pr-xlg">
-            <div class="flex__justify__space-between mb-xs">
+            <div
+              *ngIf="
+                siteParticipants.participantRegistryDetail.sitePermission ===
+                permission.ViewAndEdit
+              "
+              class="flex__justify__space-between mb-xs"
+            >
               <div
                 *ngIf="
                   activeTab == onBoardingStatus.New ||
