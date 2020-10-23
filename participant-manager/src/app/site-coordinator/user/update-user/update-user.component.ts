@@ -222,4 +222,13 @@ export class UpdateUserComponent
       delete app['totalStudiesCount'];
     });
   }
+  resendInvitation(): void{
+    this.userService
+      .resendInvitation(this.adminId)
+      .subscribe((successResponse: ApiResponse) => {
+        if (getMessage(successResponse.code)) {
+          this.toastr.success(getMessage(successResponse.code));
+        } else this.toastr.success('Success');
+      });
+  }
 }
