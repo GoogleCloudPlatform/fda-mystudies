@@ -222,7 +222,7 @@ export class UpdateUserComponent
       delete app['totalStudiesCount'];
     });
   }
-  resendInvitation(): void{
+  resendInvitation(): void {
     this.userService
       .resendInvitation(this.adminId)
       .subscribe((successResponse: ApiResponse) => {
