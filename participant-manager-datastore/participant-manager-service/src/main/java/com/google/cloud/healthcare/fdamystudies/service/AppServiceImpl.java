@@ -174,7 +174,11 @@ public class AppServiceImpl implements AppService {
     List<AppDetails> appDetailsList = new ArrayList<>();
     for (AppEntity app : apps) {
       AppDetails appDetails = AppMapper.toAppDetails(app);
-      appDetails.setAppUsersCount(appUsersCountMap.get(app.getId()).getCount());
+      if (appUsersCountMap.containsKey(app.getId())) {
+        appDetails.setAppUsersCount(appUsersCountMap.get(app.getId()).getCount());
+      } else {
+        appDetails.setAppUsersCount(0L);
+      }
       appDetails.setStudiesCount(appStudiesCountMap.get(app.getId()).getCount());
       appDetails.setPermission(Permission.EDIT.value());
       Long enrolledCount = getCount(appEnrolledCountMap, app.getId());
