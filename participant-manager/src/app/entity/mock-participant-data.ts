@@ -7,6 +7,7 @@ import {
 import {ApiResponse} from './api.response.model';
 import {RegistryParticipant} from '../shared/participant';
 import {EnrollmentStatus} from '../shared/enums';
+import {StudyType} from '../shared/enums';
 
 export const expectedParticipantDetails = {
   participantDetails: {
@@ -30,6 +31,8 @@ export const expectedParticipantDetails = {
     studiesEnrolled: '2',
     registrationDate: '28/06/1952',
     enrolledStudies: [],
+    studyType: StudyType.Close,
+
     enrollments: [
       {
         participantId: '23',

@@ -97,9 +97,9 @@ export class SetUpAccountComponent
         .setUpAccount(updatedUser)
         .subscribe((successResponse: SetUpResponse) => {
           this.toastr.success(getMessage(successResponse.code));
-          sessionStorage.setItem('tempRegId', successResponse.tempRegId);
-          sessionStorage.setItem('userId', successResponse.userId);
-          this.authService.initSessionStorage();
+          localStorage.setItem('tempRegId', successResponse.tempRegId);
+          localStorage.setItem('userId', successResponse.userId);
+          this.authService.initlocalStorage();
           setTimeout(() => {
             this.authService.beginLoginConsentFlow();
           }, 1000);
