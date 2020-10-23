@@ -1,0 +1,19 @@
+{
+  "studyId": "REGteststudy",
+  "message": "onetime",
+  "activities": [
+    {
+      "activityId": "OneTimeTest",
+      "activityVersion": 1.0,
+      "studyId": "REGteststudy",
+      "activityState": "inProgress",
+      "activityRunId": 1,
+      "bookmarked": false,
+      "activityRun": {
+        "total": 0,
+        "missed": 0,
+        "completed": 1
+      }
+    }
+  ]
+}
