@@ -6,7 +6,11 @@ import {ParticipantDetailsService} from './participant-details.service';
 import {ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {EnrollmentStatus, OnboardingStatus,StudyType} from 'src/app/shared/enums';
+import {
+  EnrollmentStatus,
+  OnboardingStatus,
+  StudyType,
+} from 'src/app/shared/enums';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Location} from '@angular/common';
 import {RegistryParticipant} from 'src/app/shared/participant';
