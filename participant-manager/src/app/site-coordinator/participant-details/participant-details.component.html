@@ -15,13 +15,27 @@
           <div>
             <div class="mb-xs">Participant Details</div>
             <div class="display-inline-flex overflow__auto">
-              <div class="pr-xlg">
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="pr-xlg"
+              >
                 <div class="banner__label">
                   {{ participant.participantDetails.customLocationId }}
                 </div>
                 <div class="banner__text">
                   {{ participant.participantDetails.locationName }}
                 </div>
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="pr-xlg"
+              >
+                <div class="banner__label">SITE</div>
+                <div class="banner__text">NA</div>
               </div>
               <div class="pr-xlg">
                 <div class="banner__label">
@@ -42,7 +56,10 @@
             </div>
           </div>
         </div>
-        <section class="desk__view">
+        <section
+          *ngIf="participant.participantDetails.studyType !== studyTypes.Open"
+          class="desk__view"
+        >
           <div class="flex__justify__space-between">
             <div
               class="mr-sm"
@@ -79,7 +96,10 @@
     </div>
   </section>
 
-  <section class="subheader p-none pl-none mobile__view border-top__c4d1e6">
+  <section
+    *ngIf="participant.participantDetails.studyType !== studyTypes.Open"
+    class="subheader p-none pl-none mobile__view border-top__c4d1e6"
+  >
     <div class="flex__ flex__justify__center">
       <button
         name="sendInvite"
@@ -120,14 +140,40 @@
           <div class="flex__justify__space-between flex__wrap">
             <div>
               <div class="blue__text__md">Onboarding Status</div>
-              <div class="participant__label">
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="participant__label"
+              >
                 {{ participant.participantDetails.onboardingStatus }}
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="participant__label"
+              >
+                NA
               </div>
             </div>
             <div>
               <div class="blue__text__md">Last Invitation Sent</div>
-              <div class="inactive__text">
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="inactive__text"
+              >
                 {{ participant.participantDetails.invitationDate }}
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="inactive__text"
+              >
+                NA
               </div>
             </div>
             <div
