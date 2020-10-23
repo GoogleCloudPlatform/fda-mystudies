@@ -65,6 +65,10 @@ spec:
               value: "http://study-datastore-np:50000"
             - name: PARTICIPANT_ENROLL_DATASTORE_URL
               value: "http://participant-enroll-datastore:50000"
+            - name: HYDRA_ADMIN_URL
+              value: "http://hydra-np:4445"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000"
             # MISC
             - name: FILE_STORAGE_PATH
               value: ""
