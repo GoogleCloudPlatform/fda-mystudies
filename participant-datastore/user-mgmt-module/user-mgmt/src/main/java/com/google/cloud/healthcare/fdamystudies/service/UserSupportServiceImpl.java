@@ -117,6 +117,5 @@ public class UserSupportServiceImpl implements UserSupportService {
     userMgmntAuditHelper.logEvent(auditEvent, auditRequest, map);
 
     return emailResponse;
-
   }
 }
