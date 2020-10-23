@@ -191,8 +191,10 @@ public class DashboardMetaDataDao {
                             + " and QSDTO.status=true"
                             + " ORDER BY QSDTO.questionnairesId, QSDTO.sequenceNo")
                     .setParameterList("questionnaireIdsList", questionnaireIdsList)
-                    .setString("QuesStepTypeQue", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)
-                    .setString("QuesStepTypeForm", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
+                    .setString(
+                        "QuesStepTypeQue", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)
+                    .setString(
+                        "QuesStepTypeForm", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                     .list();
             if ((questionnaireStepsList != null) && !questionnaireStepsList.isEmpty()) {
               for (QuestionnairesStepsDto questionnaireSteps : questionnaireStepsList) {
@@ -391,9 +393,7 @@ public class DashboardMetaDataDao {
           List<FormDto> formDtoList = null;
           formDtoList =
               session
-                  .createQuery(
-                      "from FormDto FDTO"
-                          + " where FDTO.formId in (:formIdsList)")
+                  .createQuery("from FormDto FDTO" + " where FDTO.formId in (:formIdsList)")
                   .setParameterList("formIdsList", formIdsList)
                   .list();
           if ((formDtoList != null) && !formDtoList.isEmpty()) {

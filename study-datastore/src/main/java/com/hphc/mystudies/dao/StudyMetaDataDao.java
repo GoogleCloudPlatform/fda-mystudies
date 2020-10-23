@@ -181,8 +181,8 @@ public class StudyMetaDataDao {
                     "from ResourcesDto RDTO"
                         + " where RDTO.studyId in ( select SDTO.id"
                         + " from StudyDto SDTO"
-                        + " where SDTO.platform like '%:platformType"
-                        + "%' and SDTO.type= :type and SDTO.live=1)"
+                        + " where SDTO.platform like concat('%', :platformType, '%')"
+                        + " and SDTO.type= :type and SDTO.live=1)"
                         + " ORDER BY RDTO.sequenceNo")
                 .setString(StudyMetaDataEnum.QF_TYPE.value(), StudyMetaDataConstants.STUDY_TYPE_GT)
                 .setString("platformType", platformType)
@@ -246,7 +246,7 @@ public class StudyMetaDataDao {
             session
                 .createQuery(
                     "from StudyDto SDTO"
-                        + " where SDTO.platform like '%:platformType%'"
+                        + " where SDTO.platform like concat('%', :platformType, '%')"
                         + " and SDTO.appId=:applicationId"
                         + " and (SDTO.status= :status OR SDTO.live=1)")
                 .setString(
@@ -307,8 +307,7 @@ public class StudyMetaDataDao {
               List<ReferenceTablesDto> referenceTablesList =
                   session
                       .createQuery(
-                          "from ReferenceTablesDto RTDTO"
-                              + " where RTDTO.id IN (:category)")
+                          "from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (:category)")
                       .setString("category", studyDto.getCategory())
                       .list();
               if ((null != referenceTablesList) && !referenceTablesList.isEmpty()) {
@@ -773,8 +772,7 @@ public class StudyMetaDataDao {
     ConsentDto consent = null;
     StudyDto studyDto = null;
     StudyVersionDto studyVersionDto = null;
-    String studyVersionQuery =
-        "from StudyVersionDto SVDTO" + " where SVDTO.customStudyId=':studyId'";
+    String studyVersionQuery = "from StudyVersionDto SVDTO where SVDTO.customStudyId=:studyId";
     try {
       session = sessionFactory.openSession();
 
@@ -807,21 +805,26 @@ public class StudyMetaDataDao {
         if (!studyDto
             .getStatus()
             .equalsIgnoreCase(StudyMetaDataConstants.STUDY_STATUS_PRE_PUBLISH)) {
-        	if (StringUtils.isNotEmpty(consentVersion)) {
-        		studyVersionDto =
-        				(StudyVersionDto)
-        				session.createQuery(studyVersionQuery).setMaxResults(1)
-        				.setString("studyId", studyId)
-        				.setString("consentVersion", consentVersion)
-        				.uniqueResult();
-        	} else if (StringUtils.isNotEmpty(activityId) && StringUtils.isNotEmpty(activityVersion)) {
-        		studyVersionDto =
-        				(StudyVersionDto)
-        				session.createQuery(studyVersionQuery).setMaxResults(1)
-        				.setString("studyId", studyId)
-        				.setString("activityVersion", activityVersion)
-        				.uniqueResult();
-        	}
+          if (StringUtils.isNotEmpty(consentVersion)) {
+            studyVersionDto =
+                (StudyVersionDto)
+                    session
+                        .createQuery(studyVersionQuery)
+                        .setMaxResults(1)
+                        .setString("studyId", studyId)
+                        .setString("consentVersion", consentVersion)
+                        .uniqueResult();
+          } else if (StringUtils.isNotEmpty(activityId)
+              && StringUtils.isNotEmpty(activityVersion)) {
+            studyVersionDto =
+                (StudyVersionDto)
+                    session
+                        .createQuery(studyVersionQuery)
+                        .setMaxResults(1)
+                        .setString("studyId", studyId)
+                        .setString("activityVersion", activityVersion)
+                        .uniqueResult();
+          }
         } else {
           studyVersionDto = new StudyVersionDto();
           studyVersionDto.setConsentVersion(0f);
@@ -990,12 +993,15 @@ public class StudyMetaDataDao {
                             + " and qr.schedule_type=:scheduleType"
                             + " and qr.frequency = :frequencyType"
                             + " and q.anchor_date_id=:anchorDate";
-                    List<?> result = session.createSQLQuery(searchQuery)
-                    		.setString("studyId", studyId)
-                    		.setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
-                    		.setString("frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
-                    		.setInteger("anchorDate", resourcesDto.getAnchorDateId())
-                    		.list();
+                    List<?> result =
+                        session
+                            .createSQLQuery(searchQuery)
+                            .setString("studyId", studyId)
+                            .setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
+                            .setString(
+                                "frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+                            .setInteger("anchorDate", resourcesDto.getAnchorDateId())
+                            .list();
                     if ((null != result) && !result.isEmpty()) {
                       Object[] objects = (Object[]) result.get(0);
                       availability.put("sourceKey", objects[0]);
@@ -1016,12 +1022,16 @@ public class StudyMetaDataDao {
                               + " and qq.customStudyId=:studyId"
                               + " and qq.scheduleType=:scheduleType"
                               + " and qq.frequency = :frequencyType";
-                      List<?> result1 = session.createQuery(query)
-                      			.setString("studyId", studyId)
-                      			.setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
-                      			.setString("frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
-                      			.setInteger("anchorDate", resourcesDto.getAnchorDateId())                    		  
-                      			.list();
+                      List<?> result1 =
+                          session
+                              .createQuery(query)
+                              .setString("studyId", studyId)
+                              .setString(
+                                  "scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
+                              .setString(
+                                  "frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
+                              .setInteger("anchorDate", resourcesDto.getAnchorDateId())
+                              .list();
                       if ((null != result1) && !result1.isEmpty()) {
                         // for(int i=0;i<result1.size();i++) {
                         Object[] objects = (Object[]) result1.get(0);
@@ -1213,7 +1223,8 @@ public class StudyMetaDataDao {
                               + " and QSDTO.questionnairesId in (:questionnaireIdsList)"
                               + " and QSDTO.stepType in (:questType,:questForm)")
                       .setParameterList("questionnaireIdsList", questionnaireIdsList)
-                      .setString("questType", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)
+                      .setString(
+                          "questType", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)
                       .setString("questForm", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                       .list();
               if ((questionnairesStepsList != null) && !questionnairesStepsList.isEmpty()) {
@@ -1637,8 +1648,7 @@ public class StudyMetaDataDao {
               List<ReferenceTablesDto> referenceTablesList =
                   session
                       .createQuery(
-                          "from ReferenceTablesDto RTDTO"
-                              + " where RTDTO.id IN (:category)")
+                          "from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (:category)")
                       .setString("category", studyDto.getCategory())
                       .list();
               if ((null != referenceTablesList) && !referenceTablesList.isEmpty()) {
