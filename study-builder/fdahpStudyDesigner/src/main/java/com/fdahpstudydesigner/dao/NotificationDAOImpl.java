@@ -243,8 +243,6 @@ public class NotificationDAOImpl implements NotificationDAO {
       query =
           session
               .createSQLQuery(sb.toString())
-              .SetParameter("date", date)
-              .setParameter("time", time+"%")
               .addScalar("notificationId")
               .addScalar("notificationText")
               .addScalar("customStudyId")
@@ -252,7 +250,11 @@ public class NotificationDAOImpl implements NotificationDAO {
               .addScalar("notificationSubType")
               .addScalar("appId");
       pushNotificationBeans =
-          query.setResultTransformer(Transformers.aliasToBean(PushNotificationBean.class)).list();
+          query
+              .setResultTransformer(Transformers.aliasToBean(PushNotificationBean.class))
+              .setParameter("date", date)
+              .setParameter("time", time+"%")
+              .list();
       if ((null != pushNotificationBeans) && !pushNotificationBeans.isEmpty()) {
         notificationIds = new ArrayList<>();
         for (PushNotificationBean pushNotificationBean : pushNotificationBeans) {
