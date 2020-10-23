@@ -117,7 +117,7 @@ export class ParticipantDetailsComponent
   backClicked(): void {
     this.locationLibrary.back();
   }
-  diableButton(participantDetails: RegistryParticipant): boolean {
+  hasCompletedEnrollment(participantDetails: RegistryParticipant): boolean {
     return (
       participantDetails.enrollments.length > 0 &&
       participantDetails.enrollments[0].enrollmentStatus ===
