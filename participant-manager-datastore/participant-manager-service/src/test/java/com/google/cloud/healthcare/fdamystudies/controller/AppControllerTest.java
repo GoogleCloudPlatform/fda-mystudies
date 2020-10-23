@@ -95,7 +95,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.superAdmin").value(true))
         .andExpect(jsonPath("$.apps[0].invitedCount").value(2))
         .andExpect(jsonPath("$.apps[0].enrolledCount").value(1))
-        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(50.0));
+        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(50.0))
+        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
 
     verifyTokenIntrospectRequest();
   }
@@ -117,7 +118,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.studyPermissionCount").value(1))
-        .andExpect(jsonPath("$.superAdmin").value(false));
+        .andExpect(jsonPath("$.superAdmin").value(false))
+        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
 
     verifyTokenIntrospectRequest();
   }
