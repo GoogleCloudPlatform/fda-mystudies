@@ -22,7 +22,6 @@ export class AddSiteComponent
   newSite = {} as Study;
   site = {} as AddSiteRequest;
   location$: Observable<ManageLocations> = of();
-  disableButton = false;
   constructor(
     private readonly siteService: SitesService,
     private readonly toastr: ToastrService,
@@ -40,11 +39,9 @@ export class AddSiteComponent
     this.location$ = this.locationService.getLocationsForSiteCreation(studyId);
   }
   add(): void {
-    this.disableButton = true;
     this.subs.add(
       this.siteService.add(this.site).subscribe(
         (successResponse: ApiResponse) => {
-          this.disableButton = false;
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
@@ -53,7 +50,6 @@ export class AddSiteComponent
           this.closeModal();
         },
         () => {
-          this.disableButton = false;
           this.closeModal();
         },
       ),
