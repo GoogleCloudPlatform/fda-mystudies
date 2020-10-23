@@ -406,7 +406,7 @@ public class StudyDAOImpl implements StudyDAO {
           .list();
       if ((eligibilityDeleteResult > 0) && !eligibilityTestBos.isEmpty()) {
         reorderQuery =
-            "update EligibilityTestBo  set sequenceNo=sequenceNo-1 where id in :ids";
+            "update EligibilityTestBo  set sequenceNo=sequenceNo-1 where id in (:ids)";
         eligibilityDeleteResult = session.createQuery(reorderQuery)
             .setParameterList("ids", eligibilityTestBos).executeUpdate();
       }
@@ -635,7 +635,7 @@ public class StudyDAOImpl implements StudyDAO {
       String queryString = query.replace("subQuery", "(SELECT id FROM studies WHERE custom_study_id = :customStudyId)");
       return session.createSQLQuery(queryString).setParameter("customStudyId", customStudyId);
     } else {
-      String queryString = query.replace("subQuery", ":studyIds");
+      String queryString = query.replace("subQuery", "(:studyIds)");
       return session.createSQLQuery(queryString).setParameterList("studyIds", studyIds);
     }
   }
@@ -666,7 +666,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM study_page WHERE page_id in :idList")
+                  "DELETE FROM study_page WHERE page_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -679,7 +679,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM eligibility_test WHERE id in :idList" )
+                  "DELETE FROM eligibility_test WHERE id in (:idList)" )
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -689,7 +689,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM eligibility WHERE id in :idList")
+                  "DELETE FROM eligibility WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -699,7 +699,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM consent WHERE id in :idList")
+                  "DELETE FROM consent WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -712,7 +712,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM comprehension_test_response WHERE id in :idList")
+                  "DELETE FROM comprehension_test_response WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -722,7 +722,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM comprehension_test_question WHERE id in :idList")
+                  "DELETE FROM comprehension_test_question WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -732,7 +732,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM consent_info WHERE id in :idList")
+                  "DELETE FROM consent_info WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -745,7 +745,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM active_task_attrtibutes_values WHERE active_task_id in :idList")
+                  "DELETE FROM active_task_attrtibutes_values WHERE active_task_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -758,7 +758,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM active_task_frequencies WHERE active_task_id in :idList")
+                  "DELETE FROM active_task_frequencies WHERE active_task_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -771,7 +771,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM active_task_custom_frequencies WHERE active_task_id in :idList")
+                  "DELETE FROM active_task_custom_frequencies WHERE active_task_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -781,7 +781,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM active_task WHERE id in :idList")
+                  "DELETE FROM active_task WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -797,7 +797,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM questions WHERE id in :idList")
+                  "DELETE FROM questions WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -810,7 +810,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM response_sub_type_value WHERE response_sub_type_value_id in :idList")
+                  "DELETE FROM response_sub_type_value WHERE response_sub_type_value_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -823,7 +823,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM response_type_value WHERE response_type_id in :idList")
+                  "DELETE FROM response_type_value WHERE response_type_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -837,7 +837,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM form_mapping WHERE id in :idList")
+                  "DELETE FROM form_mapping WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -851,7 +851,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM form WHERE form_id in :idList")
+                  "DELETE FROM form WHERE form_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -867,7 +867,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM instructions WHERE id in :idList")
+                  "DELETE FROM instructions WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -882,7 +882,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM questions WHERE id in :idList")
+                  "DELETE FROM questions WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -895,7 +895,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM response_sub_type_value WHERE response_sub_type_value_id in :idList")
+                  "DELETE FROM response_sub_type_value WHERE response_sub_type_value_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -908,7 +908,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM response_type_value WHERE response_type_id in :idList")
+                  "DELETE FROM response_type_value WHERE response_type_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -922,7 +922,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM questionnaires_steps WHERE step_id in :idList")
+                  "DELETE FROM questionnaires_steps WHERE step_id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -935,7 +935,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM questionnaires_frequencies WHERE id in :idList")
+                  "DELETE FROM questionnaires_frequencies WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -948,7 +948,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM questionnaires_custom_frequencies WHERE id in :idList")
+                  "DELETE FROM questionnaires_custom_frequencies WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -958,7 +958,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM questionnaires WHERE id in :idList")
+                  "DELETE FROM questionnaires WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -968,7 +968,7 @@ public class StudyDAOImpl implements StudyDAO {
         if ((idList != null) && !idList.isEmpty()) {
           session
               .createSQLQuery(
-                  "DELETE FROM resources WHERE id in :idList")
+                  "DELETE FROM resources WHERE id in (:idList)")
               .setParameterList("idList", idList)
               .executeUpdate();
         }
@@ -1017,7 +1017,7 @@ public class StudyDAOImpl implements StudyDAO {
               .executeUpdate();
         } else {
           session
-              .createSQLQuery("DELETE FROM studies WHERE id in :studyIds")
+              .createSQLQuery("DELETE FROM studies WHERE id in (:studyIds)")
               .setParameterList("studyIds", studyIds)
               .executeUpdate();
         }
@@ -3185,7 +3185,7 @@ public class StudyDAOImpl implements StudyDAO {
                   session
                       .createQuery(
                           "From ComprehensionTestResponseBo CTRBO "
-                              + "where CTRBO.comprehensionTestQuestionId IN :comprehensionIds"
+                              + "where CTRBO.comprehensionTestQuestionId IN (:comprehensionIds)"
                               + " order by comprehensionTestQuestionId")
                       .setParameterList("comprehensionIds", comprehensionIds)
                       .list();
@@ -3734,7 +3734,7 @@ public class StudyDAOImpl implements StudyDAO {
             session
                 .createQuery(
                     "delete from StudyPageBo where studyId = :studyId"
-                        + " and pageId not in :pageIds")
+                        + " and pageId not in (:pageIds)")
                 .setParameter("studyId", studyPageBean.getStudyId())
                 .setParameterList("pageIds", pageIds)
                 .executeUpdate();
@@ -4167,7 +4167,7 @@ public class StudyDAOImpl implements StudyDAO {
         }
         query =
             session.createSQLQuery(
-                " SELECT sp.user_id FROM study_permission sp WHERE sp.user_id NOT IN :ids"
+                " SELECT sp.user_id FROM study_permission sp WHERE sp.user_id NOT IN (:ids)"
                     + " AND sp.study_id = :studyId");
         deletingUserIds = query.setParameterList("ids", deleteExceptIds)
             .setParameter("studyId", studyBo.getId()).list();
@@ -4191,7 +4191,7 @@ public class StudyDAOImpl implements StudyDAO {
           if ((null != deletingUserIds) && !deletingUserIds.isEmpty()) {
             query =
                 session.createSQLQuery(
-                    " DELETE FROM study_permission WHERE user_id NOT IN :ids"
+                    " DELETE FROM study_permission WHERE user_id NOT IN (:ids)"
                         + " AND study_id = :studyId");
             query.setParameterList("ids", deleteExceptIds)
                 .setParameter("studyId", studyBo.getId())
@@ -4260,7 +4260,7 @@ public class StudyDAOImpl implements StudyDAO {
                       new HashSet<UserPermissions>(
                           session
                               .createQuery(
-                                  "FROM UserPermissions UPBO WHERE UPBO.permissions IN :oldPermissions")
+                                  "FROM UserPermissions UPBO WHERE UPBO.permissions IN (:oldPermissions)")
                               .setParameterList("oldPermissions", oldPermissions)
                               .list());
                   user.setPermissionList(permissionSet);
@@ -4280,7 +4280,7 @@ public class StudyDAOImpl implements StudyDAO {
         } else {
           if ((null != deletingUserIds) && !deletingUserIds.isEmpty()) {
             session.createSQLQuery(
-                    " DELETE FROM study_permission WHERE user_id NOT IN :ids"
+                    " DELETE FROM study_permission WHERE user_id NOT IN (:ids)"
                         + " AND study_id = :studyId")
                 .setParameterList("ids", deleteExceptIds)
                 .setParameter("studyId", studyBo.getId())
@@ -4290,7 +4290,7 @@ public class StudyDAOImpl implements StudyDAO {
 
         if (!forceLogoutUserIds.isEmpty()) {
           session.createSQLQuery(
-              " UPDATE users SET force_logout = 'Y' WHERE user_id IN :ids")
+              " UPDATE users SET force_logout = 'Y' WHERE user_id IN (:ids)")
               .setParameterList("ids", forceLogoutUserIds)
               .executeUpdate();
         }
@@ -4530,7 +4530,7 @@ public class StudyDAOImpl implements StudyDAO {
               if (!eligibilityTestIds.isEmpty()) {
                 session
                     .createSQLQuery(
-                        "UPDATE eligibility_test set is_used='Y' where id in :eligibilityTestIds")
+                        "UPDATE eligibility_test set is_used='Y' where id in (:eligibilityTestIds)")
                     .setParameterList("eligibilityTestIds", eligibilityTestIds)
                     .executeUpdate();
               }
@@ -4578,7 +4578,7 @@ public class StudyDAOImpl implements StudyDAO {
                 logger.info(
                     "StudyDAOImpl - studyDraftCreation() Questionnarie update is_live=2- Starts");
                 queryString =
-                    "update questionnaires SET is_live=2 where short_title IN :titles"
+                    "update questionnaires SET is_live=2 where short_title IN (:titles)"
                         + " and is_live=1 and custom_study_id = :customStudyId";
                 query = session.createSQLQuery(queryString)
                     .setParameterList("titles", questionnarieShorttitleList)
@@ -5117,7 +5117,7 @@ public class StudyDAOImpl implements StudyDAO {
               String currentDateTime = FdahpStudyDesignerUtil.getCurrentDateTime();
               String subQuery =
                   "update questionnaires SET is_live=2,modified_date=:currentTime, "
-                      + " active=0 where short_title IN(:objectList) and is_live=1 and custom_study_id=:custStudyId";
+                      + " active=0 where short_title IN (:objectList) and is_live=1 and custom_study_id=:custStudyId";
               query = session.createSQLQuery(subQuery);
               query.setParameter("currentTime", currentDateTime);
               query.setParameterList("objectList", objectList);
@@ -5334,7 +5334,7 @@ public class StudyDAOImpl implements StudyDAO {
                     session
                         .createQuery(
                             "From ComprehensionTestResponseBo CTRBO "
-                                + "where CTRBO.comprehensionTestQuestionId IN :comprehensionIds"
+                                + "where CTRBO.comprehensionTestQuestionId IN (:comprehensionIds)"
                                 + " order by comprehensionTestQuestionId")
                         .setParameterList("comprehensionIds", comprehensionIds)
                         .list();
@@ -5495,7 +5495,7 @@ public class StudyDAOImpl implements StudyDAO {
               query =
                   session.createSQLQuery(
                       "update questionnaires ab SET ab.study_lifetime_start = :startDate"
-                          + " where id IN :ids");
+                          + " where id IN (:ids)");
               query.setParameter("startDate", studyBo.getStudylunchDate()).setParameterList("ids", objectList).executeUpdate();
             }
             // getting activeTasks based on StudyId
@@ -6451,7 +6451,7 @@ public class StudyDAOImpl implements StudyDAO {
           searchQuery =
               "select q.id from questionnaires q where q.schedule_type='"
                   + FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE
-                  + "' and q.anchor_date_id in :anchorIds";
+                  + "' and q.anchor_date_id in (:anchorIds)";
           anchorExistIds = session.createSQLQuery(searchQuery)
               .setParameterList("anchorIds", anchorIds).list();
           if (!anchorExistIds.isEmpty() && (anchorExistIds.size() > 0)) {
@@ -6460,14 +6460,14 @@ public class StudyDAOImpl implements StudyDAO {
             searchQuery =
                 "select q.id from active_task q where q.schedule_type='"
                     + FdahpStudyDesignerConstants.SCHEDULETYPE_ANCHORDATE
-                    + "' and q.anchor_date_id in :anchorIds";
+                    + "' and q.anchor_date_id in (:anchorIds)";
             anchorExistIds = session.createSQLQuery(searchQuery)
                 .setParameterList("anchorIds", anchorIds).list();
             if (!anchorExistIds.isEmpty() && (anchorExistIds.size() > 0)) {
               isAnchorUsed = true;
             } else {
               searchQuery =
-                  "select q.id from resources q where q.anchor_date_id in :anchorIds";
+                  "select q.id from resources q where q.anchor_date_id in (:anchorIds)";
               anchorExistIds = session.createSQLQuery(searchQuery)
                   .setParameterList("anchorIds", anchorIds).list();
               if (!anchorExistIds.isEmpty() && (anchorExistIds.size() > 0)) {
@@ -6491,7 +6491,7 @@ public class StudyDAOImpl implements StudyDAO {
                               + "modified_by = :modifiedBy"
                               + ",modified_date='"
                               + FdahpStudyDesignerUtil.getCurrentDateTime()
-                              + "' where active=1 and anchor_date_id in :anchorIds")
+                              + "' where active=1 and anchor_date_id in (:anchorIds)")
                       .setParameter("modifiedBy", updatedStudy.getModifiedBy())
                       .setParameterList("anchorIds", anchorIds)
                       .executeUpdate();
@@ -6504,7 +6504,7 @@ public class StudyDAOImpl implements StudyDAO {
                           "update active_task set action=0 ,anchor_date_id=null, modified_by = :modifiedBy"
                               + ",modified_date='"
                               + FdahpStudyDesignerUtil.getCurrentDateTime()
-                              + "' where active=1 and anchor_date_id in :anchorIds")
+                              + "' where active=1 and anchor_date_id in (:anchorIds)")
                       .setParameter("modifiedBy", updatedStudy.getModifiedBy())
                       .setParameterList("anchorIds", anchorIds)
                       .executeUpdate();
@@ -6515,7 +6515,7 @@ public class StudyDAOImpl implements StudyDAO {
                   session
                       .createSQLQuery(
                           "update resources set action=0,anchor_date_id=null "
-                              + "where status=1 and anchor_date_id in :anchorIds")
+                              + "where status=1 and anchor_date_id in (:anchorIds)")
                       .setParameterList("anchorIds", anchorIds)
                       .executeUpdate();
 

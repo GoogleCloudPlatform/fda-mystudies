@@ -327,7 +327,7 @@ public class LoginDAOImpl implements LoginDAO {
       if ((userBOList != null) && !userBOList.isEmpty()) {
         session
             .createSQLQuery(
-                "Update users set status = 0 WHERE user_id in :users")
+                "Update users set status = 0 WHERE user_id in (:users)")
             .setParameterList("users", userBOList)
             .executeUpdate();
       }
