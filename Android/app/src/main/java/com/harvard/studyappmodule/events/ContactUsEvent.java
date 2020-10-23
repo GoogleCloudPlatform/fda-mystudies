@@ -14,17 +14,17 @@
 
 package com.harvard.studyappmodule.events;
 
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 
 public class ContactUsEvent {
-  private RegistrationServerConfigEvent registrationServerConfigEvent;
+  private ParticipantDatastoreConfigEvent participantDatastoreConfigEvent;
 
-  public RegistrationServerConfigEvent getRegistrationServerConfigEvent() {
-    return registrationServerConfigEvent;
+  public ParticipantDatastoreConfigEvent getParticipantDatastoreConfigEvent() {
+    return participantDatastoreConfigEvent;
   }
 
-  public void setRegistrationServerConfigEvent(
-      RegistrationServerConfigEvent registrationServerConfigEvent) {
-    this.registrationServerConfigEvent = registrationServerConfigEvent;
+  public void setParticipantDatastoreConfigEvent(
+      ParticipantDatastoreConfigEvent participantDatastoreConfigEvent) {
+    this.participantDatastoreConfigEvent = participantDatastoreConfigEvent;
   }
 }

@@ -50,7 +50,7 @@ import com.harvard.utils.Logger;
 import com.harvard.utils.SetDialogHelper;
 import com.harvard.utils.Urls;
 import com.harvard.webservicemodule.apihelper.ApiCall;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
 import java.util.HashMap;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -328,8 +328,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       HashMap<String, String> params = new HashMap<>();
       params.put("emailId", email.getText().toString());
       params.put("password", password.getText().toString());
-      RegistrationServerConfigEvent registrationServerConfigEvent =
-          new RegistrationServerConfigEvent(
+      ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+          new ParticipantDatastoreConfigEvent(
               "post",
               Urls.REGISTER_USER,
               REGISTRATION_REQUEST,
@@ -341,7 +341,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
               false,
               this);
       RegisterUserEvent registerUserEvent = new RegisterUserEvent();
-      registerUserEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+      registerUserEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
       UserModulePresenter userModulePresenter = new UserModulePresenter();
       userModulePresenter.performRegistration(registerUserEvent);
     }
@@ -525,8 +525,8 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
       Logger.log(e);
     }
 
-    RegistrationServerConfigEvent registrationServerConfigEvent =
-        new RegistrationServerConfigEvent(
+    ParticipantDatastoreConfigEvent participantDatastoreConfigEvent =
+        new ParticipantDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_USER_PROFILE,
             UPDATE_USER_PROFILE,
@@ -538,7 +538,7 @@ public class SignupActivity extends AppCompatActivity implements ApiCall.OnAsync
             false,
             this);
     UpdateUserProfileEvent updateUserProfileEvent = new UpdateUserProfileEvent();
-    updateUserProfileEvent.setRegistrationServerConfigEvent(registrationServerConfigEvent);
+    updateUserProfileEvent.setParticipantDatastoreConfigEvent(participantDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserProfile(updateUserProfileEvent);
   }

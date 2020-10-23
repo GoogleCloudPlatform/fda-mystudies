@@ -68,8 +68,8 @@ import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.apihelper.ConnectionDetector;
 import com.harvard.webservicemodule.apihelper.HttpRequest;
 import com.harvard.webservicemodule.apihelper.Responsemodel;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -399,9 +399,9 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     protected String doInBackground(String... params) {
       ConnectionDetector connectionDetector = new ConnectionDetector(StudyInfoActivity.this);
 
-      String url = Urls.BASE_URL_WCP_SERVER + Urls.CONSENT_METADATA + "?studyId=" + studyId;
+      String url = Urls.BASE_URL_STUDY_DATASTORE + Urls.CONSENT_METADATA + "?studyId=" + studyId;
       if (connectionDetector.isConnectingToInternet()) {
-        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "WCP");
+        responseModel = HttpRequest.getRequest(url, new HashMap<String, String>(), "STUDY_DATASTORE");
         responseCode = responseModel.getResponseCode();
         response = responseModel.getResponseData();
         if (responseCode.equalsIgnoreCase("0") && response.equalsIgnoreCase("timeout")) {
@@ -612,8 +612,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
         "userId",
         AppController.getHelperSharedPreference()
             .readPreference(StudyInfoActivity.this, getResources().getString(R.string.userid), ""));
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "get",
             Urls.STUDY_STATE,
             GET_PREFERENCES,
@@ -625,8 +625,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
     GetPreferenceEvent getPreferenceEvent = new GetPreferenceEvent();
-    getPreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    getPreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performGetUserPreference(getPreferenceEvent);
   }
@@ -643,8 +643,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 + studyId
                 + "&consentVersion=&activityId=&activityVersion=";
         GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-        WcpConfigEvent wcpConfigEvent =
-            new WcpConfigEvent(
+        StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+            new StudyDatastoreConfigEvent(
                 "get",
                 url,
                 StudyInfoActivity.GET_CONSENT_DOC,
@@ -656,7 +656,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
                 false,
                 StudyInfoActivity.this);
 
-        getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+        getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
         StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
         studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
       } else {
@@ -820,8 +820,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
     HashMap<String, String> header = new HashMap<>();
     String url = Urls.STUDY_INFO + "?studyId=" + studyId;
     GetUserStudyInfoEvent getUserStudyInfoEvent = new GetUserStudyInfoEvent();
-    WcpConfigEvent wcpConfigEvent =
-        new WcpConfigEvent(
+    StudyDatastoreConfigEvent studyDatastoreConfigEvent =
+        new StudyDatastoreConfigEvent(
             "get",
             url,
             STUDY_INFO,
@@ -833,7 +833,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             StudyInfoActivity.this);
 
-    getUserStudyInfoEvent.setWcpConfigEvent(wcpConfigEvent);
+    getUserStudyInfoEvent.setStudyDatastoreConfigEvent(studyDatastoreConfigEvent);
     StudyModulePresenter studyModulePresenter = new StudyModulePresenter();
     studyModulePresenter.performGetGateWayStudyInfo(getUserStudyInfoEvent);
   }
@@ -889,7 +889,7 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
           Urls.UPDATE_STUDY_PREFERENCE,
           "",
           jsonObject.toString(),
-          "RegistrationServerEnrollment",
+          "ParticipantEnrollmentDatastore",
           "",
           studyId,
           "");
@@ -897,8 +897,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
       Logger.log(e);
     }
     //////////
-    RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent =
-        new RegistrationServerEnrollmentConfigEvent(
+    ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent =
+        new ParticipantEnrollmentDatastoreConfigEvent(
             "post_object",
             Urls.UPDATE_STUDY_PREFERENCE,
             UPDATE_PREFERENCES,
@@ -910,8 +910,8 @@ public class StudyInfoActivity extends AppCompatActivity implements ApiCall.OnAs
             false,
             this);
     UpdatePreferenceEvent updatePreferenceEvent = new UpdatePreferenceEvent();
-    updatePreferenceEvent.setRegistrationServerEnrollmentConfigEvent(
-        registrationServerEnrollmentConfigEvent);
+    updatePreferenceEvent.setParticipantEnrollmentDatastoreConfigEvent(
+        participantEnrollmentDatastoreConfigEvent);
     UserModulePresenter userModulePresenter = new UserModulePresenter();
     userModulePresenter.performUpdateUserPreference(updatePreferenceEvent);
   }

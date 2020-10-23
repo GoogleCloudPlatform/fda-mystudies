@@ -18,56 +18,30 @@ package com.harvard.webservicemodule.events;
 import android.content.Context;
 import com.harvard.utils.Urls;
 import java.util.HashMap;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class RegistrationServerConfigEvent<V> extends WebserviceConfigEvent {
-
-  /**
-   * @param method
-   * @param url
-   * @param requestCode
-   * @param context
-   * @param modelclass
-   * @param params
-   * @param headers
-   * @param jsonobj
-   * @param showAlert
-   */
-  public RegistrationServerConfigEvent(
+public class StudyDatastoreConfigEvent<V> extends WebserviceConfigEvent {
+  public StudyDatastoreConfigEvent(
       String method,
       String url,
       int requestCode,
       Context context,
       Class modelclass,
-      HashMap<String, String> params,
-      HashMap<String, String> headers,
+      HashMap params,
+      HashMap header,
       JSONObject jsonobj,
       boolean showAlert,
       V v) {
-    super(method, url, requestCode, context, modelclass, params, headers, jsonobj, showAlert, v);
-  }
-
-  public RegistrationServerConfigEvent(
-      String method,
-      String url,
-      int requestCode,
-      Context context,
-      Class modelclass,
-      HashMap<String, String> headers,
-      JSONArray jsonArray,
-      boolean showAlert,
-      V v) {
-    super(method, url, requestCode, context, modelclass, headers, jsonArray, showAlert, v);
+    super(method, url, requestCode, context, modelclass, params, header, jsonobj, showAlert, v);
   }
 
   @Override
   public String getProductionUrl() {
-    return Urls.BASE_URL_REGISTRATION_SERVER;
+    return Urls.BASE_URL_STUDY_DATASTORE;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return Urls.BASE_URL_REGISTRATION_SERVER;
+    return Urls.BASE_URL_STUDY_DATASTORE;
   }
 }

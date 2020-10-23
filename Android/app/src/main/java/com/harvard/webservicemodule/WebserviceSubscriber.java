@@ -19,195 +19,195 @@ import com.harvard.R;
 import com.harvard.base.BaseSubscriber;
 import com.harvard.webservicemodule.apihelper.ApiCall;
 import com.harvard.webservicemodule.events.AuthServerConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerConsentConfigEvent;
-import com.harvard.webservicemodule.events.RegistrationServerEnrollmentConfigEvent;
-import com.harvard.webservicemodule.events.ResponseServerConfigEvent;
-import com.harvard.webservicemodule.events.WcpConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantConsentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ParticipantEnrollmentDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.ResponseDatastoreConfigEvent;
+import com.harvard.webservicemodule.events.StudyDatastoreConfigEvent;
 
 public class WebserviceSubscriber extends BaseSubscriber {
-  public void onEvent(WcpConfigEvent wcpConfigEvent) {
+  public void onEvent(StudyDatastoreConfigEvent studyDatastoreConfigEvent) {
     String url = "";
-    if (wcpConfigEvent
+    if (studyDatastoreConfigEvent
         .getContext()
         .getResources()
         .getString(R.string.app_stage)
         .equalsIgnoreCase("development")) {
-      url = wcpConfigEvent.getDevelopmentUrl() + wcpConfigEvent.getUrl();
+      url = studyDatastoreConfigEvent.getDevelopmentUrl() + studyDatastoreConfigEvent.getUrl();
     } else {
-      url = wcpConfigEvent.getProductionUrl() + wcpConfigEvent.getUrl();
+      url = studyDatastoreConfigEvent.getProductionUrl() + studyDatastoreConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
-    if (wcpConfigEvent.getRequestType().equalsIgnoreCase("get")) {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+    if (studyDatastoreConfigEvent.getRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallGet(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
-    } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+              studyDatastoreConfigEvent.getHeaders(),
+              studyDatastoreConfigEvent.getClassT(),
+              studyDatastoreConfigEvent.getResponseCode(),
+              studyDatastoreConfigEvent.getV(),
+              studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
+    } else if (studyDatastoreConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallPostJson(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParamsJson(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
-    } else if (wcpConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+              studyDatastoreConfigEvent.getHeaders(),
+              studyDatastoreConfigEvent.getClassT(),
+              studyDatastoreConfigEvent.getRequestParamsJson(),
+              studyDatastoreConfigEvent.getResponseCode(),
+              studyDatastoreConfigEvent.getV(),
+              studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
+    } else if (studyDatastoreConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParamsJson(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+              studyDatastoreConfigEvent.getHeaders(),
+              studyDatastoreConfigEvent.getClassT(),
+              studyDatastoreConfigEvent.getRequestParamsJson(),
+              studyDatastoreConfigEvent.getResponseCode(),
+          studyDatastoreConfigEvent.getV(),
+          studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
     } else {
-      ApiCall apiCall = new ApiCall(wcpConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(studyDatastoreConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
           url,
-          wcpConfigEvent.getHeaders(),
-          wcpConfigEvent.getClassT(),
-          wcpConfigEvent.getRequestParams(),
-          wcpConfigEvent.getResponseCode(),
-          wcpConfigEvent.getV(),
-          wcpConfigEvent.isShowAlert(),
-          "WCP");
+          studyDatastoreConfigEvent.getHeaders(),
+          studyDatastoreConfigEvent.getClassT(),
+          studyDatastoreConfigEvent.getRequestParams(),
+          studyDatastoreConfigEvent.getResponseCode(),
+          studyDatastoreConfigEvent.getV(),
+          studyDatastoreConfigEvent.isShowAlert(),
+          "STUDY_DATASTORE");
     }
   }
 
-  public void onEvent(RegistrationServerConfigEvent registrationServerConfigEvent) {
+  public void onEvent(ParticipantDatastoreConfigEvent participantDatastoreConfigEvent) {
     String url = "";
-    if (registrationServerConfigEvent
+    if (participantDatastoreConfigEvent
         .getContext()
         .getResources()
         .getString(R.string.app_stage)
         .equalsIgnoreCase("development")) {
       url =
-          registrationServerConfigEvent.getDevelopmentUrl()
-              + registrationServerConfigEvent.getUrl();
+          participantDatastoreConfigEvent.getDevelopmentUrl()
+              + participantDatastoreConfigEvent.getUrl();
     } else {
       url =
-          registrationServerConfigEvent.getProductionUrl() + registrationServerConfigEvent.getUrl();
+          participantDatastoreConfigEvent.getProductionUrl() + participantDatastoreConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
-    if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
-      ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
+    if (participantDatastoreConfigEvent.getRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(participantDatastoreConfigEvent.getContext());
       apiCall.apiCallGet(
           url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
-    } else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
-      ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
+          participantDatastoreConfigEvent.getHeaders(),
+          participantDatastoreConfigEvent.getClassT(),
+          participantDatastoreConfigEvent.getResponseCode(),
+          participantDatastoreConfigEvent.getV(),
+          participantDatastoreConfigEvent.isShowAlert(),
+          "ParticipantDatastoreServer");
+    } else if (participantDatastoreConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(participantDatastoreConfigEvent.getContext());
       apiCall.apiCallPostJson(
           url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParamsJson(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
-    } else if (registrationServerConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
-      ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
+          participantDatastoreConfigEvent.getHeaders(),
+          participantDatastoreConfigEvent.getClassT(),
+          participantDatastoreConfigEvent.getRequestParamsJson(),
+          participantDatastoreConfigEvent.getResponseCode(),
+          participantDatastoreConfigEvent.getV(),
+          participantDatastoreConfigEvent.isShowAlert(),
+          "ParticipantDatastoreServer");
+    } else if (participantDatastoreConfigEvent.getRequestType().equalsIgnoreCase("delete_object")) {
+      ApiCall apiCall = new ApiCall(participantDatastoreConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
           url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParamsJson(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
+          participantDatastoreConfigEvent.getHeaders(),
+          participantDatastoreConfigEvent.getClassT(),
+          participantDatastoreConfigEvent.getRequestParamsJson(),
+          participantDatastoreConfigEvent.getResponseCode(),
+          participantDatastoreConfigEvent.getV(),
+          participantDatastoreConfigEvent.isShowAlert(),
+          "ParticipantDatastoreServer");
     } else {
-      ApiCall apiCall = new ApiCall(registrationServerConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(participantDatastoreConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
           url,
-          registrationServerConfigEvent.getHeaders(),
-          registrationServerConfigEvent.getClassT(),
-          registrationServerConfigEvent.getRequestParams(),
-          registrationServerConfigEvent.getResponseCode(),
-          registrationServerConfigEvent.getV(),
-          registrationServerConfigEvent.isShowAlert(),
-          "RegistrationServer");
+          participantDatastoreConfigEvent.getHeaders(),
+          participantDatastoreConfigEvent.getClassT(),
+          participantDatastoreConfigEvent.getRequestParams(),
+          participantDatastoreConfigEvent.getResponseCode(),
+          participantDatastoreConfigEvent.getV(),
+          participantDatastoreConfigEvent.isShowAlert(),
+          "ParticipantDatastoreServer");
     }
   }
 
-  public void onEvent(RegistrationServerConsentConfigEvent registrationServerConsentConfigEvent) {
+  public void onEvent(ParticipantConsentDatastoreConfigEvent participantConsentDatastoreConfigEvent) {
     String url = "";
-    if (registrationServerConsentConfigEvent
+    if (participantConsentDatastoreConfigEvent
         .getContext()
         .getResources()
         .getString(R.string.app_stage)
         .equalsIgnoreCase("development")) {
       url =
-          registrationServerConsentConfigEvent.getDevelopmentUrl()
-              + registrationServerConsentConfigEvent.getUrl();
+          participantConsentDatastoreConfigEvent.getDevelopmentUrl()
+              + participantConsentDatastoreConfigEvent.getUrl();
     } else {
       url =
-          registrationServerConsentConfigEvent.getProductionUrl()
-              + registrationServerConsentConfigEvent.getUrl();
+          participantConsentDatastoreConfigEvent.getProductionUrl()
+              + participantConsentDatastoreConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
-    if (registrationServerConsentConfigEvent.getRequestType().equalsIgnoreCase("get")) {
-      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
+    if (participantConsentDatastoreConfigEvent.getRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(participantConsentDatastoreConfigEvent.getContext());
       apiCall.apiCallGet(
           url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
-    } else if (registrationServerConsentConfigEvent
+          participantConsentDatastoreConfigEvent.getHeaders(),
+          participantConsentDatastoreConfigEvent.getClassT(),
+          participantConsentDatastoreConfigEvent.getResponseCode(),
+          participantConsentDatastoreConfigEvent.getV(),
+          participantConsentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantConsentDatastore");
+    } else if (participantConsentDatastoreConfigEvent
         .getRequestType()
         .equalsIgnoreCase("post_object")) {
-      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(participantConsentDatastoreConfigEvent.getContext());
       apiCall.apiCallPostJson(
           url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParamsJson(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
-    } else if (registrationServerConsentConfigEvent
+          participantConsentDatastoreConfigEvent.getHeaders(),
+          participantConsentDatastoreConfigEvent.getClassT(),
+          participantConsentDatastoreConfigEvent.getRequestParamsJson(),
+          participantConsentDatastoreConfigEvent.getResponseCode(),
+          participantConsentDatastoreConfigEvent.getV(),
+          participantConsentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantConsentDatastore");
+    } else if (participantConsentDatastoreConfigEvent
         .getRequestType()
         .equalsIgnoreCase("delete_object")) {
-      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(participantConsentDatastoreConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
           url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParamsJson(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
+          participantConsentDatastoreConfigEvent.getHeaders(),
+          participantConsentDatastoreConfigEvent.getClassT(),
+          participantConsentDatastoreConfigEvent.getRequestParamsJson(),
+          participantConsentDatastoreConfigEvent.getResponseCode(),
+          participantConsentDatastoreConfigEvent.getV(),
+          participantConsentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantConsentDatastore");
     } else {
-      ApiCall apiCall = new ApiCall(registrationServerConsentConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(participantConsentDatastoreConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
           url,
-          registrationServerConsentConfigEvent.getHeaders(),
-          registrationServerConsentConfigEvent.getClassT(),
-          registrationServerConsentConfigEvent.getRequestParams(),
-          registrationServerConsentConfigEvent.getResponseCode(),
-          registrationServerConsentConfigEvent.getV(),
-          registrationServerConsentConfigEvent.isShowAlert(),
-          "RegistrationServerConsent");
+          participantConsentDatastoreConfigEvent.getHeaders(),
+          participantConsentDatastoreConfigEvent.getClassT(),
+          participantConsentDatastoreConfigEvent.getRequestParams(),
+          participantConsentDatastoreConfigEvent.getResponseCode(),
+          participantConsentDatastoreConfigEvent.getV(),
+          participantConsentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantConsentDatastore");
     }
   }
 
@@ -280,117 +280,117 @@ public class WebserviceSubscriber extends BaseSubscriber {
     }
   }
 
-  public void onEvent(ResponseServerConfigEvent responseServerConfigEvent) {
+  public void onEvent(ResponseDatastoreConfigEvent responseDatastoreConfigEvent) {
     String url = "";
-    if (responseServerConfigEvent
+    if (responseDatastoreConfigEvent
         .getContext()
         .getResources()
         .getString(R.string.app_stage)
         .equalsIgnoreCase("development")) {
-      url = responseServerConfigEvent.getDevelopmentUrl() + responseServerConfigEvent.getUrl();
+      url = responseDatastoreConfigEvent.getDevelopmentUrl() + responseDatastoreConfigEvent.getUrl();
     } else {
-      url = responseServerConfigEvent.getProductionUrl() + responseServerConfigEvent.getUrl();
+      url = responseDatastoreConfigEvent.getProductionUrl() + responseDatastoreConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
-    if (responseServerConfigEvent.getRequestType().equalsIgnoreCase("get")) {
-      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
+    if (responseDatastoreConfigEvent.getRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(responseDatastoreConfigEvent.getContext());
       apiCall.apiCallGet(
           url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
-    } else if (responseServerConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
-      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
+          responseDatastoreConfigEvent.getHeaders(),
+          responseDatastoreConfigEvent.getClassT(),
+          responseDatastoreConfigEvent.getResponseCode(),
+          responseDatastoreConfigEvent.getV(),
+          responseDatastoreConfigEvent.isShowAlert(),
+          "ResponseDatastore");
+    } else if (responseDatastoreConfigEvent.getRequestType().equalsIgnoreCase("post_object")) {
+      ApiCall apiCall = new ApiCall(responseDatastoreConfigEvent.getContext());
       apiCall.apiCallPostJson(
           url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getRequestParamsJson(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
+          responseDatastoreConfigEvent.getHeaders(),
+          responseDatastoreConfigEvent.getClassT(),
+          responseDatastoreConfigEvent.getRequestParamsJson(),
+          responseDatastoreConfigEvent.getResponseCode(),
+          responseDatastoreConfigEvent.getV(),
+          responseDatastoreConfigEvent.isShowAlert(),
+          "ResponseDatastore");
     } else {
-      ApiCall apiCall = new ApiCall(responseServerConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(responseDatastoreConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
           url,
-          responseServerConfigEvent.getHeaders(),
-          responseServerConfigEvent.getClassT(),
-          responseServerConfigEvent.getRequestParams(),
-          responseServerConfigEvent.getResponseCode(),
-          responseServerConfigEvent.getV(),
-          responseServerConfigEvent.isShowAlert(),
-          "ResponseServer");
+          responseDatastoreConfigEvent.getHeaders(),
+          responseDatastoreConfigEvent.getClassT(),
+          responseDatastoreConfigEvent.getRequestParams(),
+          responseDatastoreConfigEvent.getResponseCode(),
+          responseDatastoreConfigEvent.getV(),
+          responseDatastoreConfigEvent.isShowAlert(),
+          "ResponseDatastore");
     }
   }
 
   public void onEvent(
-      RegistrationServerEnrollmentConfigEvent registrationServerEnrollmentConfigEvent) {
+      ParticipantEnrollmentDatastoreConfigEvent participantEnrollmentDatastoreConfigEvent) {
     String url = "";
-    if (registrationServerEnrollmentConfigEvent
+    if (participantEnrollmentDatastoreConfigEvent
         .getContext()
         .getResources()
         .getString(R.string.app_stage)
         .equalsIgnoreCase("development")) {
       url =
-          registrationServerEnrollmentConfigEvent.getDevelopmentUrl()
-              + registrationServerEnrollmentConfigEvent.getUrl();
+          participantEnrollmentDatastoreConfigEvent.getDevelopmentUrl()
+              + participantEnrollmentDatastoreConfigEvent.getUrl();
     } else {
       url =
-          registrationServerEnrollmentConfigEvent.getProductionUrl()
-              + registrationServerEnrollmentConfigEvent.getUrl();
+          participantEnrollmentDatastoreConfigEvent.getProductionUrl()
+              + participantEnrollmentDatastoreConfigEvent.getUrl();
     }
     url = url.replaceAll(" ", "%20");
-    if (registrationServerEnrollmentConfigEvent.getRequestType().equalsIgnoreCase("get")) {
-      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
+    if (participantEnrollmentDatastoreConfigEvent.getRequestType().equalsIgnoreCase("get")) {
+      ApiCall apiCall = new ApiCall(participantEnrollmentDatastoreConfigEvent.getContext());
       apiCall.apiCallGet(
           url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
-    } else if (registrationServerEnrollmentConfigEvent
+          participantEnrollmentDatastoreConfigEvent.getHeaders(),
+          participantEnrollmentDatastoreConfigEvent.getClassT(),
+          participantEnrollmentDatastoreConfigEvent.getResponseCode(),
+          participantEnrollmentDatastoreConfigEvent.getV(),
+          participantEnrollmentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantEnrollmentDatastore");
+    } else if (participantEnrollmentDatastoreConfigEvent
         .getRequestType()
         .equalsIgnoreCase("post_object")) {
-      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(participantEnrollmentDatastoreConfigEvent.getContext());
       apiCall.apiCallPostJson(
           url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParamsJson(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
-    } else if (registrationServerEnrollmentConfigEvent
+          participantEnrollmentDatastoreConfigEvent.getHeaders(),
+          participantEnrollmentDatastoreConfigEvent.getClassT(),
+          participantEnrollmentDatastoreConfigEvent.getRequestParamsJson(),
+          participantEnrollmentDatastoreConfigEvent.getResponseCode(),
+          participantEnrollmentDatastoreConfigEvent.getV(),
+          participantEnrollmentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantEnrollmentDatastore");
+    } else if (participantEnrollmentDatastoreConfigEvent
         .getRequestType()
         .equalsIgnoreCase("delete_object")) {
-      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(participantEnrollmentDatastoreConfigEvent.getContext());
       apiCall.apiCallDeleteJson(
           url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParamsJson(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
+          participantEnrollmentDatastoreConfigEvent.getHeaders(),
+          participantEnrollmentDatastoreConfigEvent.getClassT(),
+          participantEnrollmentDatastoreConfigEvent.getRequestParamsJson(),
+          participantEnrollmentDatastoreConfigEvent.getResponseCode(),
+          participantEnrollmentDatastoreConfigEvent.getV(),
+          participantEnrollmentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantEnrollmentDatastore");
     } else {
-      ApiCall apiCall = new ApiCall(registrationServerEnrollmentConfigEvent.getContext());
+      ApiCall apiCall = new ApiCall(participantEnrollmentDatastoreConfigEvent.getContext());
       apiCall.apiCallPostHashmap(
           url,
-          registrationServerEnrollmentConfigEvent.getHeaders(),
-          registrationServerEnrollmentConfigEvent.getClassT(),
-          registrationServerEnrollmentConfigEvent.getRequestParams(),
-          registrationServerEnrollmentConfigEvent.getResponseCode(),
-          registrationServerEnrollmentConfigEvent.getV(),
-          registrationServerEnrollmentConfigEvent.isShowAlert(),
-          "RegistrationServerEnrollment");
+          participantEnrollmentDatastoreConfigEvent.getHeaders(),
+          participantEnrollmentDatastoreConfigEvent.getClassT(),
+          participantEnrollmentDatastoreConfigEvent.getRequestParams(),
+          participantEnrollmentDatastoreConfigEvent.getResponseCode(),
+          participantEnrollmentDatastoreConfigEvent.getV(),
+          participantEnrollmentDatastoreConfigEvent.isShowAlert(),
+          "ParticipantEnrollmentDatastore");
     }
   }
 }

@@ -26,6 +26,6 @@ public class AppConfig {
 
   // AppId
   public static String APP_ID_KEY = "appId";
-  public static String WCP_APP_ID_KEY = "applicationId";
+  public static String STUDY_DATASTORE_APP_ID_KEY = "applicationId";
   public static String APP_ID_VALUE = BuildConfig.APP_ID;
 }

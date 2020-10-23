@@ -804,7 +804,7 @@ public class AppController {
   number------- > auto increment
   httpMethod--- > post/get
   url---------- > server url
-  serverType--- > registraion/response/wcp
+  serverType--- > registraion/response/studyBuilder
   userProfileId-> userId (only for profile scenario handling other case pass "" )
   studyId-------> handling bookmark duplicate(only using the class studyinfo other class pass it "")
   activityId----> handling SurveyActivitiesFragment duplication other class pass it ""

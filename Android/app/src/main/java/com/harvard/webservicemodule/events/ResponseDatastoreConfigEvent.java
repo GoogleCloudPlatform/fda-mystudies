@@ -21,8 +21,8 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class ResponseServerConfigEvent<V> extends WebserviceConfigEvent {
-  public ResponseServerConfigEvent(
+public class ResponseDatastoreConfigEvent<V> extends WebserviceConfigEvent {
+  public ResponseDatastoreConfigEvent(
       String method,
       String url,
       int requestCode,
@@ -36,7 +36,7 @@ public class ResponseServerConfigEvent<V> extends WebserviceConfigEvent {
     super(method, url, requestCode, context, modelclass, params, header, jsonobj, showAlert, o);
   }
 
-  public ResponseServerConfigEvent(
+  public ResponseDatastoreConfigEvent(
       String method,
       String url,
       int requestCode,
@@ -51,11 +51,11 @@ public class ResponseServerConfigEvent<V> extends WebserviceConfigEvent {
 
   @Override
   public String getProductionUrl() {
-    return Urls.BASE_URL_RESPONSE_SERVER;
+    return Urls.BASE_URL_RESPONSE_DATASTORE;
   }
 
   @Override
   public String getDevelopmentUrl() {
-    return Urls.BASE_URL_RESPONSE_SERVER;
+    return Urls.BASE_URL_RESPONSE_DATASTORE;
   }
 }
