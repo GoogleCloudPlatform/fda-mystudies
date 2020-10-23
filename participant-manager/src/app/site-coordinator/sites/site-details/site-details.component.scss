@@ -6,12 +6,12 @@
   display: none;
   position: absolute;
   background-color: #fff;
-  min-width: 300px;
+  min-width: 280px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.21);
   z-index: 1;
   border-radius: 4px;
   margin-top: 5px;
-  padding: 22px;
+  padding: 20px;
 }
 
 .dropdown-content a {
@@ -90,4 +90,12 @@ input[type="checkbox"]:checked + label::before {
 
 .subheader {
   padding: 13px 0px !important;
+}
+
+.desk__.view .dropbtn {
+  width: 155px;
+  height: 32px;
+}
+.arrow_clr__white {
+  color: var(--white);
 }

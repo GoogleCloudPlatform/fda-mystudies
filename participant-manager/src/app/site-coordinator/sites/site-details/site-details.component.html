@@ -73,7 +73,7 @@
                     (click)="toggleParticipant()"
                   >
                     Add Participants
-                    <i class="fa fa-caret-down"></i>
+                    <i class="fa fa-caret-down arrow_clr__white"></i>
                   </button>
                   <div
                     [ngClass]="toggleDisplay ? 'show' : ''"
@@ -141,7 +141,7 @@
                 (click)="toggleParticipant()"
               >
                 Add Participants
-                <i class="fa fa-caret-down"></i>
+                <i class="fa fa-caret-down arrow_clr__white"></i>
               </button>
               <div
                 [ngClass]="toggleDisplay ? 'show' : ''"
@@ -444,7 +444,9 @@
                   *ngIf="activeTab == onBoardingStatus.All"
                   [routerLink]="['/coordinator/participant', participant.id]"
                 >
-                  <span class="no_st_en">{{ participant.email }}</span>
+                  <span class="no_st_en cursor__pointer outline__none">
+                    {{ participant.email }}
+                  </span>
                 </td>
 
                 <!-- for New Selected -->
@@ -459,7 +461,7 @@
                       />
                       <label for="{{ participant.id }}">
                         <span
-                          class="no_st_en"
+                          class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
                             participant.id
@@ -502,7 +504,7 @@
 
                         <label for="{{ participant.id }}">
                           <span
-                            class="no_st_en"
+                            class="no_st_en cursor__pointer outline__none"
                             [routerLink]="[
                               '/coordinator/participant',
                               participant.id
@@ -516,6 +518,7 @@
                         *ngIf="participant.enrollmentStatus != 'Yet to Enroll'"
                       >
                         <span
+                          class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
                             participant.id
@@ -542,7 +545,7 @@
                       />
                       <label for="{{ participant.id }}">
                         <span
-                          class="no_st_en"
+                          class="no_st_en cursor__pointer outline__none"
                           [routerLink]="[
                             '/coordinator/participant',
                             participant.id

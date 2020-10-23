@@ -80,11 +80,17 @@
             />
             <label for="locations">Allow access to locations</label>
           </div>
-          <div class="pl-lg text-grey__sm pt-xs">
-            <span *ngIf="user.manageLocations == permission.View">
+          <div class="pl-lg text-grey__sm">
+            <span
+              *ngIf="user.manageLocations == permission.View"
+              class="txt__green font12"
+            >
               View Only
             </span>
-            <span *ngIf="user.manageLocations == permission.ViewAndEdit">
+            <span
+              *ngIf="user.manageLocations == permission.ViewAndEdit"
+              class="txt__green font12"
+            >
               View And Edit
             </span>
           </div>
@@ -97,6 +103,16 @@
     <div class="form-group">
       <div class="user__card__title pb-lg">Sites, Studies and Apps</div>
     </div>
+
+    <div class="inner-addon navbar-nav right-addon search-icon">
+      <input
+        type="text"
+        autocomplete="off"
+        class="form-control search-box search__"
+        placeholder="Search by site or study ID or name"
+      />
+    </div>
+
     <div class="form-group pt-none">
       <div class="accordion" id="accordionExample">
         <div *ngFor="let app of user.apps" class="card">
@@ -113,8 +129,8 @@
                         [value]="app.selected"
                       />
                       <label for="appCheckBox{{ app.id }}">
-                        {{ app.name }}({{ app.customId }})
-                        <span class="app__id ml-xs"></span>
+                        {{ app.name }}
+                        <span class="app__id ml-xs">({{ app.customId }})</span>
                         <span>
                           {{
                             app.selectedSitesCount
@@ -123,11 +139,17 @@
                         </span>
                       </label>
                     </div>
-                    <div class="pl-xl pt-xs">
-                      <span *ngIf="app.permission == permission.View">
+                    <div class="pl-xl">
+                      <span
+                        *ngIf="app.permission == permission.View"
+                        class="txt__green font12"
+                      >
                         View Only
                       </span>
-                      <span *ngIf="app.permission == permission.ViewAndEdit">
+                      <span
+                        *ngIf="app.permission == permission.ViewAndEdit"
+                        class="txt__green font12"
+                      >
                         View And Edit
                       </span>
                     </div>
@@ -173,6 +195,7 @@
                               <div class="custom__labels__radio">
                                 <span
                                   *ngIf="study.permission == permission.View"
+                                  class="txt__green font12"
                                 >
                                   View Only
                                 </span>
@@ -180,6 +203,7 @@
                                   *ngIf="
                                     study.permission == permission.ViewAndEdit
                                   "
+                                  class="txt__green font12"
                                 >
                                   View And Edit
                                 </span>
@@ -224,13 +248,17 @@
                               </div>
                             </div>
                             <div class="custom__labels__radio">
-                              <span *ngIf="site.permission == permission.View">
+                              <span
+                                *ngIf="site.permission == permission.View"
+                                class="txt__green font12"
+                              >
                                 View Only
                               </span>
                               <span
                                 *ngIf="
                                   site.permission == permission.ViewAndEdit
                                 "
+                                class="txt__green font12"
                               >
                                 View And Edit
                               </span>

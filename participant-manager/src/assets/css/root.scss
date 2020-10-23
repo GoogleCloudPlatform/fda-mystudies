@@ -40,16 +40,16 @@ html {
   .search__ {
     border: transparent;
     min-width: 300px !important;
-    height: 32px;
-    font-size: 87.5%;
-    background-color: var(--aqualight-gray);
-    background-image: url("assets/svgs/search.svg");
-    background-repeat: no-repeat;
-    background-position: 5%;
-    text-indent: 25px;
-    margin-right: 20px;
-    padding-right: 30px;
-    padding-left: 10px;
+    height: 32px !important;
+    font-size: 87.5% !important;
+    background-color: var(--aqualight-gray) !important;
+    background-image: url("assets/svgs/search.svg") !important;
+    background-repeat: no-repeat !important;
+    background-position: 5% !important;
+    text-indent: 25px !important;
+    margin-right: 20px !important;
+    padding-right: 30px !important;
+    padding-left: 10px !important;
   }
   .bg__white .search__user__details {
     height: 32px;
@@ -289,6 +289,7 @@ html {
     margin-bottom: 10px;
   }
   .sub__accordian .card {
+    border: none;
     border-bottom: 1px solid var(--periwinkle-gray);
     border-radius: 0;
     padding: 10px 0;
@@ -646,7 +647,7 @@ footer ul li:last-child a {
 
 .deactive__ {
   padding: 6px 13px;
-  background: var(--light-green);
+  background: var(--light-gray);
   font-size: 75%;
   color: var(--white);
   display: inline-block;
@@ -680,7 +681,6 @@ footer ul li:last-child a {
 
 .participant__label {
   color: var(--space-gray);
-  font-size: 87.5%;
 }
 
 .text__blue__xs {
@@ -724,12 +724,10 @@ footer ul li:last-child a {
 
 .inactive__text {
   color: var(--light-gray);
-  font-size: 87.5%;
 }
 
 .gray__text__md {
   color: var(--oslo-gray);
-  font-size: 87.5%;
 }
 
 .dashboard-card__title {
@@ -892,7 +890,6 @@ footer ul li:last-child a {
 
 .participant__label {
   color: var(--space-gray);
-  font-size: 87.5%;
 }
 
 .pagination li {
