@@ -91,6 +91,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
@@ -3132,6 +3133,7 @@ public class StudyController {
           studyBo.setThumbnailImage(fileName);
         }
         studyBo.setButtonText(buttonText);
+        studyBo.setDescription(StringEscapeUtils.unescapeHtml4(studyBo.getDescription()));
         message = studyService.saveOrUpdateStudy(studyBo, sesObj.getUserId(), sesObj);
         request
             .getSession()
