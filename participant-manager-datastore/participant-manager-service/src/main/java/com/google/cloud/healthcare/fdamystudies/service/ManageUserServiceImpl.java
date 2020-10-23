@@ -32,6 +32,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserStudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.UserStudyPermissionRequest;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -52,6 +53,9 @@ import com.google.cloud.healthcare.fdamystudies.repository.SiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyPermissionRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -123,16 +127,16 @@ public class ManageUserServiceImpl implements ManageUserService {
     return userResponse;
   }
 
-  private EmailResponse sendInvitationEmail(UserRequest user, String securityCode) {
+  private EmailResponse sendInvitationEmail(String email, String firstName, String securityCode) {
     Map<String, String> templateArgs = new HashMap<>();
     templateArgs.put("ORG_NAME", appConfig.getOrgName());
-    templateArgs.put("FIRST_NAME", user.getFirstName());
+    templateArgs.put("FIRST_NAME", firstName);
     templateArgs.put("ACTIVATION_LINK", appConfig.getUserDetailsLink() + securityCode);
     templateArgs.put("CONTACT_EMAIL_ADDRESS", appConfig.getContactEmail());
     EmailRequest emailRequest =
         new EmailRequest(
             appConfig.getFromEmail(),
-            new String[] {user.getEmail()},
+            new String[] {email},
             null,
             null,
             appConfig.getRegisterUserSubject(),
@@ -231,7 +235,8 @@ public class ManageUserServiceImpl implements ManageUserService {
       }
     }
 
-    EmailResponse emailResponse = sendInvitationEmail(user, adminDetails.getSecurityCode());
+    EmailResponse emailResponse =
+        sendInvitationEmail(user.getEmail(), user.getFirstName(), adminDetails.getSecurityCode());
     logger.debug(
         String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
 
@@ -330,7 +335,9 @@ public class ManageUserServiceImpl implements ManageUserService {
 
     superAdminDetails = userAdminRepository.saveAndFlush(superAdminDetails);
 
-    EmailResponse emailResponse = sendInvitationEmail(user, superAdminDetails.getSecurityCode());
+    EmailResponse emailResponse =
+        sendInvitationEmail(
+            user.getEmail(), user.getFirstName(), superAdminDetails.getSecurityCode());
     logger.debug(
         String.format("send add new user email status=%s", emailResponse.getHttpStatusCode()));
 
@@ -680,5 +687,52 @@ public class ManageUserServiceImpl implements ManageUserService {
     participantManagerHelper.logEvent(USER_REGISTRY_VIEWED, auditRequest);
     logger.exit(String.format("total users=%d", adminList.size()));
     return new GetUsersResponse(MessageCode.GET_USERS_SUCCESS, users, userAdminRepository.count());
+  }
+
+  @Override
+  @Transactional
+  public AdminUserResponse sendInvitation(String userId, String superAdminUserId) {
+
+    validateInviteRequest(superAdminUserId);
+
+    Optional<UserRegAdminEntity> optUser = userAdminRepository.findById(userId);
+    UserRegAdminEntity user =
+        optUser.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+
+    Timestamp now = new Timestamp(Instant.now().toEpochMilli());
+    if (now.before(user.getSecurityCodeExpireDate())) {
+      logger.info("Valid security code found, skip send invite email");
+      return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
+    }
+
+    user.setSecurityCode(IdGenerator.id());
+    user.setSecurityCodeExpireDate(
+        new Timestamp(
+            Instant.now()
+                .plus(Long.valueOf(appConfig.getSecurityCodeExpireDate()), ChronoUnit.MINUTES)
+                .toEpochMilli()));
+    user = userAdminRepository.saveAndFlush(user);
+
+    EmailResponse emailResponse =
+        sendInvitationEmail(user.getEmail(), user.getFirstName(), user.getSecurityCode());
+
+    if (!MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+        .getMessage()
+        .equals(emailResponse.getMessage())) {
+      throw new ErrorCodeException(ErrorCode.APPLICATION_ERROR);
+    }
+    return new AdminUserResponse(MessageCode.INVITATION_SENT_SUCCESSFULLY, user.getId());
+  }
+
+  private void validateInviteRequest(String superAdminUserId) {
+    Optional<UserRegAdminEntity> optAdminDetails = userAdminRepository.findById(superAdminUserId);
+
+    UserRegAdminEntity loggedInUserDetails =
+        optAdminDetails.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
+
+    if (!loggedInUserDetails.isSuperAdmin()) {
+      logger.error("Signed in user is not having super admin privileges");
+      throw new ErrorCodeException(ErrorCode.NOT_SUPER_ADMIN_ACCESS);
+    }
   }
 }
