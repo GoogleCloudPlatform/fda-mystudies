@@ -601,6 +601,9 @@
                                                                             'disabled',
                                                                             false);
                                                                     if (isFromValid("#basicInfoFormId")) {
+                                                                    	var richText=$('#summernote').summernote('code');
+                                                                    	var escaped = $('#summernote').text(richText).html();
+                                                                    	$('#summernote').val(escaped);
                                                                       $(
                                                                           "#buttonText")
                                                                           .val(
@@ -761,6 +764,12 @@
                                               "#buttonText")
                                               .val(
                                                   'save');
+                                          var richTextVal=$('#summernote').val();
+	                                      if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+	                                    	  var richText=$('#summernote').summernote('code');
+	                                    	  var escaped = $('#summernote').text(richText).html();
+                                          	  $('#summernote').val(escaped);
+	                                       }
                                           $(
                                               '#basicInfoFormId')
                                               .submit();
@@ -778,6 +787,12 @@
                                               "#buttonText")
                                               .val(
                                                   'save');
+                                          var richTextVal=$('#summernote').val();
+	                                      if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+	                                    	  var richText=$('#summernote').summernote('code');
+	                                    	  var escaped = $('#summernote').text(richText).html();
+                                          	  $('#summernote').val(escaped);
+	                                       }
                                           $(
                                               '#basicInfoFormId')
                                               .submit();
@@ -797,6 +812,12 @@
                                       "#buttonText")
                                       .val(
                                           'save');
+                                  var richTextVal=$('#summernote').val();
+                                  if (null != richTextVal && richTextVal != '' && typeof richTextVal != 'undefined' && richTextVal != '<p><br></p>'){
+                                	  var richText=$('#summernote').summernote('code');
+                                	  var escaped = $('#summernote').text(richText).html();
+                                  	  $('#summernote').val(escaped);
+                                   }
                                   $(
                                       '#basicInfoFormId')
                                       .submit();
