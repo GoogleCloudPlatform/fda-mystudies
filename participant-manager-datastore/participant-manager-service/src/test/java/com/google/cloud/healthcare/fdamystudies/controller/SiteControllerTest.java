@@ -63,6 +63,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.SiteRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
@@ -1155,6 +1156,56 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnParticipantDetailsInProgressIssueFixes() throws Exception {
+    // Step 1: Set data needed to get Participant details
+    participantRegistrySiteEntity.getStudy().setApp(appEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
+    participantStudyEntity.setWithdrawalDate(null);
+    testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
+
+    // Step 2: Call API and expect GET_PARTICIPANT_DETAILS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantDetails", notNullValue()))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.participantRegistrySiteid",
+                is(participantRegistrySiteEntity.getId())))
+        .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
+        .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(1)))
+        .andExpect(
+            jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())))
+        .andExpect(
+            jsonPath("$.participantDetails.onboardingStatus", is(OnboardingStatus.NEW.getStatus())))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.enrollments[0].enrollmentStatus",
+                is(EnrollmentStatus.ENROLLED.getStatus())));
 
     verifyTokenIntrospectRequest();
   }
