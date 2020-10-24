@@ -24,7 +24,6 @@ export class SetUpAccountComponent
   tempRegId = '';
   setupAccountForm: FormGroup;
   passCriteria = '';
-  showScreen = false;
   constructor(
     private readonly fb: FormBuilder,
     private readonly setUpAccountService: SetUpAccountService,
@@ -82,7 +81,6 @@ export class SetUpAccountComponent
       if (user.redirectTo === 'login') {
         void this.router.navigate(['/login']);
       }
-      this.showScreen = true;
       this.setupAccountForm.patchValue(user);
     });
   }

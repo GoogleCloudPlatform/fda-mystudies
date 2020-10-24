@@ -32,19 +32,17 @@ export class AddEmailComponent extends UnsubscribeOnDestroyAdapter {
     this.subs.add(
       this.siteDetailedService
         .addParticipants(this.siteId, this.model)
-        .subscribe(
-          (successResponse: AddEmailResponse) => {
-            this.addParticipantEmail.id = successResponse.participantId;
-            this.addParticipantEmail.email = this.model.email;
-            this.addparticipantEmailArray.push(this.addParticipantEmail);
-            if (getMessage(successResponse.code)) {
-              this.toastr.success(getMessage(successResponse.code));
-            } else {
-              this.toastr.success(successResponse.message);
-            }
-            this.addEmail.emit(this.addparticipantEmailArray);
+        .subscribe((successResponse: AddEmailResponse) => {
+          this.addParticipantEmail.id = successResponse.participantId;
+          this.addParticipantEmail.email = this.model.email;
+          this.addparticipantEmailArray.push(this.addParticipantEmail);
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success(successResponse.message);
           }
-        ),
+          this.addEmail.emit(this.addparticipantEmailArray);
+        }),
     );
   }
   onCancel(): void {

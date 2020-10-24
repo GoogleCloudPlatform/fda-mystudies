@@ -41,16 +41,14 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
       formData.append('file', this.file, this.file.name);
       this.siteDetailsService
         .importParticipants(this.siteId, formData)
-        .subscribe(
-          (successResponse: ImportParticipantEmailResponse) => {
-            if (getMessage(successResponse.code)) {
-              this.toastr.success(getMessage(successResponse.code));
-            } else {
-              this.toastr.success(successResponse.message);
-            }
-            this.import.emit(successResponse);
+        .subscribe((successResponse: ImportParticipantEmailResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success(successResponse.message);
           }
-        );
+          this.import.emit(successResponse);
+        });
     } else {
       this.toastr.error('Please select a file to upload.');
     }

@@ -66,10 +66,7 @@ export class AuthInterceptor implements HttpInterceptor {
         console.log('refresh token is successfull');
         this.refreshTokenSubject.next(authServerResponse);
         localStorage.setItem('accessToken', authServerResponse.access_token);
-        localStorage.setItem(
-          'refreshToken',
-          authServerResponse.refresh_token,
-        );
+        localStorage.setItem('refreshToken', authServerResponse.refresh_token);
         return next.handle(this.setHeaders(request)).pipe(
           catchError((error: unknown) => {
             return throwError(error);

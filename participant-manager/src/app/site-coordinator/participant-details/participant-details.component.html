@@ -74,7 +74,9 @@
                 "
               >
                 <button
-                  [disabled]="diableButton(participant.participantDetails)"
+                  [disabled]="
+                    hasCompletedEnrollment(participant.participantDetails)
+                  "
                   name="sendInvite"
                   class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
                   (click)="
@@ -86,7 +88,9 @@
               </div>
               <div>
                 <button
-                  [disabled]="diableButton(participant.participantDetails)"
+                  [disabled]="
+                    hasCompletedEnrollment(participant.participantDetails)
+                  "
                   name="toggleInvite"
                   class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
                   (click)="
@@ -114,7 +118,7 @@
     >
       <div class="flex__ flex__justify__center">
         <button
-          [disabled]="diableButton(participant.participantDetails)"
+          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
           name="sendInvite"
           class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
           (click)="sendInvitation(participant.participantDetails.siteId)"
@@ -122,7 +126,7 @@
           {{ sendResend }}
         </button>
         <button
-          [disabled]="diableButton(participant.participantDetails)"
+          [disabled]="hasCompletedEnrollment(participant.participantDetails)"
           name="toggleInvite"
           class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
           (click)="

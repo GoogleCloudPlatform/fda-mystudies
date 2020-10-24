@@ -157,7 +157,6 @@ export class AddNewUserComponent
       this.userService.add(this.user).subscribe(
         (successResponse: ApiResponse) => {
           this.disableButton = false;
-
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else this.toastr.success('Success');
