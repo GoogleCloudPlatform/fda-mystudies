@@ -19,7 +19,7 @@
                 </div>
                 <div>
                   <div class="blue__text__md text-capitalize">
-                    {{ study.name }}
+                    {{ study.customId }}
                   </div>
                   <div
                     class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
@@ -31,8 +31,7 @@
                   >
                     <div class="col-xs-6 col-md-12 p-none">
                       <span *ngIf="study.type !== studyTypes.Open">
-                        {{ study.sitesCount }}
-                        sites
+                        {{ study.sitesCount | i18nPlural: messageMapping }}
                       </span>
                       <span *ngIf="study.type === studyTypes.Open">
                         Open Study

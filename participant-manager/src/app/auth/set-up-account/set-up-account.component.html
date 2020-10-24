@@ -122,6 +122,12 @@
                   Your password must be 8 to 64 characters long with lower
                   case,upper case,number and special character.
                 </span>
+                <span
+                  class="help-block with-errors error__msg"
+                  *ngIf="f.password.errors?.required"
+                >
+                  Please fill out this field.
+                </span>
               </div>
             </div>
           </div>
