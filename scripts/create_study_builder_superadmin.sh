@@ -33,17 +33,18 @@ echo "USE \`fda_hphc\`;" >> ${TMPFILE}
 
 # hash password with BCrypt, default strength of 10.
 # Replace 2y with 2a to make the algorithm consistent with Spring Security.
-HASH=`htpasswd -bnBC 10 "" ${PASSWORD} | tr -d ':\n' | sed 's/$2y/$2a/'`
+HASH=`htpasswd -bnBC 10 "" "${PWD}" | tr -d ':\n' | sed 's/$2y/$2a/'`
 
 # e.g. N8K7zYrc0F
-TOKEN=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 10 | head -n 1`
-
+TOKEN=`cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 10 | head -n 1`
 # e.g ja67Ll
-ACCESS_CODE=`cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 6 | head -n 1`
-
+ACCESS_CODE=`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1`
 # e.g. 2018-01-18 14:36:41
 DATETIME=`date +"%F %T"`
 EXPIRY_DATETIME=`date -v +90d +"%F %T"`
+
+echo "DATETIME is ${DATETIME}"
+echo "EXPIRY_DATETIME is ${EXPIRY_DATETIME}"
 
 echo "REPLACE into users
 (
