@@ -237,8 +237,8 @@ public class UserServiceImpl implements UserService {
         auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
       }
 
-      logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
-      return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
+      logger.exit(MessageCode.FORGOT_PASSWORD);
+      return new ResetPasswordResponse(MessageCode.FORGOT_PASSWORD);
     }
 
     auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
@@ -453,7 +453,12 @@ public class UserServiceImpl implements UserService {
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
-    throw new ErrorCodeException(ErrorCode.INVALID_LOGIN_CREDENTIALS);
+    ErrorCode errorCode =
+        userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
+            ? ErrorCode.ACCOUNT_LOCKED
+            : ErrorCode.INVALID_LOGIN_CREDENTIALS;
+
+    throw new ErrorCodeException(errorCode);
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(

@@ -49,11 +49,11 @@ public class ParticipantDetail {
 
   private String studyName;
 
+  private String studyType;
+
   private String customAppId;
 
   private String appName;
-
-  private String onboardringStatus;
 
   private String invitationDate;
 
