@@ -157,13 +157,19 @@ public final class ParticipantMapper {
 
     ParticipantStudyEntity participantStudy = idMap.get(participantRegistrySite.getId());
     if (participantStudy != null) {
-      String enrollmentStatus =
-          EnrollmentStatus.IN_PROGRESS.getStatus().equals(participantStudy.getStatus())
-              ? EnrollmentStatus.ENROLLED.getStatus()
-              : participantStudy.getStatus();
-      participant.setEnrollmentStatus(enrollmentStatus);
-      String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
-      participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+      if (EnrollmentStatus.WITHDRAWN.getStatus().equalsIgnoreCase(participantStudy.getStatus())
+          && (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
+              || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode))) {
+        participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
+      } else {
+        String enrollmentStatus =
+            EnrollmentStatus.IN_PROGRESS.getStatus().equalsIgnoreCase(participantStudy.getStatus())
+                ? EnrollmentStatus.ENROLLED.getStatus()
+                : participantStudy.getStatus();
+        participant.setEnrollmentStatus(enrollmentStatus);
+        String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
+        participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+      }
     } else {
       if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
           || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
