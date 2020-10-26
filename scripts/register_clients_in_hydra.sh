@@ -1,5 +1,15 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
+# Script to copy client ids and secret keys from gcloud secret and register them
+# in Hydra.
+# Run like:
+# $ ./scripts/register_clients_in_hydra.sh <prefix> <env>
+
 #!/bin/bash
-# Script to copy client id and secret keys from gcloud secret to CloudSQL.
 if [ "$#" -ne 2 ]; then
   echo 'Please provide deployment prefix and env in the order of <prefix> <env>>'
   exit 1
@@ -67,5 +77,3 @@ do
 
   echo "${OUTPUT}"
 done
-
-

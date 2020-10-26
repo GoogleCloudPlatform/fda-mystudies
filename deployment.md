@@ -303,13 +303,13 @@ regenerating the Terraform configs several times.
 
 1. Run
    [register_clients_in_hydra.sh $PREFIX $ENV](./scripts/register_clients_in_hydra.sh.sh), 
-   passing your deployment PREFIX and ENV as parameters. 
-   This script will register each application in hydra using the generated 
+   passing your deployment PREFIX and ENV as parameters.
+   This script will register each application in hydra using the generated
    client id and secret keys.
 
 1. Modify
    [copy_mobile_app_info_to_sql.sh](./scripts/copy_mobile_app_info_to_sql.sh)
-   to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from 
+   to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from
    secrets into CloudSQL.
 
 ### Step 10: Superadmin accounts
