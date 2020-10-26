@@ -296,7 +296,7 @@ regenerating the Terraform configs several times.
 
 ### Step 8: Kubernetes deployment
 
-1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
+1. Follow [Kubernetes README.md](./kubernetes/README.md) to deploy the
     Kubernetes resources in the GKE cluster.
 
 ### Step 9: Secrets setup
