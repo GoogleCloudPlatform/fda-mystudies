@@ -1,10 +1,10 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: fda-mystudies-dev
+  name: mystudies-dev
   annotations:
     kubernetes.io/ingress.global-static-ip-name: mystudies-ingress-ip
-    networking.gke.io/managed-certificates: fda-mystudies-cert
+    networking.gke.io/managed-certificates: mystudies-cert
 spec:
   rules:
     - http:

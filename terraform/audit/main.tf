@@ -19,7 +19,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "example-dev-terraform-state"
+    bucket = "mystudies-dev-terraform-state"
     prefix = "audit"
   }
 }
@@ -31,10 +31,10 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "example-dev-audit"
+  name                    = "mystudies-dev-audit"
   org_id                  = ""
-  folder_id               = "0000000000"
-  billing_account         = "XXXXXX-XXXXXX-XXXXXX"
+  folder_id               = "440087619763"
+  billing_account         = "01B494-31B256-17B2A6"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
@@ -74,7 +74,7 @@ module "bigquery_destination" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id                  = "example_dev_1yr_audit_logs"
+  dataset_id                  = "mystudies_dev_1yr_audit_logs"
   project_id                  = module.project.project_id
   location                    = "us-east1"
   default_table_expiration_ms = 365 * 8.64 * pow(10, 7) # 365 days
@@ -109,9 +109,9 @@ module "storage_destination" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.7.0"
 
-  name          = "example-dev-7yr-audit-logs"
+  name          = "mystudies-dev-7yr-audit-logs"
   project_id    = module.project.project_id
-  location      = "us-central1"
+  location      = "us-east1"
   storage_class = "COLDLINE"
 
   lifecycle_rules = [{

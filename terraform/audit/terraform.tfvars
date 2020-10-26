@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-folder         = "folders/0000000000"
-auditors_group = "example-dev-auditors@example.com"
+folder         = "folders/440087619763"
+auditors_group = "dpt-dev@hcls.joonix.net"
