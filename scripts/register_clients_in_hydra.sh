@@ -62,17 +62,17 @@ do
 
   echo "Register ${CLIENT_NAME} in Hydra"
   OUTPUT=`curl --location --request POST "${HYDRA_ADMIN_URL}/clients" \
---header "Content-Type: application/json" \
---header "Accept: application/json" \
---data-raw "{
-  \"client_id\": \"${CLIENT_ID}\",
-  \"client_name\": \"${CLIENT_NAME}\",
-  \"client_secret\": \"${CLIENT_SECRET}\",
-  \"client_secret_expires_at\": 0,
-  \"created_at\": \"${DATETIME}\",
-  \"grant_types\": [\"client_credentials\"],
-  \"token_endpoint_auth_method\": \"client_secret_basic\",
-  \"redirect_uris\": [\"${SCIM_AUTH_URL}/callback\"]
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --data-raw "{
+    \"client_id\": \"${CLIENT_ID}\",
+    \"client_name\": \"${CLIENT_NAME}\",
+    \"client_secret\": \"${CLIENT_SECRET}\",
+    \"client_secret_expires_at\": 0,
+    \"created_at\": \"${DATETIME}\",
+    \"grant_types\": [\"client_credentials\"],
+    \"token_endpoint_auth_method\": \"client_secret_basic\",
+    \"redirect_uris\": [\"${SCIM_AUTH_URL}/callback\"]
   }"`
 
   echo "${OUTPUT}"
