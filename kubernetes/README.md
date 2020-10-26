@@ -102,7 +102,7 @@ just "mystudies".
 Import the scripts, in this order:
 
 #### Study builder
- 
+
 ```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/HPHC_My_Studies_DB_Create_Script.sql
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/procedures.sql

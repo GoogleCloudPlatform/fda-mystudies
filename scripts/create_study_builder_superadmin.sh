@@ -43,9 +43,6 @@ ACCESS_CODE=`cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 6 | head -n 1
 DATETIME=`date +"%F %T"`
 EXPIRY_DATETIME=`date -v +90d +"%F %T"`
 
-echo "DATETIME is ${DATETIME}"
-echo "EXPIRY_DATETIME is ${EXPIRY_DATETIME}"
-
 echo "REPLACE into users
 (
   user_id, first_name, last_name, email, password, role_id, created_by,
