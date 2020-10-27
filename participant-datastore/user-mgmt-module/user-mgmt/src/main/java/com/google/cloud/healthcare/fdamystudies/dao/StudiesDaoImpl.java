@@ -88,6 +88,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setApp(appInfo);
       studyInfo.setModifiedBy(String.valueOf(0));
       studyInfo.setModified(Timestamp.from(Instant.now()));
+      studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
       session.update(studyInfo);
       if (studyInfo.getStatus().equalsIgnoreCase("Deactivated")) {
         decommisionSiteFromStudy(session, studyInfo);
@@ -118,6 +119,7 @@ public class StudiesDaoImpl implements StudiesDao {
       studyInfo.setApp(appInfo);
       studyInfo.setCreatedBy(String.valueOf(0));
       studyInfo.setCreated(Timestamp.from(Instant.now()));
+      studyInfo.setLogoImageUrl(studyMetadataBean.getLogoImageUrl());
       String generatedStudyid = (String) session.save(studyInfo);
 
       if (!StringUtils.isBlank(studyMetadataBean.getStudyType())

@@ -60,7 +60,7 @@
       <button
         type="submit"
         name="add"
-        [disabled]="addSiteForm.form.invalid"
+        [disabled]="addSiteForm.form.invalid || disableButton"
         class="btn bt__add mr-sm"
         (click)="add()"
       >

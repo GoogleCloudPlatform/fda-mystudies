@@ -29,11 +29,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 @Entity
 @Table(name = "notification")
+@NamedQueries({
+  @NamedQuery(
+      name = "getNotification",
+      query = " From NotificationBO NBO WHERE NBO.studyId =:studyId"),
+})
 public class NotificationBO implements Serializable {
 
   private static final long serialVersionUID = 3634540541782531200L;
