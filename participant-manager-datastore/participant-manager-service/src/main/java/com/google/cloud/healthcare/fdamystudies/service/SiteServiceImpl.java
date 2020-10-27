@@ -13,8 +13,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CL
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEFAULT_PERCENTAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN_PROGRESS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
@@ -322,12 +322,19 @@ public class SiteServiceImpl implements SiteService {
       return ErrorCode.OPEN_STUDY;
     }
 
-    Optional<ParticipantRegistrySiteEntity> registry =
+    List<ParticipantRegistrySiteEntity> registryList =
         participantRegistrySiteRepository.findByStudyIdAndEmail(
             site.getStudy().getId(), participant.getEmail());
 
-    if (registry.isPresent()) {
-      return ErrorCode.EMAIL_EXISTS;
+    if (CollectionUtils.isNotEmpty(registryList)) {
+      for (ParticipantRegistrySiteEntity participantRegistrySite : registryList) {
+        if (!participantRegistrySite
+                .getOnboardingStatus()
+                .equals(OnboardingStatus.DISABLED.getCode())
+            || participantRegistrySite.getSite().equals(site)) {
+          return ErrorCode.EMAIL_EXISTS;
+        }
+      }
     }
     return null;
   }
@@ -525,6 +532,8 @@ public class SiteServiceImpl implements SiteService {
 
     SiteEntity site = optSiteEntity.get();
     if (SiteStatus.DEACTIVE == SiteStatus.fromValue(site.getStatus())) {
+      checkPreConditionsForSiteActivate(site);
+
       site.setStatus(SiteStatus.ACTIVE.value());
       site = siteRepository.saveAndFlush(site);
 
@@ -548,6 +557,18 @@ public class SiteServiceImpl implements SiteService {
     logger.exit(String.format("Site status changed to DEACTIVE for siteId=%s", site.getId()));
     return new SiteStatusResponse(
         site.getId(), site.getStatus(), MessageCode.DECOMMISSION_SITE_SUCCESS);
+  }
+
+  private void checkPreConditionsForSiteActivate(SiteEntity site) {
+    Optional<LocationEntity> optLocation = locationRepository.findById(site.getLocation().getId());
+    if (optLocation.get().getStatus().equals(INACTIVE_STATUS)) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION);
+    }
+
+    Optional<StudyEntity> optStudyEntity = studyRepository.findById(site.getStudyId());
+    if (optStudyEntity.get().getStatus().equals(DEACTIVATED)) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY);
+    }
   }
 
   private void validateDecommissionSiteRequest(
@@ -578,11 +599,13 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY);
     }
 
-    List<String> status = Arrays.asList(ENROLLED_STATUS, STATUS_ACTIVE);
+    List<String> status = Arrays.asList(IN_PROGRESS, STATUS_ACTIVE);
     Optional<Long> optParticipantStudyCount =
         participantStudyRepository.findByStudyIdAndStatus(status, study.getId());
 
-    if (optParticipantStudyCount.isPresent() && optParticipantStudyCount.get() > 0) {
+    if (optParticipantStudyCount.isPresent()
+        && optParticipantStudyCount.get() > 0
+        && study.getStatus().equals(STATUS_ACTIVE)) {
       throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS);
     }
   }
@@ -1023,9 +1046,32 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.INVALID_ONBOARDING_STATUS);
     }
 
-    participantRegistrySiteRepository.updateOnboardingStatus(
-        participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    List<ParticipantRegistrySiteEntity> participantregistryList =
+        participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
+
+    if (!OnboardingStatus.NEW.equals(onboardingStatus)) {
+      participantRegistrySiteRepository.updateOnboardingStatus(
+          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    } else {
+      List<String> emails =
+          participantregistryList
+              .stream()
+              .map(ParticipantRegistrySiteEntity::getEmail)
+              .collect(Collectors.toList());
+
+      Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+          participantRegistrySiteRepository.findExistingRecordByStudyIdAndEmails(optSite.get().getStudyId(), emails);
+
+      if (optParticipantRegistrySite.isPresent()) {
+        throw new ErrorCodeException(ErrorCode.CANNOT_ENABLE_PARTICIPANT);
+      }
+
+      participantRegistrySiteRepository.updateOnboardingStatus(
+          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    }
+
     SiteEntity site = optSite.get();
+
     auditRequest.setSiteId(site.getId());
     auditRequest.setUserId(participantStatusRequest.getUserId());
     auditRequest.setStudyId(site.getStudyId());
@@ -1147,6 +1193,9 @@ public class SiteServiceImpl implements SiteService {
       StudyEntity study,
       StudyDetails studyDetail) {
 
+    Map<String, Long> enrolledInvitedCountForOpenStudyBySiteId =
+        getEnrolledCountForOpenStudyGroupBySiteId(study);
+
     for (SiteEntity siteEntity : study.getSites()) {
       EnrolledInvitedCount enrolledInvitedCount = enrolledInvitedCountMap.get(siteEntity.getId());
 
@@ -1160,13 +1209,17 @@ public class SiteServiceImpl implements SiteService {
       SiteDetails site = new SiteDetails();
       site.setId(siteEntity.getId());
       site.setName(siteEntity.getLocation().getName());
-      site.setEnrolled(enrolledCount);
 
       String studyType = study.getType();
       if (studyType.equals(OPEN_STUDY) && siteEntity.getTargetEnrollment() != null) {
+        site.setEnrolled(
+            enrolledInvitedCountForOpenStudyBySiteId != null
+                ? enrolledInvitedCountForOpenStudyBySiteId.get(siteEntity.getId())
+                : 0L);
         site.setInvited(Long.valueOf(siteEntity.getTargetEnrollment()));
       } else if (studyType.equals(CLOSE_STUDY)) {
         site.setInvited(invitedCount);
+        site.setEnrolled(enrolledCount);
       }
 
       if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
@@ -1180,6 +1233,23 @@ public class SiteServiceImpl implements SiteService {
       }
       studyDetail.getSites().add(site);
     }
+  }
+
+  private Map<String, Long> getEnrolledCountForOpenStudyGroupBySiteId(StudyEntity study) {
+    List<SiteEntity> sites = study.getSites();
+    if (CollectionUtils.isNotEmpty(sites)) {
+      List<String> siteIds = sites.stream().map(SiteEntity::getId).collect(Collectors.toList());
+
+      List<EnrolledInvitedCount> enrolledInvitedCountList =
+          participantStudyRepository.getEnrolledCountForOpenStudy(siteIds);
+
+      return enrolledInvitedCountList
+          .stream()
+          .collect(
+              Collectors.toMap(
+                  EnrolledInvitedCount::getSiteId, EnrolledInvitedCount::getEnrolledCount));
+    }
+    return new HashMap<>();
   }
 
   @Override

@@ -26,12 +26,12 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  initSessionStorage(): void {
-    sessionStorage.setItem('correlationId', uuidv4());
+  initlocalStorage(): void {
+    localStorage.setItem('correlationId', uuidv4());
     getPkce(this.pkceLength, (error, {verifier, challenge}) => {
       if (!error) {
-        sessionStorage.setItem('pkceVerifier', verifier);
-        sessionStorage.setItem('pkceChallenge', challenge);
+        localStorage.setItem('pkceVerifier', verifier);
+        localStorage.setItem('pkceChallenge', challenge);
       }
     });
   }
@@ -44,9 +44,9 @@ export class AuthService {
       .set('response_type', 'code')
       .set('mobilePlatform', this.mobilePlatform)
       .set('code_challenge_method', 'S256')
-      .set('code_challenge', sessionStorage.getItem('pkceChallenge') || '')
-      .set('correlationId', sessionStorage.getItem('correlationId') || '')
-      .set('tempRegId', sessionStorage.getItem('tempRegId') || '')
+      .set('code_challenge', localStorage.getItem('pkceChallenge') || '')
+      .set('correlationId', localStorage.getItem('correlationId') || '')
+      .set('tempRegId', localStorage.getItem('tempRegId') || '')
       .set('redirect_uri', environment.redirectUrl)
       .set('state', uuidv4())
       .set('source', this.source)
@@ -55,18 +55,18 @@ export class AuthService {
   }
 
   hasCredentials(): boolean {
-    return 'accessToken' in sessionStorage;
+    return 'accessToken' in localStorage;
   }
 
   getUserAccessToken(): string {
-    return sessionStorage.getItem('accessToken') || '';
+    return localStorage.getItem('accessToken') || '';
   }
   getAuthUserId(): string {
-    return sessionStorage.getItem('authUserId') || '';
+    return localStorage.getItem('authUserId') || '';
   }
 
   getUserId(): string {
-    return sessionStorage.getItem('userId') || '';
+    return localStorage.getItem('userId') || '';
   }
 
   getToken(code: string, userId: string): Observable<AccessToken> {
@@ -75,7 +75,7 @@ export class AuthService {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
-        'correlationId': sessionStorage.getItem('correlationId') || '',
+        'correlationId': localStorage.getItem('correlationId') || '',
         'appId': this.appId,
         'mobilePlatform': this.mobilePlatform,
       }),
@@ -86,7 +86,7 @@ export class AuthService {
       .set('code', code)
       .set('redirect_uri', environment.redirectUrl)
       .set('userId', userId)
-      .set('code_verifier', sessionStorage.getItem('pkceVerifier') || '');
+      .set('code_verifier', localStorage.getItem('pkceVerifier') || '');
     return this.http.post<AccessToken>(
       `${environment.authServerUrl}/oauth2/token`,
       params.toString(),
@@ -100,7 +100,7 @@ export class AuthService {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'application/json',
-        'correlationId': sessionStorage.getItem('correlationId') || '',
+        'correlationId': localStorage.getItem('correlationId') || '',
         'appId': this.appId,
         'mobilePlatform': this.mobilePlatform,
       }),
@@ -121,7 +121,7 @@ export class AuthService {
   }
 
   private getRefreshToken() {
-    return sessionStorage.getItem('refreshToken') || '';
+    return localStorage.getItem('refreshToken') || '';
   }
 
   getUserDetails(): void {
@@ -132,7 +132,7 @@ export class AuthService {
   }
 
   logOutUser(): void {
-    sessionStorage.clear();
+    localStorage.clear();
     this.cookieService.deleteAll();
   }
 }
