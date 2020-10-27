@@ -322,12 +322,19 @@ public class SiteServiceImpl implements SiteService {
       return ErrorCode.OPEN_STUDY;
     }
 
-    Optional<ParticipantRegistrySiteEntity> registry =
+    List<ParticipantRegistrySiteEntity> registryList =
         participantRegistrySiteRepository.findByStudyIdAndEmail(
             site.getStudy().getId(), participant.getEmail());
 
-    if (registry.isPresent()) {
-      return ErrorCode.EMAIL_EXISTS;
+    if (CollectionUtils.isNotEmpty(registryList)) {
+      for (ParticipantRegistrySiteEntity participantRegistrySite : registryList) {
+        if (!participantRegistrySite
+                .getOnboardingStatus()
+                .equals(OnboardingStatus.DISABLED.getCode())
+            || participantRegistrySite.getSite().equals(site)) {
+          return ErrorCode.EMAIL_EXISTS;
+        }
+      }
     }
     return null;
   }
@@ -1023,9 +1030,32 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.INVALID_ONBOARDING_STATUS);
     }
 
-    participantRegistrySiteRepository.updateOnboardingStatus(
-        participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    List<ParticipantRegistrySiteEntity> participantregistryList =
+        participantRegistrySiteRepository.findByIds(participantStatusRequest.getIds());
+
+    if (!OnboardingStatus.NEW.equals(onboardingStatus)) {
+      participantRegistrySiteRepository.updateOnboardingStatus(
+          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    } else {
+      List<String> emails =
+          participantregistryList
+              .stream()
+              .map(ParticipantRegistrySiteEntity::getEmail)
+              .collect(Collectors.toList());
+
+      Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+          participantRegistrySiteRepository.findExistingRecordByStudyIdAndEmails(optSite.get().getStudyId(), emails);
+
+      if (optParticipantRegistrySite.isPresent()) {
+        throw new ErrorCodeException(ErrorCode.CANNOT_ENABLE_PARTICIPANT);
+      }
+
+      participantRegistrySiteRepository.updateOnboardingStatus(
+          participantStatusRequest.getStatus(), participantStatusRequest.getIds());
+    }
+
     SiteEntity site = optSite.get();
+
     auditRequest.setSiteId(site.getId());
     auditRequest.setUserId(participantStatusRequest.getUserId());
     auditRequest.setStudyId(site.getStudyId());
@@ -1147,6 +1177,9 @@ public class SiteServiceImpl implements SiteService {
       StudyEntity study,
       StudyDetails studyDetail) {
 
+    Map<String, Long> enrolledInvitedCountForOpenStudyBySiteId =
+        getEnrolledCountForOpenStudyGroupBySiteId(study);
+
     for (SiteEntity siteEntity : study.getSites()) {
       EnrolledInvitedCount enrolledInvitedCount = enrolledInvitedCountMap.get(siteEntity.getId());
 
@@ -1160,13 +1193,17 @@ public class SiteServiceImpl implements SiteService {
       SiteDetails site = new SiteDetails();
       site.setId(siteEntity.getId());
       site.setName(siteEntity.getLocation().getName());
-      site.setEnrolled(enrolledCount);
 
       String studyType = study.getType();
       if (studyType.equals(OPEN_STUDY) && siteEntity.getTargetEnrollment() != null) {
+        site.setEnrolled(
+            enrolledInvitedCountForOpenStudyBySiteId != null
+                ? enrolledInvitedCountForOpenStudyBySiteId.get(siteEntity.getId())
+                : 0L);
         site.setInvited(Long.valueOf(siteEntity.getTargetEnrollment()));
       } else if (studyType.equals(CLOSE_STUDY)) {
         site.setInvited(invitedCount);
+        site.setEnrolled(enrolledCount);
       }
 
       if (site.getInvited() != 0 && site.getInvited() >= site.getEnrolled()) {
@@ -1180,6 +1217,23 @@ public class SiteServiceImpl implements SiteService {
       }
       studyDetail.getSites().add(site);
     }
+  }
+
+  private Map<String, Long> getEnrolledCountForOpenStudyGroupBySiteId(StudyEntity study) {
+    List<SiteEntity> sites = study.getSites();
+    if (CollectionUtils.isNotEmpty(sites)) {
+      List<String> siteIds = sites.stream().map(SiteEntity::getId).collect(Collectors.toList());
+
+      List<EnrolledInvitedCount> enrolledInvitedCountList =
+          participantStudyRepository.getEnrolledCountForOpenStudy(siteIds);
+
+      return enrolledInvitedCountList
+          .stream()
+          .collect(
+              Collectors.toMap(
+                  EnrolledInvitedCount::getSiteId, EnrolledInvitedCount::getEnrolledCount));
+    }
+    return new HashMap<>();
   }
 
   @Override

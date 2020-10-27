@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Validators} from '@angular/forms';
 import {ToastrService} from 'ngx-toastr';
 import {SetUpUser} from '../../entity/user';
@@ -30,6 +30,7 @@ export class SetUpAccountComponent
     private readonly authService: AuthService,
     private readonly route: ActivatedRoute,
     private readonly toastr: ToastrService,
+    private readonly router: Router,
   ) {
     super();
     this.setupAccountForm = fb.group(
@@ -77,6 +78,9 @@ export class SetUpAccountComponent
 
   getPreStoredDetails(): void {
     this.setUpAccountService.get(this.setUpCode).subscribe((user) => {
+      if (user.redirectTo === 'login') {
+        void this.router.navigate(['/login']);
+      }
       this.setupAccountForm.patchValue(user);
     });
   }
@@ -93,9 +97,9 @@ export class SetUpAccountComponent
         .setUpAccount(updatedUser)
         .subscribe((successResponse: SetUpResponse) => {
           this.toastr.success(getMessage(successResponse.code));
-          sessionStorage.setItem('tempRegId', successResponse.tempRegId);
-          sessionStorage.setItem('userId', successResponse.userId);
-          this.authService.initSessionStorage();
+          localStorage.setItem('tempRegId', successResponse.tempRegId);
+          localStorage.setItem('userId', successResponse.userId);
+          this.authService.initlocalStorage();
           setTimeout(() => {
             this.authService.beginLoginConsentFlow();
           }, 1000);

@@ -17,13 +17,10 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_URI;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SCOPE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.ValidationErrorResponse;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
@@ -106,57 +103,6 @@ public class OAuthController {
 
     logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
 
-    return response;
-  }
-
-  @PostMapping(
-      value = "/oauth2/revoke",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public ResponseEntity<?> revokeToken(
-      @RequestParam MultiValueMap<String, String> paramMap,
-      HttpServletRequest request,
-      @RequestHeader HttpHeaders headers) {
-    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-
-    // validate required params
-    ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
-    if (errors.hasErrors()) {
-      logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
-
-    // revoke tokens
-    ResponseEntity<JsonNode> response = oauthService.revokeToken(paramMap, headers);
-    logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
-    return response;
-  }
-
-  @PostMapping(
-      value = "/oauth2/introspect",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  public ResponseEntity<?> introspectToken(
-      @RequestParam MultiValueMap<String, String> paramMap,
-      HttpServletRequest request,
-      @RequestHeader HttpHeaders headers) {
-    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
-    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-    Map<String, String> placeHolders =
-        Collections.singletonMap("user_id", paramMap.getFirst(USER_ID));
-
-    // validate required params
-    ValidationErrorResponse errors = validateRequiredParams(paramMap, TOKEN);
-    if (errors.hasErrors()) {
-      auditHelper.logEvent(ACCESS_TOKEN_INVALID_OR_EXPIRED, auditRequest, placeHolders);
-      logger.exit(String.format(STATUS_400_AND_ERRORS_LOG, errors));
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
-
-    // revoke tokens
-    ResponseEntity<JsonNode> response = oauthService.introspectToken(paramMap, headers);
-
-    logger.exit(String.format(STATUS_D_LOG, response.getStatusCodeValue()));
     return response;
   }
 }

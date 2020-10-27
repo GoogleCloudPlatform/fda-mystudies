@@ -17,8 +17,10 @@ import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryDetail;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantRegistryResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyDetails;
 import com.google.cloud.healthcare.fdamystudies.beans.StudyResponse;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerAuditLogHelper;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
@@ -180,6 +182,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
+      studyDetail.setLogoImageUrl(study.getLogoImageUrl());
       SiteCount siteCount = sitesPerStudyMap.get(study.getId());
       if (siteCount != null && siteCount.getCount() != null) {
         studyDetail.setSitesCount(siteCount.getCount());
@@ -243,6 +246,7 @@ public class StudyServiceImpl implements StudyService {
       studyDetail.setCustomId(study.getCustomId());
       studyDetail.setName(study.getName());
       studyDetail.setType(study.getType());
+      studyDetail.setLogoImageUrl(study.getLogoImageUrl());
       List<SitePermissionEntity> permissions = entry.getValue();
       studyDetail.setSitesCount((long) permissions.size());
 
@@ -279,14 +283,21 @@ public class StudyServiceImpl implements StudyService {
       Map<String, Long> siteWithEnrolledParticipantCountMap,
       Map.Entry<StudyEntity, List<SitePermissionEntity>> entry,
       StudyDetails studyDetail) {
-    Long studyInvitedCount = 0L;
+    long studyInvitedCount = 0L;
     Long studyEnrolledCount = 0L;
     for (SitePermissionEntity sitePermission : entry.getValue()) {
-      studyInvitedCount =
-          getStudyInvitedCount(
-              siteWithInvitedParticipantCountMap, entry, studyInvitedCount, sitePermission);
+      String siteId = sitePermission.getSite().getId();
+      String studyType = entry.getKey().getType();
+      if (siteWithInvitedParticipantCountMap.containsKey(siteId) && studyType.equals(CLOSE_STUDY)) {
+        studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
+      }
 
-      if (siteWithEnrolledParticipantCountMap.containsKey(sitePermission.getSite().getId())) {
+      if (sitePermission.getSite().getTargetEnrollment() != null
+          && entry.getKey().getType().equals(OPEN_STUDY)) {
+        studyInvitedCount = sitePermission.getSite().getTargetEnrollment();
+      }
+
+      if (siteWithEnrolledParticipantCountMap.containsKey(siteId)) {
         studyEnrolledCount +=
             siteWithEnrolledParticipantCountMap.get(sitePermission.getSite().getId());
       }
@@ -302,29 +313,13 @@ public class StudyServiceImpl implements StudyService {
     }
   }
 
-  private Long getStudyInvitedCount(
-      Map<String, Long> siteWithInvitedParticipantCountMap,
-      Map.Entry<StudyEntity, List<SitePermissionEntity>> entry,
-      Long studyInvitedCount,
-      SitePermissionEntity sitePermission) {
-    String siteId = sitePermission.getSite().getId();
-    String studyType = entry.getKey().getType();
-    if (siteWithInvitedParticipantCountMap.get(siteId) != null && studyType.equals(CLOSE_STUDY)) {
-      studyInvitedCount += siteWithInvitedParticipantCountMap.get(siteId);
-    }
-
-    if (sitePermission.getSite().getTargetEnrollment() != null && studyType.equals(OPEN_STUDY)) {
-      studyInvitedCount += sitePermission.getSite().getTargetEnrollment();
-    }
-    return studyInvitedCount;
-  }
-
   private Map<String, Long> getSiteWithEnrolledParticipantCountMap(List<String> usersSiteIds) {
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantEnrollmentsBySiteIds(usersSiteIds);
 
     return participantsEnrollments
         .stream()
+        .filter(e -> e.getStatus().equals(EnrollmentStatus.IN_PROGRESS.getStatus()))
         .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
   }
 
@@ -336,10 +331,8 @@ public class StudyServiceImpl implements StudyService {
 
     return participantRegistry
         .stream()
-        .collect(
-            Collectors.groupingBy(
-                e -> e.getSite().getId(),
-                Collectors.summingLong(ParticipantRegistrySiteEntity::getInvitationCount)));
+        .filter(e -> e.getOnboardingStatus().equals(OnboardingStatus.INVITED.getCode()))
+        .collect(Collectors.groupingBy(e -> e.getSite().getId(), Collectors.counting()));
   }
 
   @Override
@@ -350,6 +343,8 @@ public class StudyServiceImpl implements StudyService {
       Integer page,
       Integer limit) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
+    auditRequest.setUserId(userId);
+
     // validations
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
     if (!optStudy.isPresent()) {
@@ -361,6 +356,7 @@ public class StudyServiceImpl implements StudyService {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
+    StudyPermissionEntity studyPermissionEntity = null;
     AppEntity app = null;
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
       StudyEntity study = optStudy.get();
@@ -373,6 +369,7 @@ public class StudyServiceImpl implements StudyService {
           optStudyPermission
               .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
               .getApp();
+      studyPermissionEntity = optStudyPermission.get();
 
       if (app == null) {
         throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
@@ -380,13 +377,20 @@ public class StudyServiceImpl implements StudyService {
     }
 
     return prepareRegistryParticipantResponse(
-        optStudy.get(), app, userId, auditRequest, page, limit);
+        optStudy.get(),
+        app,
+        studyPermissionEntity,
+        optUserRegAdminEntity.get(),
+        auditRequest,
+        page,
+        limit);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
       StudyEntity study,
       AppEntity app,
-      String userId,
+      StudyPermissionEntity studyPermissionEntity,
+      UserRegAdminEntity user,
       AuditLogEventRequest auditRequest,
       Integer page,
       Integer limit) {
@@ -398,12 +402,10 @@ public class StudyServiceImpl implements StudyService {
           siteRepository.findByStudyIdAndType(study.getId(), study.getType());
       if (optSiteEntity.isPresent()) {
         participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
-
-        Optional<SitePermissionEntity> optSitePermission =
-            sitePermissionRepository.findByUserIdAndSiteId(userId, optSiteEntity.get().getId());
-
-        participantRegistryDetail.setOpenStudySitePermission(optSitePermission.get().getCanEdit());
       }
+
+      participantRegistryDetail.setOpenStudySitePermission(
+          user.isSuperAdmin() ? Permission.EDIT.value() : studyPermissionEntity.getEdit().value());
     }
 
     List<ParticipantRegistrySiteEntity> participantSiteList = null;
@@ -451,7 +453,6 @@ public class StudyServiceImpl implements StudyService {
     Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(study.getId());
     participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
 
-    auditRequest.setUserId(userId);
     auditRequest.setStudyId(study.getId());
     auditRequest.setAppId(app.getId());
     participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);

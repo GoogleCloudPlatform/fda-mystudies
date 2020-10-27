@@ -47,6 +47,8 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTING
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_SETTINGS_SAVED_OR_UPDATED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.STUDY_VIEWED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.UPDATES_PUBLISHED_TO_STUDY;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -56,6 +58,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fdahpstudydesigner.bean.StudyDetailsBean;
 import com.fdahpstudydesigner.bean.StudySessionBean;
 import com.fdahpstudydesigner.bo.ConsentBo;
@@ -65,16 +68,20 @@ import com.fdahpstudydesigner.bo.NotificationBO;
 import com.fdahpstudydesigner.bo.ResourceBO;
 import com.fdahpstudydesigner.bo.StudyBo;
 import com.fdahpstudydesigner.common.BaseMockIT;
+import com.fdahpstudydesigner.common.JsonUtils;
 import com.fdahpstudydesigner.common.PathMappingUri;
 import com.fdahpstudydesigner.common.UserAccessLevel;
+import com.fdahpstudydesigner.dao.NotificationDAOImpl;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.SessionObject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -100,6 +107,11 @@ public class StudyControllerTest extends BaseMockIT {
   private static final String STUDY_META_DATA_URI = "/studymetadata";
 
   private static final String TEST_STUDY_ID_STRING = "678680";
+
+  @Autowired NotificationDAOImpl notificationDaoImpl;
+
+  private static final String OAUTH_TOKEN = "/oauth2/token";
+
 
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
@@ -789,16 +801,65 @@ public class StudyControllerTest extends BaseMockIT {
     sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
     sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
 
-    ResourceBO ResourceBO = new ResourceBO();
+    ResourceBO resourceBO = new ResourceBO();
+    resourceBO.setResourceText("text");
+    resourceBO.setAction(true);
 
     MockHttpServletRequestBuilder requestBuilder =
         post(PathMappingUri.SAVE_OR_UPDATE_RESOURCE.getPath())
             .headers(headers)
             .sessionAttrs(sessionAttributes);
 
-    addParams(requestBuilder, ResourceBO);
+    addParams(requestBuilder, resourceBO);
 
     mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
+
+    List<NotificationBO> notificationList =
+        notificationDaoImpl.getNotificationList(Integer.valueOf(STUDY_ID_VALUE));
+    assertTrue(notificationList.size() > 0);
+
+    for (NotificationBO notification : notificationList) {
+      if (notification.getCreatedBy().equals(Integer.parseInt(USER_ID_VALUE))) {
+        assertEquals(resourceBO.getResourceText(), notification.getNotificationText());
+      }
+    }
+
+    verifyAuditEventCall(STUDY_NEW_RESOURCE_CREATED);
+  }
+
+  @Test
+  public void shouldNotSaveNotificationBo() throws Exception {
+    HttpHeaders headers = getCommonHeaders();
+
+    SessionObject session = new SessionObject();
+    session.setUserId(Integer.parseInt(USER_ID_VALUE));
+    session.setStudySession(new ArrayList<>(Arrays.asList(0)));
+    session.setSessionId(UUID.randomUUID().toString());
+    session.setAccessLevel(UserAccessLevel.SUPER_ADMIN.getValue());
+
+    HashMap<String, Object> sessionAttributes = getSessionAttributes();
+    sessionAttributes.put(FdahpStudyDesignerConstants.SESSION_OBJECT, session);
+    sessionAttributes.put(STUDY_ID_ATTR_NAME, STUDY_ID_VALUE);
+    sessionAttributes.put(CUSTOM_STUDY_ID_ATTR_NAME, CUSTOM_STUDY_ID_VALUE);
+
+    ResourceBO resourceBO = new ResourceBO();
+    resourceBO.setResourceText("text");
+    resourceBO.setAction(true);
+    resourceBO.setResourceVisibility(false);
+
+    MockHttpServletRequestBuilder requestBuilder =
+        post(PathMappingUri.SAVE_OR_UPDATE_RESOURCE.getPath())
+            .headers(headers)
+            .param("resourceVisibilityParam", "0")
+            .sessionAttrs(sessionAttributes);
+
+    addParams(requestBuilder, resourceBO);
+
+    mockMvc.perform(requestBuilder).andDo(print()).andExpect(status().isFound());
+
+    List<NotificationBO> notificationList =
+        notificationDaoImpl.getNotificationList(Integer.valueOf(STUDY_ID_VALUE));
+    assertEquals(0, notificationList.size());
 
     verifyAuditEventCall(STUDY_NEW_RESOURCE_CREATED);
   }
@@ -1151,6 +1212,14 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
+        .expect(requestTo(OAUTH_TOKEN))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(readJsonFile("/token_response_oauth_scim_service.json")));
+
+    mockServer
         .expect(requestTo(STUDIES_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
@@ -1203,6 +1272,14 @@ public class StudyControllerTest extends BaseMockIT {
     studyDetailsBean.setStudyId(CUSTOM_STUDY_ID_VALUE);
 
     mockServer
+        .expect(requestTo(OAUTH_TOKEN))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(readJsonFile("/token_response_oauth_scim_service.json")));
+
+    mockServer
         .expect(requestTo(STUDIES_META_DATA_URI))
         .andExpect(method(HttpMethod.POST))
         .andRespond(
@@ -1232,5 +1309,11 @@ public class StudyControllerTest extends BaseMockIT {
 
     verifyAuditEventCall(STUDY_METADATA_SEND_OPERATION_FAILED);
     verifyAuditEventCall(STUDY_METADATA_SEND_FAILED);
+  }
+
+  public static String readJsonFile(String filepath) throws IOException {
+    return JsonUtils.getObjectMapper()
+        .readValue(JsonUtils.class.getResourceAsStream(filepath), JsonNode.class)
+        .toString();
   }
 }

@@ -154,9 +154,11 @@ public enum ErrorCode {
   PERMISSION_MISSING(
       400, "EC_0032", Constants.BAD_REQUEST, "User should have atleast one permission"),
 
-  INVALID_SECURITY_CODE(404, "EC_0033", "Not Found", "Invalid security code"),
-
-  SECURITY_CODE_EXPIRED(401, "EC_0034", "Unauthorized", "Security code has expired"),
+  SECURITY_CODE_EXPIRED(
+      410,
+      "EC_0034",
+      HttpStatus.GONE.toString(),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),
@@ -254,7 +256,13 @@ public enum ErrorCode {
   TEMP_PASSWORD_INVALID(400, "EC_0122", Constants.BAD_REQUEST, "Temporary password is invalid"),
 
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
-      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study");
+      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study"),
+
+  CANNOT_ENABLE_PARTICIPANT(
+      403,
+      "EC_0125",
+      HttpStatus.FORBIDDEN.toString(),
+      "Invitation cannot be enabled as participant record is enabled in another site within the same study.");
 
   private final int status;
   private final String code;
