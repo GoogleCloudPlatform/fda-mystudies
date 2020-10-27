@@ -40,7 +40,9 @@
         </div>
         <div>
           <div class="mb-lg">
-            <div class="active__">
+            <div
+              [ngClass]="locationBackup.status == 1 ? 'active__' : 'deactive__'"
+            >
               {{ locationBackup.status == 1 ? "Active" : "Deactivated" }}
             </div>
           </div>

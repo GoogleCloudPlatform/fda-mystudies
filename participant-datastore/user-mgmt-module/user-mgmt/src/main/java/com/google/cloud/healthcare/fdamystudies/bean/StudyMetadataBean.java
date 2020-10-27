@@ -36,4 +36,5 @@ public class StudyMetadataBean implements Serializable {
   @NotBlank private String appId;
   private String appName;
   private String appDescription;
+  private String logoImageUrl;
 }
