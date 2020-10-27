@@ -1,9 +1,22 @@
-#!/bin/bash
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
 # Script to copy AppId from gcloud secret to CloudSQL.
-set -e
 
-PREFIX=example
-ENV=dev
+#!/bin/bash
+if [ "$#" -ne 2 ]; then
+  echo 'Please provide deployment prefix and env in the order of <prefix> <env>>'
+  exit 1
+fi
+
+PREFIX=${1}
+ENV=${2}
+shift 2
+
+set -e
 
 SECRET_PROJECT=${PREFIX}-${ENV}-secrets
 DATA_PROJECT=${PREFIX}-${ENV}-data

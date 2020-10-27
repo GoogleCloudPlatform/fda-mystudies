@@ -434,13 +434,15 @@ public class AppServiceImpl implements AppService {
 
     List<UserDetailsEntity> userDetails = userDetailsRepository.findByAppId(app.getId());
     List<StudyEntity> studyEntity = studyRepository.findByAppId(app.getId());
+    List<ParticipantDetail> participants = new ArrayList<>();
 
-    Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>>
-        participantEnrollmentsByUserDetailsAndStudy =
-            getEnrolledParticipants(userDetails, studyEntity);
-
-    List<ParticipantDetail> participants =
-        prepareParticpantDetails(userDetails, participantEnrollmentsByUserDetailsAndStudy);
+    if (CollectionUtils.isNotEmpty(userDetails)) {
+      Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>>
+          participantsEnrolled =
+              getEnrolledParticipants(userDetails, studyEntity);
+      participants =
+          prepareParticpantDetails(userDetails, participantsEnrolled);
+    }
 
     AppParticipantsResponse appParticipantsResponse =
         new AppParticipantsResponse(
@@ -461,14 +463,14 @@ public class AppServiceImpl implements AppService {
   private Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>> getEnrolledParticipants(
       List<UserDetailsEntity> userDetails, List<StudyEntity> studyEntity) {
 
-    List<String> appsStudyIds =
+    List<String> studyIds =
         studyEntity.stream().distinct().map(StudyEntity::getId).collect(Collectors.toList());
 
-    List<String> userDetailsIds =
+    List<String> userIds =
         userDetails.stream().distinct().map(UserDetailsEntity::getId).collect(Collectors.toList());
 
     List<ParticipantStudyEntity> participantEnrollments =
-        participantStudiesRepository.findByAppIdAndUserId(appsStudyIds, userDetailsIds);
+        participantStudiesRepository.findByStudyIdsAndUserIds(studyIds, userIds);
 
     return participantEnrollments
         .stream()

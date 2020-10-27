@@ -296,19 +296,21 @@ regenerating the Terraform configs several times.
 
 ### Step 8: Kubernetes deployment
 
-1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
+1. Follow [Kubernetes README.md](./kubernetes/README.md) to deploy the
     Kubernetes resources in the GKE cluster.
 
 ### Step 9: Secrets setup
 
-1. Modify [copy_client_info_to_sql.sh](./scripts/copy_client_info_to_sql.sh) to
-    reflect proper {PREFIX} and {ENV}, and run to copy client info from secrets
-    into CloudSQL.
+1. Run
+   [register_clients_in_hydra.sh $PREFIX $ENV](./scripts/register_clients_in_hydra.sh.sh), 
+   passing your deployment PREFIX and ENV as parameters.
+   This script will register each application in hydra using the generated
+   client id and secret keys.
 
 1. Modify
-    [copy_mobile_app_info_to_sql.sh](./scripts/copy_mobile_app_info_to_sql.sh)
-    to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from
-    secrets into CloudSQL.
+   [copy_mobile_app_info_to_sql.sh](./scripts/copy_mobile_app_info_to_sql.sh)
+   to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from
+   secrets into CloudSQL.
 
 ### Step 10: Superadmin accounts
 In order to access Study Builder or Participant Manager web UIs for the first time,
