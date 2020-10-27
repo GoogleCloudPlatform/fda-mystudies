@@ -40,7 +40,6 @@ const errorMessages = {
   EC_0031: 'Participant cannot be added to open study',
   EC_0032: 'User should have atleast one permission',
   EC_0033: 'Invalid security code',
-  EC_0034: 'Security code has expired',
   EC_0035: 'Error in getting participants details',
   EC_0036: 'Import document not in prescribed format',
   EC_0037:
