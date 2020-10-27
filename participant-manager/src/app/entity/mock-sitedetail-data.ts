@@ -1,4 +1,4 @@
-import {EnrollmentStatus} from '../shared/enums';
+import {EnrollmentStatus, StudyType} from '../shared/enums';
 import {
   StatusUpdate,
   InviteSend,
@@ -40,6 +40,7 @@ export const expectedSiteParticipantDetails = {
         enrollments: [],
         consentHistory: [],
         newlyCreatedUser: true,
+        studyType: StudyType.Close,
       },
       {
         customLocationId: '',
@@ -54,6 +55,7 @@ export const expectedSiteParticipantDetails = {
         enrolledStudies: [],
         enrollments: [],
         consentHistory: [],
+        studyType: StudyType.Close,
       },
     ],
 
