@@ -45,14 +45,15 @@
             </tr>
           </thead>
           <tbody>
-            <tr
-              class="location_row"
-              *ngFor="let location of mf.data"
-              (click)="locationDetails(location.locationId)"
-            >
+            <tr class="location_row" *ngFor="let location of mf.data">
               <td>
                 <span class="tbl__td__label">Location ID:</span>
-                <span class="no_st_en">{{ location.customId }}</span>
+                <span
+                  (click)="locationDetails(location.locationId)"
+                  class="no_st_en"
+                >
+                  {{ location.customId }}
+                </span>
               </td>
               <td>
                 <span class="tbl__td__label">Location Name:</span>
@@ -64,7 +65,13 @@
               </td>
               <td>
                 <span class="tbl__td__label">Status:</span>
-                {{ location.status == 1 ? "Active" : "Deactivated" }}
+                <span
+                  [ngClass]="
+                    location.status === 1 ? ' bg__green' : 'bg__light-gray'
+                  "
+                >
+                  {{ location.status == 1 ? "Active" : "Deactivated" }}
+                </span>
               </td>
             </tr>
           </tbody>
