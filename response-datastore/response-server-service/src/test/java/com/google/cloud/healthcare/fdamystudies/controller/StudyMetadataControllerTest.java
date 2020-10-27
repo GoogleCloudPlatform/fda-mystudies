@@ -47,6 +47,9 @@ public class StudyMetadataControllerTest extends BaseMockIT {
 
   private static final String APP_ID = "appId";
 
+  public static final String LOGO_IMAGE_URL =
+      "http://localhost:8098/fdaResources/studylogo/example.jpg";
+
   @MockBean private CloudFirestoreResponsesDaoImpl responsesDaoMock;
 
   @InjectMocks private StudyMetadataServiceImpl studyMetadataService;
@@ -136,6 +139,7 @@ public class StudyMetadataControllerTest extends BaseMockIT {
         "Yes",
         APP_ID_VALUE,
         "Test App",
-        "Test app for population health study");
+        "Test app for population health study",
+        LOGO_IMAGE_URL);
   }
 }

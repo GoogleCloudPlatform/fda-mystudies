@@ -1068,4 +1068,13 @@ public class FdahpStudyDesignerUtil {
     }
     return UserAccessLevel.APP_STUDY_ADMIN.getValue();
   }
+
+  public static String getMilliSecondsForImagePath() {
+    logger.info("FdahpStudyDesignerUtil: getMilliSecondsForImagePath() - Starts ");
+    String milliSeconds;
+    Calendar cal = Calendar.getInstance();
+    milliSeconds = "?v=" + cal.getTimeInMillis();
+    logger.info("FdahpStudyDesignerUtil: getMilliSecondsForImagePath() - Ends ");
+    return milliSeconds;
+  }
 }
