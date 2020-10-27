@@ -181,6 +181,7 @@ public final class ParticipantMapper {
         participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
       }
     }
+
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
     return participant;
