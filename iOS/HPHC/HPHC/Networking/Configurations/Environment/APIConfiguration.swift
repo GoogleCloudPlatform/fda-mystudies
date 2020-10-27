@@ -36,16 +36,16 @@ enum API {
     }
   }
 
-  static var wcpURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "WCP_URL")) ?? "")
+  static var studyDataStoreURL: String {
+    return AppProtocol.value + ((try? Configuration.value(for: "STUDY_DATASTORE_URL")) ?? "")
   }
 
   static var responseURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "RESPONSE_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "RESPONSE_DATASTORE_URL")) ?? "")
   }
 
   static var registrationURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "REGISTRATION_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "USER_DATASTORE_URL")) ?? "")
   }
 
   static var authURL: String {
@@ -57,11 +57,11 @@ enum API {
   }
 
   static var enrollmentURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "ENROLLMENT_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "ENROLLMENT_DATASTORE_URL")) ?? "")
   }
 
   static var consentMgmtURL: String {
-    return AppProtocol.value + ((try? Configuration.value(for: "CONSENTMGMT_URL")) ?? "")
+    return AppProtocol.value + ((try? Configuration.value(for: "CONSENT_DATASTORE_URL")) ?? "")
   }
 
   static var authUsername: String {
