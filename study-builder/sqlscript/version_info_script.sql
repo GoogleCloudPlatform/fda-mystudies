@@ -1,4 +1,4 @@
-USE `fda_hphc2`;
+USE `fda_hphc`;
 INSERT INTO version_info (version_info_id,android,ios) VALUES (1,'1.0.0','1.0.0');
 
 /*!40000 ALTER TABLE `activetask_formula` DISABLE KEYS */;
