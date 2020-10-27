@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: participant-datastore-user
+  labels:
+    app: participant-datastore-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: participant-datastore-user
+  template:
+    metadata:
+      labels:
+        app: participant-datastore-user
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: participant-datastore-user
+          image: gcr.io/fda-mystudies-dev-apps/participant-datastore-user:latest
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-db-credentials
+                  key: username
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-db-credentials
+                  key: password
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-db-credentials
+                  key: dbname
+            - name: FROM_EMAIL_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_address
+            - name: FROM_EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_password
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-secrets
+                  key: CLIENT_ID
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-secrets
+                  key: SECRET_KEY
+            - name: GCP_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-secrets
+                  key: GCP_BUCKET_NAME
+            - name: INSTITUTION_RESOURCES_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: user-registration-secrets
+                  key: INSTITUTION_RESOURCES_BUCKET_NAME
+            - name: AUTH_SERVER_URL
+              value: "auth-server-np:50000"
+            - name: RESPONSE_SERVER_URL
+              value: "response-server-np:50000"
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
+            - name: SMTP_HOSTNAME
+              value: "smtp.gmail.com"
+            - name: SMTP_USE_IP_WHITELIST
+              value: "false"
+            - name: FROM_EMAIL_DOMAIN
+              value: ""
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /myStudiesUserMgmtWS/healthCheck
+              port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-credential_file=/secrets/gcloud_key/key.json"]
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: user-registration-gcloud-key

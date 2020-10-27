@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.STUDY_METADATA_RECEIVED;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.google.cloud.healthcare.fdamystudies.bean.StudyMetadataBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.dao.CloudFirestoreResponsesDaoImpl;
@@ -26,6 +28,7 @@ import com.google.cloud.healthcare.fdamystudies.service.StudyMetadataServiceImpl
 import com.google.cloud.healthcare.fdamystudies.utils.TestUtils;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -84,6 +87,15 @@ public class StudyMetadataControllerTest extends BaseMockIT {
     assertEquals("TEST_STUDY_ID", studyIdCaptor.getValue());
     assertEquals("TEST_STUDY_ID-RESPONSES", studyCollectionNameCaptor.getValue());
     assertEquals(APP_ID_VALUE, dataToStoreCaptor.getValue().get(APP_ID));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setStudyId(studyMetadataBeanRequest.getStudyId());
+    auditRequest.setAppId(studyMetadataBeanRequest.getAppId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(STUDY_METADATA_RECEIVED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, STUDY_METADATA_RECEIVED);
   }
 
   @Test

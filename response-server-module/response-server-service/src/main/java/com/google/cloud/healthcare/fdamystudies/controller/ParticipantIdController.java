@@ -8,14 +8,20 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ID_GENERATED;
+import static com.google.cloud.healthcare.fdamystudies.common.ResponseServerEvent.PARTICIPANT_ID_GENERATION_FAILED;
+
 import com.google.cloud.healthcare.fdamystudies.bean.EnrollmentTokenIdentifierBean;
 import com.google.cloud.healthcare.fdamystudies.bean.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantBo;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
+import com.google.cloud.healthcare.fdamystudies.common.ResponseServerAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
+import com.google.cloud.healthcare.fdamystudies.response.model.ParticipantBo;
 import com.google.cloud.healthcare.fdamystudies.service.ParticipantService;
 import com.google.cloud.healthcare.fdamystudies.utils.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.utils.AppUtil;
 import com.google.cloud.healthcare.fdamystudies.utils.ErrorCode;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,15 +38,19 @@ public class ParticipantIdController {
 
   @Autowired private ParticipantService participantService;
 
-  @Autowired private CommonService commonService;
+  @Autowired private ResponseServerAuditLogHelper responseServerAuditLogHelper;
 
   private static final Logger logger = LoggerFactory.getLogger(ParticipantIdController.class);
 
   @PostMapping("/participant/add")
   public ResponseEntity<?> addParticipantIdentifier(
       @RequestHeader("applicationId") String applicationId,
-      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean) {
+      @RequestBody EnrollmentTokenIdentifierBean enrollmentTokenIdentifierBean,
+      HttpServletRequest request) {
     logger.info("ParticipantIdController addParticipantIdentifier() - starts ");
+    AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
+    auditRequest.setAppId(applicationId);
+
     if (enrollmentTokenIdentifierBean == null
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getTokenIdentifier())
         || StringUtils.isBlank(enrollmentTokenIdentifierBean.getCustomStudyId())) {
@@ -59,12 +69,8 @@ public class ParticipantIdController {
       participantBo.setStudyId(enrollmentTokenIdentifierBean.getCustomStudyId());
       participantBo.setCreatedBy(applicationId);
       String particpantUniqueIdentifier = participantService.saveParticipant(participantBo);
-      commonService.createActivityLog(
-          null,
-          "Participant Id generated successfully",
-          "Participant Id generated successfully for partcipant "
-              + particpantUniqueIdentifier
-              + " .");
+
+      responseServerAuditLogHelper.logEvent(PARTICIPANT_ID_GENERATED, auditRequest);
       logger.info("ParticipantIdController addParticipantIdentifier() - Ends ");
       return new ResponseEntity<>(particpantUniqueIdentifier, HttpStatus.OK);
     } catch (Exception e) {
@@ -74,6 +80,8 @@ public class ParticipantIdController {
               ErrorCode.EC_703.errorMessage(),
               AppConstants.ERROR_STR,
               e.getMessage());
+
+      responseServerAuditLogHelper.logEvent(PARTICIPANT_ID_GENERATION_FAILED, auditRequest);
       logger.error("Could not create participant identifier: ");
       return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
     }

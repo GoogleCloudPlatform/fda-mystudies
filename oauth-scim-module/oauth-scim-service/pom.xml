@@ -23,6 +23,7 @@
     <clover.version>4.4.1</clover.version>
     <common.text.version>1.8</common.text.version>
     <wiremock.version>2.26.3</wiremock.version>
+    <mockito.version>2.24.0</mockito.version>
   </properties>
 
   <dependencies>
@@ -98,7 +99,6 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>20.0</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.collections</groupId>
@@ -113,6 +113,16 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
+    <dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-junit-jupiter</artifactId>
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>org.mockito</groupId>
+		<artifactId>mockito-core</artifactId>
+		<scope>test</scope>
+	</dependency>
   </dependencies>
 
   <build>
@@ -144,6 +154,11 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>2.5.2</version>
       </plugin>
     </plugins>
   </build>

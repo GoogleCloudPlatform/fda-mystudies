@@ -17,11 +17,13 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VER
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import com.google.cloud.healthcare.fdamystudies.beans.EmailResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResetPasswordBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
+import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.UserMgmntAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.mapper.AuditEventMapper;
@@ -169,7 +171,7 @@ public class UserProfileController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> resendConfirmation(
       @RequestHeader("appId") String appId,
-      @Valid @RequestBody LoginBean loginBean,
+      @Valid @RequestBody ResetPasswordBean resetPasswordBean,
       @Context HttpServletResponse response,
       HttpServletRequest request)
       throws Exception {
@@ -179,16 +181,15 @@ public class UserProfileController {
 
     UserDetailsEntity participantDetails = null;
     ResponseBean responseBean = new ResponseBean();
-
     String isValidAppMsg =
-        commonService.validatedUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+        commonService.validatedUserAppDetailsByAllApi("", resetPasswordBean.getEmailId(), appId);
     if (!StringUtils.isEmpty(isValidAppMsg)) {
       AppOrgInfoBean appOrgInfoBean =
-          commonService.getUserAppDetailsByAllApi("", loginBean.getEmailId(), appId);
+          commonService.getUserAppDetailsByAllApi("", resetPasswordBean.getEmailId(), appId);
       if (appOrgInfoBean != null) {
         participantDetails =
             userManagementProfService.getParticipantDetailsByEmail(
-                loginBean.getEmailId(), appOrgInfoBean.getAppInfoId());
+                resetPasswordBean.getEmailId(), appOrgInfoBean.getAppInfoId());
       }
       if (participantDetails != null) {
         if (participantDetails.getStatus() == 2) {
@@ -200,10 +201,12 @@ public class UserProfileController {
           UserDetailsEntity updParticipantDetails =
               userManagementProfService.saveParticipant(participantDetails);
           if (updParticipantDetails != null) {
-            int isSent =
+            EmailResponse emailResponse =
                 userManagementProfService.resendConfirmationthroughEmail(
                     appId, participantDetails.getEmailCode(), participantDetails.getEmail());
-            if (isSent == 2) {
+            if (MessageCode.EMAIL_ACCEPTED_BY_MAIL_SERVER
+                .getMessage()
+                .equals(emailResponse.getMessage())) {
               auditRequest.setUserId(updParticipantDetails.getUserId());
               userMgmntAuditHelper.logEvent(
                   VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED, auditRequest);
