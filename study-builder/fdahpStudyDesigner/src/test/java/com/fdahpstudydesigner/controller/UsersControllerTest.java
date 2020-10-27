@@ -117,7 +117,7 @@ public class UsersControllerTest extends BaseMockIT {
     mockMvc
         .perform(
             post(PathMappingUri.RESEND_ACTIVATE_DETAILS_LINK.getPath())
-                .param("userId", "2")
+                .param("userId", "15")
                 .headers(headers)
                 .sessionAttrs(getSession()))
         .andDo(print())
@@ -137,7 +137,7 @@ public class UsersControllerTest extends BaseMockIT {
         .perform(
             post(PathMappingUri.ENFORCE_PASSWORD_CHANGE.getPath())
                 .param("changePassworduserId", "2")
-                .param("emailId", "super@gmail.com")
+                .param("emailId", "invalid@gmail.com")
                 .headers(headers)
                 .sessionAttrs(getSession()))
         .andDo(print())
