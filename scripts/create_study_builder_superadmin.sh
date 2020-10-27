@@ -1,3 +1,9 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
 # Script to insert study builder superadmin.
 # Run like:
 # $ ./scripts/create_study_builder_superadmin.sh <prefix> <env> <email> <password>

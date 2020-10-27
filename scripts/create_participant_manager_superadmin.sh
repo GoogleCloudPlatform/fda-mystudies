@@ -1,3 +1,9 @@
+# Copyright 2020 Google LLC
+#
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+#
 # Script to insert the first participant manager superadmin into auth server.
 # Run like:
 # $ ./scripts/create_participant_manager_superadmin.sh <prefix> <env> <email> <password>
