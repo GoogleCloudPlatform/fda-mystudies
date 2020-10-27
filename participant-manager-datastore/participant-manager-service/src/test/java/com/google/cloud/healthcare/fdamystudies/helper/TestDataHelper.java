@@ -13,6 +13,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOGO_IMAGE_URL;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -217,6 +218,7 @@ public class TestDataHelper {
     studyEntity.setName("COVID Study");
     studyEntity.setCustomId("CovidStudy");
     studyEntity.setApp(appEntity);
+    studyEntity.setLogoImageUrl(LOGO_IMAGE_URL);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEdit(Permission.EDIT);

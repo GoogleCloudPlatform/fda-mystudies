@@ -10,8 +10,8 @@ package com.google.cloud.healthcare.fdamystudies.controller;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CLOSE_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN_PROGRESS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO_OF_RECORDS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PAGE_NO;
@@ -632,6 +632,34 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnCannotEnableParticipantError() throws Exception {
+    // Step 1:set request body
+    ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    siteEntity.getStudy().setId(studyEntity.getId());
+    participantRegistrySiteEntity.setSite(siteEntity);
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Call API to UPDATE_STATUS_SUCCESS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(participantStatusRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.CANNOT_ENABLE_PARTICIPANT.getDescription())));
+  }
+
+  @Test
   public void shouldReturnSiteParticipantsRegistryForSuperAdmin() throws Exception {
     // Step 1: set onboarding status to 'N'
     siteEntity.setStudy(studyEntity);
@@ -720,6 +748,61 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
                 is("Yet to Enroll")))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnSiteParticipantsRegistryForInProgressStatus() throws Exception {
+    // Step 1: set enrollment status to 'IN_PROGRESS'
+    participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
+    participantStudyEntity = participantStudyRepository.saveAndFlush(participantStudyEntity);
+
+    // Step 2: set onboarding status to 'E'
+    siteEntity.setStudy(studyEntity);
+    //  testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
+    participantRegistrySiteEntity.setSite(siteEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS and enrollment status as
+    // ENROLLED
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail", notNullValue()))
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
+        .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(
+            (jsonPath("$.participantRegistryDetail.registryParticipants[0].onboardingStatus")
+                .value(OnboardingStatus.ENROLLED.getStatus())))
+        .andExpect(
+            (jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
+                .value(EnrollmentStatus.ENROLLED.getStatus())))
+        .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(0)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
@@ -859,8 +942,56 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldDecomissionSite() throws Exception {
+    // Step 1: set status to ACTIVE
+    siteEntity.setStatus(SiteStatus.ACTIVE.value());
+    siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    // Step 2: Call API and expect DECOMMISSION_SITE_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    result =
+        mockMvc
+            .perform(
+                put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                    .headers(headers)
+                    .contextPath(getContextPath()))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.siteId", notNullValue()))
+            .andExpect(jsonPath("$.siteStatus", is(SiteStatus.DEACTIVE.value())))
+            .andExpect(
+                jsonPath("$.message", is(MessageCode.DECOMMISSION_SITE_SUCCESS.getMessage())))
+            .andReturn();
+
+    String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
+
+    // Step 3: verify updated values
+    Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
+    SiteEntity siteEntity = optSiteEntity.get();
+    assertNotNull(siteEntity);
+    assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteId);
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setStudyId(siteEntity.getStudyId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_DECOMMISSIONED_FOR_STUDY.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_DECOMMISSIONED_FOR_STUDY);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldRecomissionSite() throws Exception {
-    // Step 1: Set the status to DEACTIVE
+    // Step 1: Set the site status to DEACTIVE
+    studyEntity.setStatus(CommonConstants.STATUS_ACTIVE);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+    locationEntity.setStatus(CommonConstants.ACTIVE_STATUS);
+    testDataHelper.getLocationRepository().saveAndFlush(locationEntity);
+    siteEntity.setStudy(studyEntity);
+    siteEntity.setLocation(locationEntity);
     siteEntity.setStatus(SiteStatus.DEACTIVE.value());
     siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
@@ -901,44 +1032,59 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldDecomissionSite() throws Exception {
-    // Step 1: set status to ACTIVE
-    siteEntity.setStatus(SiteStatus.ACTIVE.value());
+  public void shouldNotActivateSiteForDeactivatedLocation() throws Exception {
+    // Step 1: Set the status to DEACTIVE
+    locationEntity.setStatus(INACTIVE_STATUS);
+    testDataHelper.getLocationRepository().saveAndFlush(locationEntity);
+    siteEntity.setStatus(SiteStatus.DEACTIVE.value());
+    siteEntity.setLocation(locationEntity);
     siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
-    // Step 2: Call API and expect DECOMMISSION_SITE_SUCCESS message
+    // Step 2: call API and expect CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION message
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
-    result =
-        mockMvc
-            .perform(
-                put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
-                    .headers(headers)
-                    .contextPath(getContextPath()))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.siteId", notNullValue()))
-            .andExpect(jsonPath("$.siteStatus", is(SiteStatus.DEACTIVE.value())))
-            .andExpect(
-                jsonPath("$.message", is(MessageCode.DECOMMISSION_SITE_SUCCESS.getMessage())))
-            .andReturn();
 
-    String siteId = JsonPath.read(result.getResponse().getContentAsString(), "$.siteId");
+    mockMvc
+        .perform(
+            put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION.getDescription())));
 
-    // Step 3: verify updated values
-    Optional<SiteEntity> optSiteEntity = siteRepository.findById(siteId);
-    SiteEntity siteEntity = optSiteEntity.get();
-    assertNotNull(siteEntity);
-    assertEquals(DECOMMISSION_SITE_NAME, siteEntity.getName());
+    verifyTokenIntrospectRequest();
+  }
 
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setSiteId(siteId);
-    auditRequest.setUserId(userRegAdminEntity.getId());
-    auditRequest.setStudyId(siteEntity.getStudyId());
+  @Test
+  public void shouldNotActivateSiteForDeactivatedStudy() throws Exception {
+    // Step 1: Set the status to DEACTIVE
+    locationEntity.setStatus(CommonConstants.ACTIVE_STATUS);
+    testDataHelper.getLocationRepository().saveAndFlush(locationEntity);
+    studyEntity.setStatus(DEACTIVATED);
+    testDataHelper.getStudyRepository().saveAndFlush(studyEntity);
+    siteEntity.setStatus(SiteStatus.DEACTIVE.value());
+    siteEntity.setStudy(studyEntity);
+    siteEntity.setLocation(locationEntity);
+    siteEntity = testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
 
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(SITE_DECOMMISSIONED_FOR_STUDY.getEventCode(), auditRequest);
+    // Step 2: call API and expect CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
 
-    verifyAuditEventCall(auditEventMap, SITE_DECOMMISSIONED_FOR_STUDY);
+    mockMvc
+        .perform(
+            put(ApiEndpoint.DECOMISSION_SITE.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description",
+                is(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY.getDescription())));
+
     verifyTokenIntrospectRequest();
   }
 
@@ -1022,7 +1168,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnCannotDecomissionSiteForEnrolledAndActiveStatus() throws Exception {
     // Step 1: Set status to enrolled
-    participantStudyEntity.setStatus(ENROLLED_STATUS);
+    participantStudyEntity.setStatus(IN_PROGRESS);
     testDataHelper.getParticipantStudyRepository().saveAndFlush(participantStudyEntity);
 
     // Step 2: call API and expect CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS error
@@ -1112,6 +1258,49 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnConsentHistoriesForSameVersionWithDifferentPdfs() throws Exception {
+    // Step 1: Set data needed to get Participant details
+    participantRegistrySiteEntity.getStudy().setApp(appEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    for (int i = 1; i <= 2; i++) {
+      studyConsentEntity = testDataHelper.createStudyConsentEntity(participantStudyEntity);
+      studyConsentEntity.setVersion(CONSENT_VERSION);
+      studyConsentEntity.setPdf("documents/test-document.pdf" + String.valueOf(i));
+      studyConsentRepository.saveAndFlush(studyConsentEntity);
+    }
+
+    // Step 2: Call API and expect GET_PARTICIPANT_DETAILS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantDetails", notNullValue()))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.participantRegistrySiteid",
+                is(participantRegistrySiteEntity.getId())))
+        .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
+        .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(3)));
 
     verifyTokenIntrospectRequest();
   }
@@ -1976,6 +2165,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].sites").isArray())
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();

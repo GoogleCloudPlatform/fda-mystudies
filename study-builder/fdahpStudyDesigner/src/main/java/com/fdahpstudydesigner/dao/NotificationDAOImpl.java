@@ -461,4 +461,22 @@ public class NotificationDAOImpl implements NotificationDAO {
     logger.info("NotificationDAOImpl - getGatwayAppList - Ends");
     return gatewayAppList;
   }
+
+  @Override
+  public List<NotificationBO> getNotificationList(Integer studyId) {
+    logger.info("NotificationDAOImpl - getNotificationList() - Starts");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      return session.getNamedQuery("getNotification").setInteger("studyId", studyId).list();
+    } catch (Exception e) {
+      logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("NotificationDAOImpl - getNotificationList() - Ends");
+    return null;
+  }
 }
