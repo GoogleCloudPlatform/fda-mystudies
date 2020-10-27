@@ -439,6 +439,9 @@ public class FdahpStudyDesignerConstants {
   public static final String ROLE_MANAGE_USERS_EDIT_NAME = "ROLE_MANAGE_USERS_EDIT";
   public static final String ROLE_MANAGE_USERS_VIEW_NAME = "ROLE_MANAGE_USERS_VIEW";
 
+  public static final String FDA_SMD_STUDY_THUMBNAIL_PATH = "fda.smd.study.thumbnailPath";
+  public static final String FDA_SMD_STUDY_PAGE_PATH = "fda.smd.study.pagePath";
+
   private FdahpStudyDesignerConstants() {
     // Do nothing
   }

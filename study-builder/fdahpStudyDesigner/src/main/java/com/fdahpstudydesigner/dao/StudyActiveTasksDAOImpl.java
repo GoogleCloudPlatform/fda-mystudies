@@ -659,33 +659,35 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           NotificationBO notificationBO = null;
           queryString = "From NotificationBO where activeTaskId=" + activeTaskBo.getId();
           notificationBO = (NotificationBO) session.createQuery(queryString).uniqueResult();
-          if (notificationBO == null) {
-            notificationBO = new NotificationBO();
-            notificationBO.setStudyId(activeTaskBo.getStudyId());
-            notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
-            if (StringUtils.isNotEmpty(studyBo.getAppId())) {
-              notificationBO.setAppId(studyBo.getAppId());
+          if (!activeTaskBo.getScheduleType().equalsIgnoreCase("AnchorDate")) {
+            if (notificationBO == null) {
+              notificationBO = new NotificationBO();
+              notificationBO.setStudyId(activeTaskBo.getStudyId());
+              notificationBO.setCustomStudyId(studyBo.getCustomStudyId());
+              if (StringUtils.isNotEmpty(studyBo.getAppId())) {
+                notificationBO.setAppId(studyBo.getAppId());
+              }
+              notificationBO.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
+              notificationBO.setNotificationSubType(
+                  FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ACTIVITY);
+              notificationBO.setNotificationScheduleType(
+                  FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
+              notificationBO.setActiveTaskId(activeTaskBo.getId());
+              notificationBO.setNotificationStatus(false);
+              notificationBO.setCreatedBy(sesObj.getUserId());
+              notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
+              notificationBO.setNotificationSent(false);
+            } else {
+              notificationBO.setModifiedBy(sesObj.getUserId());
+              notificationBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
             }
-            notificationBO.setNotificationType(FdahpStudyDesignerConstants.NOTIFICATION_ST);
-            notificationBO.setNotificationSubType(
-                FdahpStudyDesignerConstants.NOTIFICATION_SUBTYPE_ACTIVITY);
-            notificationBO.setNotificationScheduleType(
-                FdahpStudyDesignerConstants.NOTIFICATION_IMMEDIATE);
-            notificationBO.setActiveTaskId(activeTaskBo.getId());
-            notificationBO.setNotificationStatus(false);
-            notificationBO.setCreatedBy(sesObj.getUserId());
-            notificationBO.setCreatedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-            notificationBO.setNotificationSent(false);
-          } else {
-            notificationBO.setModifiedBy(sesObj.getUserId());
-            notificationBO.setModifiedOn(FdahpStudyDesignerUtil.getCurrentDateTime());
-          }
-          notificationBO.setNotificationText(
-              FdahpStudyDesignerConstants.NOTIFICATION_ACTIVETASK_TEXT
-                  .replace("$shortTitle", activeTaskBo.getDisplayName())
-                  .replace("$customId", draftStudyBo.getName()));
-          if (!notificationBO.isNotificationSent()) {
-            session.saveOrUpdate(notificationBO);
+            notificationBO.setNotificationText(
+                FdahpStudyDesignerConstants.NOTIFICATION_ACTIVETASK_TEXT
+                    .replace("$shortTitle", activeTaskBo.getDisplayName())
+                    .replace("$customId", draftStudyBo.getName()));
+            if (!notificationBO.isNotificationSent()) {
+              session.saveOrUpdate(notificationBO);
+            }
           }
         }
         // Notification Purpose needed End
