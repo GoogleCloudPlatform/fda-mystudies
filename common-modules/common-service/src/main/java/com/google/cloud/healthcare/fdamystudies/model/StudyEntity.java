@@ -116,6 +116,9 @@ public class StudyEntity implements Serializable {
   @Column(length = TINY_LENGTH)
   private String enrolling;
 
+  @Column(name = "logo_image_url", length = LARGE_LENGTH)
+  private String logoImageUrl;
+
   @OneToMany(
       cascade = CascadeType.ALL,
       fetch = FetchType.LAZY,

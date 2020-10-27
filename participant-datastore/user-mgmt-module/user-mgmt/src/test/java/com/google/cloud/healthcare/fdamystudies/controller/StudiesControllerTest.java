@@ -89,7 +89,8 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.STUDY_ENROLLING,
         Constants.APP_ID_VALUE,
         Constants.APP_NAME,
-        Constants.APP_DESCRIPTION);
+        Constants.APP_DESCRIPTION,
+        Constants.LOGO_IMAGE_URL);
   }
 
   @Test
@@ -118,6 +119,7 @@ public class StudiesControllerTest extends BaseMockIT {
     assertNotNull(studyInfoBo);
     assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
+    assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
 
     verifyTokenIntrospectRequest(1);
 
@@ -151,6 +153,7 @@ public class StudiesControllerTest extends BaseMockIT {
             .orElse(null);
     assertNotNull(studyInfoBo);
     assertEquals(Constants.NEW_STUDY_ID, studyInfoBo.getCustomId());
+    assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
   }
 
   @Test

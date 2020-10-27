@@ -63,8 +63,6 @@ public enum MessageCode {
   PARTICIPANTS_INVITED_SUCCESS(
       HttpStatus.OK, "MSG_0018", "Invitation to particiapant sent successfully"),
 
-  PASSWORD_RESET_SUCCESS(HttpStatus.OK, "MSG_0019", "Your password has been reset successfully"),
-
   EMAIL_ACCEPTED_BY_MAIL_SERVER(
       HttpStatus.ACCEPTED, "MSG_0020", "Email accepted by receiving mail server"),
 
@@ -102,7 +100,9 @@ public enum MessageCode {
   GET_USERS_SUCCESS(HttpStatus.OK, "MSG_0036", "User details fetched successfully"),
 
   INVITATION_SENT_SUCCESSFULLY(
-      HttpStatus.CREATED, "MSG_0037", "Invitation to user resent successfully");
+      HttpStatus.CREATED, "MSG_0037", "Invitation to user resent successfully"),
+
+  FORGOT_PASSWORD(HttpStatus.OK, "EC_0065", "Password help has been sent to your registered email");
 
   private final HttpStatus httpStatus;
   private final String code;
