@@ -171,7 +171,7 @@ public class UserProfileControllerTest extends BaseMockIT {
   }
 
   @Test
-  public void shouldReturnNotFoundForUserDetailsBySecurityCode() throws Exception {
+  public void shouldReturnRedirectUriToLoginForUserDetailsBySecurityCode() throws Exception {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Authorization", VALID_BEARER_TOKEN);
     headers.add("source", PlatformComponent.PARTICIPANT_MANAGER.getValue());
@@ -182,9 +182,8 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isNotFound())
-        .andExpect(
-            jsonPath("$.error_description", is(ErrorCode.INVALID_SECURITY_CODE.getDescription())));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.redirectTo", is("login")));
   }
 
   @Test
@@ -210,7 +209,7 @@ public class UserProfileControllerTest extends BaseMockIT {
                 .headers(headers)
                 .contextPath(getContextPath()))
         .andDo(print())
-        .andExpect(status().isUnauthorized())
+        .andExpect(status().isGone())
         .andExpect(
             jsonPath("$.error_description", is(ErrorCode.SECURITY_CODE_EXPIRED.getDescription())));
 
