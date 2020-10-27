@@ -39,4 +39,6 @@ public class StudyDetails {
   private Double enrollmentPercentage;
 
   private Integer studyPermission;
+
+  private String logoImageUrl;
 }

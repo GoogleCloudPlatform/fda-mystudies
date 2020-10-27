@@ -632,6 +632,34 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnCannotEnableParticipantError() throws Exception {
+    // Step 1:set request body
+    ParticipantStatusRequest participantStatusRequest = newParticipantStatusRequest();
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    siteEntity.getStudy().setId(studyEntity.getId());
+    participantRegistrySiteEntity.setSite(siteEntity);
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Call API to UPDATE_STATUS_SUCCESS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            patch(ApiEndpoint.UPDATE_ONBOARDING_STATUS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .content(asJsonString(participantStatusRequest))
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(
+            jsonPath(
+                "$.error_description", is(ErrorCode.CANNOT_ENABLE_PARTICIPANT.getDescription())));
+  }
+
+  @Test
   public void shouldReturnSiteParticipantsRegistryForSuperAdmin() throws Exception {
     // Step 1: set onboarding status to 'N'
     siteEntity.setStudy(studyEntity);
@@ -720,6 +748,61 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
                 is("Yet to Enroll")))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnSiteParticipantsRegistryForInProgressStatus() throws Exception {
+    // Step 1: set enrollment status to 'IN_PROGRESS'
+    participantStudyEntity.setStatus(EnrollmentStatus.IN_PROGRESS.getStatus());
+    participantStudyEntity = participantStudyRepository.saveAndFlush(participantStudyEntity);
+
+    // Step 2: set onboarding status to 'E'
+    siteEntity.setStudy(studyEntity);
+    //  testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.ENROLLED.getCode());
+    participantRegistrySiteEntity.setSite(siteEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS and enrollment status as
+    // ENROLLED
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail", notNullValue()))
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
+        .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(
+            (jsonPath("$.participantRegistryDetail.registryParticipants[0].onboardingStatus")
+                .value(OnboardingStatus.ENROLLED.getStatus())))
+        .andExpect(
+            (jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
+                .value(EnrollmentStatus.ENROLLED.getStatus())))
+        .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(0)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
@@ -1112,6 +1195,49 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnConsentHistoriesForSameVersionWithDifferentPdfs() throws Exception {
+    // Step 1: Set data needed to get Participant details
+    participantRegistrySiteEntity.getStudy().setApp(appEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+    siteEntity.setLocation(locationEntity);
+    testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
+
+    for (int i = 1; i <= 2; i++) {
+      studyConsentEntity = testDataHelper.createStudyConsentEntity(participantStudyEntity);
+      studyConsentEntity.setVersion(CONSENT_VERSION);
+      studyConsentEntity.setPdf("documents/test-document.pdf" + String.valueOf(i));
+      studyConsentRepository.saveAndFlush(studyConsentEntity);
+    }
+
+    // Step 2: Call API and expect GET_PARTICIPANT_DETAILS_SUCCESS message
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+    mockMvc
+        .perform(
+            get(
+                    ApiEndpoint.GET_PARTICIPANT_DETAILS.getPath(),
+                    participantRegistrySiteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantDetails", notNullValue()))
+        .andExpect(
+            jsonPath(
+                "$.participantDetails.participantRegistrySiteid",
+                is(participantRegistrySiteEntity.getId())))
+        .andExpect(jsonPath("$.participantDetails.enrollments").isArray())
+        .andExpect(jsonPath("$.participantDetails.enrollments", hasSize(1)))
+        .andExpect(jsonPath("$.participantDetails.consentHistory").isArray())
+        .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(3)));
 
     verifyTokenIntrospectRequest();
   }
@@ -1976,6 +2102,7 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.studies[0].id").isNotEmpty())
         .andExpect(jsonPath("$.studies[0].sites").isArray())
         .andExpect(jsonPath("$.studies[0].sites[0].id").value(siteEntity.getId()))
+        .andExpect(jsonPath("$.studies[0].logoImageUrl", is(studyEntity.getLogoImageUrl())))
         .andExpect(jsonPath("$.message", is(MessageCode.GET_SITES_SUCCESS.getMessage())));
 
     verifyTokenIntrospectRequest();

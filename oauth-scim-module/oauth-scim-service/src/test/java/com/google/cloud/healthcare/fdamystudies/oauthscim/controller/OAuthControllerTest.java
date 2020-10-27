@@ -8,9 +8,6 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.controller;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent.INVALID_CLIENT_ID_OR_SECRET;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent.RESOURCE_ACCESS_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
@@ -27,21 +24,16 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REDIRECT_URI;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.REFRESH_TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SCOPE;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.USER_ID;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCESS_TOKEN_INVALID_OR_EXPIRED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.NEW_ACCESS_TOKEN_GENERATED;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.matching.ContainsPattern;
 import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonAuditEvent;
@@ -358,128 +350,6 @@ public class OAuthControllerTest extends BaseMockIT {
     ObjectNode userInfo = getObjectNode().put("password", PasswordGenerator.generate(12));
     user.setUserInfo(userInfo);
     return user;
-  }
-
-  @Test
-  public void shouldReturnTokenIsActive() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    headers.add("correlationId", IdGenerator.id());
-    headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
-    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.add(TOKEN, VALID_TOKEN);
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.TOKEN_INTROSPECT.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.active").value(true));
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/hydra/oauth2/introspect"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
-  }
-
-  @Test
-  public void shouldReturnBadReqForInvalidToken() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    headers.add("correlationId", IdGenerator.id());
-    headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
-    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.add(USER_ID, userEntity.getUserId());
-    requestParams.add(CLIENT_ID, clientId);
-    String expectedResponseContains = ("must not be blank");
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.TOKEN_INTROSPECT.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().is4xxClientError())
-        .andExpect(jsonPath("$.violations").isArray())
-        .andExpect(content().string(containsString(expectedResponseContains)))
-        .andReturn();
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userEntity.getUserId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(ACCESS_TOKEN_INVALID_OR_EXPIRED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, ACCESS_TOKEN_INVALID_OR_EXPIRED);
-  }
-
-  @Test
-  public void shouldRevokeTheToken() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
-    headers.add(CORRELATION_ID, VALID_CORRELATION_ID);
-    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.add(TOKEN, VALID_TOKEN);
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.REVOKE_TOKEN.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isOk());
-
-    verify(
-        1,
-        postRequestedFor(urlEqualTo("/hydra/oauth2/revoke"))
-            .withRequestBody(new ContainsPattern(VALID_TOKEN)));
-  }
-
-  @Test
-  public void shouldReturnBadRequestForRevokeToken() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    headers.add("correlationId", IdGenerator.id());
-    headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
-
-    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.REVOKE_TOKEN.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.violations[0].path").value("token"))
-        .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
-  }
-
-  @Test
-  public void shouldReturnBadRequestForIntrospectToken() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    headers.add(AUTHORIZATION, VALID_BEARER_TOKEN);
-    headers.add(CORRELATION_ID, VALID_CORRELATION_ID);
-    MultiValueMap<String, String> requestParams = new LinkedMultiValueMap<>();
-    requestParams.set(USER_ID, userEntity.getUserId());
-
-    mockMvc
-        .perform(
-            post(ApiEndpoint.TOKEN_INTROSPECT.getPath())
-                .contextPath(getContextPath())
-                .params(requestParams)
-                .headers(headers))
-        .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.violations[0].path").value("token"))
-        .andExpect(jsonPath("$.violations[0].message").value("must not be blank"));
-
-    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
-    auditRequest.setUserId(userEntity.getUserId());
-    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(ACCESS_TOKEN_INVALID_OR_EXPIRED.getEventCode(), auditRequest);
-    verifyAuditEventCall(auditEventMap, ACCESS_TOKEN_INVALID_OR_EXPIRED);
   }
 
   @AfterEach
