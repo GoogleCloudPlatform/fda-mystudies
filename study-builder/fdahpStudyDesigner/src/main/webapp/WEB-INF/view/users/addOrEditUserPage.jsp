@@ -839,6 +839,8 @@
       $('#ownUser').val('1');
       </c:if>
       $('.addUpdate').parents('form').submit();
+    } else {
+      $("body").removeClass("loading");
     }
   }
 
