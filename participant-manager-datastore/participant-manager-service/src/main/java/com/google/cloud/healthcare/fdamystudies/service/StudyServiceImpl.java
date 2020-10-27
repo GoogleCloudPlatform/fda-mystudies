@@ -343,6 +343,8 @@ public class StudyServiceImpl implements StudyService {
       Integer page,
       Integer limit) {
     logger.entry("getStudyParticipants(String userId, String studyId)");
+    auditRequest.setUserId(userId);
+
     // validations
     Optional<StudyEntity> optStudy = studyRepository.findById(studyId);
     if (!optStudy.isPresent()) {
@@ -354,6 +356,7 @@ public class StudyServiceImpl implements StudyService {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
+    StudyPermissionEntity studyPermissionEntity = null;
     AppEntity app = null;
     if (optUserRegAdminEntity.get().isSuperAdmin()) {
       StudyEntity study = optStudy.get();
@@ -366,6 +369,7 @@ public class StudyServiceImpl implements StudyService {
           optStudyPermission
               .orElseThrow(() -> new ErrorCodeException(ErrorCode.STUDY_PERMISSION_ACCESS_DENIED))
               .getApp();
+      studyPermissionEntity = optStudyPermission.get();
 
       if (app == null) {
         throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
@@ -373,13 +377,20 @@ public class StudyServiceImpl implements StudyService {
     }
 
     return prepareRegistryParticipantResponse(
-        optStudy.get(), app, userId, auditRequest, page, limit);
+        optStudy.get(),
+        app,
+        studyPermissionEntity,
+        optUserRegAdminEntity.get(),
+        auditRequest,
+        page,
+        limit);
   }
 
   private ParticipantRegistryResponse prepareRegistryParticipantResponse(
       StudyEntity study,
       AppEntity app,
-      String userId,
+      StudyPermissionEntity studyPermissionEntity,
+      UserRegAdminEntity user,
       AuditLogEventRequest auditRequest,
       Integer page,
       Integer limit) {
@@ -391,12 +402,10 @@ public class StudyServiceImpl implements StudyService {
           siteRepository.findByStudyIdAndType(study.getId(), study.getType());
       if (optSiteEntity.isPresent()) {
         participantRegistryDetail.setTargetEnrollment(optSiteEntity.get().getTargetEnrollment());
-
-        Optional<SitePermissionEntity> optSitePermission =
-            sitePermissionRepository.findByUserIdAndSiteId(userId, optSiteEntity.get().getId());
-
-        participantRegistryDetail.setOpenStudySitePermission(optSitePermission.get().getCanEdit());
       }
+
+      participantRegistryDetail.setOpenStudySitePermission(
+          user.isSuperAdmin() ? Permission.EDIT.value() : studyPermissionEntity.getEdit().value());
     }
 
     List<ParticipantRegistrySiteEntity> participantSiteList = null;
@@ -444,7 +453,6 @@ public class StudyServiceImpl implements StudyService {
     Long totalParticipantStudyCount = participantStudyRepository.countbyStudyId(study.getId());
     participantRegistryResponse.setTotalParticipantCount(totalParticipantStudyCount);
 
-    auditRequest.setUserId(userId);
     auditRequest.setStudyId(study.getId());
     auditRequest.setAppId(app.getId());
     participantManagerHelper.logEvent(STUDY_PARTICIPANT_REGISTRY_VIEWED, auditRequest);
