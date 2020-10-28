@@ -58,14 +58,10 @@ export class StudyListComponent implements OnInit {
   progressBarColor(study: Study): string {
     if (study.enrollmentPercentage && study.enrollmentPercentage > 70) {
       return 'green__text__sm';
-<<<<<<< HEAD
-    } else if (study.enrollmentPercentage && (study.enrollmentPercentage >=30 || study.enrollmentPercentage <= 70)) {
-=======
     } else if (
       study.enrollmentPercentage &&
       (study.enrollmentPercentage >= 30 || study.enrollmentPercentage <= 70)
     ) {
->>>>>>> 00f08596c541aed258878690865763f33a5d5ad6
       return 'orange__text__sm';
     } else {
       return 'red__text__sm';
