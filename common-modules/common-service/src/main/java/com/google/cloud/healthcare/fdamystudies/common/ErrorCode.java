@@ -258,7 +258,6 @@ public enum ErrorCode {
   CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
       403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study"),
 
-
   CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION(
       403,
       "EC_0126",
@@ -275,8 +274,13 @@ public enum ErrorCode {
       403,
       "EC_0125",
       HttpStatus.FORBIDDEN.toString(),
-      "Invitation cannot be enabled as participant record is enabled in another site within the same study.");
+      "Invitation cannot be enabled as participant record is enabled in another site within the same study."),
 
+  CANNOT_DELETE_INVITATION(
+      403,
+      "EC_0065",
+      HttpStatus.FORBIDDEN.toString(),
+      "The user’s account is already active. Please try deactivating the user instead.");
 
   private final int status;
   private final String code;
