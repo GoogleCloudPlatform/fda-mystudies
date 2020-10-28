@@ -462,6 +462,16 @@ public enum StudyBuilderAuditEvent {
       "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
       "ACCOUNT_LOCKED"),
 
+  PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      null,
+      "PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT"),
+
+  SESSION_EXPIRY(
+      STUDY_BUILDER, STUDY_DATASTORE, null, "User session timed out or expired.", "SESSION_EXPIRY"),
+
   NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE(
       STUDY_DATASTORE,
       PARTICIPANT_USER_DATASTORE,
