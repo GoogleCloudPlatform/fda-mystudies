@@ -6,11 +6,15 @@ import {ParticipantDetailsService} from './participant-details.service';
 import {ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {OnboardingStatus, StudyType} from 'src/app/shared/enums';
+import {
+  EnrollmentStatus,
+  OnboardingStatus,
+  StudyType,
+} from 'src/app/shared/enums';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {Location} from '@angular/common';
+import {RegistryParticipant} from 'src/app/shared/participant';
 import {Permission} from 'src/app/shared/permission-enums';
-
 @Component({
   selector: 'app-participant-details',
   templateUrl: './participant-details.component.html',
@@ -114,5 +118,12 @@ export class ParticipantDetailsComponent
   }
   backClicked(): void {
     this.locationLibrary.back();
+  }
+  hasCompletedEnrollment(participantDetails: RegistryParticipant): boolean {
+    return (
+      participantDetails.enrollments.length > 0 &&
+      participantDetails.enrollments[0].enrollmentStatus ===
+        EnrollmentStatus.Enrolled
+    );
   }
 }

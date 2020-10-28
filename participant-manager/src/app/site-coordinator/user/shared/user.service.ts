@@ -33,6 +33,14 @@ export class UserService {
       updateStatusRequest,
     );
   }
+
+  resendInvitation(adminId: string): Observable<ApiResponse> {
+    return this.http.post<ApiResponse>(
+      `${environment.baseUrl}/users/${adminId}/invite`,
+      {},
+    );
+  }
+
   getUserDetails(adminId: string): Observable<ManageUserDetails> {
     return this.http.get<ManageUserDetails>(
       `${environment.baseUrl}/users/admin/${adminId}`,

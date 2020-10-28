@@ -663,7 +663,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
+        .andExpect(jsonPath("$.message").value(MessageCode.FORGOT_PASSWORD.getMessage()));
 
     String subject = getMailResetSubject();
     String body = "Thank you for reaching out for password help";
@@ -723,7 +723,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
+        .andExpect(jsonPath("$.message").value(MessageCode.FORGOT_PASSWORD.getMessage()));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());

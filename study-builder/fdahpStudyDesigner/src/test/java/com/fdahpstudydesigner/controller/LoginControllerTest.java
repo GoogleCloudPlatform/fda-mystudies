@@ -12,8 +12,8 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NEW_USER_ACCO
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHANGE_SUCCEEDED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SESSION_EXPIRY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SIGNIN_FAILED_UNREGISTERED_USER;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
 import static org.junit.Assert.assertTrue;
@@ -76,6 +76,7 @@ public class LoginControllerTest extends BaseMockIT {
         .andExpect(view().name("redirect:login.do"));
 
     verifyAuditEventCall(USER_SIGNOUT_SUCCEEDED);
+    verifyAuditEventCall(SESSION_EXPIRY);
   }
 
   @Test
@@ -165,22 +166,6 @@ public class LoginControllerTest extends BaseMockIT {
     // H2 database doesn't support Column "BINARY". Expect LoginDAOImpl throws
     // org.h2.jdbc.JdbcSQLException: Column "BINARY" not found;
     verifyAuditEventCall(PASSWORD_HELP_EMAIL_FAILED);
-  }
-
-  @Test
-  public void shouldValidateSecurityToken() throws Exception {
-    HttpHeaders headers = getCommonHeaders();
-    mockMvc
-        .perform(
-            get(PathMappingUri.SECURITY_TOKEN_VALIDATION.getPath())
-                .param("securityToken", "NK7zYrc0F")
-                .headers(headers)
-                .sessionAttrs(getSessionAttributes()))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(view().name("userPasswordReset"));
-
-    verifyAuditEventCall(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT);
   }
 
   @Test

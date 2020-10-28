@@ -54,6 +54,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -126,6 +127,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VALID_USER_ID,
             studyInfoBean.getStudyInfoId(),
             consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent);
     assertNotNull(studyConsent.getParticipantStudy());
     assertNotNull(studyConsent.getSharing());
     assertNotNull(studyConsent.getConsentDate());
@@ -159,7 +161,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     String content = "sample consent document content";
     byte[] encodedContent = Base64.getEncoder().encode(content.getBytes());
-    when(mockedBlob.getContent()).thenReturn(encodedContent);
+    Mockito.lenient().when(mockedBlob.getContent()).thenReturn(encodedContent);
 
     when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
 
@@ -233,6 +235,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VALID_USER_ID,
             studyInfoBean.getStudyInfoId(),
             consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent);
     assertNotNull(studyConsent.getParticipantStudy());
     assertNotNull(studyConsent.getSharing());
     assertNotNull(studyConsent.getConsentDate());
@@ -338,6 +341,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             Constants.VALID_USER_ID,
             studyInfoBean.getStudyInfoId(),
             consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent);
     assertNotNull(studyConsent.getParticipantStudy());
     assertNotNull(studyConsent.getSharing());
     assertNotNull(studyConsent.getConsentDate());
