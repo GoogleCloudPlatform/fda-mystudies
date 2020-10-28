@@ -177,17 +177,11 @@ module "mystudies_dev_gke_cluster" {
   regional           = true
   network_project_id = "mystudies-dev-networks"
 
-  network                = "mystudies-dev-network"
-  subnetwork             = "mystudies-dev-gke-subnet"
-  ip_range_pods          = "mystudies-dev-pods-range"
-  ip_range_services      = "mystudies-dev-services-range"
-  master_ipv4_cidr_block = "192.168.0.0/28"
-  master_authorized_networks = [
-    {
-      cidr_block   = "104.132.0.0/14"
-      display_name = "Google Offices/Campuses/CorpDC"
-    },
-  ]
+  network                 = "mystudies-dev-network"
+  subnetwork              = "mystudies-dev-gke-subnet"
+  ip_range_pods           = "mystudies-dev-pods-range"
+  ip_range_services       = "mystudies-dev-services-range"
+  master_ipv4_cidr_block  = "192.168.0.0/28"
   istio                   = true
   skip_provisioners       = true
   enable_private_endpoint = false
