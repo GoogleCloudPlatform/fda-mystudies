@@ -224,7 +224,8 @@ public class UserServiceImpl implements UserService {
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-      setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
+      setPasswordAndPasswordHistoryFields(
+          tempPassword, userInfo, UserAccountStatus.PASSWORD_RESET.getStatus());
       userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
       userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
       userInfo.remove(ACCOUNT_LOCKED_PASSWORD);
