@@ -10,6 +10,7 @@ package com.google.cloud.healthcare.fdamystudies.dao;
 
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
@@ -291,6 +292,14 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       criteriaParticipantStudiesUpdate.where(
           studyIdPredicates.toArray(new Predicate[studyIdPredicates.size()]));
       session.createQuery(criteriaParticipantStudiesUpdate).executeUpdate();
+
+      session
+          .createSQLQuery(
+              "UPDATE participant_registry_site SET onboarding_status=:onboardingStatus WHERE id IN (SELECT participant_registry_site_id FROM participant_study_info where user_details_id=:userDetailsId and study_info_id IN (:studyIds))")
+          .setParameter("onboardingStatus", OnboardingStatus.DISABLED.getCode())
+          .setParameter("userDetailsId", userDetails)
+          .setParameter("studyIds", studyInfoBoList)
+          .executeUpdate();
     }
 
     criteriaAuthInfoDelete = criteriaBuilder.createCriteriaDelete(AuthInfoEntity.class);
