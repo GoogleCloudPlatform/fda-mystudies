@@ -516,12 +516,12 @@ template "project_apps" {
         ip_range_pods_name     = "{{$prefix}}-{{$env}}-pods-range"
         ip_range_services_name = "{{$prefix}}-{{$env}}-services-range"
         master_ipv4_cidr_block = "192.168.0.0/28"
-        master_authorized_networks = [
-          {
-            cidr_block   = "104.132.0.0/14"
-            display_name = "Google Offices/Campuses/CorpDC"
-          }
-        ]
+//        master_authorized_networks = [
+//          {
+//            cidr_block   = "104.132.0.0/14"
+//            display_name = "Google Offices/Campuses/CorpDC"
+//          }
+//        ]
       }]
       # Terraform-generated service account for use by the GKE apps.
       service_accounts = [
@@ -890,6 +890,7 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-certificate-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
+      "auto-hydra-system-secret",
     ],
     formatlist("auto-%s-db-user", local.apps),
     formatlist("auto-%s-db-password", local.apps),
