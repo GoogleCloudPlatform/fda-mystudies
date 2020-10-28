@@ -6812,7 +6812,7 @@ public class StudyDAOImpl implements StudyDAO {
     logger.info("StudyDAOImpl - getStudy() - Ends");
     return study;
   }
-  
+
   @Override
   public String updateDraftToEditedStatus(
       Session session,
