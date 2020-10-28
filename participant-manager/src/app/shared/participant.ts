@@ -27,6 +27,7 @@ export interface RegistryParticipant {
   newlyCreatedUser?: boolean;
   studyType: StudyType;
   sitePermission: Permission;
+  disabledDate:string;
 }
 export interface Site {
   siteId: string;
