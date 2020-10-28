@@ -320,11 +320,15 @@ an initial superadmin account needs to be generated for each application.
 `create_participant_manager_superadmin.sh` accepts an email and password and
 generates an initial superadmin account for Participant Manager.
 ```bash
-./scripts/create_participant_manager_superadmin.sh <email> <password>
+./scripts/create_participant_manager_superadmin.sh <prefix> <env> <email> <password>
 ```
 
 1.  **Study Builder**
-(TBD)
+`create_study_builder_superadmin.sh` accepts an email and password and
+generates an initial superadmin account for Study Builder.
+```bash
+./scripts/create_study_builder_superadmin.sh <prefix> <env> <email> <password>
+```
 
 ### Step 11: Mobile app setups
 
