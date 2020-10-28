@@ -29,7 +29,7 @@ resource "google_firebase_project" "firebase" {
   project  = module.project.project_id
 }
 
-# Step 5.1: uncomment and re-run the engine once all previous steps have been completed.
+# Step 5.3: uncomment and re-run the engine once all previous steps have been completed.
 # resource "google_firestore_index" "activities_index" {
 #   project    = module.project.project_id
 #   collection = "Activities"
@@ -48,9 +48,11 @@ resource "google_firebase_project" "firebase" {
 # }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  version = "~> 9.1.0"
 
   name                    = "example-dev-firebase"
   org_id                  = ""
@@ -66,17 +68,14 @@ module "project" {
 
 module "project_iam_members" {
   source  = "terraform-google-modules/iam/google//modules/projects_iam"
-  version = "~> 6.2.0"
+  version = "~> 6.3.0"
 
   projects = [module.project.project_id]
   mode     = "additive"
 
   bindings = {
-    "roles/datastore.importExportAdmin" = [
-      "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
-    ],
     "roles/datastore.user" = [
-      "serviceAccount:response-server-gke-sa@example-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@example-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@example-dev-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [
@@ -133,11 +132,5 @@ module "example_dev_mystudies_firestore_raw_data" {
         with_state = "ANY"
       }
     }
-  ]
-  iam_members = [
-    {
-      member = "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
-      role   = "roles/storage.admin"
-    },
   ]
 }

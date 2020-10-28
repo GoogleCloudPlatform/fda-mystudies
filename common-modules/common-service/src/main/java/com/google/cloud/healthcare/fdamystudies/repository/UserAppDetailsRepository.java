@@ -9,6 +9,8 @@
 package com.google.cloud.healthcare.fdamystudies.repository;
 
 import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import java.util.Optional;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -18,4 +20,7 @@ import org.springframework.stereotype.Repository;
     value = "participant.manager.repository.enabled",
     havingValue = "true",
     matchIfMissing = false)
-public interface UserAppDetailsRepository extends JpaRepository<UserAppDetailsEntity, String> {}
+public interface UserAppDetailsRepository extends JpaRepository<UserAppDetailsEntity, String> {
+
+  public Optional<UserAppDetailsEntity> findByUserDetails(UserDetailsEntity userDetails);
+}

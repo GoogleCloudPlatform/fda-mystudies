@@ -25,6 +25,18 @@ public enum PlatformComponent {
       "PARTICIPANT DATASTORE",
       "The back-end components that manage app user / study participant data (includes PII)"),
 
+  PARTICIPANT_USER_DATASTORE(
+      "PARTICIPANT USER DATASTORE",
+      "The back-end component that manage app user / study participant data (includes PII)"),
+
+  PARTICIPANT_CONSENT_DATASTORE(
+      "PARTICIPANT CONSENT DATASTORE",
+      "The back-end component that manage consent details (includes PII)"),
+
+  PARTICIPANT_ENROLL_DATASTORE(
+      "PARTICIPANT ENROLL DATASTORE",
+      "The back-end component that manage study participant enrollement details (includes PII)"),
+
   STUDY_BUILDER("STUDY BUILDER", "The UI that researchers use to design and deploy studies"),
 
   STUDY_DATASTORE(
@@ -35,16 +47,20 @@ public enum PlatformComponent {
       "SCIM AUTH SERVER",
       "This component implements login/consent flow and integrates with ORY Hydra for access and refresh tokens"),
 
-  AUTH_SERVER(
-      "Auth Server",
-      "This is back-end component that manages user accounts and issues access and refresh tokens"),
+  PARTICIPANT_MANAGER_DATASTORE(
+      "PARTICIPANT MANAGER DATASTORE",
+      "This is the back-end component that manages the study builder data and holds the study configurations"),
 
   PARTICIPANT_MANAGER(
       "PARTICIPANT MANAGER",
       "The UI that administrators use to invite participants to studies and track enrollment progress"),
 
   CLOUD_STORAGE(
-      "CLOUD STORAGE", "for storing and accessing data on Google Cloud Platform infrastructure");
+      "CLOUD STORAGE", "for storing and accessing data on Google Cloud Platform infrastructure"),
+
+  NATIVE_PUSH_NOTIFICATION_SERVER(
+      "NATIVE PUSH NOTIFICATION SERVER",
+      "This will enables third party application developers to send notification data to applications installed on native mobile device");
 
   private String value;
 
