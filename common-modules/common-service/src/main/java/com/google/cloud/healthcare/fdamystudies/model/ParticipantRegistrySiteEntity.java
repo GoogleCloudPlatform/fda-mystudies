@@ -79,7 +79,6 @@ public class ParticipantRegistrySiteEntity implements Serializable {
   private String name;
 
   @Column(name = "invitation_time")
-  @CreationTimestamp
   private Timestamp invitationDate;
 
   @Column(name = "invitation_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
