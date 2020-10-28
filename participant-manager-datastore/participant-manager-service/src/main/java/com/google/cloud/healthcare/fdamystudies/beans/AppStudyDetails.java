@@ -29,5 +29,7 @@ public class AppStudyDetails {
 
   private String studyName;
 
+  private String studyType;
+
   private List<AppSiteDetails> sites = new ArrayList<>();
 }
