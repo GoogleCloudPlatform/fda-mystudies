@@ -8,6 +8,7 @@ import {ApiResponse} from './api.response.model';
 import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus, StudyType} from '../shared/enums';
+import { Permission } from '../shared/permission-enums';
 
 export const expectedSitesList = {
   studies: [
@@ -135,6 +136,7 @@ export const expectedStudiesDetails = {
         enrollments: [],
         consentHistory: [],
         studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
       {
         customLocationId: '',
@@ -150,6 +152,7 @@ export const expectedStudiesDetails = {
         enrollments: [],
         consentHistory: [],
         studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
       {
         customLocationId: '',
@@ -165,6 +168,7 @@ export const expectedStudiesDetails = {
         enrollments: [],
         consentHistory: [],
         studyType: StudyType.Close,
+        sitePermission: Permission.ViewAndEdit,
       },
     ],
     countByStatus: {
@@ -174,7 +178,6 @@ export const expectedStudiesDetails = {
       E: 1,
       I: 12,
       N: 21,
-      /* eslint-disable @typescript-eslint/naming-convention */
     },
   },
 

@@ -65,8 +65,8 @@
           </div>
           <div class="desk__view">
             <div
-              *ngIf="
-                siteParticipants.participantRegistryDetail.sitePermission ===
+              [hidden]="
+                siteParticipants.participantRegistryDetail.sitePermission !==
                 permission.ViewAndEdit
               "
               class="flex__justify__space-between"
@@ -138,8 +138,8 @@
     <!-- ForMobile View  -->
     <div class="mobile__view yel__tabs">
       <div
-        *ngIf="
-          siteParticipants.participantRegistryDetail.sitePermission ===
+        [hidden]="
+          siteParticipants.participantRegistryDetail.sitePermission !==
           permission.ViewAndEdit
         "
         class="p-md pb-none"
@@ -252,8 +252,8 @@
       </div>
       <div class="sred">
         <div
-          *ngIf="
-            siteParticipants.participantRegistryDetail.sitePermission ===
+          [hidden]="
+            siteParticipants.participantRegistryDetail.sitePermission !==
             permission.ViewAndEdit
           "
           class="flex__ flex__justify__center"
@@ -358,8 +358,8 @@
           </div>
           <div class="pr-xlg">
             <div
-              *ngIf="
-                siteParticipants.participantRegistryDetail.sitePermission ===
+              [hidden]="
+                siteParticipants.participantRegistryDetail.sitePermission !==
                 permission.ViewAndEdit
               "
               class="flex__justify__space-between mb-xs"
