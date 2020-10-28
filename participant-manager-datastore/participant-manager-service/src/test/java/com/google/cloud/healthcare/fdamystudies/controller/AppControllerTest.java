@@ -288,6 +288,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participants[0].email").value(userDetailsEntity.getEmail()))
         .andExpect(
             jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
+        .andExpect(
+            jsonPath("$.participants[0].enrolledStudies[0].studyType").value(studyEntity.getType()))
         .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
 
