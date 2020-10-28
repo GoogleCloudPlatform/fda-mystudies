@@ -674,6 +674,9 @@ public class SiteServiceImpl implements SiteService {
       String participantRegistrySiteId, String userId, Integer page, Integer limit) {
     logger.entry("begin getParticipantDetails()");
 
+    Optional<UserRegAdminEntity> optSuperAdmin = userRegAdminRepository.findById(userId);
+    UserRegAdminEntity user =
+        optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
         participantRegistrySiteRepository.findById(participantRegistrySiteId);
 
@@ -684,6 +687,15 @@ public class SiteServiceImpl implements SiteService {
 
     ParticipantDetail participantDetail =
         ParticipantMapper.toParticipantDetailsResponse(optParticipantRegistry.get());
+    if (!user.isSuperAdmin()) {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(
+              userId, optParticipantRegistry.get().getSite().getId());
+      participantDetail.setSitePermission(optSitePermission.get().getCanEdit().value());
+    } else {
+      participantDetail.setSitePermission(Permission.EDIT.value());
+    }
+
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantsEnrollment(participantRegistrySiteId);
 
