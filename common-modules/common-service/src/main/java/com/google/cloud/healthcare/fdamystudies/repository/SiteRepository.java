@@ -64,7 +64,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "LEFT JOIN ( "
               + "SELECT ps.site_id, COUNT(ps.site_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites_permissions sp "
-              + "WHERE ps.site_id=sp.site_id AND sp.ur_admin_user_id =:userId "
+              + "WHERE ps.site_id=sp.site_id AND ps.status='inProgress' AND sp.ur_admin_user_id =:userId "
               + "GROUP BY ps.site_id) AS enrolled ON invites.site_id=enrolled.site_id ",
       nativeQuery = true)
   public List<EnrolledInvitedCount> getEnrolledInvitedCountByUserId(@Param("userId") String userId);
@@ -83,7 +83,7 @@ public interface SiteRepository extends JpaRepository<SiteEntity, String> {
               + "( "
               + "SELECT ps.site_id, COUNT(ps.site_id) AS enrolledCount "
               + "FROM participant_study_info ps, sites si "
-              + "WHERE ps.site_id=si.id "
+              + "WHERE ps.site_id=si.id AND ps.status='inProgress' "
               + "GROUP BY ps.site_id "
               + ") AS enrolled ON invites.site_id=enrolled.site_id ",
       nativeQuery = true)
