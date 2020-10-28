@@ -437,11 +437,9 @@ public class AppServiceImpl implements AppService {
     List<ParticipantDetail> participants = new ArrayList<>();
 
     if (CollectionUtils.isNotEmpty(userDetails)) {
-      Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>>
-          participantsEnrolled =
-              getEnrolledParticipants(userDetails, studyEntity);
-      participants =
-          prepareParticpantDetails(userDetails, participantsEnrolled);
+      Map<String, Map<StudyEntity, List<ParticipantStudyEntity>>> participantsEnrolled =
+          getEnrolledParticipants(userDetails, studyEntity);
+      participants = prepareParticpantDetails(userDetails, participantsEnrolled);
     }
 
     AppParticipantsResponse appParticipantsResponse =
@@ -490,8 +488,9 @@ public class AppServiceImpl implements AppService {
       if (participantEnrollmentsByUserDetailsAndStudy.containsKey(userDetailsEntity.getId())) {
         Map<StudyEntity, List<ParticipantStudyEntity>> enrolledStudiesByStudyInfoId =
             participantEnrollmentsByUserDetailsAndStudy.get(userDetailsEntity.getId());
-        AppStudyDetails enrolledStudy = StudyMapper.toAppStudyDetails(enrolledStudiesByStudyInfoId);
-        participant.getEnrolledStudies().add(enrolledStudy);
+        List<AppStudyDetails> enrolledStudies =
+            StudyMapper.toAppStudyDetailsList(enrolledStudiesByStudyInfoId);
+        participant.getEnrolledStudies().addAll(enrolledStudies);
       }
       participantList.add(participant);
     }
