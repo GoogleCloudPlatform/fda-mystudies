@@ -19,7 +19,7 @@ export class StudyListComponent implements OnInit {
   studies: Study[] = [];
   manageStudiesBackup = {} as StudyResponse;
   studyTypes = StudyType;
-messageMapping: {[k: string]: string} = {
+  messageMapping: {[k: string]: string} = {
     '=0': 'No Sites',
     '=1': 'One Site',
     'other': '# Sites',
@@ -58,7 +58,14 @@ messageMapping: {[k: string]: string} = {
   progressBarColor(study: Study): string {
     if (study.enrollmentPercentage && study.enrollmentPercentage > 70) {
       return 'green__text__sm';
+<<<<<<< HEAD
     } else if (study.enrollmentPercentage && (study.enrollmentPercentage >=30 || study.enrollmentPercentage <= 70)) {
+=======
+    } else if (
+      study.enrollmentPercentage &&
+      (study.enrollmentPercentage >= 30 || study.enrollmentPercentage <= 70)
+    ) {
+>>>>>>> 00f08596c541aed258878690865763f33a5d5ad6
       return 'orange__text__sm';
     } else {
       return 'red__text__sm';

@@ -66,10 +66,13 @@ export class SiteListComponent implements OnInit {
   search(query: string): void {
     this.query$.next(query.trim().toLowerCase());
   }
-    progressBarColor(site: Site): string {
+  progressBarColor(site: Site): string {
     if (site.enrollmentPercentage && site.enrollmentPercentage > 70) {
       return 'green__text__sm';
-    } else if (site.enrollmentPercentage && (site.enrollmentPercentage >=30 || site.enrollmentPercentage <= 70)) {
+    } else if (
+      site.enrollmentPercentage &&
+      (site.enrollmentPercentage >= 30 || site.enrollmentPercentage <= 70)
+    ) {
       return 'orange__text__sm';
     } else {
       return 'red__text__sm';
