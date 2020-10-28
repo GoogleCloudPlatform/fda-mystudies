@@ -51,4 +51,7 @@ public final class TestConstants {
   public static final String NO_OF_RECORDS = "5";
 
   public static final String PAGE_NO = "0";
+
+  public static final String LOGO_IMAGE_URL =
+      "http://localhost:8098/fdaResources/studylogo/example.jpg";
 }
