@@ -26,7 +26,6 @@ import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
 import com.google.cloud.healthcare.fdamystudies.mapper.ParticipantMapper;
 import com.google.cloud.healthcare.fdamystudies.model.AppEntity;
-import com.google.cloud.healthcare.fdamystudies.model.AppPermissionEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.SiteCount;
@@ -101,17 +100,6 @@ public class StudyServiceImpl implements StudyService {
       logger.exit(
           String.format("total studies for superadmin=%d", studyResponse.getStudies().size()));
       return studyResponse;
-    }
-
-    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
-
-    List<StudyPermissionEntity> studyPermissions =
-        studyPermissionRepository.findByAdminUserId(userId);
-
-    if (CollectionUtils.isEmpty(appPermissions)) {
-      if (CollectionUtils.isEmpty(studyPermissions)) {
-        throw new ErrorCodeException(ErrorCode.STUDY_NOT_FOUND);
-      }
     }
 
     List<SitePermissionEntity> sitePermissions =
