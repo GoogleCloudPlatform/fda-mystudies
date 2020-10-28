@@ -34,7 +34,8 @@ public class StudyDetailsBean {
       studyEnrolling = "",
       appId = "",
       appName = "",
-      appDescription = "";
+      appDescription = "",
+      logoImageUrl = "";
 
   public String getStudyId() {
     return studyId;
@@ -130,5 +131,13 @@ public class StudyDetailsBean {
 
   public void setAppDescription(String appDescription) {
     this.appDescription = appDescription;
+  }
+
+  public String getLogoImageUrl() {
+    return logoImageUrl;
+  }
+
+  public void setLogoImageUrl(String logoImageUrl) {
+    this.logoImageUrl = logoImageUrl;
   }
 }

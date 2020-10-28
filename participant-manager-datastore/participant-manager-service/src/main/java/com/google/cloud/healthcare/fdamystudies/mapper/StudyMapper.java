@@ -56,6 +56,7 @@ public final class StudyMapper {
       appStudyDetails.setCustomStudyId(study.getCustomId());
       appStudyDetails.setStudyName(study.getName());
       appStudyDetails.setStudyId(study.getId());
+      appStudyDetails.setStudyType(study.getType());
       List<AppSiteDetails> sites = SiteMapper.toParticipantSiteList(entry);
       appStudyDetails.setSites(sites);
     }
@@ -70,6 +71,7 @@ public final class StudyMapper {
     studyDetail.setType(study.getType());
     studyDetail.setAppId(study.getApp().getAppId());
     studyDetail.setAppInfoId(study.getApp().getId());
+    studyDetail.setLogoImageUrl(study.getLogoImageUrl());
 
     return studyDetail;
   }
