@@ -23,7 +23,7 @@
 
 package com.fdahpstudydesigner.controller;
 
-import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.SESSION_EXPIRY;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.USER_SIGNOUT_SUCCEEDED;
 
@@ -347,6 +347,7 @@ public class LoginController {
         auditRequest.setSource(USER_SIGNOUT_SUCCEEDED.getSource().getValue());
         auditRequest.setDestination(USER_SIGNOUT_SUCCEEDED.getDestination().getValue());
         auditLogEventHelper.logEvent(USER_SIGNOUT_SUCCEEDED, auditRequest);
+        auditLogEventHelper.logEvent(SESSION_EXPIRY, auditRequest);
       }
       request.getSession(true).setAttribute("errMsg", msg);
       request.getSession(true).setAttribute("sucMsg", sucMsg);
@@ -443,7 +444,6 @@ public class LoginController {
         map.addAttribute("userBO", userBO);
         mv = new ModelAndView("signUpPage", map);
       } else {
-        auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
         mv = new ModelAndView("userPasswordReset", map);
       }
     } catch (Exception e) {
