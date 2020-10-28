@@ -14,7 +14,7 @@
 
 -- Dumping database structure for mystudies_response_server
 DROP DATABASE IF EXISTS `mystudies_response_server`;
-CREATE DATABASE IF NOT EXISTS `mystudies_response_server` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE IF NOT EXISTS `mystudies_response_server` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `mystudies_response_server`;
 
 -- Data exporting was unselected.
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `participant_activities` (
   PRIMARY KEY (`id`),
   KEY `participant_activities_participant_id_idx` (`participant_id`),
   KEY `participant_activities_study_id_idx` (`study_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Data exporting was unselected.
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `participant_info` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_ml7r3rylmf21yvdtoe1442mg6` (`participant_id`),
   KEY `participant_info_token_id_participant_id_idx` (`token_id`,`participant_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

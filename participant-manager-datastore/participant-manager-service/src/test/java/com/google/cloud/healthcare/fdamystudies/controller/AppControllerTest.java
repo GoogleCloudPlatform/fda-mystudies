@@ -95,7 +95,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.superAdmin").value(true))
         .andExpect(jsonPath("$.apps[0].invitedCount").value(2))
         .andExpect(jsonPath("$.apps[0].enrolledCount").value(1))
-        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(50.0));
+        .andExpect(jsonPath("$.apps[0].enrollmentPercentage").value(50.0))
+        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
 
     verifyTokenIntrospectRequest();
   }
@@ -117,7 +118,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.apps[0].customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.apps[0].name").value(appEntity.getAppName()))
         .andExpect(jsonPath("$.studyPermissionCount").value(1))
-        .andExpect(jsonPath("$.superAdmin").value(false));
+        .andExpect(jsonPath("$.superAdmin").value(false))
+        .andExpect(jsonPath("$.apps[0].appUsersCount").value(1));
 
     verifyTokenIntrospectRequest();
   }
@@ -286,6 +288,8 @@ public class AppControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participants[0].email").value(userDetailsEntity.getEmail()))
         .andExpect(
             jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
+        .andExpect(
+            jsonPath("$.participants[0].enrolledStudies[0].studyType").value(studyEntity.getType()))
         .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
 
@@ -332,6 +336,37 @@ public class AppControllerTest extends BaseMockIT {
             jsonPath("$.participants[0].enrolledStudies[0].studyName").value(studyEntity.getName()))
         .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
         .andExpect(jsonPath("$.name").value(appEntity.getAppName()));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setUserId(userRegAdminEntity.getId());
+    auditRequest.setAppId(appEntity.getAppId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(APP_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, APP_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnGetAppParticipantsWithoutParticipants() throws Exception {
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().save(userRegAdminEntity);
+    userDetailsEntity.setApp(null);
+    testDataHelper.getUserDetailsRepository().save(userDetailsEntity);
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_APP_PARTICIPANTS.getPath(), appEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.customId").value(appEntity.getAppId()))
+        .andExpect(jsonPath("$.name").value(appEntity.getAppName()))
+        .andExpect(jsonPath("$.participants").isEmpty());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userRegAdminEntity.getId());
