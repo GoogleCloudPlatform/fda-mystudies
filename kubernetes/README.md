@@ -106,6 +106,11 @@ Import the scripts, in this order:
 ```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/HPHC_My_Studies_DB_Create_Script.sql
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/procedures.sql
+```
+
+`version_info_script.sql` should be run after a superadmin has been already created for Study Builder.
+You can use [create_study_builder_superadmin.sh](../scripts/create_study_builder_superadmin.sh) to create or update Study Builder's superadmin account.
+```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/version_info_script.sql
 ```
 

@@ -13,8 +13,8 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.CL
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEACTIVATED;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.DEFAULT_PERCENTAGE;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.EMAIL_REGEX;
-import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.ENROLLED_STATUS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.INACTIVE_STATUS;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.IN_PROGRESS;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.OPEN_STUDY;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.STATUS_ACTIVE;
@@ -521,6 +521,8 @@ public class SiteServiceImpl implements SiteService {
 
     SiteEntity site = optSiteEntity.get();
     if (SiteStatus.DEACTIVE == SiteStatus.fromValue(site.getStatus())) {
+      checkPreConditionsForSiteActivate(site);
+
       site.setStatus(SiteStatus.ACTIVE.value());
       site = siteRepository.saveAndFlush(site);
 
@@ -544,6 +546,18 @@ public class SiteServiceImpl implements SiteService {
     logger.exit(String.format("Site status changed to DEACTIVE for siteId=%s", site.getId()));
     return new SiteStatusResponse(
         site.getId(), site.getStatus(), MessageCode.DECOMMISSION_SITE_SUCCESS);
+  }
+
+  private void checkPreConditionsForSiteActivate(SiteEntity site) {
+    Optional<LocationEntity> optLocation = locationRepository.findById(site.getLocation().getId());
+    if (optLocation.get().getStatus().equals(INACTIVE_STATUS)) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION);
+    }
+
+    Optional<StudyEntity> optStudyEntity = studyRepository.findById(site.getStudyId());
+    if (optStudyEntity.get().getStatus().equals(DEACTIVATED)) {
+      throw new ErrorCodeException(ErrorCode.CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY);
+    }
   }
 
   private void validateDecommissionSiteRequest(
@@ -574,11 +588,13 @@ public class SiteServiceImpl implements SiteService {
       throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY);
     }
 
-    List<String> status = Arrays.asList(ENROLLED_STATUS, STATUS_ACTIVE);
+    List<String> status = Arrays.asList(IN_PROGRESS, STATUS_ACTIVE);
     Optional<Long> optParticipantStudyCount =
         participantStudyRepository.findByStudyIdAndStatus(status, study.getId());
 
-    if (optParticipantStudyCount.isPresent() && optParticipantStudyCount.get() > 0) {
+    if (optParticipantStudyCount.isPresent()
+        && optParticipantStudyCount.get() > 0
+        && study.getStatus().equals(STATUS_ACTIVE)) {
       throw new ErrorCodeException(ErrorCode.CANNOT_DECOMMISSION_SITE_FOR_ENROLLED_ACTIVE_STATUS);
     }
   }
@@ -647,6 +663,9 @@ public class SiteServiceImpl implements SiteService {
       String participantRegistrySiteId, String userId, Integer page, Integer limit) {
     logger.entry("begin getParticipantDetails()");
 
+    Optional<UserRegAdminEntity> optSuperAdmin = userRegAdminRepository.findById(userId);
+    UserRegAdminEntity user =
+        optSuperAdmin.orElseThrow(() -> new ErrorCodeException(ErrorCode.USER_NOT_FOUND));
     Optional<ParticipantRegistrySiteEntity> optParticipantRegistry =
         participantRegistrySiteRepository.findById(participantRegistrySiteId);
 
@@ -657,6 +676,15 @@ public class SiteServiceImpl implements SiteService {
 
     ParticipantDetail participantDetail =
         ParticipantMapper.toParticipantDetailsResponse(optParticipantRegistry.get());
+    if (!user.isSuperAdmin()) {
+      Optional<SitePermissionEntity> optSitePermission =
+          sitePermissionRepository.findByUserIdAndSiteId(
+              userId, optParticipantRegistry.get().getSite().getId());
+      participantDetail.setSitePermission(optSitePermission.get().getCanEdit().value());
+    } else {
+      participantDetail.setSitePermission(Permission.EDIT.value());
+    }
+
     List<ParticipantStudyEntity> participantsEnrollments =
         participantStudyRepository.findParticipantsEnrollment(participantRegistrySiteId);
 
