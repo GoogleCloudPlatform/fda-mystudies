@@ -452,7 +452,7 @@ public class LoginDAOImpl implements LoginDAO {
       }
     }
     if (isAcountLocked) {
-      loginService.sendLockedAccountPasswordResetLinkToMail(userEmailId);
+      loginService.sendLockedAccountPasswordResetLinkToMail(userEmailId, auditRequest);
       throw new LockedException(propMap.get("account.lock.msg"));
     }
     logger.info("LoginDAOImpl - updateUser() - Ends");

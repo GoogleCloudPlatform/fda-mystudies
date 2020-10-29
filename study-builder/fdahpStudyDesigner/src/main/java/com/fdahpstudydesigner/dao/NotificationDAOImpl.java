@@ -192,18 +192,16 @@ public class NotificationDAOImpl implements NotificationDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       if (FdahpStudyDesignerConstants.STUDYLEVEL.equals(type) && (studyId != 0)) {
         queryString =
-            "from NotificationBO NBO where NBO.studyId = "
-                + studyId
+            "from NotificationBO NBO where NBO.studyId = :studyId "
                 + " and NBO.notificationSubType = 'Announcement' and NBO.notificationType = 'ST' and NBO.notificationStatus = 0 "
                 + "order by NBO.notificationId desc";
-        query = session.createQuery(queryString);
+        query = session.createQuery(queryString).setParameter("studyId", studyId);
         notificationList = query.list();
       } else {
         queryString =
-            "from NotificationBO NBO where NBO.studyId = "
-                + studyId
+            "from NotificationBO NBO where NBO.studyId = :studyId "
                 + " and NBO.notificationType = 'GT' and NBO.notificationStatus = 0 order by NBO.notificationId desc";
-        query = session.createQuery(queryString);
+        query = session.createQuery(queryString).setParameter("studyId", studyId);
         notificationList = query.list();
       }
     } catch (Exception e) {
@@ -460,5 +458,23 @@ public class NotificationDAOImpl implements NotificationDAO {
     }
     logger.info("NotificationDAOImpl - getGatwayAppList - Ends");
     return gatewayAppList;
+  }
+
+  @Override
+  public List<NotificationBO> getNotificationList(Integer studyId) {
+    logger.info("NotificationDAOImpl - getNotificationList() - Starts");
+    Session session = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      return session.getNamedQuery("getNotification").setInteger("studyId", studyId).list();
+    } catch (Exception e) {
+      logger.error("NotificationDAOImpl - getNotificationList() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("NotificationDAOImpl - getNotificationList() - Ends");
+    return null;
   }
 }

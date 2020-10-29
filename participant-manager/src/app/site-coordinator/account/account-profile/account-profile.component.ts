@@ -56,14 +56,9 @@ export class AccountProfileComponent
   }
 
   getProfileDetails(): void {
-    this.accountService.fetchUserProfile().subscribe(
-      (data) => {
-        this.profileForm.patchValue(data);
-      },
-      (error) => {
-        this.toastr.error(error);
-      },
-    );
+    this.accountService.fetchUserProfile().subscribe((data) => {
+      this.profileForm.patchValue(data);
+    });
   }
 
   updateProfile(): void {
@@ -82,7 +77,7 @@ export class AccountProfileComponent
         this.user.lastName = String(
           this.profileForm.controls['lastName'].value,
         );
-        sessionStorage.setItem('user', JSON.stringify(this.user));
+        localStorage.setItem('user', JSON.stringify(this.user));
         this.userState.setCurrentUserName(
           this.profileForm.controls['firstName'].value,
         );
@@ -106,7 +101,7 @@ export class AccountProfileComponent
         if (getMessage(successResponse.code)) {
           this.toastr.error(getMessage(successResponse.code));
         }
-        sessionStorage.clear();
+        localStorage.clear();
         void this.router.navigate(['/']);
       },
       (errorResponse: ApiResponse) => {

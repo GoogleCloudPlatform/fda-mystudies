@@ -62,7 +62,9 @@ export class AppDetailsComponent
       this.query$,
     ).pipe(
       map(([appDetails, query]) => {
-        this.appDetailsBackup = appDetails;
+        this.appDetailsBackup = JSON.parse(
+          JSON.stringify(appDetails),
+        ) as AppDetails;
         this.appDetailsBackup.participants = this.appDetailsBackup.participants.filter(
           (participant: Participant) =>
             participant.email?.toLowerCase().includes(query.toLowerCase()),
