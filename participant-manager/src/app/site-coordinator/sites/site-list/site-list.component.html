@@ -69,7 +69,7 @@
                       <div class="col-xs-12 col-md-4 p-none lh__6">
                         <div class="prog">
                           <div class="pro__base">
-                            <div *ngIf="site.invited">
+                            <div>
                               <div
                                 class="pro__top"
                                 [style.width.%]="site.enrollmentPercentage"
@@ -82,10 +82,9 @@
                           [ngClass]="progressBarColor(site)"
                         >
                           <div>
-                            <span *ngIf="site.invited" class="enrolled">
+                            <span class="enrolled">
                               {{ site.enrolled }} / {{ site.invited }}
                             </span>
-                            <span *ngIf="site.invited === 0">N/A</span>
                           </div>
                         </div>
                       </div>

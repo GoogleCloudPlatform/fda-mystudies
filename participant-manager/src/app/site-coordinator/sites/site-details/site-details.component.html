@@ -112,9 +112,16 @@
               </div>
               <div>
                 <button
+                  [disabled]="
+                    siteParticipants.participantRegistryDetail.studyStatus ===
+                      studyStatus.Deactivated &&
+                    siteParticipants.participantRegistryDetail.siteStatus === 0
+                  "
                   name="buttonDecommision"
                   class="btn banner__default__btn flex__row__reverse pad__5__13"
-                  (click)="decommissionSite()"
+                  (click)="
+                    decommissionSite(siteParticipants.participantRegistryDetail)
+                  "
                 >
                   {{
                     siteParticipants.participantRegistryDetail.siteStatus === 1
@@ -180,11 +187,22 @@
           </div>
           <div>
             <button
+              [disabled]="
+                siteParticipants.participantRegistryDetail.studyStatus ===
+                  studyStatus.Deactivated &&
+                siteParticipants.participantRegistryDetail.siteStatus === 0
+              "
               name="buttonDecommision"
               class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
-              (click)="decommissionSite()"
+              (click)="
+                decommissionSite(siteParticipants.participantRegistryDetail)
+              "
             >
-              Decommission Site for Study
+              {{
+                siteParticipants.participantRegistryDetail.siteStatus === 1
+                  ? "Decommission Site for Study"
+                  : "Activate Site for Study"
+              }}
             </button>
           </div>
         </div>

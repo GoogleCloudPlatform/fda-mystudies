@@ -121,8 +121,17 @@
             >
               <div class="p-none cursor__none">
                 Site ID :
-                <span class="blue__text__md blue__link cursor__none">
+                <span
+                  *ngIf="applists.studyType !== studyTypes.Open"
+                  class="blue__text__md blue__link cursor__none"
+                >
                   {{ sitelists.customSiteId }} {{ sitelists.siteName }}
+                </span>
+                <span
+                  *ngIf="applists.studyType === studyTypes.Open"
+                  class="blue__text__md blue__link cursor__none"
+                >
+                  NA(Open Study)
                 </span>
               </div>
               <div>

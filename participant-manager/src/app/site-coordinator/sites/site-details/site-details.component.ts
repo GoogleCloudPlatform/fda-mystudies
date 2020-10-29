@@ -11,12 +11,13 @@ import {UpdateInviteResponse} from '../../participant-details/participant-detail
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {OnboardingStatus} from 'src/app/shared/enums';
+import {OnboardingStatus, Status} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
 import {
   ImportParticipantEmailResponse,
   Participant,
 } from '../shared/import-participants';
+import { ParticipantRegistryDetail } from 'src/app/shared/participant-registry-detail';
 const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
@@ -30,7 +31,6 @@ export class SiteDetailsComponent
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
-
   sendResend = '';
   enableDisable = '';
   toggleDisplay = false;
@@ -39,6 +39,7 @@ export class SiteDetailsComponent
   activeTab = OnboardingStatus.All;
   newlyImportedParticipants: Participant[] = [];
   selectedAll = false;
+  studyStatus=Status;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -123,11 +124,12 @@ export class SiteDetailsComponent
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
-  decommissionSite(): void {
+  decommissionSite(participantRegistryDetail:ParticipantRegistryDetail): void {
     this.subs.add(
       this.particpantDetailService
         .siteDecommission(this.siteId)
         .subscribe((successResponse: ApiResponse) => {
+           participantRegistryDetail.siteStatus=participantRegistryDetail.siteStatus=== 1?0:1;
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
