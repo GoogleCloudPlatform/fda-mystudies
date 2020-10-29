@@ -31,22 +31,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: participant-manager-datastore-credentials
-                  key: username
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
                   name: participant-manager-datastore-credentials
-                  key: password
+                  key: dbpassword
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-secrets
+                  name: participant-manager-datastore-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-secrets
+                  name: participant-manager-datastore-credentials
                   key: secret_key
             # MAIL SERVER
             - name: MAIL_USERNAME
