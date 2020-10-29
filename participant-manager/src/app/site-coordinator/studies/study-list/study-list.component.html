@@ -1,0 +1,90 @@
+<div class="max__w__1280">
+  <div class="tab-content">
+    <ng-container *ngIf="studyList$ | async as studyList">
+      <div *ngIf="studyList.superAdmin || studyList.sitePermissionCount >= 2">
+        <div
+          *ngFor="let study of studyList.studies"
+          class="bg__white cards cards__var box__shadow-cmn ml-none mr-none studies_row"
+        >
+          <div
+            [routerLink]="['/coordinator/studies', study.id]"
+            class="flex__justify__space-between flex__wrap"
+          >
+            <div>
+              <div class="flex__ flex__row align__items__center">
+                <div class="img__container__left" *ngIf="study.logoImageUrl">
+                  <img [src]="study.logoImageUrl" alt="" />
+                </div>
+                <div>
+                  <div class="blue__text__md text-capitalize">
+                    {{ study.name }}
+                  </div>
+                  <div
+                    class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
+                  >
+                    {{ study.name }}
+                  </div>
+                  <div
+                    class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
+                  >
+                    <div class="col-xs-6 col-md-12 p-none">
+                      <span *ngIf="study.type !== studyTypes.Open">
+                        {{ study.sitesCount }}
+                        sites
+                      </span>
+                      <span *ngIf="study.type === studyTypes.Open">
+                        Open Study
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mb__width__100">
+              <div class="flex__ flex__row align__items__center">
+                <div class="mb__width__100">
+                  <div class="col-xs-12 p-none lh__6">
+                    <div class="prog">
+                      <div *ngIf="study.invited" class="pro__base">
+                        <div
+                          class="pro__top"
+                          [style.width.%]="study.enrollmentPercentage"
+                        ></div>
+                      </div>
+                      <div
+                        class="progress-label font__bold"
+                        [ngClass]="progressBarColor(study)"
+                      >
+                        <span *ngIf="study.invited">
+                          {{ study.enrolled }} /
+                          {{ study.invited }}
+                        </span>
+                        <span *ngIf="study.invited == 0">N/A</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right progress__bar__next">
+                  <div class="progress-bar-next__title">
+                    <span *ngIf="study.invited != 0">
+                      {{ study.enrollmentPercentage | number: ".2-2" }}%
+                    </span>
+                    <span *ngIf="study.invited == 0">N/A</span>
+                  </div>
+                  <div class="text-grey__sm">
+                    <span *ngIf="study.type !== studyTypes.Open">
+                      Enrolled / Invited
+                    </span>
+                    <span *ngIf="study.type === studyTypes.Open">
+                      Enrolled / Target
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

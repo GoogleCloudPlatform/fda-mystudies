@@ -40,16 +40,21 @@ resource "google_compute_global_address" "ingress_static_ip" {
 
 # resource "google_cloudbuild_trigger" "server_build_triggers" {
 #   for_each = toset([
-#     "WCP",
-#     "WCP-WS",
-#     "auth-server-ws",
-#     "user-registration-server-ws",
-#     "response-server-ws",
+#     "study-builder",
+#     "study-datastore",
+#     "oauth-scim-module",
+#     "participant-datastore/consent-mgmt-module",
+#     "participant-datastore/enroll-mgmt-module",
+#     "participant-datastore/user-mgmt-module",
+#     "response-datastore",
+#     "participant-manager-datastore",
+#     "hydra",
+#     "participant-manager",
 #   ])
 #
 #   provider = google-beta
 #   project  = module.project.project_id
-#   name     = each.key
+#   name     = replace(each.key, "/", "-")
 #
 #   included_files = ["${each.key}/**"]
 #
@@ -63,9 +68,11 @@ resource "google_compute_global_address" "ingress_static_ip" {
 # }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
+# Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
+# Shared VPC: https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations#centralize_network_control
 module "project" {
-  source  = "terraform-google-modules/project-factory/google"
-  version = "~> 8.1.0"
+  source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
+  version = "~> 9.1.0"
 
   name                    = "example-dev-apps"
   org_id                  = ""
@@ -156,11 +163,12 @@ module "example_dev" {
       type    = "A"
     },
   ]
+
 }
 
 module "example_dev_gke_cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
-  version = "~> 10.0.0"
+  version = "~> 11.1.0"
 
   # Required.
   name               = "example-dev-gke-cluster"
@@ -184,6 +192,7 @@ module "example_dev_gke_cluster" {
   skip_provisioners       = true
   enable_private_endpoint = false
   release_channel         = "STABLE"
+
 }
 
 resource "google_service_account" "auth_server_gke_sa" {
@@ -191,23 +200,43 @@ resource "google_service_account" "auth_server_gke_sa" {
   project    = module.project.project_id
 }
 
-resource "google_service_account" "response_server_gke_sa" {
-  account_id = "response-server-gke-sa"
+resource "google_service_account" "hydra_gke_sa" {
+  account_id = "hydra-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "study_designer_gke_sa" {
-  account_id = "study-designer-gke-sa"
+resource "google_service_account" "response_datastore_gke_sa" {
+  account_id = "response-datastore-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "study_metadata_gke_sa" {
-  account_id = "study-metadata-gke-sa"
+resource "google_service_account" "study_builder_gke_sa" {
+  account_id = "study-builder-gke-sa"
   project    = module.project.project_id
 }
 
-resource "google_service_account" "user_registration_gke_sa" {
-  account_id = "user-registration-gke-sa"
+resource "google_service_account" "study_datastore_gke_sa" {
+  account_id = "study-datastore-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "consent_datastore_gke_sa" {
+  account_id = "consent-datastore-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "enroll_datastore_gke_sa" {
+  account_id = "enroll-datastore-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "user_datastore_gke_sa" {
+  account_id = "user-datastore-gke-sa"
+  project    = module.project.project_id
+}
+
+resource "google_service_account" "participant_manager_gke_sa" {
+  account_id = "participant-manager-gke-sa"
   project    = module.project.project_id
 }
 

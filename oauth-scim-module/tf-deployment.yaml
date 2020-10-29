@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-server
+  labels:
+    app: auth-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: auth-server
+  template:
+    metadata:
+      labels:
+        app: auth-server
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: auth-server
+          image: gcr.io/fda-mystudies-dev-apps/auth-server:latest
+          env:
+            # DB ACCESS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-credentials
+                  key: dbusername
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-credentials
+                  key: dbpassword
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-server-credentials
+                  key: dbname
+            # AUTHENTICATION
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: client-side-credentials
+                  key: client_id
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: client-side-credentials
+                  key: secret_key
+            # MAIL SERVER
+            - name: FROM_EMAIL_ADDRESS
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_address
+            - name: FROM_EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: email_password
+            - name: SMTP_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: email-credentials
+                  key: smtp_hostname
+            # SERVER CALLS
+            - name: HYDRA_ADMIN_URL
+              value: "http://hydra-np:4445"
+            - name: HYDRA_PUBLIC_URL
+              value: "http://hydra-np:4444"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000"
+            # MISC
+            - name: LOG_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /oauth-scim-module/healthCheck
+              port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ['/cloud_sql_proxy', '-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306', '-credential_file=/secrets/gcloud_key/key.json']
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: auth-server-gcloud-key

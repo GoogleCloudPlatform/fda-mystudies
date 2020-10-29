@@ -634,19 +634,19 @@ class StudyListViewController: UIViewController {
 
   /// Save information for study which feilds need to be updated.
   func handleStudyUpdatedInformation() {
-    let currentStudy = Study.currentStudy
-    if currentStudy?.userParticipateState.status == UserStudyStatus.StudyStatus.yetToJoin {
+    guard let currentStudy = Study.currentStudy else { return }
+    if currentStudy.userParticipateState.status == UserStudyStatus.StudyStatus.yetToJoin {
       StudyUpdates.studyConsentUpdated = false
       StudyUpdates.studyActivitiesUpdated = false
       StudyUpdates.studyResourcesUpdated = false
 
-      currentStudy?.version = StudyUpdates.studyVersion
-      currentStudy?.newVersion = StudyUpdates.studyVersion
+      currentStudy.version = StudyUpdates.studyVersion
+      currentStudy.newVersion = StudyUpdates.studyVersion
     }
 
-    DBHandler.updateMetaDataToUpdateForStudy(study: Study.currentStudy!, updateDetails: nil)
+    DBHandler.updateMetaDataToUpdateForStudy(study: currentStudy, updateDetails: nil)
     if StudyUpdates.studyInfoUpdated {
-      sendRequestToGetStudyInfo(study: Study.currentStudy!)
+      sendRequestToGetStudyInfo(study: currentStudy)
     } else {
       navigateBasedOnUserStatus()
     }
@@ -654,36 +654,37 @@ class StudyListViewController: UIViewController {
 
   /// navigateBasedOnUserStatus method navigates to StudyDashBoard or StudyHome based on UserParticipationStatus.
   func navigateBasedOnUserStatus() {
+    guard let currentStudy = Study.currentStudy else { return }
     if User.currentUser.userType == UserType.loggedInUser {
-      if Study.currentStudy?.status == .active {
+      if currentStudy.status == .active {
         // handle accoring to UserStatus
-        let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
+        let userStudyStatus = currentStudy.userParticipateState.status
 
         if userStudyStatus == .completed || userStudyStatus == .inProgress {
           pushToStudyDashboard()
         } else {
-          checkDatabaseForStudyInfo(study: Study.currentStudy!)
+          checkDatabaseForStudyInfo(study: currentStudy)
         }
       } else {
-        checkDatabaseForStudyInfo(study: Study.currentStudy!)
+        checkDatabaseForStudyInfo(study: currentStudy)
       }
     } else {
-      checkDatabaseForStudyInfo(study: Study.currentStudy!)
+      checkDatabaseForStudyInfo(study: currentStudy)
     }
   }
 
   /// Checks `Study` status and do the action.
   func performTaskBasedOnStudyStatus() {
-    let study = Study.currentStudy
+    guard let study = Study.currentStudy else { return }
 
     if User.currentUser.userType == UserType.loggedInUser {
-      if Study.currentStudy?.status == .active {
-        let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
+      if study.status == .active {
+        let userStudyStatus = study.userParticipateState.status
 
         if userStudyStatus == .completed || userStudyStatus == .inProgress {
           // check if study version is udpated
-          if study?.version != study?.newVersion {
-            WCPServices().getStudyUpdates(study: study!, delegate: self)
+          if study.version != study.newVersion {
+            WCPServices().getStudyUpdates(study: study, delegate: self)
           } else {
             addProgressIndicator()
             perform(#selector(loadStudyDetails), with: self, afterDelay: 1)
@@ -692,7 +693,7 @@ class StudyListViewController: UIViewController {
           checkForStudyUpdate(study: study)
         }
       } else if Study.currentStudy?.status == .paused {
-        let userStudyStatus = (Study.currentStudy?.userParticipateState.status)!
+        let userStudyStatus = study.userParticipateState.status
 
         if userStudyStatus == .completed || userStudyStatus == .inProgress {
           UIUtilities.showAlertWithTitleAndMessage(
@@ -715,9 +716,13 @@ class StudyListViewController: UIViewController {
   }
 
   @objc func loadStudyDetails() {
-    let study = Study.currentStudy
+    guard let study = Study.currentStudy
+    else {
+      self.removeProgressIndicator()
+      return
+    }
     DBHandler.loadStudyDetailsToUpdate(
-      studyId: (study?.studyId)!,
+      studyId: study.studyId,
       completionHandler: { _ in
 
         self.pushToStudyDashboard()

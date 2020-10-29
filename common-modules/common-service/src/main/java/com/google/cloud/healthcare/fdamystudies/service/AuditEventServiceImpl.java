@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
     value = "commonservice.auditlogevent.enabled",
     havingValue = "true",
     matchIfMissing = true)
-public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEventService {
+public class AuditEventServiceImpl implements AuditEventService {
 
   private XLogger logger = XLoggerFactory.getXLogger(AuditEventServiceImpl.class.getName());
 
@@ -47,7 +47,7 @@ public class AuditEventServiceImpl extends BaseServiceImpl implements AuditEvent
 
     LogEntry entry =
         LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
-            .setTimestamp(auditRequest.getOccured().getTime())
+            .setTimestamp(auditRequest.getOccurred().getTime())
             .setSeverity(Severity.INFO)
             .setLogName(AUDIT_LOG_NAME)
             .setResource(MonitoredResource.newBuilder("global").build())

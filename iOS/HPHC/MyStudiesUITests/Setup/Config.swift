@@ -9,7 +9,7 @@ import EnvoyAmbassador
 
 class DefaultRouter: Router {
 
-  static let registerPath = "/myStudiesUserMgmtWS/register"
+  static let registerPath = "/participant-user-datastore/register"
 
   override init() {
     super.init()

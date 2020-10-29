@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.connection.driver_class">org.h2.Driver</property>
+    <property name="hibernate.connection.username">root</property>
+    <property name="hibernate.connection.password">password</property>
+    <property name="hibernate.connection.url">
+      jdbc:h2:mem:testdb;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    </property>
+
+    <property name="hibernate.dialect">org.hibernate.dialect.H2Dialect</property>
+
+    <!-- SQL -->
+    <property name="hibernate.format_sql">false</property>
+    <property name="hibernate.show_sql">false</property>
+    <property name="hbm2ddl.auto">create-drop</property>
+    <property name="hibernate.hbm2ddl.import_files">import.sql</property>
+    <!-- C3P0 -->
+    <property name="hibernate.c3p0.acquire_increment">2</property>
+    <property name="hibernate.c3p0.max_size">20</property>
+    <property name="hibernate.c3p0.min_size">5</property>
+    <property name="hibernate.c3p0.timeout">180</property>
+    <property name="hibernate.c3p0.idle_test_period">100</property>
+
+    <!-- Entity classes -->
+    <mapping
+      class="com.fdahpstudydesigner.bo.ActiveTaskAtrributeValuesBo" />
+    <mapping class="com.fdahpstudydesigner.bo.ActiveTaskBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.ActiveTaskCustomScheduleBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.ActivetaskFormulaBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.ActiveTaskFrequencyBo" />
+    <mapping class="com.fdahpstudydesigner.bo.ActiveTaskListBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.ActiveTaskMasterAttributeBo" />
+    <mapping class="com.fdahpstudydesigner.bo.ActiveTaskStepBo" />
+    <mapping class="com.fdahpstudydesigner.bo.AnchorDateTypeBo" />
+    <mapping class="com.fdahpstudydesigner.bo.Checklist" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.ComprehensionTestQuestionBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.ComprehensionTestResponseBo" />
+    <mapping class="com.fdahpstudydesigner.bo.ConsentBo" />
+    <mapping class="com.fdahpstudydesigner.bo.ConsentInfoBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.ConsentMasterInfoBo" />
+    <mapping class="com.fdahpstudydesigner.bo.EligibilityBo" />
+    <mapping class="com.fdahpstudydesigner.bo.EligibilityTestBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.EligibilityTestResponseBo" />
+    <mapping class="com.fdahpstudydesigner.bo.FormBo" />
+    <mapping class="com.fdahpstudydesigner.bo.FormMappingBo" />
+    <mapping class="com.fdahpstudydesigner.bo.HealthKitKeysInfo" />
+    <mapping class="com.fdahpstudydesigner.bo.InstructionsBo" />
+    <mapping class="com.fdahpstudydesigner.bo.MasterDataBO" />
+    <mapping class="com.fdahpstudydesigner.bo.NotificationBO" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.NotificationHistoryBO" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.QuestionConditionBranchBo" />
+    <mapping class="com.fdahpstudydesigner.bo.QuestionnaireBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.QuestionnaireCustomScheduleBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.QuestionnairesFrequenciesBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.QuestionnairesStepsBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.QuestionReponseTypeBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.QuestionResponseSubTypeBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.QuestionResponseTypeMasterInfoBo" />
+    <mapping class="com.fdahpstudydesigner.bo.QuestionsBo" />
+    <mapping class="com.fdahpstudydesigner.bo.ReferenceTablesBo" />
+    <mapping class="com.fdahpstudydesigner.bo.ResourceBO" />
+    <mapping class="com.fdahpstudydesigner.bo.RoleBO" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.StatisticImageListBo" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.StudyActivityVersionBo" />
+    <mapping class="com.fdahpstudydesigner.bo.StudyBo" />
+    <mapping class="com.fdahpstudydesigner.bo.StudyPageBo" />
+    <mapping class="com.fdahpstudydesigner.bo.StudyPermissionBO" />
+    <mapping class="com.fdahpstudydesigner.bo.StudySequenceBo" />
+    <mapping class="com.fdahpstudydesigner.bo.StudyVersionBo" />
+    <mapping class="com.fdahpstudydesigner.bo.UserAttemptsBo" />
+    <mapping class="com.fdahpstudydesigner.bo.UserBO" />
+    <mapping
+      class="com.fdahpstudydesigner.bo.UserPasswordHistory" />
+    <mapping class="com.fdahpstudydesigner.bo.UserPermissions" />
+
+  </session-factory>
+</hibernate-configuration>

@@ -11,8 +11,8 @@ package com.google.cloud.healthcare.fdamystudies.common;
 public enum DataSharingStatus {
   UNDEFINED("Undefined"),
   NOT_APPLICABLE("Not Applicable"),
-  NOT_PERMITTED("Not Permitted"),
-  PERMITTED("Permitted");
+  NOT_PROVIDED("Not Provided"),
+  PROVIDED("Provided");
 
   private String value;
 

@@ -1,7 +1,7 @@
 {
 	"request": {
 		"method": "GET",
-		"urlPathPattern": "/myStudiesEnrollmentMgmt/participantInfo",
+		"urlPathPattern": "/participant-enroll-datastore/participantInfo",
 		"queryParameters": {
 			"studyId": {
 				"equalTo": "ASignature01"

@@ -241,7 +241,11 @@ extension VerificationViewController: NMWebServiceDelegate {
 
     self.removeProgressIndicator()
     if User.currentUser.verified == true {
-      navigateToLogin()
+      if viewLoadFrom == .forgotPassword {
+        resetPasswordOnVerification()
+      } else {
+        navigateToLogin()
+      }
     } else {
 
       if requestName as String == RegistrationMethods.resendConfirmation.description {
@@ -322,9 +326,7 @@ extension VerificationViewController: SignInViewControllerDelegate {
   func didLogInCompleted() {
 
     UserDefaults.standard.set(true, forKey: kNotificationRegistrationIsPending)
-    if viewLoadFrom == .forgotPassword {
-      resetPasswordOnVerification()
-    } else if viewLoadFrom == .joinStudy {
+    if viewLoadFrom == .joinStudy {
 
       let appDelegate = (UIApplication.shared.delegate as? AppDelegate)!
       appDelegate.checkPasscode(viewController: self)

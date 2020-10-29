@@ -17,24 +17,28 @@
 // Set `Allow Arbitrary Loads` to NO and `Allow Arbitrary Loads in Web Content` to NO to connect over HTTPS
 PROTOCOL = https
 
-// URL of study metadata server.
-// e.g. mystudiesdeployment.com/StudyMetaData/
-WCP_URL = xxxxxx
+// URL of study datastore server.
+// e.g. mystudiesdeployment.com/study-datastore/
+STUDY_DATASTORE_URL = xxxxxx
 
 // URL of response datastore.
-// e.g. mystudiesdeployment.com/mystudies-response-server/
-RESPONSE_URL = xxxxxxxxx
+// e.g. mystudiesdeployment.com/response-datastore/
+RESPONSE_DATASTORE_URL = xxxxxxxxx
 
 // URL of different service bundles within participant datastore.
-// e.g. mystudiesdeployment.com/myStudiesUserMgmtWS/
-REGISTRATION_URL = xxxxxxx
-// e.g. mystudiesdeployment.com/myStudiesEnrollmentMgmt/
-ENROLLMENT_URL = xxxxxx
-// e.g. mystudiesdeployment.com/myStudiesConsentMgmtWS/
-CONSENTMGMT_URL = xxxxxx
+// e.g. mystudiesdeployment.com/participant-user-datastore/
+USER_DATASTORE_URL = xxxxxxx
+// e.g. mystudiesdeployment.com/participant-enroll-datastore/
+ENROLLMENT_DATASTORE_URL = xxxxxx
+// e.g. mystudiesdeployment.com/participant-consent-datastore/
+CONSENT_DATASTORE_URL = xxxxxx
 
-// Hydra URL for auth services
-// e.g. mystudiesdeployment.com
+// URL of oauth scim services.
+// e.g. mystudiesdeployment.com/oauth-scim-service
+AUTH_URL = xxxxxx
+
+// URL of Hydra server.
+// e.g. mystudiesdeployment.com/hydra
 HYDRA_BASE_URL = xxxxx
 
 // HYDRA_CLIENT_ID is a client ID for OAuth.
@@ -45,18 +49,16 @@ AUTH_USERNAME = xxxxx
 AUTH_PASSWORD = xxxxxxxxxxxx
 
 // API_KEY is <bundleid>:<apptoken>
-// These values should match the ones set in study metadata server.
+// These values should match the ones set in study datastore server.
+// see: study-datastore/src/main/resources/authorizationResource.properties
 REGISTRATIONSERVER_API_KEY = xxxxxxxx
 
 // SHA-256 of the byte representation of the secret used by mobile apps.
 // In terraform deployment, this values is stored as `mystudies-ma-secret-key`
 //
 // For more details see implementation of getHashedValue in:
-// response-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/utils/ResponseServerUtil.java
+// response-datastore/src/main/java/com/google/cloud/healthcare/fdamystudies/utils/ResponseServerUtil.java
 REGISTRATIONSERVER_API_SECERET = xxxxxxxxxxx
-
-// OrgID used for this application.
-ORG_ID = xxxxxx
 
 // AppID of this application.
 // Study builder would use this appID to match studies to apps.

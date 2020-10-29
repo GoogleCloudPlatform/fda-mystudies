@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.multidex.MultiDex;
+import android.util.Base64;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.harvard.passcodemodule.PasscodeSetupActivity;
@@ -29,15 +30,21 @@ import com.harvard.studyappmodule.StudyModuleSubscriber;
 import com.harvard.usermodule.UserModuleSubscriber;
 import com.harvard.utils.AppController;
 import com.harvard.utils.AppVisibilityDetector;
+import com.harvard.utils.Logger;
 import com.harvard.utils.realm.RealmEncryptionHelper;
 import com.harvard.webservicemodule.WebserviceSubscriber;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 public class FdaApplication extends Application {
   private static FdaApplication instance;
   private FdaEventBusRegistry registry;
+  private static String randomString;
+  private static final String ALPHA_NUMERIC_STRING =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   public static final String NOTIFICATION_CHANNEL_ID_SERVICE = AppConfig.PackageName + ".service";
   public static final String NOTIFICATION_CHANNEL_ID_INFO = AppConfig.PackageName + ".general";
@@ -53,7 +60,7 @@ public class FdaApplication extends Application {
     Fabric.with(this, new Crashlytics());
     dbInitialize();
     initChannel();
-
+    randomAlphaNumeric(50);
     startEventProcessing();
 
     AppVisibilityDetector.init(
@@ -87,7 +94,7 @@ public class FdaApplication extends Application {
         RealmEncryptionHelper.initHelper(this, getString(R.string.app_name));
     byte[] key = realmEncryptionHelper.getEncryptKey();
 
-    //Remove for release builds
+    // Remove for release builds
     Stetho.initialize(
         Stetho.newInitializerBuilder(this)
             .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
@@ -133,5 +140,34 @@ public class FdaApplication extends Application {
           new NotificationChannel(
               NOTIFICATION_CHANNEL_ID_INFO, "General", NotificationManager.IMPORTANCE_HIGH));
     }
+  }
+
+  public static void randomAlphaNumeric(int count) {
+    StringBuilder builder = new StringBuilder();
+    while (count-- != 0) {
+      int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
+      builder.append(ALPHA_NUMERIC_STRING.charAt(character));
+    }
+    randomString = builder.toString();
+  }
+
+  public static String getRandomString() {
+    return randomString;
+  }
+
+  public static String getCodeChallenge(String codeVerifier) {
+    String codeChallenge = "";
+    try {
+      MessageDigest md = MessageDigest.getInstance("SHA-256");
+      byte[] digest = md.digest(codeVerifier.getBytes(StandardCharsets.US_ASCII));
+      codeChallenge =
+          Base64.encodeToString(digest, Base64.NO_PADDING)
+              .replace("+", "-")
+              .replace("/", "_")
+              .replace("=", "");
+    } catch (Exception e) {
+      Logger.log(e);
+    }
+    return codeChallenge;
   }
 }

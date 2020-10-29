@@ -9,35 +9,47 @@ spec:
   rules:
     - http:
         paths:
-          - path: /AuthServer/*
+          - path: /oauth-scim-module/*
             backend:
               serviceName: auth-server-np
               servicePort: 50000
-          - path: /mystudies-response-server/*
+          - path: /response-datastore/*
             backend:
-              serviceName: response-server-np
+              serviceName: response-datastore-np
               servicePort: 50000
-          - path: /myStudiesUserMgmtWS/*
+          - path: /participant-user-datastore/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-user-datastore-np
               servicePort: 50000
-          - path: /myStudiesConsentMgmtWS/*
+          - path: /participant-consent-datastore/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-consent-datastore-np
               servicePort: 50000
-          - path: /myStudiesEnrollmentMgmt/*
+          - path: /participant-enroll-datastore/*
             backend:
-              serviceName: user-registration-server-np
+              serviceName: participant-enroll-datastore-np
               servicePort: 50000
-          - path: /StudyMetaData/*
+          - path: /study-datastore/*
             backend:
-              serviceName: study-meta-data-np
+              serviceName: study-datastore-np
               servicePort: 50000
           - path: /studybuilder/*
             backend:
-              serviceName: study-designer-np
+              serviceName: study-builder-np
               servicePort: 50000
-          - path: /fdaResources/*
+          - path: /study-resources/*
             backend:
-              serviceName: study-designer-np
+              serviceName: study-builder-np
+              servicePort: 50000
+          - path: /hydra/*
+              backend:
+                serviceName: hydra-np
+                servicePort: 4444
+          - path: /#/*
+            backend:
+              serviceName: participant-manager-np
+              servicePort: 50000
+          - path: /participant-manager-datastore/*
+            backend:
+              serviceName: participant-manager-datastore-np
               servicePort: 50000

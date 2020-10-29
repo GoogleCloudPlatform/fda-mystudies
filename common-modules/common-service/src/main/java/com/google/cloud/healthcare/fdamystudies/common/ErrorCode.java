@@ -154,9 +154,11 @@ public enum ErrorCode {
   PERMISSION_MISSING(
       400, "EC_0032", Constants.BAD_REQUEST, "User should have atleast one permission"),
 
-  INVALID_SECURITY_CODE(404, "EC_0033", "Not Found", "Invalid security code"),
-
-  SECURITY_CODE_EXPIRED(401, "EC_0034", "Unauthorized", "Security code has expired"),
+  SECURITY_CODE_EXPIRED(
+      410,
+      "EC_0034",
+      HttpStatus.GONE.toString(),
+      "This link is no longer valid to be used. Please contact the system admin for assistance with your account."),
 
   PARTICIPANT_REGISTRY_SITE_NOT_FOUND(
       400, "EC_0035", Constants.BAD_REQUEST, "Error in getting participants details"),
@@ -225,7 +227,7 @@ public enum ErrorCode {
   CANNOT_DECOMMISSION_SITE_FOR_OPEN_STUDY(
       400, "EC_0051", Constants.BAD_REQUEST, "Cannot decomission site as study type is open"),
 
-  INVALID_USER_STATUS(400, "EC_0052", Constants.BAD_REQUEST, "Invalid user status"),
+  INVALID_USER_STATUS(400, "EC-114", Constants.BAD_REQUEST, "Invalid user status"),
 
   CANNOT_ADD_SITE_FOR_OPEN_STUDY(
       403, "EC_0053", HttpStatus.FORBIDDEN.toString(), "Cannot add site to open study"),
@@ -238,7 +240,43 @@ public enum ErrorCode {
   APPLICATION_ID_MISSING(
       400, "EC_0056", Constants.BAD_REQUEST, "applicationId is missing in request header"),
 
-  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status.");
+  INVALID_DATA_SHARING_STATUS(400, "EC-120", Constants.BAD_REQUEST, "Invalid data sharing status."),
+
+  INVALID_SOURCE_NAME(400, "EC_0121", Constants.BAD_REQUEST, "Invalid 'source' value"),
+
+  APP_PERMISSION_ACCESS_DENIED(
+      403,
+      "EC_0123",
+      HttpStatus.FORBIDDEN.toString(),
+      "You do not have permission to access this app"),
+
+  CANNOT_ADD_SITE_FOR_DECOMMISSIONED_LOCATION(
+      400, "EC_0122", Constants.BAD_REQUEST, "Cannot add site for decommissioned location."),
+
+  TEMP_PASSWORD_INVALID(400, "EC_0122", Constants.BAD_REQUEST, "Temporary password is invalid"),
+
+  CANNOT_ADD_SITE_FOR_DEACTIVATED_STUDY(
+      403, "EC_0124", HttpStatus.FORBIDDEN.toString(), "Cannot add site to Deactivated study"),
+
+
+  CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_LOCATION(
+      403,
+      "EC_0126",
+      HttpStatus.FORBIDDEN.toString(),
+      "Cannot activate the site as the location is decommissioned"),
+
+  CANNOT_ACTIVATE_SITE_FOR_DEACTIVATED_STUDY(
+      403,
+      "EC_0127",
+      HttpStatus.FORBIDDEN.toString(),
+      "Cannot activate the site as the study is deactivated"),
+
+  CANNOT_ENABLE_PARTICIPANT(
+      403,
+      "EC_0125",
+      HttpStatus.FORBIDDEN.toString(),
+      "Invitation cannot be enabled as participant record is enabled in another site within the same study.");
+
 
   private final int status;
   private final String code;

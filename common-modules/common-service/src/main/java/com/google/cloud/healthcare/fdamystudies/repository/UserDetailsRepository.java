@@ -43,4 +43,14 @@ public interface UserDetailsRepository extends JpaRepository<UserDetailsEntity, 
 
   @Query("SELECT ud FROM UserDetailsEntity ud WHERE ud.userId = :userId")
   public Optional<UserDetailsEntity> findByUserId(String userId);
+
+  List<UserDetailsEntity> findByStatus(Integer status);
+
+  @Query(
+      value =
+          "SELECT app.id AS appId, IFNULL(COUNT(ud.id),0) AS count "
+              + "FROM user_details ud, app_info app "
+              + "WHERE app.id = ud.app_info_id GROUP BY app.id ",
+      nativeQuery = true)
+  public List<AppCount> findAppUsersCount();
 }

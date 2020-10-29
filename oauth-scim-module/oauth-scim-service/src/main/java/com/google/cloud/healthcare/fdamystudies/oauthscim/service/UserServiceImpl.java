@@ -8,12 +8,12 @@
 
 package com.google.cloud.healthcare.fdamystudies.oauthscim.service;
 
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.salt;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.createArrayNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCK_EMAIL_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
@@ -26,8 +26,20 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.SALT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TEMP_PASSWORD_LENGTH;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.TOKEN;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_CHANGE_SUCCEEDED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_FAILED;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_EMAIL_SENT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_FAILED;
-import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCESS;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_INVALID_PASSWORD;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_FAILED_UNREGISTERED_USER;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -53,7 +65,7 @@ import com.google.cloud.healthcare.fdamystudies.common.PasswordGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.TextEncryptor;
 import com.google.cloud.healthcare.fdamystudies.common.UserAccountStatus;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
-import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditLogHelper;
+import com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimAuditHelper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.config.AppPropertyConfig;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.mapper.UserMapper;
 import com.google.cloud.healthcare.fdamystudies.oauthscim.model.UserEntity;
@@ -90,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
   @Autowired private EmailService emailService;
 
-  @Autowired private AuthScimAuditLogHelper auditHelper;
+  @Autowired private AuthScimAuditHelper auditHelper;
 
   @Autowired private OAuthService oauthService;
 
@@ -126,10 +138,10 @@ public class UserServiceImpl implements UserService {
       String password, JsonNode userInfoJsonNode, int accountStatus) {
     // encrypt the password using random salt
     String rawSalt = salt();
-    String encrypted = encrypt(password, rawSalt);
+    String hashValue = hash(password, rawSalt);
 
     ObjectNode passwordNode = getObjectNode();
-    passwordNode.put(HASH, hash(encrypted));
+    passwordNode.put(HASH, hashValue);
     passwordNode.put(SALT, rawSalt);
 
     UserAccountStatus userAccountStatus = UserAccountStatus.valueOf(accountStatus);
@@ -163,24 +175,33 @@ public class UserServiceImpl implements UserService {
       passwordHistory.remove(0);
     }
 
-    userInfo.set(PASSWORD, passwordNode);
-    userInfo.set(PASSWORD_HISTORY, passwordHistory);
+    if (userAccountStatus == UserAccountStatus.ACCOUNT_LOCKED) {
+      userInfo.set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
+    } else {
+      userInfo.set(PASSWORD, passwordNode);
+      userInfo.set(PASSWORD_HISTORY, passwordHistory);
+    }
   }
 
   @Override
+  @Transactional
   public ResetPasswordResponse resetPassword(
       ResetPasswordRequest resetPasswordRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("begin resetPassword()");
-    Optional<UserEntity> entity =
+
+    Optional<UserEntity> optUserEntity =
         repository.findByAppIdAndEmail(
             resetPasswordRequest.getAppId(), resetPasswordRequest.getEmail());
 
-    if (!entity.isPresent()) {
+    if (!optUserEntity.isPresent()) {
+      auditHelper.logEvent(PASSWORD_HELP_REQUESTED_FOR_UNREGISTERED_USERNAME, auditRequest);
+      logger.exit(String.format("reset password failed, error code=%s", ErrorCode.USER_NOT_FOUND));
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    UserEntity userEntity = entity.get();
+    UserEntity userEntity = optUserEntity.get();
+    ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     if (userEntity.getStatus() == UserAccountStatus.PENDING_CONFIRMATION.getStatus()) {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_NOT_VERIFIED);
     }
@@ -189,21 +210,45 @@ public class UserServiceImpl implements UserService {
       throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
     }
 
+    if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      JsonNode accountLockedPwdNode = userInfo.get(ACCOUNT_LOCKED_PASSWORD);
+      if (null != accountLockedPwdNode
+          && Instant.now().toEpochMilli()
+              < accountLockedPwdNode.get(EXPIRE_TIMESTAMP).longValue()) {
+        throw new ErrorCodeException(ErrorCode.ACCOUNT_LOCKED);
+      }
+    }
+
+    Integer accountStatusBeforePasswordReset = userEntity.getStatus();
     String tempPassword = PasswordGenerator.generate(TEMP_PASSWORD_LENGTH);
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-
-      ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
-      setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
+      setPasswordAndPasswordHistoryFields(
+          tempPassword, userInfo, UserAccountStatus.PASSWORD_RESET.getStatus());
+      userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
+      userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
+      userInfo.remove(ACCOUNT_LOCKED_PASSWORD);
+      userInfo.put(LOGIN_ATTEMPTS, 0);
       userEntity.setUserInfo(userInfo);
       repository.saveAndFlush(userEntity);
-      logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
-      auditHelper.logEvent(PASSWORD_RESET_SUCCESS, auditRequest);
-      return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
-    } else {
-      auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
+      if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+        auditHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
+      } else {
+        auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
+      }
+
+      logger.exit(MessageCode.FORGOT_PASSWORD);
+      return new ResetPasswordResponse(MessageCode.FORGOT_PASSWORD);
     }
+
+    auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);
+    if (accountStatusBeforePasswordReset == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      auditHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
+    } else {
+      auditHelper.logEvent(PASSWORD_HELP_EMAIL_FAILED, auditRequest);
+    }
+
     logger.exit(
         String.format(
             "reset password failed, error code=%s", ErrorCode.EMAIL_SEND_FAILED_EXCEPTION));
@@ -228,7 +273,9 @@ public class UserServiceImpl implements UserService {
     return emailService.sendMimeMail(emailRequest);
   }
 
-  public ChangePasswordResponse changePassword(ChangePasswordRequest userRequest)
+  @Transactional
+  public ChangePasswordResponse changePassword(
+      ChangePasswordRequest userRequest, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("begin changePassword()");
     Optional<UserEntity> optionalEntity = repository.findByUserId(userRequest.getUserId());
@@ -238,36 +285,52 @@ public class UserServiceImpl implements UserService {
     }
 
     UserEntity userEntity = optionalEntity.get();
-    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
     ArrayNode passwordHistory =
         userInfo.hasNonNull(PASSWORD_HISTORY)
             ? (ArrayNode) userInfo.get(PASSWORD_HISTORY)
             : createArrayNode();
+
     JsonNode currentPwdNode = userInfo.get(PASSWORD);
 
+    if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      currentPwdNode = userInfo.get(ACCOUNT_LOCKED_PASSWORD);
+    }
+
     ErrorCode errorCode =
-        validateChangePasswordRequest(userRequest, currentPwdNode, passwordHistory);
+        validateChangePasswordRequest(userRequest, currentPwdNode, passwordHistory, userEntity);
     if (errorCode != null) {
+      auditHelper.logEvent(PASSWORD_CHANGE_FAILED, auditRequest);
       throw new ErrorCodeException(errorCode);
     }
 
     setPasswordAndPasswordHistoryFields(
-        userRequest.getNewPassword(), userInfo, userEntity.getStatus());
+        userRequest.getNewPassword(), userInfo, UserAccountStatus.ACTIVE.getStatus());
+    userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
+    userInfo.remove(ACCOUNT_LOCKED_PASSWORD);
+    userInfo.put(LOGIN_ATTEMPTS, 0);
+    userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
     userEntity.setUserInfo(userInfo);
     repository.saveAndFlush(userEntity);
+    auditHelper.logEvent(PASSWORD_CHANGE_SUCCEEDED, auditRequest);
     logger.exit("Your password has been changed successfully!");
     return new ChangePasswordResponse(MessageCode.CHANGE_PASSWORD_SUCCESS);
   }
 
   private ErrorCode validateChangePasswordRequest(
-      ChangePasswordRequest userRequest, JsonNode passwordNode, ArrayNode passwordHistory) {
+      ChangePasswordRequest userRequest,
+      JsonNode passwordNode,
+      ArrayNode passwordHistory,
+      UserEntity userEntity) {
     // determine whether the current password matches the password stored in database
     String hash = getTextValue(passwordNode, HASH);
     String rawSalt = getTextValue(passwordNode, SALT);
-    String currentPasswordHash = hash(encrypt(userRequest.getCurrentPassword(), rawSalt));
+    String currentPasswordHash = hash(userRequest.getCurrentPassword(), rawSalt);
+
     if (!StringUtils.equals(currentPasswordHash, hash)) {
-      return ErrorCode.CURRENT_PASSWORD_INVALID;
+      return userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
+          ? ErrorCode.TEMP_PASSWORD_INVALID
+          : ErrorCode.CURRENT_PASSWORD_INVALID;
     }
 
     // evaluate whether the new password matches any of the previous passwords
@@ -276,7 +339,7 @@ public class UserServiceImpl implements UserService {
     for (JsonNode pwd : passwordHistory) {
       salt = getTextValue(pwd, SALT);
       prevPasswordHash = getTextValue(pwd, HASH);
-      String newPasswordHash = hash(encrypt(userRequest.getNewPassword(), salt));
+      String newPasswordHash = hash(userRequest.getNewPassword(), salt);
       if (StringUtils.equals(prevPasswordHash, newPasswordHash)) {
         return ErrorCode.ENFORCE_PASSWORD_HISTORY;
       }
@@ -291,13 +354,14 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(noRollbackFor = ErrorCodeException.class)
-  public AuthenticationResponse authenticate(UserRequest user) throws JsonProcessingException {
+  public AuthenticationResponse authenticate(UserRequest user, AuditLogEventRequest auditRequest)
+      throws JsonProcessingException {
     logger.entry("begin authenticate(user)");
-    // check if the email present in the database
     Optional<UserEntity> optUserEntity =
         repository.findByAppIdAndEmail(user.getAppId(), user.getEmail());
 
     if (!optUserEntity.isPresent()) {
+      auditHelper.logEvent(SIGNIN_FAILED_UNREGISTERED_USER, auditRequest);
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
@@ -305,23 +369,38 @@ public class UserServiceImpl implements UserService {
     JsonNode userInfo = userEntity.getUserInfo();
 
     JsonNode passwordNode = userInfo.get(PASSWORD);
+    if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      JsonNode accountLockedPasswordNode = userInfo.get(ACCOUNT_LOCKED_PASSWORD);
+      if (Instant.now().toEpochMilli()
+          < accountLockedPasswordNode.get(EXPIRE_TIMESTAMP).longValue()) {
+        passwordNode = userInfo.get(ACCOUNT_LOCKED_PASSWORD);
+      } else {
+        // unlock the user account
+        userEntity.setStatus(UserAccountStatus.ACTIVE.getStatus());
+      }
+    }
     String hash = getTextValue(passwordNode, HASH);
     String salt = getTextValue(passwordNode, SALT);
 
     // check the account status and password expiry condition
-    ErrorCode errorCode = validatePasswordExpiryAndAccountStatus(userEntity, userInfo);
-    if (errorCode == null) {
-      String passwordHash = hash(encrypt(user.getPassword(), salt));
-      if (StringUtils.equals(passwordHash, hash)) {
-        // reset login attempts
-        return updateLoginAttemptsAndAuthenticationTime(userEntity, userInfo);
-      } else {
-        errorCode = ErrorCode.INVALID_LOGIN_CREDENTIALS;
-      }
+    validatePasswordExpiryAndAccountStatus(userEntity, userInfo, auditRequest);
+
+    // compare passwords
+    String passwordHash = hash(user.getPassword(), salt);
+    if (StringUtils.equals(passwordHash, hash)) {
+      // reset login attempts
+      return updateLoginAttemptsAndAuthenticationTime(userEntity, userInfo, auditRequest);
+    }
+
+    // authentication unsuccessful
+    if (UserAccountStatus.ACTIVE.getStatus() == userEntity.getStatus()) {
+      auditHelper.logEvent(SIGNIN_FAILED_INVALID_PASSWORD, auditRequest);
+    } else {
+      auditHelper.logEvent(SIGNIN_WITH_TEMPORARY_PASSWORD_FAILED, auditRequest);
     }
 
     // increment login attempts
-    return updateInvalidLoginAttempts(userEntity, userInfo, errorCode);
+    return updateInvalidLoginAttempts(userEntity, userInfo, auditRequest);
   }
 
   private EmailResponse sendAccountLockedEmail(UserEntity user, String tempPassword) {
@@ -346,51 +425,66 @@ public class UserServiceImpl implements UserService {
   }
 
   private AuthenticationResponse updateInvalidLoginAttempts(
-      UserEntity userEntity, JsonNode userInfoJsonNode, ErrorCode errorCode) {
+      UserEntity userEntity, JsonNode userInfoJsonNode, AuditLogEventRequest auditRequest) {
+    if (userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()) {
+      throw new ErrorCodeException(ErrorCode.ACCOUNT_LOCKED);
+    }
+
     ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
     int loginAttempts =
         userInfo.hasNonNull(LOGIN_ATTEMPTS) ? userInfo.get(LOGIN_ATTEMPTS).intValue() : 0;
     loginAttempts += 1;
     userInfo.put(LOGIN_ATTEMPTS, loginAttempts);
 
+    long systemTime = Instant.now().toEpochMilli();
     if (userInfo.get(LOGIN_ATTEMPTS).intValue() >= appConfig.getMaxInvalidLoginAttempts()) {
       String tempPassword = PasswordGenerator.generate(12);
       setPasswordAndPasswordHistoryFields(
           tempPassword, userInfo, UserAccountStatus.ACCOUNT_LOCKED.getStatus());
       sendAccountLockedEmail(userEntity, tempPassword);
       userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
-      userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, Instant.now().toEpochMilli());
+      userInfo.put(ACCOUNT_LOCK_EMAIL_TIMESTAMP, systemTime);
+
+      Map<String, String> placeHolders = new HashMap<>();
+      placeHolders.put("lock_time", String.valueOf(systemTime));
+      placeHolders.put("failed_attempts", String.valueOf(loginAttempts));
+      auditHelper.logEvent(ACCOUNT_LOCKED, auditRequest, placeHolders);
     }
 
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
 
-    errorCode =
-        UserAccountStatus.ACCOUNT_LOCKED.equals(UserAccountStatus.valueOf(userEntity.getStatus()))
+    ErrorCode errorCode =
+        userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
             ? ErrorCode.ACCOUNT_LOCKED
-            : errorCode;
+            : ErrorCode.INVALID_LOGIN_CREDENTIALS;
 
     throw new ErrorCodeException(errorCode);
   }
 
   private AuthenticationResponse updateLoginAttemptsAndAuthenticationTime(
-      UserEntity userEntity, JsonNode userInfoJsonNode) {
-    ObjectNode passwordNode = (ObjectNode) userInfoJsonNode.get(PASSWORD);
-    UserAccountStatus status = UserAccountStatus.valueOf(userEntity.getStatus());
-    passwordNode.remove(EXPIRE_TIMESTAMP);
-    if (UserAccountStatus.PASSWORD_RESET.equals(status)
-        || UserAccountStatus.ACCOUNT_LOCKED.equals(status)) {
-      passwordNode.remove(EXPIRE_TIMESTAMP);
-      passwordNode.put(OTP_USED, true);
-    } else {
-      passwordNode.remove(OTP_USED);
-    }
-
+      UserEntity userEntity, JsonNode userInfoJsonNode, AuditLogEventRequest auditRequest) {
     ObjectNode userInfo = (ObjectNode) userInfoJsonNode;
-    userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
-    userInfo.set(PASSWORD, passwordNode);
-    userInfo.put(LOGIN_ATTEMPTS, 0);
     userInfo.put(LOGIN_TIMESTAMP, Instant.now().toEpochMilli());
+
+    UserAccountStatus status = UserAccountStatus.valueOf(userEntity.getStatus());
+
+    if (UserAccountStatus.ACCOUNT_LOCKED.equals(status)) {
+      ObjectNode passwordNode = (ObjectNode) userInfo.get(ACCOUNT_LOCKED_PASSWORD);
+      passwordNode.put(OTP_USED, true);
+      userInfo.set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
+    } else if (UserAccountStatus.PASSWORD_RESET.equals(status)) {
+      ObjectNode passwordNode = (ObjectNode) userInfo.get(PASSWORD);
+      passwordNode.put(OTP_USED, true);
+      userInfo.set(PASSWORD, passwordNode);
+    } else {
+      ObjectNode passwordNode = (ObjectNode) userInfo.get(PASSWORD);
+      passwordNode.remove(OTP_USED);
+      userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
+      userInfo.remove(ACCOUNT_LOCKED_PASSWORD);
+      userInfo.put(LOGIN_ATTEMPTS, 0);
+      userInfo.set(PASSWORD, passwordNode);
+    }
 
     userEntity.setUserInfo(userInfo);
     userEntity = repository.saveAndFlush(userEntity);
@@ -402,19 +496,32 @@ public class UserServiceImpl implements UserService {
     return authenticationResponse;
   }
 
-  private ErrorCode validatePasswordExpiryAndAccountStatus(
-      UserEntity userEntity, JsonNode userInfo) {
-    JsonNode passwordNode = userInfo.get(PASSWORD);
+  private void validatePasswordExpiryAndAccountStatus(
+      UserEntity userEntity, JsonNode userInfo, AuditLogEventRequest auditRequest) {
+    JsonNode passwordNode =
+        userEntity.getStatus() == UserAccountStatus.ACCOUNT_LOCKED.getStatus()
+            ? userInfo.get(ACCOUNT_LOCKED_PASSWORD)
+            : userInfo.get(PASSWORD);
+    boolean passwordExpired = isPasswordExpired(passwordNode);
     UserAccountStatus accountStatus = UserAccountStatus.valueOf(userEntity.getStatus());
     switch (accountStatus) {
       case DEACTIVATED:
-        return ErrorCode.ACCOUNT_DEACTIVATED;
+        throw new ErrorCodeException(ErrorCode.ACCOUNT_DEACTIVATED);
       case ACCOUNT_LOCKED:
-        return isPasswordExpired(passwordNode) ? ErrorCode.TEMP_PASSWORD_EXPIRED : null;
+        if (passwordExpired) {
+          auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD, auditRequest);
+          throw new ErrorCodeException(ErrorCode.TEMP_PASSWORD_EXPIRED);
+        }
       case PASSWORD_RESET:
-        return isPasswordExpired(passwordNode) ? ErrorCode.TEMP_PASSWORD_EXPIRED : null;
+        if (passwordExpired) {
+          auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_TEMPORARY_PASSWORD, auditRequest);
+          throw new ErrorCodeException(ErrorCode.TEMP_PASSWORD_EXPIRED);
+        }
       default:
-        return isPasswordExpired(passwordNode) ? ErrorCode.PASSWORD_EXPIRED : null;
+        if (passwordExpired) {
+          auditHelper.logEvent(SIGNIN_FAILED_EXPIRED_PASSWORD, auditRequest);
+          throw new ErrorCodeException(ErrorCode.PASSWORD_EXPIRED);
+        }
     }
   }
 
@@ -464,24 +571,29 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserResponse logout(String userId) throws JsonProcessingException {
+  @Transactional
+  public UserResponse logout(String userId, AuditLogEventRequest auditRequest)
+      throws JsonProcessingException {
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
 
     if (!optUserEntity.isPresent()) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
 
-    return revokeAndReplaceRefreshToken(userId, null);
+    return revokeAndReplaceRefreshToken(userId, null, auditRequest);
   }
 
   @Override
-  public UserResponse revokeAndReplaceRefreshToken(String userId, String refreshToken)
+  @Transactional
+  public UserResponse revokeAndReplaceRefreshToken(
+      String userId, String refreshToken, AuditLogEventRequest auditRequest)
       throws JsonProcessingException {
     logger.entry("revokeAndReplaceRefreshToken(userId, refreshToken)");
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
     if (!optUserEntity.isPresent()) {
       throw new ErrorCodeException(ErrorCode.USER_NOT_FOUND);
     }
+
     UserEntity userEntity = optUserEntity.get();
     ObjectNode userInfo = (ObjectNode) userEntity.getUserInfo();
 
@@ -515,6 +627,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional
   public void deleteUserAccount(String userId) {
     logger.entry("deleteUserAccount");
     Optional<UserEntity> optUserEntity = repository.findByUserId(userId);
@@ -526,5 +639,11 @@ public class UserServiceImpl implements UserService {
     repository.delete(optUserEntity.get());
 
     logger.exit("user account deleted");
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Optional<UserEntity> findByUserId(String userId) {
+    return repository.findByUserId(userId);
   }
 }

@@ -34,8 +34,7 @@ public interface ParticipantRegistrySiteRepository
 
   @Query(
       "SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id = :studyId and pr.email = :email")
-  public Optional<ParticipantRegistrySiteEntity> findByStudyIdAndEmail(
-      String studyId, String email);
+  public List<ParticipantRegistrySiteEntity> findByStudyIdAndEmail(String studyId, String email);
 
   @Query(
       "SELECT pr.onboardingStatus AS onboardingStatus, count(pr.email) AS count FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id= :siteId group by pr.onboardingStatus")
@@ -44,8 +43,14 @@ public interface ParticipantRegistrySiteRepository
   @Query(
       "SELECT pr FROM ParticipantRegistrySiteEntity pr "
           + "where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
-  public Page<ParticipantRegistrySiteEntity> findBySiteIdAndStatus(
+  public Page<ParticipantRegistrySiteEntity> findBySiteIdAndStatusForPage(
       String siteId, String onboardingStatus, Pageable pageable);
+
+  @Query(
+      "SELECT pr FROM ParticipantRegistrySiteEntity pr "
+          + "where pr.site.id = :siteId and pr.onboardingStatus = :onboardingStatus order by created desc")
+  public List<ParticipantRegistrySiteEntity> findBySiteIdAndStatus(
+      String siteId, String onboardingStatus);
 
   @Query("SELECT COUNT(pr) FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id=:siteId")
   public Long countbysiteId(String siteId);
@@ -55,7 +60,10 @@ public interface ParticipantRegistrySiteRepository
   public Long countBySiteIdAndStatus(String siteId, String onboardingStatus);
 
   @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id =:siteId")
-  public Page<ParticipantRegistrySiteEntity> findBySiteId(String siteId, Pageable pageable);
+  public Page<ParticipantRegistrySiteEntity> findBySiteIdForPage(String siteId, Pageable pageable);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.site.id =:siteId")
+  public List<ParticipantRegistrySiteEntity> findBySiteId(String siteId);
 
   @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.id in (:ids)")
   public List<ParticipantRegistrySiteEntity> findByIds(@Param("ids") List<String> ids);
@@ -71,4 +79,16 @@ public interface ParticipantRegistrySiteRepository
   @Query(
       "update ParticipantRegistrySiteEntity pr set pr.onboardingStatus=:status where pr.id IN (:ids)")
   public void updateOnboardingStatus(@Param("status") String status, List<String> ids);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id=:studyId")
+  public List<ParticipantRegistrySiteEntity> findByStudyId(String studyId);
+
+  @Query("SELECT pr FROM ParticipantRegistrySiteEntity pr WHERE pr.study.id=:studyId")
+  public Page<ParticipantRegistrySiteEntity> findByStudyIdForPagination(
+      String studyId, Pageable pageable);
+
+  @Query(
+      "SELECT pr.id FROM ParticipantRegistrySiteEntity pr WHERE (pr.onboardingStatus='N' OR pr.onboardingStatus='I') AND pr.study.id =:studyId AND pr.email IN (:emails)")
+  public Optional<ParticipantRegistrySiteEntity> findExistingRecordByStudyIdAndEmails(
+      String studyId, List<String> emails);
 }

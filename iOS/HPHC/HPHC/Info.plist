@@ -32,10 +32,10 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>CONSENTMGMT_URL</key>
-	<string>$(CONSENTMGMT_URL)</string>
-	<key>ENROLLMENT_URL</key>
-	<string>$(ENROLLMENT_URL)</string>
+	<key>CONSENT_DATASTORE_URL</key>
+	<string>$(CONSENT_DATASTORE_URL)</string>
+	<key>ENROLLMENT_DATASTORE_URL</key>
+	<string>$(ENROLLMENT_DATASTORE_URL)</string>
 	<key>HYDRA_BASE_URL</key>
 	<string>$(HYDRA_BASE_URL)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
@@ -71,16 +71,14 @@
 	<string>$(PRODUCT_NAME) would like to use Motion data for the task to give more accurate result.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use Speech Recognition for the task to give more accurate result.</string>
-	<key>OrganizationID</key>
-	<string>$(ORG_ID)</string>
 	<key>REGISTRATIONSERVER_API_KEY</key>
 	<string>$(REGISTRATIONSERVER_API_KEY)</string>
 	<key>REGISTRATIONSERVER_API_SECERET</key>
 	<string>$(REGISTRATIONSERVER_API_SECERET)</string>
-	<key>REGISTRATION_URL</key>
-	<string>$(REGISTRATION_URL)</string>
-	<key>RESPONSE_URL</key>
-	<string>$(RESPONSE_URL)</string>
+	<key>USER_DATASTORE_URL</key>
+	<string>$(USER_DATASTORE_URL)</string>
+	<key>RESPONSE_DATASTORE_URL</key>
+	<string>$(RESPONSE_DATASTORE_URL)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Verdana Italic.ttf</string>
@@ -106,7 +104,7 @@
 	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>WCP_URL</key>
-	<string>$(WCP_URL)</string>
+	<key>STUDY_DATASTORE_URL</key>
+	<string>$(STUDY_DATASTORE_URL)</string>
 </dict>
 </plist>
