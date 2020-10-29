@@ -47,8 +47,7 @@
     padding-left: 0 !important;
   }
   .add__location .border-right__c4d1e6 {
-    border-right: none !important;
-    border-bottom: 1px solid var(--Periwinkle-gray) !important;
+    border-bottom: 1px solid var(--periwinkle-gray) !important;
   }
   .img__container__left {
     padding-right: 10px;
@@ -102,7 +101,7 @@
   .progress__bar__row {
     padding-top: 12px;
     padding-bottom: 8px;
-    border-top: 1px solid var(--Periwinkle-gray);
+    border-top: 1px solid var(--periwinkle-gray);
   }
   .progress__bar__row > div {
     margin-bottom: 8px;
@@ -181,6 +180,7 @@
     margin-bottom: 12px;
     border-radius: 10px;
     box-shadow: 0px 1px 5px 0px rgba(204, 215, 226, 1);
+    outline: none;
   }
   .table tbody tr:last-child {
     margin-bottom: 0;
@@ -207,7 +207,7 @@
     margin-top: 0;
     background: var(--white);
     border-radius: 0;
-    border-top: 1px solid var(--Periwinkle-gray);
+    border-top: 1px solid var(--periwinkle-gray);
     box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.12);
   }
   .yel__tabs li a {
@@ -215,7 +215,7 @@
     display: inline-block;
   }
   .yel__tabs .nav-tabs {
-    border-bottom: 1px solid var(--Periwinkle-gray);
+    border-bottom: 1px solid var(--periwinkle-gray);
   }
   .tbl__td__label {
     display: inline-block;
@@ -270,7 +270,7 @@
     padding-left: 30px !important;
   }
   .add__location .border-right__c4d1e6 {
-    border-right: 1px solid var(--Periwinkle-gray) !important;
+    border-right: 1px solid var(--periwinkle-gray) !important;
     border-bottom: none !important;
   }
   .mb__display__none {
@@ -355,7 +355,7 @@
     margin-top: 0px;
   }
   .table td {
-    border-top: 1px solid var(--Periwinkle-gray) !important;
+    border-top: 1px solid var(--periwinkle-gray) !important;
     padding: 11px 30px;
   }
   .table thead tr th {
@@ -377,7 +377,7 @@
   }
   .table tbody tr:last-child td:first-child {
     border-radius: 0px 0px 0px 7px !important;
-    border-bottom: 1px solid var(--Periwinkle-gray) !important;
+    border-bottom: 1px solid var(--periwinkle-gray) !important;
   }
   .table tbody tr:last-child td:last-child {
     border-radius: 0px 0px 7px 0px !important;
@@ -396,6 +396,7 @@
     display: table-row;
     margin-bottom: 0px;
     box-shadow: none;
+    outline: none;
   }
   .table tbody tr:first-child {
     margin-top: 0px;
@@ -449,7 +450,7 @@
 
 @media (min-width: 1300px) {
   .max__w__1280 {
-    max-width: 1060px;
+    max-width: 1280px;
   }
   .max__w__850 {
     max-width: 850px;
