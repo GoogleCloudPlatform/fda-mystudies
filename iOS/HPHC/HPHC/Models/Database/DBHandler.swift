@@ -2351,4 +2351,31 @@ class DBHandler: NSObject {
     }
   }
 
+  class func logout() {
+    let appDomain = Bundle.main.bundleIdentifier!
+    UserDefaults.standard.removePersistentDomain(forName: appDomain)
+    UserDefaults.standard.synchronize()
+
+    // Delete from database
+    DBHandler.deleteCurrentUser()
+
+    // Reset user object
+    User.resetCurrentUser()
+
+    // Delete complete database
+    DBHandler.deleteAll()
+
+    // Cancel all local notification
+    LocalNotification.cancelAllLocalNotification()
+
+    LocalNotification.removeAllDeliveredNotifications()
+
+    // Reset Filters
+    StudyFilterHandler.instance.previousAppliedFilters = []
+    StudyFilterHandler.instance.searchText = ""
+
+    // Delete keychain values
+    FDAKeychain.shared[kUserAuthTokenKeychainKey] = nil
+    FDAKeychain.shared[kUserRefreshTokenKeychainKey] = nil
+  }
 }
