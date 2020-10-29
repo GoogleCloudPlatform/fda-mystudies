@@ -16,7 +16,8 @@ template "mystudies" {
     github_owner     = "GoogleCloudPlatform"
     github_repo      = "example"
     github_branch    = "master"
-    # GKE master authorized networks. Do not specify if you would like to allow connection from anywhere.
+    # GKE master authorized networks.
+    # Comment out this block if you would like to allow connections from anywhere.
     master_authorized_networks = [
       {
         cidr_block   = "0.0.0.0/0"
