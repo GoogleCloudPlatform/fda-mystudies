@@ -393,7 +393,7 @@ public class DashboardMetaDataDao {
           List<FormDto> formDtoList = null;
           formDtoList =
               session
-                  .createQuery("from FormDto FDTO" + " where FDTO.formId in (:formIdsList)")
+                  .createQuery("from FormDto FDTO where FDTO.formId in (:formIdsList)")
                   .setParameterList("formIdsList", formIdsList)
                   .list();
           if ((formDtoList != null) && !formDtoList.isEmpty()) {
@@ -1079,7 +1079,7 @@ public class DashboardMetaDataDao {
       configuration.put("titles", titles);
       configuration.put("defaultText", "");
 
-      // single setting
+      /** single setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);
@@ -1116,7 +1116,7 @@ public class DashboardMetaDataDao {
       configuration.put("titles", titles);
       configuration.put("defaultText", "");
 
-      // mutiple setting
+      /** mutiple setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);
@@ -1185,7 +1185,7 @@ public class DashboardMetaDataDao {
       List<String> titles = new ArrayList<>();
       configuration.put("titles", titles);
 
-      // single setting
+      /** single setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);
@@ -1210,7 +1210,7 @@ public class DashboardMetaDataDao {
       List<String> titles = new ArrayList<>();
       configuration.put("titles", titles);
 
-      // multiple setting
+      /** multiple setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);

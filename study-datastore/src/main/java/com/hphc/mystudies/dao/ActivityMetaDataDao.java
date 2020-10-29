@@ -148,8 +148,7 @@ public class ActivityMetaDataDao {
           for (ActiveTaskDto activeTaskDto : activeTaskDtoList) {
             boolean isSupporting = true;
 
-            // Allow spatial span memory and tower of hanoi active
-            // tasks only for iOS platform
+            /** Allow spatial span memory and tower of hanoi active tasks only for iOS platform */
             if (deviceType.equalsIgnoreCase(StudyMetaDataConstants.STUDY_PLATFORM_ANDROID)
                 && !activeTaskDto.getTaskTypeId().equals(1)) {
               isSupporting = false;
@@ -194,8 +193,7 @@ public class ActivityMetaDataDao {
                   this.getTimeDetailsByActivityIdForActiveTask(
                       activeTaskDto, activityBean, session);
 
-              // For deleted task modified date time will be the
-              // end date time of active task
+              /** For deleted task modified date time will be the end date time of active task */
               if ((activeTaskDto.getActive() == null) || activeTaskDto.getActive().equals(0)) {
                 activityBean.setEndTime(
                     StudyMetaDataUtil.getFormattedDateTimeZone(
@@ -286,8 +284,7 @@ public class ActivityMetaDataDao {
                 this.getTimeDetailsByActivityIdForQuestionnaire(
                     questionaire, activityBean, session);
 
-            // For deleted task modified date time will be the end
-            // date time of questionnaire
+            /** For deleted task modified date time will be the end date time of questionnaire */
             if (!questionaire.getActive()) {
               activityBean.setEndTime(
                   StudyMetaDataUtil.getFormattedDateTimeZone(
@@ -493,9 +490,7 @@ public class ActivityMetaDataDao {
                 session
                     .createQuery(
                         " from ActiveTaskMasterAttributeDto ATMADTO"
-                            + " where ATMADTO.masterId in (:taskMasterAttrIdList"
-                            // + StringUtils.join(taskMasterAttrIdList, ",")
-                            + ")")
+                            + " where ATMADTO.masterId in (:taskMasterAttrIdList)")
                     .setParameterList("taskMasterAttrIdList", taskMasterAttrIdList)
                     .list();
 
@@ -865,8 +860,7 @@ public class ActivityMetaDataDao {
           break;
       }
       frequencyDetails.setRuns(runDetailsBean);
-      // set AnchorRuns
-      /** Phase2a code start * */
+      /** set AnchorRuns : Phase2a code start * */
       anchorRunDetailsBean =
           this.getAcivetaskFrequencyAncorDetailsForManuallySchedule(
               activeTask, anchorRunDetailsBean, session);
@@ -1731,8 +1725,10 @@ public class ActivityMetaDataDao {
 
           List<DestinationBean> destinationsList = new ArrayList<>();
 
-          // Choice based branching allowed only for textchoice,
-          // textscale, imagechoice, boolean response types
+          /**
+           * Choice based branching allowed only for textchoice, textscale, imagechoice, boolean
+           * response types
+           */
           if (!questionsDto.getResponseType().equals(4)) {
             destinationConditionList =
                 session
@@ -1856,7 +1852,7 @@ public class ActivityMetaDataDao {
                   : questionStepDetails.getDestinationStepType());
           destinationsList.add(destination);
 
-          // other type add destination if there start
+          /** other type add destination if there start */
           QuestionReponseTypeDto otherReponseSubType =
               (QuestionReponseTypeDto)
                   session
@@ -1911,7 +1907,7 @@ public class ActivityMetaDataDao {
             }
             destinationsList.add(otherDestination);
           }
-          // other type add destination if there end
+          /** other type add destination if there end */
           questionBean.setDestinations(destinationsList);
 
           questionBean.setHealthDataKey("");
@@ -2007,8 +2003,7 @@ public class ActivityMetaDataDao {
           List<QuestionsDto> formQuestionsList;
           formQuestionsList =
               session
-                  .createQuery(
-                      "from QuestionsDto QDTO" + " where QDTO.id in (:formQuestionIdsList" + ")")
+                  .createQuery("from QuestionsDto QDTO where QDTO.id in (:formQuestionIdsList)")
                   .setParameterList("formQuestionIdsList", formQuestionIdsList)
                   .list();
           if ((formQuestionsList != null) && !formQuestionsList.isEmpty()) {
@@ -2606,7 +2601,7 @@ public class ActivityMetaDataDao {
           textChoiceMapList.add(textChoiceMap);
         }
       }
-      // other type add destination if there start
+      /** other type add destination if there start */
       QuestionReponseTypeDto otherReponseSubType =
           (QuestionReponseTypeDto)
               session
@@ -2681,7 +2676,7 @@ public class ActivityMetaDataDao {
 
         textChoiceMapList.add(textChoiceMap);
       }
-      // other type add destination if there end
+      /** other type add destination if there end */
       questionFormat.put("textChoices", textChoiceMapList);
       questionFormat.put(
           "selectionStyle",
@@ -3410,8 +3405,9 @@ public class ActivityMetaDataDao {
       if (StringUtils.isNotEmpty(reponseType.getConditionFormula())) {
         conditionFormula = reponseType.getConditionFormula();
 
-        // Check the expression contains '=', if yes replace it with
-        // '==' to evaluate the expression
+        /**
+         * Check the expression contains '=', if yes replace it with '==' to evaluate the expression
+         */
         if (!reponseType
                 .getConditionFormula()
                 .contains(StudyMetaDataConstants.CBO_OPERATOR_NOT_EQUAL)
@@ -3425,7 +3421,7 @@ public class ActivityMetaDataDao {
                   .replaceAll("=", StudyMetaDataConstants.CBO_OPERATOR_EQUAL);
         }
 
-        // Get the minimum and maximum value range for response type
+        /** Get the minimum and maximum value range for response type */
         prerequisitesMap = this.conditionalBranchingPrerequisites(questionBean);
         minValue = (Double) prerequisitesMap.get("minValue");
         maxValue = (Double) prerequisitesMap.get("maxValue");
@@ -3434,17 +3430,17 @@ public class ActivityMetaDataDao {
         formatXValue = "%." + digitFormat + "f";
         valueOfX = minValue;
 
-        // Find position of X in the equation i.e LHS or RHS
+        /** Find position of X in the equation i.e LHS or RHS */
         operator = this.getOperatorFromConditionalFormula(conditionFormula);
 
-        // Evaluate the position of X in the equation
+        /** Evaluate the position of X in the equation */
         if (StringUtils.isNotEmpty(operator)) {
           tokenizer = new StringTokenizer(conditionFormula, operator);
           LHS = tokenizer.nextToken().trim();
           RHS = tokenizer.nextToken().trim();
         }
 
-        // Find minimum value of X
+        /** Find minimum value of X */
         while (valueOfX <= maxValue) {
           tempFormula =
               conditionFormula.replaceAll(
@@ -3569,7 +3565,7 @@ public class ActivityMetaDataDao {
           valueOfX = Double.parseDouble(String.format(formatXValue, valueOfX));
         }
 
-        // Format the value of X by type
+        /** Format the value of X by type */
         updatedDestinationsList = this.formatValueOfX(updatedDestinationsList, questionBean);
       }
     } catch (Exception e) {
@@ -3996,22 +3992,14 @@ public class ActivityMetaDataDao {
                 || activeTaskDto
                     .getFrequency()
                     .equals(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) {
-              // start.setDateOfMonth(questionnairesFrequency.getFrequencyDate());
               end.setTime(taskFrequencyDto.getFrequencyTime());
             }
-            /*
-             * if(questionaire.getFrequency().equals(StudyMetaDataConstants.
-             * FREQUENCY_TYPE_WEEKLY)) {
-             * start.setDayOfWeek(StudyMetaDataUtil.getDayName(questionaire.getDayOfTheWeek(
-             * ))); }
-             */
             start.setTime(taskFrequencyDto.getFrequencyTime());
 
             end.setRepeatInterval(
                 activeTaskDto.getRepeatActiveTask() == null
                     ? 0
                     : activeTaskDto.getRepeatActiveTask());
-            // end.setTime(time);
             if (activeTaskDto
                 .getFrequency()
                 .equals(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) {
@@ -4126,11 +4114,9 @@ public class ActivityMetaDataDao {
                   .setInteger("anchorDateId", questionaire.getAnchorDateId())
                   .list();
           if ((null != result) && !result.isEmpty()) {
-            // for(int i=0;i<result.size();i++) {
             Object[] objects = (Object[]) result.get(0);
             activityAnchorDateBean.setSourceKey((String) objects[0]);
             activityAnchorDateBean.setSourceActivityId((String) objects[1]);
-            // }
           } else {
             String query = "";
             query =
@@ -4154,7 +4140,6 @@ public class ActivityMetaDataDao {
                     .setString("scheduleType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR)
                     .setString("frequencyType", StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)
                     .list();
-            System.out.println("Total Number Of Records : " + result1.size());
             if ((null != result1) && !result1.isEmpty()) {
               Object[] objects = (Object[]) result1.get(0);
               activityAnchorDateBean.setSourceKey((String) objects[0]);
@@ -4247,22 +4232,14 @@ public class ActivityMetaDataDao {
                 || questionaire
                     .getFrequency()
                     .equals(StudyMetaDataConstants.FREQUENCY_TYPE_WEEKLY)) {
-              // start.setDateOfMonth(questionnairesFrequency.getFrequencyDate());
               end.setTime(questionnairesFrequency.getFrequencyTime());
             }
-            /*
-             * if(questionaire.getFrequency().equals(StudyMetaDataConstants.
-             * FREQUENCY_TYPE_WEEKLY)) {
-             * start.setDayOfWeek(StudyMetaDataUtil.getDayName(questionaire.getDayOfTheWeek(
-             * ))); }
-             */
             start.setTime(questionnairesFrequency.getFrequencyTime());
 
             end.setRepeatInterval(
                 questionaire.getRepeatQuestionnaire() == null
                     ? 0
                     : questionaire.getRepeatQuestionnaire());
-            // end.setTime(time);
             if (questionaire
                 .getFrequency()
                 .equals(StudyMetaDataConstants.FREQUENCY_TYPE_ONE_TIME)) {

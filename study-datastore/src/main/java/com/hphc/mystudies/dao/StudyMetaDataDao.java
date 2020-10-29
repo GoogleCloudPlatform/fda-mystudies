@@ -167,9 +167,9 @@ public class StudyMetaDataDao {
         }
       }
 
-      /*
-       * Get the platform from the provided authorization credentials and fetch based
-       * on the platform
+      /**
+       * Get the platform from the provided authorization credentials and fetch based on the
+       * platform
        */
       platformType =
           StudyMetaDataUtil.platformType(
@@ -241,7 +241,7 @@ public class StudyMetaDataDao {
       if (StringUtils.isNotEmpty(platformType)) {
         session = sessionFactory.openSession();
 
-        // Get all configured studies from the WCP by platform supported
+        /** Get all configured studies from the WCP by platform supported */
         studiesList =
             session
                 .createQuery(
@@ -306,8 +306,7 @@ public class StudyMetaDataDao {
                 && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
               List<ReferenceTablesDto> referenceTablesList =
                   session
-                      .createQuery(
-                          "from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (:category)")
+                      .createQuery("from ReferenceTablesDto RTDTO where RTDTO.id IN (:category)")
                       .setString("category", studyDto.getCategory())
                       .list();
               if ((null != referenceTablesList) && !referenceTablesList.isEmpty()) {
@@ -513,8 +512,7 @@ public class StudyMetaDataDao {
 
             SharingBean sharingBean = new SharingBean();
 
-            // check whether share data permission is yes or no
-
+            /** check whether share data permission is yes or no */
             if (StringUtils.isNotEmpty(consentDto.getShareDataPermissions())
                 && consentDto
                     .getShareDataPermissions()
@@ -798,8 +796,7 @@ public class StudyMetaDataDao {
           studyVersionQuery += " and ROUND(SVDTO.activityVersion, 1)=:activityVersion";
         }
 
-        // Get study version details by version identifier in descending
-        // order
+        /** Get study version details by version identifier in descending order */
         studyVersionQuery += " ORDER BY SVDTO.versionId DESC";
 
         if (!studyDto
@@ -966,13 +963,13 @@ public class StudyMetaDataDao {
               } else {
                 availability.put("endDays", 0);
               }
-              // Phase 2a anchordate
+              /** Phase 2a anchordate */
               if (resourcesDto.getAnchorDateId() != null) {
                 availability.put(
                     "availabilityType", StudyMetaDataConstants.SCHEDULETYPE_ANCHORDATE);
                 String searchQuery = "";
                 searchQuery =
-                    "from AnchorDateTypeDto a where a.id=" + resourcesDto.getAnchorDateId() + "";
+                    "from AnchorDateTypeDto a where a.id=" + resourcesDto.getAnchorDateId();
                 AnchorDateTypeDto anchorDateTypeDto =
                     (AnchorDateTypeDto) session.createQuery(searchQuery).uniqueResult();
                 if (anchorDateTypeDto != null) {
@@ -1033,12 +1030,10 @@ public class StudyMetaDataDao {
                               .setInteger("anchorDate", resourcesDto.getAnchorDateId())
                               .list();
                       if ((null != result1) && !result1.isEmpty()) {
-                        // for(int i=0;i<result1.size();i++) {
                         Object[] objects = (Object[]) result1.get(0);
                         availability.put("sourceKey", objects[0]);
                         availability.put("sourceActivityId", objects[2]);
                         availability.put("sourceFormKey", objects[1]);
-                        // }
                       }
                     }
                   } else {
@@ -1053,7 +1048,7 @@ public class StudyMetaDataDao {
               } else {
                 availability.put("availabilityType", StudyMetaDataConstants.SCHEDULETYPE_REGULAR);
               }
-              // phase 2a anchordate
+              /** phase 2a anchordate */
               resourcesBean.setAvailability(availability);
             }
             resourcesBean.setNotificationText(
@@ -1640,15 +1635,10 @@ public class StudyMetaDataDao {
 
             if (StringUtils.isNotEmpty(studyDto.getCategory())
                 && StringUtils.isNotEmpty(studyDto.getResearchSponsor())) {
-              /*
-               * List<ReferenceTablesDto> referenceTablesList = session
-               * .createQuery("from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (" +
-               * studyDto.getCategory() + "," + studyDto.getResearchSponsor() + ")") .list();
-               */
+
               List<ReferenceTablesDto> referenceTablesList =
                   session
-                      .createQuery(
-                          "from ReferenceTablesDto RTDTO" + " where RTDTO.id IN (:category)")
+                      .createQuery("from ReferenceTablesDto RTDTO where RTDTO.id IN (:category)")
                       .setString("category", studyDto.getCategory())
                       .list();
               if ((null != referenceTablesList) && !referenceTablesList.isEmpty()) {
@@ -1658,10 +1648,7 @@ public class StudyMetaDataDao {
                       .equalsIgnoreCase(StudyMetaDataConstants.STUDY_REF_CATEGORIES)) {
                     studyBean.setCategory(
                         StringUtils.isEmpty(reference.getValue()) ? "" : reference.getValue());
-                  } /*
-                     * else { studyBean.setSponsorName( StringUtils.isEmpty(reference.getValue()) ?
-                     * "" : reference.getValue()); }
-                     */
+                  }
                 }
               }
             }
