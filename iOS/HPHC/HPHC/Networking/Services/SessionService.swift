@@ -27,7 +27,7 @@ class SessionService {
   }
 
   /// Current App Session ID
-  private(set) var correlationID: String = {
+  static var correlationID: String = {
     return UUID().uuidString
   }()
 

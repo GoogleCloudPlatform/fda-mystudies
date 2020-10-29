@@ -112,7 +112,6 @@ public class StudyControllerTest extends BaseMockIT {
 
   private static final String OAUTH_TOKEN = "/oauth2/token";
 
-
   @Test
   public void shouldSaveOrUpdateOrResendNotificationForSave() throws Exception {
     HttpHeaders headers = getCommonHeaders();
