@@ -600,6 +600,7 @@ footer ul li:last-child a {
   height: 7px;
   border-radius: 27px;
   left: -1px;
+  max-width: 100%;
 }
 
 .mb__table__view__list li {
@@ -646,6 +647,15 @@ footer ul li:last-child a {
 }
 
 .deactive__ {
+  padding: 6px 13px;
+  background: var(--light-gray);
+  font-size: 75%;
+  color: var(--white);
+  display: inline-block;
+  border-radius: 58px;
+  line-height: 100%;
+}
+.inActive__ {
   padding: 6px 13px;
   background: var(--light-gray);
   font-size: 75%;
@@ -723,7 +733,7 @@ footer ul li:last-child a {
 }
 
 .inactive__text {
-  color: var(--light-gray);
+  color: var(--light-blue);
 }
 
 .gray__text__md {
@@ -1111,4 +1121,8 @@ button:focus {
 .helpout_svg {
   width: 18px;
   height: 18px;
+}
+
+.modal {
+  position: absolute !important;
 }
