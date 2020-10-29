@@ -756,7 +756,7 @@ EOF
           "serviceAccount:participant-manager-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
           "serviceAccount:triggers-pubsub-handler-gke-sa@{{.prefix}}-{{.env}}-apps.iam.gserviceaccount.com",
         ]
-        # Step 5.7: uncomment and re-run the engine once all previous steps have been completed.
+        # Step 5.6: uncomment and re-run the engine once all previous steps have been completed.
         # "roles/bigquery.jobUser" = [
         #   "serviceAccount:{{.prefix}}-{{.env}}-firebase@appspot.gserviceaccount.com",
         # ]
