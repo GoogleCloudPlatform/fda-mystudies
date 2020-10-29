@@ -35,9 +35,9 @@ export class SiteCoordinatorComponent implements OnInit {
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
         if (updatedPlaceHolder) {
-        this.showSearchBar = true;
-        this.filterQuery = '';
-        this.searchPlaceholder = updatedPlaceHolder;
+          this.showSearchBar = true;
+          this.filterQuery = '';
+          this.searchPlaceholder = updatedPlaceHolder;
         }
       },
     );
