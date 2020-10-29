@@ -26,6 +26,7 @@ export class AddNewUserComponent
     '=1': '1 Site',
     'other': '# Sites',
   };
+  disableButton = false;
   constructor(
     private readonly router: Router,
     private readonly userService: UserService,
@@ -145,6 +146,7 @@ export class AddNewUserComponent
       this.user.superAdmin ||
       (this.selectedApps.length > 0 && permissionsSelected.length > 0)
     ) {
+      this.disableButton = true;
       if (this.user.superAdmin) {
         this.user.apps = [];
       } else {
@@ -152,14 +154,18 @@ export class AddNewUserComponent
         this.user.apps = this.selectedApps;
       }
       this.removeExtraAttributesFromApiRequest();
-      this.userService
-        .add(this.user)
-        .subscribe((successResponse: ApiResponse) => {
+      this.userService.add(this.user).subscribe(
+        (successResponse: ApiResponse) => {
+          this.disableButton = false;
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else this.toastr.success('Success');
           void this.router.navigate(['/coordinator/users']);
-        });
+        },
+        () => {
+          this.disableButton = false;
+        },
+      );
     } else {
       this.toastr.error(
         'Please assign the user at least one permission from the permissions set shown.',

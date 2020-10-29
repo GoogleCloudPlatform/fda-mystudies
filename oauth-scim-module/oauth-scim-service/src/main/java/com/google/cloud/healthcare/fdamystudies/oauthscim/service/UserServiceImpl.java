@@ -224,7 +224,8 @@ public class UserServiceImpl implements UserService {
     EmailResponse emailResponse = sendPasswordResetEmail(resetPasswordRequest, tempPassword);
 
     if (HttpStatus.ACCEPTED.value() == emailResponse.getHttpStatusCode()) {
-      setPasswordAndPasswordHistoryFields(tempPassword, userInfo, userEntity.getStatus());
+      setPasswordAndPasswordHistoryFields(
+          tempPassword, userInfo, UserAccountStatus.PASSWORD_RESET.getStatus());
       userEntity.setStatus(UserAccountStatus.PASSWORD_RESET.getStatus());
       userInfo.remove(ACCOUNT_LOCK_EMAIL_TIMESTAMP);
       userInfo.remove(ACCOUNT_LOCKED_PASSWORD);
@@ -237,8 +238,8 @@ public class UserServiceImpl implements UserService {
         auditHelper.logEvent(PASSWORD_HELP_EMAIL_SENT, auditRequest);
       }
 
-      logger.exit(MessageCode.PASSWORD_RESET_SUCCESS);
-      return new ResetPasswordResponse(MessageCode.PASSWORD_RESET_SUCCESS);
+      logger.exit(MessageCode.FORGOT_PASSWORD);
+      return new ResetPasswordResponse(MessageCode.FORGOT_PASSWORD);
     }
 
     auditHelper.logEvent(PASSWORD_RESET_FAILED, auditRequest);

@@ -41,7 +41,8 @@ public class AuditEventServiceImpl implements AuditEventService {
     // The data to write to the log
     Map<String, Object> jsonPayloadMap = getObjectMapper().convertValue(auditRequest, Map.class);
 
-    LogEntry entry = LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
+    LogEntry entry =
+        LogEntry.newBuilder(Payload.JsonPayload.of(jsonPayloadMap))
             .setTimestamp(auditRequest.getOccurred().getTime())
             .setSeverity(Severity.INFO)
             .setLogName(AUDIT_LOG_NAME)
@@ -50,6 +51,7 @@ public class AuditEventServiceImpl implements AuditEventService {
     // Writes the log entry asynchronously
     logging.write(Collections.singleton(entry));
 
-    logger.debug(String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
+    logger.debug(
+        String.format("postAuditLogEvent() for %s event finished", auditRequest.getEventCode()));
   }
 }

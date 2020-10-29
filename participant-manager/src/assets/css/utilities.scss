@@ -54,9 +54,6 @@
   .mr-sm {
     margin-right: 10px;
   }
-  .mr-lg {
-    margin-right: 20px;
-  }
   .p-none {
     padding: 0;
   }
@@ -80,9 +77,6 @@
   }
   .pb-lg {
     padding-bottom: 20px;
-  }
-  .pb-xlg {
-    padding-bottom: 30px;
   }
   .pl-none {
     padding-left: 0;
@@ -133,6 +127,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    outline: none;
   }
   .flex__justify__center {
     justify-content: center;
@@ -151,6 +146,12 @@
   }
   .bg__green {
     background-color: var(--light-green);
+  }
+  .txt__green {
+    color: var(--light-green);
+  }
+  .txt__light-gray {
+    color: var(--light-gray);
   }
   .visibility__hidden {
     visibility: hidden;

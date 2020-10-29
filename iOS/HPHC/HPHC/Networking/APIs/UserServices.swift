@@ -97,6 +97,10 @@ class UserServices: NSObject {
   var method: Method!
   var failedRequestServices = FailedUserServices()
 
+  struct JSONKey {
+    static let tempRegID = "tempRegId"
+  }
+
   // MARK: - Requests
 
   /// Creates a request for new `User`
@@ -327,14 +331,9 @@ class UserServices: NSObject {
   /// Handles registration response
   /// - Parameter response: Webservice response
   func handleUserRegistrationResponse(response: [String: Any]) {
-
     let user = User.currentUser
-    user.userId = (response[kUserId] as? String)!
-    user.verified = (response[kUserVerified] as? Bool)!
-    user.authToken = (response[kUserAuthToken] as? String)!
-    user.refreshToken = (response[kRefreshToken] as? String)!
+    user.userId = response[kUserId] as? String ?? ""
     StudyFilterHandler.instance.previousAppliedFilters = []
-
   }
 
   /// Handles registration confirmation response
@@ -362,26 +361,9 @@ class UserServices: NSObject {
   /// Handles email verification response
   /// - Parameter response: Webservice response
   func handleEmailVerifyResponse(response: [String: Any]) {
-
     let user = User.currentUser
     user.verified = true
-
-    if user.verified {
-
-      if user.authToken != nil {
-
-        user.userType = UserType.loggedInUser
-
-        FDAKeychain.shared[kUserAuthTokenKeychainKey] = user.authToken
-        FDAKeychain.shared[kUserRefreshTokenKeychainKey] = user.refreshToken
-
-        let ud = UserDefaults.standard
-        ud.set(true, forKey: kPasscodeIsPending)
-        ud.synchronize()
-
-        DBHandler().saveCurrentUser(user: user)
-      }
-    }
+    user.tempRegID = response[JSONKey.tempRegID] as? String
   }
 
   /// handles `User` profile response

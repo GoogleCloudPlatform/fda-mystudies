@@ -54,7 +54,8 @@ public interface LoginService {
       String type,
       AuditLogEventRequest auditRequest);
 
-  public void sendLockedAccountPasswordResetLinkToMail(String email);
+  public void sendLockedAccountPasswordResetLinkToMail(
+      String email, AuditLogEventRequest auditRequest);
 
   public boolean isInactiveUser(String securityToken);
 
