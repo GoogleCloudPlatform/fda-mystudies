@@ -31,12 +31,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: participant-manager-datastore-credentials
-                  key: username
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
                   name: participant-manager-datastore-credentials
-                  key: password
+                  key: dbpassword
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
