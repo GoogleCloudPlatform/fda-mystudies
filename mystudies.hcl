@@ -741,7 +741,7 @@ EOF
         type               = "mysql"
         network_project_id = "{{.prefix}}-{{.env}}-networks"
         network            = "{{.prefix}}-{{.env}}-network"
-        user_password      = "$${data.google_secret_manager_secret_version.mystudies_sql_default_user_password.secret_data}"
+        user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
       }]
       iam_members = {
         "roles/cloudsql.client" = [

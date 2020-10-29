@@ -103,7 +103,7 @@ module "mystudies" {
   availability_type = "REGIONAL"
   database_version  = "MYSQL_5_7"
   vpc_network       = "projects/mystudies-dev-networks/global/networks/mystudies-dev-network"
-  user_password     = data.google_secret_manager_secret_version.mystudies_sql_default_user_password.secret_data
+  user_password     = data.google_secret_manager_secret_version.db_secrets["auto-mystudies-sql-default-user-password"].secret_data
 }
 
 module "project_iam_members" {
