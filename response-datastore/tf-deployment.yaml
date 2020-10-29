@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: response-datastore
-          image: gcr.io/fda-mystudies-dev-apps/response-datastore:latest
+          image: gcr.io/mystudies-dev-apps/response-datastore:latest
           env:
             # DB ACCESS
             - name: DB_USER

@@ -19,7 +19,7 @@ spec:
       containers:
         # application container
         - name: participant-manager-datastore
-          image: gcr.io/fda-mystudies-dev-apps/participant-manager-datastore:latest
+          image: gcr.io/mystudies-dev-apps/participant-manager-datastore:latest
           env:
             # DB ACCESS
             - name: DB_NAME
