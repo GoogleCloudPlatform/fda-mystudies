@@ -26,7 +26,7 @@ const successMessages = {
   MSG_0024: 'Consent document fetched successfully',
   MSG_0025: 'User details updated successfully',
   MSG_0026:
-    'New account added successfully. Please wait while we set things up for you… this might take a few seconds.',
+    'Account created successfully.',
   MSG_0027: 'Admin details fetched successfully',
   MSG_0028: 'User deactivated successfully',
   MSG_0029: 'User activated successfully',

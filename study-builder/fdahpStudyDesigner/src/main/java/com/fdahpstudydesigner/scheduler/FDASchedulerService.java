@@ -91,7 +91,6 @@ public class FDASchedulerService {
 
   @Autowired private OAuthService oauthService;
 
-
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
     ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
