@@ -85,7 +85,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     Session session = null;
     StudyVersionBo studyVersionBo = null;
     String deleteActQuery = "";
-    //  String deleteQuery = "";
     StudyBuilderAuditEvent eventEnum = null;
     Map<String, String> values = new HashMap<String, String>();
     try {
@@ -673,7 +672,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
       } else {
 
         // Notification Purpose needed Started
-        queryString = " From StudyBo where customStudyId=: customStudyId  and live=1";
+        queryString = " From StudyBo where customStudyId=:customStudyId  and live=1";
         StudyBo studyBo =
             (StudyBo)
                 session
@@ -764,6 +763,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
     List<QuestionnaireBo> questionnaireBo = null;
     List<ActiveTaskAtrributeValuesBo> activeTaskAtrributeValuesBos = null;
     List<QuestionsBo> questionnairesStepsBo = null;
+    List<String> idArr = new ArrayList<String>();
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       if ((studyId != null)
@@ -776,7 +776,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           if ((customStudyId != null) && !customStudyId.isEmpty()) {
             if (!activeTaskAttIdName.equals("static")) {
               if (activeTaskAttIdName.contains(",")) {
-                List<String> idArr = new ArrayList<String>();
                 String[] arr;
                 arr = activeTaskAttIdName.split(",");
                 if ((arr != null) && (arr.length > 0)) {
@@ -803,7 +802,7 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                       .createQuery(queryString)
                       .setParameter("customStudyId", customStudyId)
                       .setParameter("activeTaskAttIdVal", activeTaskAttIdVal)
-                      .setParameterList("activeTaskAttIdName", Arrays.asList(activeTaskAttIdName))
+                      .setParameterList("activeTaskAttIdName", idArr)
                       .list();
             } else {
               activeTaskAtrributeValuesBos =
@@ -857,7 +856,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
           } else {
             if (!activeTaskAttIdName.equals("static")) {
               if (activeTaskAttIdName.contains(",")) {
-                List<String> idArr = new ArrayList<String>();
                 String[] arr;
                 arr = activeTaskAttIdName.split(",");
                 if ((arr != null) && (arr.length > 0)) {
@@ -867,7 +865,6 @@ public class StudyActiveTasksDAOImpl implements StudyActiveTasksDAO {
                     }
                   }
                 }
-                activeTaskAttIdName = StringUtils.join(idArr, ',');
               }
               subString = " and attributeValueId NOT IN(:activeTaskAttIdName)";
             }
