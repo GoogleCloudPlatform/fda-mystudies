@@ -1088,22 +1088,22 @@ extension ActivitiesViewController: NMWebServiceDelegate {
     if self.refreshControl != nil && (self.refreshControl?.isRefreshing)! {
       self.refreshControl?.endRefreshing()
     }
+    if error.code == HTTPError.forbidden.rawValue {
+      UIUtilities.showAlertMessageWithActionHandler(
+        kErrorTitle,
+        message: error.localizedDescription,
+        buttonTitle: kTitleOk,
+        viewControllerUsed: self,
+        action: {
+          self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
+        }
+      )
+      return
+    }
     let requestName = requestName as String
 
     switch requestName {
 
-    case AuthServerMethods.getRefreshedToken.description:
-      if error.code == 401 {
-        UIUtilities.showAlertMessageWithActionHandler(
-          kErrorTitle,
-          message: error.localizedDescription,
-          buttonTitle: kTitleOk,
-          viewControllerUsed: self,
-          action: {
-            self.fdaSlideMenuController()?.navigateToHomeAfterUnauthorizedAccess()
-          }
-        )
-      }
     case ResponseMethods.activityState.method.methodName:
       if error.code != kNoNetworkErrorCode {
         self.loadActivitiesFromDatabase()

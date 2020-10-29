@@ -79,9 +79,8 @@ class WCPConfiguration: NetworkConfiguration {
     let base64token = "Basic " + token.toBase64()
 
     let headers = [
-      "Authorization": base64token,
+      kAuthorization: base64token,
       "applicationId": AppConfiguration.appID,
-      "orgId": AppConfiguration.orgID,
     ]
 
     return headers

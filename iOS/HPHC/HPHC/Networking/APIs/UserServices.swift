@@ -95,7 +95,6 @@ class UserServices: NSObject {
   var requestParams: [String: Any]? = [:]
   var headerParams: [String: String]? = [:]
   var method: Method!
-  var failedRequestServices = FailedUserServices()
 
   struct JSONKey {
     static let tempRegID = "tempRegId"
@@ -326,6 +325,22 @@ class UserServices: NSObject {
     self.delegate = delegate
   }
 
+  func updateToken(manager: NetworkManager, requestName: NSString, error: NSError) {
+    HydraAPI.refreshToken { (status, error) in
+      if status {
+        self.handleUpdateTokenResponse()
+      } else if let error = error {
+        self.delegate?.failedRequest(
+          manager,
+          requestName:
+            requestName,
+          error:
+            error.toNSError()
+        )
+      }
+    }
+  }
+
   // MARK: Parsers
 
   /// Handles registration response
@@ -405,6 +420,14 @@ class UserServices: NSObject {
       }
     }
 
+  }
+
+  func handleUpdateTokenResponse() {
+    self.sendRequestWith(
+      method: self.method,
+      params: self.requestParams ?? [:],
+      headers: self.headerParams
+    )
   }
 
   /// Handles `Study` status response
@@ -519,41 +542,16 @@ extension UserServices: NMWebServiceDelegate {
 
   func failedRequest(_ manager: NetworkManager, requestName: NSString, error: NSError) {
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  //unauthorized
-      delegate?.failedRequest(manager, requestName: requestName, error: error)
-    } else if error.code == 401 {
-
-      self.failedRequestServices.headerParams = self.headerParams
-      self.failedRequestServices.requestParams = self.requestParams
-      self.failedRequestServices.method = self.method
-
-      if User.currentUser.refreshToken == ""
-        && requestName as String
-          != AuthServerMethods
-          .login
-          .description
-      {
-        // Unauthorized Access
-        let errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
-        let localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
-        delegate?.failedRequest(manager, requestName: requestName, error: localError)
-
-      } else {
-        // Update Refresh Token
-        AuthServices().updateToken(delegate: self)
-      }
-
+    if error.code == HTTPError.tokenExpired.rawValue {
+      // Update Refresh Token
+      updateToken(manager: manager, requestName: requestName, error: error)
     } else {
-
       var errorInfo = error.userInfo
       var localError = error
-      if error.code == 403 {
-        errorInfo = ["NSLocalizedDescription": "Your Session is Expired"]
+      if error.code == HTTPError.forbidden.rawValue {
+        errorInfo = ["NSLocalizedDescription": LocalizableString.sessionExpired.localizedString]
         localError = NSError.init(domain: error.domain, code: 403, userInfo: errorInfo)
       }
-
-      delegate?.failedRequest(manager, requestName: requestName, error: localError)
-
       // handle failed request due to network connectivity
       if requestName
         as String == ResponseMethods.updateActivityState.description
@@ -569,6 +567,7 @@ extension UserServices: NMWebServiceDelegate {
           )
         }
       }
+      delegate?.failedRequest(manager, requestName: requestName, error: localError)
     }
   }
 }

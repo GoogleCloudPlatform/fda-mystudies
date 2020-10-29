@@ -78,6 +78,37 @@ class LoginTest: XCTestCase {
     SessionService.resetSession()
   }
 
+  func testRefreshToken() {
+
+    guard let url = try? AuthRouter.codeGrant(params: [:], headers: [:]).asURLRequest().url
+    else { return XCTFail("Invalid Refresh Token URL") }
+
+    let responseDict: JSONDictionary = [
+      User.JSONKey.accessToken: "accesstoken-12345",
+      User.JSONKey.refreshToken: "FXm_WOcEddMDzumj",
+      User.JSONKey.tokenType: "bearer",
+    ]
+
+    guard let responseData = Utilities.dictionaryToData(value: responseDict)
+    else { return XCTFail("Unable to convert Dictionary to Data") }
+
+    // Mock the response.
+    stub(http(.post, uri: url?.absoluteString ?? ""), jsonData(responseData))
+
+    let expection = XCTestExpectation(description: "Refresh Token Api call")
+    HydraAPI.refreshToken { (status, error) in
+      if status {
+        expection.fulfill()
+      } else {
+        XCTFail()
+      }
+    }
+    wait(for: [expection], timeout: 5.0)
+    XCTAssertEqual(User.currentUser.refreshToken, responseDict[User.JSONKey.refreshToken] as? String)
+    XCTAssertEqual(User.currentUser.authToken, "Bearer accesstoken-12345")
+    User.resetCurrentUser()
+  }
+  
   func testFailedRegistration() {
 
     let expection = expectation(description: "Registration Api Call")
@@ -166,5 +197,4 @@ class UserServicesDelegate: NMWebServiceDelegate {
     delegateAsyncResult = .finished
     expectation.fulfill()
   }
-
 }

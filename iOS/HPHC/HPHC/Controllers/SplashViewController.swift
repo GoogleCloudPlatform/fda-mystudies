@@ -60,7 +60,7 @@ class SplashViewController: UIViewController {
       self.initilizeStudyForStandaloneApp()
     } else {
 
-      if User.currentUser.authToken != nil {
+      if User.currentUser.authToken != nil || isTestingLoggedUser {
 
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.checkPasscode(viewController: self)
