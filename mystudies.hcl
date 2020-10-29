@@ -36,7 +36,7 @@ template "devops" {
     project = {
       project_id = "{{.prefix}}-{{.env}}-devops"
       owners = [
-        "group:{{.prefix}}-{{.env}}-devops-owners@{{.domain}}",
+        "group:dpt-dev@@{{.domain}}",
       ]
       apis = [
         "container.googleapis.com",
@@ -69,7 +69,7 @@ template "cicd" {
 
     # IAM members to give the roles/cloudbuild.builds.viewer permission so they can see build results.
     build_viewers = [
-      "group:{{.prefix}}-{{.env}}-cicd-viewers@{{.domain}}",
+      "group:dpt-dev@@{{.domain}}",
     ]
 
     managed_dirs = [
@@ -448,7 +448,7 @@ template "project_networks" {
         image_family  = "ubuntu-2004-lts"
         image_project = "ubuntu-os-cloud"
         members = [
-          "group:{{.prefix}}-{{.env}}-bastion-accessors@{{.domain}}",
+          "group:dpt-dev@@{{.domain}}",
         ]
         startup_script = <<EOF
 sudo apt-get -y update
@@ -536,10 +536,10 @@ template "project_apps" {
       # DNS sets up nameservers to connect to the GKE clusters.
       dns_zones = [{
         name   = "{{.prefix}}-{{.env}}"
-        domain = "{{.prefix}}-{{.env}}.{{.domain}}."
+        domain = "{{.prefix}}.{{.domain}}."
         type   = "public"
         record_sets = [{
-          name = "{{.prefix}}-{{.env}}"
+          name = "demo"
           type = "A"
           ttl  = 30
           records = [

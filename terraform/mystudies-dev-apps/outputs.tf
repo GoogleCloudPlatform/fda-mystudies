@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+output "project_id" {
+  value = module.project.project_id
+}
 
-folder         = "folders/440087619763"
-auditors_group = "mystudies-dev-auditors@hcls.joonix.net"
+output "project_number" {
+  value = module.project.project_number
+}
