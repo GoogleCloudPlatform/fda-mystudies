@@ -8,6 +8,21 @@
 
 package com.google.cloud.healthcare.fdamystudies.controller;
 
+import com.google.cloud.healthcare.fdamystudies.beans.AppInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
+import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
+import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.service.CommonService;
+import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
+import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
+import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.Context;
@@ -28,20 +43,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
-import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.beans.LoginBean;
-import com.google.cloud.healthcare.fdamystudies.beans.ResponseBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRespBean;
-import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.service.CommonService;
-import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
-import com.google.cloud.healthcare.fdamystudies.util.AppUtil;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
-import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 
 @RestController
 public class UserProfileController {
@@ -266,6 +267,35 @@ public class UserProfileController {
       return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     logger.info("UserProfileController removeDeviceToken() - Ends ");
+    return new ResponseEntity<>(errorBean, HttpStatus.OK);
+  }
+
+  @PostMapping(
+      value = "/updateAppVersion",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> updateAppVersion(
+      @RequestHeader("userId") String userId,
+      @RequestBody AppInfoBean appInfo,
+      @Context HttpServletResponse response) {
+    logger.info("UserProfileController updateAppVersion() - Starts ");
+    ErrorBean errorBean = null;
+    if (org.apache.commons.lang3.StringUtils.isBlank(userId)
+        || org.apache.commons.lang3.StringUtils.isBlank(appInfo.getOs())
+        || org.apache.commons.lang3.StringUtils.isBlank(appInfo.getAppVersion())) {
+      errorBean = new ErrorBean(ErrorCode.EC_711.code(), ErrorCode.EC_711.errorMessage());
+      return new ResponseEntity<>(errorBean, HttpStatus.BAD_REQUEST);
+    }
+    try {
+      errorBean = userManagementProfService.updateAppVersion(appInfo, userId);
+      if (errorBean.getCode() == ErrorCode.EC_500.code()) {
+        return new ResponseEntity<>(errorBean, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    } catch (Exception e) {
+      logger.error("UserProfileController updateAppVersion() - error ", e);
+      return AppUtil.httpResponseForInternalServerError();
+    }
+    logger.info("UserProfileController updateAppVersion() - Ends ");
     return new ResponseEntity<>(errorBean, HttpStatus.OK);
   }
 }

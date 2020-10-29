@@ -8,19 +8,8 @@
 
 package com.google.cloud.healthcare.fdamystudies.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.cloud.healthcare.fdamystudies.bean.StudyReqBean;
+import com.google.cloud.healthcare.fdamystudies.beans.AppInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.AppOrgInfoBean;
 import com.google.cloud.healthcare.fdamystudies.beans.DeactivateAcctBean;
 import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
@@ -40,6 +29,16 @@ import com.google.cloud.healthcare.fdamystudies.util.EmailNotification;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
 import com.google.cloud.healthcare.fdamystudies.util.UserManagementUtil;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserManagementProfileServiceImpl implements UserManagementProfileService {
@@ -350,6 +349,41 @@ public class UserManagementProfileServiceImpl implements UserManagementProfileSe
       errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
     }
     logger.info("UserManagementProfileServiceImpl - removeDeviceToken() - Ends");
+    return errorBean;
+  }
+
+  @Override
+  public ErrorBean updateAppVersion(AppInfoBean appInfoBean, String userId) {
+    logger.info("UserManagementProfileServiceImpl - updateAppVersion() - Starts");
+    ErrorBean errorBean = null;
+    try {
+      UserDetailsBO userDetailsBO = userProfileManagementDao.getParticipantInfoDetails(userId);
+      if (userDetailsBO != null) {
+        AuthInfoBO authInfo =
+            userProfileManagementDao.getAuthInfo(userDetailsBO.getUserDetailsId());
+        if (authInfo != null) {
+          authInfo.setDeviceType(appInfoBean.getOs());
+          if (StringUtils.equalsAnyIgnoreCase(appInfoBean.getOs(), "IOS")
+              || StringUtils.equalsAnyIgnoreCase(appInfoBean.getOs(), "I")) {
+            authInfo.setIosAppVersion(appInfoBean.getAppVersion());
+            authInfo.setAndroidAppVersion(null);
+          } else {
+            authInfo.setAndroidAppVersion(appInfoBean.getAppVersion());
+            authInfo.setIosAppVersion(null);
+          }
+          authInfo.setModifiedOn(new Date());
+          errorBean = userProfileManagementDao.updateAppVersion(authInfo);
+        } else {
+          errorBean = new ErrorBean(ErrorCode.EC_720.code(), ErrorCode.EC_720.errorMessage());
+        }
+      } else {
+        errorBean = new ErrorBean(ErrorCode.EC_61.code(), ErrorCode.EC_61.errorMessage());
+      }
+    } catch (Exception e) {
+      logger.error("UserManagementProfileServiceImpl - updateAppVersion() - error() ", e);
+      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+    }
+    logger.info("UserManagementProfileServiceImpl - updateAppVersion() - Ends");
     return errorBean;
   }
 }

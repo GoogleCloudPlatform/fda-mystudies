@@ -8,6 +8,17 @@
 
 package com.google.cloud.healthcare.fdamystudies.dao;
 
+import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
+import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsBO;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
+import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
+import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
+import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,17 +38,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.google.cloud.healthcare.fdamystudies.beans.ErrorBean;
-import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
-import com.google.cloud.healthcare.fdamystudies.model.AppInfoDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.AuthInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.LoginAttemptsBO;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudiesBO;
-import com.google.cloud.healthcare.fdamystudies.model.StudyInfoBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserAppDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.model.UserDetailsBO;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
-import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
 
 @Repository
 public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
@@ -448,6 +448,31 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
     }
     logger.info("UserProfileManagementDaoImpl - removeDeviceToken() - end");
+    return errorBean;
+  }
+
+  @Override
+  public ErrorBean updateAppVersion(AuthInfoBO authInfo) {
+    logger.info("UserProfileManagementDaoImpl - updateAppVersion() - starts");
+    ErrorBean errorBean = null;
+    Transaction transaction = null;
+    try (Session session = entityManagerFactory.unwrap(SessionFactory.class).openSession()) {
+      transaction = session.beginTransaction();
+      session.update(authInfo);
+      errorBean = new ErrorBean(ErrorCode.EC_200.code(), ErrorCode.EC_200.errorMessage());
+      transaction.commit();
+    } catch (Exception e) {
+      logger.error("UserProfileManagementDaoImpl - updateAppVersion() - error ", e);
+      if (transaction != null) {
+        try {
+          transaction.rollback();
+        } catch (Exception e1) {
+          logger.error("UserProfileManagementDaoImpl - updateAppVersion() - error rollback", e1);
+        }
+      }
+      errorBean = new ErrorBean(ErrorCode.EC_500.code(), ErrorCode.EC_500.errorMessage());
+    }
+    logger.info("UserProfileManagementDaoImpl - updateAppVersion() - end");
     return errorBean;
   }
 }

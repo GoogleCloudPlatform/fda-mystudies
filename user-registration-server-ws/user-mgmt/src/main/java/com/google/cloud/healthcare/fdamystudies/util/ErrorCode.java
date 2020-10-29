@@ -35,7 +35,9 @@ public enum ErrorCode {
 
   EC_718(718, "UNAUTHORIZED"),
 
-  EC_719(719, "Invalid clientId or secretKey");
+  EC_719(719, "Invalid clientId or secretKey"),
+
+  EC_720(720, "App details does not exist");
 
   private final int code;
 
