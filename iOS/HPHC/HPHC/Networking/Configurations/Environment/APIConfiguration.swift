@@ -61,7 +61,7 @@ enum API {
   static var hydraURL: String {
     return AppProtocol.value + ((try? Configuration.value(for: "HYDRA_BASE_URL")) ?? "")
   }
-  
+
   static var enrollmentURL: String {
     return AppProtocol.value + ((try? Configuration.value(for: "ENROLLMENT_DATASTORE_URL")) ?? "")
   }

@@ -12,6 +12,8 @@ enum LocalizableString: String {
   case connectionError = "Connection error"
   case connectionProblem = "There was a problem, please try again."
   case ok = "Ok"
+  case offlineError = "Offline error"
+  case checkInternet = "Check your internet connection and try again."
 
   // MARK: Resources
   case resourceNotAvailable = "This resource is currently unavailable."
@@ -26,5 +28,7 @@ enum LocalizableString: String {
   case blockerScreenLabelText = "Please update to the latest version of the app to continue."
   case appStoreUpdateText = "Please go to AppStore to update to the latest version of the app."
 
+  // MARK: - Errors
+  case badHappened = "Something bad happened"
   var localizedString: String { return NSLocalizedString(rawValue, comment: "") }
 }
