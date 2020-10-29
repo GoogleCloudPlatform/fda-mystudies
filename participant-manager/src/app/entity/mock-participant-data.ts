@@ -33,7 +33,7 @@ export const expectedParticipantDetails = {
     registrationDate: '28/06/1952',
     enrolledStudies: [],
     studyType: StudyType.Close,
-sitePermission: Permission.ViewAndEdit,
+    sitePermission: Permission.ViewAndEdit,
     enrollments: [
       {
         participantId: '23',
