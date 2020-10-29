@@ -1529,7 +1529,9 @@ public class SiteControllerTest extends BaseMockIT {
         .andExpect(jsonPath("$.participantDetails.consentHistory", hasSize(21)))
         .andExpect(jsonPath("$.totalConsentHistoryCount", is(21)))
         .andExpect(
-            jsonPath("$.participantDetails.consentHistory[0].consentVersion", is(CONSENT_VERSION)))
+            jsonPath(
+                "$.participantDetails.consentHistory[0].consentVersion",
+                is(CONSENT_VERSION + String.valueOf(20))))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_DETAILS_SUCCESS.getMessage())));
     verifyTokenIntrospectRequest(3);

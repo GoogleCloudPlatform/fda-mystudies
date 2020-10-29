@@ -443,7 +443,7 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
       let status = NetworkConstants.checkResponseHeaders(response!)
       let statusCode = status.0
       var error1: NSError?
-      if statusCode == 200 || statusCode == 0 {
+      if 200..<300 ~= statusCode {
         var responseDict: NSDictionary?
 
         do {
@@ -455,34 +455,14 @@ class NetworkWebServiceHandler: NSObject, URLSessionDelegate {
           responseDict = [:]
         }
 
-        if (delegate?.finishedRequest) != nil {
-
-          if responseDict == nil || statusCode == 200 {
-            delegate?.finishedRequest(
-              networkManager!,
-              requestName: requestName!,
-              response: responseDict ?? [:]
-            )
-
-          } else {
-
-            error1 = NSError(
-              domain: NSURLErrorDomain,
-              code: 300,
-              userInfo: [
-                NSLocalizedDescriptionKey:
-                  "Could not connect to server. Please try again later.",
-              ]
-            )
-
-            if (delegate?.failedRequest) != nil {
-              delegate?.failedRequest(
-                networkManager!,
-                requestName: requestName!,
-                error: error1!
-              )
-            }
-          }
+        if let manager = networkManager,
+          let requestName = requestName
+        {
+          delegate?.finishedRequest(
+            manager,
+            requestName: requestName,
+            response: responseDict ?? [:]
+          )
         }
       } else {
 
