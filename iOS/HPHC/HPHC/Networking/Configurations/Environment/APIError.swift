@@ -25,6 +25,21 @@ struct ApiError: ErrorPresentable {
     self.code = code
   }
 
+  init?(data: Data?) {
+    if let errorDict = data?.toJSONDictionary() {
+      message = errorDict["error_description"] as? String
+      if let code = errorDict["status"] as? Int,
+        let apiErrorCode = HTTPError(rawValue: code)
+      {
+        self.code = apiErrorCode
+        if Int(CFNetworkErrors.cfurlErrorNotConnectedToInternet.rawValue) == code {
+          title = LocalizableString.offlineError.localizedString
+          message = LocalizableString.checkInternet.localizedString
+        }
+      }
+    } else { return nil }
+  }
+
   // MARK: - Utils
   static var defaultError: ApiError {
     return ApiError(
@@ -41,12 +56,18 @@ struct ApiError: ErrorPresentable {
 }
 
 enum HTTPError: Int {
+
   case notFound = 404
+  case tokenExpired = 401
+  case forbidden = 403
+  case badRequest = 400
 
   var description: String? {
     switch self {
     case .notFound:
       return LocalizableString.resourceNotAvailable.localizedString
+    default:
+      return ""
     }
   }
 }
