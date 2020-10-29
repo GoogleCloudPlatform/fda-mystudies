@@ -127,7 +127,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:latest
           command: ["/cloud_sql_proxy",
-            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-instances=mystudies-dev-data:us-east1:mystudies=tcp:3306",
             "-credential_file=/secrets/gcloud_key/key.json"]
           volumeMounts:
           - name: gcloud-key-volume
@@ -136,4 +136,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-user-datastore-gcloud-key
+          secretName: user-datastore-gke-sa-gcloud-key
