@@ -64,10 +64,10 @@ enum AccountStatus: Int {
   case verified = 0
 
   /// User account not verified
-  case pending
+  case pending = 1
 
   /// Logged In with temporary password
-  case tempPassword
+  case tempPassword = 3
 }
 
 let kUserValueForOS = "ios"
@@ -88,6 +88,8 @@ class User {
   var password: String? = ""
   var refreshToken: String! = ""
 
+  /// Temporary ID to Auto login the user after successfull verification.
+  var tempRegID: String?
   var verified: Bool = false
   var authToken: String!
   var participatedStudies: [UserStudyStatus]! = []

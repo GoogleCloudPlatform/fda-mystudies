@@ -522,12 +522,14 @@ class Utilities: NSObject {
 
     return randomString
   }
-  
+
   class func dictionaryToData(value: JSONDictionary) -> Data? {
-    guard let theJSONData = try? JSONSerialization.data(
-      withJSONObject: value,
-      options: [])
-      else { return  nil }
+    guard
+      let theJSONData = try? JSONSerialization.data(
+        withJSONObject: value,
+        options: []
+      )
+    else { return nil }
     return theJSONData
   }
 }
