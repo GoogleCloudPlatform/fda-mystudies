@@ -25,17 +25,17 @@ spec:
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
+                  name: participant-manager-datastore-credentials
                   key: dbname
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
+                  name: participant-manager-datastore-credentials
                   key: username
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
+                  name: participant-manager-datastore-credentials
                   key: password
             # AUTHENTICATION
             - name: CLIENT_ID
