@@ -255,7 +255,7 @@ public class BaseMockIT {
           StringUtils.contains(auditRequest.getDescription(), "{")
               && StringUtils.contains(auditRequest.getDescription(), "}"));
       assertNotNull(auditRequest.getCorrelationId());
-      assertNotNull(auditRequest.getOccured());
+      assertNotNull(auditRequest.getOccurred());
       assertNotNull(auditRequest.getPlatformVersion());
       assertNotNull(auditRequest.getAppId());
       assertNotNull(auditRequest.getAppVersion());

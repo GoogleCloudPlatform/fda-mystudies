@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: response-datastore
+  labels:
+    app: response-datastore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: response-datastore
+  template:
+    metadata:
+      labels:
+        app: response-datastore
+      annotations:
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - name: response-datastore
+          image: gcr.io/fda-mystudies-dev-apps/response-datastore:latest
+          env:
+            # DB ACCESS
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: response-datastore-credentials
+                  key: dbusername
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: response-datastore-credentials
+                  key: dbpassword
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: response-datastore-credentials
+                  key: dbname
+            # AUTHENTICATION
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: response-datastore-credentials
+                  key: client_id
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: response-datastore-credentials
+                  key: secret_key
+            # STUDY BUILDER AUTHENTICATION
+            - name: STUDY_BUILDER_USER
+              valueFrom:
+                secretKeyRef:
+                  name: study-builder-connect-credentials
+                  key: username
+            - name: STUDY_BUILDER_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: study-builder-connect-credentials
+                  key: password
+            # SERVER CALLS
+            - name: AUTH_SERVER_URL
+              value: "http://auth-server-np:50000"
+            - name: STUDY_DATASTORE_URL
+              value: "http://study-datastore-np:50000"
+            - name: PARTICIPANT_ENROLL_DATASTORE_URL
+              value: "http://participant-enroll-datastore:50000"
+            - name: HYDRA_ADMIN_URL
+              value: "http://hydra-np:4445"
+            - name: SCIM_AUTH_URL
+              value: "http://auth-server-np:50000"
+            # MISC
+            - name: FILE_STORAGE_PATH
+              value: ""
+            - name: LOG_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: log_path
+            - name: FIRESTORE_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: shared-secrets
+                  key: firestore_project_id
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/secrets/gcloud_key/key.json"
+          ports:
+          - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /response-datastore/healthCheck
+              port: 8080
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:latest
+          command: ["/cloud_sql_proxy",
+            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
+            "-credential_file=/secrets/gcloud_key/key.json"]
+          volumeMounts:
+          - name: gcloud-key-volume
+            mountPath: /secrets/gcloud_key
+            readOnly: true
+      volumes:
+      - name: gcloud-key-volume
+        secret:
+          secretName: response-datastore-gcloud-key

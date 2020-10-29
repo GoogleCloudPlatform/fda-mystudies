@@ -58,7 +58,7 @@ enum AuthRouter: URLRequestConvertible {
   var baseURLPath: String {
     switch self {
     case .auth:
-      return AuthRouter.hydraServerURL
+      return AuthRouter.hydraServerURL + AuthRouter.oauthVersion
     case .codeGrant:
       return "\(AuthRouter.authServerURL)\(AuthRouter.oauthVersion)"
     default:

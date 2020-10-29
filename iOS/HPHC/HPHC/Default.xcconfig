@@ -57,7 +57,7 @@ REGISTRATIONSERVER_API_KEY = xxxxxxxx
 // In terraform deployment, this values is stored as `mystudies-ma-secret-key`
 //
 // For more details see implementation of getHashedValue in:
-// response-server-ws/src/main/java/com/google/cloud/healthcare/fdamystudies/utils/ResponseServerUtil.java
+// response-datastore/src/main/java/com/google/cloud/healthcare/fdamystudies/utils/ResponseServerUtil.java
 REGISTRATIONSERVER_API_SECERET = xxxxxxxxxxx
 
 // AppID of this application.

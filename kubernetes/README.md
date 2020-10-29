@@ -31,18 +31,20 @@ All files below are relative to the root of the repo.
         and the Ingress.
     * This is forked from service.yaml with modifications for the Terraform
         setup.
-* response-server-module/
-  * same as auth-server-ws
-* WCP/
-  * same as auth-server-ws
-* WCP-WS/
-  * same as auth-server-ws
-* user-registration-server-ws/consent-mgmt-module
-  * same as auth-server-ws
-* user-registration-server-ws/enroll-mgmt-module
-  * same as auth-server-ws
-* user-registration-server-ws/user-mgmt-module
-  * same as auth-server-ws
+* response-datastore/
+  * same as oauth-scim-module
+* study-builder/
+  * same as oauth-scim-module
+* study-datastore/
+  * same as oauth-scim-module
+* participant-datastore/consent-mgmt-module
+  * same as oauth-scim-module
+* participant-datastore/enroll-mgmt-module
+  * same as oauth-scim-module
+* participant-datastore/user-mgmt-module
+  * same as oauth-scim-module
+* participant-manager/
+  * same as oauth-scim-module
 
 ## Setup
 
@@ -85,11 +87,10 @@ Upload the SQL files to the bucket:
 
 ```bash
 $ gsutil cp \
-  ./auth-server-ws/auth_server_db_script.sql \
-  ./WCP/sqlscript/* \
-  ./response-server-ws/mystudies_response_server_db_script.sql \
-  ./user-registration-server-ws/sqlscript/mystudies_app_info_update_db_script.sql \
-  ./user-registration-server-ws/sqlscript/mystudies_user_registration_db_script.sql \
+  ./study-builder/sqlscript/* \
+  ./response-datastore/sqlscript/mystudies_response_server_db_script.sql \
+  ./participant-datastore/sqlscript/mystudies_app_info_update_db_script.sql \
+  ./participant-datastore/sqlscript/mystudies_participant_datastore_db_script.sql \
   gs://<prefix>-<env>-mystudies-sql-import
 ```
 
@@ -100,17 +101,16 @@ just "mystudies".
 
 Import the scripts, in this order:
 
-#### Auth server
-
-```bash
-gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/auth_server_db_script.sql
-```
-
 #### Study builder
 
 ```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/HPHC_My_Studies_DB_Create_Script.sql
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/procedures.sql
+```
+
+`version_info_script.sql` should be run after a superadmin has been already created for Study Builder.
+You can use [create_study_builder_superadmin.sh](../scripts/create_study_builder_superadmin.sh) to create or update Study Builder's superadmin account.
+```bash
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/version_info_script.sql
 ```
 
@@ -123,7 +123,7 @@ gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix
 #### Participant datastore
 
 ```bash
-gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_user_registration_db_script.sql
+gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_participant_datastore_db_script.sql
 gcloud sql import sql --project=<prefix>-<env>-data <instance-name> gs://<prefix>-<env>-mystudies-sql-import/mystudies_app_info_update_db_script.sql
 ```
 
@@ -136,13 +136,15 @@ In each tf-deployment.yaml file listed below (paths are relative to the
 root of the repo):
 
 1. oauth-scim-module/tf-deployment.yaml
-1. response-server-module/tf-deployment.yaml
-1. WCP/tf-deployment.yaml
-1. WCP-WS/tf-deployment.yaml
-1. user-registration-server-ws/consent-mgmt-module/tf-deployment.yaml
-1. user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml
-1. user-registration-server-ws/user-mgmt-module/tf-deployment.yaml
-1. participant-manager-module/tf-deployment.yaml
+1. hydra/tf-deployment.yaml
+1. response-datastore/tf-deployment.yaml
+1. study-builder/tf-deployment.yaml
+1. study-datastore/tf-deployment.yaml
+1. participant-datastore/consent-mgmt-module/tf-deployment.yaml
+1. participant-datastore/enroll-mgmt-module/tf-deployment.yaml
+1. participant-datastore/user-mgmt-module/tf-deployment.yaml
+1. participant-manager-datastore/tf-deployment.yaml
+1. participant-manager/tf-deployment.yaml
 
 Do the following:
 
@@ -161,6 +163,12 @@ In the ./kubernetes/ingress.yaml file:
     name in ./kubernetes/cert.yaml.
 * Change the name and the `kubernetes.io/ingress.global-static-ip-name`
     annotation to match your organization.
+    
+In ./participant-manager/src/environments/environment.prod.ts
+
+* Change the domain name to match your organization.
+* Change `clientId` to the value of `auto-auth-server-client-id`; this value
+ can be found in your secret project's secret manager.
 
 ### GKE Cluster - Terraform
 
@@ -223,28 +231,32 @@ Apply all deployments:
 
 ```bash
 $ kubectl apply \
-  -f ./WCP-WS/tf-deployment.yaml \
-  -f ./response-server-ws/tf-deployment.yaml \
-  -f ./user-registration-server-ws/consent-mgmt-module/tf-deployment.yaml \
-  -f ./user-registration-server-ws/enroll-mgmt-module/tf-deployment.yaml \
-  -f ./user-registration-server-ws/user-mgmt-module/tf-deployment.yaml \
-  -f ./WCP/tf-deployment.yaml \
+  -f ./study-datastore/tf-deployment.yaml \
+  -f ./response-datastore/tf-deployment.yaml \
+  -f ./participant-datastore/consent-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/enroll-mgmt-module/tf-deployment.yaml \
+  -f ./participant-datastore/user-mgmt-module/tf-deployment.yaml \
+  -f ./study-builder/tf-deployment.yaml \
   -f ./oauth-scim-module/tf-deployment.yaml \
-  -f ./participant-manager-module/tf-deployment.yaml
+  -f ./participant-manager-datastore/tf-deployment.yaml \
+  -f ./hydra/tf-deployment.yaml \
+  -f ./participant-manager/tf-deployment.yaml
 ```
 
 Apply all services:
 
 ```bash
 $ kubectl apply \
-  -f ./WCP-WS/tf-service.yaml \
-  -f ./response-server-ws/tf-service.yaml \
-  -f ./user-registration-server-ws/consent-mgmt-module/tf-service.yaml \
-  -f ./user-registration-server-ws/enroll-mgmt-module/tf-service.yaml \
-  -f ./user-registration-server-ws/user-mgmt-module/tf-service.yaml \
-  -f ./WCP/tf-service.yaml \
+  -f ./study-datastore/tf-service.yaml \
+  -f ./response-datastore/tf-service.yaml \
+  -f ./participant-datastore/consent-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/enroll-mgmt-module/tf-service.yaml \
+  -f ./participant-datastore/user-mgmt-module/tf-service.yaml \
+  -f ./study-builder/tf-service.yaml \
   -f ./oauth-scim-module/tf-service.yaml \
-  -f ./participant-manager-module/tf-service.yaml
+  -f ./participant-manager-datastore/tf-service.yaml \
+  -f ./hydra/tf-service.yaml \
+  -f ./participant-manager/tf-service.yaml
 ```
 
 Apply the certificate and the ingress:

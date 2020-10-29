@@ -1,0 +1,192 @@
+<ng-container *ngIf="studyDetail$ | async as studyDetails">
+  <div *ngIf="studyDetails && studyDetails.participantRegistryDetail">
+    <div class="subheader p-none study-participant-registry">
+      <div class="max__w__1280 m-none flex__justify__space-between">
+        <div class="flex__justify__space-between">
+          <div
+            class="subheader__title flex__justify__space-between align__items__baseline"
+          >
+            <div>
+              <a (click)="backClicked()">
+                <img src="assets/svgs/back-arrow.svg" alt="Go Back" />
+              </a>
+            </div>
+            <div>
+              <div class="mb-xs">
+                <span
+                  *ngIf="
+                    studyDetails.participantRegistryDetail.studyType !==
+                    studyTypes.Open
+                  "
+                >
+                  Study Participant Registry
+                </span>
+                <span
+                  *ngIf="
+                    studyDetails.participantRegistryDetail.studyType ===
+                    studyTypes.Open
+                  "
+                >
+                  Enrollment Registry
+                </span>
+              </div>
+              <div class="flex__justify__space-between">
+                <div
+                  *ngIf="
+                    studyDetails.participantRegistryDetail.studyType ===
+                    studyTypes.Open
+                  "
+                  class="pr-xlg"
+                >
+                  <div class="banner__label">SITE</div>
+                  <div class="banner__text">NA (Open Study)</div>
+                </div>
+                <div class="pr-xlg">
+                  <div class="banner__label">
+                    {{ studyDetails.participantRegistryDetail.customStudyId }}
+                  </div>
+                  <div class="banner__text">
+                    {{ studyDetails.participantRegistryDetail.studyName }}
+                  </div>
+                </div>
+                <div class="pr-xlg">
+                  <div class="banner__label">
+                    {{ studyDetails.participantRegistryDetail.customAppId }}
+                  </div>
+                  <div class="banner__text">
+                    {{ studyDetails.participantRegistryDetail.appName }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="
+            studyDetails.participantRegistryDetail.studyType ===
+              studyTypes.Open &&
+            studyDetails.participantRegistryDetail.openStudySitePermission ===
+              permission.ViewAndEdit
+          "
+          class="pr-xlg"
+        >
+          <div class="enrollment-label">
+            Enrollment Target:
+            {{ studyDetails.participantRegistryDetail.targetEnrollment }}
+            <button class="dropbtn btn pl-none" (click)="openModal(template)">
+              <img src="assets/svgs/edit.svg" alt="edit" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="max__w__1280 m-none site__participant">
+      <div class="cards1 m-none">
+        <table
+          class="table table-striped"
+          [mfData]="studyDetails.participantRegistryDetail.registryParticipants"
+          #mf="mfDataTable"
+          [mfRowsOnPage]="10"
+        >
+          <thead>
+            <tr>
+              <th>
+                <mfDefaultSorter by="name">Participant Email</mfDefaultSorter>
+              </th>
+              <th
+                *ngIf="
+                  studyDetails.participantRegistryDetail.studyType ===
+                  studyTypes.Close
+                "
+              >
+                <mfDefaultSorter by="locationName">Site ID</mfDefaultSorter>
+              </th>
+              <th
+                *ngIf="
+                  studyDetails.participantRegistryDetail.studyType ===
+                  studyTypes.Close
+                "
+              >
+                <mfDefaultSorter by="onboardingStatus">
+                  Onboarding Status
+                </mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter by="enrollmentStatus">
+                  Enrollment Status
+                </mfDefaultSorter>
+              </th>
+              <th>
+                <mfDefaultSorter by="enrollmentDate">
+                  Enrollment Date
+                </mfDefaultSorter>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let lists of mf.data">
+              <td [routerLink]="['/coordinator/participant', lists.id]">
+                <span class="no_st_en">{{ lists.email }}</span>
+              </td>
+              <td
+                *ngIf="
+                  studyDetails.participantRegistryDetail.studyType ===
+                  studyTypes.Close
+                "
+              >
+                {{ lists.locationName }}
+              </td>
+              <td
+                *ngIf="
+                  studyDetails.participantRegistryDetail.studyType ===
+                  studyTypes.Close
+                "
+              >
+                <div
+                  [ngClass]="{
+                    participant__label:
+                      lists.onboardingStatus === onboardingStatus.Invited,
+                    inactive__text:
+                      lists.onboardingStatus === onboardingStatus.Disabled
+                  }"
+                >
+                  {{ lists.onboardingStatus }}
+                </div>
+              </td>
+              <td>
+                <div
+                  [ngClass]="{
+                    participant__label:
+                      lists.enrollmentStatus === enrollmentStatus.Enrolled,
+                    inactive__text:
+                      lists.enrollmentStatus === enrollmentStatus.Withdrawn
+                  }"
+                >
+                  {{ lists.enrollmentStatus }}
+                </div>
+              </td>
+              <td>{{ lists.enrollmentDate }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">
+                <mfBootstrapPaginator></mfBootstrapPaginator>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+    <ng-template #template>
+      <update-target
+        [studyId]="studyDetails.participantRegistryDetail.studyId"
+        [targetEnrollment]="
+          studyDetails.participantRegistryDetail.targetEnrollment
+        "
+        (closeModalEvent)="closeModal($event)"
+      ></update-target>
+    </ng-template>
+  </div>
+</ng-container>
