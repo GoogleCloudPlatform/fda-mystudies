@@ -8,7 +8,7 @@ import {ApiResponse} from './api.response.model';
 import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
 import {EnrollmentStatus, StudyType} from '../shared/enums';
-import { Permission } from '../shared/permission-enums';
+import {Permission} from '../shared/permission-enums';
 
 export const expectedSitesList = {
   studies: [

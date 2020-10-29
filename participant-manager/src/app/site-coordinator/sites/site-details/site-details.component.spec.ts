@@ -25,7 +25,6 @@ import {
 } from 'src/app/entity/mock-participant-data';
 import {SitesModule} from '../sites.module';
 import {OnboardingStatus} from 'src/app/shared/enums';
-import { Permission } from 'src/app/shared/permission-enums';
 describe('SiteDetailsComponent', () => {
   let component: SiteDetailsComponent;
   let fixture: ComponentFixture<SiteDetailsComponent>;
@@ -106,7 +105,7 @@ describe('SiteDetailsComponent', () => {
     it('should decommission the site when  button is clicked', fakeAsync(async () => {
       fixture.autoDetectChanges();
       component.siteId = '2';
-          const decommisionButton = fixture.debugElement.query(
+      const decommisionButton = fixture.debugElement.query(
         By.css('[name="buttonDecommision"]'),
       ).nativeElement as HTMLInputElement;
       expect(component.siteId).toBeDefined();
