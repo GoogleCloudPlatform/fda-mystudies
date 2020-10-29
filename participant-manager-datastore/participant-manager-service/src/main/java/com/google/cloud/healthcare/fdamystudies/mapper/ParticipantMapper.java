@@ -184,6 +184,8 @@ public final class ParticipantMapper {
 
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    String disabledDate = DateTimeUtils.format(participantRegistrySite.getDisabledDate());
+    participant.setDisabledDate(StringUtils.defaultIfEmpty(disabledDate, NOT_APPLICABLE));
     return participant;
   }
 

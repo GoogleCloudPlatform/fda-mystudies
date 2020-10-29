@@ -236,6 +236,7 @@ public class UserProfileControllerTest extends BaseMockIT {
             .getParticipantRegistrySite()
             .getOnboardingStatus()
             .equals(OnboardingStatus.DISABLED.getCode()));
+    assertNotNull(participant.get().getParticipantRegistrySite().getDisabledDate());
 
     verify(1, deleteRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.USER_ID)));
     verify(
