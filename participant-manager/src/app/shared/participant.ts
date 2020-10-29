@@ -1,4 +1,4 @@
-import {EnrollmentStatus, OnboardingStatus} from './enums';
+import {EnrollmentStatus, OnboardingStatus, StudyType} from './enums';
 
 export interface RegistryParticipant {
   id: string;
@@ -8,7 +8,7 @@ export interface RegistryParticipant {
   invitedDate: string;
   siteId: string;
   customLocationId: string;
-  locationName: string;
+  locationName?: string;
   participantRegistrySiteid?: string;
   customStudyId?: string;
   studyName?: string;
@@ -23,6 +23,8 @@ export interface RegistryParticipant {
   enrolledStudies: string[];
   enrollments: Enrollment[];
   consentHistory: Consent[];
+  newlyCreatedUser?: boolean;
+  studyType: StudyType;
 }
 export interface Site {
   siteId: string;

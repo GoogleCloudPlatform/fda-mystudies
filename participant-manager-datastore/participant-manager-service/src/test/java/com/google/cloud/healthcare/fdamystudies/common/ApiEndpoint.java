@@ -18,7 +18,7 @@ public enum ApiEndpoint {
 
   HEALTH("http://localhost:8080/participant-manager-datastore/healthCheck"),
 
-  SET_UP_ACCOUNT("http://localhost:8080/participant-manager-datastore/users/"),
+  SET_UP_ACCOUNT("http://localhost:8080/participant-manager-datastore/users/setUpAccount"),
 
   PATCH_USER("http://localhost:8080/participant-manager-datastore/users/{userId}"),
 
@@ -37,14 +37,16 @@ public enum ApiEndpoint {
   ADD_NEW_PARTICIPANT(
       "http://localhost:8080/participant-manager-datastore/sites/{siteId}/participants"),
 
-  DECOMISSION_SITE("http://localhost:8080/participant-manager-datastore/sites/{siteId}/decommission"),
+  DECOMISSION_SITE(
+      "http://localhost:8080/participant-manager-datastore/sites/{siteId}/decommission"),
 
   GET_LOCATIONS("http://localhost:8003/participant-manager-datastore/locations"),
 
   GET_LOCATION_BY_LOCATION_ID(
       "http://localhost:8003/participant-manager-datastore/locations/{locationId}"),
 
-  GET_APP_PARTICIPANTS("http://localhost:8080/participant-manager-datastore/apps/{app}/participants"),
+  GET_APP_PARTICIPANTS(
+      "http://localhost:8080/participant-manager-datastore/apps/{app}/participants"),
 
   ADD_NEW_USER("http://localhost:8003/participant-manager-datastore/users"),
 
@@ -55,7 +57,7 @@ public enum ApiEndpoint {
   GET_USER_DETAILS("http://localhost:8080/participant-manager-datastore/users"),
 
   GET_PARTICIPANT_DETAILS(
-      "http://localhost:8080/participant-manager-datastore/sites/{participantRegistrySite}/participant"),
+      "http://localhost:8080/participant-manager-datastore/sites/{participantRegistrySiteId}/participant"),
 
   INVITE_PARTICIPANTS(
       "http://localhost:8003/participant-manager-datastore/sites/{siteId}/participants/invite"),
@@ -82,7 +84,10 @@ public enum ApiEndpoint {
   GET_ADMIN_DETAILS_AND_APPS(
       "http://localhost:8080/participant-manager-datastore/users/admin/{adminId}"),
 
-  GET_USERS("http://localhost:8080/participant-manager-datastore/users");
+  GET_USERS("http://localhost:8080/participant-manager-datastore/users"),
+
+  SEND_INVITATION_EMAIL(
+      "http://localhost:8080/participant-manager-datastore/users/{userId}/invite");
 
   private String url;
 

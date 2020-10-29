@@ -64,4 +64,7 @@ public final class Constants {
   public static final String NEW_APP_ID_VALUE = "app";
   public static final String NEW_STUDY_ID = "study";
   public static final String VALID_CODE = "123code";
+
+  public static final String LOGO_IMAGE_URL =
+      "http://localhost:8098/fdaResources/studylogo/example.jpg";
 }

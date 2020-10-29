@@ -1,6 +1,6 @@
 <ng-container *ngIf="participant$ | async as participant">
   <section
-    *ngIf="participant.participantDetail"
+    *ngIf="participant.participantDetails"
     class="subheader p-none pl-none"
   >
     <div class="max__w__1280 m-none">
@@ -8,65 +8,88 @@
         <div
           class="subheader__title flex__justify__space-between align__items__baseline"
         >
-          <div>
-            <a routerLink="/coordinator/apps" class="subheader__title"></a>
+          <div (click)="backClicked()">
+            <a class="subheader__title"></a>
             <img src="assets/svgs/back-arrow.svg" alt="go back" />
           </div>
           <div>
             <div class="mb-xs">Participant Details</div>
             <div class="display-inline-flex overflow__auto">
-              <div class="pr-xlg">
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="pr-xlg"
+              >
                 <div class="banner__label">
-                  {{ participant.participantDetail.customLocationId }}
+                  {{ participant.participantDetails.customLocationId }}
                 </div>
                 <div class="banner__text">
-                  {{ participant.participantDetail.locationName }}
+                  {{ participant.participantDetails.locationName }}
                 </div>
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="pr-xlg"
+              >
+                <div class="banner__label">SITE</div>
+                <div class="banner__text">NA</div>
               </div>
               <div class="pr-xlg">
                 <div class="banner__label">
-                  {{ participant.participantDetail.customStudyId }}
+                  {{ participant.participantDetails.customStudyId }}
                 </div>
                 <div class="banner__text">
-                  {{ participant.participantDetail.studyName }}
+                  {{ participant.participantDetails.studyName }}
                 </div>
               </div>
               <div>
                 <div class="banner__label">
-                  {{ participant.participantDetail.customAppId }}
+                  {{ participant.participantDetails.customAppId }}
                 </div>
                 <div class="banner__text">
-                  {{ participant.participantDetail.appName }}
+                  {{ participant.participantDetails.appName }}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <section class="desk__view">
+        <section
+          *ngIf="participant.participantDetails.studyType !== studyTypes.Open"
+          class="desk__view"
+        >
           <div class="flex__justify__space-between">
             <div
               class="mr-sm"
               *ngIf="
-                participant.participantDetail.onboardingStatus !==
+                participant.participantDetails.onboardingStatus !==
                 onBoardingStatus.Disabled
               "
             >
               <button
+                [disabled]="
+                  hasCompletedEnrollment(participant.participantDetails)
+                "
                 name="sendInvite"
                 class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
-                (click)="sendInvitation(participant.participantDetail.siteId)"
+                (click)="sendInvitation(participant.participantDetails.siteId)"
               >
                 {{ sendResend }}
               </button>
             </div>
             <div>
               <button
+                [disabled]="
+                  hasCompletedEnrollment(participant.participantDetails)
+                "
                 name="toggleInvite"
                 class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
                 (click)="
                   toggleInvitation(
-                    participant.participantDetail.siteId,
-                    participant.participantDetail.onboardingStatus
+                    participant.participantDetails.siteId,
+                    participant.participantDetails.onboardingStatus
                   )
                 "
               >
@@ -79,22 +102,27 @@
     </div>
   </section>
 
-  <section class="subheader p-none pl-none mobile__view border-top__c4d1e6">
+  <section
+    *ngIf="participant.participantDetails.studyType !== studyTypes.Open"
+    class="subheader p-none pl-none mobile__view border-top__c4d1e6"
+  >
     <div class="flex__ flex__justify__center">
       <button
+        [disabled]="hasCompletedEnrollment(participant.participantDetails)"
         name="sendInvite"
         class="btn banner__primary__btn white__text flex__row__reverse pad__5__13 font14"
-        (click)="sendInvitation(participant.participantDetail.siteId)"
+        (click)="sendInvitation(participant.participantDetails.siteId)"
       >
         {{ sendResend }}
       </button>
       <button
+        [disabled]="hasCompletedEnrollment(participant.participantDetails)"
         name="toggleInvite"
         class="btn banner__default__btn flex__row__reverse pad__5__13 font14"
         (click)="
           toggleInvitation(
-            participant.participantDetail.siteId,
-            participant.participantDetail.onboardingStatus
+            participant.participantDetails.siteId,
+            participant.participantDetails.onboardingStatus
           )
         "
       >
@@ -107,28 +135,58 @@
     <div
       class="bg__white card__inside__pad box__shadow-cmn m-none mb__padding__lg"
     >
+      <div class="blue__text__md">Participant Email</div>
+      <div class="participant__label">
+        {{ participant.participantDetails.email }}
+      </div>
       <div>
         <div class="mb__mb-sm">
           <div class="blue__text__md">Participant Email</div>
-          <div class="font24">{{ participant.participantDetail.email }}</div>
+          <div class="font24">{{ participant.participantDetails.email }}</div>
         </div>
         <div>
           <div class="flex__justify__space-between flex__wrap">
             <div>
               <div class="blue__text__md">Onboarding Status</div>
-              <div class="participant__label">
-                {{ participant.participantDetail.onboardingStatus }}
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="participant__label"
+              >
+                {{ participant.participantDetails.onboardingStatus }}
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="participant__label"
+              >
+                NA
               </div>
             </div>
             <div>
               <div class="blue__text__md">Last Invitation Sent</div>
-              <div class="inactive__text">
-                {{ participant.participantDetail.invitationDate }}
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType !== studyTypes.Open
+                "
+                class="inactive__text"
+              >
+                {{ participant.participantDetails.invitationDate }}
+              </div>
+              <div
+                *ngIf="
+                  participant.participantDetails.studyType === studyTypes.Open
+                "
+                class="inactive__text"
+              >
+                NA
               </div>
             </div>
             <div
               *ngFor="
-                let enrollmentDetails of participant.participantDetail
+                let enrollmentDetails of participant.participantDetails
                   .enrollments
               "
             >
@@ -161,7 +219,7 @@
     <section class="cards1 m-none">
       <table
         class="table table-striped"
-        [mfData]="participant.participantDetail.consentHistory"
+        [mfData]="participant.participantDetails.consentHistory"
         #mf="mfDataTable"
         [mfRowsOnPage]="10"
       >

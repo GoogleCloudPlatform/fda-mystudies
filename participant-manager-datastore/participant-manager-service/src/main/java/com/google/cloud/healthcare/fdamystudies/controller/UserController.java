@@ -66,6 +66,7 @@ public class UserController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<AdminUserResponse> updateUserSiteCoordinator(
+      @RequestHeader(name = "userId") String signedInUserId,
       @Valid @RequestBody UserRequest user,
       @PathVariable String superAdminUserId,
       HttpServletRequest request) {
@@ -74,6 +75,7 @@ public class UserController {
     AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
     auditRequest.setUserId(superAdminUserId);
 
+    user.setSignedInUserId(signedInUserId);
     AdminUserResponse userResponse =
         manageUserService.updateUser(user, superAdminUserId, auditRequest);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
@@ -105,6 +107,21 @@ public class UserController {
     GetUsersResponse userResponse =
         manageUserService.getUsers(superAdminUserId, page, limit, auditRequest);
 
+    logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
+    return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
+  }
+
+  @PostMapping(
+      value = "/users/{userId}/invite",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AdminUserResponse> sendInvitation(
+      @RequestHeader(name = "userId") String signedInUserId,
+      @PathVariable String userId,
+      HttpServletRequest request) {
+    logger.entry(String.format(BEGIN_REQUEST_LOG, request.getRequestURI()));
+
+    AdminUserResponse userResponse = manageUserService.sendInvitation(userId, signedInUserId);
     logger.exit(String.format(EXIT_STATUS_LOG, userResponse.getHttpStatusCode()));
     return ResponseEntity.status(userResponse.getHttpStatusCode()).body(userResponse);
   }

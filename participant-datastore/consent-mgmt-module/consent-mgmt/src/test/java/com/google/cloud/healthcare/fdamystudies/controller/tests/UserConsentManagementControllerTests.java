@@ -54,6 +54,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -118,6 +119,19 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
 
+    StudyInfoBean studyInfoBean =
+        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+
+    StudyConsentEntity studyConsent =
+        userConsentManagementService.getStudyConsent(
+            Constants.VALID_USER_ID,
+            studyInfoBean.getStudyInfoId(),
+            consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent);
+    assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
+
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
     auditRequest.setStudyId(Constants.STUDYOF_HEALTH);
@@ -147,7 +161,7 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
 
     String content = "sample consent document content";
     byte[] encodedContent = Base64.getEncoder().encode(content.getBytes());
-    when(mockedBlob.getContent()).thenReturn(encodedContent);
+    Mockito.lenient().when(mockedBlob.getContent()).thenReturn(encodedContent);
 
     when(this.mockStorage.get(eq(validBlobId))).thenReturn(mockedBlob);
 
@@ -212,6 +226,19 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)))
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
+
+    StudyInfoBean studyInfoBean =
+        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+
+    StudyConsentEntity studyConsent =
+        userConsentManagementService.getStudyConsent(
+            Constants.VALID_USER_ID,
+            studyInfoBean.getStudyInfoId(),
+            consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent);
+    assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);
@@ -305,6 +332,19 @@ public class UserConsentManagementControllerTests extends BaseMockIT {
             .andExpect(content().string(containsString(Constants.UPDATE_CONSENT_SUCCESS_MSG)))
             .andExpect(jsonPath("$.consentDocumentFileName").isNotEmpty())
             .andReturn();
+
+    StudyInfoBean studyInfoBean =
+        userConsentManagementService.getStudyInfoId(consentStatus.getStudyId());
+
+    StudyConsentEntity studyConsent =
+        userConsentManagementService.getStudyConsent(
+            Constants.VALID_USER_ID,
+            studyInfoBean.getStudyInfoId(),
+            consentStatus.getConsent().getVersion());
+    assertNotNull(studyConsent);
+    assertNotNull(studyConsent.getParticipantStudy());
+    assertNotNull(studyConsent.getSharing());
+    assertNotNull(studyConsent.getConsentDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.VALID_USER_ID);

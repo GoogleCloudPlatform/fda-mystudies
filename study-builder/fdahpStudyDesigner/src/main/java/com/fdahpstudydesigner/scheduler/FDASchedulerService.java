@@ -22,27 +22,38 @@
 
 package com.fdahpstudydesigner.scheduler;
 
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_METADATA_SEND_OPERATION_FAILED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE;
+
+import com.fdahpstudydesigner.bean.AuditLogEventRequest;
 import com.fdahpstudydesigner.bean.PushNotificationBean;
-import com.fdahpstudydesigner.bo.AuditLogBO;
 import com.fdahpstudydesigner.bo.UserBO;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
+import com.fdahpstudydesigner.common.PlatformComponent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
+import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.dao.LoginDAO;
 import com.fdahpstudydesigner.dao.NotificationDAO;
 import com.fdahpstudydesigner.dao.UsersDAO;
 import com.fdahpstudydesigner.service.NotificationService;
+import com.fdahpstudydesigner.service.OAuthService;
 import com.fdahpstudydesigner.util.EmailNotification;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerUtil;
 import java.io.File;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
@@ -68,8 +79,6 @@ public class FDASchedulerService {
 
   private static final Map<?, ?> configMap = FdahpStudyDesignerUtil.getAppProperties();
 
-  @Autowired AuditLogDAO auditLogDAO;
-
   @Autowired private LoginDAO loginDAO;
 
   @Autowired private NotificationDAO notificationDAO;
@@ -77,6 +86,11 @@ public class FDASchedulerService {
   @Autowired private UsersDAO usersDAO;
 
   @Autowired private NotificationService notificationService;
+
+  @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
+
+  @Autowired private OAuthService oauthService;
+
 
   @Bean()
   public ThreadPoolTaskScheduler taskScheduler() {
@@ -88,29 +102,9 @@ public class FDASchedulerService {
   @Scheduled(cron = "0 0 0 * * ?")
   public void createAuditLogs() {
     logger.info("FDASchedulerService - createAuditLogs - Starts");
-    List<AuditLogBO> auditLogs = null;
     StringBuilder logString = null;
     try {
-      auditLogs = auditLogDAO.getTodaysAuditLogs();
-      if ((auditLogs != null) && !auditLogs.isEmpty()) {
-        logString = new StringBuilder();
-        for (AuditLogBO auditLogBO : auditLogs) {
-          logString.append(auditLogBO.getAuditLogId()).append("\t");
-          logString.append(auditLogBO.getCreatedDateTime()).append("\t");
-          if (auditLogBO.getUserBO() != null) {
-            logString
-                .append(auditLogBO.getUserBO().getFirstName())
-                .append(" ")
-                .append(auditLogBO.getUserBO().getLastName())
-                .append("\t");
-          } else {
-            logString.append("anonymous user").append("\t");
-          }
-          logString.append(auditLogBO.getClassMethodName()).append("\t");
-          logString.append(auditLogBO.getActivity()).append("\t");
-          logString.append(auditLogBO.getActivityDetails()).append("\n");
-        }
-      }
+      logString = new StringBuilder();
       if ((logString != null) && StringUtils.isNotBlank(logString.toString())) {
         String date =
             new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE)
@@ -217,22 +211,38 @@ public class FDASchedulerService {
                     + FdahpStudyDesignerUtil.getAppProperties().get("push.notification.uri"));
 
         post.setHeader("Content-type", "application/json");
-
-        post.setHeader("clientId", configMap.get("security.oauth2.client.client-id").toString());
-        post.setHeader(
-            "secretKey",
-            FdahpStudyDesignerUtil.getHashedValue(
-                configMap.get("security.oauth2.client.client-secret").toString()));
+        post.setHeader("Authorization", "Bearer " + oauthService.getAccessToken());
 
         StringEntity requestEntity =
             new StringEntity(json.toString(), ContentType.APPLICATION_JSON);
         post.setEntity(requestEntity);
         client.execute(post);
+        client.execute(post);
+        HttpResponse response = client.execute(post);
+        StatusLine statusLine = response.getStatusLine();
+        if (statusLine.getStatusCode() == 200) {
+          logSendNotificationFailedEvent(NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE);
+        } else {
+          logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
+        }
       }
     } catch (Exception e) {
       logger.error("FDASchedulerService - sendPushNotification - ERROR", e.getCause());
       e.printStackTrace();
+
+      logSendNotificationFailedEvent(NOTIFICATION_METADATA_SEND_OPERATION_FAILED);
     }
     logger.info("FDASchedulerService - sendPushNotification - Ends");
+  }
+
+  private void logSendNotificationFailedEvent(StudyBuilderAuditEvent eventEnum) {
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSource(PlatformComponent.STUDY_BUILDER.getValue());
+    auditRequest.setDestination(PlatformComponent.PARTICIPANT_DATASTORE.getValue());
+    auditRequest.setCorrelationId(UUID.randomUUID().toString());
+    auditRequest.setDescription(eventEnum.getDescription());
+    auditRequest.setEventCode(eventEnum.getEventCode());
+    auditRequest.setOccurred(new Timestamp(Instant.now().toEpochMilli()));
+    auditLogEventHelper.logEvent(eventEnum, auditRequest);
   }
 }

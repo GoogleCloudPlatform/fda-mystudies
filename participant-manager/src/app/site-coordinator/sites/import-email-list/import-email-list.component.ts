@@ -1,9 +1,9 @@
 import {Component, Output, Input, EventEmitter} from '@angular/core';
 import {SiteDetailsService} from '../shared/site-details.service';
-import {ApiResponse} from 'src/app/entity/api.response.model';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
 import {ToastrService} from 'ngx-toastr';
+import {ImportParticipantEmailResponse} from '../shared/import-participants';
 
 @Component({
   selector: 'app-import-email-list',
@@ -12,7 +12,9 @@ import {ToastrService} from 'ngx-toastr';
 })
 export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
   @Output() cancel = new EventEmitter();
-  @Output() import = new EventEmitter();
+  @Output() import: EventEmitter<
+    ImportParticipantEmailResponse
+  > = new EventEmitter<ImportParticipantEmailResponse>();
   @Input() siteId = '';
   fileName = '';
   file?: File;
@@ -39,19 +41,14 @@ export class ImportEmailListComponent extends UnsubscribeOnDestroyAdapter {
       formData.append('file', this.file, this.file.name);
       this.siteDetailsService
         .importParticipants(this.siteId, formData)
-        .subscribe(
-          (successResponse: ApiResponse) => {
-            if (getMessage(successResponse.code)) {
-              this.toastr.success(getMessage(successResponse.code));
-            } else {
-              this.toastr.success(successResponse.message);
-              this.import.emit();
-            }
-          },
-          (error) => {
-            this.toastr.error(error);
-          },
-        );
+        .subscribe((successResponse: ImportParticipantEmailResponse) => {
+          if (getMessage(successResponse.code)) {
+            this.toastr.success(getMessage(successResponse.code));
+          } else {
+            this.toastr.success(successResponse.message);
+          }
+          this.import.emit(successResponse);
+        });
     } else {
       this.toastr.error('Please select a file to upload.');
     }

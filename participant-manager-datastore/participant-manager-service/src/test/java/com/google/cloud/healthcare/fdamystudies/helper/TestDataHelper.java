@@ -13,10 +13,12 @@ import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NO
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.CUSTOM_ID_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_DESCRIPTION_VALUE;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOCATION_NAME_VALUE;
+import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.LOGO_IMAGE_URL;
 import static com.google.cloud.healthcare.fdamystudies.common.TestConstants.VALID_BEARER_TOKEN;
 
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.DataSharingStatus;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.Permission;
@@ -216,6 +218,7 @@ public class TestDataHelper {
     studyEntity.setName("COVID Study");
     studyEntity.setCustomId("CovidStudy");
     studyEntity.setApp(appEntity);
+    studyEntity.setLogoImageUrl(LOGO_IMAGE_URL);
     StudyPermissionEntity studyPermissionEntity = new StudyPermissionEntity();
     studyPermissionEntity.setUrAdminUser(userEntity);
     studyPermissionEntity.setEdit(Permission.EDIT);
@@ -263,6 +266,7 @@ public class TestDataHelper {
     ParticipantStudyEntity participantStudyEntity = new ParticipantStudyEntity();
     participantStudyEntity.setSite(siteEntity);
     participantStudyEntity.setStudy(studyEntity);
+    participantStudyEntity.setStatus(EnrollmentStatus.WITHDRAWN.getStatus());
     participantStudyEntity.setParticipantRegistrySite(participantRegistrySiteEntity);
     participantStudyEntity.setSharing(DataSharingStatus.PROVIDED.value());
     return participantStudyRepository.saveAndFlush(participantStudyEntity);

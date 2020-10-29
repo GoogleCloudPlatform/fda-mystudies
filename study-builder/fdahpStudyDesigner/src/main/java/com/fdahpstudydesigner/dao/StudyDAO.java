@@ -120,6 +120,8 @@ public interface StudyDAO {
 
   public StudyBo getStudyById(String studyId, Integer userId);
 
+  public StudyBo getStudy(Integer id);
+
   public EligibilityBo getStudyEligibiltyByStudyId(String studyId);
 
   public List<StudyListBean> getStudyList(Integer userId);
@@ -218,4 +220,7 @@ public interface StudyDAO {
   public String getStudyCategory(Integer id);
 
   public Integer getEligibilityType(Integer studyId);
+
+  public String updateDraftToEditedStatus(
+      Session session, Transaction transaction, Integer userId, String actionType, Integer studyId);
 }

@@ -5,10 +5,11 @@ import {ToastrService} from 'ngx-toastr';
 import {AccountService} from '../shared/account.service';
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {UpdateProfile} from '../shared/profile.model';
+import {Profile, UpdateProfile} from '../shared/profile.model';
 import {Validators} from '@angular/forms';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {StateService} from 'src/app/service/state.service';
+import {UserService} from 'src/app/service/user.service';
 
 @Component({
   selector: 'account-profile',
@@ -19,6 +20,7 @@ export class AccountProfileComponent
   extends UnsubscribeOnDestroyAdapter
   implements OnInit {
   profileForm: FormGroup;
+  user = {} as Profile;
   constructor(
     private readonly fb: FormBuilder,
     private readonly accountService: AccountService,
@@ -26,6 +28,7 @@ export class AccountProfileComponent
     private readonly router: Router,
     private readonly toastr: ToastrService,
     private readonly userState: StateService,
+    private readonly userService: UserService,
   ) {
     super();
     this.profileForm = fb.group({
@@ -53,14 +56,9 @@ export class AccountProfileComponent
   }
 
   getProfileDetails(): void {
-    this.accountService.fetchUserProfile().subscribe(
-      (data) => {
-        this.profileForm.patchValue(data);
-      },
-      (error) => {
-        this.toastr.error(error);
-      },
-    );
+    this.accountService.fetchUserProfile().subscribe((data) => {
+      this.profileForm.patchValue(data);
+    });
   }
 
   updateProfile(): void {
@@ -69,8 +67,17 @@ export class AccountProfileComponent
       firstName: String(this.profileForm.controls['firstName'].value),
       lastName: String(this.profileForm.controls['lastName'].value),
     };
+
     this.accountService.updateUserProfile(profileToBeUpdated).subscribe(
       (successResponse: ApiResponse) => {
+        this.user = this.userService.getUserProfile();
+        this.user.firstName = String(
+          this.profileForm.controls['firstName'].value,
+        );
+        this.user.lastName = String(
+          this.profileForm.controls['lastName'].value,
+        );
+        localStorage.setItem('user', JSON.stringify(this.user));
         this.userState.setCurrentUserName(
           this.profileForm.controls['firstName'].value,
         );
@@ -94,11 +101,10 @@ export class AccountProfileComponent
         if (getMessage(successResponse.code)) {
           this.toastr.error(getMessage(successResponse.code));
         }
-        sessionStorage.clear();
+        localStorage.clear();
         void this.router.navigate(['/']);
       },
       (errorResponse: ApiResponse) => {
-        console.log(errorResponse);
         if (getMessage(errorResponse.code)) {
           this.toastr.error(getMessage(errorResponse.code));
         }

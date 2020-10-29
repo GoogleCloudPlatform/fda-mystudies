@@ -18,14 +18,18 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateRespBean;
 import com.google.cloud.healthcare.fdamystudies.beans.WithDrawFromStudyRespBean;
 import com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEventHelper;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.dao.CommonDao;
 import com.google.cloud.healthcare.fdamystudies.dao.ParticipantStudiesInfoDao;
 import com.google.cloud.healthcare.fdamystudies.dao.StudyStateDao;
 import com.google.cloud.healthcare.fdamystudies.dao.UserRegAdminUserDao;
 import com.google.cloud.healthcare.fdamystudies.exceptions.ErrorCodeException;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
 import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.util.BeanUtil;
 import com.google.cloud.healthcare.fdamystudies.util.EnrollmentManagementUtil;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
@@ -36,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.transaction.SystemException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -61,6 +66,10 @@ public class StudyStateServiceImpl implements StudyStateService {
   @Autowired private ParticipantStudiesInfoDao participantStudiesInfoDao;
 
   @Autowired EnrollAuditEventHelper enrollAuditEventHelper;
+
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
+
+  @Autowired private ParticipantRegistrySiteRepository participantRegistrySiteRepository;
 
   @Override
   @Transactional(readOnly = true)
@@ -220,7 +229,7 @@ public class StudyStateServiceImpl implements StudyStateService {
                 studyStateDao.getEnrollTokenForParticipant(
                     participantStudiesBO.getParticipantRegistrySite().getId());
             studyStateBean.setHashedToken(
-                EnrollmentManagementUtil.getHashedValue(enrolledTokenVal));
+                EnrollmentManagementUtil.getHashedValue(enrolledTokenVal.toUpperCase()));
           }
           if (participantStudiesBO.getStudy() != null) {
             studyStateBean.setStudyId(participantStudiesBO.getStudy().getCustomId());
@@ -253,10 +262,21 @@ public class StudyStateServiceImpl implements StudyStateService {
       String participantId, String studyId, boolean delete) {
     logger.info("StudyStateServiceImpl withdrawFromStudy() - Starts ");
     WithDrawFromStudyRespBean respBean = null;
-    String message = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
 
-    message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
+    String message = studyStateDao.withdrawFromStudy(participantId, studyId, delete);
     if (message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())) {
+      Optional<ParticipantStudyEntity> participantStudy =
+          participantStudyRepository.findByParticipantId(participantId);
+
+      Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
+          participantRegistrySiteRepository.findById(
+              participantStudy.get().getParticipantRegistrySite().getId());
+      ParticipantRegistrySiteEntity participantRegistrySite = optParticipantRegistrySite.get();
+      participantRegistrySite.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+      participantRegistrySiteRepository.saveAndFlush(participantRegistrySite);
+      participantStudy.get().setParticipantId(null);
+      participantStudyRepository.saveAndFlush(participantStudy.get());
+
       enrollUtil.withDrawParticipantFromStudy(participantId, studyId, delete);
       respBean = new WithDrawFromStudyRespBean();
       respBean.setCode(HttpStatus.OK.value());

@@ -30,6 +30,8 @@ import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_CHAN
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_EMAIL_SENT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_HELP_REQUESTED;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT;
+import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_FAILED;
 import static com.fdahpstudydesigner.common.StudyBuilderAuditEvent.PASSWORD_RESET_SUCCEEDED;
 
@@ -41,7 +43,6 @@ import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
 import com.fdahpstudydesigner.common.StudyBuilderConstants;
 import com.fdahpstudydesigner.common.UserAccessLevel;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.LoginDAOImpl;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.EmailNotification;
@@ -54,7 +55,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,8 +70,6 @@ import org.springframework.stereotype.Service;
 public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   private static Logger logger = Logger.getLogger(LoginServiceImpl.class.getName());
-
-  @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private StudyBuilderAuditEventHelper auditLogEventHelper;
 
@@ -99,15 +97,9 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
     String passwordCount = propMap.get("password.history.count");
     List<UserPasswordHistory> passwordHistories = null;
     Boolean isValidPassword = true;
-    String activity = "";
-    String activityDetail = "";
     Map<String, String> values = new HashMap<>();
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      // TODO(Aswini): Need top check what should be the CorrelationId for PRE Login
-      // services
-      UUID uuid = UUID.randomUUID(); // Generates random UUID.
-      auditRequest.setCorrelationId(uuid.toString().toUpperCase());
       auditRequest.setUserId(String.valueOf(userBO2.getUserId()));
       userBO = loginDAO.getUserBySecurityToken(securityToken);
       if (null != userBO) {
@@ -149,7 +141,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               userBO.setAccountNonExpired(true);
               userBO.setAccountNonLocked(true);
               userBO.setCredentialsNonExpired(true);
-              userBO.setPasswordExpairdedDateTime(
+              userBO.setPasswordExpiryDateTime(
                   new SimpleDateFormat(FdahpStudyDesignerConstants.DB_SDF_DATE_TIME)
                       .format(new Date()));
               result = loginDAO.updateUser(userBO);
@@ -158,6 +150,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
                 isValid = true;
                 SessionObject sessionObject = new SessionObject();
                 sessionObject.setUserId(userBO.getUserId());
+
+                auditRequest.setUserId(String.valueOf(userBO.getUserId()));
 
                 auditLogEventHelper.logEvent(NEW_USER_ACCOUNT_ACTIVATED, auditRequest);
                 auditLogEventHelper.logEvent(PASSWORD_RESET_SUCCEEDED, auditRequest);
@@ -221,14 +215,10 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
         Integer.parseInt(propMap.get("password.max.char.match.count"));
     List<UserPasswordHistory> passwordHistories = null;
     Boolean isValidPassword = false;
-    String activity = "";
-    String activityDetail = "";
     int countPassChar = 0;
     StudyBuilderAuditEvent eventEnum = null;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setCorrelationId(sesObj.getSessionId());
-      auditRequest.setUserId(String.valueOf(userId));
       if ((newPassword != null)
           && (newPassword.contains(sesObj.getFirstName())
               || newPassword.contains(sesObj.getLastName()))) {
@@ -269,8 +259,7 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
               loginDAO.updatePasswordHistory(
                   userId, FdahpStudyDesignerUtil.getEncryptedPassword(newPassword));
               eventEnum = PASSWORD_CHANGE_SUCCEEDED;
-              auditLogDAO.saveToAuditLog(
-                  null, null, sesObj, activity, activityDetail, "LoginDAOImpl - changePassword");
+
             } else {
               eventEnum = PASSWORD_CHANGE_FAILED;
             }
@@ -379,25 +368,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
   public Boolean logUserLogOut(SessionObject sessionObject) {
     logger.info("LoginServiceImpl - isFrocelyLogOutUser() - Starts");
     Boolean isLogged = false;
-    String activity = "";
-    String activityDetail = "";
     try {
-      activity = "User logout.";
-      activityDetail =
-          "User successfully signed out. (Account Details:- First Name = "
-              + sessionObject.getFirstName()
-              + ", Last Name = "
-              + sessionObject.getLastName()
-              + ", Email ="
-              + sessionObject.getEmail()
-              + ").";
-      auditLogDAO.saveToAuditLog(
-          null,
-          null,
-          sessionObject,
-          activity,
-          activityDetail,
-          "FdahpStudyDesignerPreHandlerInterceptor - preHandle()");
+
       isLogged = true;
     } catch (Exception e) {
       logger.error("LoginServiceImpl - isFrocelyLogOutUser() - ERROR ", e);
@@ -617,7 +589,8 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
   @Override
   // Send mail to user when account locked due to invalid login credentials
-  public void sendLockedAccountPasswordResetLinkToMail(String email) {
+  public void sendLockedAccountPasswordResetLinkToMail(
+      String email, AuditLogEventRequest auditRequest) {
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Starts");
     try {
       Map<String, String> propMap = FdahpStudyDesignerUtil.getAppProperties();
@@ -650,10 +623,12 @@ public class LoginServiceImpl implements LoginService, UserDetailsService {
 
           EmailNotification.sendEmailNotification(
               "accountLockedSubject", dynamicContent, email, null, null);
+          auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT, auditRequest);
         }
       }
     } catch (Exception e) {
       logger.error("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - ERROR ", e);
+      auditLogEventHelper.logEvent(PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT, auditRequest);
     }
     logger.info("LoginServiceImpl - sendLockedAccountPasswordResetLinkToMail - Ends");
   }

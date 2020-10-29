@@ -7,7 +7,7 @@
             class="subheader__title flex__justify__space-between align__items__baseline"
           >
             <div>
-              <a routerLink="/coordinator/studies/">
+              <a (click)="backClicked()">
                 <img src="assets/svgs/back-arrow.svg" alt="Go Back" />
               </a>
             </div>
@@ -34,9 +34,7 @@
                 <div
                   *ngIf="
                     studyDetails.participantRegistryDetail.studyType ===
-                      studyTypes.Open &&
-                    studyDetails.participantRegistryDetail
-                      .openStudySitePermission === permission.ViewAndEdit
+                    studyTypes.Open
                   "
                   class="pr-xlg"
                 >
@@ -65,7 +63,10 @@
         </div>
         <div
           *ngIf="
-            studyDetails.participantRegistryDetail.studyType === studyTypes.Open
+            studyDetails.participantRegistryDetail.studyType ===
+              studyTypes.Open &&
+            studyDetails.participantRegistryDetail.openStudySitePermission ===
+              permission.ViewAndEdit
           "
           class="pr-xlg"
         >

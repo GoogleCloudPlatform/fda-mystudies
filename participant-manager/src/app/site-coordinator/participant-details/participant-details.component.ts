@@ -6,9 +6,14 @@ import {ParticipantDetailsService} from './participant-details.service';
 import {ActivatedRoute} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {OnboardingStatus} from 'src/app/shared/enums';
+import {
+  EnrollmentStatus,
+  OnboardingStatus,
+  StudyType,
+} from 'src/app/shared/enums';
 import {ApiResponse} from 'src/app/entity/api.response.model';
-
+import {Location} from '@angular/common';
+import {RegistryParticipant} from 'src/app/shared/participant';
 @Component({
   selector: 'app-participant-details',
   templateUrl: './participant-details.component.html',
@@ -22,8 +27,9 @@ export class ParticipantDetailsComponent
   enableDisable = '';
   participant$: Observable<Participant> = of();
   onBoardingStatus = OnboardingStatus;
-
+  studyTypes = StudyType;
   constructor(
+    private readonly locationLibrary: Location,
     private readonly participantDetailsService: ParticipantDetailsService,
     private readonly route: ActivatedRoute,
     private readonly toastr: ToastrService,
@@ -44,13 +50,13 @@ export class ParticipantDetailsComponent
     this.participant$ = this.participantDetailsService.get(this.participantId);
     this.participant$.subscribe((participant) => {
       this.sendResend =
-        participant.participantDetail.onboardingStatus ===
+        participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.New
           ? 'Send Invitation'
           : 'Resend Invitation';
 
       this.enableDisable =
-        participant.participantDetail.onboardingStatus ===
+        participant.participantDetails.onboardingStatus ===
         this.onBoardingStatus.Disabled
           ? 'Enable Invitation'
           : 'Disable Invitation';
@@ -83,8 +89,8 @@ export class ParticipantDetailsComponent
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.getParticipant();
           }
+          this.getParticipant();
         }),
     );
   }
@@ -103,9 +109,19 @@ export class ParticipantDetailsComponent
             this.toastr.success(getMessage(successResponse.code));
           } else {
             this.toastr.success('Success');
-            this.getParticipant();
           }
+          this.getParticipant();
         }),
+    );
+  }
+  backClicked(): void {
+    this.locationLibrary.back();
+  }
+  hasCompletedEnrollment(participantDetails: RegistryParticipant): boolean {
+    return (
+      participantDetails.enrollments.length > 0 &&
+      participantDetails.enrollments[0].enrollmentStatus ===
+        EnrollmentStatus.Enrolled
     );
   }
 }

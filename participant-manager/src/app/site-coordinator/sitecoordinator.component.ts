@@ -3,6 +3,7 @@ import {SearchService} from '../shared/search.service';
 import {SearchBar} from '../shared/search-bar';
 import {Profile} from './account/shared/profile.model';
 import {UserService} from '../service/user.service';
+import {StateService} from '../service/state.service';
 
 @Component({
   selector: 'site-coordinator',
@@ -15,17 +16,25 @@ export class SiteCoordinatorComponent implements OnInit {
   filterQuery = '';
   searchBar: SearchBar | undefined;
   user = {} as Profile;
-
+  userName = '';
   constructor(
     private readonly searchService: SearchService,
     private readonly userService: UserService,
+    private readonly userState: StateService,
   ) {}
 
   ngOnInit(): void {
     this.user = this.userService.getUserProfile();
+    this.userState.currentUserName$.subscribe((upadtedUsername) => {
+      this.userName = upadtedUsername;
+    });
+    if (this.userName === '') {
+      this.userName = this.user.firstName;
+    }
     this.searchService.searchPlaceHolder$.subscribe(
       (updatedPlaceHolder: string) => {
         this.showSearchBar = true;
+        this.filterQuery = '';
         this.searchPlaceholder = updatedPlaceHolder;
       },
     );

@@ -41,7 +41,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.collections4.map.HashedMap;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -90,7 +89,8 @@ public class StudiesControllerTest extends BaseMockIT {
         Constants.STUDY_ENROLLING,
         Constants.APP_ID_VALUE,
         Constants.APP_NAME,
-        Constants.APP_DESCRIPTION);
+        Constants.APP_DESCRIPTION,
+        Constants.LOGO_IMAGE_URL);
   }
 
   @Test
@@ -119,6 +119,7 @@ public class StudiesControllerTest extends BaseMockIT {
     assertNotNull(studyInfoBo);
     assertEquals(Constants.STUDY_SPONSOR, studyInfoBo.getSponsor());
     assertEquals(Constants.STUDY_TAGLINE, studyInfoBo.getTagline());
+    assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
 
     verifyTokenIntrospectRequest(1);
 
@@ -152,6 +153,7 @@ public class StudiesControllerTest extends BaseMockIT {
             .orElse(null);
     assertNotNull(studyInfoBo);
     assertEquals(Constants.NEW_STUDY_ID, studyInfoBo.getCustomId());
+    assertEquals(Constants.LOGO_IMAGE_URL, studyInfoBo.getLogoImageUrl());
   }
 
   @Test
@@ -240,7 +242,6 @@ public class StudiesControllerTest extends BaseMockIT {
   }
 
   @Test
-  @Disabled
   // TODO(#668) Remove @Disabled when Github test case failed issue fix
   public void sendNotificationSuccess() throws Exception {
     HttpHeaders headers = TestUtils.getCommonHeaders();

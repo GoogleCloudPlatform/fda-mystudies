@@ -441,7 +441,49 @@ public enum StudyBuilderAuditEvent {
       RESPONSE_DATASTORE,
       null,
       "Failed to send study metadata.",
-      "STUDY_METADATA_SEND_FAILED");
+      "STUDY_METADATA_SEND_FAILED"),
+
+  SIGNIN_SUCCEEDED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "SIGNIN_SUCCEEDED"),
+
+  SIGNIN_FAILED(STUDY_BUILDER, STUDY_DATASTORE, null, null, "SIGNIN_FAILED"),
+
+  SIGNIN_FAILED_UNREGISTERED_USER(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "Sign-in failure due to unregistered username.",
+      "SIGNIN_FAILED_UNREGISTERED_USER"),
+
+  ACCOUNT_LOCKED(
+      STUDY_BUILDER,
+      STUDY_DATASTORE,
+      null,
+      "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
+      "ACCOUNT_LOCKED"),
+
+  PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      null,
+      "PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT"),
+
+  SESSION_EXPIRY(
+      STUDY_BUILDER, STUDY_DATASTORE, null, "User session timed out or expired.", "SESSION_EXPIRY"),
+
+  NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE(
+      STUDY_DATASTORE,
+      PARTICIPANT_DATASTORE,
+      null,
+      "App/study notifications metadata sent.",
+      "NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE"),
+
+  NOTIFICATION_METADATA_SEND_OPERATION_FAILED(
+      STUDY_DATASTORE,
+      PARTICIPANT_DATASTORE,
+      null,
+      "Failed to send app/study notifications metadata.",
+      "NOTIFICATION_METADATA_SEND_OPERATION_FAILED");
 
   private final PlatformComponent source;
   private final PlatformComponent destination;

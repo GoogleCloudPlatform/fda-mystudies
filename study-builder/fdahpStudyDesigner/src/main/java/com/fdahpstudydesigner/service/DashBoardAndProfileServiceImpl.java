@@ -31,7 +31,6 @@ import com.fdahpstudydesigner.bo.MasterDataBO;
 import com.fdahpstudydesigner.bo.UserBO;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEvent;
 import com.fdahpstudydesigner.common.StudyBuilderAuditEventHelper;
-import com.fdahpstudydesigner.dao.AuditLogDAO;
 import com.fdahpstudydesigner.dao.DashBoardAndProfileDAO;
 import com.fdahpstudydesigner.mapper.AuditEventMapper;
 import com.fdahpstudydesigner.util.FdahpStudyDesignerConstants;
@@ -45,8 +44,6 @@ import org.springframework.stereotype.Service;
 public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileService {
 
   private static Logger logger = Logger.getLogger(DashBoardAndProfileServiceImpl.class);
-
-  @Autowired private AuditLogDAO auditLogDAO;
 
   @Autowired private DashBoardAndProfileDAO dashBoardAndProfiledao;
 
@@ -76,13 +73,9 @@ public class DashBoardAndProfileServiceImpl implements DashBoardAndProfileServic
   public String updateProfileDetails(UserBO userBO, int userId, SessionObject userSession) {
     logger.info("DashBoardAndProfileServiceImpl - updateProfileDetails - Starts");
     String message = FdahpStudyDesignerConstants.FAILURE;
-    String activity = "";
-    String activityDetail = "";
     StudyBuilderAuditEvent auditLogEvent = null;
     try {
       AuditLogEventRequest auditRequest = AuditEventMapper.fromHttpServletRequest(request);
-      auditRequest.setUserId(String.valueOf(userId));
-      auditRequest.setCorrelationId(userSession.getSessionId());
       message = dashBoardAndProfiledao.updateProfileDetails(userBO, userId);
       if (message.equals(FdahpStudyDesignerConstants.SUCCESS)) {
         auditLogEvent = USER_ACCOUNT_UPDATED;

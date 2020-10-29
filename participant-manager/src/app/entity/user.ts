@@ -16,7 +16,7 @@ export interface User extends ApiResponse {
 
   emailChanged: number;
 
-  status: Status;
+  status?: Status;
 
   manageUsers: number;
 
@@ -46,7 +46,9 @@ export interface User extends ApiResponse {
 
   apps: App[];
 
-  manageLocationsSelected: boolean;
+  manageLocationsSelected?: boolean;
+
+  redirectTo?: string;
 }
 
 export interface SetUpUser {

@@ -1,7 +1,7 @@
 <div class="max__w__1280">
   <div class="tab-content">
     <ng-container *ngIf="studyList$ | async as studyList">
-      <div *ngIf="studyList.sitePermissionCount >= 2">
+      <div *ngIf="studyList.superAdmin || studyList.sitePermissionCount >= 2">
         <div
           *ngFor="let study of studyList.studies"
           class="bg__white cards cards__var box__shadow-cmn ml-none mr-none studies_row"
@@ -12,12 +12,12 @@
           >
             <div>
               <div class="flex__ flex__row align__items__center">
-                <div class="img__container__left" *ngIf="study.logo">
-                  <img [src]="study.logo" />
+                <div class="img__container__left" *ngIf="study.logoImageUrl">
+                  <img [src]="study.logoImageUrl" alt="" />
                 </div>
                 <div>
                   <div class="blue__text__md text-capitalize">
-                    {{ study.customId }}
+                    {{ study.name }}
                   </div>
                   <div
                     class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"

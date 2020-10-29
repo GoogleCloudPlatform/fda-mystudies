@@ -17,7 +17,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DAT
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
@@ -227,8 +227,7 @@ public class UserProfileControllerTest extends BaseMockIT {
         1,
         postRequestedFor(
             urlEqualTo(
-                "/mystudies-response-server/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true"
-            )));
+                "/response-datastore/participant/withdraw?studyId=studyId1&participantId=4&deleteResponses=true")));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(Constants.USER_ID);
@@ -236,14 +235,14 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditRequest.setParticipantId("4");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_ACCOUNT_DEACTIVATED.getEventCode(), auditRequest);
+    auditEventMap.put(USER_DELETED.getEventCode(), auditRequest);
     auditEventMap.put(PARTICIPANT_DATA_DELETED.getEventCode(), auditRequest);
     auditEventMap.put(DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL.getEventCode(), auditRequest);
     auditEventMap.put(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE.getEventCode(), auditRequest);
 
     verifyAuditEventCall(
         auditEventMap,
-        USER_ACCOUNT_DEACTIVATED,
+        USER_DELETED,
         PARTICIPANT_DATA_DELETED,
         DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL,
         WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE);

@@ -39,7 +39,7 @@ Note: Consider including {ENV} in {PREFIX}.
 
 Follow the
 [installation instructions](https://github.com/GoogleCloudPlatform/healthcare-data-protection-suite/tree/master/docs/tfengine/#installation)
-to install the tfengine binary v0.2.0.
+to install the tfengine binary v0.4.0.
 
 ## Layout of the generated Terraform configs
 
@@ -296,26 +296,46 @@ regenerating the Terraform configs several times.
 
 ### Step 8: Kubernetes deployment
 
-1. Follow [Kubernetes README.md](../kubernetes/README.md) to deploy the
+1. Follow [Kubernetes README.md](./kubernetes/README.md) to deploy the
     Kubernetes resources in the GKE cluster.
 
 ### Step 9: Secrets setup
 
-1. Modify [copy_client_info_to_sql.sh](./scripts/copy_client_info_to_sql.sh) to
-    reflect proper {PREFIX} and {ENV}, and run to copy client info from secrets
-    into CloudSQL.
+1. Run
+   [register_clients_in_hydra.sh $PREFIX $ENV](./scripts/register_clients_in_hydra.sh.sh), 
+   passing your deployment PREFIX and ENV as parameters.
+   This script will register each application in hydra using the generated
+   client id and secret keys.
 
 1. Modify
-    [copy_mobile_app_info_to_sql.sh](./scripts/copy_mobile_app_info_to_sql.sh)
-    to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from
-    secrets into CloudSQL.
+   [copy_mobile_app_info_to_sql.sh](./scripts/copy_mobile_app_info_to_sql.sh)
+   to reflect proper {PREFIX} and {ENV}, and run to copy mobile app info from
+   secrets into CloudSQL.
 
-### Step 10: Mobile app setups
+### Step 10: Superadmin accounts
+In order to access Study Builder or Participant Manager web UIs for the first time,
+an initial superadmin account needs to be generated for each application.
 
-1. Build and destribute iOS and Android apps following their individual
+1. **Participant Manager** 
+`create_participant_manager_superadmin.sh` accepts an email and password and
+generates an initial superadmin account for Participant Manager.
+```bash
+./scripts/create_participant_manager_superadmin.sh <prefix> <env> <email> <password>
+```
+
+1.  **Study Builder**
+`create_study_builder_superadmin.sh` accepts an email and password and
+generates an initial superadmin account for Study Builder.
+```bash
+./scripts/create_study_builder_superadmin.sh <prefix> <env> <email> <password>
+```
+
+### Step 11: Mobile app setups
+
+1. Build and distribute iOS and Android apps following their individual
     instructions.
 
-1. Once you have setup push notification for the apps, copy the values to their
+1. Once you have set up push notification for the apps, copy the values to their
     corresponding secrets:
 
     ```bash
@@ -335,7 +355,7 @@ regenerating the Terraform configs several times.
     to reflect proper {PREFIX} and {ENV}, and run to copy push notification info
     from secrets into CloudSQL.
 
-### Step 11: Clean up
+### Step 12: Clean up
 
 1. Revoke your super admin access by running `gcloud auth revoke` and
     authenticate as a normal user for daily activities.

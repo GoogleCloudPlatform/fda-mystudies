@@ -12,11 +12,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.PASSWORD_REGEX_MESSAGE;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.encrypt;
-import static com.google.cloud.healthcare.fdamystudies.common.EncryptionUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.ACCOUNT_LOCKED;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.hash;
+import static com.google.cloud.healthcare.fdamystudies.common.HashUtils.salt;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
+import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getObjectNode;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.getTextValue;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
+import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.ACCOUNT_LOCKED_PASSWORD;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.CORRELATION_ID;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.EXPIRE_TIMESTAMP;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimConstants.HASH;
@@ -32,6 +35,7 @@ import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScim
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_EMAIL_SENT_FOR_LOCKED_ACCOUNT;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.PASSWORD_RESET_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.oauthscim.common.AuthScimEvent.USER_SIGNOUT_SUCCEEDED;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -41,6 +45,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +77,8 @@ import com.google.cloud.healthcare.fdamystudies.oauthscim.repository.UserReposit
 import com.google.cloud.healthcare.fdamystudies.oauthscim.service.UserService;
 import com.jayway.jsonpath.JsonPath;
 import java.net.MalformedURLException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -126,13 +134,21 @@ public class UserControllerTest extends BaseMockIT {
   public void shouldReturnUnauthorized() throws Exception {
     HttpHeaders headers = getCommonHeaders();
     headers.add("Authorization", INVALID_BEARER_TOKEN);
+    headers.add("Origin", "http://localhost:4200");
 
-    performPost(
-        ApiEndpoint.USERS.getPath(),
-        asJsonString(newUserRequest()),
-        headers,
-        "Invalid token",
-        UNAUTHORIZED);
+    mockMvc
+        .perform(
+            post(ApiEndpoint.USERS.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(newUserRequest()))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().isUnauthorized())
+        .andExpect(jsonPath("$.error_description").value(ErrorCode.UNAUTHORIZED.getDescription()))
+        .andExpect(header().string("Access-Control-Allow-Headers", "*"))
+        .andExpect(header().string("Access-Control-Allow-Methods", "*"))
+        .andExpect(header().string("Access-Control-Allow-Origin", "http://localhost:4200"))
+        .andReturn();
 
     verify(
         1,
@@ -448,7 +464,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertEquals(expectedPasswordHash, actualPasswordHash);
     assertTrue(userInfoNode.get(PASSWORD_HISTORY).isArray());
@@ -536,6 +552,40 @@ public class UserControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnAccountLockedError() throws Exception {
+
+    userEntity.setStatus(UserAccountStatus.ACCOUNT_LOCKED.getStatus());
+    JsonNode userInfo = userEntity.getUserInfo();
+    String rawSalt = salt();
+    String hashValue = hash(CURRENT_PASSWORD_VALUE, rawSalt);
+    ObjectNode passwordNode = getObjectNode();
+    passwordNode.put(HASH, hashValue);
+    passwordNode.put(SALT, rawSalt);
+    passwordNode.put(EXPIRE_TIMESTAMP, Instant.now().plus(Duration.ofMinutes(15)).toEpochMilli());
+    ((ObjectNode) userInfo).set(ACCOUNT_LOCKED_PASSWORD, passwordNode);
+    userEntity.setUserInfo(userInfo);
+    userEntity = userRepository.saveAndFlush(userEntity);
+
+    HttpHeaders headers = getCommonHeaders();
+    headers.add("Authorization", VALID_BEARER_TOKEN);
+    headers.add("correlationId", "CorrelationIdValue_For_5XX_failure");
+
+    ResetPasswordRequest userRequest = new ResetPasswordRequest();
+    userRequest.setEmail(EMAIL_VALUE);
+    userRequest.setAppId(APP_ID_VALUE);
+
+    mockMvc
+        .perform(
+            post(ApiEndpoint.RESET_PASSWORD.getPath())
+                .contextPath(getContextPath())
+                .content(asJsonString(userRequest))
+                .headers(headers))
+        .andDo(print())
+        .andExpect(status().is4xxClientError())
+        .andExpect(content().string(containsString(ACCOUNT_LOCKED.getDescription())));
+  }
+
+  @Test
   public void shouldReturnAccountNotVerifiedForForgotPasswordAction()
       throws MalformedURLException, JsonProcessingException, Exception {
     HttpHeaders headers = getCommonHeaders();
@@ -613,10 +663,10 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
+        .andExpect(jsonPath("$.message").value(MessageCode.FORGOT_PASSWORD.getMessage()));
 
     String subject = getMailResetSubject();
-    String body = "Thank you for reaching out for password help for your account";
+    String body = "Thank you for reaching out for password help";
 
     MimeMessage mail =
         verifyMimeMessage(EMAIL_VALUE, appPropertyConfig.getFromEmail(), subject, body);
@@ -632,7 +682,7 @@ public class UserControllerTest extends BaseMockIT {
     JsonNode passwordNode = userInfoNode.get(PASSWORD);
     String salt = getTextValue(passwordNode, SALT);
     String actualPasswordHash = getTextValue(passwordNode, HASH);
-    String expectedPasswordHash = hash(encrypt(NEW_PASSWORD_VALUE, salt));
+    String expectedPasswordHash = hash(NEW_PASSWORD_VALUE, salt);
 
     assertNotEquals(expectedPasswordHash, actualPasswordHash);
 
@@ -673,7 +723,7 @@ public class UserControllerTest extends BaseMockIT {
                 .headers(headers))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.message").value(MessageCode.PASSWORD_RESET_SUCCESS.getMessage()));
+        .andExpect(jsonPath("$.message").value(MessageCode.FORGOT_PASSWORD.getMessage()));
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setUserId(userEntity.getUserId());

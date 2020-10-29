@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {switchMap} from 'rxjs/operators';
+import {AccessToken} from 'src/app/entity/access-token';
 import {AuthService} from 'src/app/service/auth.service';
 import {StateService} from 'src/app/service/state.service';
 import {AccountService} from 'src/app/site-coordinator/account/shared/account.service';
@@ -30,36 +31,36 @@ export class LoginCallbackComponent implements OnInit {
           this.authService
             .getToken(params.code, params.userId)
             .pipe(
-              switchMap((authServerResponse) => {
-                sessionStorage.setItem('code', params.code);
-                sessionStorage.setItem('authUserId', params.userId);
-                sessionStorage.setItem(
+              switchMap((authServerResponse: AccessToken) => {
+                localStorage.setItem('code', params.code);
+                localStorage.setItem('authUserId', params.userId);
+                localStorage.setItem(
                   'accessToken',
                   authServerResponse.access_token,
                 );
-                sessionStorage.setItem(
+                localStorage.setItem(
                   'refreshToken',
                   authServerResponse.refresh_token,
                 );
                 return this.accountService.fetchUserProfile();
               }),
             )
-            .subscribe(
-              (userProfile: Profile) => {
-                this.userState.setCurrentUserName(userProfile.firstName);
-                sessionStorage.setItem('userId', userProfile.userId);
-                sessionStorage.setItem('user', JSON.stringify(userProfile));
+            .subscribe((userProfile: Profile) => {
+              this.userState.setCurrentUserName(userProfile.firstName);
+              localStorage.setItem('userId', userProfile.userId);
+              localStorage.setItem('user', JSON.stringify(userProfile));
 
-                if (params.accountStatus === 3) {
-                  void this.router.navigate(['/change-password']);
-                } else {
-                  void this.router.navigate(['/coordinator/studies/sites']);
-                }
-              },
-              (error) => {
-                this.toastr.error(error);
-              },
-            );
+              if (
+                params.accountStatus === '3' ||
+                params.accountStatus === '2'
+              ) {
+                void this.router.navigate([
+                  '/coordinator/accounts/change-password',
+                ]);
+              } else {
+                void this.router.navigate(['/coordinator/studies/sites']);
+              }
+            });
         }
       },
       () => {

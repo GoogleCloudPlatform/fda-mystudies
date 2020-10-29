@@ -47,9 +47,12 @@ public class SiteMapper {
     List<AppSiteDetails> sites = new ArrayList<>();
     for (ParticipantStudyEntity enrollment : entry.getValue()) {
       AppSiteDetails studiesEnrollment = new AppSiteDetails();
-      studiesEnrollment.setCustomSiteId(enrollment.getSite().getLocation().getCustomId());
-      studiesEnrollment.setSiteId(enrollment.getSite().getId());
-      studiesEnrollment.setSiteName(enrollment.getSite().getLocation().getName());
+
+      if (enrollment.getSite() != null) {
+        studiesEnrollment.setCustomSiteId(enrollment.getSite().getLocation().getCustomId());
+        studiesEnrollment.setSiteId(enrollment.getSite().getId());
+        studiesEnrollment.setSiteName(enrollment.getSite().getLocation().getName());
+      }
       studiesEnrollment.setSiteStatus(enrollment.getStatus());
 
       String withdrawalDate = DateTimeUtils.format(enrollment.getWithdrawalDate());

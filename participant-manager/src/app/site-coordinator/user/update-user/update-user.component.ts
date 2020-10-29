@@ -216,10 +216,19 @@ export class UpdateUserComponent
   }
   removeExtraAttributesFromApiRequest(): void {
     delete this.user.status;
-
+    delete this.user.manageLocationsSelected;
     this.user.apps.map((app) => {
       delete app['selectedStudiesCount'];
       delete app['totalStudiesCount'];
     });
+  }
+  resendInvitation(): void {
+    this.userService
+      .resendInvitation(this.adminId)
+      .subscribe((successResponse: ApiResponse) => {
+        if (getMessage(successResponse.code)) {
+          this.toastr.success(getMessage(successResponse.code));
+        } else this.toastr.success('Success');
+      });
   }
 }

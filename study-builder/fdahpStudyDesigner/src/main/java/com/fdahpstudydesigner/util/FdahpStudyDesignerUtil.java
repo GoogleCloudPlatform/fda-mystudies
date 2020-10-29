@@ -268,7 +268,7 @@ public class FdahpStudyDesignerUtil {
       }
       ServletContext context = ServletContextHolder.getServletContext();
       Properties prop =
-          PropertiesUtil.makePropertiesWithEnvironmentVariables("application_local.properties");
+          PropertiesUtil.makePropertiesWithEnvironmentVariables("application.properties");
       objectKeys = prop.keys();
       while (objectKeys.hasMoreElements()) {
         String key = (String) objectKeys.nextElement();
@@ -1067,5 +1067,14 @@ public class FdahpStudyDesignerUtil {
       }
     }
     return UserAccessLevel.APP_STUDY_ADMIN.getValue();
+  }
+
+  public static String getMilliSecondsForImagePath() {
+    logger.info("FdahpStudyDesignerUtil: getMilliSecondsForImagePath() - Starts ");
+    String milliSeconds;
+    Calendar cal = Calendar.getInstance();
+    milliSeconds = "?v=" + cal.getTimeInMillis();
+    logger.info("FdahpStudyDesignerUtil: getMilliSecondsForImagePath() - Ends ");
+    return milliSeconds;
   }
 }

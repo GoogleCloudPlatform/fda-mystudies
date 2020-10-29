@@ -136,75 +136,40 @@ public class UserConsentManagementController {
           String message =
               userConsentManagementService.saveParticipantStudies(participantStudiesList);
 
-          StudyConsentEntity studyConsent = null;
           if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
-            studyConsent =
-                userConsentManagementService.getStudyConsent(
-                    userId,
-                    studyInfoBean.getStudyInfoId(),
-                    consentStatusBean.getConsent().getVersion());
             userDetailId = userConsentManagementService.getUserDetailsId(userId);
             Optional<UserDetailsEntity> optUser = userDetailsRepository.findById(userDetailId);
 
-            if (studyConsent != null) {
-              if (!StringUtils.isEmpty(consentStatusBean.getConsent().getVersion())) {
-                studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
-              }
-              if (!StringUtils.isEmpty(consentStatusBean.getConsent().getStatus())) {
-                studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
-              }
-              if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
-                String underDirectory = userId + "/" + consentStatusBean.getStudyId();
-                String consentDocumentFileName =
-                    consentStatusBean.getConsent().getVersion()
-                        + "_"
-                        + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-                        + ".pdf";
-                saveDocumentToCloudStorage(
-                    auditRequest,
-                    underDirectory,
-                    consentDocumentFileName,
-                    consentStatusBean,
-                    studyConsent);
-                consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
-              }
-              if (optUser.isPresent()) {
-                studyConsent.setUserDetails(optUser.get());
-              }
-
-              if (optStudy.isPresent()) {
-                studyConsent.setStudy(optStudy.get());
-              }
-            } else {
-              studyConsent = new StudyConsentEntity();
-              if (optUser.isPresent()) {
-                studyConsent.setUserDetails(optUser.get());
-              }
-
-              if (optStudy.isPresent()) {
-                studyConsent.setStudy(optStudy.get());
-              }
-              studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
-              studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
-              if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
-                String underDirectory = userId + "/" + consentStatusBean.getStudyId();
-                String consentDocumentFileName =
-                    consentStatusBean.getConsent().getVersion()
-                        + "_"
-                        + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
-                        + ".pdf";
-                saveDocumentToCloudStorage(
-                    auditRequest,
-                    underDirectory,
-                    consentDocumentFileName,
-                    consentStatusBean,
-                    studyConsent);
-                consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
-              }
+            StudyConsentEntity studyConsent = new StudyConsentEntity();
+            if (optUser.isPresent()) {
+              studyConsent.setUserDetails(optUser.get());
             }
-            String addOrUpdateConsentMessage =
-                userConsentManagementService.saveStudyConsent(studyConsent);
-            if ((addOrUpdateConsentMessage.equalsIgnoreCase(
+
+            if (optStudy.isPresent()) {
+              studyConsent.setStudy(optStudy.get());
+            }
+            studyConsent.setParticipantStudy(participantStudies);
+            studyConsent.setConsentDate(participantStudies.getEnrolledDate());
+            studyConsent.setSharing(dataSharing.value());
+            studyConsent.setStatus(consentStatusBean.getConsent().getStatus());
+            studyConsent.setVersion(consentStatusBean.getConsent().getVersion());
+            if (!StringUtils.isEmpty(consentStatusBean.getConsent().getPdf())) {
+              String underDirectory = userId + "/" + consentStatusBean.getStudyId();
+              String consentDocumentFileName =
+                  consentStatusBean.getConsent().getVersion()
+                      + "_"
+                      + new SimpleDateFormat("MMddyyyyHHmmss").format(new Date())
+                      + ".pdf";
+              saveDocumentToCloudStorage(
+                  auditRequest,
+                  underDirectory,
+                  consentDocumentFileName,
+                  consentStatusBean,
+                  studyConsent);
+              consentdocumentFilepath = underDirectory + "/" + consentDocumentFileName;
+            }
+            String addConsentMessage = userConsentManagementService.saveStudyConsent(studyConsent);
+            if ((addConsentMessage.equalsIgnoreCase(
                     MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue())
                 && message.equalsIgnoreCase(MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue()))) {
               if (AppConstants.STATUS_COMPLETED.equals(
