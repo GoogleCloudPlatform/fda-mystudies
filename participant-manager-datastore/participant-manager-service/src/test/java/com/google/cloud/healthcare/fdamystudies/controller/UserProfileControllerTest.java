@@ -29,6 +29,7 @@ import com.google.cloud.healthcare.fdamystudies.beans.AuditLogEventRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.PatchUserRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.SetUpAccountRequest;
 import com.google.cloud.healthcare.fdamystudies.beans.UserProfileRequest;
+import com.google.cloud.healthcare.fdamystudies.beans.UserRequest;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
@@ -36,7 +37,9 @@ import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
 import com.google.cloud.healthcare.fdamystudies.common.IdGenerator;
 import com.google.cloud.healthcare.fdamystudies.common.MessageCode;
 import com.google.cloud.healthcare.fdamystudies.common.ParticipantManagerEvent;
+import com.google.cloud.healthcare.fdamystudies.common.Permission;
 import com.google.cloud.healthcare.fdamystudies.common.PlatformComponent;
+import com.google.cloud.healthcare.fdamystudies.common.TestConstants;
 import com.google.cloud.healthcare.fdamystudies.common.UserStatus;
 import com.google.cloud.healthcare.fdamystudies.helper.TestDataHelper;
 import com.google.cloud.healthcare.fdamystudies.model.UserRegAdminEntity;
@@ -535,13 +538,16 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void shouldDeleteInvitedUser() throws Exception {
-    // Step 1: set user status as invited
-    userRegAdminEntity.setStatus(CommonConstants.INVITED_STATUS);
-    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
-
-    // Step 2: Call the API and expect INVITATION_DELETED_SUCCESSFULLY message
+    // Step 1: Set the super admin user in Header
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add("userId", userRegAdminEntity.getId());
+
+    // Step 2: Creating non super admin with invited status
+    // and Call the API and expect INVITATION_DELETED_SUCCESSFULLY message
+    userRegAdminEntity = testDataHelper.createNonSuperAdmin();
+    userRegAdminEntity.setSuperAdmin(false);
+    userRegAdminEntity.setStatus(CommonConstants.INVITED_STATUS);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
     mockMvc
         .perform(
@@ -557,9 +563,15 @@ public class UserProfileControllerTest extends BaseMockIT {
 
   @Test
   public void shouldNotDeleteActiveUserForDeleteInvitationRequest() throws Exception {
-    // Call the API and expect CANNOT_DELETE_INVITATION error
+    // Step 1: Set the super admin user in Header
     HttpHeaders headers = testDataHelper.newCommonHeaders();
     headers.add("userId", userRegAdminEntity.getId());
+
+    // Step 2: Creating non super admin with active status
+    // and Call the API and expect CANNOT_DELETE_INVITATION error
+    userRegAdminEntity = testDataHelper.createNonSuperAdmin();
+    userRegAdminEntity.setSuperAdmin(false);
+    testDataHelper.getUserRegAdminRepository().saveAndFlush(userRegAdminEntity);
 
     mockMvc
         .perform(
