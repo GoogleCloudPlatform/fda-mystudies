@@ -18,6 +18,6 @@ spec:
     spec:
       containers:
       - name: participant-manager
-        image: gcr.io/fda-mystudies-dev-apps/participant-manager:latest
+        image: gcr.io/mystudies-dev-apps/participant-manager:latest
         ports:
         - containerPort: 80

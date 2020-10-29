@@ -11,7 +11,7 @@ template "mystudies" {
     folder_id        = "440087619763"
     billing_account  = "01B494-31B256-17B2A6"
     domain           = "hcls.joonix.net"
-    default_location = "us-east"
+    default_location = "us-east1"
     default_zone     = "b"
     github_owner     = "zohrehj"
     github_repo      = "fda-mystudies"

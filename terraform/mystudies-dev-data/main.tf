@@ -86,7 +86,7 @@ module "mystudies_dev_mystudies_consent_documents" {
 
   name       = "mystudies-dev-mystudies-consent-documents"
   project_id = module.project.project_id
-  location   = "us-east"
+  location   = "us-east1"
 
   iam_members = [
     {
@@ -106,7 +106,7 @@ module "mystudies_dev_mystudies_institution_resources" {
 
   name       = "mystudies-dev-mystudies-institution-resources"
   project_id = module.project.project_id
-  location   = "us-east"
+  location   = "us-east1"
 
   iam_members = [
     {
@@ -122,7 +122,7 @@ module "mystudies_dev_mystudies_fda_resources" {
 
   name       = "mystudies-dev-mystudies-fda-resources"
   project_id = module.project.project_id
-  location   = "us-east"
+  location   = "us-east1"
 
   iam_members = [
     {

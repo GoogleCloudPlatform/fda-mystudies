@@ -38,34 +38,34 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #
 # The following content should be initially commented out if the above manual step is not completed.
 
-# resource "google_cloudbuild_trigger" "server_build_triggers" {
-#   for_each = toset([
-#     "study-builder",
-#     "study-datastore",
-#     "oauth-scim-module",
-#     "participant-datastore/consent-mgmt-module",
-#     "participant-datastore/enroll-mgmt-module",
-#     "participant-datastore/user-mgmt-module",
-#     "response-datastore",
-#     "participant-manager-datastore",
-#     "hydra",
-#     "participant-manager",
-#   ])
-#
-#   provider = google-beta
-#   project  = module.project.project_id
-#   name     = replace(each.key, "/", "-")
-#
-#   included_files = ["${each.key}/**"]
-#
-#   github {
-#     owner = "zohrehj"
-#     name  = "fda-mystudies"
-#     push { branch = "^develop$" }
-#   }
-#
-#   filename = "${each.key}/cloudbuild.yaml"
-# }
+resource "google_cloudbuild_trigger" "server_build_triggers" {
+  for_each = toset([
+    "study-builder",
+    "study-datastore",
+    "oauth-scim-module",
+    "participant-datastore/consent-mgmt-module",
+    "participant-datastore/enroll-mgmt-module",
+    "participant-datastore/user-mgmt-module",
+    "response-datastore",
+    "participant-manager-datastore",
+    "hydra",
+    "participant-manager",
+  ])
+
+  provider = google-beta
+  project  = module.project.project_id
+  name     = replace(each.key, "/", "-")
+
+  included_files = ["${each.key}/**"]
+
+  github {
+    owner = "zohrehj"
+    name  = "fda-mystudies"
+    push { branch = "^develop$" }
+  }
+
+  filename = "${each.key}/cloudbuild.yaml"
+}
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
 # Deletion lien: https://cloud.google.com/resource-manager/docs/project-liens
@@ -83,7 +83,7 @@ module "project" {
   skip_gcloud_download    = true
   shared_vpc              = "mystudies-dev-networks"
   shared_vpc_subnets = [
-    "projects/mystudies-dev-networks/regions/us-east/subnetworks/mystudies-dev-gke-subnet",
+    "projects/mystudies-dev-networks/regions/us-east1/subnetworks/mystudies-dev-gke-subnet",
   ]
   activate_apis = [
     "binaryauthorization.googleapis.com",
@@ -173,7 +173,7 @@ module "mystudies_dev_gke_cluster" {
   # Required.
   name               = "mystudies-dev-gke-cluster"
   project_id         = module.project.project_id
-  region             = "us-east"
+  region             = "us-east1"
   regional           = true
   network_project_id = "mystudies-dev-networks"
 

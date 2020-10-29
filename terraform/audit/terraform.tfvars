@@ -14,4 +14,4 @@
 
 
 folder         = "folders/440087619763"
-auditors_group = "mystudies-dev-auditors@hcls.joonix.net"
+auditors_group = "dpt-dev@hcls.joonix.net"

@@ -111,7 +111,7 @@ module "storage_destination" {
 
   name          = "mystudies-dev-7yr-audit-logs"
   project_id    = module.project.project_id
-  location      = "us-east"
+  location      = "us-east1"
   storage_class = "COLDLINE"
 
   lifecycle_rules = [{

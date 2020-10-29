@@ -57,11 +57,11 @@ module "bastion_vm" {
 
   name         = "bastion-vm"
   project      = module.project.project_id
-  zone         = "us-east-b"
+  zone         = "us-east1-b"
   host_project = module.project.project_id
   network      = module.mystudies_dev_network.network.network.self_link
-  subnet       = module.mystudies_dev_network.subnets["us-east/mystudies-dev-bastion-subnet"].self_link
-  members      = ["group:dpt-dev@@hcls.joonix.net"]
+  subnet       = module.mystudies_dev_network.subnets["us-east1/mystudies-dev-bastion-subnet"].self_link
+  members      = ["group:dpt-dev@hcls.joonix.net"]
 
   image_family = "ubuntu-2004-lts"
 
@@ -90,7 +90,7 @@ module "mystudies_dev_network" {
     {
       subnet_name           = "mystudies-dev-bastion-subnet"
       subnet_ip             = "10.0.128.0/24"
-      subnet_region         = "us-east"
+      subnet_region         = "us-east1"
       subnet_flow_logs      = true
       subnet_private_access = true
     },
@@ -98,7 +98,7 @@ module "mystudies_dev_network" {
     {
       subnet_name           = "mystudies-dev-gke-subnet"
       subnet_ip             = "10.0.0.0/17"
-      subnet_region         = "us-east"
+      subnet_region         = "us-east1"
       subnet_flow_logs      = true
       subnet_private_access = true
     },
@@ -132,7 +132,7 @@ module "mystudies_dev_router" {
 
   name    = "mystudies-dev-router"
   project = module.project.project_id
-  region  = "us-east"
+  region  = "us-east1"
   network = module.mystudies_dev_network.network.network.self_link
 
   nats = [
@@ -142,13 +142,13 @@ module "mystudies_dev_router" {
 
       subnetworks = [
         {
-          name                    = "${module.mystudies_dev_network.subnets["us-east/mystudies-dev-bastion-subnet"].self_link}"
+          name                    = "${module.mystudies_dev_network.subnets["us-east1/mystudies-dev-bastion-subnet"].self_link}"
           source_ip_ranges_to_nat = ["PRIMARY_IP_RANGE"]
 
           secondary_ip_range_names = []
         },
         {
-          name                    = "${module.mystudies_dev_network.subnets["us-east/mystudies-dev-gke-subnet"].self_link}"
+          name                    = "${module.mystudies_dev_network.subnets["us-east1/mystudies-dev-gke-subnet"].self_link}"
           source_ip_ranges_to_nat = ["ALL_IP_RANGES"]
 
           secondary_ip_range_names = []

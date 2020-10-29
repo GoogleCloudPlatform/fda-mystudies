@@ -17,5 +17,5 @@ project_id      = "mystudies-dev-devops"
 state_bucket    = "mystudies-dev-terraform-state"
 terraform_root  = "terraform"
 build_viewers = [
-  "group:dpt-dev@@hcls.joonix.net",
+  "group:dpt-dev@hcls.joonix.net",
 ]

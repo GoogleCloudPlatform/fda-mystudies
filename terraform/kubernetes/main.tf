@@ -28,7 +28,7 @@ data "google_client_config" "default" {}
 
 data "google_container_cluster" "gke_cluster" {
   name     = "mystudies-dev-gke-cluster"
-  location = "us-east"
+  location = "us-east1"
   project  = "mystudies-dev-apps"
 }
 
@@ -124,7 +124,7 @@ resource "kubernetes_secret" "shared_secrets" {
   data = {
     gcp_bucket_name                   = "mystudies-dev-mystudies-consent-documents"
     institution_resources_bucket_name = "mystudies-dev-mystudies-institution-resources"
-    base_url                          = "https://mystudies-dev.hcls.joonix.net."
+    base_url                          = "https://demo.mystudies.hcls.joonix.net."
     firestore_project_id              = "mystudies-dev-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data

@@ -27,6 +27,10 @@ terraform {
     google      = "~> 3.0"
     google-beta = "~> 3.0"
   }
+  backend "gcs" {
+    bucket = "mystudies-dev-terraform-state"
+    prefix = "devops"
+  }
 }
 
 # Create the project, enable APIs, and create the deletion lien, if specified.
@@ -57,14 +61,14 @@ module "state_bucket" {
 
   name       = "mystudies-dev-terraform-state"
   project_id = module.project.project_id
-  location   = "us-east"
+  location   = "us-east1"
 }
 
 # Project level IAM permissions for devops project owners.
 resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
-  members = ["group:dpt-dev@@hcls.joonix.net"]
+  members = ["group:dpt-dev@hcls.joonix.net"]
 
 }
 
@@ -72,5 +76,5 @@ resource "google_project_iam_binding" "devops_owners" {
 resource "google_folder_iam_member" "admin" {
   folder = "folders/440087619763"
   role   = "roles/resourcemanager.folderAdmin"
-  member = "group:mystudies-dev-folder-admins@hcls.joonix.net"
+  member = "group:dpt-dev@hcls.joonix.net"
 }
