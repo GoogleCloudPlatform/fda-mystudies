@@ -308,7 +308,7 @@ extension ChangePasswordViewController {
 
   func changePasswordfailed(with error: ApiError) {
 
-    if error.code == .forbidden {  // Unauthorized
+    if error.code == HTTPError.forbidden.rawValue {  // Unauthorized
       self.presentDefaultAlertWithError(
         error: error,
         animated: true,

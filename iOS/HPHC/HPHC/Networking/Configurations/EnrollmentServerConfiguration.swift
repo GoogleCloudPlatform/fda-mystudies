@@ -64,7 +64,6 @@ class EnrollmentServerConfiguration: NetworkConfiguration {
 
     let header = [
       "appId": AppConfiguration.appID,
-      "orgId": AppConfiguration.orgID,
       kAuthorization: User.currentUser.authToken ?? "",
     ]
     return header

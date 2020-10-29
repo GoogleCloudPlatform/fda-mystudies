@@ -1089,7 +1089,7 @@ extension StudyListViewController: NMWebServiceDelegate {
     let appdelegate = (UIApplication.shared.delegate as? AppDelegate)!
     appdelegate.window?.removeProgressIndicatorFromWindow()
 
-    if requestName as String == AuthServerMethods.getRefreshedToken.description && error.code == 401 {  // unauthorized Access
+    if error.code == HTTPError.forbidden.rawValue {  // unauthorized Access
       UIUtilities.showAlertMessageWithActionHandler(
         kErrorTitle,
         message: error.localizedDescription,
