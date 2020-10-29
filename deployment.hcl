@@ -1,6 +1,8 @@
 # {{$recipes := "git://github.com/GoogleCloudPlatform/healthcare-data-protection-suite//templates/tfengine/recipes"}}
 # {{$ref := "ref=templates-v0.4.0"}}
 
+# The following values are placeholder values, change and adjust them according to
+# your use case and organization needs.
 # {{$prefix := "example"}}
 # {{$env := "dev"}}
 # {{$domain := "example.com"}}
@@ -9,6 +11,10 @@
 # {{$github_owner := "GoogleCloudPlatform"}}
 # {{$github_repo := "example"}}
 # {{$github_branch := "master" }}
+# If you would like to allow connection from anywhere, remove the entire
+# 'master_authorized_networks' block in the 'project_apps' template below.
+# {{$master_authorized_network_cidr_block := "0.0.0.0/0"}}
+# {{$master_authorized_network_display_name := "Example diplay name"}}
 
 data = {
   parent_type     = "folder"
@@ -516,11 +522,20 @@ template "project_apps" {
         ip_range_pods_name     = "{{$prefix}}-{{$env}}-pods-range"
         ip_range_services_name = "{{$prefix}}-{{$env}}-services-range"
         master_ipv4_cidr_block = "192.168.0.0/28"
+        # If you would like to allow connection from anywhere, remove the
+        # entire master_authorized_networks block below.
         master_authorized_networks = [
           {
-            cidr_block   = "104.132.0.0/14"
-            display_name = "Google Offices/Campuses/CorpDC"
-          }
+            cidr_block   = "{{$master_authorized_network_cidr_block}}"
+            display_name = "{{$master_authorized_network_display_name}}"
+          },
+          # If you would like to add more master authorized networks to this
+          # list, uncomment the block below and follow the pattern.
+          # {
+          #   cidr_block   = "another_master_authorized_network_cidr_block"
+          #   display_name = "another_master_authorized_network_display_name"
+          # },
+          # ...
         ]
       }]
       # Terraform-generated service account for use by the GKE apps.
