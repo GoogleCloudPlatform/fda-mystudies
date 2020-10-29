@@ -6,23 +6,23 @@ template "mystudies" {
   # The following values are placeholder values, change and adjust them according to
   # your use case and organization needs.
   data = {
-    prefix           = "example"
+    prefix           = "mystudies"
     env              = "dev"
-    folder_id        = "0000000000"
-    billing_account  = "XXXXXX-XXXXXX-XXXXXX"
-    domain           = "example.com"
-    default_location = "us-central1"
-    default_zone     = "a"
-    github_owner     = "GoogleCloudPlatform"
-    github_repo      = "example"
-    github_branch    = "master"
+    folder_id        = "440087619763"
+    billing_account  = "01B494-31B256-17B2A6"
+    domain           = "hcls.joonix.net"
+    default_location = "us-east1"
+    default_zone     = "b"
+    github_owner     = "zohrehj"
+    github_repo      = "fda-mystudies"
+    github_branch    = "develop"
     # GKE master authorized networks.
     # Comment out this block if you would like to allow connections from anywhere.
-    master_authorized_networks = [
-      {
-        cidr_block   = "0.0.0.0/0"
-        display_name = "Example diplay name"
-      },
-    ]
+//    master_authorized_networks = [
+//      {
+//        cidr_block   = "0.0.0.0/0"
+//        display_name = "Example diplay name"
+//      },
+//    ]
   }
 }

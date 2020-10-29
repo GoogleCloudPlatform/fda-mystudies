@@ -17,65 +17,65 @@ spec:
         sidecar.istio.io/inject: "true"
     spec:
       containers:
-        - name: study-datastore
-          image: gcr.io/fda-mystudies-dev-apps/study-datastore:latest
-          env:
-            # DB ACCESS
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: study-datastore-credentials
-                  key: dbusername
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: study-datastore-credentials
-                  key: dbpassword
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: study-datastore-credentials
-                  key: dbname
-            # SERVER CALLS
-            - name: PARTICIPANT_USER_DATASTORE_URL
-              value: "http://participant-user-datastore-np:50000"
-            # MISC
-            - name: BASE_URL
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: base_url
-            - name: TERMS_AND_CONDITION_URL
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: terms_url
-            - name: PRIVACY_POLICY_URL
-              valueFrom:
-                secretKeyRef:
-                  name: shared-secrets
-                  key: privacy_url
-            - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: "/secrets/gcloud_key/key.json"
-          ports:
-          - containerPort: 8080
-          readinessProbe:
-            httpGet:
-              path: /study-datastore/healthCheck
-              port: 8080
-          volumeMounts:
-          - name: gcloud-key-volume
-            mountPath: /secrets/gcloud_key
-            readOnly: true
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:latest
-          command: ["/cloud_sql_proxy",
-            "-instances=fda-mystudies-dev-data:us-east1:mystudies=tcp:3306",
-            "-credential_file=/secrets/gcloud_key/key.json"]
-          volumeMounts:
-          - name: gcloud-key-volume
-            mountPath: /secrets/gcloud_key
-            readOnly: true
+      - name: study-datastore
+        image: gcr.io/mystudies-dev-apps/study-datastore:latest
+        env:
+        # DB ACCESS
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: study-datastore-credentials
+              key: dbusername
+        - name: DB_PASS
+          valueFrom:
+            secretKeyRef:
+              name: study-datastore-credentials
+              key: dbpassword
+        - name: DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: study-datastore-credentials
+              key: dbname
+        # SERVER CALLS
+        - name: PARTICIPANT_USER_DATASTORE_URL
+          value: "http://participant-user-datastore-np:50000"
+        # MISC
+        - name: BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: shared-secrets
+              key: base_url
+        - name: TERMS_AND_CONDITION_URL
+          valueFrom:
+            secretKeyRef:
+              name: shared-secrets
+              key: terms_url
+        - name: PRIVACY_POLICY_URL
+          valueFrom:
+            secretKeyRef:
+              name: shared-secrets
+              key: privacy_url
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: "/secrets/gcloud_key/key.json"
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /study-datastore/healthCheck
+            port: 8080
+        volumeMounts:
+        - name: gcloud-key-volume
+          mountPath: /secrets/gcloud_key
+          readOnly: true
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:latest
+        command: ["/cloud_sql_proxy",
+                  "-instances=mystudies-dev-data:us-east1:mystudies=tcp:3306",
+                  "-credential_file=/secrets/gcloud_key/key.json"]
+        volumeMounts:
+        - name: gcloud-key-volume
+          mountPath: /secrets/gcloud_key
+          readOnly: true
       volumes:
       - name: gcloud-key-volume
         secret:
