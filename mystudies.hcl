@@ -707,6 +707,7 @@ locals {
     "participant-enroll-datastore",
     "participant-user-datastore",
     "participant-manager-datastore",
+    "hydra",
   ]
 }
 
