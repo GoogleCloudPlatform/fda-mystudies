@@ -697,12 +697,6 @@ template "project_data" {
     # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "mystudies_db_default_password" {
-  provider = google-beta
-  secret  = "auto-mystudies-sql-default-user-password"
-  project = "{{.prefix}}-{{.env}}-secrets"
-}
-
 locals {
   apps = [
     "auth-server",
@@ -716,12 +710,13 @@ locals {
   ]
 }
 
-data "google_secret_manager_secret_version" "auto_db_secrets" {
+data "google_secret_manager_secret_version" "db_secrets" {
   provider = google-beta
   project  = "{{.prefix}}-{{.env}}-secrets"
   secret   = each.key
 
   for_each = toset(concat(
+    ["auto-mystudies-sql-default-user-password"],
     formatlist("auto-%s-db-user", local.apps),
     formatlist("auto-%s-db-password", local.apps))
   )
@@ -730,10 +725,10 @@ data "google_secret_manager_secret_version" "auto_db_secrets" {
 resource "google_sql_user" "db_users" {
   for_each = toset(local.apps)
 
-  name     = data.google_secret_manager_secret_version.auto_db_secrets["auto-$${each.key}-db-user"].secret_data
+  name     = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-user"].secret_data
   instance = module.mystudies.instance_name
   host     = "%"
-  password = data.google_secret_manager_secret_version.auto_db_secrets["auto-$${each.key}-db-password"].secret_data
+  password = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-password"].secret_data
   project  = module.project.project_id
 }
 EOF
@@ -745,7 +740,7 @@ EOF
       #   type               = "mysql"
       #   network_project_id = "{{.prefix}}-{{.env}}-networks"
       #   network            = "{{.prefix}}-{{.env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
