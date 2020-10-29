@@ -119,6 +119,7 @@ public final class ParticipantMapper {
       participants.setStudyName(study.getName());
       participants.setCustomStudyId(study.getCustomId());
       participants.setSitePermission(permission.value());
+      participants.setStudyStatus(study.getStatus());
       setParticipantRegistryAppInfo(participants, study);
       setParticipantRegistryLocation(site, participants);
     }
