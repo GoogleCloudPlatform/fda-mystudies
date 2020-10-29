@@ -74,6 +74,9 @@ module "project_iam_members" {
   mode     = "additive"
 
   bindings = {
+    "roles/datastore.importExportAdmin" = [
+      "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
+    ],
     "roles/datastore.user" = [
       "serviceAccount:response-datastore-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
       "serviceAccount:triggers-pubsub-handler-gke-sa@mystudies-dev-apps.iam.gserviceaccount.com",
@@ -132,5 +135,11 @@ module "mystudies_dev_mystudies_firestore_raw_data" {
         with_state = "ANY"
       }
     }
+  ]
+  iam_members = [
+    {
+      member = "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com"
+      role   = "roles/storage.admin"
+    },
   ]
 }

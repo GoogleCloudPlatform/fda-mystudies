@@ -27,10 +27,6 @@ terraform {
     google      = "~> 3.0"
     google-beta = "~> 3.0"
   }
-  backend "gcs" {
-    bucket = "mystudies-dev-terraform-state"
-    prefix = "devops"
-  }
 }
 
 # Create the project, enable APIs, and create the deletion lien, if specified.
