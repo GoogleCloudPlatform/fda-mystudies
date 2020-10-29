@@ -29,7 +29,7 @@ template "devops" {
   data = {
     # During Step 1, set to `true` and re-run the engine after generated devops module has been deployed.
     # Run `terraform init` in the devops module to backup its state to GCS.
-    enable_gcs_backend = false
+    enable_gcs_backend = true
 
     admins_group = "dpt-dev@{{.domain}}"
 
