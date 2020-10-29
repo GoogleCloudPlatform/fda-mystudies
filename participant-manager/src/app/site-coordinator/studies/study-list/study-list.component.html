@@ -28,10 +28,20 @@
                     class="text-grey__sm row flex-wrap-unset col-xs-12 col-md-12 p-none"
                   >
                     <div class="col-xs-6 col-md-12 p-none">
-                      <span *ngIf="study.sitesCount">
+                      <span
+                        *ngIf="
+                          study.type !== studyTypes.Open && study.sitesCount
+                        "
+                      >
                         {{ study.sitesCount | i18nPlural: messageMapping }}
                       </span>
-                      <span *ngIf="!study.sitesCount">No Sites</span>
+                      <span
+                        *ngIf="
+                          study.type !== studyTypes.Open && !study.sitesCount
+                        "
+                      >
+                        No Sites
+                      </span>
                       <span *ngIf="study.type === studyTypes.Open">
                         Open Study
                       </span>
