@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: hydra-ic
-        image: gcr.io/fda-mystudies-dev-apps/hydra:latest
+        image: gcr.io/mystudies-dev-apps/hydra:latest
         env:
         # DB ACCESS
         - name: DB_USER

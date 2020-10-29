@@ -546,7 +546,7 @@ template "project_apps" {
       }
       # DNS sets up nameservers to connect to the GKE clusters.
       dns_zones = [{
-        name   = "{{$prefix}}-{{$env}}"
+        name   = "demo"
         domain = "{{$prefix}}.{{$domain}}."
         type   = "public"
         record_sets = [{

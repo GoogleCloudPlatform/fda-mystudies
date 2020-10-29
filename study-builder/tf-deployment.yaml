@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: study-builder
-          image: gcr.io/fda-mystudies-dev-apps/study-builder:latest
+          image: gcr.io/mystudies-dev-apps/study-builder:latest
           env:
             # DB ACCESS
             - name: DB_USER
