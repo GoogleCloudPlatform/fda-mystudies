@@ -333,51 +333,40 @@ template "project_secrets" {
     }
     terraform_addons = {
       raw_config = <<EOF
+locals {
+  apps = [
+    "auth_server",
+    "response_datastore",
+    "study_builder",
+    "study_datastore",
+    "participant_consent_datastore",
+    "participant_enroll_datastore",
+    "participant_user_datastore",
+    "participant_manager_datastore",
+  ]
+}
+
 resource "random_string" "strings" {
-  for_each = toset([
-    "auth_server_db_user",
-    "auth_server_client_id",
-    "response_datastore_db_user",
-    "response_datastore_client_id",
-    "study_builder_db_user",
-    "study_builder_client_id",
-    "study_datastore_db_user",
-    "study_datastore_client_id",
-    "participant_consent_datastore_db_user",
-    "participant_consent_datastore_client_id",
-    "participant_enroll_datastore_db_user",
-    "participant_enroll_datastore_client_id",
-    "participant_user_datastore_db_user",
-    "participant_user_datastore_client_id",
-    "participant_manager_datastore_db_user",
-    "participant_manager_datastore_client_id",
-    "hydra_db_user",
-  ])
+  for_each = toset(concat(
+    [
+      "hydra_db_user",
+    ],
+    formatlist("%s_db_user", local.apps),
+    formatlist("%s_client_id", local.apps))
+  )
   length  = 16
   special = true
 }
 
 resource "random_password" "passwords" {
-  for_each = toset([
-    "mystudies_sql_default_user_password",
-    "auth_server_db_password",
-    "auth_server_secret_key",
-    "response_datastore_db_password",
-    "response_datastore_secret_key",
-    "study_builder_db_password",
-    "study_builder_secret_key",
-    "study_datastore_db_password",
-    "study_datastore_secret_key",
-    "participant_consent_datastore_db_password",
-    "participant_consent_datastore_secret_key",
-    "participant_enroll_datastore_db_password",
-    "participant_enroll_datastore_secret_key",
-    "participant_user_datastore_db_password",
-    "participant_user_datastore_secret_key",
-    "participant_manager_datastore_db_password",
-    "participant_manager_datastore_secret_key",
-    "hydra_db_password",
-  ])
+  for_each = toset(concat(
+    [
+      "mystudies_sql_default_user_password",
+      "hydra_db_password",
+    ],
+    formatlist("%s_db_password", local.apps),
+    formatlist("%s_secret_key", local.apps))
+  )
   length  = 16
   special = true
 }
@@ -708,10 +697,39 @@ template "project_data" {
     # Step 5.4: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "mystudies_db_default_password" {
+locals {
+  apps = [
+    "auth-server",
+    "response-datastore",
+    "study-builder",
+    "study-datastore",
+    "participant-consent-datastore",
+    "participant-enroll-datastore",
+    "participant-user-datastore",
+    "participant-manager-datastore",
+  ]
+}
+
+data "google_secret_manager_secret_version" "db_secrets" {
   provider = google-beta
-  secret  = "auto-mystudies-sql-default-user-password"
-  project = "{{.prefix}}-{{.env}}-secrets"
+  project  = "{{.prefix}}-{{.env}}-secrets"
+  secret   = each.key
+
+  for_each = toset(concat(
+    ["auto-mystudies-sql-default-user-password"],
+    formatlist("auto-%s-db-user", local.apps),
+    formatlist("auto-%s-db-password", local.apps))
+  )
+}
+
+resource "google_sql_user" "db_users" {
+  for_each = toset(local.apps)
+
+  name     = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-user"].secret_data
+  instance = module.mystudies.instance_name
+  host     = "%"
+  password = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-password"].secret_data
+  project  = module.project.project_id
 }
 EOF
     } */
@@ -722,7 +740,7 @@ EOF
       #   type               = "mysql"
       #   network_project_id = "{{.prefix}}-{{.env}}-networks"
       #   network            = "{{.prefix}}-{{.env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [

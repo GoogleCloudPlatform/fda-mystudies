@@ -163,7 +163,6 @@ module "example_dev" {
       type    = "A"
     },
   ]
-
 }
 
 module "example_dev_gke_cluster" {
