@@ -890,6 +890,7 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-certificate-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
+      "auto-hydra-system-secret",
     ],
     formatlist("auto-%s-db-user", local.apps),
     formatlist("auto-%s-db-password", local.apps),

@@ -59,6 +59,17 @@
                ReferencedContainer = "container:HPHC.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6FEE49412521CBD500DD9696"
+               BuildableName = "MyStudiesUITests.xctest"
+               BlueprintName = "MyStudiesUITests"
+               ReferencedContainer = "container:HPHC.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
