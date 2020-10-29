@@ -67,4 +67,5 @@ public final class Constants {
 
   public static final String LOGO_IMAGE_URL =
       "http://localhost:8098/fdaResources/studylogo/example.jpg";
+  public static final String STUDY_INFO_ID = "2";
 }

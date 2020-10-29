@@ -146,18 +146,18 @@ resource "google_binary_authorization_policy" "policy" {
   }
 }
 
-module "demo" {
+module "mystudies_dev" {
   source  = "terraform-google-modules/cloud-dns/google"
   version = "~> 3.0.0"
 
-  name       = "demo"
+  name       = "mystudies-dev"
   project_id = module.project.project_id
   domain     = "mystudies.hcls.joonix.net."
   type       = "public"
 
   recordsets = [
     {
-      name    = "mystudies-dev"
+      name    = "demo"
       records = ["${google_compute_global_address.ingress_static_ip.address}"]
       ttl     = 30
       type    = "A"
