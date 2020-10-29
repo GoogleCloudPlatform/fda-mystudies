@@ -7105,6 +7105,26 @@ public class StudyDAOImpl implements StudyDAO {
   }
 
   @Override
+  public StudyBo getStudy(Integer id) {
+    logger.info("StudyDAOImpl - getStudy() - Starts");
+    Session session = null;
+    StudyBo study = null;
+    try {
+      session = hibernateTemplate.getSessionFactory().openSession();
+      Query query = session.getNamedQuery("getStudy").setInteger("id", id);
+      study = (StudyBo) query.uniqueResult();
+    } catch (Exception e) {
+      logger.error("StudyDAOImpl - getStudy() - ERROR", e);
+    } finally {
+      if ((null != session) && session.isOpen()) {
+        session.close();
+      }
+    }
+    logger.info("StudyDAOImpl - getStudy() - Ends");
+    return study;
+  }
+
+  @Override
   public String updateDraftToEditedStatus(
       Session session,
       Transaction transaction,

@@ -14,6 +14,8 @@ import com.google.cloud.healthcare.fdamystudies.model.StudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.MyStudiesUserRegUtil;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -133,6 +135,7 @@ public class StudyStateDaoImpl implements StudyStateDao {
       criteriaUpdate = criteriaBuilder.createCriteriaUpdate(ParticipantStudyEntity.class);
       participantStudyRoot = criteriaUpdate.from(ParticipantStudyEntity.class);
       criteriaUpdate.set("status", AppConstants.WITHDRAWN);
+      criteriaUpdate.set("withdrawalDate", new Timestamp(Instant.now().toEpochMilli()));
       predicates.add(
           criteriaBuilder.equal(participantStudyRoot.get("participantId"), participantId));
       predicates.add(criteriaBuilder.equal(participantStudyRoot.get("study"), studyEntity));

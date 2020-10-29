@@ -25,6 +25,10 @@ public enum PlatformComponent {
       "PARTICIPANT DATASTORE",
       "The back-end components that manage app user / study participant data (includes PII)"),
 
+  PARTICIPANT_USER_DATASTORE(
+      "PARTICIPANT USER DATASTORE",
+      "The back-end component that manage app user / study participant data (includes PII)"),
+
   STUDY_BUILDER("STUDY BUILDER", "The UI that researchers use to design and deploy studies"),
 
   STUDY_DATASTORE(

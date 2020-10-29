@@ -8,7 +8,7 @@
 
 package com.fdahpstudydesigner.common;
 
-import static com.fdahpstudydesigner.common.PlatformComponent.PARTICIPANT_DATASTORE;
+import static com.fdahpstudydesigner.common.PlatformComponent.PARTICIPANT_USER_DATASTORE;
 import static com.fdahpstudydesigner.common.PlatformComponent.RESPONSE_DATASTORE;
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_BUILDER;
 import static com.fdahpstudydesigner.common.PlatformComponent.STUDY_DATASTORE;
@@ -113,6 +113,7 @@ public enum StudyBuilderAuditEvent {
       null,
       "Password change enforced for user (user id - ${edited_user_id}).",
       "PASSWORD_CHANGE_ENFORCED_FOR_USER"),
+
   STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE(
       STUDY_BUILDER, STUDY_DATASTORE, null, null, "STUDY_ACTIVE_TASK_SECTION_MARKED_COMPLETE"),
 
@@ -417,7 +418,7 @@ public enum StudyBuilderAuditEvent {
 
   STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE(
       STUDY_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "App/study metadata sent.",
       "STUDY_METADATA_SENT_TO_PARTICIPANT_DATASTORE"),
@@ -431,7 +432,7 @@ public enum StudyBuilderAuditEvent {
 
   STUDY_METADATA_SEND_OPERATION_FAILED(
       STUDY_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "Failed to send app/study metadata.",
       "STUDY_METADATA_SEND_OPERATION_FAILED"),
@@ -461,16 +462,26 @@ public enum StudyBuilderAuditEvent {
       "User account locked for ${lock_time} due to ${failed_attempt} consecutively failed sign-in attempts with incorrect password.",
       "ACCOUNT_LOCKED"),
 
+  PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT(
+      STUDY_DATASTORE,
+      STUDY_DATASTORE,
+      null,
+      null,
+      "PASSWORD_RESET_EMAIL_FAILED_FOR_LOCKED_ACCOUNT"),
+
+  SESSION_EXPIRY(
+      STUDY_BUILDER, STUDY_DATASTORE, null, "User session timed out or expired.", "SESSION_EXPIRY"),
+
   NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE(
       STUDY_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "App/study notifications metadata sent.",
       "NOTIFICATION_METADATA_SENT_TO_PARTICIPANT_DATASTORE"),
 
   NOTIFICATION_METADATA_SEND_OPERATION_FAILED(
       STUDY_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "Failed to send app/study notifications metadata.",
       "NOTIFICATION_METADATA_SEND_OPERATION_FAILED");
