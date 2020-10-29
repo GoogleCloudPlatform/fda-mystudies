@@ -128,4 +128,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-manager-datastore-gke-sa-gcloud-key
+          secretName: participant-manager-gke-sa-gcloud-key
