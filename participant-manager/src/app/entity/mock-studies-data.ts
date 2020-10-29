@@ -6,7 +6,7 @@ import {StudyDetails} from '../site-coordinator/studies/shared/study-details';
 import {ApiResponse} from './api.response.model';
 import {UpdateTargetEnrollmentRequest} from '../site-coordinator/studies/shared/site.model';
 import {AddSiteRequest} from '../site-coordinator/sites/shared/add.sites.request';
-import {EnrollmentStatus, StudyType} from '../shared/enums';
+import {EnrollmentStatus, Status, StudyType} from '../shared/enums';
 
 export const expectedSitesList = {
   studies: [
@@ -115,10 +115,10 @@ export const expectedStudiesDetails = {
     studyName: 'COVID study',
     studyType: 'OPEN',
     appId: '4028617973be410f0173be41229e0001',
-
     customAppId: 'mystudies-id-1',
     appName: 'mystudies-1',
     targetEnrollment: 1,
+    studyStatus: Status.Active,
     registryParticipants: [
       {
         customLocationId: '',
