@@ -57,7 +57,9 @@
           </td>
           <td>
             <span class="tbl__td__label">Status:</span>
-            {{ user.status }}
+            <span [ngClass]="statusColour(user.status)">
+              {{ user.status }}
+            </span>
           </td>
         </tr>
       </tbody>

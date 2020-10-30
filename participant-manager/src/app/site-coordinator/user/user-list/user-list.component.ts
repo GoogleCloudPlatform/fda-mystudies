@@ -5,6 +5,7 @@ import {User} from 'src/app/entity/user';
 import {UserService} from '../shared/user.service';
 import {map} from 'rxjs/operators';
 import {SearchService} from 'src/app/shared/search.service';
+import { Status } from 'src/app/shared/enums';
 
 @Component({
   selector: 'user-list',
@@ -13,7 +14,7 @@ import {SearchService} from 'src/app/shared/search.service';
 export class UserListComponent implements OnInit {
   manageUser$: Observable<ManageUsers> = of();
   manageUsersBackup = {} as ManageUsers;
-
+onBoardingStatus=Status;
   query$ = new BehaviorSubject('');
 
   constructor(
@@ -49,4 +50,12 @@ export class UserListComponent implements OnInit {
   search(query: string): void {
     this.query$.next(query.trim().toLowerCase());
   }
+    statusColour(status:string):string {
+if (status === this.onBoardingStatus.Active) {
+  return 'txt__green'
+} else if (status ===this.onBoardingStatus.Deactivated) {
+  return 'txt__light-gray'
+} else {
+return 'txt__space-gray'
+}
 }
