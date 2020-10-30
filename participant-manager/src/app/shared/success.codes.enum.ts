@@ -51,6 +51,7 @@ Reason for failure of import emails may be due to following reasons:'
 4.Email already exists
 `,
   MSG_0043: 'Invitation to user resent successfully',
+  MSG_0044: 'Password help has been sent to your registered email',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 

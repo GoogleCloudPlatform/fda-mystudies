@@ -79,4 +79,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-datastore-gcloud-key
+          secretName: study-datastore-gke-sa-gcloud-key

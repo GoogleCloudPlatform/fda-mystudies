@@ -17,7 +17,8 @@ import {
   ImportParticipantEmailResponse,
   Participant,
 } from '../shared/import-participants';
-import { ParticipantRegistryDetail } from 'src/app/shared/participant-registry-detail';
+import {Permission} from 'src/app/shared/permission-enums';
+import {ParticipantRegistryDetail} from 'src/app/shared/participant-registry-detail';
 const MAXIMUM_USER_COUNT = 10;
 @Component({
   selector: 'app-site-details',
@@ -31,6 +32,7 @@ export class SiteDetailsComponent
   siteParticipants$: Observable<SiteParticipants> = of();
   siteDetailsBackup = {} as SiteParticipants;
   siteId = '';
+  permission = Permission;
   sendResend = '';
   enableDisable = '';
   toggleDisplay = false;
