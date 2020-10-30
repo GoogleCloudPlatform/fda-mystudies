@@ -3,7 +3,6 @@
 FROM node:latest AS compile-image
 WORKDIR /app
 COPY . ./
-RUN npm config set registry https://registry.npmjs.org
 RUN npm install
 RUN  npm install -g @angular/cli
 # run npm install -g npm@7.0.6
