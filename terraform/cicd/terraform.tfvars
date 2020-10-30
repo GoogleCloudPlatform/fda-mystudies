@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-billing_account = "01B494-31B256-17B2A6"
+billing_account = "0132B5-9CBD69-7F2F47"
 project_id      = "mystudies-dev-devops"
 state_bucket    = "mystudies-dev-terraform-state"
 terraform_root  = "terraform"
