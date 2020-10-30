@@ -87,11 +87,12 @@ public class NotificationDAOImpl implements NotificationDAO {
       if (notificationIdForDelete != 0) {
         queryString =
             "update NotificationBO NBO set NBO.modifiedBy = :userId "
-                + ", NBO.modifiedOn = now(), NBO.notificationStatus = 1 ,NBO.notificationDone = 1 ,NBO.notificationAction = 1 "
-                + "where NBO.notificationId = :notificationIdForDelete";
-        query = session.createQuery(queryString)
-          .setParameter("userId", sessionObject.getUserId())
-          .setParameter("notificationIdForDelete", notificationIdForDelete);
+                + ", NBO.modifiedOn = now(), NBO.notificationStatus = 1 ,NBO.notificationDone = 1 ,NBO.notificationAction = 1 where NBO.notificationId =:notificationId";
+        query =
+            session
+                .createQuery(queryString)
+                .setParameter("userId", sessionObject.getUserId())
+                .setParameter("notificationId", notificationIdForDelete);
         i = query.executeUpdate();
         if (i > 0) {
           message = FdahpStudyDesignerConstants.SUCCESS;
@@ -165,7 +166,7 @@ public class NotificationDAOImpl implements NotificationDAO {
     try {
       session = hibernateTemplate.getSessionFactory().openSession();
       queryString =
-          "from NotificationHistoryBO NHBO where NHBO.notificationSentDateTime <> null and NHBO.notificationId = :notificationId"
+          "from NotificationHistoryBO NHBO where NHBO.notificationSentDateTime <> null and NHBO.notificationId =:notificationId "
               + " order by NHBO.notificationSentDateTime desc";
       query = session.createQuery(queryString).setParameter("notificationId", notificationId);
       notificationHistoryListNoDateTime = query.list();
@@ -219,7 +220,7 @@ public class NotificationDAOImpl implements NotificationDAO {
   public List<PushNotificationBean> getPushNotificationList(String date, String time) {
     logger.info("NotificationDAOImpl - getPushNotificationList - Starts");
     Session session = null;
-    StringBuilder sb = null;
+    String sb = "";
     List<PushNotificationBean> pushNotificationBeans = null;
     List<Integer> notificationIds;
     Transaction trans = null;
@@ -227,19 +228,11 @@ public class NotificationDAOImpl implements NotificationDAO {
       session = hibernateTemplate.getSessionFactory().openSession();
       trans = session.beginTransaction();
       sb =
-          new StringBuilder(
-              "select n.notification_id as notificationId, n.notification_text as notificationText, s.custom_study_id as customStudyId, n.notification_type as notificationType, n.notification_subType as notificationSubType,n.app_id as appId ");
-      sb.append("from (notification as n) LEFT OUTER JOIN studies as s ON s.id = n.study_id")
-          .append(" where n.schedule_date = :date")
-          .append(
-              " AND n.is_anchor_date = false AND n.notification_done = true AND n.schedule_time like :time")
-          .append(" AND (n.notification_subType='")
-          .append(FdahpStudyDesignerConstants.STUDY_EVENT)
-          .append("' OR n.notification_type = '")
-          .append(FdahpStudyDesignerConstants.NOTIFICATION_GT)
-          .append("' OR  s.status = '")
-          .append(FdahpStudyDesignerConstants.STUDY_ACTIVE)
-          .append("')");
+          "select n.notification_id as notificationId, n.notification_text as notificationText, s.custom_study_id as customStudyId, n.notification_type as notificationType, n.notification_subType as notificationSubType,n.app_id as appId"
+              + " from (notification as n) LEFT OUTER JOIN studies as s ON s.id = n.study_id where n.schedule_date =:date"
+              + " AND n.is_anchor_date = false AND n.notification_done = true AND n.schedule_time like concat('%', :time, '%')"
+              + " AND (n.notification_subType=:subType OR n.notification_type =:type OR s.status =:status)";
+
       query =
           session
               .createSQLQuery(sb.toString())
@@ -248,13 +241,14 @@ public class NotificationDAOImpl implements NotificationDAO {
               .addScalar("customStudyId")
               .addScalar("notificationType")
               .addScalar("notificationSubType")
-              .addScalar("appId");
-      pushNotificationBeans =
-          query
-              .setResultTransformer(Transformers.aliasToBean(PushNotificationBean.class))
+              .addScalar("appId")
+              .setParameter("time", time)
               .setParameter("date", date)
-              .setParameter("time", time+"%")
-              .list();
+              .setParameter("subType", FdahpStudyDesignerConstants.STUDY_EVENT)
+              .setParameter("type", FdahpStudyDesignerConstants.NOTIFICATION_GT)
+              .setParameter("status", FdahpStudyDesignerConstants.STUDY_ACTIVE);
+      pushNotificationBeans =
+          query.setResultTransformer(Transformers.aliasToBean(PushNotificationBean.class)).list();
       if ((null != pushNotificationBeans) && !pushNotificationBeans.isEmpty()) {
         notificationIds = new ArrayList<>();
         for (PushNotificationBean pushNotificationBean : pushNotificationBeans) {
@@ -271,9 +265,13 @@ public class NotificationDAOImpl implements NotificationDAO {
             session.save(historyBO);
           }
         }
-        sb = new StringBuilder("update NotificationBO NBO set NBO.notificationSent = true");
-        sb.append(" where NBO.notificationId in :notificationIds");
-        session.createQuery(sb.toString()).setParameterList("notificationIds", notificationIds).executeUpdate();
+        sb =
+            "update NotificationBO NBO set NBO.notificationSent = true  where NBO.notificationId in (:notificationIds )";
+        ;
+        session
+            .createQuery(sb)
+            .setParameterList("notificationIds", notificationIds)
+            .executeUpdate();
       }
       trans.commit();
     } catch (Exception e) {
@@ -343,9 +341,9 @@ public class NotificationDAOImpl implements NotificationDAO {
         notificationId = (Integer) session.save(notificationBOUpdate);
       } else {
         query =
-            session.createQuery(
-                " from NotificationBO NBO where NBO.notificationId = :notificationId"
-            ).setParameter("notificationId", notificationBO.getNotificationId());
+            session
+                .createQuery(" from NotificationBO NBO where NBO.notificationId =:notificationId ")
+                .setParameter("notificationId", notificationBO.getNotificationId());
         notificationBOUpdate = (NotificationBO) query.uniqueResult();
 
         if (StringUtils.isNotBlank(notificationBO.getNotificationText())) {

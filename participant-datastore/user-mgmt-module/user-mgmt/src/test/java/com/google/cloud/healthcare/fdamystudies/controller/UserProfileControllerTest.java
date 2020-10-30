@@ -44,9 +44,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
@@ -96,6 +99,8 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Autowired private UserDetailsRepository userDetailsRepository;
+
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Test
   public void contextLoads() {
@@ -221,6 +226,17 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertNotNull(daoResp);
     assertTrue(daoResp.getEmail().length() == CommonConstants.EMAIL_LENGTH);
     assertTrue(daoResp.getEmail().contains("_DEACTIVATED_"));
+
+    Optional<ParticipantStudyEntity> participant =
+        participantStudyRepository.findByStudyIdAndUserId(Constants.STUDY_INFO_ID, daoResp.getId());
+    assertNotNull(participant.get().getWithdrawalDate());
+
+    assertTrue(
+        participant
+            .get()
+            .getParticipantRegistrySite()
+            .getOnboardingStatus()
+            .equals(OnboardingStatus.DISABLED.getCode()));
 
     verify(1, deleteRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.USER_ID)));
     verify(

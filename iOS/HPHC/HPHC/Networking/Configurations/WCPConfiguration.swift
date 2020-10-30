@@ -54,9 +54,9 @@ enum WCPMethods: String {
 enum WCPServerURLConstants {
 
   /// Staging.
-  static let ProductionURL = API.wcpURL
+  static let ProductionURL = API.studyDataStoreURL
 
-  static let DevelopmentURL = API.wcpURL  // This will change based on config file.
+  static let DevelopmentURL = API.studyDataStoreURL  // This will change based on config file.
 
 }
 
