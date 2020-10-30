@@ -106,4 +106,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: response-datastore-gcloud-key
+          secretName: response-datastore-gke-sa-gcloud-key
