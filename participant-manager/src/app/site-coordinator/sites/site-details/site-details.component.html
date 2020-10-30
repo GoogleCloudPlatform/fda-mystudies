@@ -63,7 +63,14 @@
               </div>
             </div>
           </div>
-          <div class="desk__view">
+          <div
+            [hidden]="
+              siteParticipants.participantRegistryDetail.studyStatus ===
+                studyStatus.Active &&
+              siteParticipants.participantRegistryDetail.siteStatus === 1
+            "
+            class="desk__view"
+          >
             <div class="flex__justify__space-between">
               <div>
                 <div class="dropdown">
@@ -112,11 +119,6 @@
               </div>
               <div>
                 <button
-                  [disabled]="
-                    siteParticipants.participantRegistryDetail.studyStatus ===
-                      studyStatus.Deactivated &&
-                    siteParticipants.participantRegistryDetail.siteStatus === 0
-                  "
                   name="buttonDecommision"
                   class="btn banner__default__btn flex__row__reverse pad__5__13"
                   (click)="
@@ -138,7 +140,14 @@
 
     <!-- ForMobile View  -->
     <div class="mobile__view yel__tabs">
-      <div class="p-md pb-none">
+      <div
+        [hidden]="
+          siteParticipants.participantRegistryDetail.studyStatus ===
+            studyStatus.Active &&
+          siteParticipants.participantRegistryDetail.siteStatus === 1
+        "
+        class="p-md pb-none"
+      >
         <div class="flex__ flex__justify__center">
           <div>
             <div class="dropdown">
@@ -187,11 +196,6 @@
           </div>
           <div>
             <button
-              [disabled]="
-                siteParticipants.participantRegistryDetail.studyStatus ===
-                  studyStatus.Deactivated &&
-                siteParticipants.participantRegistryDetail.siteStatus === 0
-              "
               name="buttonDecommision"
               class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
               (click)="
