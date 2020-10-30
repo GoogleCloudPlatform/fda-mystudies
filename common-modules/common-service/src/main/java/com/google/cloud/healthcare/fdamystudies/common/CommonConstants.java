@@ -23,6 +23,8 @@ public final class CommonConstants {
 
   public static final String DEACTIVATED = "Deactivated";
 
+  public static final String IN_PROGRESS = "inProgress";
+
   public static final String NOT_APPLICABLE = "NA";
 
   public static final String OPEN_STUDY = "OPEN";

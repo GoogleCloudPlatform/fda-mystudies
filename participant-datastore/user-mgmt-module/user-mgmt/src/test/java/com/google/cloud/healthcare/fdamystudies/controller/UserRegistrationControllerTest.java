@@ -15,7 +15,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.ErrorCode.USER_ALR
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.asJsonString;
 import static com.google.cloud.healthcare.fdamystudies.common.JsonUtils.readJsonFile;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.ACCOUNT_REGISTRATION_REQUEST_RECEIVED;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_CREATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.REGISTRATION_SUCCEEDED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_REGISTRATION_ATTEMPT_FAILED_EXISTING_USERNAME;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_SENT;
 import static org.hamcrest.CoreMatchers.is;
@@ -212,10 +212,10 @@ public class UserRegistrationControllerTest extends BaseMockIT {
     auditRequest.setUserId(userDetails.getUserId());
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_CREATED.getEventCode(), auditRequest);
+    auditEventMap.put(REGISTRATION_SUCCEEDED.getEventCode(), auditRequest);
     auditEventMap.put(VERIFICATION_EMAIL_SENT.getEventCode(), auditRequest);
 
-    verifyAuditEventCall(auditEventMap, USER_CREATED, VERIFICATION_EMAIL_SENT);
+    verifyAuditEventCall(auditEventMap, REGISTRATION_SUCCEEDED, VERIFICATION_EMAIL_SENT);
   }
 
   private String getRegisterUser(String emailId, String password) throws JsonProcessingException {

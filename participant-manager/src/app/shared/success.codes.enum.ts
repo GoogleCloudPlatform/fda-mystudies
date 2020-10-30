@@ -50,6 +50,7 @@ Reason for failure of import emails may be due to following reasons:'
 3.Participant enabled in another site within same study
 4.Email already exists
 `,
+  MSG_0043: 'Invitation to user resent successfully',
   /* eslint-enable @typescript-eslint/naming-convention */
 };
 

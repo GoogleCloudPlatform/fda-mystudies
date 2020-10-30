@@ -17,12 +17,12 @@
     <div *ngIf="manageLocations.locations.length != 0">
       <div class="cards1 m-none">
         <table
-          class="table table-striped"
+          class="table table-striped custom__table"
           [mfData]="manageLocations.locations"
           #mf="mfDataTable"
           [mfRowsOnPage]="10"
         >
-          <thead>
+          <thead class="custom__thead">
             <tr>
               <span
                 class="text__387fea__12 mobile__view mr-sm"
@@ -44,15 +44,19 @@
               <th>Status</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="custom__tbody">
             <tr
-              class="location_row"
+              class="location_row border__bottom__red border-top__c4d1e6 progress__bar"
               *ngFor="let location of mf.data"
-              (click)="locationDetails(location.locationId)"
             >
               <td>
                 <span class="tbl__td__label">Location ID:</span>
-                <span class="no_st_en">{{ location.customId }}</span>
+                <span
+                  (click)="locationDetails(location.locationId)"
+                  class="no_st_en"
+                >
+                  {{ location.customId }}
+                </span>
               </td>
               <td>
                 <span class="tbl__td__label">Location Name:</span>
@@ -64,11 +68,17 @@
               </td>
               <td>
                 <span class="tbl__td__label">Status:</span>
-                {{ location.status == 1 ? "Active" : "DEACTIVATED" }}
+                <span
+                  [ngClass]="
+                    location.status === 1 ? ' txt__green' : 'txt__light-gray'
+                  "
+                >
+                  {{ location.status == 1 ? "Active" : "Deactivated" }}
+                </span>
               </td>
             </tr>
           </tbody>
-          <tfoot>
+          <tfoot class="custom__tfoot">
             <tr>
               <td colspan="4">
                 <mfBootstrapPaginator></mfBootstrapPaginator>

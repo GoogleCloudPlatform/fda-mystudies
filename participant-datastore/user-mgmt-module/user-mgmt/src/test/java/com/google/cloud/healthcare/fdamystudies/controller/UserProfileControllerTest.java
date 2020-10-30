@@ -17,7 +17,7 @@ import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.DAT
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.PARTICIPANT_DATA_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_FAILED_FOR_USER_PROFILE;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.READ_OPERATION_SUCCEEDED_FOR_USER_PROFILE;
-import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_ACCOUNT_DEACTIVATED;
+import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_DELETED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.USER_PROFILE_UPDATED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.VERIFICATION_EMAIL_RESEND_REQUEST_RECEIVED;
 import static com.google.cloud.healthcare.fdamystudies.common.UserMgmntEvent.WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE;
@@ -44,9 +44,12 @@ import com.google.cloud.healthcare.fdamystudies.beans.UserRequestBean;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
 import com.google.cloud.healthcare.fdamystudies.common.CommonConstants;
 import com.google.cloud.healthcare.fdamystudies.common.ErrorCode;
+import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.common.PlaceholderReplacer;
 import com.google.cloud.healthcare.fdamystudies.config.ApplicationPropertyConfiguration;
+import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
+import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.service.FdaEaUserDetailsServiceImpl;
 import com.google.cloud.healthcare.fdamystudies.service.UserManagementProfileService;
@@ -96,6 +99,8 @@ public class UserProfileControllerTest extends BaseMockIT {
   @Autowired ApplicationPropertyConfiguration appConfig;
 
   @Autowired private UserDetailsRepository userDetailsRepository;
+
+  @Autowired private ParticipantStudyRepository participantStudyRepository;
 
   @Test
   public void contextLoads() {
@@ -222,6 +227,17 @@ public class UserProfileControllerTest extends BaseMockIT {
     assertTrue(daoResp.getEmail().length() == CommonConstants.EMAIL_LENGTH);
     assertTrue(daoResp.getEmail().contains("_DEACTIVATED_"));
 
+    Optional<ParticipantStudyEntity> participant =
+        participantStudyRepository.findByStudyIdAndUserId(Constants.STUDY_INFO_ID, daoResp.getId());
+    assertNotNull(participant.get().getWithdrawalDate());
+
+    assertTrue(
+        participant
+            .get()
+            .getParticipantRegistrySite()
+            .getOnboardingStatus()
+            .equals(OnboardingStatus.DISABLED.getCode()));
+
     verify(1, deleteRequestedFor(urlEqualTo("/oauth-scim-service/users/" + Constants.USER_ID)));
     verify(
         1,
@@ -235,14 +251,14 @@ public class UserProfileControllerTest extends BaseMockIT {
     auditRequest.setParticipantId("4");
 
     Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
-    auditEventMap.put(USER_ACCOUNT_DEACTIVATED.getEventCode(), auditRequest);
+    auditEventMap.put(USER_DELETED.getEventCode(), auditRequest);
     auditEventMap.put(PARTICIPANT_DATA_DELETED.getEventCode(), auditRequest);
     auditEventMap.put(DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL.getEventCode(), auditRequest);
     auditEventMap.put(WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE.getEventCode(), auditRequest);
 
     verifyAuditEventCall(
         auditEventMap,
-        USER_ACCOUNT_DEACTIVATED,
+        USER_DELETED,
         PARTICIPANT_DATA_DELETED,
         DATA_RETENTION_SETTING_CAPTURED_ON_WITHDRAWAL,
         WITHDRAWAL_INTIMATED_TO_RESPONSE_DATASTORE);

@@ -55,8 +55,6 @@ public class ParticipantDetail {
 
   private String appName;
 
-  private String onboardringStatus;
-
   private String invitationDate;
 
   private String userDetailsId;
@@ -66,6 +64,8 @@ public class ParticipantDetail {
   private String studiesEnrolled;
 
   private String registrationDate;
+
+  private Integer sitePermission;
 
   private List<AppStudyDetails> enrolledStudies = new ArrayList<>();
 

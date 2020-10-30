@@ -147,6 +147,8 @@
 		6FD4F67A244F2EE900584C0C /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4F679244F2EE900584C0C /* DateHelper.swift */; };
 		6FD5CA02244ED39800AFC08B /* AnonymousFilterData.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */; };
 		6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */; };
+		6FEE495F2521CFE500DD9696 /* AuthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEE495D2521CFE500DD9696 /* AuthTests.swift */; };
+		6FEFEEB82510DE7A007BF1CE /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */; };
 		7878B311221574D80052FC23 /* StandaloneStudy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B30E221574D80052FC23 /* StandaloneStudy.swift */; };
 		7878B31D2216C6E20052FC23 /* HPHCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7878B31C2216C6E20052FC23 /* HPHCTests.swift */; };
 		847A25102518C93800BCB50A /* UtilitiesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847A250F2518C93800BCB50A /* UtilitiesTest.swift */; };
@@ -249,6 +251,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 86CC8E9A1AC09332001CCD89;
 			remoteInfo = ResearchKitTests;
+		};
+		6FEE49582521CFD000DD9696 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E7D2D4E1E433E8700763D4C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6E7D2D551E433E8700763D4C;
+			remoteInfo = HPHC;
 		};
 		7878B31F2216C6E20052FC23 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -437,6 +446,10 @@
 		6FD4F679244F2EE900584C0C /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		6FD5CA01244ED39800AFC08B /* AnonymousFilterData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = AnonymousFilterData.plist; sourceTree = "<group>"; };
 		6FE00CEF238FFE9F0067A7B8 /* ActivitySchedules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivitySchedules.swift; sourceTree = "<group>"; };
+		6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyStudiesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FEE495D2521CFE500DD9696 /* AuthTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthTests.swift; sourceTree = "<group>"; };
+		6FEE495E2521CFE500DD9696 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		782AF87B221D247D000025CF /* StudyTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyTest.swift; sourceTree = "<group>"; };
 		7878B30E221574D80052FC23 /* StandaloneStudy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StandaloneStudy.swift; sourceTree = "<group>"; };
 		7878B31A2216C6E10052FC23 /* HPHCTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HPHCTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -541,6 +554,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6FEE49502521CFD000DD9696 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7878B3172216C6E10052FC23 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -640,6 +660,7 @@
 				6EF0BC352223D1D5004F2357 /* ResearchKit.xcodeproj */,
 				6E7D2D581E433E8700763D4C /* HPHC */,
 				7878B31B2216C6E20052FC23 /* HPHCTests */,
+				6FEE49542521CFD000DD9696 /* MyStudiesUITests */,
 				6E7D2D571E433E8700763D4C /* Products */,
 				62CD35D6D8DE746AB43D70D6 /* Pods */,
 				5E6053B2479953DCC93BD8D4 /* Frameworks */,
@@ -651,6 +672,7 @@
 			children = (
 				6E7D2D561E433E8700763D4C /* FDA MyStudies.app */,
 				7878B31A2216C6E10052FC23 /* HPHCTests.xctest */,
+				6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1459,8 +1481,18 @@
 				89AD25AB23D7295A00F9450C /* AuthServices.swift */,
 				6F2392DD2423E0F300013AC0 /* EnrollServices.swift */,
 				6F55B9BD250239DA00A052A9 /* HydraAPI.swift */,
+				6FEFEEB72510DE7A007BF1CE /* UserAPI.swift */,
 			);
 			path = APIs;
+			sourceTree = "<group>";
+		};
+		6FEE49542521CFD000DD9696 /* MyStudiesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				6FEE495E2521CFE500DD9696 /* Info.plist */,
+				6FEE495D2521CFE500DD9696 /* AuthTests.swift */,
+			);
+			path = MyStudiesUITests;
 			sourceTree = "<group>";
 		};
 		7878B31B2216C6E20052FC23 /* HPHCTests */ = {
@@ -1744,6 +1776,24 @@
 			productReference = 6E7D2D561E433E8700763D4C /* FDA MyStudies.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6FEE49522521CFD000DD9696 /* MyStudiesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6FEE495A2521CFD000DD9696 /* Build configuration list for PBXNativeTarget "MyStudiesUITests" */;
+			buildPhases = (
+				6FEE494F2521CFD000DD9696 /* Sources */,
+				6FEE49502521CFD000DD9696 /* Frameworks */,
+				6FEE49512521CFD000DD9696 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6FEE49592521CFD000DD9696 /* PBXTargetDependency */,
+			);
+			name = MyStudiesUITests;
+			productName = MyStudiesUITests;
+			productReference = 6FEE49532521CFD000DD9696 /* MyStudiesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		7878B3192216C6E10052FC23 /* HPHCTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7878B3252216C6E20052FC23 /* Build configuration list for PBXNativeTarget "HPHCTests" */;
@@ -1770,7 +1820,7 @@
 		6E7D2D4E1E433E8700763D4C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 1170;
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = Google;
 				TargetAttributes = {
@@ -1790,6 +1840,12 @@
 								enabled = 1;
 							};
 						};
+					};
+					6FEE49522521CFD000DD9696 = {
+						CreatedOnToolsVersion = 11.7;
+						DevelopmentTeam = 3485DDCN2M;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 6E7D2D551E433E8700763D4C;
 					};
 					7878B3192216C6E10052FC23 = {
 						CreatedOnToolsVersion = 10.1;
@@ -1858,6 +1914,7 @@
 			targets = (
 				6E7D2D551E433E8700763D4C /* HPHC */,
 				7878B3192216C6E10052FC23 /* HPHCTests */,
+				6FEE49522521CFD000DD9696 /* MyStudiesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1934,6 +1991,13 @@
 				94B3DD441E6ED8E500327AE5 /* Profile.plist in Resources */,
 				6E7D2D8C1E4340B200763D4C /* UserProfile.plist in Resources */,
 				6E7D2D901E43526100763D4C /* Register.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6FEE49512521CFD000DD9696 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2108,6 +2172,7 @@
 				6FE00CF0238FFE9F0067A7B8 /* ActivitySchedules.swift in Sources */,
 				6F99755F242387300044944E /* AppConfiguration.swift in Sources */,
 				6ED86F641EA6498D00365AF0 /* RepeatableFormStepViewController.m in Sources */,
+				6FEFEEB82510DE7A007BF1CE /* UserAPI.swift in Sources */,
 				9491F7F81E825F5D0018C15E /* DBHandler.swift in Sources */,
 				6ED134361E5EB0370090C976 /* ConsentStep.swift in Sources */,
 				6EE93DCA1E93C8850027A5DC /* ActivitiesTableViewCell.swift in Sources */,
@@ -2237,6 +2302,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6FEE494F2521CFD000DD9696 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FEE495F2521CFE500DD9696 /* AuthTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7878B3162216C6E10052FC23 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2250,6 +2323,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6FEE49592521CFD000DD9696 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6E7D2D551E433E8700763D4C /* HPHC */;
+			targetProxy = 6FEE49582521CFD000DD9696 /* PBXContainerItemProxy */;
+		};
 		7878B3202216C6E20052FC23 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6E7D2D551E433E8700763D4C /* HPHC */;
@@ -2461,6 +2539,51 @@
 			};
 			name = Release;
 		};
+		6FEE495B2521CFD000DD9696 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = MyStudiesUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.MyStudiesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HPHC;
+			};
+			name = Debug;
+		};
+		6FEE495C2521CFD000DD9696 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 3485DDCN2M;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = MyStudiesUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.btc.MyStudiesUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HPHC;
+			};
+			name = Release;
+		};
 		7878B3212216C6E20052FC23 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D8009EF16382C7D8C349B5A9 /* Pods-HPHCTests.debug.xcconfig */;
@@ -2529,6 +2652,15 @@
 			buildConfigurations = (
 				6E7D2D7F1E433E8800763D4C /* Debug */,
 				6E7D2D801E433E8800763D4C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6FEE495A2521CFD000DD9696 /* Build configuration list for PBXNativeTarget "MyStudiesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6FEE495B2521CFD000DD9696 /* Debug */,
+				6FEE495C2521CFD000DD9696 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -215,39 +215,19 @@ public class UserConsentManagementDaoImpl implements UserConsentManagementDao {
 
     Session session = this.sessionFactory.getCurrentSession();
 
-    String addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
-    CriteriaBuilder criteriaBuilder = null;
-    CriteriaUpdate<StudyConsentEntity> criteriaUpdate = null;
-    Root<StudyConsentEntity> studyConsentBoRoot = null;
-    Predicate[] predicates = new Predicate[1];
-    List<StudyConsentEntity> studyConsentBoList = null;
-    Integer isUpdated = 0;
+    String addConsentMessage = MyStudiesUserRegUtil.ErrorCodes.FAILURE.getValue();
     String isSaved = "";
 
     if (null != studyConsent) {
-      if (studyConsent.getId() != null) {
-        criteriaBuilder = session.getCriteriaBuilder();
-        criteriaUpdate = criteriaBuilder.createCriteriaUpdate(StudyConsentEntity.class);
-        studyConsentBoRoot = criteriaUpdate.from(StudyConsentEntity.class);
-        criteriaUpdate.set("version", studyConsent.getVersion());
-        criteriaUpdate.set("status", studyConsent.getStatus());
-        criteriaUpdate.set("pdf", studyConsent.getPdf());
-        criteriaUpdate.set("pdfPath", studyConsent.getPdfPath());
-        criteriaUpdate.set("pdfStorage", studyConsent.getPdfStorage());
-        criteriaUpdate.where(
-            criteriaBuilder.equal(studyConsentBoRoot.get("id"), studyConsent.getId()));
-        isUpdated = session.createQuery(criteriaUpdate).executeUpdate();
-      } else {
-        studyConsent.setCreated(Timestamp.from(Instant.now()));
-        isSaved = (String) session.save(studyConsent);
-      }
+      studyConsent.setCreated(Timestamp.from(Instant.now()));
+      isSaved = (String) session.save(studyConsent);
     }
-    if ((isUpdated > 0) || (!StringUtils.isEmpty(isSaved))) {
-      addOrUpdateConsentMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
+    if (!StringUtils.isEmpty(isSaved)) {
+      addConsentMessage = MyStudiesUserRegUtil.ErrorCodes.SUCCESS.getValue();
     }
 
     logger.info("UserConsentManagementDaoImpl saveStudyConsent() - Ends ");
-    return addOrUpdateConsentMessage;
+    return addConsentMessage;
   }
 
   @Override

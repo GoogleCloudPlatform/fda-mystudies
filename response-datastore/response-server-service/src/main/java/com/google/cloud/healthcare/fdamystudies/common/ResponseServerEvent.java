@@ -9,7 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.common;
 
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.MOBILE_APPS;
-import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_DATASTORE;
+import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.PARTICIPANT_USER_DATASTORE;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.RESPONSE_DATASTORE;
 import static com.google.cloud.healthcare.fdamystudies.common.PlatformComponent.STUDY_BUILDER;
 
@@ -21,10 +21,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ResponseServerEvent implements AuditLogEvent {
   PARTICIPANT_ID_GENERATED(
-      PARTICIPANT_DATASTORE, RESPONSE_DATASTORE, null, null, "PARTICIPANT_ID_GENERATED"),
+      PARTICIPANT_USER_DATASTORE, RESPONSE_DATASTORE, null, null, "PARTICIPANT_ID_GENERATED"),
 
   PARTICIPANT_ID_GENERATION_FAILED(
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       RESPONSE_DATASTORE,
       null,
       "Participant ID could not be generated for app user.",
@@ -98,7 +98,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
 
   DATA_SHARING_CONSENT_VALUE_RETRIEVED(
       RESPONSE_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "Latest data-sharing consent value ('${datasharing_consent_value}')"
           + " for participant retrieved.",
@@ -106,7 +106,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
 
   DATA_SHARING_CONSENT_VALUE_RETRIEVAL_FAILED(
       RESPONSE_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "Latest data-sharing consent value for participant could not be retrieved.",
       "DATA_SHARING_CONSENT_VALUE_RETRIEVAL_FAILED"),
@@ -122,7 +122,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
 
   WITHDRAWAL_INFORMATION_RETRIEVED(
       RESPONSE_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "Participant's withdrawal information (withdrawn status: '${withdrawn_status}')"
           + " successfully retrieved, after receipt of activity response from participant.",
@@ -130,7 +130,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
 
   WITHDRAWAL_INFORMATION_RETREIVAL_FAILED(
       RESPONSE_DATASTORE,
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       null,
       "Participant's withdrawal information could not be retrieved, after receipt of "
           + "activity response from participant.",
@@ -218,7 +218,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
       "ACTIVITY_DATA_DELETION_FAILED"),
 
   PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE(
-      PARTICIPANT_DATASTORE,
+      PARTICIPANT_USER_DATASTORE,
       RESPONSE_DATASTORE,
       null,
       "Information about participant's withdrawal from study received"
@@ -227,7 +227,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
       "PARTICIPANT_WITHDRAWAL_INTIMATION_FROM_PARTICIPANT_DATASTORE"),
 
   ACTIVITY_STATE_SAVED_OR_UPDATED(
-      MOBILE_APPS,
+      RESPONSE_DATASTORE,
       RESPONSE_DATASTORE,
       null,
       "Activity state '${activity_state}' for activity ID '${activity_id}' was saved"
@@ -236,7 +236,7 @@ public enum ResponseServerEvent implements AuditLogEvent {
       "ACTIVITY_STATE_SAVED_OR_UPDATED"),
 
   ACTIVITY_STATE_SAVE_OR_UPDATE_FAILED(
-      MOBILE_APPS,
+      RESPONSE_DATASTORE,
       RESPONSE_DATASTORE,
       null,
       "Activity state '${activity_state}' for activity ID '${activity_id}' could not be saved"
