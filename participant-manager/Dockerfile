@@ -3,7 +3,6 @@
 FROM node:latest AS compile-image
 WORKDIR /app
 COPY . ./
-RUN rm /app/package-lock.json
 RUN npm cache clean --force
 RUN npm install
 RUN npm install -g @angular/cli
