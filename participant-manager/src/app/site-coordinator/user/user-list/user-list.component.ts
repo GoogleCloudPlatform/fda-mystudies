@@ -59,3 +59,4 @@ if (status === this.onBoardingStatus.Active) {
 return 'txt__space-gray'
 }
 }
+}
