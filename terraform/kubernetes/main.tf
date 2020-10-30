@@ -106,6 +106,7 @@ data "google_secret_manager_secret_version" "secrets" {
       "manual-ios-certificate-password",
       "auto-hydra-db-password",
       "auto-hydra-db-user",
+      "auto-hydra-system-secret",
     ],
     formatlist("auto-%s-db-user", local.apps),
     formatlist("auto-%s-db-password", local.apps),
@@ -201,7 +202,7 @@ resource "kubernetes_secret" "email_credentials" {
   data = {
     email_address         = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-address"].secret_data
     email_password        = data.google_secret_manager_secret_version.secrets["manual-mystudies-email-password"].secret_data
-    contact_email_domain  = data.google_secret_manager_secret_version.secrets["manual-mystudies-contact-email-address"].secret_data
+    contact_email_address = data.google_secret_manager_secret_version.secrets["manual-mystudies-contact-email-address"].secret_data
     from_email_address    = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-address"].secret_data
     from_email_domain     = data.google_secret_manager_secret_version.secrets["manual-mystudies-from-email-domain"].secret_data
     smtp_hostname         = data.google_secret_manager_secret_version.secrets["manual-mystudies-smtp-hostname"].secret_data

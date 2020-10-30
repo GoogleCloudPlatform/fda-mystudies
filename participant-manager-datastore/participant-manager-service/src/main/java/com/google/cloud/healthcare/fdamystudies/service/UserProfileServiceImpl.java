@@ -37,6 +37,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepositor
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -227,7 +228,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     UserRegAdminEntity user = optUser.get();
-    if (UserStatus.ACTIVE == userStatus || UserStatus.DEACTIVATED == userStatus) {
+    if (StringUtils.isNotEmpty(user.getUrAdminAuthId())) {
       updateUserAccountStatusInAuthServer(user.getUrAdminAuthId(), statusRequest.getStatus());
     }
 

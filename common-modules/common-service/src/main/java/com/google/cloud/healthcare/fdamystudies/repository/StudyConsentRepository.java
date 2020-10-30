@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
 public interface StudyConsentRepository extends JpaRepository<StudyConsentEntity, String> {
 
   @Query(
-      "SELECT sc FROM StudyConsentEntity sc WHERE sc.participantStudy.id in (:participantStudyIds)")
+      "SELECT sc FROM StudyConsentEntity sc WHERE sc.participantStudy.id in (:participantStudyIds) ORDER BY sc.created DESC")
   public List<StudyConsentEntity> findByParticipantRegistrySiteId(List<String> participantStudyIds);
 
   @Query(

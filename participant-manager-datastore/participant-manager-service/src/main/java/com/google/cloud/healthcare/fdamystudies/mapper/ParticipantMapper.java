@@ -9,6 +9,7 @@
 package com.google.cloud.healthcare.fdamystudies.mapper;
 
 import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.NOT_APPLICABLE;
+import static com.google.cloud.healthcare.fdamystudies.common.CommonConstants.YET_TO_ENROLL;
 
 import com.google.cloud.healthcare.fdamystudies.beans.Enrollment;
 import com.google.cloud.healthcare.fdamystudies.beans.ParticipantDetail;
@@ -75,8 +76,9 @@ public final class ParticipantMapper {
       String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
       participantDetail.setEnrollmentDate(
           StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
+    } else {
+      participantDetail.setEnrollmentStatus(YET_TO_ENROLL);
     }
-
     return participantDetail;
   }
 
@@ -171,11 +173,9 @@ public final class ParticipantMapper {
         participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
       }
     } else {
-      if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
-          || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
-        participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
-      }
+      participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
     }
+
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
     return participant;

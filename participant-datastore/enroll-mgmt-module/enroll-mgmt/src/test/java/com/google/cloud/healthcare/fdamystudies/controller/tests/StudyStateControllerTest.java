@@ -13,12 +13,14 @@ import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.R
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.STUDY_STATE_SAVED_OR_UPDATED_FOR_PARTICIPANT;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_FAILED;
 import static com.google.cloud.healthcare.fdamystudies.common.EnrollAuditEvent.WITHDRAWAL_FROM_STUDY_SUCCEEDED;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,17 +33,14 @@ import com.google.cloud.healthcare.fdamystudies.beans.StudyStateResponse;
 import com.google.cloud.healthcare.fdamystudies.beans.WithdrawFromStudyBean;
 import com.google.cloud.healthcare.fdamystudies.common.ApiEndpoint;
 import com.google.cloud.healthcare.fdamystudies.common.BaseMockIT;
+import com.google.cloud.healthcare.fdamystudies.common.EnrollmentStatus;
 import com.google.cloud.healthcare.fdamystudies.common.JsonUtils;
-import com.google.cloud.healthcare.fdamystudies.common.OnboardingStatus;
 import com.google.cloud.healthcare.fdamystudies.controller.StudyStateController;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantRegistrySiteEntity;
-import com.google.cloud.healthcare.fdamystudies.model.ParticipantStudyEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantRegistrySiteRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.ParticipantStudyRepository;
 import com.google.cloud.healthcare.fdamystudies.service.StudyStateService;
 import com.google.cloud.healthcare.fdamystudies.testutils.Constants;
 import com.google.cloud.healthcare.fdamystudies.testutils.TestUtils;
-import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -240,7 +239,6 @@ public class StudyStateControllerTest extends BaseMockIT {
     verifyTokenIntrospectRequest();
   }
 
-  @SuppressWarnings("rawtypes")
   @Test
   public void withdrawFromStudySuccess() throws Exception {
 
@@ -273,40 +271,18 @@ public class StudyStateControllerTest extends BaseMockIT {
 
     verifyTokenIntrospectRequest();
 
-    MvcResult result =
-        mockMvc
-            .perform(
-                get(ApiEndpoint.STUDY_STATE_PATH.getPath())
-                    .headers(headers)
-                    .contextPath(getContextPath()))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andReturn();
+    mockMvc
+        .perform(
+            get(ApiEndpoint.STUDY_STATE_PATH.getPath())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.studies[3].participantId").isEmpty())
+        .andExpect(jsonPath("$.studies[3].status", is(EnrollmentStatus.WITHDRAWN.getStatus())))
+        .andReturn();
 
     verifyTokenIntrospectRequest(2);
-
-    StudyStateResponse response =
-        getObjectMapper()
-            .readValue(result.getResponse().getContentAsString(), StudyStateResponse.class);
-    Optional<StudyStateBean> study =
-        response
-            .getStudies()
-            .stream()
-            .filter(s -> s.getParticipantId().equals(Constants.PARTICIPANT_ID))
-            .findFirst();
-
-    Optional<ParticipantStudyEntity> participantStudy =
-        participantStudyRepository.findByParticipantId(Constants.PARTICIPANT_ID);
-
-    Optional<ParticipantRegistrySiteEntity> optParticipantRegistrySite =
-        participantRegistrySiteRepository.findById(
-            participantStudy.get().getParticipantRegistrySite().getId());
-
-    assertTrue(study.isPresent());
-    assertEquals(
-        optParticipantRegistrySite.get().getOnboardingStatus(),
-        OnboardingStatus.DISABLED.getCode());
-    assertEquals(AppConstants.WITHDRAWN, study.get().getStatus());
   }
 
   @Test
