@@ -53,7 +53,7 @@ locals {
     "auth-server"       = "auth_server"
     "response-server"   = "mystudies_response_server"
     "study-designer"    = "fda_hphc"
-    "study-meta-data"   = "fda_hphc"
+    "study-metadata"    = "fda_hphc"
     "user-registration" = "mystudies_userregistration"
   }
   # App codes for auth server authentication.
