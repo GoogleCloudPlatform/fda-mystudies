@@ -584,10 +584,35 @@ template "project_data" {
     # Step 5.2: uncomment and re-run the engine once all previous steps have been completed.
     /* terraform_addons = {
       raw_config = <<EOF
-data "google_secret_manager_secret_version" "my_studies_db_default_password" {
+locals {
+  apps = [
+    "auth-server",
+    "response-server",
+    "study-designer",
+    "study-metadata",
+    "user-registration",
+  ]
+}
+
+data "google_secret_manager_secret_version" "db_secrets" {
   provider = google-beta
-  secret  = "auto-mystudies-sql-default-user-password"
-  project = "{{$prefix}}-{{$env}}-secrets"
+  project  = "{{$prefix}}-{{$env}}-secrets"
+  secret   = each.key
+
+  for_each = toset(concat(
+    ["auto-mystudies-sql-default-user-password"],
+    formatlist("auto-%s-db-user", local.apps),
+    formatlist("auto-%s-db-password", local.apps))
+  )
+}
+
+resource "google_sql_user" "db_users" {
+  for_each = toset(local.apps)
+  name     = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-user"].secret_data
+  instance = module.my_studies.instance_name
+  host     = "%"
+  password = data.google_secret_manager_secret_version.db_secrets["auto-$${each.key}-db-password"].secret_data
+  project  = module.project.project_id
 }
 EOF
     } */
@@ -598,7 +623,7 @@ EOF
       #   type               = "mysql"
       #   network_project_id = "{{$prefix}}-{{$env}}-networks"
       #   network            = "{{$prefix}}-{{$env}}-network"
-      #   user_password      = "$${data.google_secret_manager_secret_version.my_studies_db_default_password.secret_data}"
+      #   user_password      = "$${data.google_secret_manager_secret_version.db_secrets[\"auto-mystudies-sql-default-user-password\"].secret_data}"
       # }]
       iam_members = {
         "roles/cloudsql.client" = [
