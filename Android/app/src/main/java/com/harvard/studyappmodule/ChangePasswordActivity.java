@@ -266,10 +266,12 @@ public class ChangePasswordActivity extends AppCompatActivity
     } else {
       Toast.makeText(
               this,
-              getResources().getString(R.string.password_change_message_signin),
+              getResources().getString(R.string.password_change_message),
               Toast.LENGTH_SHORT)
           .show();
-      AppController.forceSignout(ChangePasswordActivity.this);
+      Intent intent = new Intent();
+      setResult(RESULT_OK, intent);
+      finish();
     }
   }
 
