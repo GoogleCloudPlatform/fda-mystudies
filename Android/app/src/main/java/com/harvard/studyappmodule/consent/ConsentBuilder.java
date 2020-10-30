@@ -293,41 +293,35 @@ public class ConsentBuilder {
       }
     }
 
-    QuestionStepCustom formStep =
-        new QuestionStepCustom(context.getResources().getString
-            (R.string.signature_form_step));
-    ArrayList<QuestionStep> questionStepCustom = new ArrayList<>();
     TextAnswerFormatRegex textAnswerFormat =
-        new TextAnswerFormatRegex(Integer.MAX_VALUE,
-            "",
-            "");
+            new TextAnswerFormatRegex(Integer.MAX_VALUE,
+                    "",
+                    "");
     textAnswerFormat.setIsMultipleLines(false);
     QuestionStepCustom firstName =
-        new QuestionStepCustom(
-            context.getResources().getString
-                (R.string.first_name),
-            context.getResources().getString
-                (R.string.first_name),
-            textAnswerFormat);
-    firstName.setPlaceholder(context.getResources().getString
-        (R.string.required));
+            new QuestionStepCustom(
+                    context.getResources().getString(R.string.first_name),
+                    context.getResources().getString(R.string.first_name),
+                    textAnswerFormat);
+    firstName.setPlaceholder(context.getResources().getString(R.string.required));
     firstName.setAnswerFormat1(textAnswerFormat);
     firstName.setOptional(false);
 
     QuestionStepCustom lastName =
-        new QuestionStepCustom(
-            context.getResources().getString
-                (R.string.last_name),
-            context.getResources().getString
-                (R.string.last_name),
-            textAnswerFormat);
-    lastName.setPlaceholder(context.getResources().getString
-        (R.string.required));
+            new QuestionStepCustom(
+                    context.getResources().getString(R.string.last_name),
+                    context.getResources().getString(R.string.last_name),
+                    textAnswerFormat);
+    lastName.setPlaceholder(context.getResources().getString(R.string.required));
     lastName.setAnswerFormat1(textAnswerFormat);
     lastName.setOptional(false);
 
+    ArrayList<QuestionStep> questionStepCustom = new ArrayList<>();
     questionStepCustom.add(firstName);
     questionStepCustom.add(lastName);
+
+    QuestionStepCustom formStep =
+            new QuestionStepCustom(context.getResources().getString(R.string.signature_form_step));
 
     ChoiceAnswerFormatCustom formAnswerFormat =
         new ChoiceAnswerFormatCustom(
