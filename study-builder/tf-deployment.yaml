@@ -109,4 +109,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: study-builder-gcloud-key
+          secretName: study-builder-gke-sa-gcloud-key
