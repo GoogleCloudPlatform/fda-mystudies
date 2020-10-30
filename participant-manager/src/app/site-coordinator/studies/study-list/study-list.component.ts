@@ -8,6 +8,7 @@ import {Study, StudyResponse} from '../shared/study.model';
 import {StudiesService} from '../shared/studies.service';
 import {SearchService} from 'src/app/shared/search.service';
 import {StudyType} from 'src/app/shared/enums';
+import {Permission} from 'src/app/shared/permission-enums';
 @Component({
   selector: 'app-study-list',
   templateUrl: './study-list.component.html',
@@ -59,5 +60,8 @@ export class StudyListComponent implements OnInit {
     } else {
       return 'green__text__sm';
     }
+  }
+   checkEditPermission(permission: number): boolean {
+    return permission === Permission.ViewAndEdit;
   }
 }

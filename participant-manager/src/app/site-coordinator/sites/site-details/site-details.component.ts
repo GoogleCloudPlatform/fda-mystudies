@@ -11,7 +11,7 @@ import {UpdateInviteResponse} from '../../participant-details/participant-detail
 import {ApiResponse} from 'src/app/entity/api.response.model';
 import {UnsubscribeOnDestroyAdapter} from 'src/app/unsubscribe-on-destroy-adapter';
 import {getMessage} from 'src/app/shared/success.codes.enum';
-import {OnboardingStatus} from 'src/app/shared/enums';
+import {EnrollmentStatus, OnboardingStatus} from 'src/app/shared/enums';
 import {SearchService} from 'src/app/shared/search.service';
 import {
   ImportParticipantEmailResponse,
@@ -226,8 +226,15 @@ export class SiteDetailsComponent
     if (this.selectedAll) {
       for (const participants of this.siteDetailsBackup
         .participantRegistryDetail.registryParticipants) {
+          if (this.activeTab===OnboardingStatus.Invited ) {
+            if ( participants.enrollmentStatus!==EnrollmentStatus.YetToEnroll) {
+           participants.newlyCreatedUser = this.selectedAll;
+           this.userIds.push(participants.id);
+            }
+        } else {
         participants.newlyCreatedUser = this.selectedAll;
         this.userIds.push(participants.id);
+        }
       }
     } else {
       for (const participants of this.siteDetailsBackup

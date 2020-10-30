@@ -17,7 +17,7 @@ const successMessages = {
   MSG_0015: 'User profile fetched successfully',
   MSG_0016: 'User profile with security code fetched successfully',
   MSG_0017: 'Participant details fetched successfully',
-  MSG_0018: 'Invitation to particiapant sent successfully',
+  MSG_0018: 'Invitation sent successfully',
   MSG_0019: 'Your password has been reset successfully',
   MSG_0020: 'Email accepted by receiving mail server',
   MSG_0021: 'Email list imported successfully',
