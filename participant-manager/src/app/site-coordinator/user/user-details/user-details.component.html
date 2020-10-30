@@ -179,7 +179,10 @@
                                   disabled
                                   [value]="study.selected"
                                 />
-                                <label for="studyCheckBox{{ study.studyId }}">
+                                <label
+                                  for="studyCheckBox{{ study.studyId }}"
+                                  class="font14"
+                                >
                                   {{ study.studyName }}
                                 </label>
                               </div>
@@ -225,7 +228,7 @@
                             }}
                           </div>
                           <div *ngFor="let site of study.sites">
-                            <div *ngIf="site.selected">
+                            <span *ngIf="site.selected">
                               <div class="custom__labels">
                                 <input
                                   type="checkbox"
@@ -233,12 +236,15 @@
                                   disabled
                                   [value]="site.selected"
                                 />
-                                <label for="siteCheckBox{{ site.siteId }}">
+                                <label
+                                  for="siteCheckBox{{ site.siteId }}"
+                                  class="font12"
+                                >
                                   {{ site.locationName }}
                                 </label>
                               </div>
-                            </div>
-                            <div class="custom__labels__radio">
+                            </span>
+                            <span class="custom__labels__radio">
                               <span
                                 *ngIf="site.permission == permission.View"
                                 class="txt__green font12"
@@ -253,7 +259,7 @@
                               >
                                 View And Edit
                               </span>
-                            </div>
+                            </span>
                           </div>
                         </div>
                       </div>
