@@ -122,7 +122,12 @@
                   </div>
                 </div>
               </div>
-              <div>
+              <div
+                [hidden]="
+                  siteParticipants.participantRegistryDetail.studyPermission !==
+                  permission.ViewAndEdit
+                "
+              >
                 <button
                   name="buttonDecommision"
                   class="btn banner__default__btn flex__row__reverse pad__5__13"
@@ -201,7 +206,12 @@
               </div>
             </div>
           </div>
-          <div>
+          <div
+            [hidden]="
+              siteParticipants.participantRegistryDetail.studyPermission !==
+              permission.ViewAndEdit
+            "
+          >
             <button
               name="buttonDecommision"
               class="btn banner__default__btn flex__row__reverse pad__5__13 font12"

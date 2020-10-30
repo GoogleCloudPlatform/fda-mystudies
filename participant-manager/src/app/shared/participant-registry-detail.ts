@@ -17,6 +17,7 @@ export interface ParticipantRegistryDetail {
   locationName?: string;
   locationStatus?: string;
   sitePermission?: Permission;
+  studyPermission:Permission;
   openStudySitePermission?: Permission;
   siteStatus?: number;
   registryParticipants: RegistryParticipant[];
