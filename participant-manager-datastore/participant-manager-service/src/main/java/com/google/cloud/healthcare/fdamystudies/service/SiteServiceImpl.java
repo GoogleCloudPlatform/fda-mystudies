@@ -233,9 +233,7 @@ public class SiteServiceImpl implements SiteService {
       site.setLocation(location.get());
     }
 
-    if (!userRegAdmin.isSuperAdmin()) {
-      addSitePermissions(userId, studyId, site);
-    }
+    addSitePermissions(userId, studyId, site);
 
     site = siteRepository.save(site);
 
@@ -248,15 +246,11 @@ public class SiteServiceImpl implements SiteService {
         studyPermissionRepository.findByStudyId(studyId);
 
     for (StudyPermissionEntity studyPermission : userStudypermissionList) {
-      Permission editPermission =
-          studyPermission.getUrAdminUser().getId().equals(userId)
-              ? Permission.EDIT
-              : studyPermission.getEdit();
       SitePermissionEntity sitePermission = new SitePermissionEntity();
       sitePermission.setUrAdminUser(studyPermission.getUrAdminUser());
       sitePermission.setStudy(studyPermission.getStudy());
       sitePermission.setApp(studyPermission.getApp());
-      sitePermission.setCanEdit(editPermission);
+      sitePermission.setCanEdit(studyPermission.getEdit());
       sitePermission.setCreatedBy(userId);
       site.addSitePermissionEntity(sitePermission);
     }
