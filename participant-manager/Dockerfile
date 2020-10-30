@@ -3,7 +3,7 @@
 FROM node:latest AS compile-image
 WORKDIR /app
 COPY . ./
-RUN npm config set registry http://registry.npmjs.org/
+RUN npm config set https-proxy "http://username:password@proxy-url:proxy-port"
 RUN npm install
 RUN  npm install -g @angular/cli
 # run npm install -g npm@7.0.6
