@@ -24,10 +24,40 @@ terraform {
   }
 }
 
-data "google_secret_manager_secret_version" "mystudies_db_default_password" {
+locals {
+  apps = [
+    "auth-server",
+    "response-datastore",
+    "study-builder",
+    "study-datastore",
+    "participant-consent-datastore",
+    "participant-enroll-datastore",
+    "participant-user-datastore",
+    "participant-manager-datastore",
+    "hydra",
+  ]
+}
+
+data "google_secret_manager_secret_version" "db_secrets" {
   provider = google-beta
-  secret   = "auto-mystudies-sql-default-user-password"
   project  = "mystudies-dev-secrets"
+  secret   = each.key
+
+  for_each = toset(concat(
+    ["auto-mystudies-sql-default-user-password"],
+    formatlist("auto-%s-db-user", local.apps),
+    formatlist("auto-%s-db-password", local.apps))
+  )
+}
+
+resource "google_sql_user" "db_users" {
+  for_each = toset(local.apps)
+
+  name     = data.google_secret_manager_secret_version.db_secrets["auto-${each.key}-db-user"].secret_data
+  instance = module.mystudies.instance_name
+  host     = "%"
+  password = data.google_secret_manager_secret_version.db_secrets["auto-${each.key}-db-password"].secret_data
+  project  = module.project.project_id
 }
 
 # Create the project and optionally enable APIs, create the deletion lien and add to shared VPC.
@@ -73,7 +103,7 @@ module "mystudies" {
   availability_type = "REGIONAL"
   database_version  = "MYSQL_5_7"
   vpc_network       = "projects/mystudies-dev-networks/global/networks/mystudies-dev-network"
-  user_password     = data.google_secret_manager_secret_version.mystudies_db_default_password.secret_data
+  user_password     = data.google_secret_manager_secret_version.db_secrets["auto-mystudies-sql-default-user-password"].secret_data
 }
 
 module "project_iam_members" {
