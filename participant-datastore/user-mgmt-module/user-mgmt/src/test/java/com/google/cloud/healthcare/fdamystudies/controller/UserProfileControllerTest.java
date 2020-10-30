@@ -229,6 +229,7 @@ public class UserProfileControllerTest extends BaseMockIT {
 
     Optional<ParticipantStudyEntity> participant =
         participantStudyRepository.findByStudyIdAndUserId(Constants.STUDY_INFO_ID, daoResp.getId());
+    assertNotNull(participant.get().getWithdrawalDate());
 
     assertTrue(
         participant

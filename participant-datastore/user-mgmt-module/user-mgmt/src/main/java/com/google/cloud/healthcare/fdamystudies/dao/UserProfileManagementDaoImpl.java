@@ -23,6 +23,7 @@ import com.google.cloud.healthcare.fdamystudies.model.UserDetailsEntity;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.util.AppConstants;
 import com.google.cloud.healthcare.fdamystudies.util.ErrorCode;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -284,6 +285,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
       criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
       criteriaParticipantStudiesUpdate.set("participantId", null);
+      criteriaParticipantStudiesUpdate.set(
+          "withdrawalDate", new Timestamp(Instant.now().toEpochMilli()));
       userDetails = session.get(UserDetailsEntity.class, userDetailsId);
       studyIdPredicates.add(
           criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
