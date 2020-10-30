@@ -66,8 +66,8 @@
           <div
             [hidden]="
               siteParticipants.participantRegistryDetail.studyStatus ===
-                studyStatus.Active &&
-              siteParticipants.participantRegistryDetail.siteStatus === 1
+                studyStatus.Deactivated &&
+              siteParticipants.participantRegistryDetail.siteStatus === 0
             "
             class="desk__view"
           >
@@ -143,8 +143,8 @@
       <div
         [hidden]="
           siteParticipants.participantRegistryDetail.studyStatus ===
-            studyStatus.Active &&
-          siteParticipants.participantRegistryDetail.siteStatus === 1
+            studyStatus.Deactivated &&
+          siteParticipants.participantRegistryDetail.siteStatus === 0
         "
         class="p-md pb-none"
       >
