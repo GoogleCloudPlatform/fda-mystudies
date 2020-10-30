@@ -9,16 +9,21 @@
           class="bg__white cards box__shadow-cmn p-xl ml-none mr-none apps_row"
         >
           <div
-            [routerLink]="['/coordinator/apps', app.id]"
-            class="flex__justify__space-between flex__wrap cursor__pointer"
+            [routerLink]="
+              checkEditPermission(app.permission)
+                ? ['/coordinator/apps', app.id]
+                : []
+            "
+            class="flex__justify__space-between flex__wrap"
+            [ngClass]="
+              checkEditPermission(app.permission) ? ' cursor__pointer' : ''
+            "
           >
             <div>
               <div class="blue__text__md text-capitalize">
                 {{ app.customId }}
               </div>
-              <div
-                class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
-              >
+              <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                 {{ app.name }}
               </div>
               <div

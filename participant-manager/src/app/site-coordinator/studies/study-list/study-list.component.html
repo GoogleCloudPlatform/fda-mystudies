@@ -7,8 +7,17 @@
           class="bg__white cards cards__var box__shadow-cmn ml-none mr-none studies_row"
         >
           <div
-            [routerLink]="['/coordinator/studies', study.id]"
-            class="flex__justify__space-between flex__wrap cursor__pointer"
+            [routerLink]="
+              checkEditPermission(study.studyPermission)
+                ? ['/coordinator/studies', study.id]
+                : []
+            "
+            [ngClass]="
+              checkEditPermission(study.studyPermission)
+                ? ' cursor__pointer'
+                : ''
+            "
+            class="flex__justify__space-between flex__wrap"
           >
             <div>
               <div class="flex__ flex__row align__items__center">
@@ -21,9 +30,7 @@
                   <div class="blue__text__md text-capitalize">
                     {{ study.customId }}
                   </div>
-                  <div
-                    class="col-xs-12 col-md-12 p-none dashboard-card__title cursor__pointer"
-                  >
+                  <div class="col-xs-12 col-md-12 p-none dashboard-card__title">
                     {{ study.name }}
                   </div>
                   <div
