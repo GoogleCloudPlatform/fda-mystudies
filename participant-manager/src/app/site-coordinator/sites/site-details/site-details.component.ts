@@ -227,14 +227,14 @@ export class SiteDetailsComponent
     if (this.selectedAll) {
       for (const participants of this.siteDetailsBackup
         .participantRegistryDetail.registryParticipants) {
-          if (this.activeTab===OnboardingStatus.Invited ) {
-            if ( participants.enrollmentStatus!==EnrollmentStatus.YetToEnroll) {
-           participants.newlyCreatedUser = this.selectedAll;
-           this.userIds.push(participants.id);
-            }
+        if (this.activeTab === OnboardingStatus.Invited) {
+          if (participants.enrollmentStatus !== EnrollmentStatus.YetToEnroll) {
+            participants.newlyCreatedUser = this.selectedAll;
+            this.userIds.push(participants.id);
+          }
         } else {
-        participants.newlyCreatedUser = this.selectedAll;
-        this.userIds.push(participants.id);
+          participants.newlyCreatedUser = this.selectedAll;
+          this.userIds.push(participants.id);
         }
       }
     } else {
