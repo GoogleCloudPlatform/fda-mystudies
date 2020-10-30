@@ -186,16 +186,15 @@ public class DashboardMetaDataDao {
                 session
                     .createQuery(
                         "from QuestionnairesStepsDto QSDTO"
-                            + " where QSDTO.questionnairesId in ("
-                            + StringUtils.join(questionnaireIdsList, ',')
-                            + ")"
-                            + " and QSDTO.stepType in ('"
-                            + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION
-                            + "','"
-                            + StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM
-                            + "')"
+                            + " where QSDTO.questionnairesId in (:questionnaireIdsList)"
+                            + " and QSDTO.stepType in (:QuesStepTypeQue,:QuesStepTypeForm)"
                             + " and QSDTO.status=true"
                             + " ORDER BY QSDTO.questionnairesId, QSDTO.sequenceNo")
+                    .setParameterList("questionnaireIdsList", questionnaireIdsList)
+                    .setString(
+                        "QuesStepTypeQue", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_QUESTION)
+                    .setString(
+                        "QuesStepTypeForm", StudyMetaDataConstants.QUESTIONAIRE_STEP_TYPE_FORM)
                     .list();
             if ((questionnaireStepsList != null) && !questionnaireStepsList.isEmpty()) {
               for (QuestionnairesStepsDto questionnaireSteps : questionnaireStepsList) {
@@ -233,9 +232,8 @@ public class DashboardMetaDataDao {
                   .createQuery(
                       "from ActiveTaskAttrtibutesValuesDto ATAVDTO"
                           + " where ATAVDTO.addToLineChart=true or ATAVDTO.useForStatistic=true"
-                          + " and ATAVDTO.activeTaskId in ("
-                          + StringUtils.join(activeTaskIdsList, ',')
-                          + ")")
+                          + " and ATAVDTO.activeTaskId in (:activeTaskIdsList)")
+                  .setParameterList("activeTaskIdsList", activeTaskIdsList)
                   .list();
           if ((activeTaskValuesList != null) && !activeTaskValuesList.isEmpty()) {
             int taskTypeId = 0;
@@ -328,14 +326,12 @@ public class DashboardMetaDataDao {
               session
                   .createQuery(
                       " from QuestionsDto QDTO"
-                          + " where QDTO.id in ("
-                          + StringUtils.join(questionIdsList, ",")
-                          + ") and QDTO.status=true"
-                          + " and QDTO.addLineChart='"
-                          + StudyMetaDataConstants.YES
-                          + "' or QDTO.useStasticData='"
-                          + StudyMetaDataConstants.YES
-                          + "' ")
+                          + " where QDTO.id in (:questionIdsList) and QDTO.status=true"
+                          + " and QDTO.addLineChart=:addLineChart"
+                          + " or QDTO.useStasticData=:useStasticData")
+                  .setParameterList("questionIdsList", questionIdsList)
+                  .setString("addLineChart", StudyMetaDataConstants.YES)
+                  .setString("useStasticData", StudyMetaDataConstants.YES)
                   .list();
           for (QuestionsDto questionDto : questionsList) {
             QuestionnairesStepsDto questionnaireSteps =
@@ -397,11 +393,8 @@ public class DashboardMetaDataDao {
           List<FormDto> formDtoList = null;
           formDtoList =
               session
-                  .createQuery(
-                      "from FormDto FDTO"
-                          + " where FDTO.formId in ("
-                          + StringUtils.join(formIdsList, ',')
-                          + ")")
+                  .createQuery("from FormDto FDTO where FDTO.formId in (:formIdsList)")
+                  .setParameterList("formIdsList", formIdsList)
                   .list();
           if ((formDtoList != null) && !formDtoList.isEmpty()) {
             for (FormDto form : formDtoList) {
@@ -411,9 +404,9 @@ public class DashboardMetaDataDao {
                   session
                       .createQuery(
                           "from FormMappingDto FMDTO"
-                              + " where FMDTO.formId="
-                              + form.getFormId()
+                              + " where FMDTO.formId=:formId"
                               + " order by FMDTO.sequenceNo")
+                      .setInteger("formId", form.getFormId())
                       .list();
               if ((formMappingDtoList != null) && !formMappingDtoList.isEmpty()) {
                 for (FormMappingDto formMappingDto : formMappingDtoList) {
@@ -427,14 +420,13 @@ public class DashboardMetaDataDao {
                     session
                         .createQuery(
                             "from QuestionsDto FQDTO"
-                                + " where FQDTO.id in ("
-                                + StringUtils.join(formQuestionIdsList, ',')
-                                + ") and FQDTO.status=true"
-                                + " and FQDTO.addLineChart='"
-                                + StudyMetaDataConstants.YES
-                                + "' or FQDTO.useStasticData='"
-                                + StudyMetaDataConstants.YES
-                                + "' ")
+                                + " where FQDTO.id in (:formQuestionIdsList)"
+                                + " and FQDTO.status=true"
+                                + " and FQDTO.addLineChart=:addLineChart"
+                                + " or FQDTO.useStasticData=:useStasticData")
+                        .setParameterList("formQuestionIdsList", formQuestionIdsList)
+                        .setString("addLineChart", StudyMetaDataConstants.YES)
+                        .setString("useStasticData", StudyMetaDataConstants.YES)
                         .list();
                 if ((formQuestionDtoList != null) && !formQuestionDtoList.isEmpty()) {
                   for (QuestionsDto questionDto : formQuestionDtoList) {
@@ -814,8 +806,8 @@ public class DashboardMetaDataDao {
                   session
                       .createQuery(
                           "from ActiveTaskFrequencyDto ATFDTO"
-                              + " where ATFDTO.activeTaskId="
-                              + activeTaskDto.getId())
+                              + " where ATFDTO.activeTaskId=:activeTaskId")
+                      .setInteger("activeTaskId", activeTaskDto.getId())
                       .uniqueResult();
           if ((activeTaskFrequency != null)
               && StringUtils.isNotEmpty(activeTaskFrequency.getFrequencyTime())) {
@@ -844,9 +836,9 @@ public class DashboardMetaDataDao {
               session
                   .createQuery(
                       "from ActiveTaskFrequencyDto ATFDTO"
-                          + " where ATFDTO.activeTaskId="
-                          + activeTaskDto.getId()
+                          + " where ATFDTO.activeTaskId=:activeTaskId"
                           + " ORDER BY ATFDTO.frequencyTime")
+                  .setInteger("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskFrequencyList != null) && !activeTaskFrequencyList.isEmpty()) {
             startDateTime =
@@ -869,9 +861,9 @@ public class DashboardMetaDataDao {
               session
                   .createQuery(
                       "from ActiveTaskCustomFrequenciesDto ATCFDTO"
-                          + " where ATCFDTO.activeTaskId="
-                          + activeTaskDto.getId()
+                          + " where ATCFDTO.activeTaskId=:activeTaskId"
                           + " ORDER BY ATCFDTO.frequencyTime")
+                  .setInteger("activeTaskId", activeTaskDto.getId())
                   .list();
           if ((activeTaskCustomFrequencyList != null) && !activeTaskCustomFrequencyList.isEmpty()) {
             String startDate = activeTaskCustomFrequencyList.get(0).getFrequencyStartDate();
@@ -955,8 +947,8 @@ public class DashboardMetaDataDao {
                   session
                       .createQuery(
                           "from QuestionnairesFrequenciesDto QFDTO"
-                              + " where QFDTO.questionnairesId="
-                              + questionaire.getId())
+                              + " where QFDTO.questionnairesId=:questRespId")
+                      .setInteger("questRespId", questionaire.getId())
                       .uniqueResult();
           if ((questionnairesFrequency != null)
               && StringUtils.isNotEmpty(questionnairesFrequency.getFrequencyTime())) {
@@ -985,9 +977,9 @@ public class DashboardMetaDataDao {
               session
                   .createQuery(
                       "from QuestionnairesFrequenciesDto QFDTO"
-                          + " where QFDTO.questionnairesId="
-                          + questionaire.getId()
+                          + " where QFDTO.questionnairesId=:questRespId"
                           + " ORDER BY QFDTO.frequencyTime")
+                  .setInteger("questRespId", questionaire.getId())
                   .list();
           if ((questionnairesFrequencyList != null) && !questionnairesFrequencyList.isEmpty()) {
             startDateTime =
@@ -1008,9 +1000,9 @@ public class DashboardMetaDataDao {
               session
                   .createQuery(
                       "from QuestionnairesCustomFrequenciesDto QCFDTO"
-                          + " where QCFDTO.questionnairesId="
-                          + questionaire.getId()
+                          + " where QCFDTO.questionnairesId=:questRespId"
                           + " ORDER BY QCFDTO.frequencyTime")
+                  .setInteger("questRespId", questionaire.getId())
                   .list();
           if ((questionnaireCustomFrequencyList != null)
               && !questionnaireCustomFrequencyList.isEmpty()) {
@@ -1087,7 +1079,7 @@ public class DashboardMetaDataDao {
       configuration.put("titles", titles);
       configuration.put("defaultText", "");
 
-      // single setting
+      /** single setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);
@@ -1124,7 +1116,7 @@ public class DashboardMetaDataDao {
       configuration.put("titles", titles);
       configuration.put("defaultText", "");
 
-      // mutiple setting
+      /** mutiple setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);
@@ -1193,7 +1185,7 @@ public class DashboardMetaDataDao {
       List<String> titles = new ArrayList<>();
       configuration.put("titles", titles);
 
-      // single setting
+      /** single setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);
@@ -1218,7 +1210,7 @@ public class DashboardMetaDataDao {
       List<String> titles = new ArrayList<>();
       configuration.put("titles", titles);
 
-      // multiple setting
+      /** multiple setting */
       List<Map<String, Object>> settingsList = new ArrayList<>();
       Map<String, Object> settings = new LinkedHashMap<>();
       settings.put("numberOfPoints", 1);
