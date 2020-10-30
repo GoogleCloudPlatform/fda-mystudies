@@ -85,6 +85,8 @@ export const expectedAppDetails = {
           studyId: '4ef1e4a0004',
           customStudyId: 'NewCovidStudy2019',
           studyName: 'TestStudy',
+          studyType: StudyType.Close,
+
           sites: [
             {
               siteId: '617973b45',

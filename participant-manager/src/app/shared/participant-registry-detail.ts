@@ -23,7 +23,8 @@ export interface ParticipantRegistryDetail {
   registryParticipants: RegistryParticipant[];
   countByStatus: CountByStatus;
   status?: string;
-  studyStatus:Status;
+  studyStatus: Status;
+  studyPermission: Permission;
 }
 export interface CountByStatus {
   // eslint-disable-next-line @typescript-eslint/naming-convention

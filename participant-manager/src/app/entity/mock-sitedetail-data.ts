@@ -26,6 +26,7 @@ export const expectedSiteParticipantDetails = {
     locationName: 'Location1',
     targetEnrollment: 1,
     studyStatus: Status.Active,
+    studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {
         customLocationId: '',

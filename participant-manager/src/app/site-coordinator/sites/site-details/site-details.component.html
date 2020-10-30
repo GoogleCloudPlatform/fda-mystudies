@@ -66,17 +66,17 @@
               </div>
             </div>
           </div>
-          <div
-            [hidden]="
-              siteParticipants.participantRegistryDetail.sitePermission !==
-                permission.ViewAndEdit ||
-              (siteParticipants.participantRegistryDetail.studyStatus ===
-                studyStatus.Deactivated &&
-                siteParticipants.participantRegistryDetail.siteStatus === 0)
-            "
-            class="desk__view"
-          >
-            <div class="flex__justify__space-between">
+          <div class="desk__view">
+            <div
+              [hidden]="
+                siteParticipants.participantRegistryDetail.sitePermission !==
+                  permission.ViewAndEdit ||
+                (siteParticipants.participantRegistryDetail.studyStatus ===
+                  studyStatus.Deactivated &&
+                  siteParticipants.participantRegistryDetail.siteStatus === 0)
+              "
+              class="flex__justify__space-between"
+            >
               <div>
                 <div class="dropdown">
                   <button
