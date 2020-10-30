@@ -9,7 +9,7 @@ template "mystudies" {
     prefix           = "mystudies"
     env              = "dev"
     folder_id        = "440087619763"
-    billing_account  = "01B494-31B256-17B2A6"
+    billing_account  = "0132B5-9CBD69-7F2F47"
     domain           = "hcls.joonix.net"
     default_location = "us-east1"
     default_zone     = "b"
