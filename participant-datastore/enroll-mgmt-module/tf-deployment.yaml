@@ -84,4 +84,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-enroll-datastore-gcloud-key
+          secretName: enroll-datastore-gke-sa-gcloud-key

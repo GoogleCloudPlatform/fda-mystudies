@@ -42,9 +42,9 @@ spec:
               serviceName: study-designer-np
               servicePort: 50000
           - path: /hydra/*
-              backend:
-                serviceName: hydra-np
-                servicePort: 4444
+            backend:
+              serviceName: hydra-np
+              servicePort: 4444
           - path: /#/*
             backend:
               serviceName: participant-manager-np

@@ -70,4 +70,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: hydra-gcloud-key
+          secretName: hydra-gke-sa-gcloud-key

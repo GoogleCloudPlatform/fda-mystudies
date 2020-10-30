@@ -12,7 +12,6 @@ spec:
   type: NodePort
   selector:
     app: hydra-ic
-    tier: web
   ports:
   - protocol: TCP
     port: 4444
