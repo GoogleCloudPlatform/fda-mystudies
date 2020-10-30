@@ -120,6 +120,7 @@ export const expectedStudiesDetails = {
     appName: 'mystudies-1',
     targetEnrollment: 1,
     studyStatus: Status.Active,
+    studyPermission: Permission.ViewAndEdit,
     registryParticipants: [
       {
         customLocationId: '',

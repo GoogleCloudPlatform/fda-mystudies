@@ -41,7 +41,7 @@ export class SiteDetailsComponent
   activeTab = OnboardingStatus.All;
   newlyImportedParticipants: Participant[] = [];
   selectedAll = false;
-  studyStatus=Status;
+  studyStatus = Status;
   constructor(
     private readonly particpantDetailService: SiteDetailsService,
     private readonly router: Router,
@@ -126,12 +126,13 @@ export class SiteDetailsComponent
       this.userIds = this.userIds.filter((item) => item !== checkbox.id);
     }
   }
-  decommissionSite(participantRegistryDetail:ParticipantRegistryDetail): void {
+  decommissionSite(participantRegistryDetail: ParticipantRegistryDetail): void {
     this.subs.add(
       this.particpantDetailService
         .siteDecommission(this.siteId)
         .subscribe((successResponse: ApiResponse) => {
-           participantRegistryDetail.siteStatus=participantRegistryDetail.siteStatus=== 1?0:1;
+          participantRegistryDetail.siteStatus =
+            participantRegistryDetail.siteStatus === 1 ? 0 : 1;
           if (getMessage(successResponse.code)) {
             this.toastr.success(getMessage(successResponse.code));
           } else {
