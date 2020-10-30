@@ -4,7 +4,7 @@ FROM node:latest AS compile-image
 WORKDIR /app
 COPY . ./
 RUN npm cache clean --force
-RUN npm install
+RUN npm install --force
 RUN npm install -g @angular/cli
 RUN npm install -g npm@7.0.6
 RUN ng build --aot --prod
