@@ -1411,13 +1411,13 @@ public class SurveyDashboardFragment extends Fragment implements ApiCall.OnAsync
             for (int i = 0; i < jsonArray.length(); i++) {
               JSONObject jsonObject1 = new JSONObject(String.valueOf(jsonArray.get(i)));
               JSONArray jsonArray1 = (JSONArray) jsonObject1.get("data");
+              int duration = 0;
+              Date completedDate = new Date();
               for (int j = 0; j < jsonArray1.length(); j++) {
                 JSONObject jsonObjectData = (JSONObject) jsonArray1.get(j);
                 Type type = new TypeToken<Map<String, Object>>() {}.getType();
                 Map<String, Object> map = gson.fromJson(String.valueOf(jsonObjectData), type);
                 StepRecordCustom stepRecordCustom = new StepRecordCustom();
-                Date completedDate = new Date();
-                int duration = 0;
                 try {
                   Object completedDateValMap = gson.toJson(map.get("Created"));
                   Map<String, Object> completedDateVal =
