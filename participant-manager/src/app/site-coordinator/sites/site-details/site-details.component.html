@@ -63,6 +63,7 @@
               </div>
             </div>
           </div>
+<<<<<<< HEAD
           <div class="desk__view">
             <div
               [hidden]="
@@ -71,6 +72,17 @@
               "
               class="flex__justify__space-between"
             >
+=======
+          <div
+            [hidden]="
+              siteParticipants.participantRegistryDetail.studyStatus ===
+                studyStatus.Active &&
+              siteParticipants.participantRegistryDetail.siteStatus === 1
+            "
+            class="desk__view"
+          >
+            <div class="flex__justify__space-between">
+>>>>>>> b8c2e5cea3aca68f340130430ae44e2c7107943c
               <div>
                 <div class="dropdown">
                   <button
@@ -118,11 +130,6 @@
               </div>
               <div>
                 <button
-                  [disabled]="
-                    siteParticipants.participantRegistryDetail.studyStatus ===
-                      studyStatus.Deactivated &&
-                    siteParticipants.participantRegistryDetail.siteStatus === 0
-                  "
                   name="buttonDecommision"
                   class="btn banner__default__btn flex__row__reverse pad__5__13"
                   (click)="
@@ -146,8 +153,10 @@
     <div class="mobile__view yel__tabs">
       <div
         [hidden]="
-          siteParticipants.participantRegistryDetail.sitePermission !==
-          permission.ViewAndEdit
+           siteParticipants.participantRegistryDetail.sitePermission !==
+          permission.ViewAndEdit || (siteParticipants.participantRegistryDetail.studyStatus ===
+            studyStatus.Deactivated &&
+          siteParticipants.participantRegistryDetail.siteStatus === 0)
         "
         class="p-md pb-none"
       >
@@ -199,11 +208,6 @@
           </div>
           <div>
             <button
-              [disabled]="
-                siteParticipants.participantRegistryDetail.studyStatus ===
-                  studyStatus.Deactivated &&
-                siteParticipants.participantRegistryDetail.siteStatus === 0
-              "
               name="buttonDecommision"
               class="btn banner__default__btn flex__row__reverse pad__5__13 font12"
               (click)="
@@ -270,10 +274,12 @@
       </div>
       <div class="sred">
         <div
-          [hidden]="
-            siteParticipants.participantRegistryDetail.sitePermission !==
-            permission.ViewAndEdit
-          "
+           [hidden]="
+           siteParticipants.participantRegistryDetail.sitePermission !==
+          permission.ViewAndEdit || (siteParticipants.participantRegistryDetail.studyStatus ===
+            studyStatus.Deactivated &&
+          siteParticipants.participantRegistryDetail.siteStatus === 0)
+        "
           class="flex__ flex__justify__center"
         >
           <div
@@ -376,10 +382,12 @@
           </div>
           <div class="pr-xlg">
             <div
-              [hidden]="
-                siteParticipants.participantRegistryDetail.sitePermission !==
-                permission.ViewAndEdit
-              "
+                [hidden]="
+           siteParticipants.participantRegistryDetail.sitePermission !==
+          permission.ViewAndEdit || (siteParticipants.participantRegistryDetail.studyStatus ===
+            studyStatus.Deactivated &&
+          siteParticipants.participantRegistryDetail.siteStatus === 0)
+        "
               class="flex__justify__space-between mb-xs"
             >
               <div
