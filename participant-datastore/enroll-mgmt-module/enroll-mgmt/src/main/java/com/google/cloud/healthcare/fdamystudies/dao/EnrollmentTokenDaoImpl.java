@@ -83,10 +83,11 @@ public class EnrollmentTokenDaoImpl implements EnrollmentTokenDao {
         session
             .createQuery(
                 "from ParticipantRegistrySiteEntity PS where study.customId =:studyId and"
-                    + " upper(trim(enrollmentToken))=:token and email=:email")
+                    + " upper(trim(enrollmentToken))=:token and email=:email and onboardingStatus != :onboardingStatus")
             .setParameter("studyId", studyId)
             .setParameter("token", token.toUpperCase())
             .setParameter("email", email)
+            .setParameter("onboardingStatus", "D")
             .getResultList();
 
     if (participantRegistrySite != null && !participantRegistrySite.isEmpty()) {
