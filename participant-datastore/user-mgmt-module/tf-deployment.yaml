@@ -136,4 +136,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-user-datastore-gcloud-key
+          secretName: user-datastore-gke-sa-gcloud-key

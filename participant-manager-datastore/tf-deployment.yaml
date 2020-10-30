@@ -25,28 +25,28 @@ spec:
             - name: DB_NAME
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
+                  name: participant-manager-datastore-credentials
                   key: dbname
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
-                  key: username
+                  name: participant-manager-datastore-credentials
+                  key: dbusername
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-db-credentials
-                  key: password
+                  name: participant-manager-datastore-credentials
+                  key: dbpassword
             # AUTHENTICATION
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-secrets
+                  name: participant-manager-datastore-credentials
                   key: client_id
             - name: SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: participant-manager-datastore-secrets
+                  name: participant-manager-datastore-credentials
                   key: secret_key
             # MAIL SERVER
             - name: MAIL_USERNAME
@@ -128,4 +128,4 @@ spec:
       volumes:
       - name: gcloud-key-volume
         secret:
-          secretName: participant-manager-datastore-gcloud-key
+          secretName: participant-manager-gke-sa-gcloud-key
