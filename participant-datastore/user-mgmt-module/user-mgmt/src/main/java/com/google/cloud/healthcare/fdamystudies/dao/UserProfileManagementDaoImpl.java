@@ -285,6 +285,8 @@ public class UserProfileManagementDaoImpl implements UserProfileManagementDao {
       participantStudiesRoot = criteriaParticipantStudiesUpdate.from(ParticipantStudyEntity.class);
       criteriaParticipantStudiesUpdate.set("status", "Withdrawn");
       criteriaParticipantStudiesUpdate.set("participantId", null);
+      criteriaParticipantStudiesUpdate.set(
+          "withdrawalDate", new Timestamp(Instant.now().toEpochMilli()));
       userDetails = session.get(UserDetailsEntity.class, userDetailsId);
       studyIdPredicates.add(
           criteriaBuilder.equal(participantStudiesRoot.get("userDetails"), userDetails));
