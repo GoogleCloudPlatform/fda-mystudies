@@ -46,6 +46,7 @@ import com.google.cloud.healthcare.fdamystudies.repository.StudyRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserDetailsRepository;
 import com.google.cloud.healthcare.fdamystudies.repository.UserRegAdminRepository;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -95,11 +96,6 @@ public class AppServiceImpl implements AppService {
       AppResponse appResponse = getAppsForSuperAdmin(optUserRegAdminEntity.get());
       logger.exit(String.format("total apps for superadmin=%d", appResponse.getApps().size()));
       return appResponse;
-    }
-
-    List<AppPermissionEntity> appPermissions = appPermissionRepository.findByAdminUserId(userId);
-    if (CollectionUtils.isEmpty(appPermissions)) {
-      throw new ErrorCodeException(ErrorCode.APP_NOT_FOUND);
     }
 
     List<SitePermissionEntity> sitePermissions =
@@ -324,7 +320,7 @@ public class AppServiceImpl implements AppService {
 
   private Map<String, AppPermissionEntity> getAppPermissionsMap(
       String userId, List<String> appIds) {
-    Map<String, AppPermissionEntity> appPermissionsByAppInfoId = null;
+    Map<String, AppPermissionEntity> appPermissionsByAppInfoId = new HashMap<>();
 
     List<AppPermissionEntity> appPermissions =
         appPermissionRepository.findAppPermissionsOfUserByAppIds(appIds, userId);
