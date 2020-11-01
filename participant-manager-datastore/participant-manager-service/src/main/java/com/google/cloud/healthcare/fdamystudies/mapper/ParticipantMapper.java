@@ -76,10 +76,7 @@ public final class ParticipantMapper {
       String enrollmentDate = DateTimeUtils.format(participantStudy.getEnrolledDate());
       participantDetail.setEnrollmentDate(
           StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
-    }
-
-    if (OnboardingStatus.INVITED.getCode().equalsIgnoreCase(onboardingStatusCode)
-        || OnboardingStatus.NEW.getCode().equalsIgnoreCase(onboardingStatusCode)) {
+    } else {
       participantDetail.setEnrollmentStatus(YET_TO_ENROLL);
     }
     return participantDetail;
@@ -177,14 +174,13 @@ public final class ParticipantMapper {
         participant.setEnrollmentDate(StringUtils.defaultIfEmpty(enrollmentDate, NOT_APPLICABLE));
       }
     } else {
-      if (OnboardingStatus.NEW.getCode().equals(onboardingStatusCode)
-          || OnboardingStatus.INVITED.getCode().equals(onboardingStatusCode)) {
-        participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
-      }
+      participant.setEnrollmentStatus(CommonConstants.YET_TO_ENROLL);
     }
 
     String invitedDate = DateTimeUtils.format(participantRegistrySite.getInvitationDate());
     participant.setInvitedDate(StringUtils.defaultIfEmpty(invitedDate, NOT_APPLICABLE));
+    String disabledDate = DateTimeUtils.format(participantRegistrySite.getDisabledDate());
+    participant.setDisabledDate(StringUtils.defaultIfEmpty(disabledDate, NOT_APPLICABLE));
     return participant;
   }
 

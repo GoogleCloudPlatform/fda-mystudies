@@ -93,6 +93,8 @@ import com.jayway.jsonpath.JsonPath;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -660,6 +662,33 @@ public class SiteControllerTest extends BaseMockIT {
   }
 
   @Test
+  public void shouldReturnSiteParticipantsForDisabled() throws Exception {
+    siteEntity = testDataHelper.createSiteEntity(studyEntity, userRegAdminEntity, appEntity);
+    participantRegistrySiteEntity =
+        testDataHelper.createParticipantRegistrySite(siteEntity, studyEntity);
+
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+    participantRegistrySiteRepository.save(participantRegistrySiteEntity);
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(
+            jsonPath(
+                "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
+                is(CommonConstants.YET_TO_ENROLL)));
+
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
   public void shouldReturnSiteParticipantsRegistryForSuperAdmin() throws Exception {
     // Step 1: set onboarding status to 'N'
     studyEntity.setStatus(DEACTIVATED);
@@ -805,6 +834,56 @@ public class SiteControllerTest extends BaseMockIT {
             (jsonPath("$.participantRegistryDetail.registryParticipants[0].enrollmentStatus")
                 .value(EnrollmentStatus.ENROLLED.getStatus())))
         .andExpect(jsonPath("$.participantRegistryDetail.countByStatus.N", is(0)))
+        .andExpect(
+            jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
+
+    AuditLogEventRequest auditRequest = new AuditLogEventRequest();
+    auditRequest.setSiteId(siteEntity.getId());
+    auditRequest.setStudyId(studyEntity.getId());
+    auditRequest.setAppId(appEntity.getId());
+    auditRequest.setUserId(userRegAdminEntity.getId());
+
+    Map<String, AuditLogEventRequest> auditEventMap = new HashedMap<>();
+    auditEventMap.put(SITE_PARTICIPANT_REGISTRY_VIEWED.getEventCode(), auditRequest);
+
+    verifyAuditEventCall(auditEventMap, SITE_PARTICIPANT_REGISTRY_VIEWED);
+    verifyTokenIntrospectRequest();
+  }
+
+  @Test
+  public void shouldReturnSiteParticipantsRegistryForDisabledParticipants() throws Exception {
+    // Step 1: set onboarding status to 'D'
+    siteEntity.setStudy(studyEntity);
+    participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.DISABLED.getCode());
+    participantRegistrySiteEntity.setSite(siteEntity);
+    participantRegistrySiteEntity.setEmail(TestConstants.EMAIL_VALUE);
+    participantRegistrySiteEntity.setDisabledDate(new Timestamp(Instant.now().toEpochMilli()));
+    testDataHelper
+        .getParticipantRegistrySiteRepository()
+        .saveAndFlush(participantRegistrySiteEntity);
+
+    // Step 2: Call API and expect  GET_PARTICIPANT_REGISTRY_SUCCESS
+    HttpHeaders headers = testDataHelper.newCommonHeaders();
+    headers.add(USER_ID_HEADER, userRegAdminEntity.getId());
+
+    mockMvc
+        .perform(
+            get(ApiEndpoint.GET_SITE_PARTICIPANTS.getPath(), siteEntity.getId())
+                .headers(headers)
+                .param("onboardingStatus", OnboardingStatus.DISABLED.getCode())
+                .contextPath(getContextPath()))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.participantRegistryDetail", notNullValue()))
+        .andExpect(jsonPath("$.participantRegistryDetail.studyId", is(studyEntity.getId())))
+        .andExpect(jsonPath("$.participantRegistryDetail.siteStatus", is(siteEntity.getStatus())))
+        .andExpect(jsonPath("$.participantRegistryDetail.registryParticipants").isArray())
+        .andExpect(
+            (jsonPath("$.participantRegistryDetail.registryParticipants[0].onboardingStatus")
+                .value(OnboardingStatus.DISABLED.getStatus())))
+        .andExpect(
+            (jsonPath("$.participantRegistryDetail.registryParticipants[0].disabledDate")
+                .isNotEmpty()))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
@@ -2135,6 +2214,7 @@ public class SiteControllerTest extends BaseMockIT {
     assertNotNull(participantRegistrySiteEntity);
     assertEquals(
         participantStatusRequest.getStatus(), participantRegistrySiteEntity.getOnboardingStatus());
+    assertNotNull(participantRegistrySiteEntity.getDisabledDate());
 
     AuditLogEventRequest auditRequest = new AuditLogEventRequest();
     auditRequest.setSiteId(siteEntity.getId());
