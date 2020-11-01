@@ -691,6 +691,7 @@ public class SiteControllerTest extends BaseMockIT {
   @Test
   public void shouldReturnSiteParticipantsRegistryForSuperAdmin() throws Exception {
     // Step 1: set onboarding status to 'N'
+    studyEntity.setStatus(DEACTIVATED);
     siteEntity.setStudy(studyEntity);
     //  testDataHelper.getSiteRepository().saveAndFlush(siteEntity);
     participantRegistrySiteEntity.setOnboardingStatus(OnboardingStatus.NEW.getCode());
@@ -724,6 +725,7 @@ public class SiteControllerTest extends BaseMockIT {
             jsonPath(
                 "$.participantRegistryDetail.registryParticipants[0].enrollmentStatus",
                 is("Yet to Enroll")))
+        .andExpect(jsonPath("$.participantRegistryDetail.studyStatus", is(studyEntity.getStatus())))
         .andExpect(
             jsonPath("$.message", is(MessageCode.GET_PARTICIPANT_REGISTRY_SUCCESS.getMessage())));
 
