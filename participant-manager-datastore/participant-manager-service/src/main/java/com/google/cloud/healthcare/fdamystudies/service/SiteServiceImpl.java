@@ -1160,7 +1160,6 @@ public class SiteServiceImpl implements SiteService {
         CollectionUtils.isNotEmpty(studyPermissions) ? userStudies : userStudiesWithSites;
 
     List<StudyDetails> studies = new ArrayList<>();
-    //////////////
     for (StudyEntity study : studyList) {
       StudyDetails studyDetail = StudyMapper.toStudyDetails(study);
 
@@ -1183,7 +1182,6 @@ public class SiteServiceImpl implements SiteService {
       studyDetail.setSitesCount((long) studyDetail.getSites().size());
       studies.add(studyDetail);
     }
-    ////////////////
     logger.exit(String.format("%d studies found", studies.size()));
     return new SiteDetailsResponse(studies, MessageCode.GET_SITES_SUCCESS);
   }
